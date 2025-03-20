@@ -1,5 +1,5 @@
 <template>
-  <plugin-panel class="outlinebox plugin-tree" title="大纲树" @close="$emit('close')">
+  <plugin-panel class="outlinebox plugin-tree" title="大纲树" @close="$emit('close')" ref="panelRef" tabindex="0">
     <template #header>
       <svg-button
         class="item icon-sidebar"
@@ -13,7 +13,7 @@
         label-key="componentName"
         :data="state.pageSchema"
         :draggable="true"
-        :active="pageState.currentSchema?.id"
+        :actives="selectedIds"
         :disallow-drop="disallowDrop"
         class="outline-tree"
         @click="handleClickRow"
@@ -38,10 +38,17 @@
 </template>
 
 <script>
-import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
+import { reactive, watch, computed, onActivated, onDeactivated, onMounted, onBeforeUnmount, nextTick, ref } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useMaterial, useLayout, useMessage, useHistory } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useMaterial,
+  useLayout,
+  useMessage,
+  useHistory,
+  getMergeMeta
+} from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import DraggableTree from './DraggableTree.vue'
 
@@ -64,6 +71,10 @@ export default {
     const { PLUGIN_NAME } = useLayout()
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
+
+    const { useMultiSelect, registerHotkeyEvent, removeHotkeyEvent } = getMergeMeta('engine.canvas.container').api
+
+    const selectedIds = computed(() => useMultiSelect().multiSelectedStates.value.map((state) => state.id))
 
     const filterSchema = (data) => {
       const translateChild = (data) => {
@@ -195,9 +206,10 @@ export default {
       })
     }
 
-    const handleClickRow = (row) => {
+    const handleClickRow = (event, row) => {
+      const isCtrlKey = event.ctrlKey || event.metaKey
       const { selectNode } = useCanvas().canvasApi.value
-      selectNode(row.id, 'clickTree')
+      selectNode(row.id, 'clickTree', isCtrlKey)
     }
 
     const getIconName = (row) => {
@@ -205,8 +217,29 @@ export default {
       return iconName.toLowerCase()
     }
 
+    const panelRef = ref(null)
+
+    // 由于copy，paste等事件需要在document上监听才有效果，这里加了一个事件过滤器。当焦点在大纲树上时才触发热键事件
+    const eventFilter = () => {
+      return panelRef.value.$el.contains(document.activeElement)
+    }
+
+    onMounted(() => {
+      if (panelRef.value) {
+        registerHotkeyEvent(document, { eventFilter })
+      }
+    })
+
+    onBeforeUnmount(() => {
+      if (panelRef.value) {
+        removeHotkeyEvent(document)
+      }
+    })
+
     return {
       panelFixed,
+      selectedIds,
+      panelRef,
       eyeOpen,
       delNode,
       showNode,
@@ -227,6 +260,9 @@ export default {
 .outlinebox {
   height: 100%;
   overflow: hidden;
+  &:focus {
+    outline: none;
+  }
 }
 .outline-tree {
   flex: 1;

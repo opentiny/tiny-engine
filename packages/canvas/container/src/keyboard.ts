@@ -116,8 +116,20 @@ const handleClipboardCut = (event) => {
   clearMultiSelection()
 }
 
-const handleClipboardPaste = (nodeList, schema, parent) => {
-  if (!nodeList.length) return
+const handleClipboardPaste = (event) => {
+  const nodeList = getClipboardSchema(event)
+
+  if (!nodeList.length) {
+    return
+  }
+
+  const lastSelected = multiSelectedStates.value.slice(-1)[0]
+
+  if (!lastSelected) {
+    return
+  }
+
+  const { schema, parent } = lastSelected
 
   nodeList.forEach((node) => {
     if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {
@@ -135,16 +147,21 @@ const handleCopyEvent = (event) => {
   setClipboardSchema(event, dataToCopy)
 }
 
+const eventFiltersMap = new WeakMap()
+
 const handlerClipboardEvent = (event) => {
-  const { schema, parent } = getCurrent()
-  const nodeList = getClipboardSchema(event)
+  const eventFilter = eventFiltersMap.get(event.currentTarget)
+  // 如果过滤器返回 false，则阻止处理
+  if (typeof eventFilter === 'function' && !eventFilter(event)) {
+    return
+  }
 
   switch (event.type) {
     case 'copy':
       handleCopyEvent(event)
       break
     case 'paste':
-      handleClipboardPaste(nodeList, schema, parent)
+      handleClipboardPaste(event)
       break
     case 'cut':
       handleClipboardCut(event)
@@ -155,12 +172,18 @@ const handlerClipboardEvent = (event) => {
 }
 
 const keyboardHandler = (event) => {
+  const eventFilter = eventFiltersMap.get(event.currentTarget)
+  // 如果过滤器返回 false，则阻止处理
+  if (typeof eventFilter === 'function' && !eventFilter(event)) {
+    return
+  }
+
   // 处理 Ctrl 或 Command 键
   if (event.ctrlKey || event.metaKey) {
     handlerCtrl(event)
+  } else {
+    handlerArrow(event.keyCode)
   }
-
-  handlerArrow(event.keyCode)
 }
 
 const removeHotkeyEvent = (dom) => {
@@ -168,10 +191,18 @@ const removeHotkeyEvent = (dom) => {
   dom.removeEventListener('copy', handlerClipboardEvent)
   dom.removeEventListener('cut', handlerClipboardEvent)
   dom.removeEventListener('paste', handlerClipboardEvent)
+
+  eventFiltersMap.delete(dom)
 }
 
-const registerHotkeyEvent = (dom) => {
+const registerHotkeyEvent = (dom, options) => {
   removeHotkeyEvent(dom)
+
+  const { eventFilter } = options || {}
+
+  if (typeof eventFilter === 'function') {
+    eventFiltersMap.set(dom, eventFilter)
+  }
 
   dom.addEventListener('keydown', keyboardHandler)
   dom.addEventListener('copy', handlerClipboardEvent)

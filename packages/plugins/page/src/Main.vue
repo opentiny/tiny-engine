@@ -17,7 +17,6 @@
           @click="createNewPage('staticPages')"
         ></svg-button>
       </template>
-
       <template #content>
         <page-tree
           ref="pageTreeRef"
@@ -26,25 +25,24 @@
           @openSettingPanel="openSettingPanel"
           @createPage="createNewPage"
           @createFolder="createNewFolder"
+          @settingHome="settingHome"
         ></page-tree>
       </template>
     </plugin-panel>
-
     <page-setting :isFolder="state.isFolder" @openNewPage="openNewPage"></page-setting>
-
     <page-folder-setting :isFolder="state.isFolder"></page-folder-setting>
   </div>
 </template>
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
-import { useCanvas, usePage, useHelp } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, usePage, useHelp, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
 import PageFolderSetting, { openFolderSettingPanel, closeFolderSettingPanel } from './PageFolderSetting.vue'
 import PageTree from './PageTree.vue'
-import { fetchPageDetail } from './http'
+import { fetchPageDetail, handleRouteHomeUpdate } from './http'
 
 export const api = {
   getPageById: async (id) => {
@@ -72,6 +70,7 @@ export default {
     }
   },
   setup() {
+    const { confirm } = useModal()
     const { pageState } = useCanvas()
     const { pageSettingState, getDefaultPage, isTemporaryPage, initCurrentPageData } = usePage()
 
@@ -117,6 +116,27 @@ export default {
       pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
       state.isFolder = true
       openFolderSettingPanel()
+    }
+
+    const settingHome = (node) => {
+      confirm({
+        title: '提示',
+        type: 'warning ',
+        message: '是否确定要将此页面设置为主页？',
+        exec: () => {
+          const params = { ...node.rawData, isHome: true }
+
+          handleRouteHomeUpdate(node.id, params)
+            .then(() => {
+              pageSettingState.updateTreeData()
+              pageSettingState.isNew = false
+              useNotify({ message: '主页设置成功！', type: 'success' })
+            })
+            .catch(() => {
+              useNotify({ message: '主页设置失败！', type: 'error' })
+            })
+        }
+      })
     }
 
     watchEffect(() => {
@@ -166,7 +186,8 @@ export default {
       openSettingPanel,
       createNewFolder,
       createNewPage,
-      docsUrl
+      docsUrl,
+      settingHome
     }
   }
 }

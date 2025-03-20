@@ -96,7 +96,7 @@ export default {
       default: false
     }
   },
-  emits: ['openSettingPanel', 'add', 'createPage', 'createFolder'],
+  emits: ['openSettingPanel', 'add', 'createPage', 'createFolder', 'settingHome'],
   setup(props, { emit }) {
     const { confirm } = useModal()
     const { pageState, isBlock, isSaved } = useCanvas()
@@ -241,11 +241,16 @@ export default {
       emit('createFolder', node.id)
     }
 
+    const settingHome = (node) => {
+      emit('settingHome', node)
+    }
+
     const rowOperations = [
       { type: 'settings', label: '设置', action: handleClickPageSettings },
       { type: 'divider' },
       { type: 'createPage', label: '新建子页面', action: createPage },
-      { type: 'createFolder', label: '新建子文件夹', action: createFolder }
+      { type: 'createFolder', label: '新建子文件夹', action: createFolder },
+      { type: 'settingHome', label: '设置为主页', action: settingHome }
       // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
       // { type: 'divider' },
       // { type: 'copy', label: '复制页面', action: copyPage },
@@ -263,9 +268,14 @@ export default {
       if (groupId === COMMON_PAGE_GROUP_ID) {
         return rowOperations.slice(0, 1)
       }
-      if (!node.rawData.isPage) {
-        return rowOperations.filter((item) => item.type !== 'copy')
+      if (!node.rawData.isPage || node.rawData.group === 'public') {
+        return rowOperations.filter((item) => item.type !== 'settingHome')
       }
+      // TODO 复制逻辑暂时屏蔽
+      // if (!node.rawData.isPage) {
+      //   return rowOperations.filter((item) => item.type !== 'copy')
+      // }
+
       return rowOperations
     }
 
@@ -280,8 +290,13 @@ export default {
       }
 
       const isCurEditPage = pageState?.currentPage?.id === id
+      const updateParams = {
+        id,
+        params,
+        isCurEditPage
+      }
 
-      return handlePageUpdate(id, params, false, isCurEditPage)
+      return handlePageUpdate(updateParams)
     }
 
     const updateFolder = (pageDetail) => {

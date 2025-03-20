@@ -130,7 +130,7 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
-import { formatString, generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
+import { generate, parse, traverse } from '@opentiny/tiny-engine-common/js/ast'
 import { DEFAULT_LOOP_NAME } from '@opentiny/tiny-engine-common/js/constants'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
@@ -277,7 +277,19 @@ export default {
       lineNumbers: false,
       minimap: {
         enabled: false
-      }
+      },
+      tabSize: 2,
+      insertSpaces: true,
+      formatOnPaste: true,
+      formatOnType: true,
+      autoIndent: 'full',
+      newLineCharacter: '\n',
+      convertTabsToSpaces: true,
+      trimAutoWhitespace: true,
+      wordWrap: 'on',
+      wordWrapColumn: 120,
+      wordWrapMinChars: 10,
+      wordWrapStrategy: 'advanced'
     }
 
     const editorDidMount = () => {
@@ -398,14 +410,16 @@ export default {
       cancel()
     }
 
-    const confirm = () => {
-      let variableContent = state.isEditorEditMode ? editor.value?.getEditor().getValue() : state.variable
+    const confirm = async () => {
+      const editorInstance = editor.value?.getEditor()
+      await editorInstance.getAction('editor.action.formatDocument').run()
+
+      const variableContent = state.isEditorEditMode ? editorInstance.getValue() : state.variable
 
       const { setSaved, getSchema, updateSchema } = useCanvas()
       // 如果新旧值不一样就显示未保存状态
       if (oldValue !== variableContent) {
         setSaved(false)
-        variableContent = formatString(variableContent, 'javascript')
       }
 
       const pattern = /^[\s]*{[\s]*api[\s]*:[\s\w.]*}$/

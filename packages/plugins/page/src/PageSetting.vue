@@ -208,11 +208,18 @@ export default {
         })
     }
 
-    const updatePage = (id, params) => {
+    const updatePage = (id, params, isUpdateTree = true) => {
       const routerChange = pageSettingState.currentPageDataCopy.route !== pageSettingState.currentPageData.route
       const isCurEditPage = pageState?.currentPage?.id === id
+      const updateParams = {
+        id,
+        params,
+        routerChange,
+        isCurEditPage,
+        isUpdateTree
+      }
 
-      return handlePageUpdate(id, params, routerChange, isCurEditPage)
+      return handlePageUpdate(updateParams)
     }
 
     const restorePage = (pageData) => {
@@ -273,6 +280,7 @@ export default {
       copyData.route = `${copyData.route}Copy`
       pageSettingState.currentPageData = copyData
       pageSettingState.currentPageDataCopy = extend(true, {}, copyData)
+      pageSettingState.defaultPage = null
     }
 
     const copyPage = () => {
@@ -291,6 +299,11 @@ export default {
       }
     }
 
+    const settingDefaultPage = async () => {
+      const params = { ...pageSettingState.defaultPage, isDefault: true }
+      await updatePage(pageSettingState.defaultPage?.id, params, false)
+    }
+
     const createHistoryMessage = () => {
       if (pageSettingState.isNew) {
         pageSettingState.currentPageData.message = 'Page auto save'
@@ -302,7 +315,11 @@ export default {
         }
         const exec = () => {
           pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
-          editPage()
+          if (pageSettingState.defaultPage?.id) {
+            settingDefaultPage().then(editPage)
+          } else {
+            editPage()
+          }
           state.historyMessage = ''
         }
 
