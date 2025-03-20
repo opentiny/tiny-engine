@@ -5,7 +5,6 @@
     class="plugin-schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"
-    :width-resizable="true"
     @close="close"
   >
     <template #header>

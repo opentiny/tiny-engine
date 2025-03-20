@@ -105,6 +105,7 @@ export default {
 
         // 为每个插件分配 index 和相关属性
         const index = alignGroups[align].indexOf(item.id)
+        const widthResizable = item?.widthResizable ?? false
 
         plugin[item.id] = {
           width: item?.width || PLUGIN_DEFAULT_WIDTH,
@@ -113,7 +114,8 @@ export default {
           isShow: true,
           entry: item.entry,
           id: item.id,
-          icon: item.icon
+          icon: item.icon,
+          widthResizable
         }
       }
     })

@@ -33,7 +33,7 @@
       <slot name="content"></slot>
     </div>
 
-    <div v-if="widthResizable">
+    <div v-if="isWidthResizable">
       <div class="resizer-right" v-if="isLeftResizer" @mousedown="onMouseDownRight"></div>
       <div class="resizer-left" v-if="isRightResizer" @mousedown="onMouseDownLeft"></div>
     </div>
@@ -109,13 +109,6 @@ export default {
     isShowCollapseIcon: {
       type: Boolean,
       default: false
-    },
-    /**
-     * 是否可以调整宽度
-     */
-    widthResizable: {
-      type: Boolean,
-      default: false
     }
   },
   emits: ['close', 'updateCollapseStatus'],
@@ -144,12 +137,14 @@ export default {
 
     const headerBottomLine = computed(() => (props.showBottomBorder ? 'header-bottom-line' : ''))
 
-    const { getPluginWidth, changePluginWidth, getPluginByLayout, changeMoveDragBarState } = useLayout()
+    const { getPluginWidth, changePluginWidth, getPluginByLayout, changeMoveDragBarState, isPanelWidthResizable } =
+      useLayout()
 
     const align = ref(getPluginByLayout(props.fixedName)) // 滚动条位置
     const panelWidth = ref(getPluginWidth(props.fixedName)) // 面板使用默认宽度
     const isLeftResizer = ref(align.value.includes('left'))
     const isRightResizer = ref(align.value.includes('right'))
+    const isWidthResizable = computed(() => isPanelWidthResizable(props.fixedName))
 
     const onMouseMoveRight = (event) => {
       const newWidth = startWidth + (event.clientX - startX)
@@ -220,6 +215,7 @@ export default {
     })
 
     return {
+      isWidthResizable,
       headerBottomLine,
       clickCollapseIcon,
       isCollapsed,

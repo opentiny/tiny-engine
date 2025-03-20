@@ -296,12 +296,20 @@ export default () => {
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
 
+  /**
+   * 返回面板是否宽度可调
+   * @param {string} name 插件名称
+   * @returns
+   */
+  const isPanelWidthResizable = (name) => pluginStorageReactive.value[name]?.widthResizable
+
   const initPluginStorageReactive = (pluginList) => {
     if (Object.keys(pluginStorageReactive.value).length) return
     pluginStorageReactive.value = pluginList
   }
 
   return {
+    isPanelWidthResizable,
     getFixedPanelsStatus,
     initPluginStorageReactive,
     PLUGIN_NAME,
