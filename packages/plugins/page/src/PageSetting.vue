@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :fixed-name="PLUGIN_NAME.AppManage"
+    :align="align"
+    :title="state.title"
+    class="page-plugin-setting"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
@@ -54,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -135,6 +141,9 @@ export default {
     const pageGeneral = registry.components.PageGeneral
     const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -398,6 +407,8 @@ export default {
     }
 
     return {
+      align,
+      PLUGIN_NAME,
       state,
       isShow,
       savePageSetting,

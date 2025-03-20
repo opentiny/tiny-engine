@@ -3,6 +3,6 @@ export default {
   title: '样式',
   name: 'style',
   type: 'setting',
-  align: 'left',
-  icon: ''
+  align: 'rightTop',
+  icon: 'display-inline'
 }

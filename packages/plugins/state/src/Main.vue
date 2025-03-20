@@ -1,78 +1,84 @@
 <template>
-  <div id="data-source" class="plugin-state">
-    <div class="data-source-left-panel">
-      <div class="title">
-        <span>状态管理</span>
-        <link-button :href="docsUrl"></link-button>
-        <close-icon @close="closePanel"></close-icon>
+  <plugin-panel
+    id="data-source"
+    title="状态管理"
+    class="plugin-state"
+    :fixed-name="PLUGIN_NAME.State"
+    :fixedPanels="fixedPanels"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+    @close="closePanel"
+  >
+    <template #content>
+      <div class="data-source-left-panel">
+        <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
+          <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
+          <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
+        </tiny-tabs>
+        <tiny-search
+          :modelValue="query"
+          class="left-filter"
+          placeholder="请输入搜索条件"
+          clearable
+          @update:modelValue="search"
+        >
+          <template #prefix>
+            <tiny-icon-search />
+          </template>
+        </tiny-search>
+        <div class="add-btn">
+          <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
+            <svg-icon name="add" class="add-btn-icon"></svg-icon>
+            <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
+          </tiny-button>
+        </div>
+        <data-source-list
+          :modelValue="Object.keys(state.dataSource)"
+          :stateScope="activeName"
+          :query="query"
+          :selectedKey="selectedKey"
+          @openPanel="openPanel"
+          @remove="remove"
+          @removeStore="removeStore"
+        />
       </div>
-      <tiny-tabs v-model="activeName" @click="tabClick" tab-style="button-card">
-        <tiny-tab-item :name="STATE.CURRENT_STATE" :title="isBlock ? '区块状态' : '页面状态'"></tiny-tab-item>
-        <tiny-tab-item :name="STATE.GLOBAL_STATE" title="应用状态"></tiny-tab-item>
-      </tiny-tabs>
-      <tiny-search
-        :modelValue="query"
-        class="left-filter"
-        placeholder="请输入搜索条件"
-        clearable
-        @update:modelValue="search"
-      >
-        <template #prefix>
-          <tiny-icon-search />
-        </template>
-      </tiny-search>
-      <div class="add-btn">
-        <tiny-button @click="openPanel(OPTION_TYPE.ADD)">
-          <svg-icon name="add" class="add-btn-icon"></svg-icon>
-          <span class="add-btn-text">{{ activeName === STATE.CURRENT_STATE ? '添加变量' : '添加全局变量' }}</span>
-        </tiny-button>
+      <div class="data-source-right-panel" v-if="isPanelShow" :style="alignStyle">
+        <div class="header">
+          <span>{{ addDataSource }}</span>
+          <span class="options-wrap">
+            <tiny-button type="primary" @click="confirm">保存</tiny-button>
+            <close-icon @close="cancel"></close-icon>
+          </span>
+        </div>
+        <create-variable
+          v-if="activeName === STATE.CURRENT_STATE"
+          ref="variableRef"
+          :dataSource="state.dataSource"
+          :flag="flag"
+          :updateKey="updateKey"
+          :createData="state.createData"
+          @nameInput="updateName"
+          @close="cancel"
+          @mouseleave="onMouseLeaveVariable"
+        />
+        <create-store
+          v-if="activeName === STATE.GLOBAL_STATE"
+          ref="storeRef"
+          :dataSource="state.dataSource"
+          :flag="flag"
+          :updateKey="updateKey"
+          :storeData="state.createData"
+          @nameInput="validName"
+          @close="cancel"
+          @mouseleave="onMouseLeaveStore"
+        />
       </div>
-      <data-source-list
-        :modelValue="Object.keys(state.dataSource)"
-        :stateScope="activeName"
-        :query="query"
-        :selectedKey="selectedKey"
-        @openPanel="openPanel"
-        @remove="remove"
-        @removeStore="removeStore"
-      />
-    </div>
-    <div v-if="isPanelShow" class="data-source-right-panel">
-      <div class="header">
-        <span>{{ addDataSource }}</span>
-        <span class="options-wrap">
-          <tiny-button type="primary" @click="confirm">保存</tiny-button>
-          <close-icon @close="cancel"></close-icon>
-        </span>
-      </div>
-      <create-variable
-        v-if="activeName === STATE.CURRENT_STATE"
-        ref="variableRef"
-        :dataSource="state.dataSource"
-        :flag="flag"
-        :updateKey="updateKey"
-        :createData="state.createData"
-        @nameInput="updateName"
-        @close="cancel"
-        @mouseleave="onMouseLeaveVariable"
-      />
-      <create-store
-        v-if="activeName === STATE.GLOBAL_STATE"
-        ref="storeRef"
-        :dataSource="state.dataSource"
-        :flag="flag"
-        :updateKey="updateKey"
-        :storeData="state.createData"
-        @nameInput="validName"
-        @close="cancel"
-        @mouseleave="onMouseLeaveStore"
-      />
-    </div>
-  </div>
+    </template>
+  </plugin-panel>
 </template>
 
 <script>
-import { reactive, ref, computed, onActivated, watch } from 'vue'
+import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -80,13 +86,14 @@ import {
   useResource,
   useNotify,
   useHelp,
+  useLayout,
   getMetaApi,
   META_APP,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { getCommentByKey } from '@opentiny/tiny-engine-common/js/comment'
 import { iconSearch } from '@opentiny/vue-icon'
-import { CloseIcon, LinkButton } from '@opentiny/tiny-engine-common'
+import { CloseIcon, PluginPanel } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
@@ -104,8 +111,13 @@ export default {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
     CreateStore,
-    LinkButton,
+    PluginPanel,
     TinyIconSearch: iconSearch()
+  },
+  props: {
+    fixedPanels: {
+      type: Array
+    }
   },
   setup(props, { emit }) {
     const variableRef = ref(null)
@@ -130,6 +142,24 @@ export default {
       }
     })
     const selectedKey = ref(null)
+
+    const { PLUGIN_NAME, getPluginWidth, getPluginByLayout } = useLayout()
+
+    const firstPanelOffset = computed(() => {
+      return getPluginWidth(PLUGIN_NAME.State)
+    })
+
+    const alignStyle = computed(() => {
+      const panelAlign = getPluginByLayout(PLUGIN_NAME.State)
+      const align = panelAlign.includes('left') ? 'left' : 'right'
+      return `${align}: ${firstPanelOffset.value}px`
+    })
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     watch(activeName, () => {
       selectedKey.value = null
@@ -355,6 +385,9 @@ export default {
     })
 
     return {
+      alignStyle,
+      firstPanelOffset,
+      PLUGIN_NAME,
       isBlock,
       isPanelShow,
       errorMessage,
@@ -420,18 +453,6 @@ export default {
       }
     }
 
-    .title {
-      padding: 10px;
-      font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-        'Helvetica Neue', sans-serif;
-      color: var(--te-state-common-text-color);
-      font-weight: var(--te-base-font-weight-bold);
-      border-bottom: 1px solid var(--te-state-common-border-color-divider);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
     .left-filter {
       margin-top: 4px;
       padding: 0 8px;
@@ -459,7 +480,6 @@ export default {
     border-right: 1px solid var(--te-state-common-border-color-divider);
     background: var(--te-state-common-bg-color);
     position: absolute;
-    left: var(--base-left-panel-width);
     top: 0;
 
     .header {
@@ -490,7 +510,7 @@ export default {
   }
 
   :deep(.tiny-tabs__header) {
-    padding: 8px;
+    padding: 0 8px 8px 8px;
   }
 
   :deep(.tiny-tabs__header .tiny-tabs__active-bar) {

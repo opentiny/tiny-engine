@@ -1,45 +1,49 @@
 <template>
-  <div id="source-code" class="plugin-schema">
-    <div class="source-code-header">
-      <div class="title">页面Schema</div>
-      <div class="header-title">
-        <!-- 暂时放开schema录入功能，等画布功能完善后，再打开下面一行的注释 -->
-        <!-- <tiny-popover v-if="isEdit" placement="bottom" trigger="hover" append-to-body content="保存"> -->
-        <span class="icon-wrap" @click="saveSchema">
-          <i v-show="!showRed" class="red"></i>
-          <tiny-button type="primary">保存</tiny-button>
-        </span>
-        <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
-          <template #reference>
-            <span class="icon-wrap">
-              <icon-download-link></icon-download-link>
-            </span>
-          </template>
-        </tiny-popover>
-        <close-icon @close="close"></close-icon>
+  <plugin-panel
+    id="source-code"
+    title="页面 Schema"
+    class="plugin-schema"
+    :fixed-name="PLUGIN_NAME.Schema"
+    :fixedPanels="fixedPanels"
+    @close="close"
+  >
+    <template #header>
+      <span class="icon-wrap">
+        <i v-show="!showRed" class="red"></i>
+        <tiny-button type="primary" @click="saveSchema">保存</tiny-button>
+      </span>
+      <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
+        <template #reference>
+          <span class="icon-wrap">
+            <icon-download-link></icon-download-link>
+          </span>
+        </template>
+      </tiny-popover>
+    </template>
+
+    <template #content>
+      <div class="source-code-content">
+        <monaco-editor
+          ref="container"
+          class="code-edit-content"
+          :value="state.pageData"
+          :options="options"
+          @change="editorChange"
+          @shortcutSave="saveSchema"
+        ></monaco-editor>
       </div>
-    </div>
-    <div class="source-code-content">
-      <monaco-editor
-        ref="container"
-        class="code-edit-content"
-        :value="state.pageData"
-        :options="options"
-        @change="editorChange"
-        @shortcutSave="saveSchema"
-      ></monaco-editor>
-    </div>
-    <div class="source-code-footer">
-      <button>导入 Schema</button>
-    </div>
-  </div>
+      <div class="source-code-footer">
+        <button>导入 Schema</button>
+      </div>
+    </template>
+  </plugin-panel>
 </template>
 
 <script lang="jsx">
-import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
-import { VueMonaco, CloseIcon } from '@opentiny/tiny-engine-common'
-import { useCanvas, useModal, useNotify, useMessage } from '@opentiny/tiny-engine-meta-register'
+import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
+import { useCanvas, useModal, useNotify, useMessage, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { iconDownloadLink } from '@opentiny/vue-icon'
 import { useThrottleFn } from '@vueuse/core'
@@ -51,8 +55,13 @@ export default {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover,
     TinyButton: Button,
-    CloseIcon,
+    PluginPanel,
     IconDownloadLink: iconDownloadLink()
+  },
+  props: {
+    fixedPanels: {
+      type: Array
+    }
   },
   setup(props, { emit }) {
     const app = getCurrentInstance()
@@ -62,6 +71,13 @@ export default {
       pageData: obj2String(pageState.pageSchema)
     })
     const { subscribe, unsubscribe } = useMessage()
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const isEdit = false
     const showRed = ref(true)
@@ -148,6 +164,7 @@ export default {
     })
 
     return {
+      PLUGIN_NAME,
       state,
       isEdit,
       saveSchema,
@@ -169,57 +186,35 @@ export default {
 
 <style lang="less" scoped>
 #source-code {
-  width: 50vw;
-  height: calc(100% - var(--base-top-panel-height));
-  padding: 12px 0;
-  position: fixed;
-  top: var(--base-top-panel-height);
-  left: 41px;
-  background: var(--te-schema-panel-bg-color);
   box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
-  .source-code-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--te-schema-common-border-color);
-    margin-bottom: 12px;
-    padding: 0 12px 12px;
-  }
-  .title {
-    color: var(--te-schema-panel-title-text-color);
-    font-weight: var(--te-base-font-weight-bold);
-  }
-  .header-title {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    .icon-wrap {
-      position: relative;
-      .tiny-button {
-        min-width: 40px;
-        margin-right: 2px;
-        height: 24px;
-        line-height: 24px;
-      }
-      .red {
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: var(--te-schema-dot-color);
-        display: block;
-        z-index: 100;
-        position: absolute;
-        top: -3px;
-        right: -4px;
-      }
+
+  .icon-wrap {
+    position: relative;
+    margin-right: 6px;
+
+    .tiny-button {
+      min-width: 40px;
+      margin-right: 2px;
+      height: 24px;
+      line-height: 24px;
     }
-    & > span:not(:last-child) {
-      margin-right: 8px;
+
+    .red {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--te-schema-dot-color);
+      display: block;
+      z-index: 100;
+      position: absolute;
+      top: -3px;
+      right: -1px;
     }
   }
+
   .source-code-content {
-    height: calc(100% - 42px);
+    height: calc(100% - 12px);
     border: 1px solid var(--te-schema-common-border-color);
     border-radius: 4px;
     margin: 0 12px;

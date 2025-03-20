@@ -1,13 +1,10 @@
 <template>
-  <plugin-panel :title="shortcut ? '' : title" @close="$emit('close')">
-    <template #header>
-      <component
-        v-if="!onlyShowDefault"
-        :is="registryData?.components?.header"
-        :fixedPanels="fixedPanels"
-        @fix-panel="(id) => $emit('fix-panel', id)"
-      ></component>
-    </template>
+  <plugin-panel
+    :title="shortcut ? '' : title"
+    :fixed-name="PLUGIN_NAME.Materials"
+    :fixedPanels="fixedPanels"
+    @close="$emit('close')"
+  >
     <template #content>
       <tiny-tabs v-model="activeName" tab-style="button-card" class="full-width-tabs" v-if="!onlyShowDefault">
         <tiny-tab-item :key="item.id" v-for="item in tabComponents" :title="item.title" :name="item.id">
@@ -23,7 +20,7 @@
 <script>
 import { reactive, provide, ref, computed } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -83,6 +80,7 @@ export default {
     const title = ref(props.registryData?.title)
 
     return {
+      PLUGIN_NAME,
       title,
       activeName,
       defaultComponent,

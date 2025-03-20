@@ -1,13 +1,13 @@
 <template>
-  <plugin-panel class="outlinebox plugin-tree" title="大纲树" @close="$emit('close')" ref="panelRef" tabindex="0">
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        :name="panelFixed ? 'fixed-solid' : 'fixed'"
-        :tips="panelFixed ? '解除固定面板' : '固定面板'"
-        @click="$emit('fix-panel', PLUGIN_NAME.OutlineTree)"
-      ></svg-button>
-    </template>
+  <plugin-panel
+    tabindex="0"
+    title="大纲树"
+    ref="panelRef"
+    class="outlinebox plugin-tree"
+    :fixed-name="PLUGIN_NAME.OutlineTree"
+    :fixedPanels="fixedPanels"
+    @close="$emit('close')"
+  >
     <template #content>
       <draggable-tree
         label-key="componentName"
@@ -38,8 +38,19 @@
 </template>
 
 <script>
-import { reactive, watch, computed, onActivated, onDeactivated, onMounted, onBeforeUnmount, nextTick, ref } from 'vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import {
+  reactive,
+  watch,
+  computed,
+  onActivated,
+  onDeactivated,
+  provide,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  ref
+} from 'vue'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import {
   useCanvas,
@@ -56,7 +67,6 @@ const { PAGE_STATUS } = constants
 export default {
   components: {
     PluginPanel,
-    SvgButton,
     DraggableTree
   },
   props: {
@@ -65,7 +75,7 @@ export default {
     }
   },
   emits: ['close', 'fix-panel'],
-  setup(props) {
+  setup(props, { emit }) {
     const { pageState } = useCanvas()
     const { getMaterial } = useMaterial()
     const { PLUGIN_NAME } = useLayout()
@@ -75,6 +85,11 @@ export default {
     const { useMultiSelect, registerHotkeyEvent, removeHotkeyEvent } = getMergeMeta('engine.canvas.container').api
 
     const selectedIds = computed(() => useMultiSelect().multiSelectedStates.value.map((state) => state.id))
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const filterSchema = (data) => {
       const translateChild = (data) => {

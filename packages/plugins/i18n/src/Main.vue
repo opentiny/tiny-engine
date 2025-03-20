@@ -1,5 +1,12 @@
 <template>
-  <plugin-panel title="国际化资源" :docsUrl="docsUrl" :isShowDocsIcon="true" :isCloseLeft="false" class="plugin-i18n">
+  <plugin-panel
+    title="国际化资源"
+    class="plugin-i18n"
+    :fixed-name="PLUGIN_NAME.I18n"
+    :fixedPanels="fixedPanels"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+  >
     <template #content>
       <div class="language-search-box">
         <tiny-select v-model="currentSearchType" :options="i18nSearchTypes"></tiny-select>
@@ -113,12 +120,19 @@
 </template>
 
 <script lang="jsx">
-import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch } from 'vue'
+import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow, iconUpload } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useTranslate, useModal, useHelp, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useTranslate,
+  useModal,
+  useHelp,
+  getMetaApi,
+  META_SERVICE,
+  useLayout
+} from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
@@ -138,7 +152,12 @@ export default {
     SearchEmpty,
     IconUpload: iconUpload()
   },
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  setup(props, { emit }) {
     // 组件库iconLoadingShadow图标不能切换颜色，因此不同主题用不同icon
     const SvgIcon = resolveComponent('SvgIcon')
     const lightSpinnerIcon = iconLoadingShadow()
@@ -146,6 +165,13 @@ export default {
     const isLightTheme = getMergeMeta('engine.config').theme === 'light'
     const { getLangs, i18nResource, currentLanguage, getI18nData } = useTranslate()
     const { toClipboard } = useClipboard()
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
+
     const fullLangList = computed(() => {
       const langs = getLangs()
 
@@ -392,6 +418,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       sortTypeChanges,
       currentSearchType,
       i18nSearchTypes,

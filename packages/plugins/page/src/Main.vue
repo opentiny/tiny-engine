@@ -1,6 +1,13 @@
 <template>
   <div class="plugin-page">
-    <plugin-panel :title="title" @close="pluginPanelClosed" :docsUrl="docsUrl" :isShowDocsIcon="true">
+    <plugin-panel
+      :title="title"
+      :fixed-name="PLUGIN_NAME.AppManage"
+      :fixedPanels="fixedPanels"
+      @close="pluginPanelClosed"
+      :docsUrl="docsUrl"
+      :isShowDocsIcon="true"
+    >
       <template #header>
         <svg-button
           class="add-folder-icon"
@@ -36,7 +43,7 @@
 
 <script lang="jsx">
 import { reactive, ref, watchEffect, provide } from 'vue'
-import { useCanvas, usePage, useHelp, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, usePage, useHelp, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import PageSetting, { openPageSettingPanel, closePageSettingPanel } from './PageSetting.vue'
@@ -67,12 +74,24 @@ export default {
     title: {
       type: String,
       default: '页面'
+    },
+    fixedPanels: {
+      type: Array
     }
   },
-  setup() {
+  emits: ['close'],
+  setup(props, { emit }) {
     const { confirm } = useModal()
     const { pageState } = useCanvas()
     const { pageSettingState, getDefaultPage, isTemporaryPage, initCurrentPageData } = usePage()
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
 
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
@@ -169,6 +188,7 @@ export default {
     provide('openSettingPanel', openSettingPanel)
 
     const pluginPanelClosed = () => {
+      emit('close')
       closePageSettingPanel()
       closeFolderSettingPanel()
     }
@@ -178,6 +198,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       pageState,
       openNewPage,

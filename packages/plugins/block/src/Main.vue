@@ -1,129 +1,128 @@
 <template>
-  <div class="plugin-block">
-    <plugin-panel
-      class="block-manage"
-      title="区块管理"
-      :docsUrl="docsUrl"
-      :isShowDocsIcon="true"
-      :isCloseLeft="false"
-      @close="closePanel"
-    >
-      <template #header>
-        <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
-      </template>
-      <template #content>
-        <div class="app-manage-type">
-          <tiny-select
-            ref="groupSelect"
-            v-model="state.categoryId"
-            popper-class="block-popper"
-            :placeholder="groupLabels.selectPlaceholder"
-            filterable
-            :filter-method="categoryFilter"
-            clearable
-            top-create
-            @top-create-click="createCategory"
-            @change="changeCategory"
-            @clear="changeCategory"
-            @visible-change="handleSelectVisibleChange"
-            class="search-select"
+  <plugin-panel
+    title="区块管理"
+    class="plugin-block"
+    :fixed-name="PLUGIN_NAME.BlockManage"
+    :fixedPanels="fixedPanels"
+    :docsUrl="docsUrl"
+    :isShowDocsIcon="true"
+    @close="close"
+  >
+    <template #header>
+      <svg-button name="add-page" placement="bottom" tips="新建区块" @click="openBlockAdd"></svg-button>
+    </template>
+    <template #content>
+      <div class="app-manage-type">
+        <tiny-select
+          ref="groupSelect"
+          v-model="state.categoryId"
+          popper-class="block-popper"
+          :placeholder="groupLabels.selectPlaceholder"
+          filterable
+          :filter-method="categoryFilter"
+          clearable
+          top-create
+          @top-create-click="createCategory"
+          @change="changeCategory"
+          @clear="changeCategory"
+          @visible-change="handleSelectVisibleChange"
+          class="search-select"
+        >
+          <tiny-option
+            v-for="item in categoryList"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+            class="block-group-option-item"
           >
-            <tiny-option
-              v-for="item in categoryList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-              class="block-group-option-item"
-            >
-              <div class="block-item">
-                <span>{{ item.name }}</span>
-                <div class="item-btns">
-                  <svg-button
-                    class="item-icon"
-                    name="to-edit"
-                    :hoverBgColor="false"
-                    @click.stop="editCategory(item)"
-                  ></svg-button>
-                  <tiny-popover
-                    :modelValue="state.currentDeleteGroupId === item.id"
-                    placement="right"
-                    trigger="manual"
-                    popper-class="block-category-option-popper-wrapper"
-                    @update:modelValue="handleChangeDeletePopoverVisible"
-                  >
-                    <div class="popper-confirm" @mousedown.stop="">
-                      <div class="popper-confirm-header">删除</div>
-                      <div class="popper-confirm-content">
-                        <span class="title">{{ groupLabels.deletePrompt }}</span>
-                      </div>
-                      <div class="popper-confirm-footer">
-                        <tiny-button class="cancel-btn" size="small" @click="handleShowDeleteModal(null)"
-                          >取消</tiny-button
-                        >
-                        <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
-                          >确定</tiny-button
-                        >
-                      </div>
+            <div class="block-item">
+              <span>{{ item.name }}</span>
+              <div class="item-btns">
+                <svg-button
+                  class="item-icon"
+                  name="to-edit"
+                  :hoverBgColor="false"
+                  @click.stop="editCategory(item)"
+                ></svg-button>
+                <tiny-popover
+                  :modelValue="state.currentDeleteGroupId === item.id"
+                  placement="right"
+                  trigger="manual"
+                  popper-class="block-category-option-popper-wrapper"
+                  @update:modelValue="handleChangeDeletePopoverVisible"
+                >
+                  <div class="popper-confirm" @mousedown.stop="">
+                    <div class="popper-confirm-header">删除</div>
+                    <div class="popper-confirm-content">
+                      <span class="title">{{ groupLabels.deletePrompt }}</span>
                     </div>
-                    <template #reference>
-                      <svg-button
-                        v-if="!item.blocks.length"
-                        class="item-icon"
-                        name="delete"
-                        :hoverBgColor="false"
-                        @click.stop="handleShowDeleteModal(item.id)"
-                      ></svg-button>
-                    </template>
-                  </tiny-popover>
-                </div>
+                    <div class="popper-confirm-footer">
+                      <tiny-button class="cancel-btn" size="small" @click="handleShowDeleteModal(null)"
+                        >取消</tiny-button
+                      >
+                      <tiny-button class="confirm-btn" size="small" type="primary" @click="delCategory(item.id)"
+                        >确定</tiny-button
+                      >
+                    </div>
+                  </div>
+                  <template #reference>
+                    <svg-button
+                      v-if="!item.blocks.length"
+                      class="item-icon"
+                      name="delete"
+                      :hoverBgColor="false"
+                      @click.stop="handleShowDeleteModal(item.id)"
+                    ></svg-button>
+                  </template>
+                </tiny-popover>
               </div>
-            </tiny-option>
-          </tiny-select>
-        </div>
-        <div class="app-manage-search">
-          <tiny-search v-model="state.searchKey" placeholder="搜索">
-            <template #prefix>
-              <tiny-icon-search />
-            </template>
-          </tiny-search>
-        </div>
-        <div class="plugin-block-list">
-          <plugin-block-list
-            :data="state.blockList"
-            :isBlockManage="true"
-            :showBlockShot="true"
-            :blockStyle="state.layout"
-            default-icon-tip="查看区块"
-            :externalBlock="externalBlock"
-            @editBlock="editBlock"
-            @iconClick="openSettingPanel"
-          ></plugin-block-list>
-        </div>
-        <block-setting></block-setting>
-        <div class="block-footer">
-          <tiny-dropdown trigger="click" @item-click="changeType">
-            <span>
-              <span>{{ state.sortTypeLabel }}</span>
-            </span>
-            <template #dropdown>
-              <tiny-dropdown-menu
-                popper-class="my-class"
-                placement="top"
-                :options="state.sortOptions"
-              ></tiny-dropdown-menu>
-            </template>
-          </tiny-dropdown>
-          <block-group-arrange v-model="state.layout" :arrangeList="state.arrangeList"></block-group-arrange>
-        </div>
-      </template>
-    </plugin-panel>
-    <category-edit v-model="state.editVisible" :initialValue="state.groupInitialValue"></category-edit>
-    <save-new-block :boxVisibility="boxVisibility" @close="close"></save-new-block>
-  </div>
+            </div>
+          </tiny-option>
+        </tiny-select>
+      </div>
+      <div class="app-manage-search">
+        <tiny-search v-model="state.searchKey" placeholder="搜索">
+          <template #prefix>
+            <tiny-icon-search />
+          </template>
+        </tiny-search>
+      </div>
+      <div class="plugin-block-list">
+        <plugin-block-list
+          :data="state.blockList"
+          :isBlockManage="true"
+          :showBlockShot="true"
+          :blockStyle="state.layout"
+          default-icon-tip="查看区块"
+          :externalBlock="externalBlock"
+          @editBlock="editBlock"
+          @iconClick="openSettingPanel"
+        ></plugin-block-list>
+      </div>
+      <block-setting></block-setting>
+      <div class="block-footer">
+        <tiny-dropdown trigger="click" @item-click="changeType">
+          <span>
+            <span>{{ state.sortTypeLabel }}</span>
+          </span>
+          <template #dropdown>
+            <tiny-dropdown-menu
+              popper-class="my-class"
+              placement="top"
+              :options="state.sortOptions"
+            ></tiny-dropdown-menu>
+          </template>
+        </tiny-dropdown>
+        <block-group-arrange v-model="state.layout" :arrangeList="state.arrangeList"></block-group-arrange>
+      </div>
+    </template>
+  </plugin-panel>
+  <category-edit v-model="state.editVisible" :initialValue="state.groupInitialValue"></category-edit>
+  <save-new-block :boxVisibility="boxVisibility" @close="close"></save-new-block>
 </template>
 
 <script lang="jsx">
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, provide } from 'vue'
 import {
   Search as TinySearch,
   Select as TinySelect,
@@ -217,8 +216,13 @@ export default {
     TinyButton,
     TinyIconSearch: IconSearch()
   },
-
-  setup() {
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['close'],
+  setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('block')
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
@@ -266,6 +270,14 @@ export default {
 
     const groupSelect = ref(null)
 
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
+
     watch(
       () => [getBlockList(), state.searchKey, state.publishFilterType],
       () => {
@@ -304,15 +316,15 @@ export default {
     }
     const close = () => {
       boxVisibility.value = false
+      emit('close')
+      closePanel()
     }
+
     const editBlock = async (block) => {
       const isEdit = true
 
       if (isSaved()) {
         await refreshBlockData(block)
-        useBlock().initBlock(block, {}, isEdit)
-        useLayout().closePlugin()
-        closePanel()
         getMetaApi(META_SERVICE.GlobalService).updateBlockId(block.id)
       } else {
         confirm({
@@ -320,8 +332,6 @@ export default {
           exec: async () => {
             await refreshBlockData(block)
             useBlock().initBlock(block, {}, isEdit)
-            useLayout().closePlugin()
-            closePanel()
           }
         })
       }
@@ -423,6 +433,7 @@ export default {
     }
 
     return {
+      PLUGIN_NAME,
       state,
       groupSelect,
       categoryList,
@@ -458,7 +469,7 @@ export default {
 }
 .app-manage-type {
   padding: 0 10px;
-  margin: 12px 0;
+  margin-bottom: 12px;
   display: flex;
   .search-select {
     flex: 1;

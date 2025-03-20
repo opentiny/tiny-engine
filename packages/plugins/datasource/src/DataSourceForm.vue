@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isOpen" title="设置数据源" class="data-source-form">
+  <plugin-setting
+    v-if="isOpen"
+    title="设置数据源"
+    class="data-source-form plugin-datasource"
+    :fixed-name="PLUGIN_NAME.Collections"
+    :align="align"
+  >
     <template #header>
       <button-group>
         <tiny-button class="field-save" type="primary" @click="save">保存</tiny-button>
@@ -27,7 +33,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
@@ -41,7 +47,14 @@ import {
   requestDeleteDataSource,
   requestGenerateDataSource
 } from './js/http'
-import { useModal, useDataSource, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useLayout,
+  useModal,
+  useDataSource,
+  useNotify,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
 const isOpen = ref(false)
@@ -83,6 +96,9 @@ export default {
     const state = reactive({
       dataSource: {}
     })
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     watch(
       () => state.dataSource.name,
@@ -131,7 +147,8 @@ export default {
 
         dataSourceState.dataSourceColumn = { name, type: type || 'array', columns: filterColumns }
         dataSourceState.dataSourceColumnCopies = extend(true, {}, dataSourceState.dataSourceColumn)
-      }
+      },
+      { immediate: true }
     )
 
     const closeAllPanel = () => {
@@ -240,6 +257,8 @@ export default {
     }
 
     return {
+      align,
+      PLUGIN_NAME,
       state,
       isOpen,
       save,

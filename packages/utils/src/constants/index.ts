@@ -97,7 +97,9 @@ export const BROADCAST_CHANNEL = {
   CanvasRouterViewSetting: `tiny-lowcode-canvas-router-view-setting-${CHANNEL_UID}`
 }
 
-export const STORAGE_KEY_FIXED_PANELS = `tiny-engine-fixed-panels-${CHANNEL_UID}`
+export const STORAGE_KEY_LEFT_FIXED_PANELS = `tiny-engine-left-fixed-panels`
+export const STORAGE_KEY_RIGHT_FIXED_PANELS = `tiny-engine-right-fixed-panels`
+
 export const CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY = `tiny-engine-canvas-router-view-setting-view-mode`
 
 export const AUTO_SAVED = 'tiny-engine-auto-saved'
@@ -161,3 +163,6 @@ export const SORT_TYPE = {
   // 字母倒序
   alphabetDesc: 'alphabetDesc'
 }
+
+// 插件面板默认宽度
+export const PLUGIN_DEFAULT_WIDTH = 280

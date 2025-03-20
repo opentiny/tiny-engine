@@ -2,7 +2,7 @@ export default {
   id: 'engine.setting.event',
   title: '高级',
   type: 'setting',
-  align: 'left',
+  align: 'rightTop',
   name: 'event',
-  icon: ''
+  icon: 'target'
 }

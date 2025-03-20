@@ -1,7 +1,15 @@
+<!-- 左侧插件栏-->
 <template>
   <div id="tiny-engine-nav-panel" :style="{ 'pointer-events': pluginState.pluginEvent }">
-    <ul class="nav-panel-lists top">
-      <li
+    <vue-draggable-next
+      v-model="state.topNavLists"
+      filter="EditorHelp"
+      class="nav-panel-lists top"
+      id="leftTop"
+      group="plugins"
+      @end="onEnd"
+    >
+      <div
         v-for="(item, index) in state.topNavLists"
         :key="index"
         :class="{
@@ -12,8 +20,9 @@
         }"
         :title="item.title"
         @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftTop)"
       >
-        <div>
+        <div v-if="getPluginShown(item.id)">
           <span class="item-icon">
             <svg-icon
               v-if="typeof iconComponents[item.id] === 'string'"
@@ -23,65 +32,80 @@
             <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
           </span>
         </div>
-      </li>
-    </ul>
-    <ul class="nav-panel-lists bottom">
-      <li style="flex: 1" class="list-item"></li>
-      <li
-        v-for="(item, index) in state.bottomNavLists"
-        :key="index"
-        :class="[
-          'list-item',
-          { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
-        ]"
-        :title="item.title"
-        @click="clickMenu({ item, index })"
-      >
-        <div :class="{ 'is-show': renderPanel }">
-          <span class="item-icon">
-            <public-icon
-              v-if="typeof iconComponents[item.id] === 'string'"
-              :name="iconComponents[item.id]"
-              class="panel-icon"
-              svgClass="panel-svg"
-            ></public-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
-          </span>
-        </div>
-      </li>
-    </ul>
-  </div>
+      </div>
+    </vue-draggable-next>
 
-  <div
-    v-show="renderPanel && components[renderPanel]"
-    id="tiny-engine-left-panel"
-    :class="[renderPanel, { 'is-fixed': pluginState.fixedPanels.includes(renderPanel) }]"
-  >
-    <div class="left-panel-wrap">
-      <keep-alive>
-        <component
-          :is="components[renderPanel]"
-          ref="pluginRef"
-          :fixed-panels="pluginState.fixedPanels"
-          @close="close"
-          @fixPanel="fixPanel"
-        ></component>
-      </keep-alive>
+    <!-- 图标菜单下侧区域（附加icon） -->
+    <div class="nav-panel-lists bottom">
+      <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)" />
+      <vue-draggable-next id="leftBottom" v-model="state.bottomNavLists" group="plugins" @end="onEnd">
+        <div
+          v-for="(item, index) in state.bottomNavLists"
+          :key="index"
+          :class="[
+            'list-item',
+            { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
+          ]"
+          :title="item.title"
+          @click="clickMenu({ item, index })"
+          @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftBottom)"
+        >
+          <div :class="{ 'is-show': renderPanel }" v-if="getPluginShown(item.id)">
+            <span class="item-icon">
+              <public-icon
+                v-if="typeof iconComponents[item.id] === 'string'"
+                :name="iconComponents[item.id]"
+                class="panel-icon"
+                svgClass="panel-svg"
+              ></public-icon>
+              <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            </span>
+          </div>
+        </div>
+      </vue-draggable-next>
     </div>
   </div>
+
+  <div :class="{ 'not-selected': getMoveDragBarState() }">
+    <!-- 插件面板 -->
+    <div
+      v-show="renderPanel && components[renderPanel]"
+      id="tiny-engine-left-panel"
+      :class="[renderPanel, { 'is-fixed': leftFixedPanelsStorage.includes(renderPanel) }]"
+    >
+      <div class="left-panel-wrap">
+        <keep-alive>
+          <component
+            ref="pluginRef"
+            :is="currentComponent"
+            :fixed-panels="leftFixedPanelsStorage"
+            @close="close"
+            @fixPanel="fixPanel"
+          ></component>
+        </keep-alive>
+      </div>
+    </div>
+  </div>
+
+  <plugin-right-menu
+    ref="rightMenu"
+    :list="[...state.topNavLists, ...state.bottomNavLists]"
+    :align="left"
+    @switchAlign="switchAlign"
+  />
 </template>
 
 <script lang="ts">
-import { reactive, ref, watch } from 'vue'
+import { reactive, ref, watch, computed } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
-import { useLayout, usePage, useModal, META_APP } from '@opentiny/tiny-engine-meta-register'
-import { PublicIcon } from '@opentiny/tiny-engine-common'
-import { constants } from '@opentiny/tiny-engine-utils'
-
-const { STORAGE_KEY_FIXED_PANELS } = constants
+import { VueDraggableNext } from 'vue-draggable-next'
+import { useLayout, usePage, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { PublicIcon, PluginRightMenu } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
+    PluginRightMenu,
+    VueDraggableNext,
     TinyPopover: Popover,
     TinyTooltip: Tooltip,
     PublicIcon
@@ -93,6 +117,10 @@ export default {
     plugins: {
       type: Array,
       default: () => []
+    },
+    pluginList: {
+      type: Array,
+      default: () => []
     }
   },
   emits: ['click', 'node-click'],
@@ -101,18 +129,56 @@ export default {
     const iconComponents: any = {}
     const pluginRef = ref<any>(null)
     const { isTemporaryPage } = usePage()
-    const { message } = useModal()
     const pluginState = useLayout().getPluginState()
 
-    props.plugins.forEach(({ id, entry, icon }) => {
+    const {
+      changeLeftFixedPanels,
+      leftFixedPanelsStorage,
+      getPluginById,
+      getPluginShown,
+      PLUGIN_POSITION,
+      getMoveDragBarState,
+      isSameSide,
+      dragPluginLayout,
+      getPluginsByPosition
+    } = useLayout()
+
+    const rightMenu = ref(null)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
+
+    const state = reactive({
+      prevIdex: -2,
+      topNavLists: getPluginsByPosition(PLUGIN_POSITION.leftTop, props.pluginList),
+      bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
+    })
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(props.pluginList, pluginId)
+      const existingItemIndex = state.topNavLists.findIndex((plugin) => plugin.id === item.id)
+
+      if (existingItemIndex !== -1) {
+        state.topNavLists.splice(existingItemIndex, 1)
+      }
+
+      state.topNavLists.unshift(item)
+    }
+
+    props.pluginList.forEach(({ id, entry, icon }) => {
       components[id] = entry
       iconComponents[id] = icon
     })
 
-    const state = reactive({
-      prevIdex: -2,
-      topNavLists: props.plugins.filter((item) => item.align === 'top'),
-      bottomNavLists: props.plugins.filter((item) => item.align === 'bottom')
+    const currentComponent = computed(() => {
+      const isExistedComponent = [...state.topNavLists, ...state.bottomNavLists].some(
+        (item) => item.id === props.renderPanel
+      )
+      return isExistedComponent ? components[props.renderPanel] : null
     })
 
     const clickMenu = ({ item, index }) => {
@@ -127,14 +193,14 @@ export default {
           result &&
           emit('click', {
             item,
-            navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+            navLists: item.align === 'leftTop' ? state.topNavLists[index] : state.bottomNavLists[index]
           })
 
         pluginRef.value?.[lastPlugin.confirm](confirmCallback)
       } else {
         emit('click', {
           item,
-          navLists: item.align === 'top' ? state.topNavLists[index] : state.bottomNavLists[index]
+          navLists: item.align === 'leftTop' ? state.topNavLists[index] : state.bottomNavLists[index]
         })
       }
     }
@@ -154,35 +220,43 @@ export default {
       useLayout().closePlugin(true)
     }
 
+    /**
+     * @param index 组件索引
+     * @param id 组件 ID, 类似于 'engine.plugins.*'
+     * @param from 组件来源
+     */
+    const switchAlign = (index, id, from) => {
+      if (from === PLUGIN_POSITION.leftTop) {
+        state.topNavLists.splice(index, 1)
+      } else {
+        state.bottomNavLists.splice(index, 1)
+      }
+      emit('changeLeftAlign', id)
+
+      if (!isSameSide(index, 0)) close()
+      dragPluginLayout(from, PLUGIN_POSITION.rightTop, index, 0)
+    }
+
     const fixPanel = (pluginName) => {
-      pluginState.fixedPanels = pluginState.fixedPanels?.includes(pluginName)
-        ? pluginState.fixedPanels?.filter((item) => item !== pluginName)
-        : [...pluginState.fixedPanels, pluginName]
-
-      try {
-        localStorage.setItem(STORAGE_KEY_FIXED_PANELS, JSON.stringify(pluginState.fixedPanels))
-      } catch (error) {
-        message({ message: `'存储固定面板数据失败:'${error}`, status: 'error' })
-      }
+      changeLeftFixedPanels(pluginName)
     }
 
-    const restoreFixedPanels = () => {
-      try {
-        const storedPanels = localStorage.getItem(STORAGE_KEY_FIXED_PANELS)
-        pluginState.fixedPanels = storedPanels ? JSON.parse(storedPanels) : []
-
-        if (!Array.isArray(pluginState.fixedPanels)) {
-          pluginState.fixedPanels = []
-        }
-      } catch (error) {
-        message({ message: `'读取固定面板数据失败:'${error}`, status: 'error' })
-        pluginState.fixedPanels = []
-      }
+    //监听拖拽结束事件
+    const onEnd = (e) => {
+      if (!isSameSide(e.from.id, e.to.id)) close()
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
     }
-
-    restoreFixedPanels()
 
     return {
+      leftFixedPanelsStorage,
+      currentComponent,
+      changeAlign,
+      rightMenu,
+      PLUGIN_POSITION,
+      showContextMenu,
+      switchAlign,
+      getPluginShown,
+      onEnd,
       state,
       clickMenu,
       pluginRef,
@@ -190,6 +264,7 @@ export default {
       fixPanel,
       pluginState,
       components,
+      getMoveDragBarState,
       iconComponents
     }
   }
@@ -198,7 +273,7 @@ export default {
 
 <style lang="less" scoped>
 #tiny-engine-left-panel {
-  width: var(--base-left-panel-width);
+  width: auto !important;
   height: calc(100vh - var(--base-top-panel-height));
   border-right: 1px solid var(--te-layout-common-border-color);
   background: var(--te-layout-common-bg-color);
@@ -208,10 +283,6 @@ export default {
   top: var(--base-top-panel-height);
   left: var(--base-nav-panel-width);
   z-index: 999;
-
-  &[class~='engine.plugins.i18n'] {
-    width: auto;
-  }
 
   &.is-fixed {
     position: relative;
@@ -323,5 +394,10 @@ export default {
 
 :deep(.svg-icon.icon-plugin-icon-plugin-help) {
   font-size: 18px;
+}
+
+.not-selected {
+  pointer-events: none;
+  user-select: none;
 }
 </style>
