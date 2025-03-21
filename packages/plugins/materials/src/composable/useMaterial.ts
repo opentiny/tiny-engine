@@ -60,26 +60,6 @@ const getSnippet = (component) => {
   return schema
 }
 
-const generateNode = ({ type, component }) => {
-  const snippet = getSnippet(component) || {}
-
-  const schema = {
-    componentName: component,
-    ...snippet,
-    props: {
-      ...snippet.props,
-      className: getOptions(meta.id).useBaseStyle ? getOptions(meta.id).componentBaseStyle.className : ''
-    }
-  }
-
-  if (type === 'block') {
-    schema.componentType = 'Block'
-    schema.props.className = getOptions(meta.id).useBaseStyle ? getOptions(meta.id).blockBaseStyle.className : ''
-  }
-
-  return schema
-}
-
 /**
  * 获取物料组件的配置信息
  * @returns
@@ -483,7 +463,28 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
     })
   }
 }
+const generateNode = ({ type, component }) => {
+  const snippet = getSnippet(component) || {}
+  const material = getMaterial(component)
+  // 判断是否要加基础样式
+  const notUseBaseStyle = material.configure?.notUseBaseStyle
+  const useBaseStyle = getOptions(meta.id).useBaseStyle && !notUseBaseStyle
+  const schema = {
+    componentName: component,
+    ...snippet,
+    props: {
+      ...snippet.props,
+      className: useBaseStyle ? getOptions(meta.id).componentBaseStyle.className : ''
+    }
+  }
 
+  if (type === 'block') {
+    schema.componentType = 'Block'
+    schema.props.className = getOptions(meta.id).useBaseStyle ? getOptions(meta.id).blockBaseStyle.className : ''
+  }
+
+  return schema
+}
 /**
  * 根据组名获取指定分组组件
  * @param {Array} components 所有组件
