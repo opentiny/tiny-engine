@@ -31,8 +31,8 @@ export default {
 .mask-modal {
   position: fixed;
   top: 0;
-  left: calc(100% - var(--base-right-panel-width));
-  width: calc(var(--base-right-panel-width) - 40px);
+  left: calc(100% - var(--base-right-panel-width) - var(--base-nav-panel-width));
+  width: var(--base-right-panel-width);
   height: 100%;
   background-color: var(--te-component-mask-modal-bg-color);
   transition: background-color, 0.2s, ease-in-out;
