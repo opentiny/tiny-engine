@@ -54,8 +54,8 @@ export { default as Pane } from './Pane.vue'
 export { default as I18nInput } from './I18nInput.vue'
 export { default as CanvasDragItem } from './CanvasDragItem.vue'
 export { default as ToolbarBase } from './ToolbarBase.vue'
-export { default as Modal } from './Modal.jsx'
-export { default as Notify } from './Notify.jsx'
+export { default as Modal } from './Modal'
+export { default as Notify } from './Notify'
 export { ConfigGroup, ConfigItem }
 
 export const injectGlobalComponents = {
