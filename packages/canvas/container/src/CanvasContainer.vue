@@ -30,13 +30,19 @@
   <canvas-menu @insert="insertComponent"></canvas-menu>
   <!-- 快捷选择物料面板 -->
   <div v-if="insertPosition" ref="insertPanel" class="insert-panel">
-    <component :is="materialsPanel" :shortcut="insertPosition" @close="insertPosition = false"></component>
+    <component
+      :is="materialsPanel"
+      class="component-wrap"
+      :shortcut="insertPosition"
+      @close="insertPosition = false"
+    ></component>
   </div>
   <!-- 【添加父级容器】快捷选择物料面板 -->
   <div v-if="insertContainer" ref="containerPanel" class="insert-panel">
     <component
       :is="materialsPanel"
       :shortcut="insertContainer"
+      class="component-wrap"
       groupName="layout"
       @close="insertContainer = false"
     ></component>
@@ -352,7 +358,11 @@ export default {
   position: fixed;
   top: 200px;
   left: 400px;
-  width: 480px;
+
+  .component-wrap {
+    width: 480px !important;
+  }
+
   :deep(.components-wrap) {
     & > .tiny-collapse {
       max-height: 300px;

@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { inject, onMounted, reactive, ref } from 'vue'
+import { inject, onMounted, reactive, ref, watchEffect } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty, CanvasDragItem } from '@opentiny/tiny-engine-common'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
@@ -99,8 +99,12 @@ export default {
 
     const state = reactive({
       components: initComponents(),
-      activeName: [...Array(components.length).keys()],
+      activeName: [],
       searchValue: ''
+    })
+
+    watchEffect(() => {
+      state.activeName = [...Array(components.length).keys()]
     })
 
     const change = (value) => {

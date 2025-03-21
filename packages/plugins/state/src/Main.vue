@@ -146,7 +146,7 @@ export default {
     const { PLUGIN_NAME, getPluginWidth, getPluginByLayout } = useLayout()
 
     const firstPanelOffset = computed(() => {
-      return getPluginWidth(PLUGIN_NAME.State)
+      return getPluginWidth(PLUGIN_NAME.State) + 1
     })
 
     const alignStyle = computed(() => {

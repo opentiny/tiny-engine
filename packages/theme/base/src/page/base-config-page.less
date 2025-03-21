@@ -38,7 +38,7 @@ body {
   --base-top-panel-height: 40px;
   --base-top-panel-breadcrumb-line-height: 28px;
   --base-bottom-panel-height: 30px;
-  --base-nav-panel-width: 40px;
+  --base-nav-panel-width: 40px; // 插件导航栏宽度
   --base-collection-panel-width: calc(
     (99vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px)) / 2
   );
@@ -253,7 +253,7 @@ td {
   }
   &.fixed-left.fixed-left {
     top: var(--base-top-panel-height) !important;
-    transform: translateX(calc(4px - var(--base-right-panel-width)));
+    transform: translateX(calc(4px - var(--base-right-panel-width) - var(--base-nav-panel-width)));
     height: calc(100% - var(--base-top-panel-height));
   }
 }
