@@ -23,6 +23,7 @@ import { computed, watchEffect, ref, reactive, provide } from 'vue'
 import { ConfigRender, BlockDescription, BlockLinkField, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useProperty, useLayout } from '@opentiny/tiny-engine-meta-register'
 import Empty from './components/Empty.vue'
+import useStyle from '../../styles/src/js/useStyle'
 
 export default {
   components: {
@@ -43,6 +44,8 @@ export default {
       emitEvent: emit
     })
     provide('panelState', panelState)
+
+    useStyle()
 
     const isBlock = computed(() => pageState.isBlock)
 
