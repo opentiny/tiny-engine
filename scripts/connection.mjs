@@ -95,6 +95,97 @@ class MysqlConnection {
   }
 
   /**
+   * 标准化JSON对象或字符串
+   * @param {any} value 要标准化的值
+   * @returns {object} 标准化后的对象
+   */
+  normalizeJsonValue(value) {
+    // 如果值是对象，直接返回
+    if (typeof value === 'object' && value !== null) {
+      return value
+    }
+
+    // 如果值是字符串，尝试解析为JSON
+    if (typeof value === 'string') {
+      try {
+        // 先尝试直接解析
+        const parsed = JSON.parse(value)
+
+        // 如果解析结果仍然是字符串，且看起来像JSON，再次尝试解析
+        if (typeof parsed === 'string' && parsed.startsWith('{') && parsed.endsWith('}')) {
+          try {
+            return JSON.parse(parsed)
+          } catch (e) {
+            // 如果再次解析失败，返回第一次解析的结果
+            return parsed
+          }
+        }
+
+        return parsed
+      } catch (e) {
+        // 如果解析失败，返回原始字符串
+        return value
+      }
+    }
+
+    // 其他类型直接返回
+    return value
+  }
+
+  /**
+   * 比较组件数据是否有差异
+   * @param {object} newComponent 新的组件数据
+   * @param {object} existingComponent 数据库中已存在的组件数据
+   * @returns {boolean} 是否有差异需要更新
+   */
+  isComponentDifferent(newComponent, existingComponent) {
+    // 需要比较的字段列表
+    const fieldsToCompare = ['name', 'icon', 'npm', 'group', 'category', 'snippets', 'schema', 'configure']
+
+    // 检查每个字段是否有差异
+    for (const field of fieldsToCompare) {
+      if (!newComponent[field] && !existingComponent[this.fieldTransform(field)]) {
+        // 两者都为空或未定义，视为相同
+        continue
+      }
+
+      const dbField = this.fieldTransform(field)
+      const newValue = newComponent[field]
+      const dbValue = existingComponent[dbField]
+
+      // 对于对象类型的字段，需要标准化后比较
+      if (typeof newValue === 'object' && newValue !== null) {
+        // 标准化两个值，确保它们在相同的格式下进行比较
+        const normalizedNewValue = this.normalizeJsonValue(newValue)
+        const normalizedDbValue = this.normalizeJsonValue(dbValue)
+
+        // 将两个对象序列化为JSON字符串进行比较
+        const newValueStr = JSON.stringify(normalizedNewValue)
+        const dbValueStr = JSON.stringify(normalizedDbValue)
+
+        if (newValueStr !== dbValueStr) {
+          return true
+        }
+      } else {
+        // 对于基本类型，直接比较
+        const dbField = this.fieldTransform(field)
+        const newValue = String(newComponent[field])
+        const dbValue = String(existingComponent[dbField])
+
+        if (newValue !== dbValue) {
+          console.log(`${newComponent.component}字段 ${field} 需要更新: 
+            新值: ${newValue} 
+            旧值: ${dbValue}`)
+          return true
+        }
+      }
+    }
+
+    // 所有字段都相同，不需要更新
+    return false
+  }
+
+  /**
    * 校验组件数据是否有效
    * @param {object} component 组件数据
    * @returns boolean 校验组件字段是否失败，false-有字段出错
@@ -104,8 +195,7 @@ class MysqlConnection {
 
     return Object.entries(component).every(([key, value]) => {
       if (longTextFields.includes(key) && value !== null && typeof value !== 'object') {
-        logger.error(`the value of "${key}" is not valid JSON at ${file}.`)
-
+        logger.error(`the value of "${key}" is not valid JSON at ${file || 'unknown file'}.`)
         return false
       }
 
@@ -365,6 +455,13 @@ class MysqlConnection {
       .then((result) => {
         if (!result.length) {
           this.insertComponent(component)
+        } else {
+          // component 与 result 比较，如果不一致，更新组件
+          const existingComponent = result[0]
+          const needUpdate = this.isComponentDifferent(component, existingComponent)
+          if (needUpdate) {
+            this.updateComponent(component)
+          }
         }
       })
       .catch((error) => {

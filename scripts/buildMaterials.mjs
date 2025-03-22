@@ -17,6 +17,9 @@ const appSchemaPath = path.join(process.cwd(), 'mockServer/src/mock/get/app-cent
 const appInfo = fsExtra.readJSONSync(appInfoPath)
 const appSchema = fsExtra.readJSONSync(appSchemaPath)
 
+// 从materials目录下的packages.json读取物料包配置
+const materialInfo = fsExtra.readJSONSync(path.join(process.cwd(), materialsDir, 'packages.json'))
+
 const connection = new MysqlConnection()
 
 /**
@@ -112,6 +115,17 @@ const generateComponents = () => {
           logger.error(`incorrect file format at ${fileFullPath}.`)
 
           return
+        }
+
+        const materialPackageInfo = material.npm
+
+        if (materialPackageInfo?.package) {
+          const latestPackageInfo = materialInfo.packages.find((item) => item.package === materialPackageInfo.package)
+
+          if (latestPackageInfo) {
+            const { name: _name, ...rest } = latestPackageInfo
+            material.npm = Object.assign(material.npm, rest)
+          }
         }
 
         if (file.includes('/blocks/')) {
