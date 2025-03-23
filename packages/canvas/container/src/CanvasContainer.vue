@@ -134,6 +134,12 @@ export default {
       if (element) {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
+        // 如果是点击右键则打开右键菜单
+        if (event.button === 2) {
+          openMenu(event)
+          return
+        }
+
         if (!currentElement?.contains(element) || event.button === 0) {
           const isCtrlKey = event.ctrlKey || event.metaKey
           const loopId = element.getAttribute(NODE_LOOP)
@@ -148,11 +154,6 @@ export default {
           const { x, y } = element.getBoundingClientRect()
 
           dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
-        }
-
-        // 如果是点击右键则打开右键菜单
-        if (event.button === 2) {
-          openMenu(event)
         }
       }
     }
