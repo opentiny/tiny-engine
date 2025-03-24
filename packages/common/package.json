@@ -52,7 +52,8 @@
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "glob": "^10.3.4",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-static-copy": "^1.0.6"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",

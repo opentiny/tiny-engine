@@ -26,9 +26,11 @@ export const copyLocalImportMap = ({
       }
       return getCdnPathNpmInfoForSingleFile(libPath, originCdnPrefix, base, dir, false, bundleTempDir)
     })
+    .filter(Boolean)
   const styleFiles = styleUrls
     .filter((styleUrl) => styleUrl.startsWith(originCdnPrefix))
     .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false), bundleTempDir)
+    .filter(Boolean)
 
   const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(
     importMapFiles.concat(styleFiles)

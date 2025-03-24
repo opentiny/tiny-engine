@@ -78,7 +78,7 @@ export default {
           return
         }
 
-        const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion, deps)
+        const { importMap, importStyles } = getImportMapData(deps)
 
         canvasSrcDoc.value = initCanvas(importMap, importStyles).html
       }

@@ -78,7 +78,8 @@
             { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },
             { "title": "区块局域网发布方案(Node.js服务端)", "name": "block-lan-release-solution.md" },
             { "title": "设计器中引入第三方组件库", "name": "third-party-library-in-designer.md" },
-            { "title": "物料同步方案", "name": "material-sync-solution.md" }
+            { "title": "物料同步方案", "name": "material-sync-solution.md" },
+            { "title": "本地化CDN方案", "name": "local-cdn.md" }
           ]
         },
         {

@@ -31,6 +31,7 @@
     "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.38.0",
     "eslint-plugin-vue": "^8.0.0",
+    "fast-glob": "^3.3.2",
     "fs-extra": "^10.1.0",
     "husky": "^8.0.0",
     "lerna": "^7.2.0",

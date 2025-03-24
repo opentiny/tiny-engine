@@ -48,9 +48,30 @@ export function getCdnPathNpmInfoForSingleFile(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-  const { packageName, versionDemand, filePathInPackage } = url.match(
-    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-  ).groups
+
+  // 分别匹配 unpkg 和 npmmirror 格式
+  let unpkgMatch = null
+  let npmmirrorMatch = null
+
+  try {
+    unpkgMatch = url.match(
+      new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
+    )
+    npmmirrorMatch = url.match(
+      new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)/(?<versionDemand>[^/]+)/files(?<filePathInPackage>.*?)$`)
+    )
+  } catch (error) {
+    // ignore
+  }
+
+  // 使用匹配到的结果
+  const match = npmmirrorMatch || unpkgMatch
+
+  if (!match) {
+    return null
+  }
+
+  const { packageName, versionDemand, filePathInPackage } = match.groups
   let version = versionDemand
   let isFolder = filePathInPackage.endsWith('/')
   let src = replaceTailSlash(`node_modules/${packageName}${filePathInPackage}`)
@@ -111,9 +132,22 @@ export function getCdnPathNpmInfoForPackage(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-  const { packageName, versionDemand, filePathInPackage } = url.match(
+
+  // 分别匹配 unpkg 和 npmmirror 格式
+  const unpkgMatch = url.match(
     new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-  ).groups
+  )
+  const npmmirrorMatch = url.match(
+    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)/(?<versionDemand>[^/]+)/files(?<filePathInPackage>.*?)$`)
+  )
+
+  // 使用匹配到的结果
+  const match = npmmirrorMatch || unpkgMatch
+  if (!match) {
+    return null
+  }
+
+  const { packageName, versionDemand, filePathInPackage } = match.groups
   let version = versionDemand
   let src = `node_modules/${packageName}`
   const sourceExist = fs.existsSync(path.resolve(src))

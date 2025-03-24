@@ -116,7 +116,8 @@
     "less": "^4.1.2",
     "lint-staged": "^13.2.0",
     "rollup-plugin-polyfill-node": "^0.13.0",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-static-copy": "^1.0.6"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",
