@@ -22,7 +22,7 @@ import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { getImportMap as getInitImportMap } from './importMap'
 import srcFiles from './srcFiles'
 import generateMetaFiles, { processAppJsCode } from './generate'
-import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
+import { getSearchParams, fetchMetaData, fetchAppSchema, fetchBlockSchema } from './http'
 import { PanelType, PreviewTips } from '../constant'
 import { injectDebugSwitch } from './debugSwitch'
 import '@vue/repl/style.css'
@@ -65,15 +65,6 @@ export default {
     document.documentElement?.setAttribute?.('data-theme', queryParams.theme || 'light')
 
     const getImportMap = async () => {
-      if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
-        const mapJSON = await fetchImportMap()
-        return {
-          imports: {
-            ...mapJSON.imports,
-            ...getSearchParams().scripts
-          }
-        }
-      }
       return getInitImportMap()
     }
 

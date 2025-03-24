@@ -13,29 +13,30 @@ import {
 const { readJsonSync } = fs
 
 export function extraBundleCdnLink(filename, originCdnPrefix) {
-  const result = []
+  const result = new Set()
   const bundle = readJsonSync(filename)
-  bundle.data?.materials?.components?.forEach((component) => {
-    if (component.npm) {
-      const possibleUrl = [component.npm.script, component.npm.css]
+  bundle.data?.materials?.packages?.forEach((packageItem) => {
+    if (packageItem) {
+      const possibleUrl = [packageItem.script, packageItem.css]
       possibleUrl.forEach((url) => {
-        if (url?.startsWith(originCdnPrefix) && !result.includes(url)) {
-          result.push(url)
+        if (url?.startsWith(originCdnPrefix)) {
+          result.add(url)
         }
       })
     }
   })
-  return result
+
+  return [...result]
 }
 
 export function replaceBundleCdnLink(bundle, fileMap) {
-  bundle.data?.materials?.components?.forEach((component) => {
-    if (component.npm) {
+  bundle.data?.materials?.packages?.forEach((packageItem) => {
+    if (packageItem) {
       const possibleUrl = ['script', 'css']
       possibleUrl.forEach((key) => {
-        const matchRule = fileMap.find((rule) => component.npm[key] === rule.originUrl)
+        const matchRule = fileMap.find((rule) => packageItem[key] === rule.originUrl)
         if (matchRule) {
-          component.npm[key] = matchRule.newUrl
+          packageItem[key] = matchRule.newUrl
         }
       })
     }
@@ -50,9 +51,10 @@ export function copyBundleDeps({
   dir = 'material-static',
   bundleTempDir = 'bundle-deps/material-static'
 }) {
-  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) =>
-    getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
-  )
+  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix)
+    .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir))
+    .filter(Boolean)
+
   const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(cdnFiles)
 
   const plugin = (isDev) => {

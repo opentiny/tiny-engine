@@ -12,7 +12,7 @@
 
 import { useEnv } from '@opentiny/tiny-engine-meta-register'
 import { getSearchParams } from './http'
-import importMapJSON from './importMap.json'
+import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap/index'
 
 const importMap = {}
 

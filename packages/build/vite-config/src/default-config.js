@@ -10,7 +10,7 @@ import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './localCdnFile/index.js'
+import { getBaseUrlFromCli, copyBundleDeps, localCdnPlugin } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
@@ -160,21 +160,25 @@ export function useTinyEngineBaseConfig(engineConfig) {
           originCdnPrefix: VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           base: getBaseUrlFromCli(config.base)
         }).plugin(command === 'serve')
-      : [],
-    isLocalImportMap
-      ? copyPreviewImportMap({
-          // FIXME: 相对路径需要修正
-          importMapJson: './src/preview/src/preview/importMap.json',
-          targetImportMapJson: 'preview-import-map-static/preview-importmap.json',
-          originCdnPrefix: VITE_CDN_DOMAIN,
-          base: getBaseUrlFromCli(config.base),
-          packageCopyLib: [
-            // 以下的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
-            '@vue/devtools-api'
-          ]
-        })
       : []
   )
+
+  // 添加本地化CDN插件支持
+  if (isLocalImportMap) {
+    const logger = console
+    logger.log('[local-cdn-plugin]: Initializing local CDN plugin')
+
+    const cdnPlugins = localCdnPlugin({
+      importMapConfig: engineConfig.importMapConfig,
+      base: getBaseUrlFromCli(config.base),
+      cdnDir: 'local-cdn-static',
+      copyConfig: engineConfig.copyConfig
+    })
+
+    if (cdnPlugins && cdnPlugins.length > 0) {
+      config.plugins.push(...cdnPlugins)
+    }
+  }
 
   config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
 

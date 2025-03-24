@@ -1,0 +1,204 @@
+# 本地化CDN方案
+
+## 概述
+
+本地化CDN是一种在生产环境中将远程CDN资源替换为本地文件的解决方案。它解决了以下问题：
+
+1. 减少对外部CDN的依赖，提高应用的可靠性
+2. 在离线环境或内网环境中使用CDN资源
+3. 加快资源加载速度，提升应用性能
+
+## 使用方法
+
+### 修改环境变量使用本地化CDN
+
+要启用本地化CDN功能，请按照以下步骤操作：
+
+1. 修改环境变量
+
+```bash
+# .env.alpha、.env.production、.env.development
+
+# 将画布、页面预览需要的 CDN 资源进行本地化。
+VITE_LOCAL_IMPORT_MAPS=true
+
+# 将物料需要的CDN 资源进行本地化。注意⚠️：这里需要您的物料package需要能够通过 npm 的方式进行下载，否则会失效。
+VITE_LOCAL_BUNDLE_DEPS=true
+```
+
+2. 【可选】 在 `vite.config.js` 中传入自定义配置
+
+```javascript
+const baseConfig = useTinyEngineBaseConfig({
+  importMapConfig: { imports: { ... } },
+  copyConfig: { ... }
+  // ...otherConfig
+})
+```
+
+### 配置选项
+
+CDN 本地化接受以下配置选项：
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| importMapConfig | Object | `{ imports: {} }` | 导入映射配置，定义需要本地化的CDN依赖 |
+| copyConfig | Object | `{}` | 自定义复制配置，可以覆盖特定包的默认配置 |
+
+#### importMapConfig 详细说明
+
+`importMapConfig` 是一个包含 `imports` 属性的对象，它定义了需要本地化的CDN依赖。在插件内部，它会与默认的导入映射配置合并。
+
+import-map.json 的格式示例：
+```json
+{
+  "imports": {
+    "vue": "${VITE_CDN_DOMAIN}/vue${versionDelimiter}3.2.37${fileDelimiter}/dist/vue.global.prod.js",
+    "vue-router": "${VITE_CDN_DOMAIN}/vue-router${versionDelimiter}4.1.5${fileDelimiter}/dist/vue-router.global.js",
+    "pinia": "${VITE_CDN_DOMAIN}/pinia${versionDelimiter}2.0.23${fileDelimiter}/dist/pinia.iife.prod.js"
+  }
+}
+```
+
+URL格式说明：
+- `${VITE_CDN_DOMAIN}` - CDN域名占位符，将被替换为本地路径
+- `${versionDelimiter}` - 版本分隔符，用于分隔包名和版本
+- `${fileDelimiter}` - 文件路径分隔符，用于分隔版本和文件路径
+
+插件将解析这些URL，提取包名、版本和文件路径，然后在构建时将它们替换为本地路径。
+
+**重要说明**：如果您在 Vite 配置中传递了 `importMapConfig`，还需要在 registry 注册表的 config 中传入同样的配置，以确保应用在运行时能正确读取自定义的 importMap 配置。例如：
+
+```javascript
+// 在注册表配置中
+{
+  config: {
+    id: 'engine.config',
+    importMap: importMapConfig,
+    // ... 其他配置
+  }
+}
+```
+
+这是因为画布和页面预览默认会从注册表 `getMergeMeta('engine.config')?.importMap` 中读取自定义的映射配置，如果获取失败，则会读取默认的映射。
+
+#### copyConfig 详细说明
+
+`copyConfig` 是一个可选的配置对象，用于覆盖特定包的默认复制配置。它的结构是一个对象，键是包名，值是该包的复制配置。
+
+默认配置如下：
+```javascript
+{
+  '@opentiny/vue-theme': {
+    filePathInPackage: '/'
+  },
+  '@opentiny/vue-renderless': {
+    filePathInPackage: '/'
+  },
+  '@opentiny/vue-runtime': {
+    filePathInPackage: '/dist3/'
+  },
+  '@vue/devtools-api': {
+    filePathInPackage: '/'
+  }
+}
+```
+
+每个包的配置支持以下选项：
+- `filePathInPackage`: 指定要复制的包内路径，如果想要复制整个 package，则配置为 '/'
+- `version`: (可选) 覆盖包的版本号（注意：实际请求的 url 路径的版本号不会变，只是实际下载的版本号变了）
+
+例如，自定义配置：
+```javascript
+{
+  'vue': {
+    filePathInPackage: '/dist/'
+  },
+  'element-plus': {
+    filePathInPackage: '/dist/index.css',
+    version: '2.2.0'
+  }
+}
+```
+
+### 处理bundle文件中的CDN链接
+
+如果需要处理bundle文件中的CDN链接，可以在 env 文件中配置 `VITE_LOCAL_BUNDLE_DEPS=true`：
+
+注意⚠️：物料文件 bundle.json 中 packages 数组中，只有前缀与 env 文件配置的 `VITE_CDN_DOMAIN` 一致，才会被复制打包并改写 bundle.json。
+
+比如有如下物料配置和 .env 配置
+
+`bundle.json`:
+```json
+{
+  "packages": [
+    {
+      "name": "TinyVue组件库",
+      "package": "@opentiny/vue",
+      "version": "3.20.0",
+      "destructuring": true,
+      "script": "https://npmmirror.com/@opentiny/vue-runtime/~3.20/files/dist3/tiny-vue-pc.mjs",
+      "css": "https://npmmirror.com/@opentiny/vue-theme/~3.20/files/index.css"
+    },
+    {
+      "name": "element-plus组件库",
+      "package": "element-plus",
+      "version": "2.4.2",
+      "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
+      "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css"
+    }
+  ]
+}
+```
+
+`.env.alpha`:
+
+```bash
+VITE_CDN_DOMAIN=https://unpkg.com
+```
+
+此时，只有前缀匹配的 `element-plus` 才会被解析并复制 npm 内容。而 `@opentiny/vue-runtime` 则不会被复制
+
+
+## 实现原理
+
+本地化CDN的实现原理可以分为以下几个核心步骤：
+
+### 1. 分析导入映射并收集依赖
+
+`localCdnPlugin`会分析提供的`importMapConfig`和默认的导入映射，识别所有需要本地化的CDN依赖。这个过程包括：
+
+- 解析CDN URL获取包名、版本和文件路径
+- 合并用户配置和默认配置
+- 生成文件复制任务列表
+
+### 2. 判断和安装依赖包
+
+插件会检查所需的依赖包是否已在本地存在，对于不存在或版本不匹配的包，会通过`installPackageTemporary`函数临时安装到指定目录。
+
+### 3. 替换环境变量
+
+通过创建`createEnvReplacementPlugin`插件，将环境变量中的CDN域名替换为本地路径，确保应用在构建时使用本地资源而不是远程CDN。
+
+### 4. 复制并转换文件
+
+对于已识别的CDN依赖，插件会：
+
+- 复制所需文件到目标CDN目录
+- 对JavaScript文件进行路径替换转换 (比如： `import push from './push'` 需要改成 `import push from './push.js'`)
+- 保持目录结构与原始CDN一致
+
+### 5. 处理Bundle文件
+
+`copyBundleDeps`功能专门处理bundle文件中的CDN链接：
+
+- 提取bundle文件中的CDN链接
+- 替换为本地路径
+- 生成新的bundle文件
+
+## 注意事项
+
+1. 确保所有需要本地化的CDN依赖在package.json中有相应的版本定义
+2. 本地化CDN会增加构建输出的大小，但会提高应用的可靠性和性能
+3. 某些特定格式的CDN URL可能需要在`copyConfig`中进行特别配置 
