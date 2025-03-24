@@ -8,6 +8,6 @@ let designMode = DESIGN_MODE.DESIGN
 
 export const getDesignMode = () => designMode
 
-export const setDesignMode = (mode) => {
+export const setDesignMode = (mode: string) => {
   designMode = mode
 }

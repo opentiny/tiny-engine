@@ -7,7 +7,7 @@ const durationMap = {
   error: 10000
 }
 
-interface NotifyOptions {
+export interface NotifyOptions {
   [key: string]: any
   customClass: string
   title: string
