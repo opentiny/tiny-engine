@@ -145,6 +145,8 @@ export default {
 
     // 计算上下文菜单位置，右键时显示，否则关闭
 
+    const { PLUGIN_NAME, activeSetting } = useLayout()
+
     const operations = {
       del() {
         removeNodeById(getCurrent().schema?.id)
@@ -153,10 +155,10 @@ export default {
         copyNode(getCurrent().schema?.id)
       },
       config() {
-        useLayout().activeSetting('props')
+        activeSetting(PLUGIN_NAME.Props)
       },
       bindEvent() {
-        useLayout().activeSetting('event')
+        activeSetting(PLUGIN_NAME.Event)
       },
       insert({ value }) {
         emit('insert', value)
