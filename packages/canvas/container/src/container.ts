@@ -291,7 +291,7 @@ const insertAfter = ({ parent, node, data }: InsertOptions) => {
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: 'after',
     referTargetNodeId: node.id
@@ -305,7 +305,7 @@ const insertBefore = ({ parent, node, data }: InsertOptions) => {
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: 'before',
     referTargetNodeId: node.id
@@ -319,7 +319,7 @@ const insertInner = ({ node, data }: Omit<InsertOptions, 'parent'>, position: st
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: node.id,
+    parentId: node.id || '',
     newNodeData: data,
     position: ([POSITION.TOP, POSITION.LEFT] as string[]).includes(position) ? 'before' : 'after'
   })
@@ -340,7 +340,7 @@ const insertContainer = ({ parent, node, data }: InsertOptions) => {
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: POSITION.OUT,
     referTargetNodeId: node.id
