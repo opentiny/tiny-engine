@@ -9958,29 +9958,6 @@
               }
             ],
             "events": {
-              "onEditClosed": {
-                "label": {
-                  "zh_CN": "单元格编辑状态下被关闭时会触发该事件"
-                },
-                "description": {
-                  "zh_CN": ""
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "table",
-                      "type": "Object",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "{$table,filters} 包含 table 实例对象和过滤条件的对象"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": "function onClick(e) {}"
-              },
               "onFilterChange": {
                 "label": {
                   "zh_CN": "筛选条件改变时触发改事件"
