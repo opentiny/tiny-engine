@@ -88,31 +88,31 @@ export const useMultiSelect = () => {
   const areSiblingNodes = (): boolean => {
     if (multiSelectedStates.value.length <= 1) return false
 
-    // 获取第一个节点的父节点
-    const firstNode = multiSelectedStates.value[0]
-    const { parent: firstParent } = useCanvas().getNodeWithParentById(firstNode.id) || {}
-    if (!firstParent) return false
+    // 一次性获取所有选中节点及其父节点信息
+    const canvas = useCanvas()
+    const nodesWithParent = multiSelectedStates.value.map((node) => canvas.getNodeWithParentById(node.id) || {})
 
+    // 检查所有节点是否都有父节点
+    if (nodesWithParent.some((node) => !node.parent)) return false
+
+    // 获取第一个父节点并检查所有节点是否有相同的父节点
+    const firstParent = nodesWithParent[0].parent
     const parentId = firstParent.id
 
-    // 检查所有节点是否有相同的父节点
-    for (let i = 1; i < multiSelectedStates.value.length; i++) {
-      const { parent } = useCanvas().getNodeWithParentById(multiSelectedStates.value[i].id) || {}
-      if (!parent || parent.id !== parentId) {
+    if (nodesWithParent.some((node) => node.parent.id !== parentId)) return false
+
+    const nodeIndices = multiSelectedStates.value
+      .map((node) => firstParent.children.findIndex((child: Schema) => child.id === node.id))
+      .sort((a, b) => a - b)
+
+    // 检查索引是否连续
+    for (let i = 1; i < nodeIndices.length; i++) {
+      if (nodeIndices[i] !== nodeIndices[i - 1] + 1) {
         return false
       }
     }
 
-    // 收集所有节点的索引
-    const nodeIds = multiSelectedStates.value.map((node) => node.id)
-    const nodeIndices = nodeIds
-      .map((id) => firstParent.children.findIndex((child) => child.id === id))
-      .sort((a, b) => a - b)
-
-    // 检查是否是连续的兄弟节点
-    const isConsecutive = nodeIndices.every((val, i, arr) => i === 0 || val === arr[i - 1] + 1)
-
-    return isConsecutive
+    return true
   }
 
   /**
