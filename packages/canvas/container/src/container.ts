@@ -88,6 +88,7 @@ export const dragState = reactive({
 })
 
 export const initialRectState = {
+  id: '',
   top: 0,
   height: 0,
   width: 0,
@@ -408,11 +409,12 @@ const setSelectRect = (
 ) => {
   clearHover()
 
-  const { type, schema, isMultiple = false } = options || {}
+  const { type, isMultiple = false } = options || {}
+  const schema = options?.schema || (useCanvas().getNodeWithParentById(id) || {}).node
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
-  const componentName = (schema || getCurrent().schema)?.componentName || ''
+  const componentName = schema?.componentName || ''
   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
 
   return toggleMultiSelection(
@@ -451,10 +453,6 @@ export const updateRect = (id?: string) => {
   } else {
     clearSelect()
   }
-}
-
-export const syncNodeScroll = () => {
-  refreshSelectionState()
 }
 
 export const getConfigure = (targetName: string) => {
@@ -619,6 +617,7 @@ const setHoverRect = (element?: Element, data?: Node | null) => {
 
   // 设置元素hover状态
   Object.assign(hoverState, {
+    id,
     width,
     height,
     top,
@@ -627,6 +626,24 @@ const setHoverRect = (element?: Element, data?: Node | null) => {
     componentName
   })
   return undefined
+}
+
+const updateHoverRect = (id?: string) => {
+  const element = querySelectById(id || hoverState.id)
+
+  if (!element) {
+    return
+  }
+
+  const rect = getRect(element)
+  const { left, height, top, width } = rect
+
+  Object.assign(hoverState, {
+    width,
+    height,
+    top,
+    left
+  })
 }
 
 const setInactiveHoverRect = (element?: Element) => {
@@ -653,6 +670,12 @@ const setInactiveHoverRect = (element?: Element) => {
     componentName
   })
 }
+
+export const syncNodeScroll = () => {
+  refreshSelectionState()
+  updateHoverRect()
+}
+
 let moveUpdateTimer: ReturnType<typeof setTimeout> | undefined = undefined
 
 // 绝对布局

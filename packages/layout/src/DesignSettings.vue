@@ -18,7 +18,14 @@
     </div>
   </div>
   <div id="tiny-engine-nav-panel">
-    <vue-draggable-next id="rightTop" v-model="settingPlugins" class="nav-panel-lists" group="plugins" @end="onEnd">
+    <vue-draggable-next
+      id="rightTop"
+      v-model="settingPlugins"
+      filter=".panel-icon"
+      class="nav-panel-lists"
+      group="plugins"
+      @end="onEnd"
+    >
       <div
         v-for="(item, index) in settingPlugins"
         :key="index"

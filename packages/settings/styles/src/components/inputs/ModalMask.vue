@@ -1,5 +1,5 @@
 <template>
-  <teleport :to="teleport">
+  <teleport :to="targetClass">
     <div class="modal-wrapper">
       <div :class="[isAlignBody ? '' : 'modal-mask']" @click="$emit('close')"></div>
 
@@ -15,7 +15,8 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const modal = reactive({
   left: 0,
@@ -45,13 +46,28 @@ export default {
   props: {
     teleport: {
       type: String,
-      default: '.tiny-engine-right-wrap'
+      default: '.right-panel-wrap'
     }
   },
   setup(props) {
     const isAlignBody = props.teleport === 'body'
     const topStyle = ref(0)
     const modalContent = ref(null)
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+
+    /**
+     * 根据所处位置判断目标挂载面板
+     */
+    const targetClass = computed(() => {
+      if (props.teleport) {
+        return props.teleport
+      }
+
+      const layout = getPluginByLayout(PLUGIN_NAME.Styles)
+      // 直接判断布局中是否包含 'left'，选择挂载面板
+      return layout.includes('left') ? '.left-panel-wrap' : '.right-panel-wrap'
+    })
 
     const calculateTopStyle = (modalContent) => {
       const innnerHeight = window.getComputedStyle(document.body).height
@@ -70,6 +86,7 @@ export default {
     })
 
     return {
+      targetClass,
       modal,
       modalContent,
       topStyle,
@@ -110,10 +127,10 @@ export default {
     padding: var(--te-styles-modal-padding-y) var(--te-styles-modal-padding-x);
   }
   .align-body {
-    right: var(--te-styles-modal-right-offset-first);
+    right: calc(var(--te-styles-modal-right-offset-first) + var(--base-nav-panel-width));
     left: calc(
       100% - var(--te-styles-modal-right-offset-first) - var(--te-styles-modal-right-offset-second) -
-        var(--te-styles-modal-spacing)
+        var(--te-styles-modal-spacing) - var(--base-nav-panel-width)
     );
   }
 }
