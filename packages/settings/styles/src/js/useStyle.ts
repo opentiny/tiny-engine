@@ -168,7 +168,8 @@ export const initStylePanelWatch = () => {
       state.styleContent = formatString(`:root {\n ${schema?.props?.style || ''}\n}`, 'css')
     },
     {
-      deep: true
+      deep: true,
+      immediate: true
     }
   )
 
@@ -184,6 +185,9 @@ export const initStylePanelWatch = () => {
       state.cssParseList = parseList
       state.selectors = selectors
       state.styleObject = styleObject
+    },
+    {
+      immediate: true
     }
   )
 
@@ -338,13 +342,8 @@ const updateStyle = (properties: any) => {
   updateRect()
 }
 
-let hasWatchInitialized = false
-
 export default () => {
-  if (!hasWatchInitialized) {
-    initStylePanelWatch()
-    hasWatchInitialized = true
-  }
+  initStylePanelWatch()
 
   return {
     state,

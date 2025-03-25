@@ -7,14 +7,12 @@
       :class="[renderPanel, { 'is-fixed': rightFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="right-panel-wrap">
-        <keep-alive>
-          <component
-            :is="currentComponent"
-            :fixed-panels="rightFixedPanelsStorage"
-            @close="close"
-            @fixPanel="fixPanel"
-          ></component>
-        </keep-alive>
+        <component
+          :is="currentComponent"
+          :fixed-panels="rightFixedPanelsStorage"
+          @close="close"
+          @fixPanel="fixPanel"
+        ></component>
         <div v-show="activating" class="active2" />
       </div>
     </div>
