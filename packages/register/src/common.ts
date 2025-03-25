@@ -151,7 +151,7 @@ export const preprocessRegistry = (registry: Array<any> | { [s: string]: any }) 
     .forEach((metaApps) => {
       // normal: { plugins: [ Page, Block, ... ] }
       // array format: { plugins: [ [ Page, { options: extraOptions } ], Block, ... ] }
-      metaApps.forEach((metaApp: any[], index: number) => {
+      metaApps.forEach((metaApp: any, index: number) => {
         if (isArrayFormat(metaApp)) {
           metaApps.splice(index, 1, { ...metaApp[0], ...metaApp[1] })
         }
