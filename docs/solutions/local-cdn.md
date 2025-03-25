@@ -30,8 +30,10 @@ VITE_LOCAL_BUNDLE_DEPS=true
 
 ```javascript
 const baseConfig = useTinyEngineBaseConfig({
-  importMapConfig: { imports: { ... } },
-  copyConfig: { ... }
+  localCdnConfig: {
+    importMap: { imports: { ... } },
+    copy: { ... }
+  }
   // ...otherConfig
 })
 ```
@@ -42,12 +44,13 @@ CDN 本地化接受以下配置选项：
 
 | 参数 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| importMapConfig | Object | `{ imports: {} }` | 导入映射配置，定义需要本地化的CDN依赖 |
-| copyConfig | Object | `{}` | 自定义复制配置，可以覆盖特定包的默认配置 |
+| localCdnConfig | Object | `{ importMap: { imports: {} }, copy: {} }` | 本地CDN配置对象 |
+| localCdnConfig.importMap | Object | `{ imports: {} }` | 导入映射配置，定义需要本地化的CDN依赖 |
+| localCdnConfig.copy | Object | `{}` | 自定义复制配置，可以覆盖特定包的默认配置 |
 
-#### importMapConfig 详细说明
+#### importMap 详细说明
 
-`importMapConfig` 是一个包含 `imports` 属性的对象，它定义了需要本地化的CDN依赖。在插件内部，它会与默认的导入映射配置合并。
+`localCdnConfig.importMap` 是一个包含 `imports` 属性的对象，它定义了需要本地化的CDN依赖。在插件内部，它会与默认的导入映射配置合并。
 
 import-map.json 的格式示例：
 ```json
@@ -67,14 +70,14 @@ URL格式说明：
 
 插件将解析这些URL，提取包名、版本和文件路径，然后在构建时将它们替换为本地路径。
 
-**重要说明**：如果您在 Vite 配置中传递了 `importMapConfig`，还需要在 registry 注册表的 config 中传入同样的配置，以确保应用在运行时能正确读取自定义的 importMap 配置。例如：
+**重要说明**：如果您在 Vite 配置中传递了 `localCdnConfig.importMap`，还需要在 registry 注册表的 config 中传入同样的配置，以确保应用在运行时能正确读取自定义的 importMap 配置。例如：
 
 ```javascript
 // 在注册表配置中
 {
   config: {
     id: 'engine.config',
-    importMap: importMapConfig,
+    importMap: localCdnConfig.importMap,
     // ... 其他配置
   }
 }
@@ -82,9 +85,9 @@ URL格式说明：
 
 这是因为画布和页面预览默认会从注册表 `getMergeMeta('engine.config')?.importMap` 中读取自定义的映射配置，如果获取失败，则会读取默认的映射。
 
-#### copyConfig 详细说明
+#### copy 详细说明
 
-`copyConfig` 是一个可选的配置对象，用于覆盖特定包的默认复制配置。它的结构是一个对象，键是包名，值是该包的复制配置。
+`localCdnConfig.copy` 是一个可选的配置对象，用于覆盖特定包的默认复制配置。它的结构是一个对象，键是包名，值是该包的复制配置。
 
 默认配置如下：
 ```javascript
@@ -167,7 +170,7 @@ VITE_CDN_DOMAIN=https://unpkg.com
 
 ### 1. 分析导入映射并收集依赖
 
-`localCdnPlugin`会分析提供的`importMapConfig`和默认的导入映射，识别所有需要本地化的CDN依赖。这个过程包括：
+`localCdnPlugin`会分析提供的`localCdnConfig`和默认的导入映射，识别所有需要本地化的CDN依赖。这个过程包括：
 
 - 解析CDN URL获取包名、版本和文件路径
 - 合并用户配置和默认配置
@@ -201,4 +204,4 @@ VITE_CDN_DOMAIN=https://unpkg.com
 
 1. 确保所有需要本地化的CDN依赖在package.json中有相应的版本定义
 2. 本地化CDN会增加构建输出的大小，但会提高应用的可靠性和性能
-3. 某些特定格式的CDN URL可能需要在`copyConfig`中进行特别配置 
+3. 某些特定格式的CDN URL可能需要在`copy`中进行特别配置 
