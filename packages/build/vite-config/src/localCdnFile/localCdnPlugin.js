@@ -315,17 +315,25 @@ function getCdnPathNpmInfo(
 }
 
 /**
- * 创建本地化CDN插件
- * @param {Object} options - 插件配置选项
+ * 本地化CDN插件
+ * @param {Object} options - 配置选项
+ * @param {Object} options.localCdnConfig - 本地CDN配置
+ * @param {Object} options.localCdnConfig.importMap - 导入映射配置，定义需要本地化的CDN依赖
+ * @param {Object} options.localCdnConfig.copy - 自定义复制配置，可以覆盖特定包的默认配置
+ * @param {string} options.base - 构建的base URL
+ * @param {string} options.cdnDir - 构建目录中的CDN文件夹名称
+ * @param {string} options.bundleTempDir - 临时存放下载的包的目录
  * @returns {Array} - Vite插件数组
  */
 export function localCdnPlugin({
-  importMapConfig = { imports: {} },
+  localCdnConfig = { importMap: { imports: {} }, copy: {} },
   base = './',
   cdnDir = 'local-cdn-static', // 构建目录中的CDN文件夹名称
-  bundleTempDir = 'bundle-deps/local-cdn', // 临时存放下载的包的目录
-  copyConfig = {}
+  bundleTempDir = 'bundle-deps/local-cdn' // 临时存放下载的包的目录
 }) {
+  const importMapConfig = localCdnConfig.importMap || { imports: {} }
+  const copyConfig = localCdnConfig.copy || {}
+
   const defaultImportMapConfig = JSON.parse(
     fs.readFileSync(path.resolve(process.cwd(), './node_modules/@opentiny/tiny-engine/dist/import-map.json'), 'utf-8')
   )

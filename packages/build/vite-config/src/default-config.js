@@ -169,10 +169,9 @@ export function useTinyEngineBaseConfig(engineConfig) {
     logger.log('[local-cdn-plugin]: Initializing local CDN plugin')
 
     const cdnPlugins = localCdnPlugin({
-      importMapConfig: engineConfig.importMapConfig,
+      localCdnConfig: engineConfig.localCdnConfig,
       base: getBaseUrlFromCli(config.base),
-      cdnDir: 'local-cdn-static',
-      copyConfig: engineConfig.copyConfig
+      cdnDir: 'local-cdn-static'
     })
 
     if (cdnPlugins && cdnPlugins.length > 0) {
