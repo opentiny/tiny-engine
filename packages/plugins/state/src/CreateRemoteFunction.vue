@@ -6,7 +6,7 @@
   <monaco-editor ref="functionEditor" class="function-editor" :value="state.value" :options="state.options" />
 </template>
 
-<script>
+<script lang="ts">
 import { getCurrentInstance, reactive } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { iconDel } from '@opentiny/vue-icon'

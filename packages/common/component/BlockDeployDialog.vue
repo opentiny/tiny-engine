@@ -70,7 +70,7 @@
   </tiny-dialog-box>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, watch } from 'vue'
 import {
   Checkbox as TinyCheckbox,
@@ -142,12 +142,12 @@ export default {
       }
     }
 
-    const getNextVersion = (block) => {
+    const getNextVersion = (block: any) => {
       const backupList = block.histories || []
 
       let latestVersion = '1.0.0'
       let latestTime = 0
-      backupList.forEach((v) => {
+      backupList.forEach((v: { created_at: string | number | Date; version: string }) => {
         const vTime = new Date(v.created_at).getTime()
 
         if (vTime > latestTime) {
@@ -170,7 +170,7 @@ export default {
       }
     )
 
-    const setVisible = (visible) => emit('update:visible', visible)
+    const setVisible = (visible: boolean) => emit('update:visible', visible)
 
     const { setSaved } = useCanvas()
 
@@ -180,7 +180,7 @@ export default {
     }
 
     const deployBlock = async () => {
-      deployBlockRef.value.validate((valid) => {
+      deployBlockRef.value.validate((valid: any) => {
         const { publishBlock } = getMetaApi(META_APP.BlockManage)
 
         if (valid) {
@@ -203,7 +203,7 @@ export default {
       })
     }
 
-    const changeCompare = async (value) => {
+    const changeCompare = async (value: any) => {
       const api = getMetaApi(META_APP.BlockManage)
 
       if (value) {
@@ -217,7 +217,7 @@ export default {
       }
     }
 
-    const changeCode = (code) => {
+    const changeCode = (code: string) => {
       if (typeof code !== 'string') {
         return
       }

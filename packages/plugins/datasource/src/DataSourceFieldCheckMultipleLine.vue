@@ -9,7 +9,7 @@
   </tiny-form-item>
 </template>
 
-<script>
+<script lang="ts">
 import { inject } from 'vue'
 import { Radio, FormItem } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'

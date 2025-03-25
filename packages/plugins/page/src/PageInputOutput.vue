@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect, computed } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'

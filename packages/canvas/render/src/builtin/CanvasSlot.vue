@@ -4,7 +4,7 @@
   </slot>
 </template>
 
-<script>
+<script lang="ts">
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 export default {
   components: {

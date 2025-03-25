@@ -11,7 +11,7 @@
   </tiny-popover>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import MetaChildItem from './MetaChildItem.vue'

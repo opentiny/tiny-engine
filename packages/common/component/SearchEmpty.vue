@@ -4,7 +4,7 @@
     <p class="empty-text">暂无数据</p>
   </div>
 </template>
-<script>
+<script lang="ts">
 export default {
   props: {
     /**

@@ -13,7 +13,7 @@
   </tiny-form>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive, watch } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem } from '@opentiny/vue'
 import { REGEXP_EVENT_NAME, verifyEventName } from '@opentiny/tiny-engine-common/js/verification'

@@ -33,7 +33,7 @@
   </tiny-dialog-box>
 </template>
 
-<script>
+<script lang="ts">
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
 import { reactive, computed, ref, nextTick } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -54,8 +54,8 @@ export default {
   },
   emits: ['cancel', 'confirm'],
   setup(props, { emit }) {
-    const getTableTreeData = (data) => {
-      const res = []
+    const getTableTreeData = (data: any[]) => {
+      const res: any[] = []
       data.forEach((item) => {
         const folder = item.filePath.split('/').slice(0, -1)
 
@@ -64,7 +64,7 @@ export default {
           return
         }
 
-        const parentFolder = folder.reduce((parent, curPath) => {
+        const parentFolder = folder.reduce((parent: any[], curPath: any) => {
           let curItem = parent.find((parItem) => parItem.path === curPath)
 
           if (!curItem) {
@@ -82,12 +82,12 @@ export default {
     }
 
     const tableData = computed(() => getTableTreeData(props.data))
-    const gridRef = ref(null)
+    const gridRef = ref<any>(null)
 
     const state = reactive({})
 
     const confirm = () => {
-      const selectedData = gridRef.value.getSelectRecords().filter((item) => !item.children)
+      const selectedData = gridRef.value.getSelectRecords().filter((item: { children: any }) => !item.children)
       if (!selectedData?.length) {
         useNotify({
           type: 'error',

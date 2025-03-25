@@ -32,32 +32,36 @@ export const requestEvent = (url, params) => {
 
 /**
  * 页面更新
- * @param { string } pageId 页面ID
+ * @param { string } id 页面ID
  * @param { json } params 页面信息
  * @returns { Promise }
  *
  */
-export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) => {
+export const handlePageUpdate = (updateParams) => {
+  const { id, params, routerChange = false, isCurEditPage = true, isUpdateTree = true } = updateParams
+
   return getMetaApi(META_SERVICE.Http)
-    .post(`/app-center/api/pages/update/${pageId}`, params)
+    .post(`/app-center/api/pages/update/${id}`, params)
     .then((res) => {
       const { setSaved } = useCanvas()
       if (isVsCodeEnv) {
         generatePage({
-          id: pageId,
+          id,
           name: params.name,
           page_content: params.page_content
         })
 
         if (routerChange) {
           generateRouter({
-            pageId,
+            id,
             componentsTree: params
           })
         }
       }
 
-      useNotify({ message: '保存成功!', type: 'success' })
+      if (isUpdateTree) {
+        useNotify({ message: '保存成功!', type: 'success' })
+      }
 
       // 更新 页面状态 标志
       setSaved(true)
@@ -75,7 +79,9 @@ export const handlePageUpdate = (pageId, params, routerChange, isCurEditPage) =>
     .finally(() => {
       const { pageSettingState } = usePage()
       // 更新页面管理的列表，如果不存在，说明还没有打开过页面管理面板
-      pageSettingState.updateTreeData?.()
+      if (isUpdateTree) {
+        pageSettingState.updateTreeData?.()
+      }
       pageSettingState.isNew = false
     })
 }

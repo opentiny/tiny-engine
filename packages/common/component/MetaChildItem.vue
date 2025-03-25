@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { isObject } from '@opentiny/vue-renderless/grid/static'
 import ConfigItem from './ConfigItem.vue'
@@ -75,7 +75,7 @@ export default {
       return result
     })
 
-    const onValueChange = (property, data) => {
+    const onValueChange = (property: any, data: any) => {
       emit('update:modelValue', { propertyKey: property, propertyValue: data })
     }
 

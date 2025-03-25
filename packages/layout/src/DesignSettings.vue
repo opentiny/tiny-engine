@@ -1,130 +1,335 @@
+<!-- 右侧插件栏 -->
 <template>
-  <div id="tiny-right-panel">
-    <tiny-tabs v-model="layoutState.settings.render">
-      <tiny-tab-item v-for="(setting, index) in settings" :key="index" :title="setting.title" :name="setting.name">
-        <component :is="setting.entry"></component>
-        <div v-show="activating" class="active"></div>
-      </tiny-tab-item>
-    </tiny-tabs>
-    <div v-if="layoutState.settings.render === 'style'" class="tabs-setting">
-      <tiny-tooltip effect="light" :content="isCollapsed ? '展开' : '折叠'" placement="top" :visible-arrow="false">
-        <template #default> <svg-icon :name="settingIcon" @click="isCollapsed = !isCollapsed"></svg-icon> </template>
-      </tiny-tooltip>
+  <div :class="{ 'not-selected': getMoveDragBarState() }">
+    <div
+      v-show="renderPanel && components[renderPanel]"
+      id="tiny-engine-right-panel"
+      :class="[renderPanel, { 'is-fixed': rightFixedPanelsStorage.includes(renderPanel) }]"
+    >
+      <div class="right-panel-wrap">
+        <component
+          :is="currentComponent"
+          :fixed-panels="rightFixedPanelsStorage"
+          @close="close"
+          @fixPanel="fixPanel"
+        ></component>
+        <div v-show="activating" class="active2" />
+      </div>
     </div>
   </div>
+  <div id="tiny-engine-nav-panel">
+    <vue-draggable-next
+      id="rightTop"
+      v-model="settingPlugins"
+      filter=".panel-icon"
+      class="nav-panel-lists"
+      group="plugins"
+      @end="onEnd"
+    >
+      <div
+        v-for="(item, index) in settingPlugins"
+        :key="index"
+        :class="['list-item', { 'first-item': item === settingPlugins[0], active: item.id === renderPanel }]"
+        :title="item.title"
+        @click="clickMenu({ item, index })"
+        @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.rightTop)"
+      >
+        <span class="item-icon" v-if="getPluginShown(item.id)">
+          <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
+          <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+        </span>
+      </div>
+      <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
+    </vue-draggable-next>
+  </div>
+
+  <plugin-right-menu
+    ref="rightMenu"
+    :list="settingPlugins"
+    :align="PLUGIN_POSITION.rightTop"
+    @switchAlign="switchAlign"
+  />
 </template>
 
-<script>
-import { computed, provide, ref } from 'vue'
-import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
+<script lang="ts">
+import { computed, ref, watch, toRefs } from 'vue'
+import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { VueDraggableNext } from 'vue-draggable-next'
+import { PluginRightMenu } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
+    PluginRightMenu,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    TinyTooltip: Tooltip
+    VueDraggableNext
   },
   props: {
     settings: {
       type: Array,
       default: () => []
+    },
+    renderPanel: {
+      type: String
+    },
+    pluginList: {
+      type: Array,
+      default: () => []
     }
   },
-  setup() {
-    const { layoutState } = useLayout()
-    const activating = computed(() => layoutState.settings.activating)
-    const showMask = ref(true)
-    const isCollapsed = ref(false)
-    const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
+  setup(props, { emit }) {
+    const components = {}
+    const iconComponents = {}
 
-    provide('isCollapsed', isCollapsed)
+    const {
+      getPluginsByPosition,
+      getPluginById,
+      PLUGIN_POSITION,
+      rightFixedPanelsStorage,
+      changeRightFixedPanels,
+      dragPluginLayout,
+      isSameSide,
+      getPluginShown,
+      getMoveDragBarState,
+      layoutState: { settings: settingsState }
+    } = useLayout()
+
+    const rightMenu = ref(null)
+    const { renderPanel } = toRefs(props)
+    const showContextMenu = (event, type, item, index, align) => {
+      if (!type) {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
+      } else {
+        rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
+      }
+    }
+
+    props.pluginList.forEach(({ id, entry, icon }) => {
+      components[id] = entry
+      iconComponents[id] = icon
+    })
+
+    const settingPlugins = ref(getPluginsByPosition(PLUGIN_POSITION.rightTop, props.pluginList))
+
+    const currentComponent = computed(() => {
+      const isExistedComponent = settingPlugins.value.some((item) => item.id === renderPanel.value)
+      return isExistedComponent ? components[renderPanel.value] : null
+    })
+
+    const close = () => {
+      useLayout().closeSetting(true)
+    }
+
+    const switchAlign = (index, id, from) => {
+      settingPlugins.value.splice(index, 1)
+      emit('changeRightAlign', id)
+      if (!isSameSide(index, 0)) close()
+      dragPluginLayout(from, PLUGIN_POSITION.leftTop, index, 0)
+    }
+
+    const changeAlign = (pluginId) => {
+      const item = getPluginById(props.pluginList, pluginId)
+      const existingItemIndex = settingPlugins.value.findIndex((plugin) => plugin.id === item.id)
+
+      if (existingItemIndex !== -1) {
+        settingPlugins.value.splice(existingItemIndex, 1)
+      }
+      settingPlugins.value.unshift(item)
+    }
+
+    const setRender = (curId) => {
+      settingsState.render = curId
+    }
+
+    //点击右侧菜单icon按钮
+    const clickMenu = ({ item }) => {
+      if (settingsState.render == item.id) {
+        useLayout().closeSetting(true)
+        return
+      }
+      setRender(item.id)
+    }
+
+    watch(renderPanel, (n) => {
+      setRender(n)
+    })
+
+    //切换面板状态
+    const fixPanel = (pluginName) => {
+      changeRightFixedPanels(pluginName)
+    }
+
+    //监听拖拽结束事件
+    const onEnd = (e) => {
+      if (!isSameSide(e.from.id, e.to.id)) close()
+      dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
+    }
+
+    const activating = computed(() => settingsState.activating)
+    const showMask = ref(true)
 
     return {
+      currentComponent,
+      changeAlign,
       showMask,
-      isCollapsed,
       activating,
-      settingIcon,
-      layoutState
+      settingsState,
+      settingPlugins,
+      components,
+      iconComponents,
+      clickMenu,
+      close,
+      fixPanel,
+      rightFixedPanelsStorage,
+      onEnd,
+      showContextMenu,
+      PLUGIN_POSITION,
+      getPluginShown,
+      switchAlign,
+      rightMenu,
+      getMoveDragBarState
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-#tiny-right-panel {
-  width: var(--base-right-panel-width);
-  height: 100%;
-  transition: 0.3s linear;
-  position: relative;
+#tiny-engine-right-panel {
+  height: calc(100vh - var(--base-top-panel-height));
   border-left: 1px solid var(--te-layout-common-border-color);
-  padding-top: 12px;
-  background-color: var(--te-layout-common-bg-color);
+  background: var(--ti-lowcode-common-component-bg);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: var(--base-top-panel-height);
+  right: var(--base-nav-panel-width);
+  z-index: 999;
 
-  .tabs-setting {
-    position: absolute;
-    top: 9px;
-    right: 18px;
-    line-height: 26px;
-    color: var(--te-layout-common-icon-color);
-    cursor: pointer;
+  &.I18n {
+    width: auto;
   }
-  .tiny-tabs {
+
+  &.is-fixed {
+    position: relative;
+    top: 0;
+    right: 0;
+  }
+
+  .right-panel-wrap {
+    width: 100%;
     height: 100%;
-  }
-  :deep(.tiny-tabs) {
-    display: flex;
-    flex-direction: column;
-    .tiny-tabs__header .tiny-tabs__nav {
-      width: 60%;
-      background-color: var(--te-layout-common-bg-color);
+    position: relative;
+    :deep(.tiny-tabs__nav.is-show-active-bar) .tiny-tabs__item {
+      margin-right: 0;
     }
-    .tiny-tabs__nav-scroll {
-      margin-left: 12px;
-      .tiny-tabs__active-bar {
-        height: 3px;
-        background-color: var(--te-layout-common-text-color-active);
-      }
-    }
-
-    .tiny-tabs__content {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0;
-      margin: 0;
-    }
-    .tiny-tabs__nav.is-show-active-bar .tiny-tabs__item {
-      margin-right: 8px;
-    }
-    .tiny-tabs__item {
-      flex: 1;
-      background-color: var(--te-layout-common-bg-color);
-      color: var(--te-layout-common-text-color-secondary);
-      margin-right: 5px;
-      &:hover {
-        color: var(--te-layout-common-text-color-hover);
-      }
-      &.is-active {
-        color: var(--te-layout-common-text-color-active);
-        border: none;
-      }
-
-      .tiny-tabs__item__title {
-        padding-bottom: 6px;
-      }
-    }
-
-    .tiny-tabs__nav-wrap-not-separator::after {
-      z-index: 2;
-    }
-  }
-
-  :deep(.tiny-collapse-item__content) {
-    padding: 0 8px 12px 12px; // 这里的bottom为4px + 内部行元素与底部的距离为8px = 12px
   }
 }
 
-.active {
+#tiny-engine-nav-panel {
+  display: none;
+  width: var(--base-nav-panel-width);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--te-layout-common-bg-color);
+  box-sizing: border-box;
+  z-index: 1000;
+  border-left: 1px solid var(--te-layout-common-border-color);
+
+  &.completed {
+    display: block;
+  }
+
+  .nav-panel-lists {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    &.bottom {
+      flex: 1;
+      padding-bottom: 28px;
+    }
+
+    .list-item {
+      width: 100%;
+      padding: 3px 0;
+
+      &:first-child {
+        padding-top: 12px;
+      }
+
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      &:hover,
+      &.active {
+        .item-icon {
+          background: var(--te-layout-common-bg-color-hover);
+          border-radius: 4px;
+        }
+      }
+
+      &.active {
+        position: relative;
+
+        .item-icon {
+          color: var(--te-layout-common-text-color-secondary-checked);
+        }
+      }
+
+      &.prev {
+        border-bottom-color: var(--te-layout-common-border-color);
+      }
+    }
+
+    .item-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: var(--te-layout-common-text-color);
+      font-size: 22px;
+      width: 26px;
+      height: 26px;
+
+      svg {
+        font-size: 18px;
+      }
+      .public-icon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 26px;
+        height: 26px;
+      }
+    }
+  }
+}
+
+:deep(.panel-svg) {
+  font-size: 18px;
+}
+
+:deep(.svg-icon.icon-plugin-icon-plugin-help) {
+  font-size: 18px;
+}
+
+.not-selected {
+  pointer-events: none;
+  user-select: none;
+}
+
+:deep(.svg-icon.icon-plugin-icon-plugin-help) {
+  font-size: 22px;
+}
+
+//高亮显示动画
+.active2 {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -135,10 +340,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--te-layout-setting-bg-color-hover);
+    box-shadow: inset 0px 0px 4px var(--ti-lowcode-canvas-handle-hover-bg);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--te-layout-setting-bg-color-hover);
+    box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
   }
 }
 </style>

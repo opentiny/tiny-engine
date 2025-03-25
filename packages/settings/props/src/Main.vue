@@ -1,17 +1,27 @@
 <template>
-  <config-render :data="properties">
-    <template #prefix="{ data }">
-      <block-link-field v-if="isBlock" :data="data"></block-link-field>
+  <plugin-panel
+    title="属性"
+    :fixed-panels="fixedPanels"
+    :fixed-name="PLUGIN_NAME.Props"
+    :show-bottom-border="showEmptyTips"
+    @close="$emit('close')"
+  >
+    <template #content>
+      <config-render :data="properties">
+        <template #prefix="{ data }">
+          <block-link-field v-if="isBlock" :data="data"></block-link-field>
+        </template>
+      </config-render>
+      <block-description v-if="isBlock" class="block-description"> </block-description>
+      <empty :showEmptyTips="showEmptyTips"></empty>
     </template>
-  </config-render>
-  <block-description v-if="isBlock" class="block-description"> </block-description>
-  <empty :showEmptyTips="showEmptyTips"></empty>
+  </plugin-panel>
 </template>
 
 <script>
-import { computed, watchEffect, ref } from 'vue'
-import { ConfigRender, BlockDescription, BlockLinkField } from '@opentiny/tiny-engine-common'
-import { useCanvas, useProperty } from '@opentiny/tiny-engine-meta-register'
+import { computed, watchEffect, ref, reactive, provide } from 'vue'
+import { ConfigRender, BlockDescription, BlockLinkField, PluginPanel } from '@opentiny/tiny-engine-common'
+import { useCanvas, useProperty, useLayout } from '@opentiny/tiny-engine-meta-register'
 import Empty from './components/Empty.vue'
 
 export default {
@@ -19,12 +29,20 @@ export default {
     ConfigRender,
     BlockLinkField,
     BlockDescription,
-    Empty
+    Empty,
+    PluginPanel
   },
-  setup() {
+  setup(props, { emit }) {
     const { pageState } = useCanvas()
     const { properties } = useProperty().getProperty({ pageState })
     const showEmptyTips = ref(false)
+
+    const { PLUGIN_NAME } = useLayout()
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const isBlock = computed(() => pageState.isBlock)
 
@@ -33,6 +51,7 @@ export default {
     })
 
     return {
+      PLUGIN_NAME,
       isBlock,
       properties,
       showEmptyTips

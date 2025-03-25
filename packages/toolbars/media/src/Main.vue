@@ -79,7 +79,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
@@ -108,7 +108,7 @@ export default {
     }
   },
   setup(props, { emit }) {
-    let timer = null
+    let timer: any = null
     let prevWidthVal = ''
     let prevScaleVal = ''
     const { layoutState } = useLayout()
@@ -124,8 +124,8 @@ export default {
     const state = reactive({
       activeIndex: 0,
       guideValue: '',
-      width: '',
-      scaleValue: '',
+      width: '' as string | number,
+      scaleValue: '' as string | number,
       readonly: false,
       viewWidth: null,
       moreData: {
@@ -266,7 +266,7 @@ export default {
       flag.value = false
     }
 
-    const closePopover = (e) => {
+    const closePopover = (e: any) => {
       const ele = document.querySelector('.reference-text')
       const isChild = ele?.contains(e.target)
 
@@ -281,7 +281,7 @@ export default {
       return output
     }, {})
 
-    const setViewPort = (item) => {
+    const setViewPort = (item: any) => {
       if (props.isCanvas) {
         useLayout().setDimension({
           deviceType: item.view,
@@ -295,7 +295,7 @@ export default {
       }
     }
 
-    const activeView = (val, type) => {
+    const activeView = (val: number, type: string) => {
       const item = mediaMap[type]
       useLayout().setDimension({
         deviceType: item.view,
@@ -313,7 +313,7 @@ export default {
       { type: 'mdx', min: 1200, max: 1920 }
     ]
 
-    const widthChange = (val) => {
+    const widthChange = (val: string) => {
       const reg = /^\d+$/
 
       if (!String(val).match(reg)) {
@@ -331,7 +331,7 @@ export default {
       activeView(width, type)
     }
 
-    const scaleChange = (val) => {
+    const scaleChange = (val: string) => {
       const item = mediaMap['mdx']
       const reg = /^\d+(\.\d+)?$/
 

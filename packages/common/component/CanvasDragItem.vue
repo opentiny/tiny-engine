@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
@@ -18,7 +18,7 @@ export default {
   setup(props, { emit }) {
     const canvasApi = getMetaApi('engine.canvas').canvasApi
 
-    const dragstart = (e) => {
+    const dragstart = (e: any) => {
       if (props.data && canvasApi.value?.dragStart) {
         const data = deepClone(props.data)
         canvasApi.value.dragStart(data)

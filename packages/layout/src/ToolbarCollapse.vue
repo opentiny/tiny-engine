@@ -29,7 +29,7 @@
   </tiny-popover>
 </template>
 
-<script>
+<script lang="ts">
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'

@@ -2,7 +2,7 @@
   <monaco-editor :value="modelValue" class="monaco-editor" :options="options" @change="change" />
 </template>
 
-<script>
+<script lang="ts">
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {

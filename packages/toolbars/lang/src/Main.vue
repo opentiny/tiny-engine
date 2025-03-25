@@ -8,7 +8,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

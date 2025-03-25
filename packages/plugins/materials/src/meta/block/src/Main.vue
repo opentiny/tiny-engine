@@ -2,7 +2,7 @@
   <block-panel v-if="existBlockModule" v-bind="$attrs"></block-panel>
 </template>
 
-<script>
+<script lang="ts">
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import BlockPanel from './BlockPanel.vue'
 

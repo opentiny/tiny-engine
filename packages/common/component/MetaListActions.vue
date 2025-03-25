@@ -6,7 +6,7 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import { Tooltip } from '@opentiny/vue'
 
 export default {
@@ -20,7 +20,7 @@ export default {
     }
   },
   setup(props, { emit }) {
-    const actionsEvents = (item) => {
+    const actionsEvents = (item: any) => {
       emit('actionEvents', item)
     }
 

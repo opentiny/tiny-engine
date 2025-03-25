@@ -1,19 +1,19 @@
 <template>
-  <plugin-panel class="outlinebox plugin-tree" title="大纲树" @close="$emit('close')">
-    <template #header>
-      <svg-button
-        class="item icon-sidebar"
-        :name="panelFixed ? 'fixed-solid' : 'fixed'"
-        :tips="panelFixed ? '解除固定面板' : '固定面板'"
-        @click="$emit('fix-panel', PLUGIN_NAME.OutlineTree)"
-      ></svg-button>
-    </template>
+  <plugin-panel
+    tabindex="0"
+    title="大纲树"
+    ref="panelRef"
+    class="outlinebox plugin-tree"
+    :fixed-name="PLUGIN_NAME.OutlineTree"
+    :fixedPanels="fixedPanels"
+    @close="$emit('close')"
+  >
     <template #content>
       <draggable-tree
         label-key="componentName"
         :data="state.pageSchema"
         :draggable="true"
-        :active="pageState.currentSchema?.id"
+        :actives="selectedIds"
         :disallow-drop="disallowDrop"
         class="outline-tree"
         @click="handleClickRow"
@@ -27,8 +27,8 @@
               row.label
             }}</span>
             <template v-if="row.id !== 'body'">
-              <svg-icon v-if="eyeOpen(row.id)" name="eye" @mouseup="showNode(row.rawData)"></svg-icon>
-              <svg-icon v-if="!eyeOpen(row.id)" name="eye-invisible" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon name="delete" @mouseup="delNode(row.rawData)"></svg-icon>
             </template>
           </div>
         </template>
@@ -37,11 +37,29 @@
   </plugin-panel>
 </template>
 
-<script>
-import { reactive, watch, computed, onActivated, onDeactivated, nextTick } from 'vue'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+<script lang="ts">
+import {
+  reactive,
+  watch,
+  computed,
+  onActivated,
+  onDeactivated,
+  provide,
+  onMounted,
+  onBeforeUnmount,
+  nextTick,
+  ref
+} from 'vue'
+import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useMaterial, useLayout, useMessage } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useMaterial,
+  useLayout,
+  useMessage,
+  useHistory,
+  getMergeMeta
+} from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import DraggableTree from './DraggableTree.vue'
 
@@ -49,7 +67,6 @@ const { PAGE_STATUS } = constants
 export default {
   components: {
     PluginPanel,
-    SvgButton,
     DraggableTree
   },
   props: {
@@ -58,12 +75,21 @@ export default {
     }
   },
   emits: ['close', 'fix-panel'],
-  setup(props) {
+  setup(props, { emit }) {
     const { pageState } = useCanvas()
     const { getMaterial } = useMaterial()
     const { PLUGIN_NAME } = useLayout()
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
+
+    const { useMultiSelect, registerHotkeyEvent, removeHotkeyEvent } = getMergeMeta('engine.canvas.container').api
+
+    const selectedIds = computed(() => useMultiSelect().multiSelectedStates.value.map((state) => state.id))
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+    provide('panelState', panelState)
 
     const filterSchema = (data) => {
       const translateChild = (data) => {
@@ -133,6 +159,16 @@ export default {
       clearSelect()
     }
 
+    const delNode = (data) => {
+      const { clearSelect } = useCanvas().canvasApi.value
+      useCanvas().operateNode({
+        type: 'delete',
+        id: data.id
+      })
+      clearSelect()
+      useHistory().addHistory()
+    }
+
     const handleMouseEnterRow = (row) => {
       const { hoverNode } = useCanvas().canvasApi.value
 
@@ -185,9 +221,10 @@ export default {
       })
     }
 
-    const handleClickRow = (row) => {
+    const handleClickRow = (event, row) => {
+      const isCtrlKey = event.ctrlKey || event.metaKey
       const { selectNode } = useCanvas().canvasApi.value
-      selectNode(row.id, 'clickTree')
+      selectNode(row.id, 'clickTree', isCtrlKey)
     }
 
     const getIconName = (row) => {
@@ -195,9 +232,31 @@ export default {
       return iconName.toLowerCase()
     }
 
+    const panelRef = ref(null)
+
+    // 由于copy，paste等事件需要在document上监听才有效果，这里加了一个事件过滤器。当焦点在大纲树上时才触发热键事件
+    const eventFilter = () => {
+      return panelRef.value.$el.contains(document.activeElement)
+    }
+
+    onMounted(() => {
+      if (panelRef.value) {
+        registerHotkeyEvent(document, { eventFilter })
+      }
+    })
+
+    onBeforeUnmount(() => {
+      if (panelRef.value) {
+        removeHotkeyEvent(document)
+      }
+    })
+
     return {
       panelFixed,
+      selectedIds,
+      panelRef,
       eyeOpen,
+      delNode,
       showNode,
       state,
       PLUGIN_NAME,
@@ -216,6 +275,9 @@ export default {
 .outlinebox {
   height: 100%;
   overflow: hidden;
+  &:focus {
+    outline: none;
+  }
 }
 .outline-tree {
   flex: 1;
@@ -232,11 +294,15 @@ export default {
       color: var(--te-common-icon-hover);
     }
   }
-  svg.icon-eye {
+  svg.icon-eye,
+  svg.icon-delete {
     visibility: hidden;
   }
-  .tree-row:hover svg.icon-eye {
-    visibility: unset;
+  .tree-row:hover {
+    svg.icon-eye,
+    svg.icon-delete {
+      visibility: unset;
+    }
   }
   .row-content {
     flex: 1;

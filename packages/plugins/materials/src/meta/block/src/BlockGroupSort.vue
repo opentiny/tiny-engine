@@ -27,7 +27,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { iconDeltaDown } from '@opentiny/vue-icon'

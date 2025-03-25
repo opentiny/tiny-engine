@@ -1,9 +1,9 @@
 <template>
-  <div v-for="multiState in multiSelectedStates" :key="multiState.id">
+  <div v-for="state in multiSelectedStates" :key="state.id">
     <canvas-action
       :hoverState="hoverState"
       :inactiveHoverState="inactiveHoverState"
-      :selectState="multiState"
+      :selectState="state"
       :lineState="lineState"
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
@@ -14,8 +14,8 @@
   </div>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
-  <canvas-divider :selectState="selectState"></canvas-divider>
-  <canvas-resize-border :iframe="iframe"></canvas-resize-border>
+  <canvas-divider :selectState="computedSelectState"></canvas-divider>
+  <canvas-resize-border :selectState="computedSelectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
     <template v-if="!loading">
       <iframe
@@ -30,13 +30,19 @@
   <canvas-menu @insert="insertComponent"></canvas-menu>
   <!-- 快捷选择物料面板 -->
   <div v-if="insertPosition" ref="insertPanel" class="insert-panel">
-    <component :is="materialsPanel" :shortcut="insertPosition" @close="insertPosition = false"></component>
+    <component
+      :is="materialsPanel"
+      class="component-wrap"
+      :shortcut="insertPosition"
+      @close="insertPosition = false"
+    ></component>
   </div>
   <!-- 【添加父级容器】快捷选择物料面板 -->
   <div v-if="insertContainer" ref="containerPanel" class="insert-panel">
     <component
       :is="materialsPanel"
       :shortcut="insertContainer"
+      class="component-wrap"
       groupName="layout"
       @close="insertContainer = false"
     ></component>
@@ -62,9 +68,9 @@ import {
   onMouseUp,
   dragMove,
   dragState,
+  initialRectState,
   hoverState,
   inactiveHoverState,
-  selectState,
   lineState,
   removeNodeById,
   syncNodeScroll,
@@ -107,7 +113,17 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates, multiStateLength, toggleMultiSelection } = useMultiSelect()
+    const { multiSelectedStates } = useMultiSelect()
+
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
+
+    const computedSelectState = computed(() => {
+      if (multiSelectedStates.value.length === 1) {
+        return multiSelectedStates.value[0]
+      }
+
+      return initialRectState
+    })
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -119,11 +135,12 @@ export default {
         const currentElement = querySelectById(getCurrent().schema?.id)
 
         if (!currentElement?.contains(element) || event.button === 0) {
+          const isCtrlKey = event.ctrlKey || event.metaKey
           const loopId = element.getAttribute(NODE_LOOP)
           if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`)
+            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`, isCtrlKey)
           } else {
-            node = await selectNode(element.getAttribute(NODE_UID))
+            node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
           }
         }
 
@@ -204,8 +221,6 @@ export default {
             if (!element) {
               return
             }
-
-            toggleMultiSelection(event, element)
 
             insertPosition.value = false
             insertContainer.value = false
@@ -300,16 +315,6 @@ export default {
       hoverState.slot = slotName
     }
 
-    watch(
-      () => multiStateLength.value,
-      (newVal) => {
-        if (newVal > 1) {
-          // 清空属性面板
-          selectNode(null)
-        }
-      }
-    )
-
     onMounted(() => run(iframe))
     onUnmounted(() => {
       if (iframe.value?.contentDocument) {
@@ -326,7 +331,7 @@ export default {
       dragState,
       hoverState,
       inactiveHoverState,
-      selectState,
+      computedSelectState,
       lineState,
       multiSelectedStates,
       multiStateLength,
@@ -353,7 +358,11 @@ export default {
   position: fixed;
   top: 200px;
   left: 400px;
-  width: 480px;
+
+  .component-wrap {
+    width: 480px !important;
+  }
+
   :deep(.components-wrap) {
     & > .tiny-collapse {
       max-height: 300px;

@@ -2,7 +2,7 @@
   <span :class="['canvas-text', className]">{{ text }}</span>
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     text: {

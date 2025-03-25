@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import {
   useBlock,

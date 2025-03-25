@@ -33,7 +33,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'

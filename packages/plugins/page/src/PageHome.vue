@@ -10,13 +10,13 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive, watchEffect, inject } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { generateRouter } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
-import http from './http.js'
+import http from './http'
 
 export default {
   components: {

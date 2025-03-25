@@ -3,5 +3,5 @@ export default {
   title: '物料',
   type: 'plugins',
   icon: 'plugin-icon-materials',
-  align: 'top'
+  align: 'leftTop'
 }

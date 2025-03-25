@@ -26,7 +26,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 import { Tooltip, Popover, Radio, RadioGroup } from '@opentiny/vue'
 import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
@@ -52,7 +52,7 @@ export default {
   },
   emits: ['change', 'update:modelValue'],
   setup(props, { emit }) {
-    const getModelValueType = (types, value) => {
+    const getModelValueType = (types: string[], value: any) => {
       let result = types[0] || ''
 
       if (value === undefined) return result
@@ -71,7 +71,7 @@ export default {
     const defaultType = getModelValueType(props.meta.type, props.meta.defaultValue)
 
     const initModelValue = () =>
-      props.meta.type.map((type) => {
+      props.meta.type.map((type: string) => {
         if (type === currentType) return { modelValue: props.meta.widget?.props?.modelValue }
         if (type === defaultType) return { modelValue: props.meta.defaultValue }
         return { modelValue: null }
@@ -82,7 +82,7 @@ export default {
       typesValue: initModelValue() // 保存多个组件的modelValue
     })
 
-    const TYPE_MAP = {
+    const TYPE_MAP: Record<string, string> = {
       string: '字符串',
       number: '数字',
       boolean: '布尔值',
@@ -90,15 +90,15 @@ export default {
       array: '数组'
     }
 
-    const change = (val) => {
-      const itemIndex = props.meta.type.findIndex((type) => type === val[0])
+    const change = (val: any[]) => {
+      const itemIndex = props.meta.type.findIndex((type: any) => type === val[0])
       if (itemIndex > -1) {
         emit('update:modelValue', state.typesValue[itemIndex].modelValue)
       }
       emit('change', val)
     }
 
-    const handleChange = (index, val) => {
+    const handleChange = (index: string | number, val: any) => {
       const type = props.meta.type[index]
 
       if (state.type !== type) {

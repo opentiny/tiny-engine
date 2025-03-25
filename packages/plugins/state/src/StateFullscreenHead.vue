@@ -4,7 +4,7 @@
     <close-icon @close="close"></close-icon>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { CloseIcon } from '@opentiny/tiny-engine-common'
 export default {
   props: {

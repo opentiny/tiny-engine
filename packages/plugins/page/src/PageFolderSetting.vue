@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="pageFolder-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :fixed-name="PLUGIN_NAME.AppManage"
+    :align="align"
+    :title="state.title"
+    class="pageFolder-plugin-setting"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="saveFolderSetting">保存</tiny-button>
@@ -26,12 +32,13 @@
   </plugin-setting>
 </template>
 
-<script>
-import { reactive, ref } from 'vue'
+<script lang="ts">
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import {
   usePage,
+  useLayout,
   useModal,
   useNotify,
   getMergeRegistry,
@@ -41,7 +48,7 @@ import {
 import { isEqual } from '@opentiny/vue-renderless/common/object'
 import throttle from '@opentiny/vue-renderless/common/deps/throttle'
 import meta from '../meta'
-import http from './http.js'
+import http from './http'
 
 const isShow = ref(false)
 export const openFolderSettingPanel = () => {
@@ -82,6 +89,9 @@ export default {
     const registry = getMergeRegistry(meta.type, meta.id)
     const pageGeneral = registry.components.PageGeneral
     const folderGeneralRef = ref(null)
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
 
     const closeFolderSetting = () => {
       if (isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)) {
@@ -197,6 +207,8 @@ export default {
     }
 
     return {
+      align,
+      PLUGIN_NAME,
       saveFolderSetting,
       deleteFolder: throttle(5000, true, deleteFolder),
       pageGeneral,

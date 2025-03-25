@@ -81,7 +81,7 @@ export default {
     const showpopover = ref(false)
 
     const themeShowType = computed(() => {
-      let filterList = THEME_DATA.value.filter((item) => ['light', 'dark'].includes(item.type)) || []
+      const filterList = THEME_DATA.value.filter((item) => ['light', 'dark'].includes(item.type)) || []
       return THEME_DATA.value.length === filterList.length
     })
 

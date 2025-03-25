@@ -1,36 +1,42 @@
 <template>
-  <div v-if="isOpen" class="global-data-handler">
-    <plugin-setting title="全局设置" @cancel="close" @save="saveGlobalDataHandle">
-      <template #content>
-        <tiny-collapse v-model="activeNames">
-          <tiny-collapse-item title="跨域代理配置（proxy）" name="proxy">
-            <data-handler-editor v-model="state.proxy" :options="options"></data-handler-editor>
-          </tiny-collapse-item>
-          <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
-            <data-handler-editor v-model="state.willFetchValue"></data-handler-editor>
-          </tiny-collapse-item>
-          <tiny-collapse-item title="请求完成回调函数（dataHandler）" name="dataHandler">
-            <data-handler-editor v-model="state.dataHandlerValue"></data-handler-editor>
-          </tiny-collapse-item>
-          <tiny-collapse-item title="请求失败后的回调函数（errorHandler）" name="errorHandler">
-            <data-handler-editor v-model="state.errorHandlerValue"></data-handler-editor>
-          </tiny-collapse-item>
-        </tiny-collapse>
-      </template>
-    </plugin-setting>
-  </div>
+  <plugin-setting
+    v-if="isOpen"
+    title="全局设置"
+    class="plugin-datasource global-data-handler"
+    :align="align"
+    :fixed-name="PLUGIN_NAME.Collections"
+    @cancel="close"
+    @save="saveGlobalDataHandle"
+  >
+    <template #content>
+      <tiny-collapse v-model="activeNames">
+        <tiny-collapse-item title="跨域代理配置（proxy）" name="proxy">
+          <data-handler-editor v-model="state.proxy" :options="options"></data-handler-editor>
+        </tiny-collapse-item>
+        <tiny-collapse-item title="请求参数处理函数（willFetch）" name="willFetch">
+          <data-handler-editor v-model="state.willFetchValue"></data-handler-editor>
+        </tiny-collapse-item>
+        <tiny-collapse-item title="请求完成回调函数（dataHandler）" name="dataHandler">
+          <data-handler-editor v-model="state.dataHandlerValue"></data-handler-editor>
+        </tiny-collapse-item>
+        <tiny-collapse-item title="请求失败后的回调函数（errorHandler）" name="errorHandler">
+          <data-handler-editor v-model="state.errorHandlerValue"></data-handler-editor>
+        </tiny-collapse-item>
+      </tiny-collapse>
+    </template>
+  </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
-import { watch, ref, nextTick, reactive } from 'vue'
+import { watch, ref, nextTick, reactive, computed } from 'vue'
 import { requestGlobalDataHandler } from './js/http'
-import { useModal, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useModal, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { Collapse, CollapseItem } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 
-const { DEFAULT_INTERCEPTOR } = constants
+const { DEFAULT_INTERCEPTOR, DEFAULT_PROXY } = constants
 
 const isOpen = ref(false)
 
@@ -54,6 +60,8 @@ export default {
     const {
       appSchemaState: { proxy, willFetch, dataHandler, errorHandler }
     } = useResource()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
     const options = reactive({
       language: 'json',
       minimap: { enabled: true },
@@ -112,6 +120,8 @@ export default {
     )
 
     return {
+      align,
+      PLUGIN_NAME,
       isOpen,
       close,
       saveGlobalDataHandle,

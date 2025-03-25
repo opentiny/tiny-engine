@@ -22,7 +22,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { inject } from 'vue'
 import { Numeric, FormItem } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'

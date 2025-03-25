@@ -1,6 +1,14 @@
 <template>
   <div
-    :class="['plugin-setting', { 'second-panel': isSecond }, { 'full-screen': state.isFullScreen }]"
+    id="panel-setting"
+    :class="[
+      'plugin-setting',
+      { 'second-panel': isSecond },
+      { 'full-screen': state.isFullScreen },
+      { 'align-right': align.includes('right') },
+      shadowClass
+    ]"
+    :style="alignStyle"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -30,12 +38,13 @@
   </div>
 </template>
 
-<script>
-import { reactive, watchEffect } from 'vue'
+<script lang="ts">
+import { nextTick, reactive, watchEffect, computed } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
 import ButtonGroup from './ButtonGroup.vue'
 import SvgButton from './SvgButton.vue'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 
 const EVENTS = {
   FULL_SCREEN_CHANGE: 'fullScreenChange',
@@ -91,12 +100,42 @@ export default {
     icon: {
       type: Object,
       default: iconPlus()
+    },
+    fixedName: {
+      type: String,
+      default: ''
+    },
+    align: {
+      type: String,
+      default: 'leftTop'
     }
   },
   emits: [EVENTS.FULL_SCREEN_CHANGE, EVENTS.SAVE, EVENTS.CANCEL, EVENTS.ADD, EVENTS.CLICK],
   setup(props, { emit }) {
     const state = reactive({
       isFullScreen: false
+    })
+
+    const { getPluginWidth } = useLayout()
+
+    const firstPanelOffset = computed(() => {
+      return getPluginWidth(props.fixedName) + 1
+    })
+
+    const secondPanelAlign = computed(() => {
+      return props.align.includes('left') ? 'left' : 'right'
+    })
+
+    const alignStyle = computed(() => {
+      return `${secondPanelAlign.value} : ${firstPanelOffset.value}px`
+    })
+
+    watchEffect(() => {
+      // 处理二级面板偏移量
+      const secondPanelOffset = document.querySelector('.plugin-setting')?.clientWidth + firstPanelOffset.value
+      nextTick(() => {
+        document.querySelector('.second-panel')?.style.setProperty(secondPanelAlign.value, `${secondPanelOffset}px`)
+      })
     })
 
     watchEffect(() => {
@@ -108,11 +147,20 @@ export default {
       emit(EVENTS.FULL_SCREEN_CHANGE, state.isFullScreen)
     }
 
-    const getFullScreenLabel = (isFullScreen) => {
+    const getFullScreenLabel = (isFullScreen: boolean) => {
       return isFullScreen ? '收起' : '全屏查看'
     }
 
+    // 计算属性用于确定阴影类
+    const shadowClass = computed(() => {
+      if (props.isSecond) return ''
+      return props.align.includes('right') ? 'shadow-right' : 'shadow-left'
+    })
+
     return {
+      alignStyle,
+      shadowClass,
+      firstPanelOffset,
       state,
       fullScreen,
       getFullScreenLabel
@@ -124,7 +172,6 @@ export default {
 <style lang="less" scoped>
 .plugin-setting {
   position: absolute;
-  left: var(--base-left-panel-width);
   top: 0;
   width: var(--base-collection-panel-width);
   height: 100%;
@@ -132,17 +179,24 @@ export default {
   background: var(--te-component-common-bg-color);
   overflow: hidden;
   border-left: 1px solid var(--te-component-common-border-color-divider);
+
   &:not(.second-panel) {
-    box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
-    border-right: none;
-    border-left: none;
+    &.shadow-left {
+      box-shadow: 6px 0px 3px 0px var(--te-component-common-shadow-color);
+      border-right: none;
+    }
+
+    &.shadow-right {
+      box-shadow: -6px 0px 3px 0px var(--te-component-common-shadow-color);
+      border-left: none;
+    }
   }
+
   &.full-screen {
     width: var(--base-collection-panel-full-screen-width);
   }
 
   &.second-panel {
-    left: calc(var(--base-left-panel-width) + var(--base-collection-panel-width));
     z-index: 1;
   }
 
@@ -167,6 +221,7 @@ export default {
     color: var(--te-component-common-text-color-primary);
     padding: 0 12px;
     border-bottom: 1px solid var(--te-component-common-border-color-divider);
+
     .plugin-setting-header-title {
       font-size: 12px;
       font-weight: 700;
@@ -175,9 +230,11 @@ export default {
       text-overflow: ellipsis;
       white-space: nowrap;
     }
+
     :deep(.svg-button + .svg-button) {
       margin: 0;
     }
+
     :deep(.tiny-button.tiny-button) {
       margin-right: 0;
     }
@@ -194,5 +251,9 @@ export default {
     display: flex;
     align-items: center;
   }
+}
+
+.align-right {
+  right: 0;
 }
 </style>

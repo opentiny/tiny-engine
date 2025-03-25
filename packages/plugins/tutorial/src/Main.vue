@@ -41,7 +41,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { IconChevronRight } from '@opentiny/vue-icon'

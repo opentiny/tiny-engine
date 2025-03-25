@@ -45,7 +45,7 @@
   </plugin-setting>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive, ref, watch } from 'vue'
 import { Button, Input, Numeric, DatePicker, Form, FormItem, Switch, Slider } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'

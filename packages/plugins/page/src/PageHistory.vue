@@ -2,13 +2,13 @@
   <block-history-list :history="list" @preview="previewHistory" @restore="restoreHistory"></block-history-list>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { usePage, useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { fetchPageHistory } from './http.js'
+import { fetchPageHistory } from './http'
 
 export default {
   components: {

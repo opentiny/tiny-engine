@@ -5,5 +5,5 @@ export default {
   title: 'AI对话框',
   type: 'plugins',
   icon: RobotIcon,
-  align: 'bottom'
+  align: 'leftBottom'
 }

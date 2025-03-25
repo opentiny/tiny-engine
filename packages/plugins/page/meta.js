@@ -3,5 +3,5 @@ export default {
   title: '页面',
   type: 'plugins',
   icon: 'plugin-icon-page',
-  align: 'top'
+  align: 'leftTop'
 }

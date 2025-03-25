@@ -16,7 +16,7 @@
   </block-guide>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import BlockGuide from './BlockGuide.vue'
 import BlockPropertyList from './BlockPropertyList.vue'

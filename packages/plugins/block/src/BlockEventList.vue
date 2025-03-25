@@ -15,7 +15,7 @@
   </meta-list-items>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'

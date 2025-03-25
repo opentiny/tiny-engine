@@ -37,8 +37,23 @@ const formatScript = (string) => {
     ...prettierConfig
   }
   try {
-    // 低码中的编辑器大多只会输入js值，并不是一个完整的javascript表达式，无法格式化，因此需要特殊处理预格式化该种情形
-    newStr = prettier.format(`!${string}`, options).substring(1).replace(/\n$/, '')
+    const ast = string2Ast(string)
+    // javascript 在 prettier 格式化的时候，会自动在前面加上逗号“；”，因此该种情形需要特殊处理格式化
+    if (ast.program.body?.length === 1 && ast.program.body?.[0]?.type === 'ExpressionStatement') {
+      // 将 javascript 表达式 包裹在 "!()" 中，格式化完成之后，再从里面取出来格式化之后的值
+      newStr = prettier.format(`!(${string})`, options).replace(/\r?\n$/, '')
+
+      // 格式化后，仍存在包裹的 "!()"
+      if (newStr.match(/^!\([\s\S]*\)$/)) {
+        newStr = newStr.replace(/^!\(([\s\S]*)\)$/, '$1')
+      } else {
+        // 格式化后，仅存在开头的 "!"
+        newStr = newStr.replace(/^!/, '')
+      }
+    } else {
+      // 其他类型，不需要特殊处理
+      newStr = prettier.format(string, options)
+    }
   } catch (error) {
     newStr = prettier.format(newStr, options)
   }

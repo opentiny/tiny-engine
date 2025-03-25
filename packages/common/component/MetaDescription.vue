@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect, reactive } from 'vue'
 
 const $constants = {

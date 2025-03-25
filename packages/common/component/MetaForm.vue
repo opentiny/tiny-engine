@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 import { Form, FormItem, Input, Button } from '@opentiny/vue'
 

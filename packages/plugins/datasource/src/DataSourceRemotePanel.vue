@@ -2,8 +2,9 @@
   <div class="remote">
     <plugin-setting
       title="获取远程字段"
-      class="remote-setting"
+      class="remote-setting plugin-datasource"
       :isSecond="true"
+      :align="align"
       @cancel="closePanel"
       @save="saveRemote"
     >
@@ -51,8 +52,8 @@
   </div>
 </template>
 
-<script>
-import { reactive, watch, ref } from 'vue'
+<script lang="ts">
+import { reactive, watch, ref, computed } from 'vue'
 import { Collapse, CollapseItem, Tabs, TabItem, Button } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import DataSourceRemoteForm, { getServiceForm } from './DataSourceRemoteForm.vue'
@@ -61,7 +62,7 @@ import DataSourceRemoteAutoload from './DataSourceRemoteAutoload.vue'
 import DataSourceRemoteAdapter from './DataSourceRemoteDataAdapter.vue'
 import DataSrouceRemoteDataResult, { getResponseData } from './DataSourceRemoteDataResult.vue'
 import { open as openRemoteMapping } from './DataSourceRemoteMapping.vue'
-import { useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useDataSource, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { getRequest } from './js/datasource'
@@ -113,6 +114,9 @@ export default {
   setup(props, { emit }) {
     const dataSourceRemoteAdapteRef = ref(null)
     const { dataSourceState } = useDataSource()
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     const state = reactive({
       remoteData: { options: {} },
@@ -179,7 +183,7 @@ export default {
         // await validate() 如果验证不通过会抛出异常，而不是返回 false
         await getServiceForm().validate()
       } catch (error) {
-        return
+        throw new Error(`请先完成表单验证: ${error?.message || ''}`)
       }
 
       const options = { ...state.remoteData.options }
@@ -221,6 +225,7 @@ export default {
     }
 
     return {
+      align,
       state,
       dataSourceRemoteAdapteRef,
       closePanel: close,

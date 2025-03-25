@@ -3,5 +3,5 @@ export default {
   title: 'TinyEngine 教程',
   type: 'plugins',
   icon: 'plugin-icon-tutorial',
-  align: 'bottom'
+  align: 'leftBottom'
 }

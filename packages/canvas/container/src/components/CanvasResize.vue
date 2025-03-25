@@ -92,12 +92,26 @@ export default {
 
     watch(() => useLayout().getDimension().width, setScale, { flush: 'post', immediate: true })
 
-    watch(() => useLayout().getPluginState().fixedPanels, setScale, { flush: 'post' })
+    watch(() => useLayout().leftFixedPanelsStorage.value, setScale, { flush: 'post' })
 
     watch(
       () => useLayout().getPluginState().render,
       (value) => {
         const currentFixed = useLayout().getPluginState().fixedPanels.includes(value)
+
+        if (!value || currentFixed) {
+          setScale()
+        }
+      },
+      { flush: 'post' }
+    )
+
+    watch(() => useLayout().rightFixedPanelsStorage.value, setScale, { flush: 'post' })
+
+    watch(
+      () => useLayout().getSettingState().render,
+      (value) => {
+        const currentFixed = useLayout().rightFixedPanelsStorage.value.includes(value)
 
         if (!value || currentFixed) {
           setScale()

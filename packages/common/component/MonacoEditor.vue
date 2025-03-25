@@ -48,7 +48,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, ref, onActivated, onDeactivated } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import PublicIcon from './PublicIcon.vue'
@@ -63,9 +63,13 @@ export default {
     TinyTooltip: Tooltip
   },
   props: {
-    value: String,
+    value: {
+      type: String,
+      default: ''
+    },
     options: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     showFormatBtn: {
       type: Boolean,
@@ -78,7 +82,7 @@ export default {
   },
   emits: ['editorDidMount', 'change', 'fullscreenChange', 'shortcutSave'],
   setup(props, { emit }) {
-    const editor = ref(null)
+    const editor = ref<any>(null)
     const fullscreen = ref(false)
     const editorOptions = computed(() => {
       return {
@@ -126,7 +130,7 @@ export default {
       editor.value.getEditor().dispose()
     })
 
-    const switchFullScreen = (value) => {
+    const switchFullScreen = (value: boolean) => {
       fullscreen.value = value
       emit('fullscreenChange', value)
     }

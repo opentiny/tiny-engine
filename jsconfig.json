@@ -6,7 +6,7 @@
       "@/*": ["packages/*"],
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],
       "@opentiny/tiny-engine-meta-register": ["packages/register/src/index.js"],
-      "@opentiny/tiny-engine-canvas": ["packages/canvas/src/index.js"],
+      "@opentiny/tiny-engine-canvas": ["packages/canvas/src/index"],
       "@opentiny/tiny-engine-plugin-materials": ["packages/plugins/materials/index"],
       "@opentiny/tiny-engine-plugin-state": ["packages/plugins/state/index"],
       "@opentiny/tiny-engine-plugin-script": ["packages/plugins/script/index"],
@@ -61,7 +61,7 @@
       "@opentiny/tiny-engine-toolbar-theme-switch/*": ["packages/toolbars/themeSwitch/*"],
       "@opentiny/tiny-engine-toolbar-save/*": ["packages/toolbars/save/*"],
       "@opentiny/tiny-engine-svgs/*": ["packages/svgs/*"],
-      "@opentiny/tiny-engine-utils": ["packages/utils/src/index.js"],
+      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
       "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"],
       "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"]
     }

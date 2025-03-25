@@ -15,7 +15,7 @@
   </teleport>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'

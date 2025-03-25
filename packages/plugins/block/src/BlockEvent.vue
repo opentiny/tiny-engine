@@ -20,7 +20,7 @@
   </block-guide>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive } from 'vue'
 import { Row as TinyRow, Col as TinyCol, Alert as TinyAlert } from '@opentiny/vue'
 import BlockGuide from './BlockGuide.vue'

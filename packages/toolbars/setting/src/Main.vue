@@ -8,7 +8,7 @@
   </toolbar-base>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -32,12 +32,12 @@ export default {
     const { confirm, message } = useModal()
 
     const openBlockSetting = () => {
-      activePlugin(PLUGIN_NAME.BlockManage).then((api) => {
+      activePlugin(PLUGIN_NAME.BlockManage).then((api: any) => {
         api.openSettingPanel({ item: getCurrentBlock() })
       })
     }
 
-    const openPageAndInit = async (api) => {
+    const openPageAndInit = async (api: any) => {
       const { currentPage } = pageState
       api.openPageSettingPanel()
       const page = await api.getPageById(currentPage.id)
@@ -55,7 +55,7 @@ export default {
         return
       }
 
-      activePlugin(PLUGIN_NAME.AppManage).then((api) => {
+      activePlugin(PLUGIN_NAME.AppManage).then((api: any) => {
         if (isChangePageData()) {
           confirm({
             title: '提示',

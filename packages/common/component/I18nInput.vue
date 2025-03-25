@@ -34,7 +34,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, ref, watchEffect } from 'vue'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
@@ -70,11 +70,11 @@ export default {
       inputValue.value = useTranslate().translate(props.modelValue)
     })
 
-    const inputChange = (event) => {
+    const inputChange = (event: { target: { value: any } }) => {
       emit('update:modelValue', event.target.value) // 直接修改时去掉绑定
     }
 
-    const setI18n = (data) => {
+    const setI18n = (data: any) => {
       emit('update:modelValue', data)
     }
 

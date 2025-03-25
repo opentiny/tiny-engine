@@ -3,7 +3,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import {
   useMaterial,
   useCanvas,

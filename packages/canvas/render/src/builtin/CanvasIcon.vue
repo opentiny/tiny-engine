@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 import * as SvgIcons from '@opentiny/vue-icon'
 import { h } from 'vue'
 

@@ -6,7 +6,7 @@
   </video-guide>
 </template>
 
-<script>
+<script lang="ts">
 import { VideoGuide } from '@opentiny/tiny-engine-common'
 
 export default {

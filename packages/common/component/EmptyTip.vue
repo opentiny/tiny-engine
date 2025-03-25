@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { iconInfo } from '@opentiny/vue-icon'
 
 export default {

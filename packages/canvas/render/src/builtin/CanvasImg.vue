@@ -2,7 +2,7 @@
   <img :src="src" :style="style" />
 </template>
 
-<script>
+<script lang="ts">
 export default {
   props: {
     src: {

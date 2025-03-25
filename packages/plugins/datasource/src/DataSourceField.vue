@@ -32,7 +32,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceFieldList from './DataSourceFieldList.vue'

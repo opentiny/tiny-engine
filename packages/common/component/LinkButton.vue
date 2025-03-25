@@ -4,7 +4,7 @@
   </a>
 </template>
 
-<script>
+<script lang="ts">
 import SvgButton from './SvgButton.vue'
 export default {
   components: {

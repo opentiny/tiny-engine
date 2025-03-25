@@ -36,7 +36,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive } from 'vue'
 import { CheckboxGroup, Checkbox, Select, Option } from '@opentiny/vue'
 

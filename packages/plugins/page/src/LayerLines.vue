@@ -8,7 +8,7 @@
   </span>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { defineProps } from 'vue'
 
 defineProps({

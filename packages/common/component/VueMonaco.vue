@@ -1,7 +1,7 @@
 <template>
   <div ref="monacoRef"></div>
 </template>
-<script>
+<script lang="ts">
 import * as monacoEditor from 'monaco-editor'
 import { watch, onMounted, nextTick, onBeforeUnmount, ref } from 'vue'
 import { formatString } from '../js/ast'
@@ -9,10 +9,7 @@ import { formatString } from '../js/ast'
 const defaultMonacoEditorTheme = 'vs'
 const globalMonacoEditorTheme = ref(defaultMonacoEditorTheme)
 
-/**
- * @param {'vs' | 'vs-dark' | undefined} theme
- */
-export const setGlobalMonacoEditorTheme = (theme) => {
+export const setGlobalMonacoEditorTheme = (theme?: 'vs' | 'vs-dark') => {
   globalMonacoEditorTheme.value = theme || defaultMonacoEditorTheme
 }
 
@@ -33,7 +30,8 @@ export default {
       type: String
     },
     options: {
-      type: Object
+      type: Object,
+      default: () => ({})
     },
     amdRequire: {
       type: Function
@@ -45,7 +43,7 @@ export default {
   },
   emits: ['change', 'editorWillMount', 'editorDidMount', 'shortcutSave'],
   setup(props, { emit }) {
-    const vueMonaco = {
+    const vueMonaco: { editor: any; monaco: any } = {
       editor: null,
       monaco: null
     }
@@ -71,7 +69,7 @@ export default {
 
     const getModelMarkers = () => vueMonaco.monaco.editor.getModelMarkers()
 
-    const initMonaco = (monaco) => {
+    const initMonaco = (monaco: any) => {
       emit('editorWillMount', vueMonaco.monaco)
 
       const options = {
@@ -102,7 +100,7 @@ export default {
 
       const editor2 = getModifiedEditor()
 
-      editor2.onDidChangeModelContent((event) => {
+      editor2.onDidChangeModelContent((event: any) => {
         const value = editor2.getValue()
 
         if (props.value !== value) {
@@ -130,7 +128,7 @@ export default {
             label: 'Prettier',
             precondition: null,
             contextMenuGroupId: 'navigation',
-            run(editor) {
+            run(editor: { getValue: () => any; setValue: (arg0: any) => void }) {
               const currentValue = editor.getValue()
               const newValue = formatString(currentValue, props.options.language)
 

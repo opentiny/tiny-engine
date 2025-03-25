@@ -16,7 +16,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { watch, ref } from 'vue'
 import { Form, FormItem, RadioGroup, Radio } from '@opentiny/vue'
 

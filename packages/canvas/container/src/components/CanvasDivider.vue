@@ -71,10 +71,10 @@ export default {
   },
   setup(props) {
     const state = reactive({
-      horizontalLeft: 0,
-      horizontalTop: 0,
-      verLeft: 0,
-      verTop: 0,
+      horizontalLeft: '',
+      horizontalTop: '',
+      verLeft: '',
+      verTop: '',
       showVerticalDivider: false,
       showHorizontalDivider: false,
       showDividerLine: false,
@@ -181,7 +181,7 @@ export default {
         state.dividerStyle = {
           width: '1px',
           height: `${height}px`,
-          left: `${state.verLeft}px`,
+          left: state.verLeft,
           top: `${top}px`
         }
       } else {
@@ -189,7 +189,7 @@ export default {
           width: `${width}px`,
           height: '1px',
           left: `${left}px`,
-          top: `${state.horizontalTop}px`
+          top: state.horizontalTop
         }
       }
       state.showDividerLine = true

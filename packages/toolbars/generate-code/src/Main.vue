@@ -11,7 +11,7 @@
   </toolbar-base>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive } from 'vue'
 import {
   useBlock,
@@ -27,7 +27,7 @@ import { fs } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
-
+// @ts-ignore
 export default {
   components: {
     GenerateFileSelector: FileSelector,

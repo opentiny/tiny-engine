@@ -16,7 +16,7 @@
     </template>
   </tiny-popover>
 </template>
-<script>
+<script lang="ts">
 import { Popover } from '@opentiny/vue'
 
 export default {

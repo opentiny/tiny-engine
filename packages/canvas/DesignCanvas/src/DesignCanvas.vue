@@ -1,5 +1,5 @@
 <template>
-  <component :is="CanvasLayout">
+  <component :is="CanvasLayout" :class="{ 'not-selected': getMoveDragBarState() }">
     <template #header>
       <component v-if="!isBlock()" :is="CanvasRouteBar"></component>
     </template>
@@ -66,6 +66,8 @@ export default {
     let showModal = false // 弹窗标识
     const { canvasSrc = '' } = getOptions(meta.id) || {}
     const canvasSrcDoc = ref('')
+
+    const { getMoveDragBarState, getFixedPanelsStatus, closePlugin, closeSetting } = useLayout()
 
     useMessage().subscribe({
       topic: 'init_canvas_deps',
@@ -151,9 +153,17 @@ export default {
     )
 
     const nodeSelected = (node, parent, type, id) => {
+      const { leftPanelFixed, rightPanelFixed } = getFixedPanelsStatus()
+
       const { toolbars } = useLayout().layoutState
       if (type !== 'clickTree') {
-        useLayout().closePlugin()
+        if (!leftPanelFixed) {
+          closePlugin()
+        }
+
+        if (!rightPanelFixed) {
+          closeSetting(true)
+        }
       }
 
       const { getSchema, getNodePath } = useCanvas()
@@ -275,6 +285,7 @@ export default {
         useNotify
       },
       isBlock,
+      getMoveDragBarState,
       CanvasLayout,
       canvasRef,
       CanvasContainer,
@@ -284,3 +295,10 @@ export default {
   }
 }
 </script>
+
+<style lang="less" scoped>
+.not-selected {
+  pointer-events: none;
+  user-select: none;
+}
+</style>

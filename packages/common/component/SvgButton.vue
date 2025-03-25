@@ -7,7 +7,7 @@
   </span>
 </template>
 
-<script>
+<script lang="ts">
 import { computed } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 
@@ -37,8 +37,8 @@ export default {
   setup(props, { emit }) {
     const isTinyIcon = computed(() => props.name.toLowerCase().indexOf('icon') === 0)
 
-    const handleClick = (event) => {
-      event.target.blur()
+    const handleClick = (event: MouseEvent) => {
+      event.target?.blur()
       emit('click', event)
     }
 

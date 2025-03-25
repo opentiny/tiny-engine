@@ -29,7 +29,7 @@
   </data-source-field-form>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watchEffect } from 'vue'
 import fieldTypes from './config'
 import DataSourceFieldForm from './DataSourceFieldForm.vue'

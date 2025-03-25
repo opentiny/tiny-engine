@@ -9,7 +9,7 @@
   </meta-description>
 </template>
 
-<script>
+<script lang="ts">
 import { useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
 import MetaDescription from './MetaDescription.vue'
 
@@ -22,7 +22,7 @@ export default {
     const { PLUGIN_NAME, activePlugin } = useLayout()
 
     const openBlockSetting = () => {
-      activePlugin(PLUGIN_NAME.BlockManage).then((api) => {
+      activePlugin(PLUGIN_NAME.BlockManage).then((api: { openSettingPanel: (arg0: { item: any }) => void }) => {
         api.openSettingPanel({ item: getCurrentBlock() })
       })
     }

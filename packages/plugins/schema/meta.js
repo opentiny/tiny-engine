@@ -3,5 +3,7 @@ export default {
   title: '页面 Schema',
   type: 'plugins',
   icon: 'plugin-icon-page-schema',
-  align: 'bottom'
+  align: 'leftBottom',
+  widthResizable: true,
+  width: 600
 }

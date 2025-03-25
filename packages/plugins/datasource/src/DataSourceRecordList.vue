@@ -3,6 +3,8 @@
     v-if="isOpen"
     :is-icon-button="false"
     :showIfFullScreen="true"
+    :fixed-name="PLUGIN_NAME.Collections"
+    :align="align"
     title="静态数据管理"
     class="datasource-record-list"
     @cancel="closeRecordList"
@@ -77,7 +79,7 @@
   ></data-source-record-upload>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
@@ -122,7 +124,8 @@ export default {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
-    const { layoutState } = useLayout()
+    const { layoutState, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     const state = reactive({
       totalData: [],
@@ -155,6 +158,7 @@ export default {
           message: '复制失败，请尝试手动复制',
           type: 'error'
         })
+        throw new Error(e)
       }
     }
 
@@ -559,6 +563,8 @@ export default {
     }
 
     return {
+      align,
+      PLUGIN_NAME,
       isOpen,
       state,
       grid,

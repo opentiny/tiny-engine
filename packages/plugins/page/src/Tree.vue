@@ -37,7 +37,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import LayerLines from './LayerLines.vue'
 

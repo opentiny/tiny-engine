@@ -8,7 +8,7 @@
     </tiny-button>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { Button } from '@opentiny/vue'
 
 export default {

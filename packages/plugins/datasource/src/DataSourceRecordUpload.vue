@@ -68,7 +68,7 @@
   </tiny-modal>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, watch } from 'vue'
 import { Button, Modal, FileUpload } from '@opentiny/vue'
 import { getDataFromFile } from './js/datasource'

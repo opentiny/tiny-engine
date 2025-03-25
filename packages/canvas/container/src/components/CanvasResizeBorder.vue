@@ -9,13 +9,16 @@
 <script>
 import { reactive, watch } from 'vue'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { getCurrent, updateRect, selectState, querySelectById } from '../container'
+import { getCurrent, updateRect, querySelectById } from '../container'
 
 export default {
   props: {
     iframe: {
       type: Object,
       default: () => ({})
+    },
+    selectState: {
+      type: Object
     }
   },
   setup(props) {
@@ -118,7 +121,7 @@ export default {
     }
 
     const handleResizeStart = () => {
-      const { top, left, width, height } = selectState
+      const { top, left, width, height } = props.selectState
       const { parent, schema } = getCurrent()
 
       let startX = left
@@ -146,8 +149,8 @@ export default {
     }
 
     watch(
-      () => selectState,
-      () => {
+      () => props.selectState,
+      (selectState) => {
         const { top, left, width, height, componentName } = selectState
         const { parent, schema } = getCurrent()
 

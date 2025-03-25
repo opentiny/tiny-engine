@@ -4,7 +4,7 @@
   </tiny-checkbox>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Checkbox as TinyCheckbox } from '@opentiny/vue'
 import { computed, defineEmits, defineProps } from 'vue'
 

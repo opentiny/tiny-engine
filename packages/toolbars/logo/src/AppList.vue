@@ -9,7 +9,7 @@
   </tiny-select>
 </template>
 
-<script>
+<script lang="ts">
 import { useMessage, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { Select, Option } from '@opentiny/vue'
 
@@ -21,7 +21,7 @@ export default {
   setup() {
     const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
 
-    const appChange = (appId) => {
+    const appChange = (appId: string) => {
       useMessage().publish({ topic: 'app_id_changed', data: appId })
     }
 

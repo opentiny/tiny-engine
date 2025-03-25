@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isShow" :title="state.title" class="page-plugin-setting">
+  <plugin-setting
+    v-if="isShow"
+    :fixed-name="PLUGIN_NAME.AppManage"
+    :align="align"
+    :title="state.title"
+    class="page-plugin-setting"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="savePageSetting">保存</tiny-button>
@@ -54,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -75,7 +81,7 @@ import { generatePage } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile
 import PageHistory from './PageHistory.vue'
 import PageInputOutput from './PageInputOutput.vue'
 import meta from '../meta'
-import http from './http.js'
+import http from './http'
 
 const { COMPONENT_NAME } = constants
 const isShow = ref(false)
@@ -135,6 +141,9 @@ export default {
     const pageGeneral = registry.components.PageGeneral
     const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)
+
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -208,11 +217,18 @@ export default {
         })
     }
 
-    const updatePage = (id, params) => {
+    const updatePage = (id, params, isUpdateTree = true) => {
       const routerChange = pageSettingState.currentPageDataCopy.route !== pageSettingState.currentPageData.route
       const isCurEditPage = pageState?.currentPage?.id === id
+      const updateParams = {
+        id,
+        params,
+        routerChange,
+        isCurEditPage,
+        isUpdateTree
+      }
 
-      return handlePageUpdate(id, params, routerChange, isCurEditPage)
+      return handlePageUpdate(updateParams)
     }
 
     const restorePage = (pageData) => {
@@ -273,6 +289,7 @@ export default {
       copyData.route = `${copyData.route}Copy`
       pageSettingState.currentPageData = copyData
       pageSettingState.currentPageDataCopy = extend(true, {}, copyData)
+      pageSettingState.defaultPage = null
     }
 
     const copyPage = () => {
@@ -291,6 +308,11 @@ export default {
       }
     }
 
+    const settingDefaultPage = async () => {
+      const params = { ...pageSettingState.defaultPage, isDefault: true }
+      await updatePage(pageSettingState.defaultPage?.id, params, false)
+    }
+
     const createHistoryMessage = () => {
       if (pageSettingState.isNew) {
         pageSettingState.currentPageData.message = 'Page auto save'
@@ -302,7 +324,11 @@ export default {
         }
         const exec = () => {
           pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
-          editPage()
+          if (pageSettingState.defaultPage?.id) {
+            settingDefaultPage().then(editPage)
+          } else {
+            editPage()
+          }
           state.historyMessage = ''
         }
 
@@ -381,6 +407,8 @@ export default {
     }
 
     return {
+      align,
+      PLUGIN_NAME,
       state,
       isShow,
       savePageSetting,

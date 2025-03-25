@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref, onUnmounted, onMounted } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
@@ -118,7 +118,7 @@ export default {
       subscribe({
         topic: 'pageOrBlockInit',
         subscriber,
-        callback: (schema) => {
+        callback: (schema: any) => {
           originSchema.value = JSON.stringify(schema)
           setSaved(true) // 初始化时标记为已保存
         }

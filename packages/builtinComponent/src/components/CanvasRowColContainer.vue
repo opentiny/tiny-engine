@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, defineProps } from 'vue'
 import { getStyleValue } from './helper'
 
