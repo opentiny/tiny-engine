@@ -168,6 +168,7 @@ export default {
     const { SaveNewBlock } = getMergeMeta('engine.plugins.blockmanage')?.components || {}
     if (SaveNewBlock) {
       menus.value.push({ name: '新建区块', code: 'createBlock' })
+      multiSelectMenus.value.push({ name: '新建区块', code: 'createBlock' })
     }
 
     menus.value.unshift({
