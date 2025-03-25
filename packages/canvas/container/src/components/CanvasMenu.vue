@@ -124,6 +124,13 @@ export default {
       { name: '删除', code: 'multiDel' },
       { name: '复制', code: 'multiCopy' },
       {
+        name: '插入',
+        items: [
+          { name: '向前', code: 'insert', value: 'top' },
+          { name: '向后', code: 'insert', value: 'bottom' }
+        ]
+      },
+      {
         name: '添加父级',
         items: [
           {
