@@ -167,8 +167,7 @@ watch(
     classNameState.curSelector = className
     // 多类名的选择器的暂时不支持编辑，比如 .test1.test2
     classNameState.curSelectorEditable = getCurSelectorEditable(className)
-  },
-  { immediate: true }
+  }
 )
 
 const setSelectorProps = (type, value) => {
