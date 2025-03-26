@@ -16,17 +16,16 @@ import DiffMatchPatch from 'diff-match-patch'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { useHistory, getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
 import type { canvasApi as CanvasApi } from '../../../container/src/container'
+import type { Node, RootNode } from '@/canvas/types'
 import type {
   ChangePropsOperation,
   DeleteOperation,
   InsertOperation,
-  Node,
   NodeOperation,
   PageSchema,
   PageState,
-  RootNode,
   UpdateAttributesOperation
-} from '@/canvas/types'
+} from './types'
 
 const { COMPONENT_NAME } = constants
 const { deepClone } = utils

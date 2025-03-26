@@ -12,27 +12,27 @@ import { SaveLocalService } from '@opentiny/tiny-engine-toolbar-generate-code'
 import { HistoryService } from '@opentiny/tiny-engine-toolbar-redoundo'
 import { Modal, Notify } from '@opentiny/tiny-engine-common'
 
-export type ReturnTypeOfUseCanvas = ReturnType<typeof useCanvasApi>
-export type ReturnTypeOfUseLayout = typeof LayoutService['apis']
+export type UseCanvasApi = ReturnType<typeof useCanvasApi>
+export type UseLayoutApi = typeof LayoutService['apis']
 
 // plugin
-export type ReturnTypeOfUseBlock = typeof BlockService['apis']
-export type ReturnTypeOfUseDataSource = typeof DataSourceService['apis']
-export type ReturnTypeOfUseHelp = typeof HelpService['apis']
-export type ReturnTypeOfUseTranslate = typeof TranslateService['apis']
-export type ReturnTypeOfUseMaterial = typeof MaterialService['apis']
-export type ReturnTypeOfUseResource = typeof ResourceService['apis']
-export type ReturnTypeOfUsePage = typeof PageService['apis']
+export type UseBlockApi = typeof BlockService['apis']
+export type UseDataSourceApi = typeof DataSourceService['apis']
+export type UseHelpApi = typeof HelpService['apis']
+export type UseTranslateApi = typeof TranslateService['apis']
+export type UseMaterialApi = typeof MaterialService['apis']
+export type UseResourceApi = typeof ResourceService['apis']
+export type UsePageApi = typeof PageService['apis']
 
 // setting
-export type ReturnTypeOfUseProperties = typeof PropertiesService['apis']
-export type ReturnTypeOfUseProperty = typeof PropertyService['apis']
+export type UsePropertiesApi = typeof PropertiesService['apis']
+export type UsePropertyApi = typeof PropertyService['apis']
 
 // toolbar
-export type ReturnTypeOfUseBreadcrumb = typeof BreadcrumbService['apis']
-export type ReturnTypeOfUseSaveLocal = typeof SaveLocalService['apis']
-export type ReturnTypeOfUseHistory = typeof HistoryService['apis']
+export type UseBreadcrumbApi = typeof BreadcrumbService['apis']
+export type UseSaveLocalApi = typeof SaveLocalService['apis']
+export type UseHistoryApi = typeof HistoryService['apis']
 
-export type ReturnTypeOfUseModal = typeof Modal
-export type ParametersOfUseNotify = Parameters<typeof Notify>
-export type ReturnTypeOfUseNotify = ReturnType<typeof Notify>
+export type UseModalApi = typeof Modal
+export type NotifyParams = Parameters<typeof Notify>
+export type NotifyResult = ReturnType<typeof Notify>
