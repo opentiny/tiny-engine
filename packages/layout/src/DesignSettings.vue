@@ -54,7 +54,7 @@
 <script lang="ts">
 import { computed, ref, watch, toRefs } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { useLayout, useStyle } from '@opentiny/tiny-engine-meta-register'
+import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { PluginRightMenu } from '@opentiny/tiny-engine-common'
 
@@ -104,10 +104,6 @@ export default {
         rightMenu.value.showContextMenu(event.clientX, event.clientY, type, item, index, align)
       }
     }
-
-    const { initStylePanelWatch } = useStyle()
-
-    initStylePanelWatch()
 
     props.pluginList.forEach(({ id, entry, icon }) => {
       components[id] = entry
@@ -344,10 +340,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--te-panel-active-inner-glow);
+    box-shadow: inset 0px 0px 4px var(--te-panel-active-color);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--te-panel-active-inner-glow);
+    box-shadow: inset 0px 0px 14px var(--te-panel-active-color);
   }
 }
 </style>

@@ -12,11 +12,12 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
-import { StyleService } from './src/js'
+import { default as StyleService } from './src/js/index'
 import './src/styles/vars.less'
 
 export default {
   ...metaData,
-  entry,
-  metas: [StyleService]
+  entry
 }
+
+export { StyleService }
