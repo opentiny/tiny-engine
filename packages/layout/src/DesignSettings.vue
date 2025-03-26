@@ -344,10 +344,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--te-layout-setting-bg-color-hover);
+    box-shadow: inset 0px 0px 4px var(--te-panel-active-inner-glow);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--te-layout-setting-bg-color-hover);
+    box-shadow: inset 0px 0px 14px var(--te-panel-active-inner-glow);
   }
 }
 </style>
