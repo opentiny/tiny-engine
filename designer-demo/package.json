@@ -1,0 +1,33 @@
+{
+  "name": "designer-demo",
+  "private": true,
+  "version": "2.3.0",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env vite",
+    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
+  },
+  "dependencies": {
+    "@opentiny/tiny-engine": "^2.3.0",
+    "@opentiny/tiny-engine-utils": "^2.3.0",
+    "@opentiny/vue": "~3.20.0",
+    "@opentiny/vue-design-smb": "~3.20.0",
+    "@opentiny/vue-icon": "~3.20.0",
+    "@opentiny/vue-locale": "~3.20.0",
+    "@opentiny/vue-renderless": "~3.20.0",
+    "@opentiny/vue-theme": "~3.20.0",
+    "@vueuse/core": "^9.6.0",
+    "axios": "0.28",
+    "axios-mock-adapter": "^2.1.0",
+    "dexie": "^4.0.11",
+    "vue": "^3.4.21"
+  },
+  "devDependencies": {
+    "@opentiny/tiny-engine-mock": "^2.3.0",
+    "@opentiny/tiny-engine-vite-config": "^2.3.0",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "cross-env": "^7.0.3",
+    "vite": "^5.4.2"
+  }
+}

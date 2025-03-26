@@ -1,0 +1,15 @@
+{
+  "command": {
+    "version": {
+      "message": "chore(release): publish"
+    }
+  },
+  "useNx": false,
+  "version": "independent",
+  "npmClient": "pnpm",
+  "publish": {
+    "npmClient": "pnpm"
+  },
+  "ignoreChanges": ["**/*.md", "**/test/**", ".npmrc"],
+  "granularPathspec": false
+}
