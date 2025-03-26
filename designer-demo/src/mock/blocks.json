@@ -1,0 +1,286 @@
+[
+  {
+    "id": 1,
+    "createdBy": "1",
+    "lastUpdatedBy": "1",
+    "tenantId": "1",
+    "renterId": null,
+    "siteId": "1",
+    "label": "BlockTest1a",
+    "framework": "Vue",
+    "content": {
+      "state": {},
+      "methods": {},
+      "componentName": "Block",
+      "fileName": "BlockTest1a",
+      "css": "",
+      "props": {},
+      "children": [
+        {
+          "componentName": "TinyGrid",
+          "props": {
+            "editConfig": {
+              "trigger": "click",
+              "mode": "cell",
+              "showStatus": true
+            },
+            "columns": [
+              {
+                "type": "index",
+                "width": 60
+              },
+              {
+                "type": "selection",
+                "width": 60
+              },
+              {
+                "field": "employees",
+                "title": "员工数"
+              },
+              {
+                "field": "created_date",
+                "title": "创建日期"
+              },
+              {
+                "field": "city",
+                "title": "城市"
+              }
+            ],
+            "data": [
+              {
+                "id": "1",
+                "name": "GFD科技有限公司",
+                "city": "福州",
+                "employees": 800,
+                "created_date": "2014-04-30 00:56:00",
+                "boole": false
+              },
+              {
+                "id": "2",
+                "name": "WWW科技有限公司",
+                "city": "深圳",
+                "employees": 300,
+                "created_date": "2016-07-08 12:36:22",
+                "boole": true
+              }
+            ]
+          },
+          "id": "9f544d43"
+        },
+        {
+          "componentName": "div",
+          "props": {},
+          "id": "c3be6334"
+        },
+        {
+          "componentName": "TinyForm",
+          "props": {
+            "labelWidth": "80px",
+            "labelPosition": "top"
+          },
+          "children": [
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "人员"
+              },
+              "children": [
+                {
+                  "componentName": "TinyInput",
+                  "props": {
+                    "placeholder": "请输入",
+                    "modelValue": ""
+                  },
+                  "id": "6a365365"
+                }
+              ],
+              "id": "22464422"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "密码"
+              },
+              "children": [
+                {
+                  "componentName": "TinyInput",
+                  "props": {
+                    "placeholder": "请输入",
+                    "modelValue": "",
+                    "type": "password"
+                  },
+                  "id": "55297132"
+                }
+              ],
+              "id": "c42655f5"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": ""
+              },
+              "children": [
+                {
+                  "componentName": "TinyButton",
+                  "props": {
+                    "text": "提交",
+                    "type": "primary",
+                    "style": "margin-right: 10px"
+                  },
+                  "id": "521663e5"
+                },
+                {
+                  "componentName": "TinyButton",
+                  "props": {
+                    "text": "重置",
+                    "type": "primary"
+                  },
+                  "id": "33153f15"
+                }
+              ],
+              "id": "31541a46"
+            }
+          ],
+          "id": "35a24114"
+        },
+        {
+          "componentName": "TinyCarousel",
+          "props": {
+            "height": "180px"
+          },
+          "children": [
+            {
+              "componentName": "TinyCarouselItem",
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": "margin:10px 0 0 30px"
+                  },
+                  "id": "92546616"
+                }
+              ],
+              "id": "1b2d445c",
+              "props": {
+                "title": "选项卡",
+                "name": ""
+              }
+            },
+            {
+              "componentName": "TinyCarouselItem",
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": "margin:10px 0 0 30px"
+                  },
+                  "id": "3a145148"
+                }
+              ],
+              "id": "36631533",
+              "props": {
+                "title": "选项卡",
+                "name": ""
+              }
+            }
+          ],
+          "id": "52426c25"
+        }
+      ],
+      "schema": {
+        "properties": [
+          {
+            "label": {
+              "zh_CN": "基础信息"
+            },
+            "description": {
+              "zh_CN": "基础信息"
+            },
+            "collapse": {
+              "number": 6,
+              "text": {
+                "zh_CN": "显示更多"
+              }
+            },
+            "content": []
+          }
+        ],
+        "events": {},
+        "slots": {}
+      },
+      "dataSource": {},
+      "dependencies": {
+        "scripts": [
+          {
+            "package": "@opentiny/vue",
+            "version": "",
+            "components": {
+              "TinyGrid": "Grid",
+              "TinyForm": "Form",
+              "TinyFormItem": "FormItem",
+              "TinyInput": "Input",
+              "TinyButton": "Button",
+              "TinyCarousel": "Carousel",
+              "TinyCarouselItem": "CarouselItem"
+            }
+          }
+        ],
+        "styles": []
+      }
+    },
+    "assets": {
+      "material": [],
+      "scripts": [],
+      "styles": []
+    },
+    "description": "区块",
+    "tags": [],
+    "screenshot": null,
+    "path": "default",
+    "i18n": {},
+    "created_at": "2024-10-16 23:52:11",
+    "updated_at": "2024-10-16 23:52:11",
+    "name_cn": "BlockTest1a",
+    "last_build_info": {
+      "result": true,
+      "versions": ["@opentiny/tiny-engine-block-build@1.0.2"],
+      "endTime": "2024/3/19 20:22:03",
+      "message": "",
+      "filesPath": {
+        "material": [],
+        "scripts": [],
+        "styles": []
+      },
+      "taskId": 184
+    },
+    "version": "1.0.0",
+    "current_history": 1,
+    "occupier": {
+      "id": 1,
+      "createdBy": "1",
+      "lastUpdatedBy": "1",
+      "tenantId": "1",
+      "renterId": null,
+      "siteId": "1",
+      "username": "开发者",
+      "email": "developer@lowcode.com",
+      "isEnable": null,
+      "isAdmin": true,
+      "isPublic": null,
+      "created_at": "2024-10-16 23:28:41",
+      "updated_at": "2024-10-16 23:28:41"
+    },
+    "is_official": false,
+    "public": 1,
+    "is_default": false,
+    "tiny_reserved": false,
+    "npm_name": "",
+    "platform_id": 1,
+    "created_app": 1,
+    "content_blocks": null,
+    "public_scope_tenants": [],
+    "histories_length": 0,
+    "is_published": true,
+    "current_version": "1.0.0"
+  }
+]

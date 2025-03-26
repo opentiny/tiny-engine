@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "createdBy": "1",
+  "lastUpdatedBy": "1",
+  "tenantId": "1",
+  "renterId": null,
+  "siteId": "1",
+  "username": "开发者",
+  "email": "tinyengine@lowcode.com",
+  "isEnable": null,
+  "isAdmin": true,
+  "isPublic": null,
+  "created_at": "2024-10-16 23:28:41",
+  "updated_at": "2024-10-16 23:28:41"
+}
