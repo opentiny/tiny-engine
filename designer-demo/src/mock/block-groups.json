@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "createdBy": "1",
+    "lastUpdatedBy": "1",
+    "tenantId": "1",
+    "renterId": null,
+    "siteId": "1",
+    "name": "我的分组",
+    "platformId": 1,
+    "description": "区块分组",
+    "blocks": [],
+    "materialBlocks": [
+      {
+        "id": 1,
+        "version": "1.0.0"
+      }
+    ],
+    "created_at": "2024-10-16 19:15:53",
+    "updated_at": "2024-10-16 19:15:53",
+    "app": 1
+  }
+]

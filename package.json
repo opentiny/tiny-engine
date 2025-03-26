@@ -1,0 +1,44 @@
+{
+  "name": "tiny-engine",
+  "private": true,
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "serve": "pnpm --filter designer-demo dev",
+    "build:alpha": "pnpm --filter designer-demo build:alpha",
+    "build:prod": "pnpm --filter designer-demo build",
+    "lint": "eslint . --ext .js,.mjs,.jsx,.ts,.mts,.tsx,.vue --fix",
+    "format": "prettier --write --list-different **/*{.vue,.js,.mjs,.jsx,.ts,.mts,.tsx,.html,.json}",
+    "prepare": "node -e \"if(require('fs').existsSync('.git')){process.exit(1)}\" || husky install"
+  },
+  "devDependencies": {
+    "@eslint/js": "^8.57.1",
+    "@types/node": "^18.0.0",
+    "@vue/eslint-config-typescript": "^14.4.0",
+    "@vue/tsconfig": "^0.7.0",
+    "chokidar": "^3.5.3",
+    "concurrently": "^8.2.0",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.3.1",
+    "eslint": "^9.21.0",
+    "eslint-plugin-vue": "^9.32.0",
+    "fast-glob": "^3.3.2",
+    "fs-extra": "^10.1.0",
+    "globals": "^16.0.0",
+    "husky": "^8.0.0",
+    "lerna": "^7.2.0",
+    "lint-staged": "^13.2.0",
+    "picocolors": "^1.0.0",
+    "prettier": "^2.7.1",
+    "typescript": "~5.4.5"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "engines": {
+    "node": ">=16",
+    "pnpm": ">=8"
+  },
+  "pnpm": {}
+}
