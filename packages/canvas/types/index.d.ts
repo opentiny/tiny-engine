@@ -16,4 +16,5 @@ export type RootNode = Omit<Node, 'id'> & {
   bridge?: any
   inputs?: any[]
   outputs?: any[]
+  schema?: any
 }

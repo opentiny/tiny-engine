@@ -592,7 +592,7 @@ const exportSchema = () => {
   return JSON.stringify(pageState.pageSchema)
 }
 
-const getSchema = () => {
+const getSchema = (): RootNode | object => {
   return pageState.pageSchema || {}
 }
 
