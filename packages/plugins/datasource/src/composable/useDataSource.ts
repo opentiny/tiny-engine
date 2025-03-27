@@ -45,7 +45,27 @@ const compareData = () => {
   return { isRecordSame, isDataSourceSame, isRemoteDataSame }
 }
 
-const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceSame, callback) => {
+interface DataSourceState {
+  dataSource: Record<string, any>
+  record: Record<string, any>
+  recordCopies: Record<string, any>
+  dataSourceColumn: Record<string, any>
+  dataSourceColumnCopies: Record<string, any>
+  remoteData: Record<string, any>
+  remoteDataCopies: Record<string, any>
+  currentRecordId: string
+  isRecordValidate: boolean
+  disCard: boolean
+  remoteConfig: Record<string, any>
+}
+
+const handleConfirmSave = (
+  dataSourceState: DataSourceState,
+  isRecordSame: boolean,
+  resolve: (value: unknown) => void,
+  isDataSourceSame: boolean,
+  callback: (...args: any[]) => any
+) => {
   let {
     name,
     data: { data, columns }
@@ -63,7 +83,7 @@ const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceS
     // 数据源数据修改，新增，数据源数据做修改
     if (dataSourceState.currentRecordId) {
       data = data || []
-      const index = data.findIndex((item) => item.id === dataSourceState.currentRecordId)
+      const index = data.findIndex((item: { id: string }) => item.id === dataSourceState.currentRecordId)
 
       data[index] = Object.assign(data[index], dataSourceState.record)
     } else {
@@ -85,7 +105,7 @@ const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceS
 
   const requestData = { name, data: { columns, data, type } }
 
-  callback(id, requestData).then((data) => {
+  callback(id, requestData).then((data: any) => {
     if (data) {
       dataSourceState.record = {}
       dataSourceState.recordCopies = {}
@@ -100,7 +120,7 @@ const handleConfirmSave = (dataSourceState, isRecordSame, resolve, isDataSourceS
   return undefined
 }
 
-const saveDataSource = (callback) => {
+const saveDataSource = (callback: (...args: any[]) => any) => {
   const { isRecordSame, isDataSourceSame } = compareData()
   const { confirm } = useModal()
 

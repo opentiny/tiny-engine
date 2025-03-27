@@ -945,7 +945,7 @@ export const addScript = (src: string) => appendScript(src, getDocument())
  * @param {*} messages
  * @param {*} merge 是否合并，默认是重置所有数据
  */
-export const setLocales = (messages: any, merge: any) => {
+export const setLocales = (messages: any, merge?: boolean) => {
   const i18n = getRenderer().getI18n()
 
   Object.keys(messages).forEach((lang) => {
