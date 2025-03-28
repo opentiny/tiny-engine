@@ -439,9 +439,11 @@ const switchPageWithConfirm = (pageId, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (page, currentPage) => {
-  if (currentPage.id && currentPage.pageInfo?.schema && page.id === currentPage.id) {
-    page.page_content = currentPage.pageInfo?.schema
+const updatePageContent = (familyPages, currentPage) => {
+  const currentPageSchema = familyPages.find((item) => item.id === currentPage.id)
+  // 替换为当前页面最新的 schema
+  if (currentPageSchema) {
+    currentPageSchema.page_content = currentPage.page_content
   }
 }
 
@@ -463,13 +465,12 @@ const updateParentId = (page, pages, index, ROOT_ID) => {
   }
 }
 
-const handlePageDetail = async (pages, currentPage) => {
+const handlePageDetail = async (pages) => {
   const { ROOT_ID } = pageSettingState
 
   if (pages.length > 0) {
     await Promise.all(
       pages.map(async (page, index) => {
-        updatePageContent(page, currentPage)
         await fetchPageDetailIfNeeded(page)
         updateParentId(page, pages, index, ROOT_ID)
       })
@@ -485,8 +486,23 @@ const getFamily = async (previewParams) => {
   const familyPages = getAncestorsRecursively(previewParams.id)
     .filter((item) => item.isPage)
     .reverse()
+    .map((item) => ({
+      id: item.id,
+      page_content: item.page_content,
+      name: item.name,
+      parentId: item.parentId,
+      route: item.route,
+      isPage: item.isPage,
+      isBody: item.isBody,
+      isHome: item.isHome,
+      group: item.group,
+      isDefault: item.isDefault,
+      depth: item.depth
+    }))
 
-  await handlePageDetail(familyPages, previewParams)
+  await handlePageDetail(familyPages)
+
+  updatePageContent(familyPages, previewParams)
 
   return familyPages
 }
