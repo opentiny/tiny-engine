@@ -25,7 +25,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 import { useMultiSelect } from './composables/useMultiSelect'
-import type { Node, RootNode } from '@/canvas/types'
+import type { Node, RootNode } from '../../types'
 
 export interface DragOffset {
   offsetX: number

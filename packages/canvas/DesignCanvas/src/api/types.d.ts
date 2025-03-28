@@ -1,4 +1,4 @@
-import { Node } from '@/canvas/types'
+import { Node } from '../../../types'
 
 export type PageSchema = RootNode
 
