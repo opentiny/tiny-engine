@@ -1,0 +1,380 @@
+export interface Material {
+  components: Component[]
+  snippets?: Snippet[]
+  blocks?: Block[]
+  packages?: Package[]
+}
+
+export interface Block {
+  id: number | string
+  label: string
+  framework: string
+  content: BlockResource
+  created_by?: unknown
+  updated_by?: unknown
+  created_at: Date
+  updated_at: Date
+  assets: Assets
+  createdBy: CreatedBy
+  updatedBy: number
+  last_build_info: BuildInfo
+  description?: unknown
+  tags: any[]
+  current_history: number
+  screenshot: string
+  path: string
+  occupier?: CreatedBy
+  isOfficial?: boolean
+  public: number
+  isDefault?: boolean
+  tiny_reserved?: boolean
+  author?: unknown
+  name_cn?: string
+  npm_name: string
+  created_app?: unknown
+  content_blocks?: unknown
+  histories: History[]
+  categories: any[]
+  public_scope_tenants: any[]
+  histories_length: number
+  state?: unknown
+}
+
+export interface Assets {
+  material: string[]
+  scripts: string[]
+  styles: string[]
+}
+
+export interface BlockResource {
+  componentName: string
+  fileName: string
+  css?: string
+  props: Record<string, any>
+  dataSource?: Record<string, any>
+  schema: ContentSchema
+  children: BlockContentChildren[]
+  state?: Record<string, any>
+  methods: {
+    [key: string]: TypeValuePair
+  }
+  lifeCycles?: {
+    [key: string]: TypeValuePair
+  }
+  id?: string
+  type?: 'block'
+  component?: string
+  label?: string
+  configure?: Configure
+  actions?: unknown
+  blockName?: string
+}
+
+export interface BlockContentChildren {
+  componentName: string
+  props?: Record<string, any>
+  children?: BlockContentChildren[]
+  id: string
+  condition?: boolean
+  fileName?: string
+}
+
+export interface TypeValuePair {
+  type: DataTypeEnum
+  value: string
+}
+
+export type DataTypeEnum = 'JSExpression' | 'JSFunction' | 'JSResource' | 'JSResouce'
+
+export interface ContentSchema {
+  properties?: Property[]
+  events?: Record<string, any>
+  slots?: unknown
+  lifeCycles?: Record<string, TypeValuePair>
+}
+
+export interface Locale {
+  zh_CN?: string
+}
+
+export interface Property {
+  label: Locale
+  description: Locale
+  collapse: Collapse
+  content?: BlockProperty[]
+  defaultValue?: any[]
+}
+
+export interface Collapse {
+  number: number
+  text: Locale
+}
+
+export interface BlockProperty {
+  property: string
+  type?: string
+  defaultValue: unknown
+  label: {
+    text: Locale
+  }
+  description?: Locale
+  widget?: {
+    component: string
+    props?: Record<string, any>
+  }
+  cols?: number
+  rules?: any[]
+  linked?: Linked
+  handle?: Record<string, any>
+  hidden?: boolean
+  required?: boolean
+  readOnly?: boolean
+  disabled?: boolean
+  labelPosition?: string
+}
+
+export interface Linked {
+  componentName: string
+  property: string
+  id: string
+  blockProperty: any
+}
+
+export interface CreatedBy {
+  id: number
+  username: string
+  resetPasswordToken: string
+}
+
+export interface History {
+  id: number
+  message: string
+  content: unknown
+  assets?: Assets
+  build_info?: BuildInfo
+  created_by?: unknown
+  updated_by?: unknown
+  created_at: Date | string
+  updated_at: Date | string
+  screenshot?: string
+  path?: string
+  label?: string
+  description?: unknown
+  mode: 'vscode' | null
+  block_id: number
+  version: '1.0.0' | null
+  npm_name?: string
+  i18n?: unknown
+  created_app?: unknown
+  content_blocks?: unknown
+}
+
+export interface BuildInfo {
+  result: boolean
+  versions: string[]
+  endTime: string
+}
+
+export interface Component {
+  id?: number
+  version?: string
+  name: {
+    zh_CN?: string
+  }
+  component: string
+  icon: string
+  description?: string
+  doc_url?: string
+  screenshot?: string
+  tags?: string
+  keywords?: string
+  dev_mode?: string
+  npm?: Npm
+  group?: string
+  configure?: Configure
+  content?: { configure?: Configure }
+  createdBy?: number
+  created_at?: Date | string
+  updated_at?: Date | string
+  public?: number
+  framework?: string
+  isOfficial?: boolean
+  isDefault?: boolean
+  tiny_reserved?: boolean
+  component_metadata?: {
+    events?: unknown[]
+    attrs?: unknown[]
+    slots?: unknown
+  }
+  library?: number
+  schema: ComponentSchema
+}
+
+export interface Configure {
+  loop?: boolean
+  condition?: boolean
+  styles?: boolean
+  isContainer?: boolean
+  isModal?: boolean
+  nestingRule?: NestingRule
+  isNullNode?: boolean
+  isLayout?: boolean
+  string?: string
+  shortcuts?: {
+    properties: string[]
+  }
+  contextMenu?: ContextMenu
+  slots?: string[]
+  framework?: string
+  isPopper?: boolean
+  invalidity?: string[]
+  clickCapture?: boolean
+}
+
+export interface ContextMenu {
+  actions: string[]
+  disable: string[]
+}
+
+export interface ComponentSchema {
+  properties?: ComponentProperty[]
+  events?: Record<string, any>
+  slots?: unknown
+}
+
+export interface ComponentProperty {
+  label: Locale
+  description?: Locale
+  collapse?: Collapse
+  content: {
+    property: string
+    label: {
+      text: Locale
+    }
+    required?: boolean
+    readOnly?: boolean
+    disabled?: boolean
+    cols?: number
+    widget: {
+      component: string
+      props?: Record<string, any>
+    }
+    description?: Locale
+    labelPosition?: string
+    type?: string
+    defaultValue?: unknown
+    rules?: any[]
+    hidden?: boolean
+    device?: any[]
+    onChange?: string
+    properties?: ContentProperty[]
+  }[]
+  name?: string
+  group?: string
+}
+
+export interface ContentProperty {
+  label: Locale
+  content: {
+    property: string
+    type?: string
+    defaultValue?: boolean | string
+    label: {
+      text: Locale
+    }
+    widget: {
+      component: string
+      props: Record<string, any>
+    }
+    labelPosition?: string
+    required?: boolean
+    readOnly?: boolean
+    disabled?: boolean
+    cols?: number
+    description?: Locale
+  }[]
+}
+
+export interface Package {
+  name: string
+  packageName: string
+  package?: string
+  version: string
+  script: string
+  css: string
+  others?: unknown
+}
+
+export interface Snippet {
+  group: string
+  children: SnippetChild[]
+}
+
+export interface SnippetChild {
+  icon?: string
+  name?: Locale
+  schema?: SnippetSchema
+  screenshot?: string
+  snippetName?: string
+  configure?: Configure
+  group?: boolean
+  component?: string
+  description?: string
+  docUrl?: string
+  tags?: string
+  keywords?: string
+  devMode?: 'proCode'
+  npm?: Dependency
+  priority?: number
+}
+
+export interface Npm {
+  package: string
+  exportName: string
+  version?: string
+  destructuring?: boolean
+  script?: string
+  css?: string
+  dependencies?: unknown
+}
+
+export type Dependency = Omit<Npm, 'exportName'> & {
+  components?: any
+}
+
+export interface NestingRule {
+  string?: string[] | string
+  parentWhitelist?: string[]
+  descendantBlacklist?: string[]
+  ancestorWhitelist?: string[]
+}
+
+export interface SnippetSchema {
+  props?: Record<string, any>
+  children?: SnippetSchema[]
+  componentName?: string
+  componentType?: string
+  properties?: unknown[]
+  events?: unknown
+  slots?: unknown
+}
+
+export interface MaterialState {
+  components: Snippet[]
+  blocks: { groupId: string; groupName: string; children: Block[] }[]
+  componentsDepsMap: {
+    scripts: Dependency[]
+    styles: Set<unknown>
+  }
+  packages: never[]
+}
+
+export type ComponentMap = Dependency & { componentName: string }
+
+export interface InitMaterialOptions {
+  isInit?: boolean
+  appData?: {
+    [x: string]: any
+    componentsMap?: Array<ComponentMap>
+  }
+}
