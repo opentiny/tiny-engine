@@ -57,9 +57,33 @@ const DEFAULT_PAGE = {
 
 const selectedTemplateCard = ref(null)
 
-const pageSettingState = reactive({
-  currentPageDataCopy: {}, // 记录当前页最开始的状态，当用户点击取消按钮的时候恢复到初始状态
-  currentPageData: {}, // 当前配置页面的数据
+export interface PageData {
+  id: string | number
+  parentId: string | number
+  [x: string]: any
+}
+
+export interface PageNode {
+  id: string | number
+  parentId: string | number
+  children?: PageNode[]
+}
+
+export interface PageSettingState {
+  currentPageDataCopy: PageData
+  currentPageData: PageData
+  pages: any[]
+  oldParentId?: string | number | null
+  isNew: boolean
+  ROOT_ID: string
+  updateTreeData?: any
+  treeDataMapping: Record<string, any>
+  defaultPage?: any
+}
+
+const pageSettingState = reactive<PageSettingState>({
+  currentPageDataCopy: {} as PageData, // 记录当前页最开始的状态，当用户点击取消按钮的时候恢复到初始状态
+  currentPageData: {} as PageData, // 当前配置页面的数据
   pages: [],
   oldParentId: null,
   isNew: false,
@@ -76,12 +100,25 @@ const isTemporaryPage = reactive({
 const STATIC_PAGE_GROUP_ID = 0
 const COMMON_PAGE_GROUP_ID = 1
 
-const generateCssString = (pageOptions, materialsOptions) => {
+export interface PageOptions {
+  pageBaseStyle: {
+    className: string
+    style: string
+  }
+}
+
+export interface MaterialsOptions {
+  useBaseStyle: any
+  blockBaseStyle: { className: string; style: string }
+  componentBaseStyle: { className: string; style: string }
+}
+
+const generateCssString = (pageOptions: PageOptions, materialsOptions: MaterialsOptions) => {
   if (!pageOptions?.pageBaseStyle?.className || !pageOptions?.pageBaseStyle?.style) {
     return ''
   }
 
-  const formatCssRule = (className, style) => `.${className} {\n  ${style.trim()}\n}\n`
+  const formatCssRule = (className: string, style: string) => `.${className} {\n  ${style.trim()}\n}\n`
   const baseStyle = `.${pageOptions.pageBaseStyle.className}{\r\n ${pageOptions.pageBaseStyle.style}\r\n}\r\n`
 
   if (!materialsOptions.useBaseStyle) {
@@ -117,8 +154,8 @@ const getDefaultPage = () => {
 }
 
 const isCurrentDataSame = () => {
-  const data = pageSettingState.currentPageData || {}
-  const dataCopy = pageSettingState.currentPageDataCopy || {}
+  const data: Record<string, any> = pageSettingState.currentPageData || {}
+  const dataCopy: Record<string, any> = pageSettingState.currentPageDataCopy || {}
   let isEqual = true
 
   Object.keys(dataCopy).some((item) => {
@@ -152,13 +189,13 @@ const isCurrentDataSame = () => {
   return isEqual
 }
 
-const getParentNode = (parentId) => {
+const getParentNode = (parentId: string) => {
   return parentId === pageSettingState.ROOT_ID
     ? { id: pageSettingState.ROOT_ID, children: pageSettingState.pages[STATIC_PAGE_GROUP_ID].data }
     : pageSettingState.treeDataMapping[parentId]
 }
 
-const changeTreeData = (newParentId, oldParentId) => {
+const changeTreeData = (newParentId: string, oldParentId: string) => {
   if (newParentId && oldParentId && String(newParentId) !== String(oldParentId)) {
     const folderData = getParentNode(newParentId)
     const parentData = getParentNode(oldParentId)
@@ -168,7 +205,7 @@ const changeTreeData = (newParentId, oldParentId) => {
     }
 
     const currentPageDataId = pageSettingState.currentPageData.id
-    const curDataIndex = parentData.children?.findIndex?.(({ id }) => id === currentPageDataId)
+    const curDataIndex = parentData.children?.findIndex?.(({ id }: { id: string }) => id === currentPageDataId)
 
     if (curDataIndex > -1) {
       const splicedPageData = parentData.children.splice(curDataIndex, 1)[0]
@@ -184,15 +221,15 @@ const getPageContent = () => {
   return pageSettingState.currentPageData.page_content || {}
 }
 
-const initCurrentPageData = (pageDetail) => {
+const initCurrentPageData = (pageDetail: PageData) => {
   pageSettingState.currentPageData = pageDetail
   pageSettingState.currentPageDataCopy = extend(true, {}, pageDetail)
   pageSettingState.oldParentId = pageDetail.parentId
 }
 
 const resetPageData = () => {
-  pageSettingState.currentPageData = {}
-  pageSettingState.currentPageDataCopy = {}
+  pageSettingState.currentPageData = {} as PageData
+  pageSettingState.currentPageDataCopy = {} as PageData
   pageSettingState.oldParentId = null
   pageSettingState.defaultPage = null
 }
@@ -200,25 +237,10 @@ const resetPageData = () => {
 // 判断当前页面内容是否有修改
 const isChangePageData = () => !isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
 
-/**
- *
- * @typedef {Object} PageData
- * @property {string | number} id
- * @property {string | number} parentId
- *
- * @typedef {Object} PageNode
- * @property {string | number} id
- * @property {string | number} parentId
- * @property {PageNode[] | undefined} children
- *
- * @param {PageData[]} data
- * @returns
- */
-const generateTree = (data) => {
+const generateTree = (data: PageData[]) => {
   const { ROOT_ID } = pageSettingState
 
-  /** @type {Record<string, PageNode>} */
-  const treeDataMapping = { [ROOT_ID]: { id: ROOT_ID } }
+  const treeDataMapping: Record<string, PageNode> = { [ROOT_ID]: { id: ROOT_ID, parentId: '' } }
 
   data.forEach((item) => {
     treeDataMapping[item.id] = item
@@ -238,11 +260,17 @@ const generateTree = (data) => {
   return treeDataMapping
 }
 
-const getPageList = async (appId) => {
-  const pagesData = await http.fetchPageList(appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id)
+interface GroupData {
+  groupName: string
+  groupId: number
+  data: PageData[]
+}
 
-  const firstGroupData = { groupName: '静态页面', groupId: STATIC_PAGE_GROUP_ID, data: [] }
-  const secondGroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
+const getPageList = async (appId?: string) => {
+  const pagesData: any[] = await http.fetchPageList(appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id)
+
+  const firstGroupData: GroupData = { groupName: '静态页面', groupId: STATIC_PAGE_GROUP_ID, data: [] }
+  const secondGroupData: GroupData = { groupName: '公共页面', groupId: COMMON_PAGE_GROUP_ID, data: [] }
 
   pagesData.forEach((item) => {
     const namedNode = item.name ? item : { ...item, name: item.folderName, group: 'staticPages' }
@@ -268,16 +296,12 @@ const getPageList = async (appId) => {
   const firstGroupTreeData = generateTree(firstGroupData.data)
   const secondGroupTreeData = generateTree(secondGroupData.data)
   pageSettingState.treeDataMapping = { ...firstGroupTreeData, ...secondGroupTreeData }
-  firstGroupData.data = firstGroupTreeData[pageSettingState.ROOT_ID].children
+  firstGroupData.data = firstGroupTreeData[pageSettingState.ROOT_ID].children || []
   pageSettingState.pages = [firstGroupData, secondGroupData]
   return pageSettingState.pages
 }
 
-/**
- * @param {string | number} id
- * @returns {any[]}
- */
-const getAncestorsRecursively = (id) => {
+const getAncestorsRecursively = (id: string): any[] => {
   if (id === pageSettingState.ROOT_ID) {
     return []
   }
@@ -292,7 +316,7 @@ const getAncestorsRecursively = (id) => {
  * @param {boolean} withFolders default `false`
  * @returns {(string | number)[]}
  */
-const getAncestors = async (id, withFolders) => {
+const getAncestors = async (id: string, withFolders?: boolean) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
@@ -304,7 +328,7 @@ const getAncestors = async (id, withFolders) => {
   const ancestorsWithSelf = getAncestorsRecursively(id)
   const ancestors = ancestorsWithSelf.slice(1).reverse()
 
-  const predicate = withFolders ? () => true : (item) => item.isPage
+  const predicate = withFolders ? () => true : (item: { isPage: boolean }) => item.isPage
 
   return ancestors.filter(predicate).map((item) => item.id)
 }
@@ -314,7 +338,7 @@ const getAncestors = async (id, withFolders) => {
  * @param {Array<{isPage: boolean, children?: any[]} & Record<string, any>} pagesOrFolders 页面或者文件夹数组
  * @returns
  */
-const flatternFolder = (pagesOrFolders) => {
+const flatternFolder = (pagesOrFolders: Array<{ isPage: boolean; children?: any[] } & Record<string, any>>) => {
   // 页面数组中没有文件夹，无需处理
   if (pagesOrFolders.every((item) => item.isPage)) {
     return pagesOrFolders
@@ -341,7 +365,7 @@ const flatternFolder = (pagesOrFolders) => {
  * @param {string | number} id
  * @returns
  */
-const getPageChildren = async (id) => {
+const getPageChildren = async (id: string) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
@@ -364,7 +388,7 @@ const clearCurrentState = () => {
   pageState.pageSchema = null
 }
 
-const switchPage = (pageId, clearPreview = false) => {
+const switchPage = (pageId: string | number, clearPreview = false) => {
   // 切换页面时清空 选中节点信息状态
   clearCurrentState()
 
@@ -375,7 +399,7 @@ const switchPage = (pageId, clearPreview = false) => {
     } else {
       getMetaApi(META_SERVICE.GlobalService).updatePageId('')
     }
-    useCanvas().initData({ componentName: COMPONENT_NAME.Page }, {})
+    useCanvas().initData({ componentName: COMPONENT_NAME.Page, props: {} }, {})
     useLayout().layoutState.pageStatus = {
       state: 'empty',
       data: {}
@@ -386,7 +410,7 @@ const switchPage = (pageId, clearPreview = false) => {
 
   return http
     .fetchPageDetail(pageId)
-    .then((data) => {
+    .then((data: { [x: string]: any; isPage: boolean; name: string; occupier: any }) => {
       if (data.isPage) {
         // 应该改成让 Breadcrumb 插件去监听变化
         useBreadcrumb().setBreadcrumbPage([data.name])
@@ -409,7 +433,7 @@ const switchPage = (pageId, clearPreview = false) => {
     })
 }
 
-const switchPageWithConfirm = (pageId, clearPreview = false) => {
+const switchPageWithConfirm = (pageId: string, clearPreview = false) => {
   const checkPageSaved = () => {
     const { isSaved, isBlock } = useCanvas()
 
@@ -439,31 +463,31 @@ const switchPageWithConfirm = (pageId, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (page, currentPage) => {
+const updatePageContent = (page: { id: any; page_content: any }, currentPage: { id: string; pageInfo?: any }) => {
   if (currentPage.id && currentPage.pageInfo?.schema && page.id === currentPage.id) {
     page.page_content = currentPage.pageInfo?.schema
   }
 }
 
-const fetchPageDetailIfNeeded = async (page) => {
+const fetchPageDetailIfNeeded = async (page: { page_content: any; id: string }) => {
   if (!page.page_content) {
     try {
       const pageDetail = await http.fetchPageDetail(page.id)
       page.page_content = pageDetail.page_content
     } catch (error) {
       page.page_content = {}
-      throw new Error(error)
+      throw new Error(String(error))
     }
   }
 }
 
-const updateParentId = (page, pages, index, ROOT_ID) => {
+const updateParentId = (page: { parentId: any }, pages: any[], index: number, ROOT_ID: string) => {
   if (page.parentId !== ROOT_ID && !pages.find((item) => item.id === page.parentId)) {
     page.parentId = pages[index - 1]?.id ? pages[index - 1].id : ROOT_ID
   }
 }
 
-const handlePageDetail = async (pages, currentPage) => {
+const handlePageDetail = async (pages: any[], currentPage: { id: string }) => {
   const { ROOT_ID } = pageSettingState
 
   if (pages.length > 0) {
@@ -477,7 +501,7 @@ const handlePageDetail = async (pages, currentPage) => {
   }
 }
 
-const getFamily = async (previewParams) => {
+const getFamily = async (previewParams: { id: string }) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
