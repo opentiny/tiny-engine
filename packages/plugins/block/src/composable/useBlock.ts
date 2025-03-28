@@ -739,7 +739,7 @@ const cancelCheckAll = () => {
   selectedBlockArray.value = []
 }
 
-const getBlockAssetsByVersion = (block: Block, version: string) => {
+const getBlockAssetsByVersion = (block: Block, version?: string) => {
   let assets = block.assets
 
   if (version) {
