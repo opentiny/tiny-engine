@@ -416,7 +416,7 @@ const addBlockProperty = (property: BlockProperty, block: Block) => {
     block.content.schema.properties = copyArray(DEFAULT_PROPERTIES)
   }
 
-  block.content.schema.properties[0].content.push(property)
+  block.content.schema.properties?.[0].content?.push(property)
 
   if (property.linked) {
     setComponentLinkedValue({

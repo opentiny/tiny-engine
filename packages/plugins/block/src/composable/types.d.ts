@@ -1,33 +1,33 @@
 export interface Property {
   label: {
-    zh_CN: string
+    zh_CN?: string
   }
   description: {
-    zh_CN: string
+    zh_CN?: string
   }
   collapse: {
     number: number
     text: {
-      zh_CN: string
+      zh_CN?: string
     }
   }
-  content: BlockProperty[]
+  content?: BlockProperty[]
 }
 
 export interface BlockContent {
   componentName: string
   blockName?: string
   fileName: string
-  css: string
+  css?: string
   props: Record<string, any>
   children: any[]
   schema: {
-    properties: Property[]
+    properties?: Property[]
     events?: Record<string, any>
   }
-  state: Record<string, any>
+  state?: Record<string, any>
   methods: Record<string, any>
-  dataSource: Record<string, any>
+  dataSource?: Record<string, any>
   i18n?: any
 }
 
@@ -38,7 +38,7 @@ export interface BlockOccupier {
 }
 
 export interface Block {
-  id?: string
+  id?: string | number
   name_cn?: string
   label: string
   path?: string
@@ -48,8 +48,8 @@ export interface Block {
   framework: string
   content: BlockContent
   occupier?: BlockOccupier | null
-  created_at?: string
-  updated_at?: string
+  created_at?: string | Date
+  updated_at?: string | Date
   histories?: any[]
   assets?: any
 }
@@ -68,10 +68,10 @@ export interface BlockGroup {
 }
 
 export interface BlockProperty {
-  linked: { property: any; blockProperty: any } | null
+  linked?: { property: any; blockProperty: any } | null
   property: any
   defaultValue: any
-  widget: any
+  widget?: any
 }
 
 export interface SchemaData {
