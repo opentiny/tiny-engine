@@ -409,7 +409,7 @@ const addMaterials = (materials: Material) => {
   addBlocks(materials.blocks)
 }
 
-const getMaterial = (name: string): Resource | BlockResource | object => {
+const getMaterial = (name?: string): Partial<Resource & BlockResource> => {
   if (name) {
     // 先读取组件缓存，再读取区块缓存
     return (

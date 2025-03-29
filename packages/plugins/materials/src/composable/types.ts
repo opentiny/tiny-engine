@@ -63,13 +63,14 @@ export interface BlockResource {
   lifeCycles?: {
     [key: string]: TypeValuePair
   }
-  id?: string
-  type?: 'block'
+  id?: string | number
+  type?: string
   component?: string
   label?: string
   configure?: Configure
   actions?: unknown
   blockName?: string
+  properties?: Property[]
 }
 
 export interface TypeValuePair {
@@ -131,7 +132,7 @@ export interface BuildInfo {
 }
 
 export interface Component {
-  id?: number
+  id?: number | string
   version?: string
   name: {
     zh_CN?: string
@@ -147,7 +148,7 @@ export interface Component {
   npm?: Npm
   group?: string
   configure?: Configure
-  content?: { configure?: Configure }
+  content?: { configure?: Configure; schema?: Schema }
   createdBy?: number
   created_at?: Date | string
   updated_at?: Date | string
@@ -196,8 +197,9 @@ export interface Property {
   description?: Locale
   collapse?: Collapse
   content: {
+    [x: string]: unknown
     property: string
-    label: {
+    label?: {
       text: Locale
     }
     required?: boolean
@@ -217,7 +219,7 @@ export interface Property {
     device?: any[]
     onChange?: string
     properties?: ContentProperty[]
-    linked?: Linked
+    linked?: Linked | null
     handle?: Record<string, any>
   }[]
   name?: string
@@ -308,7 +310,7 @@ export interface Schema {
   componentType?: string
   properties?: Property[]
   events?: Record<string, any>
-  slots?: unknown
+  slots?: Record<string, any>
   lifeCycles?: Record<string, TypeValuePair>
   id?: string
   condition?: boolean
