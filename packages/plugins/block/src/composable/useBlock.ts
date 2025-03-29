@@ -166,7 +166,13 @@ const copySchema = (schema: Partial<BlockContent['schema']>, contentList: string
   })
 
   emitList.forEach((e) => {
-    let key = e.match(/'.*?'/g)![0].replace(/'/g, '')
+    const matches = e.match(/'.*?'/g)
+
+    if (!matches || !matches.length) {
+      return
+    }
+
+    let key = matches[0].replace(/'/g, '')
 
     key = `on${key[0].toLocaleUpperCase() + key.slice(1, key.length)}`
     if (schema?.events?.[key]) {
