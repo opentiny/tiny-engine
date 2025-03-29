@@ -46,14 +46,16 @@ export interface Assets {
   styles: string[]
 }
 
+export type Resource = Omit<Component, 'component'> & { type: string; component?: string; item?: string }
+
 export interface BlockResource {
   componentName: string
   fileName: string
   css?: string
   props: Record<string, any>
   dataSource?: Record<string, any>
-  schema: ContentSchema
-  children: BlockContentChildren[]
+  schema: Schema
+  children: Schema[]
   state?: Record<string, any>
   methods: {
     [key: string]: TypeValuePair
@@ -70,15 +72,6 @@ export interface BlockResource {
   blockName?: string
 }
 
-export interface BlockContentChildren {
-  componentName: string
-  props?: Record<string, any>
-  children?: BlockContentChildren[]
-  id: string
-  condition?: boolean
-  fileName?: string
-}
-
 export interface TypeValuePair {
   type: DataTypeEnum
   value: string
@@ -86,51 +79,13 @@ export interface TypeValuePair {
 
 export type DataTypeEnum = 'JSExpression' | 'JSFunction' | 'JSResource' | 'JSResouce'
 
-export interface ContentSchema {
-  properties?: Property[]
-  events?: Record<string, any>
-  slots?: unknown
-  lifeCycles?: Record<string, TypeValuePair>
-}
-
 export interface Locale {
   zh_CN?: string
-}
-
-export interface Property {
-  label: Locale
-  description: Locale
-  collapse: Collapse
-  content?: BlockProperty[]
-  defaultValue?: any[]
 }
 
 export interface Collapse {
   number: number
   text: Locale
-}
-
-export interface BlockProperty {
-  property: string
-  type?: string
-  defaultValue: unknown
-  label: {
-    text: Locale
-  }
-  description?: Locale
-  widget?: {
-    component: string
-    props?: Record<string, any>
-  }
-  cols?: number
-  rules?: any[]
-  linked?: Linked
-  handle?: Record<string, any>
-  hidden?: boolean
-  required?: boolean
-  readOnly?: boolean
-  disabled?: boolean
-  labelPosition?: string
 }
 
 export interface Linked {
@@ -207,7 +162,7 @@ export interface Component {
     slots?: unknown
   }
   library?: number
-  schema: ComponentSchema
+  schema: Schema
 }
 
 export interface Configure {
@@ -236,13 +191,7 @@ export interface ContextMenu {
   disable: string[]
 }
 
-export interface ComponentSchema {
-  properties?: ComponentProperty[]
-  events?: Record<string, any>
-  slots?: unknown
-}
-
-export interface ComponentProperty {
+export interface Property {
   label: Locale
   description?: Locale
   collapse?: Collapse
@@ -268,9 +217,12 @@ export interface ComponentProperty {
     device?: any[]
     onChange?: string
     properties?: ContentProperty[]
+    linked?: Linked
+    handle?: Record<string, any>
   }[]
   name?: string
   group?: string
+  defaultValue?: unknown
 }
 
 export interface ContentProperty {
@@ -313,7 +265,7 @@ export interface Snippet {
 export interface SnippetChild {
   icon?: string
   name?: Locale
-  schema?: SnippetSchema
+  schema?: Schema
   screenshot?: string
   snippetName?: string
   configure?: Configure
@@ -349,14 +301,18 @@ export interface NestingRule {
   ancestorWhitelist?: string[]
 }
 
-export interface SnippetSchema {
+export interface Schema {
   props?: Record<string, any>
-  children?: SnippetSchema[]
+  children?: Schema[]
   componentName?: string
   componentType?: string
-  properties?: unknown[]
-  events?: unknown
+  properties?: Property[]
+  events?: Record<string, any>
   slots?: unknown
+  lifeCycles?: Record<string, TypeValuePair>
+  id?: string
+  condition?: boolean
+  fileName?: string
 }
 
 export interface MaterialState {

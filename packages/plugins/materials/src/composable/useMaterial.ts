@@ -28,23 +28,24 @@ import meta from '../../meta'
 import { getBlockCompileRes, getBlockByName, updateBlockCompileCache } from './block-compile'
 import type {
   Block,
+  BlockResource,
+  Component,
+  ComponentMap,
+  Dependency,
+  InitMaterialOptions,
   Material,
   MaterialState,
-  SnippetSchema,
-  Snippet,
-  Component,
-  InitMaterialOptions,
-  ComponentMap,
-  BlockResource,
-  ComponentProperty,
-  Dependency
+  Property,
+  Resource,
+  Schema,
+  Snippet
 } from './types'
 
 const { camelize, capitalize, deepClone } = utils
 const { MATERIAL_TYPE } = constants
 
 // 这里存放所有TinyVue组件、原生HTML、内置组件的缓存，包含了物料插件面板里所有显示的组件，也包含了没显示的一些联动组件
-const resource = new Map<string, Omit<Component, 'component'> & { type: string; component?: string; item?: string }>()
+const resource = new Map<string, Resource>()
 
 // 这里涉及到区块发布后的更新问题，所以需要单独缓存区块
 const blockResource = new Map<string, BlockResource>()
@@ -60,7 +61,7 @@ const componentState = reactive<{ componentsMap: Record<string, ComponentMap> }>
   componentsMap: {}
 })
 const getSnippet = (component: string) => {
-  let schema: SnippetSchema = {}
+  let schema: Schema = {}
   materialState.components.some(({ children }) => {
     const child = children.find(({ snippetName }) => snippetName === component)
     if (child?.schema) {
@@ -76,7 +77,7 @@ const getSnippet = (component: string) => {
 const generateNode = ({ type, component }: { type: string; component: string }) => {
   const snippet = getSnippet(component) || {}
 
-  const schema: SnippetSchema & Required<Pick<SnippetSchema, 'props'>> = {
+  const schema: Schema & Required<Pick<Schema, 'props'>> = {
     componentName: component,
     ...snippet,
     props: {
@@ -109,7 +110,7 @@ const getConfigureMap = () => {
  * @param schemaProperties
  * @returns
  */
-const patchBaseProps = (schemaProperties?: ComponentProperty[]) => {
+const patchBaseProps = (schemaProperties?: Property[]) => {
   if (!Array.isArray(schemaProperties)) {
     return
   }
@@ -408,7 +409,7 @@ const addMaterials = (materials: Material) => {
   addBlocks(materials.blocks)
 }
 
-const getMaterial = (name: string) => {
+const getMaterial = (name: string): Resource | BlockResource | object => {
   if (name) {
     // 先读取组件缓存，再读取区块缓存
     return (
@@ -423,7 +424,7 @@ const getMaterial = (name: string) => {
   }
 }
 
-const setMaterial = (name: string, data: any) => {
+const setMaterial = (name: string, data: Resource) => {
   resource.set(name, data)
 }
 
