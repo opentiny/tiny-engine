@@ -84,7 +84,7 @@ export interface SchemaData {
 
 export type ParsePropToDataOptons = Pick<SchemaData, 'langs' | 'methods' | 'state'> & {
   prop: {
-    type: typeof SCHEMA_DATA_TYPE[keyof typeof SCHEMA_DATA_TYPE]
+    type: string
     key: string
     value: any
   }
