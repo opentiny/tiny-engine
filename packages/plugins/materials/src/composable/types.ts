@@ -116,9 +116,9 @@ export interface History {
   path?: string
   label?: string
   description?: unknown
-  mode: 'vscode' | null
+  mode?: string | null
   block_id: number
-  version: '1.0.0' | null
+  version?: string | null
   npm_name?: string
   i18n?: unknown
   created_app?: unknown
@@ -277,7 +277,7 @@ export interface SnippetChild {
   docUrl?: string
   tags?: string
   keywords?: string
-  devMode?: 'proCode'
+  devMode?: string
   npm?: Dependency
   priority?: number
 }
