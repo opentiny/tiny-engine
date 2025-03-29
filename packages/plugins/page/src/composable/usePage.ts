@@ -478,12 +478,12 @@ const handlePageDetail = async (pages) => {
   }
 }
 
-const getFamily = async (previewParams) => {
+const getFamily = async (currentPage) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
 
-  const familyPages = getAncestorsRecursively(previewParams.id)
+  const familyPages = getAncestorsRecursively(currentPage.id)
     .filter((item) => item.isPage)
     .reverse()
     .map((item) => ({
@@ -502,7 +502,7 @@ const getFamily = async (previewParams) => {
 
   await handlePageDetail(familyPages)
 
-  updatePageContent(familyPages, previewParams)
+  updatePageContent(familyPages, currentPage)
 
   return familyPages
 }
