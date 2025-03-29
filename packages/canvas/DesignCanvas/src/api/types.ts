@@ -1,4 +1,4 @@
-import { Node } from '../../../types'
+import type { Node, RootNode } from '../../../types'
 
 export type PageSchema = RootNode
 

@@ -10,6 +10,7 @@
  *
  */
 
+import type { App } from 'vue'
 import ConfigGroup from './ConfigGroup.vue'
 import ConfigItem from './ConfigItem.vue'
 export { default as PluginSetting } from './PluginSetting.vue'
@@ -59,7 +60,7 @@ export { default as Notify } from './Notify'
 export { ConfigGroup, ConfigItem }
 
 export const injectGlobalComponents = {
-  install: (app) => {
+  install: (app: App<Element>) => {
     const globalComponents = {
       ConfigGroup,
       ConfigItem
