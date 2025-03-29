@@ -30,6 +30,9 @@ const { deepClone } = utils
 // 保存预览窗口引用
 let previewWindow = null
 
+// 创建 BroadcastChannel 实例用于通信
+const previewChannel = new BroadcastChannel('tiny-engine-preview-channel')
+
 const getScriptAndStyleDeps = () => {
   const { scripts, styles } = useMaterial().getCanvasDeps()
   const utilsDeps = useResource().getUtilsDeps()
@@ -99,46 +102,29 @@ const sendSchemaUpdate = (data) => {
   )
 }
 
-// 监听来自预览页面的消息
-const setupMessageListener = () => {
-  window.addEventListener('message', async (event) => {
-    // 确保消息来源安全
-    if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
-      const { event: eventType, source } = event.data || {}
-      // 通过 heartbeat 消息来重新建立连接，避免刷新页面后 previewWindow 为 null
-      if (source === 'preview' && eventType === 'heartbeat' && !previewWindow) {
-        previewWindow = event.source
-      }
+let hasSchemaChangeListener = false
 
-      if (source === 'preview' && eventType === 'onMounted' && previewWindow) {
-        const params = await getSchemaParams()
-        sendSchemaUpdate(params)
-      }
-    }
+const cleanupSchemaChangeListener = () => {
+  const { unsubscribe } = useMessage()
+  unsubscribe({
+    topic: 'schemaChange',
+    subscriber: 'preview-communication'
   })
+  unsubscribe({
+    topic: 'schemaImport',
+    subscriber: 'preview-communication'
+  })
+  unsubscribe({
+    topic: 'pageOrBlockInit',
+    subscriber: 'preview-communication'
+  })
+  hasSchemaChangeListener = false
 }
 
-// 初始化消息监听
-setupMessageListener()
-
-let schemaChangeListener = null
 const handleSchemaChange = async () => {
-  const { unsubscribe } = useMessage()
   // 如果预览窗口不存在或已关闭，则取消订阅
   if (!previewWindow || previewWindow.closed) {
-    unsubscribe({
-      topic: 'schemaChange',
-      subscriber: 'preview-communication'
-    })
-    unsubscribe({
-      topic: 'schemaImport',
-      subscriber: 'preview-communication'
-    })
-    unsubscribe({
-      topic: 'pageOrBlockInit',
-      subscriber: 'preview-communication'
-    })
-    schemaChangeListener = null
+    cleanupSchemaChangeListener()
     return
   }
 
@@ -149,13 +135,13 @@ const handleSchemaChange = async () => {
 // 设置监听 schemaChange 事件，自动发送更新到预览页面
 export const setupSchemaChangeListener = () => {
   // 如果已经存在监听，则取消之前的监听
-  if (schemaChangeListener) {
+  if (hasSchemaChangeListener) {
     return
   }
 
   const { subscribe } = useMessage()
 
-  schemaChangeListener = subscribe({
+  subscribe({
     topic: 'schemaChange',
     subscriber: 'preview-communication',
     // 防抖更新，防止因为属性变化频繁触发
@@ -173,7 +159,38 @@ export const setupSchemaChangeListener = () => {
     subscriber: 'preview-communication',
     callback: handleSchemaChange
   })
+
+  hasSchemaChangeListener = true
 }
+
+// 监听来自预览页面的消息
+const setupMessageListener = () => {
+  window.addEventListener('message', async (event) => {
+    // 确保消息来源安全
+    if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
+      const { event: eventType, source } = event.data || {}
+      // 通过 heartbeat 消息来重新建立连接，避免刷新页面后 previewWindow 为 null
+      if (source === 'preview' && eventType === 'connect' && !previewWindow) {
+        previewWindow = event.source
+        setupSchemaChangeListener()
+      }
+
+      if (source === 'preview' && eventType === 'onMounted' && previewWindow) {
+        const params = await getSchemaParams()
+        sendSchemaUpdate(params)
+      }
+    }
+  })
+
+  // 可能是刷新，需要重新建立连接
+  previewChannel.postMessage({
+    event: 'connect',
+    source: 'designer'
+  })
+}
+
+// 初始化消息监听
+setupMessageListener()
 
 const handleHistoryPreview = (params, url) => {
   let historyPreviewWindow = null
@@ -241,7 +258,20 @@ const open = (params = {}, isHistory = false) => {
 
   let openUrl = ''
 
-  openUrl = isDevelopEnv ? `./preview.html?${query}` : `${href.endsWith('/') ? href : `${href}/`}preview?${query}`
+  // 从预览组件配置获取自定义URL
+  const customPreviewUrl = getMergeMeta('engine.toolbars.preview')?.options?.previewUrl
+  const defaultPreviewUrl = isDevelopEnv ? `./preview.html` : `${href.endsWith('/') ? href : `${href}/`}preview`
+
+  if (customPreviewUrl) {
+    // 如果配置了自定义预览URL，则使用自定义URL
+    openUrl =
+      typeof customPreviewUrl === 'function'
+        ? customPreviewUrl(defaultPreviewUrl, query)
+        : `${customPreviewUrl}?${query}`
+  } else {
+    // 否则使用默认生成的URL
+    openUrl = `${defaultPreviewUrl}?${query}`
+  }
 
   if (isHistory) {
     handleHistoryPreview({ ...params, scripts, styles }, openUrl)

@@ -4,42 +4,28 @@ interface PreviewCommunicationOptions {
 }
 
 let onSchemaReceivedAction: PreviewCommunicationOptions['onSchemaReceived'] | null = null
+// 创建 BroadcastChannel 实例，与主页面通信
+let previewChannel: BroadcastChannel | null = null
 
 const handleMessage = async (event: MessageEvent) => {
   if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
     const { type, data, source } = event.data || {}
 
-    if (source === 'designer' && type === 'schema' && data) {
-      if (onSchemaReceivedAction) {
-        await onSchemaReceivedAction(data)
-      }
+    if (source === 'designer' && type === 'schema' && data && onSchemaReceivedAction) {
+      await onSchemaReceivedAction(data)
     }
   }
 }
 
-let heartbeatTimer: ReturnType<typeof setTimeout> | undefined = undefined
-let retryTimes = 0
-let loadInitialData: PreviewCommunicationOptions['loadInitialData'] | null = null
-
-// 心跳重连，防止主页面刷新之后，丢失子页面实例
-const heartbeat = () => {
-  const opener = window.opener
-  if (retryTimes > 10) {
-    clearTimeout(heartbeatTimer)
-    return
+const handleBroadcastMessage = async (event: MessageEvent) => {
+  const { event: eventType, source } = event.data || {}
+  // 初始化了，重新建立连接
+  if (source === 'designer' && eventType === 'connect' && window.opener) {
+    window.opener.postMessage({ event: 'connect', source: 'preview' }, '*')
   }
-
-  if (!opener) {
-    retryTimes++
-  }
-
-  if (opener) {
-    retryTimes = 0
-    opener.postMessage({ event: 'heartbeat', source: 'preview' }, '*')
-  }
-
-  heartbeatTimer = setTimeout(heartbeat, 1000)
 }
+
+let loadInitialData: PreviewCommunicationOptions['loadInitialData'] | null = null
 
 const sendReadyMessage = () => {
   // 尝试获取父窗口引用
@@ -57,7 +43,12 @@ const sendReadyMessage = () => {
 const cleanupCommunication = () => {
   // 移除消息监听器
   window.removeEventListener('message', handleMessage)
-  clearTimeout(heartbeatTimer)
+
+  // 关闭 BroadcastChannel
+  if (previewChannel) {
+    previewChannel.close()
+    previewChannel = null
+  }
 }
 
 const initCommunication = () => {
@@ -70,7 +61,9 @@ const initCommunication = () => {
   const isHistory = new URLSearchParams(location.search).get('history')
 
   if (!isHistory && window.opener) {
-    heartbeatTimer = setTimeout(heartbeat, 1000)
+    // 初始化 BroadcastChannel
+    previewChannel = new BroadcastChannel('tiny-engine-preview-channel')
+    previewChannel.onmessage = handleBroadcastMessage
   }
 }
 
