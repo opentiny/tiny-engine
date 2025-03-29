@@ -8,7 +8,10 @@ let onSchemaReceivedAction: PreviewCommunicationOptions['onSchemaReceived'] | nu
 let previewChannel: BroadcastChannel | null = null
 
 const handleMessage = async (event: MessageEvent) => {
-  if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
+  const parsedOrigin = new URL(event.origin)
+  const parsedHost = new URL(window.location.href)
+
+  if (parsedOrigin.origin === parsedHost.origin || parsedOrigin.host === parsedHost.host) {
     const { type, data, source } = event.data || {}
 
     if (source === 'designer' && type === 'schema' && data && onSchemaReceivedAction) {
@@ -21,7 +24,7 @@ const handleBroadcastMessage = async (event: MessageEvent) => {
   const { event: eventType, source } = event.data || {}
   // 初始化了，重新建立连接
   if (source === 'designer' && eventType === 'connect' && window.opener) {
-    window.opener.postMessage({ event: 'connect', source: 'preview' }, '*')
+    window.opener.postMessage({ event: 'connect', source: 'preview' }, window.opener.origin || window.location.origin)
   }
 }
 
@@ -31,13 +34,22 @@ const sendReadyMessage = () => {
   // 尝试获取父窗口引用
   const opener = window.opener
 
-  if (opener) {
-    opener.postMessage({ event: 'onMounted', source: 'preview' }, '*')
-  } else {
+  const fallbackHandler = () => {
     const logger = console
     logger.warn('无法获取主窗口引用，将使用 URL 参数初始化预览')
     loadInitialData?.()
   }
+
+  if (opener) {
+    try {
+      opener.postMessage({ event: 'onMounted', source: 'preview' }, opener.origin || window.location.origin)
+    } catch (error) {
+      fallbackHandler()
+    }
+    return
+  }
+
+  fallbackHandler()
 }
 
 const cleanupCommunication = () => {

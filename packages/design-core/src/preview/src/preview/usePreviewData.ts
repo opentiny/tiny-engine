@@ -102,7 +102,7 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   const history = searchParams.get('history')
 
   if (pageId) {
-    let ancestors = await getPageRecursively(pageId)
+    let ancestors = (await getPageRecursively(pageId)).reverse()
     let currentPage = await getPageById(pageId)
     if (history) {
       const historyList: IPage[] = await fetchPageHistory(pageId)

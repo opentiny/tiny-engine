@@ -98,7 +98,7 @@ const sendSchemaUpdate = (data) => {
       type: 'schema',
       data
     },
-    '*'
+    previewWindow.origin || window.location.origin
   )
 }
 
@@ -166,8 +166,10 @@ export const setupSchemaChangeListener = () => {
 // 监听来自预览页面的消息
 const setupMessageListener = () => {
   window.addEventListener('message', async (event) => {
+    const parsedOrigin = new URL(event.origin)
+    const parsedHost = new URL(window.location.href)
     // 确保消息来源安全
-    if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
+    if (parsedOrigin.origin === parsedHost.origin || parsedOrigin.host === parsedHost.host) {
       const { event: eventType, source } = event.data || {}
       // 通过 heartbeat 消息来重新建立连接，避免刷新页面后 previewWindow 为 null
       if (source === 'preview' && eventType === 'connect' && !previewWindow) {
@@ -211,8 +213,11 @@ const handleHistoryPreview = (params, url) => {
               styles
             })
           },
-          '*'
+          previewWindow.origin || window.location.origin
         )
+
+        // 历史页面不需要实时更新预览，发送完消息后移除监听
+        window.removeEventListener('message', handlePreviewReady)
       }
     }
   }
