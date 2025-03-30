@@ -4,10 +4,7 @@ import useStyle from './useStyle'
 export default defineService({
   id: META_SERVICE.Style,
   type: 'MetaService',
-  apis: () => {
-    const { state, ...apis } = useStyle()
-    return apis
-  },
+  apis: useStyle(),
   composable: {
     name: HOOK_NAME.useStyle
   },

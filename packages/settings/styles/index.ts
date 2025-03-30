@@ -17,6 +17,7 @@ import './src/styles/vars.less'
 
 export default {
   ...metaData,
+  metas: [StyleService],
   entry
 }
 
