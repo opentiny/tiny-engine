@@ -4803,7 +4803,7 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Layout",
-            "version": "3.20.0",
+            "version": "3.14.0",
             "destructuring": true
           },
           "group": "component",
