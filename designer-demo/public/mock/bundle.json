@@ -4803,10 +4803,8 @@
           "npm": {
             "package": "@opentiny/vue",
             "exportName": "Layout",
-            "version": "3.14.0",
-            "destructuring": true,
-            "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-            "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+            "version": "3.20.0",
+            "destructuring": true
           },
           "group": "component",
           "priority": 5,
@@ -14042,15 +14040,15 @@
           "package": "@opentiny/vue",
           "version": "3.14.0",
           "destructuring": true,
-          "script": "https://unpkg.com/@opentiny/vue@~3.14/runtime/tiny-vue.mjs",
-          "css": "https://unpkg.com/@opentiny/vue-theme@~3.14/index.css"
+          "script": "https://registry.npmmirror.com/@opentiny/vue/~3.14/files/runtime/tiny-vue.mjs",
+          "css": "https://registry.npmmirror.com/@opentiny/vue-theme/~3.14/files/index.css"
         },
         {
           "name": "element-plus组件库",
           "package": "element-plus",
           "version": "2.4.2",
-          "script": "https://unpkg.com/element-plus@2.4.2/dist/index.full.mjs",
-          "css": "https://unpkg.com/element-plus@2.4.2/dist/index.css"
+          "script": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.full.mjs",
+          "css": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.css"
         }
       ]
     }
