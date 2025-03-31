@@ -329,8 +329,8 @@ export default {
 .resizer-right {
   position: absolute;
   top: 0;
-  right: -4px;
-  width: 8px;
+  right: 0;
+  width: 3px;
   height: 100%;
   cursor: col-resize;
   background-color: transparent;
@@ -339,7 +339,7 @@ export default {
   &::after {
     content: '';
     position: absolute;
-    left: 4px;
+    left: 3px;
     width: 1px;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);
@@ -371,8 +371,8 @@ export default {
 .resizer-left {
   position: absolute;
   top: 0;
-  left: -4px;
-  width: 8px;
+  left: 0;
+  width: 3px;
   height: 100%;
   cursor: col-resize;
   background-color: transparent;
@@ -381,7 +381,7 @@ export default {
   &::after {
     content: '';
     position: absolute;
-    right: 4px;
+    right: 3px;
     width: 1px;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.1);

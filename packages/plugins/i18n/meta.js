@@ -3,6 +3,6 @@ export default {
   title: '国际化',
   type: 'plugins',
   align: 'leftTop',
-  width: 600,
+  width: 602,
   icon: 'plugin-icon-i18n'
 }
