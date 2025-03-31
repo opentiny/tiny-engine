@@ -17,7 +17,66 @@ import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
-const PLUGIN_POSITION = {
+interface PluginPosition {
+  leftTop: string
+  leftBottom: string
+  independence: string
+  rightTop: string
+  rightBottom: string
+  fixed: string
+}
+
+interface PluginState {
+  pluginEvent: string
+}
+
+interface Dimension {
+  deviceType: string
+  width: string
+  maxWidth: string
+  minWidth: string
+  scale: number
+  height: string
+}
+
+interface Plugins {
+  isShow: boolean
+  fixedPanels: string[]
+  render: string | null
+  pluginEvent: string
+  activating: boolean
+  showDesignSettings: boolean
+}
+
+interface Settings extends Plugins {
+  api: any | null
+}
+
+interface LayoutState {
+  isMoveDragBar: boolean
+  dimension: Dimension
+  plugins: Plugins
+  settings: Settings
+  toolbars: {
+    visiblePopover: boolean
+  }
+  pageStatus: string
+}
+
+interface PluginStorageItem {
+  width?: number
+  offset?: number
+  align?: string
+  index?: number
+  isShow?: boolean
+  widthResizable?: boolean
+}
+
+interface PluginStorage {
+  [key: string]: PluginStorageItem
+}
+
+const PLUGIN_POSITION: PluginPosition = {
   leftTop: 'leftTop',
   leftBottom: 'leftBottom',
   independence: 'independence',
@@ -26,11 +85,11 @@ const PLUGIN_POSITION = {
   fixed: 'fixed'
 }
 
-const pluginState = reactive({
+const pluginState: PluginState = reactive({
   pluginEvent: 'all'
 })
 
-const layoutState = reactive({
+const layoutState: LayoutState = reactive({
   isMoveDragBar: false,
   dimension: {
     deviceType: 'desktop',
@@ -64,15 +123,19 @@ const layoutState = reactive({
     data: {}
   }
 })
-const getMoveDragBarState = () => {
+
+const getMoveDragBarState = (): boolean => {
   return layoutState.isMoveDragBar
 }
-const changeMoveDragBarState = (state) => {
+
+const changeMoveDragBarState = (state: boolean): void => {
   layoutState.isMoveDragBar = state
 }
-const leftMenuShownStorage = useStorage('leftMenuShown', layoutState.plugins.isShow)
-const rightMenuShownStorage = useStorage('rightMenuShown', layoutState.settings.isShow)
-const changeMenuShown = (menuName) => {
+
+const leftMenuShownStorage = useStorage<boolean>('leftMenuShown', layoutState.plugins.isShow)
+const rightMenuShownStorage = useStorage<boolean>('rightMenuShown', layoutState.settings.isShow)
+
+const changeMenuShown = (menuName: 'left' | 'right'): void => {
   switch (menuName) {
     case 'left': {
       leftMenuShownStorage.value = !leftMenuShownStorage.value
@@ -84,33 +147,35 @@ const changeMenuShown = (menuName) => {
     }
   }
 }
-const leftFixedPanelsStorage = useStorage(STORAGE_KEY_LEFT_FIXED_PANELS, layoutState.plugins.fixedPanels)
-const rightFixedPanelsStorage = useStorage(STORAGE_KEY_RIGHT_FIXED_PANELS, layoutState.settings.fixedPanels)
 
-const changeLeftFixedPanels = (pluginName) => {
+const leftFixedPanelsStorage = useStorage<string[]>(STORAGE_KEY_LEFT_FIXED_PANELS, layoutState.plugins.fixedPanels)
+const rightFixedPanelsStorage = useStorage<string[]>(STORAGE_KEY_RIGHT_FIXED_PANELS, layoutState.settings.fixedPanels)
+
+const changeLeftFixedPanels = (pluginName: string): void => {
   leftFixedPanelsStorage.value = leftFixedPanelsStorage.value?.includes(pluginName)
     ? leftFixedPanelsStorage.value?.filter((item) => item !== pluginName)
     : [...leftFixedPanelsStorage.value, pluginName]
 }
-const changeRightFixedPanels = (pluginName) => {
+
+const changeRightFixedPanels = (pluginName: string): void => {
   rightFixedPanelsStorage.value = rightFixedPanelsStorage.value?.includes(pluginName)
     ? rightFixedPanelsStorage.value?.filter((item) => item !== pluginName)
     : [...rightFixedPanelsStorage.value, pluginName]
 }
 
-const getScale = () => layoutState.dimension.scale
+const getScale = (): number => layoutState.dimension.scale
 
-const getPluginState = () => layoutState.plugins
-const getSettingState = () => layoutState.settings
+const getPluginState = (): Plugins => layoutState.plugins
+const getSettingState = (): Settings => layoutState.settings
 
-const getDimension = () => layoutState.dimension
+const getDimension = (): Dimension => layoutState.dimension
 
-const setDimension = (data) => {
+const setDimension = (data: Partial<Dimension>): void => {
   Object.assign(layoutState.dimension, data)
 }
 
 // 激活setting面板并高亮提示
-const activeSetting = (name) => {
+const activeSetting = (name: string): void => {
   const { settings } = layoutState
 
   settings.render = name
@@ -132,7 +197,7 @@ const getFixedPanelsStatus = () => {
   return { leftPanelFixed, rightPanelFixed }
 }
 
-const closeSetting = (forceClose) => {
+const closeSetting = (forceClose?: boolean) => {
   const { settings } = layoutState
   if (!settings.fixedPanels.includes(settings.render) || forceClose) {
     settings.render = null
@@ -140,7 +205,7 @@ const closeSetting = (forceClose) => {
 }
 
 // 激活plugin面板并返回当前插件注册的Api
-const activePlugin = (name, noActiveRender) => {
+const activePlugin = (name: string, noActiveRender: boolean) => {
   const { plugins } = layoutState
 
   if (!noActiveRender) {
@@ -153,7 +218,7 @@ const activePlugin = (name, noActiveRender) => {
 }
 
 // 关闭插件面板
-const closePlugin = (forceClose) => {
+const closePlugin = (forceClose?: boolean) => {
   const { plugins } = layoutState
   if (!plugins.fixedPanels.includes(plugins.render) || forceClose) {
     plugins.render = null
@@ -163,7 +228,7 @@ const closePlugin = (forceClose) => {
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
 export default () => {
-  let plugin = []
+  let plugin: PluginStorage = {}
 
   try {
     const storedPlugin = localStorage.getItem('plugin')
@@ -174,21 +239,18 @@ export default () => {
     throw new Error(error)
   }
 
-  // 如果 plugin 不是一个数组，则将其重置为默认值
-  if (!Array.isArray(plugin)) {
-    plugin = []
-  }
-
-  const pluginStorageReactive = useStorage('plugin', plugin)
+  const pluginStorageReactive = useStorage<PluginStorage>('plugin', plugin)
 
   // 获取插件宽度
-  const getPluginWidth = (name) => pluginStorageReactive.value[name]?.width || PLUGIN_DEFAULT_WIDTH
+  const getPluginWidth = (name: string) => pluginStorageReactive.value[name]?.width || PLUGIN_DEFAULT_WIDTH
 
   // 修改插件宽度
-  const changePluginWidth = (name, width, offset) => {
+  const changePluginWidth = (name: string, width: number, offset?: number): void => {
     if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
       pluginStorageReactive.value[name].width = width
-      pluginStorageReactive.value[name].offset = offset
+      if (offset !== undefined) {
+        pluginStorageReactive.value[name].offset = offset
+      }
     } else {
       pluginStorageReactive.value[name] = {
         width
@@ -197,11 +259,10 @@ export default () => {
   }
 
   // 获取插件布局
-  const getPluginByLayout = (name) => pluginStorageReactive.value[name]?.align || 'leftTop'
+  const getPluginByLayout = (name: string): string => pluginStorageReactive.value[name]?.align || 'leftTop'
 
   // 获取某个布局（左上/左下/右上/右下）的插件名称列表
-  const getPluginsByLayout = (layout = 'all') => {
-    // 筛选出符合布局条件的插件名称
+  const getPluginsByLayout = (layout: string = 'all'): string[] => {
     const pluginNames = Object.keys(pluginStorageReactive.value).filter(
       (key) => pluginStorageReactive.value[key].align === layout || layout === 'all'
     )
@@ -211,16 +272,21 @@ export default () => {
     return pluginNames
   }
 
-  const getPluginById = (pluginList, pluginId) => {
+  interface Plugin {
+    id: string
+    [key: string]: any
+  }
+
+  const getPluginById = (pluginList: Plugin[], pluginId: string): Plugin | undefined => {
     return pluginList.find((item) => item.id === pluginId)
   }
 
-  const getPluginsByPosition = (position, pluginList) => {
+  const getPluginsByPosition = (position: string, pluginList: Plugin[]): (Plugin | undefined)[] => {
     return getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
   }
 
   // 修改某个插件的布局
-  const changePluginLayout = (name, layout) => {
+  const changePluginLayout = (name: string, layout: string): void => {
     if (pluginStorageReactive.value[name]) {
       pluginStorageReactive.value[name].align = layout
     }
@@ -234,17 +300,16 @@ export default () => {
    * @param {*} newIndex 插件的结束索引
    * @returns
    */
-  const dragPluginLayout = (from, to, oldIndex, newIndex) => {
+  const dragPluginLayout = (from: string, to: string, oldIndex: number, newIndex: number): void => {
     if (from === to && oldIndex === newIndex) return
 
     const items = Object.values(pluginStorageReactive.value)
-    // 记录拖拽项
     const movedItem = items.find((item) => item.align === from && item.index === oldIndex)
 
-    // 同一列表中的拖拽
+    // 同一列表的拖拽
     if (from === to) {
       if (oldIndex < newIndex) {
-        //往后移动
+        // 往后移动
         items.forEach((item) => {
           if (item !== movedItem && item.align === from && item.index > oldIndex && item.index <= newIndex) {
             item.index -= 1
@@ -278,7 +343,7 @@ export default () => {
   }
 
   //判断是否在同一侧
-  const isSameSide = (from, to) => {
+  const isSameSide = (from: string, to: string): boolean => {
     const leftSide = [PLUGIN_POSITION.leftTop, PLUGIN_POSITION.leftBottom]
     const rightSide = [PLUGIN_POSITION.rightTop, PLUGIN_POSITION.rightBottom]
 
@@ -289,10 +354,10 @@ export default () => {
   }
 
   //获取插件显示状态
-  const getPluginShown = (name) => pluginStorageReactive.value[name]?.isShow
+  const getPluginShown = (name: string): boolean => pluginStorageReactive.value[name]?.isShow
 
   //修改插件显示状态
-  const changePluginShown = (name) => {
+  const changePluginShown = (name: string): void => {
     if (!pluginStorageReactive.value[name]) {
       pluginStorageReactive.value[name] = { isShow: true }
     }
@@ -304,9 +369,9 @@ export default () => {
    * @param {string} name 插件名称
    * @returns
    */
-  const isPanelWidthResizable = (name) => pluginStorageReactive.value[name]?.widthResizable
+  const isPanelWidthResizable = (name: string): boolean => pluginStorageReactive.value[name]?.widthResizable
 
-  const initPluginStorageReactive = (pluginList) => {
+  const initPluginStorageReactive = (pluginList: PluginStorage): void => {
     if (Object.keys(pluginStorageReactive.value).length) return
     pluginStorageReactive.value = pluginList
   }
