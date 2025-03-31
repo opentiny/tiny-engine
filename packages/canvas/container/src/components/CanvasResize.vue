@@ -90,6 +90,9 @@ export default {
       })
     }
 
+    const draggablePanel = ref(null)
+    watch(() => useLayout().getPluginWidth(draggablePanel.value), setScale, { flush: 'post' })
+
     watch(() => useLayout().getDimension().width, setScale, { flush: 'post', immediate: true })
 
     watch(() => useLayout().leftFixedPanelsStorage.value, setScale, { flush: 'post' })
@@ -98,6 +101,11 @@ export default {
       () => useLayout().getPluginState().render,
       (value) => {
         const currentFixed = useLayout().getPluginState().fixedPanels.includes(value)
+        const isPanelResizable = useLayout().isPanelWidthResizable(value)
+
+        if (isPanelResizable) {
+          draggablePanel.value = value
+        }
 
         if (!value || currentFixed) {
           setScale()
