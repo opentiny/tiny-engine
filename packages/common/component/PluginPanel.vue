@@ -109,11 +109,19 @@ export default {
     isShowCollapseIcon: {
       type: Boolean,
       default: false
+    },
+    isCustomClose: {
+      type: Function,
+      default: null
     }
   },
   emits: ['close', 'updateCollapseStatus'],
   setup(props, { emit }) {
     const closePanel = () => {
+      if (typeof props.isCustomClose === 'function') {
+        props.isCustomClose()
+        return
+      }
       emit('close')
     }
 

@@ -5,7 +5,7 @@
     class="plugin-schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"
-    @close="close"
+    :is-custom-close="close"
   >
     <template #header>
       <span class="icon-wrap">
