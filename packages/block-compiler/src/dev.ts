@@ -1,5 +1,9 @@
 // @ts-ignore
-import { createApp, defineAsyncComponent, h } from 'https://unpkg.com/vue@3.4.23/dist/vue.runtime.esm-browser.js'
+import {
+  createApp,
+  defineAsyncComponent,
+  h
+} from 'https://registry.npmmirror.com/vue/3.4.23/files/dist/vue.runtime.esm-browser.js'
 import { compile } from './index'
 import BlockFileName from '../test/sample/BlockFileName.vue?raw'
 import BlockHead from '../test/sample/BlockHead.vue?raw'

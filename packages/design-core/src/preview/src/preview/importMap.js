@@ -19,7 +19,14 @@ const importMap = {}
 const opentinyVueVersion = '~3.20'
 
 function replacePlaceholder(v) {
-  return v.replace('${VITE_CDN_DOMAIN}', useEnv().VITE_CDN_DOMAIN).replace('${opentinyVueVersion}', opentinyVueVersion)
+  const versionDelimiter = useEnv().VITE_CDN_TYPE === 'npmmirror' ? '/' : '@'
+  const fileDelimiter = useEnv().VITE_CDN_TYPE === 'npmmirror' ? '/files' : ''
+
+  return v
+    .replace('${VITE_CDN_DOMAIN}', useEnv().VITE_CDN_DOMAIN)
+    .replace('${opentinyVueVersion}', opentinyVueVersion)
+    .replace('${versionDelimiter}', versionDelimiter)
+    .replace('${fileDelimiter}', fileDelimiter)
 }
 
 export const getImportMap = () => {
