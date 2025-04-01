@@ -12,7 +12,7 @@
 
 - 拖动一个Collection组件到画布中，在Collection组件属性面板上选择数据源
 - 拖动格组件到Collection中，表格组件将自动生成数据源中的字段
-![使用数据源Mock数据](not-found/dataSource6.png)
+![使用数据源Mock数据](./imgs/dataSource6.png)
 
 ## 更新数据源到画布
 

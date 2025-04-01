@@ -24,7 +24,7 @@
 
    ![state-isLogin为false时](./imgs/state-isLogin为false时.png)
 
-   **图 4**  state.isLogin为ture时
+   **图 4**  state.isLogin为true时
 
-   ![state-isLogin为ture时.png](./imgs/state-isLogin为ture时.png)
+   ![state-isLogin为ture时.png](./imgs/state-isLogin为true时.png)
 
