@@ -11,13 +11,27 @@
  */
 
 import { reactive, nextTick } from 'vue'
+import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
-interface PluginPosition {
+// 定义常量类型
+type PluginNameType = typeof PLUGIN_NAME
+
+// MetaApi 类型定义
+interface IMetaApi {
+  [key: string]: any
+}
+
+interface IFixedPanelsStatus {
+  leftPanelFixed: boolean
+  rightPanelFixed: boolean
+}
+
+interface IPluginPosition {
   leftTop: string
   leftBottom: string
   independence: string
@@ -26,12 +40,12 @@ interface PluginPosition {
   fixed: string
 }
 
-interface PluginState {
-  pluginEvent: string
+interface IPluginState {
+  pluginEvent: 'all' | string
 }
 
-interface Dimension {
-  deviceType: string
+interface IDimension {
+  deviceType: 'desktop' | 'tablet' | 'mobile'
   width: string
   maxWidth: string
   minWidth: string
@@ -39,44 +53,94 @@ interface Dimension {
   height: string
 }
 
-interface Plugins {
+interface IPlugins {
   isShow: boolean
   fixedPanels: string[]
-  render: string | null
-  pluginEvent: string
+  render: string
   activating: boolean
   showDesignSettings: boolean
 }
 
-interface Settings extends Plugins {
-  api: any | null
+interface ISettings extends IPlugins {
+  api: IMetaApi | null
 }
 
-interface LayoutState {
+interface ILayoutState {
   isMoveDragBar: boolean
-  dimension: Dimension
-  plugins: Plugins
-  settings: Settings
+  dimension: IDimension
+  plugins: IPlugins
+  settings: ISettings
   toolbars: {
     visiblePopover: boolean
   }
-  pageStatus: string
+  pageStatus: any
 }
 
-interface PluginStorageItem {
-  width?: number
+interface IPluginStorageItem {
+  width?: number | undefined
   offset?: number
   align?: string
-  index?: number
+  index: number
   isShow?: boolean
   widthResizable?: boolean
 }
 
-interface PluginStorage {
-  [key: string]: PluginStorageItem
+interface IPluginStorage {
+  [key: string]: IPluginStorageItem
 }
 
-const PLUGIN_POSITION: PluginPosition = {
+interface IPlugin {
+  id: string
+  componentName?: string
+  name?: string
+  label?: string
+  [key: string]: any
+}
+
+// 定义插件位置类型
+type MenuType = 'left' | 'right'
+
+export interface IUseLayoutReturn {
+  isPanelWidthResizable: (name: string) => boolean
+  getFixedPanelsStatus: () => IFixedPanelsStatus
+  initPluginStorageReactive: (pluginList: IPluginStorage) => void
+  PLUGIN_NAME: PluginNameType
+  PLUGIN_POSITION: IPluginPosition
+  activeSetting: (name: string) => void
+  closeSetting: (forceClose?: boolean) => void
+  activePlugin: (name: string, noActiveRender: boolean) => Promise<IMetaApi>
+  closePlugin: (forceClose?: boolean) => void
+  layoutState: ILayoutState
+  getScale: () => number
+  setDimension: (data: Partial<IDimension>) => void
+  getDimension: () => IDimension
+  getPluginById: (pluginList: IPlugin[], pluginId: string) => IPlugin | undefined
+  pluginState: IPluginState
+  getPluginState: () => IPlugins
+  getSettingState: () => ISettings
+  isEmptyPage: () => boolean
+  getPluginWidth: (name: string) => number
+  changePluginWidth: (name: string, width: number, offset?: number) => void
+  leftFixedPanelsStorage: RemovableRef<string[]>
+  rightFixedPanelsStorage: RemovableRef<string[]>
+  leftMenuShownStorage: RemovableRef<boolean>
+  rightMenuShownStorage: RemovableRef<boolean>
+  changeLeftFixedPanels: (pluginName: string) => void
+  changeRightFixedPanels: (pluginName: string) => void
+  getPluginsByLayout: (layout?: string) => string[]
+  changePluginLayout: (name: string, layout: string) => void
+  getPluginByLayout: (name: string) => string
+  dragPluginLayout: (from: string, to: string, oldIndex: number, newIndex: number) => void
+  isSameSide: (from: string, to: string) => boolean
+  getPluginShown: (name: string) => boolean
+  changePluginShown: (name: string) => void
+  changeMenuShown: (menuName: MenuType) => void
+  getMoveDragBarState: () => boolean
+  changeMoveDragBarState: (state: boolean) => void
+  getPluginsByPosition: (position: string, pluginList: IPlugin[]) => (IPlugin | undefined)[]
+}
+
+const PLUGIN_POSITION: IPluginPosition = {
   leftTop: 'leftTop',
   leftBottom: 'leftBottom',
   independence: 'independence',
@@ -85,11 +149,11 @@ const PLUGIN_POSITION: PluginPosition = {
   fixed: 'fixed'
 }
 
-const pluginState: PluginState = reactive({
+const pluginState: IPluginState = reactive({
   pluginEvent: 'all'
 })
 
-const layoutState: LayoutState = reactive({
+const layoutState: ILayoutState = reactive({
   isMoveDragBar: false,
   dimension: {
     deviceType: 'desktop',
@@ -165,12 +229,12 @@ const changeRightFixedPanels = (pluginName: string): void => {
 
 const getScale = (): number => layoutState.dimension.scale
 
-const getPluginState = (): Plugins => layoutState.plugins
-const getSettingState = (): Settings => layoutState.settings
+const getPluginState = (): IPlugins => layoutState.plugins
+const getSettingState = (): ISettings => layoutState.settings
 
-const getDimension = (): Dimension => layoutState.dimension
+const getDimension = (): IDimension => layoutState.dimension
 
-const setDimension = (data: Partial<Dimension>): void => {
+const setDimension = (data: Partial<IDimension>): void => {
   Object.assign(layoutState.dimension, data)
 }
 
@@ -200,7 +264,7 @@ const getFixedPanelsStatus = () => {
 const closeSetting = (forceClose?: boolean) => {
   const { settings } = layoutState
   if (!settings.fixedPanels.includes(settings.render) || forceClose) {
-    settings.render = null
+    settings.render = ''
   }
 }
 
@@ -212,7 +276,7 @@ const activePlugin = (name: string, noActiveRender: boolean) => {
     plugins.render = name
   }
 
-  return new Promise((resolve) => {
+  return new Promise<IMetaApi>((resolve) => {
     nextTick(() => resolve(getMetaApi(name)))
   })
 }
@@ -221,25 +285,28 @@ const activePlugin = (name: string, noActiveRender: boolean) => {
 const closePlugin = (forceClose?: boolean) => {
   const { plugins } = layoutState
   if (!plugins.fixedPanels.includes(plugins.render) || forceClose) {
-    plugins.render = null
+    plugins.render = ''
   }
 }
 
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
-export default () => {
-  let plugin: PluginStorage = {}
+export default (): IUseLayoutReturn => {
+  let plugin: IPluginStorage = {}
 
   try {
     const storedPlugin = localStorage.getItem('plugin')
     if (storedPlugin) {
-      plugin = JSON.parse(storedPlugin)
+      plugin = JSON.parse(storedPlugin) as IPluginStorage
     }
   } catch (error) {
-    throw new Error(error)
+    if (error instanceof Error) {
+      throw new Error(error.message)
+    }
+    throw new Error('Failed to parse plugin storage')
   }
 
-  const pluginStorageReactive = useStorage<PluginStorage>('plugin', plugin)
+  const pluginStorageReactive = useStorage<IPluginStorage>('plugin', plugin)
 
   // 获取插件宽度
   const getPluginWidth = (name: string) => pluginStorageReactive.value[name]?.width || PLUGIN_DEFAULT_WIDTH
@@ -252,9 +319,7 @@ export default () => {
         pluginStorageReactive.value[name].offset = offset
       }
     } else {
-      pluginStorageReactive.value[name] = {
-        width
-      }
+      Object.assign(pluginStorageReactive.value, { width })
     }
   }
 
@@ -272,16 +337,11 @@ export default () => {
     return pluginNames
   }
 
-  interface Plugin {
-    id: string
-    [key: string]: any
-  }
-
-  const getPluginById = (pluginList: Plugin[], pluginId: string): Plugin | undefined => {
+  const getPluginById = (pluginList: IPlugin[], pluginId: string): IPlugin | undefined => {
     return pluginList.find((item) => item.id === pluginId)
   }
 
-  const getPluginsByPosition = (position: string, pluginList: Plugin[]): (Plugin | undefined)[] => {
+  const getPluginsByPosition = (position: string, pluginList: IPlugin[]): (IPlugin | undefined)[] => {
     return getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
   }
 
@@ -354,12 +414,12 @@ export default () => {
   }
 
   //获取插件显示状态
-  const getPluginShown = (name: string): boolean => pluginStorageReactive.value[name]?.isShow
+  const getPluginShown = (name: string): boolean => pluginStorageReactive.value[name]?.isShow || false
 
   //修改插件显示状态
   const changePluginShown = (name: string): void => {
     if (!pluginStorageReactive.value[name]) {
-      pluginStorageReactive.value[name] = { isShow: true }
+      Object.assign(pluginStorageReactive.value[name], { isShow: true })
     }
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
@@ -369,9 +429,9 @@ export default () => {
    * @param {string} name 插件名称
    * @returns
    */
-  const isPanelWidthResizable = (name: string): boolean => pluginStorageReactive.value[name]?.widthResizable
+  const isPanelWidthResizable = (name: string): boolean => pluginStorageReactive.value[name]?.widthResizable || false
 
-  const initPluginStorageReactive = (pluginList: PluginStorage): void => {
+  const initPluginStorageReactive = (pluginList: IPluginStorage): void => {
     if (Object.keys(pluginStorageReactive.value).length) return
     pluginStorageReactive.value = pluginList
   }
