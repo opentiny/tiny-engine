@@ -319,7 +319,7 @@ export default (): IUseLayoutReturn => {
         pluginStorageReactive.value[name].offset = offset
       }
     } else {
-      Object.assign(pluginStorageReactive.value, { width })
+      pluginStorageReactive.value[name] = { width, index: 0, isShow: true }
     }
   }
 
@@ -419,7 +419,7 @@ export default (): IUseLayoutReturn => {
   //修改插件显示状态
   const changePluginShown = (name: string): void => {
     if (!pluginStorageReactive.value[name]) {
-      Object.assign(pluginStorageReactive.value[name], { isShow: true })
+      pluginStorageReactive.value[name] = { isShow: true, index: 0 }
     }
     pluginStorageReactive.value[name].isShow = !pluginStorageReactive.value[name].isShow
   }
