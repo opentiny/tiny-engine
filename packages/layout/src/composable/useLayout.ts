@@ -44,7 +44,7 @@ export interface IDimension {
   height: string
 }
 
-export interface IPlugins {
+export interface IPluginBase {
   isShow: boolean
   fixedPanels: string[]
   render: string
@@ -52,7 +52,9 @@ export interface IPlugins {
   showDesignSettings: boolean
 }
 
-export interface ISettings extends IPlugins {
+export interface IPlugins extends IPluginBase, IPluginState {}
+
+export interface ISettings extends IPluginBase {
   api: IMetaApi | null
 }
 
@@ -97,11 +99,11 @@ const PLUGIN_POSITION: IPluginPosition = {
   fixed: 'fixed'
 }
 
-const pluginState: IPluginState = reactive({
+const pluginState = reactive<IPluginState>({
   pluginEvent: 'all'
 })
 
-const layoutState: ILayoutState = reactive({
+const layoutState = reactive<ILayoutState>({
   isMoveDragBar: false,
   dimension: {
     deviceType: 'desktop',
@@ -217,7 +219,7 @@ const closeSetting = (forceClose?: boolean) => {
 }
 
 // 激活plugin面板并返回当前插件注册的Api
-const activePlugin = (name: string, noActiveRender: boolean) => {
+const activePlugin = (name: string, noActiveRender?: boolean) => {
   const { plugins } = layoutState
 
   if (!noActiveRender) {
