@@ -11,24 +11,15 @@
  */
 
 import { reactive, nextTick } from 'vue'
-import type { RemovableRef } from '@vueuse/core'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
-// 定义常量类型
-type PluginNameType = typeof PLUGIN_NAME
-
 // MetaApi 类型定义
 interface IMetaApi {
   [key: string]: any
-}
-
-interface IFixedPanelsStatus {
-  leftPanelFixed: boolean
-  rightPanelFixed: boolean
 }
 
 interface IPluginPosition {
@@ -95,49 +86,6 @@ interface IPlugin {
   name?: string
   label?: string
   [key: string]: any
-}
-
-// 定义插件位置类型
-type MenuType = 'left' | 'right'
-
-export interface IUseLayoutReturn {
-  isPanelWidthResizable: (name: string) => boolean
-  getFixedPanelsStatus: () => IFixedPanelsStatus
-  initPluginStorageReactive: (pluginList: IPluginStorage) => void
-  PLUGIN_NAME: PluginNameType
-  PLUGIN_POSITION: IPluginPosition
-  activeSetting: (name: string) => void
-  closeSetting: (forceClose?: boolean) => void
-  activePlugin: (name: string, noActiveRender: boolean) => Promise<IMetaApi>
-  closePlugin: (forceClose?: boolean) => void
-  layoutState: ILayoutState
-  getScale: () => number
-  setDimension: (data: Partial<IDimension>) => void
-  getDimension: () => IDimension
-  getPluginById: (pluginList: IPlugin[], pluginId: string) => IPlugin | undefined
-  pluginState: IPluginState
-  getPluginState: () => IPlugins
-  getSettingState: () => ISettings
-  isEmptyPage: () => boolean
-  getPluginWidth: (name: string) => number
-  changePluginWidth: (name: string, width: number, offset?: number) => void
-  leftFixedPanelsStorage: RemovableRef<string[]>
-  rightFixedPanelsStorage: RemovableRef<string[]>
-  leftMenuShownStorage: RemovableRef<boolean>
-  rightMenuShownStorage: RemovableRef<boolean>
-  changeLeftFixedPanels: (pluginName: string) => void
-  changeRightFixedPanels: (pluginName: string) => void
-  getPluginsByLayout: (layout?: string) => string[]
-  changePluginLayout: (name: string, layout: string) => void
-  getPluginByLayout: (name: string) => string
-  dragPluginLayout: (from: string, to: string, oldIndex: number, newIndex: number) => void
-  isSameSide: (from: string, to: string) => boolean
-  getPluginShown: (name: string) => boolean
-  changePluginShown: (name: string) => void
-  changeMenuShown: (menuName: MenuType) => void
-  getMoveDragBarState: () => boolean
-  changeMoveDragBarState: (state: boolean) => void
-  getPluginsByPosition: (position: string, pluginList: IPlugin[]) => (IPlugin | undefined)[]
 }
 
 const PLUGIN_POSITION: IPluginPosition = {
@@ -291,7 +239,7 @@ const closePlugin = (forceClose?: boolean) => {
 
 const isEmptyPage = () => layoutState.pageStatus?.state === PAGE_STATUS.Empty
 
-export default (): IUseLayoutReturn => {
+export default () => {
   let plugin: IPluginStorage = {}
 
   try {
