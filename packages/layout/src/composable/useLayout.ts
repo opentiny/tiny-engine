@@ -18,11 +18,11 @@ import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
 // MetaApi 类型定义
-interface IMetaApi {
+export interface IMetaApi {
   [key: string]: any
 }
 
-interface IPluginPosition {
+export interface IPluginPosition {
   leftTop: string
   leftBottom: string
   independence: string
@@ -31,11 +31,11 @@ interface IPluginPosition {
   fixed: string
 }
 
-interface IPluginState {
+export interface IPluginState {
   pluginEvent: 'all' | string
 }
 
-interface IDimension {
+export interface IDimension {
   deviceType: 'desktop' | 'tablet' | 'mobile'
   width: string
   maxWidth: string
@@ -44,7 +44,7 @@ interface IDimension {
   height: string
 }
 
-interface IPlugins {
+export interface IPlugins {
   isShow: boolean
   fixedPanels: string[]
   render: string
@@ -52,11 +52,11 @@ interface IPlugins {
   showDesignSettings: boolean
 }
 
-interface ISettings extends IPlugins {
+export interface ISettings extends IPlugins {
   api: IMetaApi | null
 }
 
-interface ILayoutState {
+export interface ILayoutState {
   isMoveDragBar: boolean
   dimension: IDimension
   plugins: IPlugins
@@ -76,11 +76,11 @@ interface IPluginStorageItem {
   widthResizable?: boolean
 }
 
-interface IPluginStorage {
+export interface IPluginStorage {
   [key: string]: IPluginStorageItem
 }
 
-interface IPlugin {
+export interface IPlugin {
   id: string
   componentName?: string
   name?: string
