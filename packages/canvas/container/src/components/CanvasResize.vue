@@ -10,7 +10,7 @@
   </div>
 </template>
 <script>
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { canvasState } from '../container'
 
@@ -136,6 +136,18 @@ export default {
         })
       }
     )
+
+    const handleResize = () => {
+      setScale()
+    }
+
+    onMounted(() => {
+      window.addEventListener('resize', handleResize)
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', handleResize)
+    })
 
     return {
       onMouseDown,
