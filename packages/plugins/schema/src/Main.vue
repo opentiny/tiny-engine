@@ -5,7 +5,7 @@
     class="plugin-schema"
     :fixed-name="PLUGIN_NAME.Schema"
     :fixedPanels="fixedPanels"
-    :is-custom-close="close"
+    @close="close"
   >
     <template #header>
       <span class="icon-wrap">
@@ -58,6 +58,7 @@ export default {
     PluginPanel,
     IconDownloadLink: iconDownloadLink()
   },
+  inheritAttrs: false,
   props: {
     fixedPanels: {
       type: Array
