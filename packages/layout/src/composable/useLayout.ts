@@ -67,7 +67,7 @@ export interface ILayoutState {
   pageStatus: any
 }
 
-interface IPluginStorageItem {
+export interface IPluginStorageItem {
   width?: number | undefined
   offset?: number
   align?: string
