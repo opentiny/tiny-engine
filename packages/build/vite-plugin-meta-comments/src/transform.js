@@ -18,8 +18,6 @@ import {
   wrapEntryFuncNode,
   COMMON_PACKAGE_NAME,
   CALLENTRY,
-  BEFORE_CALLENTRY,
-  AFTER_CALLENTRY,
   USE_COMPILE,
   METADATANAME,
   isCallEntryFile,
@@ -127,19 +125,13 @@ function handleProgram(state, metaPath) {
     path.node.body.unshift(template.statement(`import ${metaData} from '${metaPath}'`)())
 
     const callEntry = path.scope.generateUid(CALLENTRY)
-    const beforeCallEntry = path.scope.generateUid(BEFORE_CALLENTRY)
-    const afterCallEntry = path.scope.generateUid(AFTER_CALLENTRY)
     const useCompile = path.scope.generateUid(USE_COMPILE)
     state.varName[CALLENTRY] = callEntry
-    state.varName[BEFORE_CALLENTRY] = beforeCallEntry
-    state.varName[AFTER_CALLENTRY] = afterCallEntry
     state.varName[USE_COMPILE] = useCompile
     path.node.body.unshift(
       template.statement(
         `import { 
           ${CALLENTRY} as ${callEntry},
-          ${BEFORE_CALLENTRY} as ${beforeCallEntry},
-          ${AFTER_CALLENTRY} as ${afterCallEntry},
           ${USE_COMPILE} as ${useCompile} 
         } from '${COMMON_PACKAGE_NAME}'`
       )()
