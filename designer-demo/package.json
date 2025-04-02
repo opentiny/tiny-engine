@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env vite",
-    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
+    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build --mode alpha",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build",
     "test": "vitest run",
     "test:watch": "vitest"
   },

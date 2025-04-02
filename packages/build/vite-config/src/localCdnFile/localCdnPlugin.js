@@ -65,7 +65,7 @@ function extractInfo(str) {
  * @param {string} cdnDir - 本地CDN目录名
  * @returns {Object} - Vite插件对象
  */
-function createEnvReplacementPlugin(cdnDir) {
+function createEnvReplacementPlugin(cdnDir, base) {
   return {
     name: 'vite-replace-cdn-env',
     config(config) {
@@ -74,7 +74,9 @@ function createEnvReplacementPlugin(cdnDir) {
         config.define = {}
       }
 
-      config.define['import.meta.env.VITE_CDN_DOMAIN'] = JSON.stringify(`./${cdnDir}`)
+      config.define['import.meta.env.VITE_CDN_DOMAIN'] = JSON.stringify(
+        `${base.endsWith('/') ? base : base + '/'}${cdnDir}`
+      )
       // 使用本地 CDN 时，强制设置CDN类型为 local
       config.define['import.meta.env.VITE_CDN_TYPE'] = JSON.stringify('local')
     }
@@ -377,7 +379,7 @@ export function localCdnPlugin({
   // 返回插件数组
   return [
     // 创建环境变量替换插件，替换CDN域名为本地路径
-    createEnvReplacementPlugin(cdnDir),
+    createEnvReplacementPlugin(cdnDir, base),
     // 安装需要的包
     ...installPackageTemporary(packageNeedToInstall, bundleTempDir),
     // 使用自定义的copyPlugin替代直接调用copy
