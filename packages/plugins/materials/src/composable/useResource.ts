@@ -28,16 +28,39 @@ import {
 
 const { COMPONENT_NAME, DEFAULT_INTERCEPTOR } = constants
 
-const appSchemaState = reactive({
+interface AppSchemaState {
+  dataSource: any[]
+  pageTree: any[]
+  langs: {
+    locales: {
+      lang: string
+    }[]
+    messages: any
+  }
+  utils: { [x: string]: any; type: string }[]
+  globalState: any[]
+  materialsDeps: {
+    scripts: any[]
+    styles: Set<unknown>
+  }
+  componentsMap?: any
+  dataHandler?: any
+  willFetch?: any
+  errorHandler?: any
+  bridge?: any
+  isDemo?: boolean
+}
+
+const appSchemaState = reactive<AppSchemaState>({
   dataSource: [],
   pageTree: [],
-  langs: {},
-  utils: {},
+  langs: { locales: [], messages: {} },
+  utils: [],
   globalState: [],
   materialsDeps: { scripts: [], styles: new Set() }
 })
 
-function goPage(pageId) {
+function goPage(pageId: string) {
   if (!pageId) {
     return
   }
@@ -45,7 +68,16 @@ function goPage(pageId) {
   getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
 }
 
-const initPage = (pageInfo) => {
+interface PageInfo {
+  [x: string]: any
+  meta: any
+  id: string
+  fileName: string
+  componentName: string
+  props: any
+}
+
+const initPage = (pageInfo: PageInfo) => {
   try {
     if (pageInfo.meta) {
       const { occupier } = pageInfo.meta
@@ -77,12 +109,12 @@ const initPage = (pageInfo) => {
  * 根据区块 id 初始化应用
  * @param {string} blockId 区块 id
  */
-const initBlock = async (blockId) => {
+const initBlock = async (blockId: string) => {
   const blockApi = getMetaApi(META_APP.BlockManage)
   const blockContent = await blockApi.getBlockById(blockId)
 
   if (blockContent.public_scope_tenants.length) {
-    blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e) => e.id)
+    blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e: { id: string }) => e.id)
   }
 
   useLayout().layoutState.pageStatus = getCanvasStatus(blockContent?.occupier)

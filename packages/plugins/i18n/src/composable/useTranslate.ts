@@ -19,12 +19,19 @@ import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
 import { useResource, useCanvas, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const { HOST_TYPE } = constants
-const state = reactive({
+const state = reactive<{ langs: Record<string, any> }>({
   langs: {}
 })
 
 const currentLanguage = ref('zh_CN')
-const i18nResource = reactive({ messages: {}, locales: [] })
+const i18nResource = reactive<{
+  messages: Record<string, any>
+  locales: any[]
+  [x: string]: any
+}>({
+  messages: {},
+  locales: []
+})
 const i18nApi = '/app-center/api/i18n/entries'
 const globalParams = {
   host: '',
@@ -60,7 +67,7 @@ const removeI18n = (key = []) => {
  * @returns
  */
 
-const ensureI18n = (obj, send) => {
+const ensureI18n = (obj: { [x: string]: any; key: string }, send?: boolean) => {
   const { locales } = i18nResource
   const contents = Object.fromEntries(locales.map(({ lang }) => [lang, obj[lang]]))
   const langs = getLangs()
@@ -93,16 +100,16 @@ const ensureI18n = (obj, send) => {
   }
 
   try {
-    const messages = {}
+    const messages: Record<string, any> = {}
     Object.entries(contents).forEach(([locale, message]) => {
       messages[locale] = {
         [key]: message
       }
     })
 
-    useCanvas().canvasApi.value?.setLocales(messages, true)
+    useCanvas().canvasApi.value?.setLocales?.(messages, true)
   } catch (e) {
-    throw new Error(e)
+    throw new Error(String(e))
     // 不需要处理，有报错的词条会在画布初始化的时候统一调setLocales这个方法
   }
 
@@ -117,12 +124,19 @@ const getI18nData = () => {
   })
 }
 
-const getI18n = async ({ init, local }) => {
+export interface I18nOptions {
+  init?: boolean
+  local?: any
+  host?: string
+  hostType?: string
+}
+
+const getI18n = async ({ init, local }: I18nOptions): Promise<typeof appSchemaState.langs> => {
   const { appSchemaState } = useResource()
 
   if (local) {
     const locales = appSchemaState?.langs?.locales || []
-    const messages = {}
+    const messages: Record<string, any> = {}
     const langs = getLangs()
 
     if (Array.isArray(locales)) {
@@ -143,8 +157,8 @@ const getI18n = async ({ init, local }) => {
   }
 }
 
-const initI18n = async ({ host, hostType, init, local }) => {
-  globalParams.host = host
+const initI18n = async ({ host, hostType, init, local }: I18nOptions) => {
+  globalParams.host = host || ''
   const hostTypeVar = 'host_type'
   globalParams[hostTypeVar] = hostType || HOST_TYPE.App
 
@@ -165,23 +179,23 @@ const initI18n = async ({ host, hostType, init, local }) => {
   })
 }
 
-const initAppI18n = async (appId) => {
+const initAppI18n = async (appId: string) => {
   if (appId) {
     await initI18n({
       host: appId,
       hostType: HOST_TYPE.App
     })
-    useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
+    useCanvas().canvasApi.value?.setLocales?.(i18nResource.messages)
   }
 }
 
-const initBlockI18n = async (blockId) => {
+const initBlockI18n = async (blockId: string) => {
   if (blockId) {
     await initI18n({
       host: blockId,
       hostType: HOST_TYPE.Block
     })
-    useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
+    useCanvas().canvasApi.value?.setLocales?.(i18nResource.messages)
   }
 }
 
@@ -192,12 +206,13 @@ const initBlockLocalI18n = async (langs = {}) => {
     hostType: HOST_TYPE.Block,
     local: true
   })
-  useCanvas().canvasApi.value?.setLocales(i18nResource.messages)
+  useCanvas().canvasApi.value?.setLocales?.(i18nResource.messages)
 }
 
-const format = (str = '', params = {}) => str.replace(/\$\{(.+?)\}/g, (substr, key) => params[key] || '')
+const format = (str = '', params: Record<string, any> = {}) =>
+  str.replace(/\$\{(.+?)\}/g, (_substr, key: string) => params[key] || '')
 
-const translate = (obj) => {
+const translate = (obj: { [x: string]: any }) => {
   const { type, key = utils.guid() } = obj || {}
 
   if (type === PROP_DATA_TYPE.I18N) {
@@ -213,13 +228,13 @@ const translate = (obj) => {
 
 const getData = () => i18nResource.messages
 
-const batchCreateI18n = ({ host, hostType }) => {
+const batchCreateI18n = ({ host, hostType }: Pick<I18nOptions, 'host' | 'hostType'>) => {
   if (!host) {
     return
   }
 
   globalParams.host = host
-  globalParams.host_type = hostType
+  globalParams.host_type = hostType || ''
 
   const { locales } = i18nResource
   const langs = getLangs()

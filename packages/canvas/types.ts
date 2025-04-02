@@ -8,7 +8,7 @@ export interface Node {
 export type RootNode = Omit<Node, 'id'> & {
   id?: string
   css?: string
-  fileName: string
+  fileName?: string
   methods?: Record<string, any>
   state?: Record<string, any>
   lifeCycles?: Record<string, any>
@@ -16,4 +16,5 @@ export type RootNode = Omit<Node, 'id'> & {
   bridge?: any
   inputs?: any[]
   outputs?: any[]
+  schema?: any
 }
