@@ -486,10 +486,7 @@ export default {
       (newStyle) => {
         if (state.showModal) {
           // 弹窗打开时，更新当前编辑的属性值
-          state.property = {
-            ...state.property,
-            value: newStyle[state.property.name]
-          }
+          state.property.value = newStyle[state.property.name]
         }
       },
       { deep: true }
