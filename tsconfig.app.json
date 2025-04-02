@@ -46,6 +46,7 @@
       "@opentiny/tiny-engine-toolbar-lock": ["packages/toolbars/lock/index"],
       "@opentiny/tiny-engine-toolbar-logo": ["packages/toolbars/logo/index"],
       "@opentiny/tiny-engine-toolbar-media": ["packages/toolbars/media/index"],
+      "@opentiny/tiny-engine-toolbar-plugin-toggle": ["packages/toolbars/plugin-toggle/index"],
       "@opentiny/tiny-engine-toolbar-preview": ["packages/toolbars/preview/index"],
       "@opentiny/tiny-engine-toolbar-redoundo": ["packages/toolbars/redoundo/index"],
       "@opentiny/tiny-engine-toolbar-save": ["packages/toolbars/save/index"],

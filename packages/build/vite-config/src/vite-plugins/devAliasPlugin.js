@@ -41,6 +41,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-logo': path.resolve(basePath, 'packages/toolbars/logo/index.ts'),
     '@opentiny/tiny-engine-toolbar-logout': path.resolve(basePath, 'packages/toolbars/logout/index.ts'),
     '@opentiny/tiny-engine-toolbar-media': path.resolve(basePath, 'packages/toolbars/media/index.ts'),
+    '@opentiny/tiny-engine-toolbar-plugin-toggle': path.resolve(basePath, 'packages/toolbars/plugin-toggle/index.ts'),
     '@opentiny/tiny-engine-toolbar-preview': path.resolve(basePath, 'packages/toolbars/preview/index.ts'),
     '@opentiny/tiny-engine-toolbar-generate-code': path.resolve(basePath, 'packages/toolbars/generate-code/index.ts'),
     '@opentiny/tiny-engine-toolbar-refresh': path.resolve(basePath, 'packages/toolbars/refresh/index.ts'),
