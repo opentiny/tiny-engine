@@ -16,8 +16,6 @@ import fs from 'node:fs'
 
 // 定义各种常量，用于标识不同的入口点和编译选项
 export const CALLENTRY = 'callEntry' // 主入口点
-export const BEFORE_CALLENTRY = 'beforeCallEntry' // 前置入口点
-export const AFTER_CALLENTRY = 'afterCallEntry' // 后置入口点
 export const USE_COMPILE = 'useCompile' // 编译选项
 export const METADATANAME = 'metaData' // 元数据名称
 export const COMMON_PACKAGE_NAME = '@opentiny/tiny-engine-meta-register' // 公共包名
@@ -73,64 +71,21 @@ export const getModuleId = (str) => {
  * 从注释中提取参数并组合成标准格式
  * @param {Object} params - 参数对象
  * @param {string} params.functionName - 函数名
- * @param {Object} params.syncVars - 同步变量
  * @param {Object} params.asyncVars - 异步变量
  * @param {Object} params.state - 状态对象
  * @returns {string} 格式化后的参数
  */
-export const getEntryParam = ({ functionName = '', syncVars, asyncVars, state }) => {
+export const getEntryParam = ({ functionName = '', asyncVars, state }) => {
   const { varName, moduleId, noUseVars } = state
   const metaData = varName[METADATANAME]
   const id = moduleId ? `'${moduleId}.${functionName}'` : `\`\${${metaData}.id}.${functionName}\``
-  const syncVarsKey = Object.keys(syncVars).filter((key) => !noUseVars.includes(key))
-  const asyncVarsKey = Object.keys(asyncVars).filter((key) => !noUseVars.includes(key) && !syncVarsKey.includes(key))
-  const ctx = ` () => {
-    let asyncVars = {}
-    const syncVars = {${syncVarsKey.join(',')}}
-    try {
-      asyncVars = { ${asyncVarsKey.join(',')} }
-    } catch {
-      return syncVars
-    }
-    return { ...syncVars, ...asyncVars }
-  }`
+  const asyncVarsKey = Object.keys(asyncVars).filter((key) => !noUseVars.includes(key))
+  const ctx = `() => ({${asyncVarsKey.join(',')}})`
   if (functionName) {
     return `{ ${METADATANAME}: { id: ${id} }, ctx: ${ctx}}`
   }
 
   return `{ ${METADATANAME}: ${metaData} }`
-}
-
-/**
- * 获取父级变量声明节点
- * @param {Object} path - Babel路径对象
- * @returns {Object} 父级变量声明节点
- */
-const getParentVariableDeclaration = (path) => {
-  if (!path) {
-    return
-  }
-
-  if (path.type === 'VariableDeclaration' && path.parentPath.type !== 'ExportNamedDeclaration') {
-    return path
-  } else {
-    return getParentVariableDeclaration(path?.parentPath)
-  }
-}
-
-/**
- * 生成前置和后置入口点
- * @param {Object} params - 参数对象
- * @param {Object} params.path - Babel路径对象
- * @param {Object} params.beforeEntryAst - 前置入口点AST
- * @param {Object} params.afterEntryAst - 后置入口点AST
- */
-const generateBeforeAfterEntry = ({ path, beforeEntryAst, afterEntryAst }) => {
-  const parent = getParentVariableDeclaration(path)
-  if (parent) {
-    parent.insertBefore(beforeEntryAst)
-    parent.insertAfter(afterEntryAst)
-  }
 }
 
 /**
@@ -148,72 +103,6 @@ export const getOuterBingdings = (path) => {
     }
   })
   return outerBindings
-}
-
-/**
- * 获取当前上下文中可用的scope变量
- * @param {Object} params - 参数对象
- * @param {Object} params.path - Babel路径对象
- * @param {Object} params.state - 状态对象
- * @param {string} params.functionName - 函数名
- * @returns {Object} 有效的绑定变量对象
- */
-export const getValidBingdinngs = ({ path, state, functionName }) => {
-  // 存储有效的绑定变量
-  const validBindings = {}
-  // 从state中获取变量声明信息
-  const { varDeclartion } = state
-  // 用于存储作用域链上所有已声明的变量名
-  let varArr = []
-  // 获取当前路径的父路径
-  let parentPath = path.parentPath
-  // 用于存储当前遍历到的作用域块
-  let block
-
-  // 向上遍历作用域链
-  while (parentPath) {
-    // 获取当前父路径的作用域块
-    const newBlock = parentPath.scope.block
-    // 继续向上遍历
-    parentPath = parentPath.parentPath
-
-    // 如果当前块与上一个块相同,跳过本次循环
-    if (newBlock === block) {
-      continue
-    }
-
-    // 更新当前块
-    block = newBlock
-    // 将当前块中声明的所有变量添加到varArr中
-    varArr = varArr.concat(varDeclartion.get(block))
-  }
-
-  // 获取作用域内所有的绑定变量
-  const allBindings = path.scope.getAllBindings()
-  // 获取当前作用域自身定义的绑定变量
-  const selfBindings = path.scope.bindings
-
-  // 遍历所有绑定变量
-  Object.keys(allBindings).forEach((key) => {
-    // 跳过当前作用域自身定义的变量
-    if (selfBindings[key]) {
-      return
-    }
-    const value = allBindings[key]
-
-    // 过滤掉以下变量:
-    // 1. 变量是 var/const/let 声明,但在varArr中不存在(说明还未初始化)
-    // 2. 变量名与当前函数名相同
-    if ((['var', 'const', 'let'].includes(value.kind) && !varArr.includes(key)) || key === functionName) {
-      return
-    }
-
-    // 将有效的绑定变量添加到结果中
-    validBindings[key] = value
-  })
-
-  // 返回所有有效的绑定变量
-  return validBindings
 }
 
 /**
@@ -241,24 +130,16 @@ export const getModuleBindings = (path) => {
  * @param {Object} params.state - 状态对象
  */
 export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) => {
-  const syncVars = getValidBingdinngs({ path, state, functionName })
   const asyncVars = getOuterBingdings(path)
   const entryParam = getEntryParam({
     functionName,
-    syncVars,
     asyncVars,
     varName,
     state
   })
   const callEntry = varName[CALLENTRY]
-  const beforeCallEntry = varName[BEFORE_CALLENTRY]
-  const afterCallEntry = varName[AFTER_CALLENTRY]
   const entryAst = statement(`${callEntry}(${entryParam})`)()
-  const beforeEntryAst = statement(`${beforeCallEntry}(${entryParam})`)()
-  const afterEntryAst = statement(`${afterCallEntry}(${entryParam})`)()
-
   const resultNode = path.node
-  generateBeforeAfterEntry({ path, beforeEntryAst, afterEntryAst })
 
   entryAst.expression.arguments.unshift(JSON.parse(JSON.stringify(resultNode)))
   // 替换整个节点
@@ -347,11 +228,9 @@ export const wrapHookCall = ({ path, varName, functionName, callName, state }) =
   // vue的生命周期hook只有一个参数
   const argument = path.node.expression.arguments[0]
   const callEntry = varName[CALLENTRY]
-  const syncVars = getValidBingdinngs({ path, state, functionName })
   const asyncVars = path.scope.getAllBindings()
   const entryParam = getEntryParam({
     functionName,
-    syncVars,
     asyncVars,
     varName,
     state
