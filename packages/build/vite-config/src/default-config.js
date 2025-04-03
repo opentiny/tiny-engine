@@ -13,6 +13,7 @@ import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
+import { vitePluginMoveCanvas } from './vite-plugins/vitePluginMoveCanvas.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
@@ -153,6 +154,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
     }),
     monacoEditorPluginInstance,
     htmlUpgradeHttpsPlugin(mode),
+    vitePluginMoveCanvas(),
     isCopyBundleDeps
       ? copyBundleDeps({
           bundleFile: 'public/mock/bundle.json',

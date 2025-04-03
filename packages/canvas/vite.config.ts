@@ -20,7 +20,7 @@ import { vitePluginBuildEntry } from './scripts/vite-plugin-separate-build'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
-
+  needAsset: true,
   plugins: [
     vue(),
     vueJsx(),

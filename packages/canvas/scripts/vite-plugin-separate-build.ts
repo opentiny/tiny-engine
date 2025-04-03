@@ -27,7 +27,13 @@ async function bundleBuildEntry(config, options) {
   })
 
   // handle sourceMap
-  const { map: sourcemap, fileName: chunkFileName } = outputChunk
+  const { map: sourcemap, fileName: chunkFileName, code } = outputChunk
+  if (config.needAsset) {
+    saveEmitBundleAssets(config, {
+      fileName: chunkFileName,
+      source: code
+    })
+  }
   if (sourcemap) {
     if (config.build.sourcemap === 'hidden' || config.build.sourcemap === true) {
       saveEmitBundleAssets(config, {
@@ -83,15 +89,20 @@ export async function vitePluginBuildEntry(customBuildConfig) {
         return
       }
       const file = cleanUrl(id)
-      const { code } = await bundleBuildEntry(config, {
+      const { code, fileName } = await bundleBuildEntry(config, {
         customBuildConfig,
         buildConfig: match.groups.name,
         entries: [file]
       })
-      const formatBase64 = (code) => {
-        return 'data:text/javascript;base64,' + Buffer.from(code).toString('base64')
+      if (config.needAsset) {
+        const pathName = `./${fileName}`
+        return `export default ${JSON.stringify(pathName)}\n`
+      } else {
+        const formatBase64 = (code) => {
+          return 'data:text/javascript;base64,' + Buffer.from(code).toString('base64')
+        }
+        return `export default ${JSON.stringify(formatBase64(code))}\n`
       }
-      return `export default ${JSON.stringify(formatBase64(code))}\n`
     },
     generateBundle(opts, bundle) {
       if (opts.__vite_skip_assets_emit__) {
