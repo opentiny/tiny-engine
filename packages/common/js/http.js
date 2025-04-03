@@ -12,7 +12,7 @@
 
 import { isVsCodeEnv } from './environments'
 import { generateRouter, generatePage } from './vscodeGenerateFile'
-import { usePage, useCanvas, useNotify, useBreadcrumb } from '@opentiny/tiny-engine-meta-register'
+import { usePage, useNotify, useBreadcrumb, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 /**
@@ -43,7 +43,6 @@ export const handlePageUpdate = (updateParams) => {
   return getMetaApi(META_SERVICE.Http)
     .post(`/app-center/api/pages/update/${id}`, params)
     .then((res) => {
-      const { setSaved } = useCanvas()
       if (isVsCodeEnv) {
         generatePage({
           id,
@@ -63,8 +62,11 @@ export const handlePageUpdate = (updateParams) => {
         useNotify({ message: '保存成功!', type: 'success' })
       }
 
-      // 更新 页面状态 标志
-      setSaved(true)
+      // 发布 Schema 变动通知
+      useMessage().publish({
+        topic: 'pageOrBlockInit',
+        data: params.page_content
+      })
 
       if (isCurEditPage) {
         const { setBreadcrumbPage } = useBreadcrumb()
