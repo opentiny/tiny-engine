@@ -109,6 +109,7 @@ export default {
         const widthResizable = item?.widthResizable ?? false
 
         plugin[item.id] = {
+          title: item.title,
           width: item?.width || PLUGIN_DEFAULT_WIDTH,
           align: align,
           index: index,
