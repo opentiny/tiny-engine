@@ -13031,7 +13031,7 @@
               "schema": {
                 "componentName": "video",
                 "props": {
-                  "src": "https://www.bilibili.com/video/BV16j411e7y2/",
+                  "src": "https://tinyengine-assets.obs.myhuaweicloud.com/files/in-action.mp4#t=1.5",
                   "width": "200",
                   "height": "100",
                   "style": "border:1px solid #ccc"
