@@ -35,18 +35,20 @@ import { registerConfigurators } from './registerConfigurators'
 
 const { guid } = utils
 
+defineEntry(defaultRegistry)
+
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
-    const newRegistry = mergeRegistry(registry, defaultRegistry)
-    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    if (process.env.NODE_ENV === 'development') {
-      console.log('default registry:', defaultRegistry) // eslint-disable-line
-      console.log('merged registry:', registry) // eslint-disable-line
-    }
+    mergeRegistry(registry)
 
-    // 在common层注入合并后的注册表
-    defineEntry(newRegistry)
+    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    const config = getMergeMeta('engine.config')
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('custom registry:', registry) // eslint-disable-line
+      console.log('default registry:', defaultRegistry) // eslint-disable-line
+    }
 
     // 初始化所有服务
     initServices()
@@ -55,10 +57,7 @@ const defaultLifeCycles = {
     initHook(HOOK_NAME.useNotify, Notify, { useDefaultExport: true })
     initHook(HOOK_NAME.useModal, Modal)
 
-    // 加载主题样式，尽早加载
-    // import(`./theme/${newRegistry.config.theme}.js`)
-
-    const theme = localStorage.getItem(`tiny-engine-theme-${appId}`) || newRegistry.config.theme || 'light'
+    const theme = localStorage.getItem(`tiny-engine-theme-${appId}`) || config.theme || 'light'
 
     new TinyThemeTool(defaultThemeList[theme], defaultThemeList[theme]?.id)
     document.documentElement?.setAttribute?.('data-theme', theme)
@@ -68,7 +67,7 @@ const defaultLifeCycles = {
     }
 
     // 这里暴露到 window 是为了让 canvas 可以读取
-    window.TinyGlobalConfig = newRegistry.config || {}
+    window.TinyGlobalConfig = config || {}
   },
   appCreated: ({ app }) => {
     initSvgs(app)

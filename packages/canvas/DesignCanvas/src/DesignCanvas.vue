@@ -32,7 +32,6 @@ import {
   useModal,
   usePage,
   useMessage,
-  getMergeRegistry,
   getMergeMeta,
   getOptions,
   getMetaApi,
@@ -55,7 +54,7 @@ const componentType = {
 
 export default {
   setup() {
-    const registry = getMergeRegistry('canvas')
+    const registry = getMergeMeta('engine.canvas')
     const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
     const { CanvasRouteBar, CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry

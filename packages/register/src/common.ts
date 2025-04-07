@@ -46,7 +46,7 @@ export const templateHashMap: Record<string, any> = {}
  */
 export const layoutHashMap: Record<string, any> = {}
 
-export const metaHashMap: Record<string, any> = {}
+export const metaHashMap: Map<string, any> = new Map()
 
 export const apisMap: Record<string, any> = {}
 export const optionsMap: Record<string, any> = {}
@@ -166,7 +166,7 @@ export const generateRegistry = (registry: any) => {
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
       if (id && key !== 'metaData') {
         handleRegistryProp(id, value)
-        metaHashMap[id] = value
+        metaHashMap.set(id, value)
       } else {
         // TODO: 其他类型配置处理
       }
@@ -177,5 +177,21 @@ export const generateRegistry = (registry: any) => {
 }
 
 export const getMergeMeta = (id: string) => {
-  return metaHashMap[id]
+  return metaHashMap.get(id)
+}
+
+export const getMergeMetaByType = (type: string) => {
+  const result: Record<string, any> = []
+
+  for (const [_key, value] of metaHashMap) {
+    if (value.type === type) {
+      result.push(value)
+    }
+  }
+
+  return result
+}
+
+export const getAllMergeMeta = () => {
+  return metaHashMap.values()
 }

@@ -11,68 +11,29 @@
  */
 
 import { merge } from 'lodash-es'
-import { utils } from '@opentiny/tiny-engine-utils'
-import { generateRegistry, entryHashMap, preprocessRegistry } from './common'
+import { generateRegistry, entryHashMap, preprocessRegistry, metaHashMap } from './common'
 
-const lowcodeRegistry = { registry: null }
-
-const { getType } = utils
-
-// 合并子模块注册表(metas字段)
-const getMergedChildMetas = (defaultChildMeta: any[], userChildMeta: any[]) => {
-  if (!Array.isArray(defaultChildMeta)) {
-    return userChildMeta
+export const mergeRegistry = (registry: Record<string, any>) => {
+  if (!registry || Object.prototype.toString.call(registry) !== '[object Object]') {
+    return
   }
 
-  return userChildMeta.map((childConfig) => {
-    const defaultChildConfig = defaultChildMeta.find((item) => item.id === childConfig.id) || {}
-    return merge({}, defaultChildConfig, childConfig)
+  Object.entries(registry).forEach(([key, value]) => {
+    const defaultRegistryItem = metaHashMap.get(key)
+    // 取消注册插件
+    if (!defaultRegistryItem && value) {
+      metaHashMap.set(key, value)
+      return
+    }
+    if (defaultRegistryItem && !value) {
+      metaHashMap.delete(key)
+      return
+    }
+    if (defaultRegistryItem && value) {
+      const mergedRegistryItem = merge({}, defaultRegistryItem, value)
+      metaHashMap.set(key, mergedRegistryItem)
+    }
   })
-}
-
-/**
- * 合并注册表
- * @param {*} registry 用户自定义的注册表
- * @param {*} defaultRegistry 默认设计器注册表
- * @returns registry 合并后的用户自定义注册表
- */
-export const mergeRegistry = (registry: any, defaultRegistry: any) => {
-  for (const [key, value] of Object.entries(registry)) {
-    const defaultConfig = defaultRegistry[key]
-    if (Array.isArray(value) && defaultConfig) {
-      value.forEach((userMeta, index) => {
-        const defaultMeta = defaultConfig.find((item) => item.id === userMeta.id)
-        if (defaultMeta) {
-          const { metas: defaultChildMeta, ...restMeta } = defaultMeta
-          if (Array.isArray(userMeta.metas)) {
-            userMeta.metas = getMergedChildMetas(defaultChildMeta, userMeta.metas)
-          }
-          value[index] = merge({}, restMeta, userMeta)
-        }
-      })
-    }
-
-    if (getType(value) === 'Object' && defaultConfig) {
-      registry[key] = merge({}, defaultConfig, registry[key])
-    }
-  }
-
-  return registry
-}
-
-export const getMergeRegistry = (type: string, id: string) => {
-  const registry = type ? lowcodeRegistry.registry[type] : lowcodeRegistry.registry
-
-  if (!id) {
-    return registry
-  }
-
-  if (Array.isArray(registry)) {
-    const item = registry.find((item) => item.id === id)
-    return item || null
-  }
-
-  return registry?.[id] ? registry : null
 }
 
 export const defineEntry = (registry: any) => {
@@ -81,8 +42,6 @@ export const defineEntry = (registry: any) => {
   }
 
   preprocessRegistry(registry)
-
-  lowcodeRegistry.registry = registry
   generateRegistry(registry)
 }
 

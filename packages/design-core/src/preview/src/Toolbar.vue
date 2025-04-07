@@ -14,7 +14,7 @@
 </template>
 
 <script lang="jsx">
-import { useBreadcrumb, getMergeRegistry, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { useBreadcrumb, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
 import { getSearchParams } from './preview/http'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
@@ -26,8 +26,8 @@ export default {
   },
   setup() {
     const debugSwitch = injectDebugSwitch()
-    const Breadcrumb = getMergeRegistry('toolbars', 'engine.toolbars.breadcrumb')?.entry
-    const ChangeLang = getMergeRegistry('toolbars', 'engine.toolbars.lang')?.entry
+    const Breadcrumb = getMergeMeta('engine.toolbars.breadcrumb')?.entry
+    const ChangeLang = getMergeMeta('engine.toolbars.lang')?.entry
     const langOptions = getMergeMeta('engine.toolbars.lang').options
     const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
 

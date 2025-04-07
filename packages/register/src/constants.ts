@@ -51,7 +51,6 @@ export const META_APP = {
   Schema: 'engine.plugins.schema',
   Help: 'engine.plugins.editorhelp',
   Robot: 'engine.plugins.robot',
-  DslVue: 'engine.dsls.dslvue',
   Props: 'engine.setting.props',
   Styles: 'engine.setting.styles',
   Event: 'engine.setting.event',
