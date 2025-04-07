@@ -176,7 +176,7 @@ const fetchAppState = async () => {
   appSchemaState.bridge = appData.bridge
   appSchemaState.utils = appData.utils
   appSchemaState.isDemo = appData?.meta?.isDemo || appData?.meta?.is_demo
-  appSchemaState.globalState = appData?.meta?.globaState || appData?.meta?.global_state
+  appSchemaState.globalState = appData?.meta?.globalState || appData?.meta?.global_state
 
   // 词条语言为空时使用默认的语言
   const defaultLocales = [
