@@ -67,6 +67,11 @@ export const getModuleId = (str) => {
   return moduleId
 }
 
+export const getTemplateId = (str) => {
+  const [, moduleId = ''] = str.match(/\s*metaComponent: \s*(.+)\s*/) || []
+  return moduleId.trim()
+}
+
 /**
  * 从注释中提取参数并组合成标准格式
  * @param {Object} params - 参数对象
@@ -192,25 +197,73 @@ export const getMeataPath = (id) => {
  * @param {Object} params.path - Babel路径对象
  * @param {Object} params.varName - 变量名对象
  */
-export const wrapExportComp = ({ path, varName }) => {
+/**
+ * 包装导出组件,对组件进行useCompile包装处理
+ * @param {Object} params - 参数对象
+ * @param {Object} params.path - Babel路径对象,用于AST操作
+ * @param {Object} params.varName - 变量名对象,包含元数据和编译函数名
+ * @param {string} params.lastComment - 最后一个注释,用于生成模板ID
+ */
+export const wrapExportComp = ({ path, varName, lastComment }) => {
+  // 获取导出对象的所有属性
   const properties = path.node.declaration?.properties || []
+  // 获取元数据变量名
   const metaData = varName[METADATANAME]
+  // 获取useCompile函数名
   const useCompile = varName[USE_COMPILE]
+  // 从注释中获取模板ID
+  const templateId = getTemplateId(lastComment)
 
-  // 对键值为component属性包一层useCompile
+  // 遍历导出对象的所有属性
   properties.forEach((prop) => {
+    // 处理单个组件导出的情况
     if (prop.key?.name === 'component') {
+      // 获取组件值
       const val = prop.value
+      // 创建useCompile包装的AST节点
       const compileAst = statement(`${useCompile}({ component: null, ${METADATANAME}: ${metaData} });`)()
+      // 将原组件值设置到useCompile的component参数中
       compileAst.expression.arguments[0].properties[0].value = val
+      // 遍历AST,替换原组件节点
       path.traverse({
         enter(subPath) {
           if (subPath.node === val) {
+            // 用useCompile包装后的节点替换原节点
             subPath.replaceWith(compileAst)
+            // 跳过子节点遍历
             subPath.skip()
           }
         }
       })
+    }
+    // 处理多个组件导出的情况
+    else if (prop.key?.name === 'components') {
+      const val = prop.value
+      // 确保components是一个对象
+      if (val?.properties) {
+        const properties = val.properties
+        // 遍历所有子组件
+        properties.forEach((item) => {
+          const value = item.value
+          // 生成元数据对象,如果有templateId则使用"templateId.组件名"作为id
+          const metaObj = templateId ? `{id:'${templateId}.${value.name}'}` : metaData
+          // 创建useCompile包装的AST节点
+          const compileAst = statement(`${useCompile}({ component: null, ${METADATANAME}: ${metaObj} });`)()
+          // 将原组件值设置到useCompile的component参数中
+          compileAst.expression.arguments[0].properties[0].value = value
+          // 遍历AST,替换原组件节点
+          path.traverse({
+            enter(subPath) {
+              if (subPath.node === value) {
+                // 用useCompile包装后的节点替换原节点
+                subPath.replaceWith(compileAst)
+                // 跳过子节点遍历
+                subPath.skip()
+              }
+            }
+          })
+        })
+      }
     }
   })
 }
