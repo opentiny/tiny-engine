@@ -132,16 +132,25 @@ export default {
       return familyPages
     }
 
+    const genAllBlocks = (ancestors) =>
+      new Promise((resolve) => {
+        const blocksTask = (ancestors || []).map((item) => {
+          return getAllNestedBlocksSchema(item?.page_content, fetchBlockSchema)
+        })
+        Promise.all(blocksTask).then((rs) => {
+          resolve((rs || [])?.flat())
+        })
+      })
+
     const promiseList = [
       fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
+      genAllBlocks(queryParams.ancestors),
       setFiles(srcFiles, 'src/Main.vue'),
       getImportMap()
     ]
-    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
+    Promise.all(promiseList).then(async ([appData, metaData, blocks, _void, importMapData]) => {
       store.setImportMap(importMapData)
-
-      const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
       // TODO: 需要验证级联生成 block schema
       // TODO: 物料内置 block 需要如何处理？
