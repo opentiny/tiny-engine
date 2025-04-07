@@ -18,7 +18,6 @@ import { injectGlobalComponents, setGlobalMonacoEditorTheme, Modal, Notify } fro
 import TinyThemeTool from '@opentiny/vue-theme/theme-tool'
 import { defaultThemeList } from '@opentiny/tiny-engine-theme-base'
 import {
-  defineEntry,
   mergeRegistry,
   getMergeMeta,
   getMetaApi,
@@ -35,12 +34,10 @@ import { registerConfigurators } from './registerConfigurators'
 
 const { guid } = utils
 
-defineEntry(defaultRegistry)
-
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
-    mergeRegistry(registry)
+    mergeRegistry(defaultRegistry, registry)
 
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const config = getMergeMeta('engine.config')

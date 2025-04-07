@@ -10,28 +10,111 @@
  *
  */
 
-import { merge } from 'lodash-es'
-import { generateRegistry, entryHashMap, preprocessRegistry, metaHashMap } from './common'
+import { isRef } from 'vue'
 
-export const mergeRegistry = (registry: Record<string, any>) => {
-  if (!registry || Object.prototype.toString.call(registry) !== '[object Object]') {
+/**
+ * 自定义方法注册哈希表，形式如下：
+ * {
+ *  'engine.plugins.i18n.handleClick': () => { // do something }
+ * }
+ */
+export const entryHashMap: Record<string, any> = {}
+/**
+ * 自定义模板注册哈希表，形式如下：
+ * {
+ *  'engine.plugins.status.metas.app': <template></template>
+ * }
+ */
+export const templateHashMap: Record<string, any> = {}
+
+const vueLifeHook = [
+  'onMounted',
+  'onUpdated',
+  'onUnmounted',
+  'onBeforeMount',
+  'onBeforeUpdate',
+  'onBeforeUnmount',
+  'onActivated',
+  'onDeactivated'
+]
+
+const handleMethods = (id: string, methods: any) => {
+  Object.entries(methods).forEach(([fileId, idMethods]) => {
+    if (typeof idMethods === 'object' && idMethods) {
+      Object.entries(idMethods).forEach(([name, method]) => {
+        const prefix = fileId ? `.${fileId}` : ''
+        const methodId = `${id}${prefix}.${name}`
+        entryHashMap[methodId] = method
+      })
+    }
+  })
+}
+
+const handleVueLifeCycle = (id: string, value: any) => {
+  for (const hookName of vueLifeHook) {
+    const hookConfig = value[hookName]
+    if (!hookConfig) {
+      return
+    }
+
+    if (typeof hookConfig === 'function') {
+      const hookId = `${id}.${hookName}[0]`
+      entryHashMap[hookId] = hookConfig
+    }
+
+    if (Array.isArray(hookConfig)) {
+      hookConfig.forEach((hookFn, index) => {
+        if (typeof hookFn === 'function') {
+          const hookId = `${id}.${hookName}[${index}]`
+          entryHashMap[hookId] = hookFn
+        }
+      })
+    }
+  }
+}
+
+const handleLifeCycles = (id: string, lifeCycles: any) => {
+  Object.entries(lifeCycles).forEach(([fileId, idLifeCycles]) => {
+    const prefix = fileId ? `.${fileId}` : ''
+    const lifeCycleId = `${id}${prefix}`
+    handleVueLifeCycle(lifeCycleId, idLifeCycles)
+  })
+}
+
+const handleRegistryProp = (id: string, value: any) => {
+  const { overwrite } = value
+
+  // 逻辑复写
+  if (typeof overwrite === 'object' && overwrite) {
+    const { template, lifeCycles, methods } = overwrite
+    // 处理模板
+    if (template) {
+      templateHashMap[id] = template
+    }
+    // 处理生命周期
+    if (lifeCycles) {
+      handleLifeCycles(id, lifeCycles)
+    }
+    if (methods) {
+      handleMethods(id, methods)
+    }
+  }
+}
+
+export const generateRegistry = (registry: any) => {
+  if (Object.prototype.toString.call(registry) !== '[object Object]') {
     return
   }
 
   Object.entries(registry).forEach(([key, value]) => {
-    const defaultRegistryItem = metaHashMap.get(key)
-    // 取消注册插件
-    if (!defaultRegistryItem && value) {
-      metaHashMap.set(key, value)
-      return
-    }
-    if (defaultRegistryItem && !value) {
-      metaHashMap.delete(key)
-      return
-    }
-    if (defaultRegistryItem && value) {
-      const mergedRegistryItem = merge({}, defaultRegistryItem, value)
-      metaHashMap.set(key, mergedRegistryItem)
+    if (typeof value === 'object' && value && !isRef(value)) {
+      const { id } = value
+      // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
+      if (id && key !== 'metaData') {
+        handleRegistryProp(id, value)
+      }
+
+      generateRegistry(value)
     }
   })
 }
@@ -41,7 +124,6 @@ export const defineEntry = (registry: any) => {
     throw new Error('请传递正确的注册表')
   }
 
-  preprocessRegistry(registry)
   generateRegistry(registry)
 }
 
