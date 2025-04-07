@@ -32,7 +32,7 @@ describe('generate whole application', () => {
         fs.writeFileSync(
           path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`),
           // 这里需要将换行符替换成 CRLF 格式的
-          fileContent.replace(/\r?\n/g, '\r\n')
+          fileContent.replace(/\r?\n/g, '\n')
         )
       } else if (fileContent instanceof Blob) {
         const arrayBuffer = await fileContent.arrayBuffer()
