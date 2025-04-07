@@ -148,7 +148,7 @@ function handleExportDefaultDeclaration(state) {
     const lastComment = comment[comment.length - 1].value
     // 只判断最接近export default的注释节点
     if (lastComment.includes('metaComponent')) {
-      wrapExportComp({ path, varName: state.varName })
+      wrapExportComp({ path, varName: state.varName, lastComment })
       path.skip()
     }
   }
