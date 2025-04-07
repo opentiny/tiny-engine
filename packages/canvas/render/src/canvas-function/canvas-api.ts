@@ -8,7 +8,7 @@ import type { setController, getController } from './controller'
 export interface IApplicationFunctionAPI
   extends Pick<ReturnType<typeof useUtils>, 'getUtils'>,
     Pick<ReturnType<typeof useDataSourceMap>, 'getDataSourceMap'> {}
-export type IPageContextAPI = Pick<IPageContext, 'setCondition' | 'getConditions' | 'setContext'>
+export type IPageContextAPI = Pick<IPageContext, 'setCondition' | 'getConditions'>
 export interface ICanvasFunctionAPI extends ReturnType<typeof useCustomRenderer> {
   getDesignMode: typeof getDesignMode
   setDesignMode: typeof setDesignMode
@@ -30,7 +30,6 @@ export function setCurrentApi(activeApi: IInnerCanvasAPI) {
 }
 
 export const api: IInnerCanvasAPI = {
-  setContext: (...args) => currentApi?.setContext(...args),
   getUtils: (...args) => currentApi?.getUtils(...args),
   setController: (...args) => currentApi?.setController(...args),
   getController: (...args) => currentApi?.getController(...args),

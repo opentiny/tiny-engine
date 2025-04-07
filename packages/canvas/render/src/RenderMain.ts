@@ -76,7 +76,6 @@ setCurrentApi({
   setConfigure,
   setCondition,
   getController,
-  setContext: setGlobalContext,
   getConditions,
   getRenderer,
   setRenderer,
