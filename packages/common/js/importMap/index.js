@@ -1,1 +1,1 @@
-export { default as importMapConfig } from './import-map.json'
+export { default as importMapConfig } from 'virtual:import-map'

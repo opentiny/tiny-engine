@@ -14,6 +14,7 @@ import { getBaseUrlFromCli, copyBundleDeps, localCdnPlugin } from './localCdnFil
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
+import { createDynamicImportMapPlugin } from './vite-plugins/createDynamicImportMapPlugin.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -178,6 +179,14 @@ export function useTinyEngineBaseConfig(engineConfig) {
       config.plugins.push(...cdnPlugins)
     }
   }
+
+  config.plugins.push(
+    createDynamicImportMapPlugin({
+      base: getBaseUrlFromCli(config.base),
+      cdnDir: 'local-cdn-static',
+      isLocalImportMap
+    })
+  )
 
   config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
 
