@@ -10,10 +10,9 @@
  *
  */
 
-export { getMergeMeta, getMetaApi, getOptions } from './common'
+export { getMergeMeta, getMetaApi, getOptions, getMergeMetaByType, getAllMergeMeta, mergeRegistry } from './common'
 export { useCompile } from './templateHash'
-export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, mergeRegistry, getMergeRegistry } from './entryHash'
-export { getLayoutComponent } from './layoutHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry } from './entryHash'
 export { default as useMessage } from './useMessage'
 export { getConfigurator, addConfigurator } from './configurators'
 export * from './hooks'

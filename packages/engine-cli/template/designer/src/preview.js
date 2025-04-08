@@ -10,8 +10,7 @@
  *
  */
 
-import { initHook, HOOK_NAME, GenerateCodeService, Breadcrumb, Media, Lang } from '@opentiny/tiny-engine'
-import { initPreview } from '@opentiny/tiny-engine'
+import { initHook, HOOK_NAME, META_SERVICE, initPreview } from '@opentiny/tiny-engine'
 import 'virtual:svg-icons-register'
 import { HttpService } from './composable'
 
@@ -21,12 +20,7 @@ const beforeAppCreate = () => {
 
 initPreview({
   registry: {
-    root: {
-      id: 'engine.root',
-      metas: [HttpService, GenerateCodeService]
-    },
-    config: { id: 'engine.config', theme: 'light' },
-    toolbars: [Breadcrumb, Media, Lang]
+    [META_SERVICE.Http]: HttpService
   },
   lifeCycles: {
     beforeAppCreate

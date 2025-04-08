@@ -9,26 +9,28 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { initHook, HOOK_NAME, GenerateCodeService, Breadcrumb, Media, Lang } from '@opentiny/tiny-engine'
-import { initPreview } from '@opentiny/tiny-engine'
+import { defineEntry } from '@opentiny/tiny-engine-meta-register'
 import 'virtual:svg-icons-register'
 import { HttpService } from './composable'
 
-const beforeAppCreate = () => {
-  initHook(HOOK_NAME.useEnv, import.meta.env)
+async function startApp () {
+  const { initHook, HOOK_NAME, META_SERVICE, initPreview } = await import('@opentiny/tiny-engine')
+
+  const beforeAppCreate = () => {
+    initHook(HOOK_NAME.useEnv, import.meta.env)
+  }
+  const registry = {
+    [META_SERVICE.Http]: HttpService
+  }
+
+  defineEntry(registry)
+  
+  initPreview({
+    registry,
+    lifeCycles: {
+      beforeAppCreate
+    }
+  })
 }
 
-initPreview({
-  registry: {
-    root: {
-      id: 'engine.root',
-      metas: [HttpService, GenerateCodeService]
-    },
-    config: { id: 'engine.config', theme: 'light' },
-    toolbars: [Breadcrumb, Media, Lang]
-  },
-  lifeCycles: {
-    beforeAppCreate
-  }
-})
+startApp()
