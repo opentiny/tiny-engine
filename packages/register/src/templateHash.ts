@@ -11,7 +11,7 @@
  */
 
 import { compile } from 'vue/dist/vue.esm-bundler.js'
-import { templateHashMap } from './common'
+import { templateHashMap } from './entryHash'
 
 const generateTemplate = (template: string) => {
   const templateString = template.trim()

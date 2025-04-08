@@ -10,49 +10,12 @@
  *
  */
 
-import {
-  Breadcrumb,
-  Fullscreen,
-  Lang,
-  ViewSetting,
-  Logo,
-  Lock,
-  Media,
-  Redoundo,
-  Save,
-  Clean,
-  ThemeSwitch,
-  Preview,
-  GenerateCode,
-  Refresh,
-  Collaboration,
-  Materials,
-  State,
-  Script,
-  Tree,
-  Help,
-  Schema,
-  Page,
-  I18n,
-  Bridge,
-  Block,
-  Datasource,
-  Robot,
-  Props,
-  Events,
-  Styles,
-  Layout,
-  Canvas,
-  GenerateCodeService,
-  GlobalService,
-  ThemeSwitchService,
-  HttpService
-} from './re-export'
+import { GenerateCodeService, Breadcrumb, Media, Lang, HttpService } from '../../../re-export'
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
+    metas: [HttpService, GenerateCodeService]
   },
   config: {
     id: 'engine.config',
@@ -66,7 +29,7 @@ export default {
       scripts: []
     },
     dslMode: 'Vue',
-    platformId: 1,
+    platformId: 918,
     // TODO: 声明周期相关配置拆分到页面管理的配置项里面
     // 生命周期函数
     lifeCyclesOptions: {
@@ -125,60 +88,5 @@ export default {
       }
     ]
   },
-  layout: {
-    ...Layout,
-    options: {
-      ...Layout.options,
-      isShowLine: true,
-      isShowCollapse: true,
-      toolbars: {
-        left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
-        center: ['engine.toolbars.media'],
-        right: [
-          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
-          ['engine.toolbars.preview'],
-          ['engine.toolbars.generate-code', 'engine.toolbars.save']
-        ],
-        collapse: [
-          ['engine.toolbars.collaboration'],
-          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang'],
-          ['engine.toolbars.viewSetting']
-        ]
-      }
-    }
-  },
-  toolbars: [
-    ThemeSwitch,
-    Logo,
-    Breadcrumb,
-    Lock,
-    Media,
-    Redoundo,
-    Collaboration,
-    Clean,
-    Preview,
-    Refresh,
-    GenerateCode,
-    Save,
-    Fullscreen,
-    Lang,
-    ViewSetting
-  ],
-  plugins: [
-    Materials,
-    Tree,
-    Page,
-    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
-    Datasource,
-    Bridge,
-    I18n,
-    Script,
-    State,
-    Schema,
-    Help,
-    Robot
-  ],
-  settings: [Props, Styles, Events],
-  canvas: Canvas
+  toolbars: [Breadcrumb, Media, Lang]
 }
