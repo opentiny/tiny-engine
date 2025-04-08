@@ -6,7 +6,6 @@ import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill
 import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
 import { fileURLToPath } from 'node:url'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
 const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
@@ -32,19 +31,7 @@ const addViteIgnorePlugin = () => {
 }
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueJsx(),
-    // 复制 import-map.json到产物，提供给构建插件读取
-    viteStaticCopy({
-      targets: [
-        {
-          src: './node_modules/@opentiny/tiny-engine-common/dist/import-map.json',
-          dest: '.'
-        }
-      ]
-    })
-  ],
+  plugins: [vue(), vueJsx()],
   publicDir: false,
   optimizeDeps: {
     esbuildOptions: {
@@ -92,7 +79,7 @@ export default defineConfig({
           }
         }
       },
-      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, '@opentiny/tiny-engine-meta-register']
+      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, /^@opentiny\/tiny-engine*/]
     }
   }
 })
