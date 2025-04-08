@@ -41,7 +41,7 @@ import {
   useLayout,
   useModal,
   useNotify,
-  getMergeRegistry,
+  getMergeMeta,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
@@ -86,7 +86,7 @@ export default {
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
     const { pageSettingState, changeTreeData } = usePage()
     const { confirm } = useModal()
-    const registry = getMergeRegistry(meta.type, meta.id)
+    const registry = getMergeMeta(meta.id)
     const pageGeneral = registry.components.PageGeneral
     const folderGeneralRef = ref(null)
 

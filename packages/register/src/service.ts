@@ -77,10 +77,11 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
 }
 
 export const initServices = () => {
-  const services = Object.values(metaHashMap).filter((service) => service.type === 'MetaService')
+  const services = [...metaHashMap.values()].filter((service) => service.type === 'MetaService')
 
   services.forEach((service) => {
     const context = servicesMap.get(service.id)
+
     if (context) {
       const { state, init } = context
       const { options } = service
