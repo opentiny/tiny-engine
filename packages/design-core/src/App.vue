@@ -1,17 +1,17 @@
 <template>
-  <component :is="registry.layout.component" :registry="registry"></component>
+  <component :is="layoutRegistry.component"></component>
 </template>
 
 <script>
 import { watch, onUnmounted } from 'vue'
 import {
-  getMergeRegistry,
   getMetaApi,
   useModal,
   useNotify,
   useResource,
   useCanvas,
-  useMessage
+  useMessage,
+  getMergeMeta
 } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
@@ -22,7 +22,7 @@ const { BROADCAST_CHANNEL } = constants
 export default {
   setup() {
     const { message } = useModal()
-    const registry = getMergeRegistry()
+    const layoutRegistry = getMergeMeta('engine.layout')
     const materialsApi = getMetaApi('engine.plugins.materials')
     const blockApi = getMetaApi('engine.plugins.blockmanage')
 
@@ -74,7 +74,7 @@ export default {
     )
 
     return {
-      registry
+      layoutRegistry
     }
   }
 }
