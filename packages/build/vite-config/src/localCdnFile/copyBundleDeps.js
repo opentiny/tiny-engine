@@ -15,6 +15,18 @@ const { readJsonSync } = fs
 export function extraBundleCdnLink(filename, originCdnPrefix) {
   const result = new Set()
   const bundle = readJsonSync(filename)
+  // 兼容旧版的 npm 协议
+  bundle.data?.materials?.components?.forEach((component) => {
+    if (component.npm) {
+      const possibleUrl = [component.npm.script, component.npm.css]
+      possibleUrl.forEach((url) => {
+        if (url?.startsWith(originCdnPrefix) && !result.has(url)) {
+          result.add(url)
+        }
+      })
+    }
+  })
+
   bundle.data?.materials?.packages?.forEach((packageItem) => {
     if (packageItem) {
       const possibleUrl = [packageItem.script, packageItem.css]
