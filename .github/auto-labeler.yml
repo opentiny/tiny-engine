@@ -45,7 +45,7 @@ labels:
   - label: 'ospp'
     sync: true
     matcher:
-      baseBranch: '^ospp-\d+/.*'
+      baseBranch: '^ospp-\d+\/.*'
   - label: '1.x'
     sync: true
     matcher:
@@ -53,4 +53,4 @@ labels:
   - label: 'release'
     sync: true
     matcher:
-      baseBranch: '^release/v2.*'
+      baseBranch: '^release\/v2.*'
