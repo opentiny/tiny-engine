@@ -25,7 +25,9 @@ const helpState = {
   }
 }
 
-const getDocsUrl = (plugin) => {
+type PluginName = keyof typeof helpState['docsUrl']
+
+const getDocsUrl = (plugin: PluginName) => {
   return `${getBaseUrl()}${helpState.docsUrl[plugin]}`
 }
 

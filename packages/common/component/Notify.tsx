@@ -7,7 +7,16 @@ const durationMap = {
   error: 10000
 }
 
-const useNotify = (config) => {
+export interface NotifyOptions {
+  [key: string]: any
+  title?: string
+  message: string
+  type: keyof typeof durationMap
+  customClass?: string
+  position?: string
+}
+
+const useNotify = (config: NotifyOptions) => {
   const { customClass, title, type = 'info', position = 'top-right', ...otherConfig } = config
 
   Notify({

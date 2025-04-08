@@ -1,7 +1,18 @@
 import { h, render } from 'vue'
 import { Modal } from '@opentiny/vue'
 
-const confirm = ({ title, status, message, exec, cancel, showFooter = true }) => {
+export interface ModalOptions {
+  title: string
+  status?: string
+  message: string | ((...args: any[]) => any)
+  exec?: (...args: any[]) => any
+  cancel?: (...args: any[]) => any
+  showFooter?: boolean
+}
+
+export type ConfirmOptions = ModalOptions
+
+const confirm = ({ title, status, message, exec, cancel, showFooter = true }: ConfirmOptions) => {
   Modal.confirm({
     title,
     status,
@@ -13,7 +24,7 @@ const confirm = ({ title, status, message, exec, cancel, showFooter = true }) =>
         </div>
       )
     }
-  }).then((res) => {
+  }).then((res: string) => {
     if (res === 'confirm' && typeof exec === 'function') {
       exec()
     } else if (typeof cancel === 'function') {
@@ -22,7 +33,9 @@ const confirm = ({ title, status, message, exec, cancel, showFooter = true }) =>
   })
 }
 
-const message = ({ title, status, message, exec, width = '400' }) => {
+export type MessageOptions = Pick<ModalOptions, 'title' | 'status' | 'message' | 'exec'> & { width?: string }
+
+const message = ({ title, status, message, exec, width = '400' }: MessageOptions) => {
   Modal.alert({
     title,
     status,
@@ -42,13 +55,13 @@ const message = ({ title, status, message, exec, width = '400' }) => {
   })
 }
 
-const topbox = (options) => {
+const topbox = (options: ModalOptions) => {
   const props = { ...options, modelValue: true }
   let TopBox = h(Modal, props)
   const modalEl = document.createElement('div')
 
   const close = () => {
-    TopBox.el.remove()
+    TopBox.el?.remove()
     TopBox = null
   }
 
@@ -57,6 +70,13 @@ const topbox = (options) => {
   return {
     TopBox,
     close
+  }
+}
+
+declare global {
+  interface Window {
+    topbox?: (options: ModalOptions) => { TopBox: any; close: () => void }
+    message?: (options: MessageOptions) => void
   }
 }
 

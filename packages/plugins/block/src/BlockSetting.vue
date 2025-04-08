@@ -18,7 +18,6 @@
           @click="showDeployBlockDialog"
           >发布
         </tiny-button>
-        <svg-button name="text-copy-page" placement="bottom" tips="复制区块"></svg-button>
         <svg-button name="delete" tips="删除" placement="top" @click="deleteBlock"></svg-button>
         <close-icon @click="closePanel"></close-icon>
       </button-group>

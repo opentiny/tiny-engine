@@ -25,6 +25,18 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 import { useMultiSelect } from './composables/useMultiSelect'
+import type { Node, RootNode } from '../../types'
+
+export interface DragOffset {
+  offsetX: number
+  offsetY: number
+  horizontal: string
+  vertical: string
+  width: number
+  height: number
+  x: number
+  y: number
+}
 
 export const POSITION = Object.freeze({
   TOP: 'top',
@@ -38,31 +50,34 @@ export const POSITION = Object.freeze({
 const initialDragState = {
   keydown: false,
   draging: false,
-  data: null,
-  position: null, // ghost位置
-  mouse: null, // iframe里鼠标位置
-  element: null,
-  offset: {}
+  data: null as Node | null,
+  position: null as { left: number; top: number } | null, // ghost位置
+  mouse: {} as { x: number; y: number }, // iframe里鼠标位置
+  element: null as Element | null,
+  offset: {} as DragOffset,
+  timer: 0
 }
 
 export const canvasState = shallowReactive({
   type: 'normal',
   schema: null,
-  renderer: null, // 存放画布内的api
-  iframe: null,
+  renderer: null as any, // 存放画布内的api
+  iframe: {} as HTMLIFrameElement,
   loading: true,
-  current: null,
-  parent: null,
-  loopId: null
+  current: null as any,
+  parent: null as any,
+  loopId: null as string | null,
+  controller: null as any,
+  emit: null as any
 })
 
 export const getRenderer = () => canvasState.renderer
 
 export const getController = () => canvasState.controller
 
-export const getDocument = () => canvasState.iframe.contentDocument
+export const getDocument = () => canvasState.iframe.contentDocument!
 
-export const getWindow = () => canvasState.iframe.contentWindow
+export const getWindow = () => canvasState.iframe.contentWindow!
 
 export const getCurrent = () => {
   return {
@@ -74,7 +89,7 @@ export const getCurrent = () => {
 
 export const getDesignMode = () => getRenderer()?.getDesignMode()
 
-export const setDesignMode = (mode) => getRenderer()?.setDesignMode(mode)
+export const setDesignMode = (mode: string) => getRenderer()?.setDesignMode(mode)
 
 export const getSchema = () => useCanvas().getPageSchema()
 
@@ -103,7 +118,8 @@ const initialLineState = {
   forbidden: false,
   id: '',
   config: null,
-  doc: null
+  doc: null,
+  configure: null
 }
 
 // 鼠标移入画布中元素时的状态
@@ -136,14 +152,14 @@ export const clearSelect = () => {
 }
 
 const smoothScroll = {
-  timmer: null,
+  timmer: undefined as ReturnType<typeof setTimeout> | undefined,
   /**
    *
-   * @param {*} up 方向
-   * @param {*} step 每次滚动距离
-   * @param {*} time 滚动延时（不得大于系统滚动时长，否则可能出现卡顿效果）
+   * @param {boolean} up 方向
+   * @param {number} step 每次滚动距离
+   * @param {number} time 滚动延时（不得大于系统滚动时长，否则可能出现卡顿效果）
    */
-  start(up, step = 40, time = 100) {
+  start(up: boolean, step = 40, time = 100) {
     const dom = getDocument().documentElement
     const fn = () => {
       const top = up ? dom.scrollTop + step : dom.scrollTop - step
@@ -158,14 +174,14 @@ const smoothScroll = {
   },
   stop() {
     clearTimeout(this.timmer)
-    this.timmer = null
+    this.timmer = undefined
   }
 }
 
 export const dragStart = (
-  data,
-  element,
-  { offsetX = 0, offsetY = 0, horizontal, vertical, width, height, x, y } = {}
+  data: Node,
+  element: Element,
+  { offsetX = 0, offsetY = 0, horizontal, vertical, width, height, x, y } = {} as DragOffset
 ) => {
   // 表示鼠标按下开始拖拽
   dragState.keydown = true
@@ -188,8 +204,8 @@ export const dragEnd = () => {
   const { element, data } = dragState
 
   if (element && canvasState.type === 'absolute') {
-    data.props = data.props || {}
-    data.props.style = element.style.cssText
+    data!.props = data!.props || {}
+    data!.props.style = element.style.cssText
 
     getController().addHistory()
   }
@@ -202,15 +218,19 @@ export const dragEnd = () => {
   smoothScroll.stop()
 }
 
-export const getOffset = (element) => {
+export const getOffset = (element: Element) => {
   if (element.ownerDocument === document) {
-    return { x: 0, y: 0 }
+    return { x: 0, y: 0, bottom: 0, top: 0 }
   }
   const { x, y, bottom, top } = canvasState.iframe.getBoundingClientRect()
   return { x, y, bottom, top }
 }
 
-export const getElement = (element) => {
+export const getElement = (element?: Element): Element | undefined => {
+  if (!element || element.nodeType !== 1) {
+    return undefined
+  }
+
   // 如果当前元素是body
   if (element === element.ownerDocument.body) {
     return element
@@ -219,10 +239,6 @@ export const getElement = (element) => {
   // 如果当前元素是画布的html，返回画布的body
   if (element === element.ownerDocument.documentElement) {
     return element.ownerDocument.body
-  }
-
-  if (!element || element.nodeType !== 1) {
-    return undefined
   }
 
   if (element.getAttribute(NODE_UID)) {
@@ -234,7 +250,7 @@ export const getElement = (element) => {
   return undefined
 }
 
-export const getInactiveElement = (element) => {
+export const getInactiveElement = (element?: Element): Element | undefined => {
   if (
     !element ||
     element.nodeType !== 1 ||
@@ -256,7 +272,7 @@ export const getInactiveElement = (element) => {
   return undefined
 }
 
-export const getRect = (element) => {
+export const getRect = (element: Element) => {
   if (element === getDocument().body) {
     const { innerWidth: width, innerHeight: height } = getWindow()
     return {
@@ -273,48 +289,54 @@ export const getRect = (element) => {
   return element.getBoundingClientRect()
 }
 
-const insertAfter = ({ parent, node, data }) => {
+interface InsertOptions {
+  parent: Node | RootNode
+  node: Node | RootNode
+  data: Node
+}
+
+const insertAfter = ({ parent, node, data }: InsertOptions) => {
   if (!data.id) {
     data.id = utils.guid()
   }
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: 'after',
     referTargetNodeId: node.id
   })
 }
 
-const insertBefore = ({ parent, node, data }) => {
+const insertBefore = ({ parent, node, data }: InsertOptions) => {
   if (!data.id) {
     data.id = utils.guid()
   }
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: 'before',
     referTargetNodeId: node.id
   })
 }
 
-const insertInner = ({ node, data }, position) => {
+const insertInner = ({ node, data }: Omit<InsertOptions, 'parent'>, position: string = '') => {
   if (!data.id) {
     data.id = utils.guid()
   }
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: node.id,
+    parentId: node.id || '',
     newNodeData: data,
-    position: [POSITION.TOP, POSITION.LEFT].includes(position) ? 'before' : 'after'
+    position: ([POSITION.TOP, POSITION.LEFT] as string[]).includes(position) ? 'before' : 'after'
   })
 }
 
-export const removeNode = (id) => {
+export const removeNode = (id: string) => {
   useCanvas().operateNode({
     type: 'delete',
     id
@@ -322,21 +344,21 @@ export const removeNode = (id) => {
 }
 
 // 添加外部容器
-const insertContainer = ({ parent, node, data }) => {
+const insertContainer = ({ parent, node, data }: InsertOptions) => {
   if (!data.id) {
     data.id = utils.guid()
   }
 
   useCanvas().operateNode({
     type: 'insert',
-    parentId: parent.id,
+    parentId: parent.id || '',
     newNodeData: data,
     position: POSITION.OUT,
     referTargetNodeId: node.id
   })
 }
 
-export const removeNodeById = (id) => {
+export const removeNodeById = (id: string) => {
   if (!id) {
     return
   }
@@ -347,9 +369,9 @@ export const removeNodeById = (id) => {
   canvasState.emit('remove')
 }
 
-export const querySelectById = (id) => {
+export const querySelectById = (id: string) => {
   let selector = `[${NODE_UID}="${id}"]`
-  const doc = canvasState.iframe.contentDocument
+  const doc = getDocument()
   let element = doc.querySelector(selector)
   const loopId = element?.getAttribute('loop-id')
   if (element && loopId) {
@@ -364,12 +386,12 @@ export const getCurrentElement = () => querySelectById(getCurrent().schema?.id)
 // 滚动页面后，目标元素与页面边界至少保留的边距
 const SCROLL_MARGIN = 15
 
-export const scrollToNode = (element) => {
+export const scrollToNode = (element?: Element | null) => {
   if (element) {
     const container = getDocument().documentElement
     const { clientWidth, clientHeight } = container
     const { left, right, top, bottom, width, height } = element.getBoundingClientRect()
-    const option = {}
+    const option: { left?: number; top?: number } = {}
 
     if (right < 0) {
       option.left = container.scrollLeft + left - SCROLL_MARGIN
@@ -391,11 +413,15 @@ export const scrollToNode = (element) => {
   return nextTick()
 }
 
-const setSelectRect = (id, element, options = {}) => {
+const setSelectRect = (
+  id: string,
+  element?: Element | null,
+  options?: { type?: string; schema: any; isMultiple: boolean }
+) => {
   clearHover()
 
-  const { type, isMultiple = false } = options
-  const schema = options.schema || (useCanvas().getNodeWithParentById(id) || {}).node
+  const { type, isMultiple = false } = options || {}
+  const schema = options?.schema || (useCanvas().getNodeWithParentById(id) || {}).node
   element = element || querySelectById(id) || getDocument().body
 
   const { left, height, top, width } = getRect(element)
@@ -419,7 +445,7 @@ const setSelectRect = (id, element, options = {}) => {
   )
 }
 
-export const updateRect = (id) => {
+export const updateRect = (id?: string) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
 
@@ -440,7 +466,7 @@ export const updateRect = (id) => {
   }
 }
 
-export const getConfigure = (targetName) => {
+export const getConfigure = (targetName: string) => {
   const material = getController().getMaterial(targetName)
 
   // 这里如果是区块插槽，则返回标识为容器的对象
@@ -459,7 +485,7 @@ export const getConfigure = (targetName) => {
  * @param {*} data 当前插入目标的schame数据
  * @returns
  */
-export const allowInsert = (configure = hoverState.configure || {}, data = dragState.data || {}) => {
+export const allowInsert = (configure: any = hoverState.configure || {}, data: Node | null = dragState.data) => {
   const { nestingRule = {} } = configure
   const { childWhitelist = [], descendantBlacklist = [] } = nestingRule
 
@@ -480,7 +506,7 @@ export const allowInsert = (configure = hoverState.configure || {}, data = dragS
   return flag
 }
 
-const isAncestor = (ancestor, descendant) => {
+const isAncestor = (ancestor: string | Node, descendant: string | Node) => {
   const ancestorId = typeof ancestor === 'string' ? ancestor : ancestor.id
   let descendantId = typeof descendant === 'string' ? descendant : descendant.id
 
@@ -497,9 +523,13 @@ const isAncestor = (ancestor, descendant) => {
   return false
 }
 
+type Rect =
+  | DOMRect
+  | { left: number; top: number; right: number; bottom: number; width: number; height: number; x: number; y: number }
+
 // 获取位置信息，返回状态
 const lineAbs = 20
-const getPosLine = (rect, configure) => {
+const getPosLine = (rect: Rect, configure: { isContainer: any }) => {
   const mousePos = dragState.mouse
   const yAbs = Math.min(lineAbs, rect.height / 3)
   const xAbs = Math.min(lineAbs, rect.width / 3)
@@ -532,14 +562,14 @@ const getPosLine = (rect, configure) => {
   return { type, forbidden }
 }
 
-const isBodyEl = (element) => element.nodeName === 'BODY'
+const isBodyEl = (element: Element) => element.nodeName === 'BODY'
 
-const setHoverRect = (element, data) => {
+const setHoverRect = (element?: Element, data?: Node | null) => {
   if (!element) {
     return clearHover()
   }
-  const componentName = element.getAttribute(NODE_TAG)
-  const id = element.getAttribute(NODE_UID)
+  const componentName = element.getAttribute(NODE_TAG)!
+  const id = element.getAttribute(NODE_UID)!
   const configure = getConfigure(componentName)
   const rect = getRect(element)
   const { left, height, top, width } = rect
@@ -561,7 +591,7 @@ const setHoverRect = (element, data) => {
         // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
         const lastNode = children[children.length - 1]
         childEle = querySelectById(lastNode.id)
-        const childComponentName = element.getAttribute(childEle)
+        const childComponentName = childEle!.getAttribute(NODE_TAG)!
         const Childconfigure = getConfigure(childComponentName)
         lineState.id = lastNode.id
         lineState.configure = Childconfigure
@@ -572,7 +602,7 @@ const setHoverRect = (element, data) => {
     if (childEle) {
       const childRect = getRect(childEle)
       const { left, height, top, width } = childRect
-      const posLine = getPosLine(childRect, lineState.configure)
+      const posLine = getPosLine(childRect, lineState.configure!)
       Object.assign(lineState, {
         width,
         height,
@@ -627,13 +657,13 @@ const updateHoverRect = (id?: string) => {
   })
 }
 
-const setInactiveHoverRect = (element) => {
+const setInactiveHoverRect = (element?: Element) => {
   if (!element) {
     Object.assign(inactiveHoverState, initialRectState, { slot: null })
     return
   }
 
-  const componentName = element.getAttribute(NODE_TAG)
+  const componentName = element.getAttribute(NODE_TAG)!
   const id = element.getAttribute(NODE_INACTIVE_UID)
   const configure = getConfigure(componentName)
   const rect = getRect(element)
@@ -657,10 +687,10 @@ export const syncNodeScroll = () => {
   updateHoverRect()
 }
 
-let moveUpdateTimer = null
+let moveUpdateTimer: ReturnType<typeof setTimeout> | undefined = undefined
 
 // 绝对布局
-const absoluteMove = (event, element) => {
+const absoluteMove = (event: DragEvent, element: HTMLElement) => {
   const { clientX, clientY } = event
   const { offsetX, offsetY, horizontal, vertical, height, width, x, y } = dragState.offset
 
@@ -693,7 +723,7 @@ const absoluteMove = (event, element) => {
 
   clearTimeout(moveUpdateTimer)
 
-  const { data } = dragState
+  const data = dragState.data!
   data.props = data.props || {}
 
   // 防抖更新位置信息到 schema
@@ -706,7 +736,16 @@ const absoluteMove = (event, element) => {
   updateRect()
 }
 
-const setDragPosition = ({ clientX, x, clientY, y, offsetBottom, offsetTop }) => {
+interface SetDragPositionOptions {
+  clientX: number
+  x: number
+  clientY: number
+  y: number
+  offsetBottom: number
+  offsetTop: number
+}
+
+const setDragPosition = ({ clientX, x, clientY, y, offsetBottom, offsetTop }: SetDragPositionOptions) => {
   const left = clientX + x
   const top = clientY + y
   if (clientY < 20) {
@@ -720,12 +759,14 @@ const setDragPosition = ({ clientX, x, clientY, y, offsetBottom, offsetTop }) =>
   dragState.position = { left, top }
 }
 
-export const dragMove = (event, isHover) => {
+export const dragMove = (event: DragEvent, isHover: boolean) => {
   if (!dragState.draging && dragState.keydown && new Date().getTime() - dragState.timer < 200) {
     return
   }
 
-  const { x, y, bottom: offsetBottom, top: offsetTop } = getOffset(event.target)
+  const eventTarget = event.target as Element
+
+  const { x, y, bottom: offsetBottom, top: offsetTop } = getOffset(eventTarget)
   const { clientX, clientY } = event
   const { element } = dragState
   const absolute = canvasState.type === 'absolute'
@@ -737,24 +778,24 @@ export const dragMove = (event, isHover) => {
   // 如果仅仅是mouseover事件直接return,并重置拖拽位置状态，优化性能
   if (isHover) {
     lineState.position = ''
-    setHoverRect(getElement(event.target), null)
-    setInactiveHoverRect(getInactiveElement(event.target))
+    setHoverRect(getElement(eventTarget), null)
+    setInactiveHoverRect(getInactiveElement(eventTarget))
     return
   }
 
-  setHoverRect(getElement(event.target), dragState.data)
+  setHoverRect(getElement(eventTarget), dragState.data)
 
   if (dragState.draging) {
     // 绝对布局时走的逻辑
     if (element && absolute) {
-      absoluteMove(event, element)
+      absoluteMove(event, element as HTMLElement)
     }
     setDragPosition({ clientX, x, clientY, y, offsetBottom, offsetTop })
   }
 }
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
-export const selectNode = async (id, type, isMultiple = false) => {
+export const selectNode = async (id: string, type?: string, isMultiple = false) => {
   const { node } = useCanvas().getNodeWithParentById(id) || {}
 
   let element = querySelectById(id)
@@ -798,16 +839,20 @@ export const selectNode = async (id, type, isMultiple = false) => {
   }
 }
 
-export const hoverNode = (id, data) => {
+export const hoverNode = (id: string, data: Node) => {
   const element = querySelectById(id)
   if (element) {
     setHoverRect(element, data)
   }
 }
 
-export const insertNode = (node, position = POSITION.IN, select = true) => {
+export const insertNode = (
+  node: { node: Node; parent: Node; data: Node },
+  position: string = POSITION.IN,
+  select = true
+) => {
   if (!node.parent) {
-    insertInner({ node: useCanvas().pageState.pageSchema, data: node.data }, position)
+    insertInner({ node: useCanvas().pageState.pageSchema!, data: node.data }, position)
   } else {
     switch (position) {
       case POSITION.TOP:
@@ -837,33 +882,34 @@ export const insertNode = (node, position = POSITION.IN, select = true) => {
   getController().addHistory()
 }
 
-export const addComponent = (data, position) => {
+export const addComponent = (data: Node, position: string) => {
   const { schema, parent } = getCurrent()
 
   insertNode({ node: schema, parent, data }, position)
 }
 
-export const copyNode = (id) => {
+export const copyNode = (id: string) => {
   if (!id) {
     return
   }
 
-  const { node, parent } = useCanvas().getNodeWithParentById(id)
+  const { node, parent } = useCanvas().getNodeWithParentById(id)!
 
   insertAfter({ parent, node, data: copyObject(node) })
   getController().addHistory()
 }
 
 export const onMouseUp = () => {
-  const { draging, data } = dragState
+  const { draging } = dragState
   const { position, forbidden } = lineState
   const absolute = canvasState.type === 'absolute'
-  const sourceId = data?.id
   const lineId = lineState.id
   const { getNodeWithParentById, getSchema } = useCanvas()
 
   if (draging && !forbidden) {
     const { parent, node } = getNodeWithParentById(lineId) || {} // target
+    const data = dragState.data!
+    const sourceId = data.id
 
     const insertData = toRaw(data)
     const targetNode = { parent, node, data: { ...insertData, children: insertData.children || [] } }
@@ -890,16 +936,16 @@ export const onMouseUp = () => {
   dragEnd()
 }
 
-export const addStyle = (href) => appendStyle(href, getDocument())
+export const addStyle = (href: string) => appendStyle(href, getDocument())
 
-export const addScript = (src) => appendScript(src, getDocument())
+export const addScript = (src: string) => appendScript(src, getDocument())
 
 /**
  *
  * @param {*} messages
  * @param {*} merge 是否合并，默认是重置所有数据
  */
-export const setLocales = (messages, merge) => {
+export const setLocales = (messages: any, merge?: boolean) => {
   const i18n = getRenderer().getI18n()
 
   Object.keys(messages).forEach((lang) => {
@@ -908,11 +954,11 @@ export const setLocales = (messages, merge) => {
   })
 }
 
-export const setConfigure = (configure) => {
+export const setConfigure = (configure: any) => {
   getRenderer().setConfigure(configure)
 }
 
-export const setI18n = (data) => {
+export const setI18n = (data: any) => {
   const messages = data || useTranslate().getData()
   const i18n = getRenderer().getI18n()
   Object.keys(messages).forEach((lang) => {
@@ -920,7 +966,7 @@ export const setI18n = (data) => {
   })
 }
 
-export const setCanvasType = (type) => {
+export const setCanvasType = (type: string) => {
   canvasState.type = type || 'normal'
   getDocument().body.className = type === 'absolute' ? 'canvas-grid-bg' : ''
 }
@@ -932,7 +978,7 @@ export const getCanvasType = () => canvasState.type
  * @param {string} name 事件名称
  * @param {any} data 派发的数据
  */
-export const canvasDispatch = (name, data, doc = getDocument()) => {
+export const canvasDispatch = (name: string, data: any, doc = getDocument()) => {
   if (!doc) return
 
   doc.dispatchEvent(new CustomEvent(name, data))
@@ -964,15 +1010,15 @@ export const canvasApi = {
   getConfigure,
   allowInsert,
   Builtin,
-  removeBlockCompsCache: (...args) => {
+  removeBlockCompsCache: (...args: any[]) => {
     return canvasState.renderer.removeBlockCompsCache(...args)
   },
-  updateCanvas: (...args) => {
+  updateCanvas: (...args: any[]) => {
     return canvasState.renderer.updateCanvas(...args)
   }
 }
 
-export const initCanvas = ({ renderer, iframe, emit, controller }) => {
+export const initCanvas = ({ renderer, iframe, emit, controller }: any) => {
   canvasState.iframe = iframe
   canvasState.emit = emit
   // 存放画布外层传进来的插件api

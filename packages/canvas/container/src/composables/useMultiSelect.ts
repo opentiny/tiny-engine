@@ -1,17 +1,30 @@
 import { ref } from 'vue'
 import { getDocument, getRect, querySelectById } from '../container'
 
+export interface MultiSelectedState {
+  id: string
+  left: number
+  height: number
+  top: number
+  width: number
+  componentName: string
+  doc: Document
+  schema: any
+  parent: any
+  type?: string
+}
+
 // 初始化多选节点
-const multiSelectedStates = ref([])
+const multiSelectedStates = ref<MultiSelectedState[]>([])
 
 export const useMultiSelect = () => {
   /**
    * 添加state到多选列表
-   * @param {*} selectState
-   * @param {boolean} isMultiple 是否多选
-   * @returns {boolean} 添加成功返回true，否则返回false
+   * @param selectState
+   * @param isMultiple 是否多选
+   * @returns 添加成功返回true，否则返回false
    */
-  const toggleMultiSelection = (selectState, isMultiple = false) => {
+  const toggleMultiSelection = (selectState: MultiSelectedState, isMultiple = false) => {
     if (!selectState || typeof selectState !== 'object') {
       return false
     }

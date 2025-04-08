@@ -15,14 +15,26 @@ import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { useHistory, getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
+import type { canvasApi as CanvasApi } from '../../../container/src/container'
+import type { Node, RootNode } from '../../../types'
+import type {
+  ChangePropsOperation,
+  DeleteOperation,
+  InsertOperation,
+  NodeOperation,
+  PageSchema,
+  PageState,
+  UpdateAttributesOperation
+} from './types'
 
 const { COMPONENT_NAME } = constants
 const { deepClone } = utils
 
-const defaultPageState = {
+const defaultPageState: PageState = {
   currentVm: null,
   currentSchema: null,
   currentType: null,
+  currentPage: null,
   pageSchema: null,
   properties: null,
   dataSource: null,
@@ -34,7 +46,7 @@ const defaultPageState = {
   loading: false
 }
 
-const defaultSchema = {
+const defaultSchema: PageSchema = {
   componentName: 'Page',
   fileName: '',
   css: '',
@@ -53,11 +65,11 @@ const defaultSchema = {
   outputs: []
 }
 
-const canvasApi = ref({})
+const canvasApi = ref<Partial<typeof CanvasApi>>({})
 const isCanvasApiReady = ref(false)
-const nodesMap = ref(new Map())
+const nodesMap = ref(new Map<string | number, { node: any; parent: any }>())
 
-const initCanvasApi = (newCanvasApi) => {
+const initCanvasApi = (newCanvasApi: typeof CanvasApi) => {
   canvasApi.value = newCanvasApi
   isCanvasApiReady.value = true
 }
@@ -72,7 +84,7 @@ const rootSchema = ref([
   }
 ])
 
-const handleTinyGridColumnsSlots = (node) => {
+const handleTinyGridColumnsSlots = (node: Node) => {
   const columns = Array.isArray(node.props?.columns) ? node.props.columns : []
   for (const columnItem of columns) {
     if (!columnItem?.slots) {
@@ -81,7 +93,7 @@ const handleTinyGridColumnsSlots = (node) => {
 
     for (const slotItem of Object.values(columnItem.slots)) {
       if (Array.isArray(slotItem?.value)) {
-        slotItem.value.forEach((item) => {
+        slotItem.value.forEach((item: Node) => {
           if (!item.id) {
             item.id = utils.guid()
           }
@@ -98,13 +110,13 @@ const handleTinyGridColumnsSlots = (node) => {
   }
 }
 
-const handleNodesInProps = (node) => {
+const handleNodesInProps = (node: Node) => {
   if (node.componentName === 'TinyGrid') {
     handleTinyGridColumnsSlots(node)
   }
 }
 
-const generateNodesMap = (nodes, parent) => {
+const generateNodesMap = (nodes: Node[], parent: RootNode | Node) => {
   nodes.forEach((nodeItem) => {
     if (!nodeItem.id) {
       nodeItem.id = utils.guid()
@@ -124,7 +136,7 @@ const generateNodesMap = (nodes, parent) => {
 }
 
 const jsonDiffPatchInstance = jsonDiffPatch.create({
-  objectHash: function (obj, index) {
+  objectHash: function (obj: { fileName?: string; id?: string }, index) {
     return obj.fileName || obj.id || `$$index:${index}`
   },
   arrays: {
@@ -135,8 +147,7 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
     diffMatchPatch: DiffMatchPatch,
     minLength: 60
   },
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  propertyFilter: function (name, context) {
+  propertyFilter: function (name) {
     return name.slice(0, 1) !== '$'
   },
   cloneDiffValues: false
@@ -145,7 +156,7 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
 const { publish } = useMessage()
 
 // 重置画布数据
-const resetCanvasState = async (state = {}) => {
+const resetCanvasState = async (state: Partial<PageState> = {}) => {
   const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
 
   Object.assign(pageState, defaultPageState, state)
@@ -178,14 +189,14 @@ const resetCanvasState = async (state = {}) => {
 }
 
 // 页面重置画布数据
-const resetPageCanvasState = (state = {}) => {
+const resetPageCanvasState = (state: Partial<PageState> = {}) => {
   state.isBlock = false
   resetCanvasState(state)
   useHistory().addHistory(state.pageSchema)
 }
 
 // 区块重置画布数据
-const resetBlockCanvasState = async (state = {}) => {
+const resetBlockCanvasState = async (state: Partial<PageState> = {}) => {
   state.isBlock = true
   await resetCanvasState(state)
 }
@@ -225,7 +236,7 @@ const clearCanvas = () => {
 const isBlock = () => pageState.isBlock
 
 // 初始化页面数据
-const initData = (schema = { ...defaultSchema }, currentPage) => {
+const initData = (schema: PageSchema = { ...defaultSchema }, currentPage: any) => {
   if (schema.componentName === COMPONENT_NAME.Block) {
     resetBlockCanvasState({
       pageSchema: toRaw(schema),
@@ -255,7 +266,7 @@ const getPageSchema = () => {
   return pageState.pageSchema || {}
 }
 
-const setCurrentSchema = (schema) => {
+const setCurrentSchema = (schema: any) => {
   pageState.currentSchema = schema
 }
 
@@ -269,15 +280,15 @@ const clearCurrentState = () => {
 }
 const getCurrentPage = () => pageState.currentPage
 
-const getNodeById = (id) => {
+const getNodeById = (id: string) => {
   return nodesMap.value.get(id)?.node
 }
 
-const getNodeWithParentById = (id) => {
+const getNodeWithParentById = (id: string) => {
   return nodesMap.value.get(id)
 }
 
-const delNode = (id) => {
+const delNode = (id: string) => {
   nodesMap.value.delete(id)
 }
 
@@ -285,18 +296,18 @@ const clearNodes = () => {
   nodesMap.value.clear()
 }
 
-const setNode = (schema, parent) => {
+const setNode = (schema: Node, parent: Node | RootNode) => {
   schema.id = schema.id || utils.guid()
 
   nodesMap.value.set(schema.id, { node: schema, parent })
 }
 
-const getNode = (id, parent) => {
+const getNode = (id: string, parent?: boolean) => {
   return parent ? nodesMap.value.get(id) : nodesMap.value.get(id)?.node
 }
 
 const operationTypeMap = {
-  insert: (operation) => {
+  insert: (operation: InsertOperation) => {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
     const parentNode = getNode(parentId) || pageState.pageSchema
     // 1. 确认是否存在 ParentNode
@@ -359,7 +370,7 @@ const operationTypeMap = {
       previous: undefined
     }
   },
-  delete: (operation) => {
+  delete: (operation: DeleteOperation) => {
     const { id } = operation
     const targetNode = getNode(id, true)
 
@@ -398,7 +409,7 @@ const operationTypeMap = {
       previous: node
     }
   },
-  changeProps: (operation) => {
+  changeProps: (operation: ChangePropsOperation) => {
     const { id, value, option: changeOption } = operation
     let { node } = getNode(id, true) || {}
     const previous = deepClone(node)
@@ -423,10 +434,10 @@ const operationTypeMap = {
       previous
     }
   },
-  updateAttributes: (operation) => {
+  updateAttributes: (operation: UpdateAttributesOperation) => {
     const { id, value, overwrite } = operation
     const { id: _id, children, ...restAttr } = value
-    const node = getNode(id)
+    const node: Node | RootNode = getNode(id)
 
     // 其他属性直接浅  merge
     Object.assign(node, restAttr)
@@ -466,7 +477,7 @@ const operationTypeMap = {
 
     const newChildrenSet = new Set(newChildren.map(({ id }) => id))
     // 被删除的项
-    const deletedIds = originChildrenIds.filter((id) => !newChildrenSet.has(id))
+    const deletedIds = originChildrenIds.filter((id: any) => !newChildrenSet.has(id))
     const deletedIdsSet = new Set(deletedIds)
 
     for (const id of deletedIds) {
@@ -526,7 +537,7 @@ const lastUpdateType = ref('')
  * @param {*} operation
  * @returns
  */
-const operateNode = async (operation) => {
+const operateNode = async (operation: NodeOperation) => {
   if (!operationTypeMap[operation.type]) {
     return
   }
@@ -546,11 +557,11 @@ const operateNode = async (operation) => {
 }
 
 // 获取传入的 schema 与最新 schema 的 diff
-const getSchemaDiff = (schema) => {
+const getSchemaDiff = (schema: unknown) => {
   return jsonDiffPatchInstance.diff(schema, pageState.pageSchema)
 }
 
-const patchLatestSchema = (schema) => {
+const patchLatestSchema = (schema: unknown) => {
   // 这里 pageSchema 需要 deepClone，不然 patch 的时候，会 patch 成同一个引用，造成画布无法更新
   const diff = jsonDiffPatchInstance.diff(schema, deepClone(pageState.pageSchema))
 
@@ -559,7 +570,7 @@ const patchLatestSchema = (schema) => {
   }
 }
 
-const importSchema = (data) => {
+const importSchema = (data: any) => {
   let importData = data
 
   if (typeof data === 'string') {
@@ -581,11 +592,11 @@ const exportSchema = () => {
   return JSON.stringify(pageState.pageSchema)
 }
 
-const getSchema = () => {
+const getSchema = (): RootNode | object => {
   return pageState.pageSchema || {}
 }
 
-const getNodePath = (id, nodes = []) => {
+const getNodePath = (id: string, nodes: { name: string; node: string }[] = []) => {
   const { parent, node } = getNodeWithParentById(id) || {}
 
   if (node) {
@@ -601,7 +612,11 @@ const getNodePath = (id, nodes = []) => {
   return nodes
 }
 
-const updateSchema = (data) => {
+const updateSchema = (data: Partial<PageSchema>) => {
+  if (!pageState.pageSchema) {
+    return
+  }
+
   Object.assign(pageState.pageSchema, data)
 
   publish({ topic: 'schemaChange', data: {} })

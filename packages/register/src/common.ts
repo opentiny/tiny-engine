@@ -51,7 +51,7 @@ export const metaHashMap: Record<string, any> = {}
 export const apisMap: Record<string, any> = {}
 export const optionsMap: Record<string, any> = {}
 
-export const getMetaApi = (id: string, key: string) => {
+export const getMetaApi = (id: string, key?: string) => {
   if (!apisMap[id]) {
     return
   }
@@ -144,14 +144,14 @@ const handleRegistryProp = (id: string, value: any) => {
 
 export const preprocessRegistry = (registry: Array<any> | { [s: string]: any }) => {
   // 元应用支持使用长度为2的数组来配置，第一个参数为元应用，第二个参数是额外的自定义配置。此函数判断数组是否属于这种配置格式
-  const isArrayFormat = (arr) => Array.isArray(arr) && arr.length === 2 && arr[0].id
+  const isArrayFormat = (arr: any) => Array.isArray(arr) && arr.length === 2 && arr[0].id
 
   Object.values(registry)
     .filter((metaApps) => Array.isArray(metaApps))
     .forEach((metaApps) => {
       // normal: { plugins: [ Page, Block, ... ] }
       // array format: { plugins: [ [ Page, { options: extraOptions } ], Block, ... ] }
-      metaApps.forEach((metaApp, index) => {
+      metaApps.forEach((metaApp: any, index: number) => {
         if (isArrayFormat(metaApp)) {
           metaApps.splice(index, 1, { ...metaApp[0], ...metaApp[1] })
         }

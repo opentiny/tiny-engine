@@ -63,7 +63,7 @@ const {
   getDataSourceMap
 })
 const { getRenderer, setRenderer } = useCustomRenderer()
-const { setCondition } = activePageContext
+const { setCondition, getConditions } = activePageContext
 const updateCanvas = () => {
   refreshKey.value++
 }
@@ -75,6 +75,8 @@ setCurrentApi({
   // 设置物料配置
   setConfigure,
   setCondition,
+  getController,
+  getConditions,
   getRenderer,
   setRenderer,
   getDesignMode,
@@ -91,7 +93,6 @@ const throttleUpdateSchema = useThrottleFn(
   true
 )
 
-const pageRenderer = getRenderer()
 const { routerViewSetting } = useRouterViewSetting()
 
 export default defineComponent({
@@ -274,6 +275,8 @@ export default defineComponent({
         }
       )
     }
+
+    const pageRenderer = getRenderer()
 
     return () =>
       pageAncestors.value === null

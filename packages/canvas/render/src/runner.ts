@@ -66,7 +66,7 @@ const create = async (config) => {
   App = createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
 
   if (typeof appCreated === 'function') {
-    await appCreated(App)
+    await appCreated(App, { api: renderer })
   }
 
   App.config.globalProperties.lowcodeConfig = window.parent.TinyGlobalConfig
