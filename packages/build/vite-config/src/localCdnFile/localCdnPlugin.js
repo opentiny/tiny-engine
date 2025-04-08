@@ -28,7 +28,7 @@ const defaultCopyConfig = {
  * @param {string} filename - 文件名
  * @returns {string} - 处理后的内容
  */
-function transform(content, filename) {
+function replaceJsImportPaths(content, filename) {
   if (filename.endsWith('.js')) {
     const result = babelReplaceImportPathWithCertainFileName(content, filename, console)
     return result.code || content
@@ -144,7 +144,7 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
           const content = await fs.readFile(file, 'utf-8')
 
           // 应用转换
-          const transformedContent = transform(content, file)
+          const transformedContent = replaceJsImportPaths(content, file)
 
           // 写入转换后的内容
           await fs.writeFile(destFilePath, transformedContent)
@@ -162,7 +162,7 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
         const content = await fs.readFile(srcPath, 'utf-8')
 
         // 应用转换
-        const transformedContent = transform(content, srcPath)
+        const transformedContent = replaceJsImportPaths(content, srcPath)
 
         // 写入转换后的内容
         await fs.writeFile(finalDestPath, transformedContent)
