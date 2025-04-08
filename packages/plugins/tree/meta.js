@@ -3,6 +3,7 @@ export default {
   title: '大纲树',
   type: 'plugins',
   icon: 'plugin-icon-tree',
+  // icon: 'plugin-icon-var',
   widthResizable: true,
   align: 'leftTop'
 }

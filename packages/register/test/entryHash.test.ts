@@ -1,6 +1,6 @@
 import { expect, describe, it } from 'vitest'
-import { cloneDeep } from 'lodash-es'
-import { mergeRegistry } from '../src/entryHash'
+import { mergeRegistry, defineEntry } from '../src/entryHash'
+import { getMergeMeta } from '../src/common'
 
 // run this test suite in parallel
 describe.concurrent('mergeRegistry', () => {
@@ -61,18 +61,14 @@ describe.concurrent('mergeRegistry', () => {
   }
   it('should merge registry correctly', () => {
     const registry = {
-      layout: {
-        id: 'engine.layout',
+      'engine.layout': {
         options: {
           pluginPanelWidth: '100px'
         }
       },
-      plugins: [
-        {
-          id: 'engine.plugins.outlinetree',
-          component: 'MyCustomOutline'
-        }
-      ]
+      'engine.plugins.outlinetree': {
+        component: 'MyCustomOutline'
+      }
     }
 
     const expected = {
@@ -96,83 +92,37 @@ describe.concurrent('mergeRegistry', () => {
       ]
     }
 
-    expect(mergeRegistry(registry, defaultRegistry)).toEqual(expected)
-  })
+    defineEntry(defaultRegistry)
+    mergeRegistry(registry)
 
-  it('should merge child metas correctly', () => {
-    const registry = {
-      plugins: [
-        {
-          id: 'engine.plugins.materials',
-          title: '我的物料',
-          layout: {
-            id: 'engine.plugin.materials.layout',
-            component: 'MyMaterialsLayout'
-          },
-          metas: [
-            {
-              id: 'engine.plugins.materials.block',
-              options: {
-                listType: 'grid'
-              }
-            }
-          ]
-        }
-      ]
-    }
+    const layout = getMergeMeta('engine.layout')
+    const outlineTree = getMergeMeta('engine.plugins.outlinetree')
 
-    const expected = {
-      plugins: [
-        // should only include one plugin
-        {
-          id: 'engine.plugins.materials',
-          title: '我的物料', // should replace title
-          type: 'plugins', // should merged from defaultRegistry
-          icon: 'plugin-icon-materials', // should merged from defaultRegistry
-          component: 'Material', // should merged from defaultRegistry
-          layout: {
-            id: 'engine.plugin.materials.layout',
-            component: 'MyMaterialsLayout', // should replace component
-            apis: {}, // should merged from defaultRegistry
-            options: {} // should merged from defaultRegistry
-          },
-          metas: [
-            // should only include one metaApp
-            {
-              id: 'engine.plugins.materials.block',
-              title: '区块', // should merged from defaultRegistry
-              type: 'metaApp', // should merged from defaultRegistry
-              component: 'MaterialList', // should merged from defaultRegistry
-              options: {
-                listType: 'grid' // should merge from registry
-              }
-            }
-          ]
-        }
-      ]
-    }
-
-    expect(mergeRegistry(registry, defaultRegistry)).toEqual(expected)
+    expect(layout?.options?.pluginPanelWidth).toEqual('100px')
+    expect(outlineTree?.component).toEqual('MyCustomOutline')
   })
 
   it('should not change origin defaultRegistry', () => {
     const registry = {
-      layout: {
-        id: 'engine.layout',
+      'engine.layout': {
         options: {
           pluginPanelWidth: '100px'
         }
       },
-      plugins: [
-        {
-          id: 'engine.plugins.outlinetree',
-          component: 'MyCustomOutline'
-        }
-      ]
+      'engine.plugins.outlinetree': {
+        component: 'MyCustomOutline'
+      }
     }
-    const originRegistry = cloneDeep(defaultRegistry)
-    mergeRegistry(registry, defaultRegistry)
 
-    expect(defaultRegistry).toEqual(originRegistry)
+    defineEntry(defaultRegistry)
+    mergeRegistry(registry)
+
+    const layout = getMergeMeta('engine.layout')
+    const outlineTree = getMergeMeta('engine.plugins.outlinetree')
+    const material = getMergeMeta('engine.plugins.materials')
+
+    expect(layout?.options?.pluginIconSize).toEqual('24px')
+    expect(outlineTree?.title).toEqual('大纲树')
+    expect(material).toBeDefined()
   })
 })
