@@ -1,4 +1,3 @@
 export default {
-  id: 'engine.plugins.materials.layout',
-  type: 'plugins'
+  id: 'engine.plugins.materials.layout'
 }
