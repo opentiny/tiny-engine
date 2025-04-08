@@ -38,6 +38,34 @@ export function copyfileToDynamicSrcMapper({ src, dest, transform, rename, folde
   }
 }
 
+function extractPackageInfo(url, originCdnPrefix) {
+  let match = null
+
+  try {
+    const mergedRegex = new RegExp(
+      `^${originCdnPrefix}/?` +
+        // 包名捕获组（支持作用域包 @scope/name 格式）
+        // (?:@[^/]+/)? 匹配 @scope/ 格式
+        // [^/@]+ 匹配包名，不包含 '/' 和 '@'
+        `(?<packageName>(?:@[^/]+/)?[^/@]+)` +
+        // 版本号部分（@或/分隔）
+        // /(?=.*/files) 匹配斜杠的分割的文件路径，但是需满足正向预查，确保后续路径包含 /files
+        `(?:@|/(?=.*/files))` +
+        // 捕获版本号
+        `(?<versionDemand>[^/]+)` +
+        // 路径部分 处理/files前缀（npmmirror）
+        `(?:/files)?` +
+        // 路径部分 匹配文件路径
+        `(?<filePathInPackage>.*?)$`
+    )
+    match = url.match(mergedRegex)
+  } catch (error) {
+    // ignore
+  }
+
+  return match
+}
+
 // 生成复制单个文件所需要的信息
 export function getCdnPathNpmInfoForSingleFile(
   url, // cdn托管的npm文件地址数组
@@ -48,24 +76,7 @@ export function getCdnPathNpmInfoForSingleFile(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-
-  // 分别匹配 unpkg 和 npmmirror 格式
-  let unpkgMatch = null
-  let npmmirrorMatch = null
-
-  try {
-    unpkgMatch = url.match(
-      new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-    )
-    npmmirrorMatch = url.match(
-      new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)/(?<versionDemand>[^/]+)/files(?<filePathInPackage>.*?)$`)
-    )
-  } catch (error) {
-    // ignore
-  }
-
-  // 使用匹配到的结果
-  const match = npmmirrorMatch || unpkgMatch
+  const match = extractPackageInfo(url, originCdnPrefix)
 
   if (!match) {
     return null
@@ -132,17 +143,9 @@ export function getCdnPathNpmInfoForPackage(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-
-  // 分别匹配 unpkg 和 npmmirror 格式
-  const unpkgMatch = url.match(
-    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-  )
-  const npmmirrorMatch = url.match(
-    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)/(?<versionDemand>[^/]+)/files(?<filePathInPackage>.*?)$`)
-  )
-
   // 使用匹配到的结果
-  const match = npmmirrorMatch || unpkgMatch
+  const match = extractPackageInfo(url, originCdnPrefix)
+
   if (!match) {
     return null
   }
