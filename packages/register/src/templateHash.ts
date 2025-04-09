@@ -9,24 +9,13 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { compile } from 'vue/dist/vue.esm-bundler.js'
 import { templateHashMap } from './entryHash'
-
-const generateTemplate = (template: string) => {
-  const templateString = template.trim()
-  if (templateString.startsWith('<template>') && templateString.endsWith('</template>')) {
-    return templateString.slice(10, -11)
-  }
-  return templateString
-}
 
 export const useCompile = ({ component, metaData }: any) => {
   // 此处compile会缓存template对应的render函数，并且render函数一个纯函数（用到的所有变量都来自参数）
   const customTem = templateHashMap[metaData.id]
   if (customTem) {
-    const template = generateTemplate(customTem)
-    component.render = compile(template)
+    component.render = customTem.render
   }
 
   return component

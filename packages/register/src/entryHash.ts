@@ -81,15 +81,24 @@ const handleLifeCycles = (id: string, lifeCycles: any) => {
   })
 }
 
+const handleVueTemplate = (id: string, templates: any) => {
+  Object.entries(templates).forEach(([name, template]) => {
+    if (typeof template === 'object') {
+      const prefix = name && name !== "''" ? `.${name}` : ''
+      const templateId = `${id}${prefix}`
+      templateHashMap[templateId] = template
+    }
+  })
+}
+
 const handleRegistryProp = (id: string, value: any) => {
   const { overwrite } = value
-
   // 逻辑复写
   if (typeof overwrite === 'object' && overwrite) {
-    const { template, lifeCycles, methods } = overwrite
+    const { templates, lifeCycles, methods } = overwrite
     // 处理模板
-    if (template) {
-      templateHashMap[id] = template
+    if (templates) {
+      handleVueTemplate(id, templates)
     }
     // 处理生命周期
     if (lifeCycles) {
