@@ -45,6 +45,19 @@ const renderer = {
   ...api
 }
 
+const GetComponentByDomNode = {
+  install: (Vue) => {
+    Vue.mixin({
+      mounted() {
+        this.$el.__vueComponent = this?._
+      },
+      updated() {
+        this.$el.__vueComponent = this?._
+      }
+    })
+  }
+}
+
 const create = async (config) => {
   const { beforeAppCreate, appCreated } = config.lifeCycles || {}
   if (typeof beforeAppCreate === 'function') {
@@ -63,7 +76,7 @@ const create = async (config) => {
 
   dispatch('canvasReady', { detail: renderer })
 
-  App = createApp(Main).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
+  App = createApp(Main).use(GetComponentByDomNode).use(TinyI18nHost).provide(I18nInjectionKey, TinyI18nHost)
 
   if (typeof appCreated === 'function') {
     await appCreated(App, { api: renderer })

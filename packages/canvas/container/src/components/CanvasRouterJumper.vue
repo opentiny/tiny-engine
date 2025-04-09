@@ -25,10 +25,6 @@ export default {
     hoverState: {
       type: Object,
       default: () => ({})
-    },
-    inactiveHoverState: {
-      type: Object,
-      default: () => ({})
     }
   },
   setup(props) {
@@ -47,21 +43,20 @@ export default {
     }
 
     watch(
-      () => [props.hoverState, props.inactiveHoverState],
-      ([hoverState, inactiveHoverState]) => {
-        const usedHoverState = [hoverState, inactiveHoverState].find(({ componentName }) =>
-          LEGAL_JUMPER_COMPONENT.includes(componentName)
-        )
-
-        if (!usedHoverState) {
+      () => props.hoverState?.componentName,
+      (curHoverComponentName) => {
+        if (!LEGAL_JUMPER_COMPONENT.includes(curHoverComponentName)) {
           state.showRouterJumper = false
           return
         }
-        const { width, left, top, element } = usedHoverState
+
+        const { width, left, top } = props.hoverState.rect
+        const element = props.hoverState.element
+
         state.showRouterJumper = true
         state.left = `${left + width}px`
         state.top = `${top}px`
-        state.targetPageId = element.getAttribute('data-router-target-page-id') || null
+        state.targetPageId = element?.getAttribute?.('data-router-target-page-id') || null
       },
       { deep: true }
     )

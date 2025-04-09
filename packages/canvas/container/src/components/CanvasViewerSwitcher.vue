@@ -47,7 +47,6 @@ import { useBroadcastChannel } from '@vueuse/core'
 import { reactive, ref, watch } from 'vue'
 
 const { BROADCAST_CHANNEL, CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY } = constants
-
 const COMPONENT_WHITELIST = ['RouterView']
 
 export default {
@@ -56,10 +55,6 @@ export default {
   },
   props: {
     hoverState: {
-      type: Object,
-      default: () => ({})
-    },
-    inactiveHoverState: {
       type: Object,
       default: () => ({})
     }
@@ -127,20 +122,28 @@ export default {
     }
 
     watch(
-      () => [props.hoverState, props.inactiveHoverState],
-      ([hoverState, inactiveHoverState]) => {
-        state.usedHoverState = [inactiveHoverState, hoverState].find(
-          ({ componentName, element }) =>
-            COMPONENT_WHITELIST.includes(componentName) &&
-            element.ownerDocument.querySelector('div[data-page-active="true"]')?.contains(element) && // 确保不是已激活的页面上游
-            element.getAttribute('data-page-active') !== 'true' // 确保不是已激活页面自己的页面框
-        )
-
-        if (!state.usedHoverState) {
+      () => props.hoverState,
+      () => {
+        const element = props.hoverState?.element
+        const componentName = props.hoverState?.componentName
+        if (!element) {
           return
         }
 
-        const { width, left, top } = state.usedHoverState
+        const isValid =
+          COMPONENT_WHITELIST.includes(componentName) &&
+          // 确保不是已激活的页面上游
+          element.ownerDocument.querySelector('div[data-page-active="true"]')?.contains(element) &&
+          // 确保不是已激活页面自己的页面框
+          element.getAttribute('data-page-active') !== 'true'
+
+        if (!isValid) {
+          return
+        }
+
+        state.usedHoverState = props.hoverState
+
+        const { width, left, top } = state.usedHoverState.rect
         state.left = `${left + width}px`
         state.top = `${top}px`
       },

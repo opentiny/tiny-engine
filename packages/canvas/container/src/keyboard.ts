@@ -11,10 +11,10 @@
  */
 
 import { useHistory, useCanvas, getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
-import { getCurrent, insertNode, selectNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
+import { getCurrent, insertNode, POSITION, removeNodeById, allowInsert, getConfigure } from './container'
 import { copyObject } from '../../common'
 import { getClipboardSchema, setClipboardSchema } from './utils'
-import { useMultiSelect } from './composables/useMultiSelect'
+import { useHoverNode, useSelectNode } from './interactions'
 
 const KEY_S = 83
 const KEY_Y = 89
@@ -26,35 +26,45 @@ const KEY_DOWN = 40
 const KEY_DEL = 46
 
 function handlerLeft({ parent }) {
-  selectNode(parent?.id)
+  const { selectNodeById } = useSelectNode()
+  selectNodeById(parent?.id)
 }
 function handlerRight({ schema }) {
   const id = schema.children?.[0]?.id
   if (id) {
-    selectNode(id)
+    const { selectNodeById } = useSelectNode()
+    selectNodeById(id)
   }
 }
 function handlerUp({ index, parent }) {
   const id = (parent?.children[index - 1] || parent)?.id
   if (id) {
-    selectNode(id)
+    const { selectNodeById } = useSelectNode()
+    selectNodeById(id)
   }
 }
 function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
   if (id) {
-    selectNode(id)
+    const { selectNodeById } = useSelectNode()
+    selectNodeById(id)
   }
 }
 
-const { multiSelectedStates, clearMultiSelection } = useMultiSelect()
-
 function handlerDelete() {
-  multiSelectedStates.value.forEach(({ id: schemaId }) => {
-    removeNodeById(schemaId)
+  const { selectState, clearSelect } = useSelectNode()
+  const { curHoverState, clearHover } = useHoverNode()
+
+  selectState.value.forEach(({ node }) => {
+    if (node?.id) {
+      removeNodeById(node.id)
+      if (curHoverState.value?.id === node.id) {
+        clearHover()
+      }
+    }
   })
 
-  clearMultiSelection()
+  clearSelect()
 }
 
 const handlerArrow = (keyCode) => {
@@ -104,16 +114,19 @@ const handlerCtrl = (event) => {
 }
 
 const handleClipboardCut = (event) => {
-  const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
+  const { selectState, clearSelect } = useSelectNode()
+  const selectedNodes = selectState.value.filter(({ node }) => node?.id).map(({ node }) => copyObject(node))
   const dataToCut = JSON.stringify(selectedNodes)
 
   if (setClipboardSchema(event, dataToCut)) {
-    multiSelectedStates.value.forEach(({ id }) => {
-      removeNodeById(id)
+    selectState.value.forEach(({ node }) => {
+      if (node?.id) {
+        removeNodeById(node.id)
+      }
     })
   }
 
-  clearMultiSelection()
+  clearSelect()
 }
 
 const handleClipboardPaste = (event) => {
@@ -123,7 +136,8 @@ const handleClipboardPaste = (event) => {
     return
   }
 
-  const lastSelected = multiSelectedStates.value.slice(-1)[0]
+  const { selectState } = useSelectNode()
+  const lastSelected = selectState.value.at(-1)
 
   if (!lastSelected) {
     return
@@ -141,7 +155,8 @@ const handleClipboardPaste = (event) => {
 }
 
 const handleCopyEvent = (event) => {
-  const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
+  const { selectState } = useSelectNode()
+  const selectedNodes = selectState.value.filter(({ node }) => node?.id).map(({ node }) => copyObject(node))
 
   // 如果没有选中任何节点，直接返回
   if (!selectedNodes.length) {
