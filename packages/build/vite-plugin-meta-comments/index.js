@@ -17,7 +17,7 @@ export default function () {
     name: 'vite-plugin-generate-comments',
     enforce: 'pre',
     transform(code, id) {
-      if (id.endsWith('.vue')) {
+      if (id.split('?')[0].endsWith('.vue')) {
         const result = transformSFC(code, id)
         return result
       }
