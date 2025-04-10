@@ -139,6 +139,7 @@ import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 const { OPEN_DELAY } = constants
 
+/* metaComponent: engine.plugins.i18n */
 export default {
   components: {
     TinyPopover: Popover,
@@ -234,6 +235,8 @@ export default {
     })
 
     onMounted(() => {
+      // eslint-disable-next-line no-console
+      console.log('original i18n onMounted')
       currentSearchType.value = i18nSearchTypes[0].value
     })
 
