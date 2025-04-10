@@ -117,13 +117,9 @@ export const generateRegistry = (registry: any) => {
 
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value && !isRef(value)) {
-      const { id } = value
-      // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
-      if (id && key !== 'metaData') {
-        handleRegistryProp(id, value)
-      }
+      handleRegistryProp(key, value)
 
-      generateRegistry(value)
+      // generateRegistry(value)
     }
   })
 }
