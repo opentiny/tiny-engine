@@ -9,13 +9,20 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { META_SERVICE } from '@opentiny/tiny-engine'
-import engineConfig from './engine.config'
-import { HttpService } from './src/composable'
 
 export default {
-  [META_SERVICE.Http]: HttpService,
-  'engine.config': {
-    ...engineConfig,
+  'engine.plugins.i18n': {
+    overwrite: {
+      lifeCycles: {
+        '': {
+          onMounted: [
+            (ctx) => () => {
+              console.log('overWrite i18n onMounted', ctx.i18nSearchTypes, ctx.currentSearchType.value)
+              ctx.currentSearchType.value = ctx.i18nSearchTypes[0].value
+            }
+          ]
+        }
+      }
+    }
   }
 }
