@@ -45,7 +45,7 @@ const statement = (code) => template.statement(code, { placeholderPattern: false
  * @returns {boolean} 是否包含metaService注释
  */
 export const isCallEntryFile = (code) => {
-  return callEntryExp.test(code)
+  return callEntryExp.test(code) || compileExp.test(code)
 }
 
 /**
