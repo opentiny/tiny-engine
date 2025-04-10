@@ -138,6 +138,7 @@ export default {
           element.getAttribute('data-page-active') !== 'true'
 
         if (!isValid) {
+          state.usedHoverState = null
           return
         }
 

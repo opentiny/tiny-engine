@@ -114,32 +114,10 @@ const initialLineState = {
   configure: null
 }
 
-// 鼠标移入画布中元素时的状态
-// export const hoverState = reactive({
-//   ...initialRectState
-// })
-
-// export const inactiveHoverState = reactive({
-//   ...initialRectState
-// })
-
 // 拖拽时的位置状态
 export const lineState = reactive({
   ...initialLineState
 })
-
-// export const clearHover = () => {
-//   Object.assign(hoverState, initialRectState, { slot: null })
-//   Object.assign(inactiveHoverState, initialRectState, { slot: null })
-// }
-
-// export const clearSelect = () => {
-//   canvasState.current = null
-//   canvasState.parent = null
-//   clearMultiSelection()
-//   // 临时借用 remote 事件出发 currentSchema 更新
-//   canvasState?.emit?.('remove')
-// }
 
 const smoothScroll = {
   timmer: undefined as ReturnType<typeof setTimeout> | undefined,
@@ -241,28 +219,6 @@ export const getElement = (element?: Element): Element | undefined => {
 
   return undefined
 }
-
-// export const getInactiveElement = (element?: Element): Element | undefined => {
-//   if (
-//     !element ||
-//     element.nodeType !== 1 ||
-//     // 如果当前元素是body或者html，需要排除
-//     element === element.ownerDocument.body ||
-//     element === element.ownerDocument.documentElement ||
-//     // 如果当前元素是RouterView, 则有可能是激活元素处于非激活元素里面，需要排除
-//     (element.getAttribute(NODE_TAG) === 'RouterView' && element.getAttribute(NODE_UID))
-//   ) {
-//     return undefined
-//   }
-
-//   if (element.getAttribute(NODE_INACTIVE_UID)) {
-//     return element
-//   } else if (element.parentElement) {
-//     return getInactiveElement(element.parentElement)
-//   }
-
-//   return undefined
-// }
 
 export const getRect = (element: Element) => {
   if (element === getDocument().body) {
@@ -393,13 +349,6 @@ export const querySelectById = (id: string) => {
   }
 
   return element
-
-  // const loopId = element?.getAttribute('loop-id')
-  // if (element && loopId) {
-  //   selector = `[${NODE_UID}="${id}"][${NODE_LOOP}="${loopId}"]`
-  //   element = doc.querySelector(selector)
-  // }
-  // return element
 }
 
 export const getCurrentElement = () => querySelectById(getCurrent().schema?.id)
@@ -434,38 +383,6 @@ export const scrollToNode = (element?: Element | null) => {
   return nextTick()
 }
 
-// const setSelectRect = (
-//   id: string,
-//   element?: Element | null,
-//   options?: { type?: string; schema: any; isMultiple: boolean }
-// ) => {
-//   clearHover()
-
-//   const { type, isMultiple = false } = options || {}
-//   const schema = options?.schema || (useCanvas().getNodeWithParentById(id) || {}).node
-//   element = element || querySelectById(id) || getDocument().body
-
-//   const { left, height, top, width } = getRect(element)
-//   const componentName = schema?.componentName || ''
-//   const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
-
-//   return toggleMultiSelection(
-//     {
-//       id,
-//       left,
-//       height,
-//       top,
-//       width,
-//       componentName,
-//       doc: getDocument(),
-//       schema: node,
-//       parent,
-//       type
-//     },
-//     isMultiple
-//   )
-// }
-
 // TODO:
 export const updateRect = () => {
   const { clearHover } = useHoverNode()
@@ -473,25 +390,6 @@ export const updateRect = () => {
   // 滚动的时候，清空 hover
   clearHover()
   updateSelectedRect()
-
-  // id = (typeof id === 'string' && id) || getCurrent().schema?.id
-  // clearHover()
-
-  // // 多选场景直接调用 refreshSelectionState
-  // if (multiSelectedStates.value.length > 1) {
-  //   refreshSelectionState()
-  //   setTimeout(() => refreshSelectionState())
-  //   return
-  // }
-
-  // const selectState = multiSelectedStates.value[0] || initialRectState
-  // const isBodySelected = !selectState.componentName && selectState.width > 0
-
-  // if (id || isBodySelected) {
-  //   setTimeout(() => setSelectRect(id))
-  // } else {
-  //   clearSelect()
-  // }
 }
 
 /**
@@ -608,10 +506,14 @@ const updateLineState = (element?: Element, data?: Node | null) => {
         // 如果容器盒子有子节点，则以最后一个子节点为拖拽参照物
         const lastNode = children[children.length - 1]
         childEle = querySelectById(lastNode.id)
-        const childComponentName = childEle!.getAttribute(NODE_TAG)!
-        const Childconfigure = getConfigure(childComponentName)
-        lineState.id = lastNode.id
-        lineState.configure = Childconfigure
+
+        // 这里有可能查不到，因为 data-uid 属性可能无法传到子组件上面
+        if (childEle) {
+          const childComponentName = childEle!.getAttribute(NODE_TAG)!
+          const Childconfigure = getConfigure(childComponentName)
+          lineState.id = lastNode.id
+          lineState.configure = Childconfigure
+        }
       }
     }
 
@@ -643,69 +545,15 @@ const updateLineState = (element?: Element, data?: Node | null) => {
     useLayout().closePlugin()
   }
 
-  // 设置元素hover状态
-  // Object.assign(hoverState, {
-  //   id,
-  //   width,
-  //   height,
-  //   top,
-  //   left,
-  //   element,
-  //   componentName
-  // })
   return undefined
 }
 
-// const updateHoverRect = (id?: string) => {
-//   const element = querySelectById(id || hoverState.id)
-
-//   if (!element) {
-//     return
-//   }
-
-//   const rect = getRect(element)
-//   const { left, height, top, width } = rect
-
-//   Object.assign(hoverState, {
-//     width,
-//     height,
-//     top,
-//     left
-//   })
-// }
-
-// const setInactiveHoverRect = (element?: Element) => {
-//   if (!element) {
-//     Object.assign(inactiveHoverState, initialRectState, { slot: null })
-//     return
-//   }
-
-//   const componentName = element.getAttribute(NODE_TAG)!
-//   const id = element.getAttribute(NODE_INACTIVE_UID)
-//   const configure = getConfigure(componentName)
-//   const rect = getRect(element)
-//   const { left, height, top, width } = rect
-
-//   inactiveHoverState.configure = configure
-//   // 设置元素hover状态
-//   Object.assign(inactiveHoverState, {
-//     id,
-//     width,
-//     height,
-//     top,
-//     left,
-//     element,
-//     componentName
-//   })
-// }
-
 export const syncNodeScroll = () => {
-  // refreshSelectionState()
   const { updateSelectedRect } = useSelectNode()
   updateSelectedRect()
-  // updateHoverRect()
+
   const { hoverNodeById, curHoverState } = useHoverNode()
-  hoverNodeById(curHoverState.value?.id)
+  hoverNodeById(curHoverState.value?.node?.id)
 }
 
 let moveUpdateTimer: ReturnType<typeof setTimeout> | undefined = undefined
@@ -796,14 +644,6 @@ export const dragMove = (event: DragEvent) => {
 
   dragState.mouse = { x: clientX, y: clientY }
 
-  // 如果仅仅是mouseover事件直接return,并重置拖拽位置状态，优化性能
-  // if (isHover) {
-  //   lineState.position = ''
-  //   setHoverRect(getElement(eventTarget), null)
-  //   setInactiveHoverRect(getInactiveElement(eventTarget))
-  //   return
-  // }
-
   updateLineState(getElement(eventTarget), dragState.data)
 
   if (dragState.draging) {
@@ -817,7 +657,7 @@ export const dragMove = (event: DragEvent) => {
 
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 /**
- * @deprecated 后续废弃，改为使用 selectNodeById
+ * @deprecated 后续废弃，改为使用 useSelectNode().selectNodeById
  * @param {*} id
  * @param {*} type
  * @returns
@@ -826,61 +666,15 @@ export const selectNode = async (id: string, type?: string) => {
   const { selectNodeById } = useSelectNode()
 
   selectNodeById(id, type || '')
-  // const { node } = useCanvas().getNodeWithParentById(id) || {}
-
-  // let element = querySelectById(id)
-
-  // if (element && node) {
-  //   const { rootSelector } = getConfigure(node.componentName)
-  //   element = rootSelector ? element.querySelector(rootSelector) : element
-  // }
-
-  // const nodeIsSelected = setSelectRect(id, element, { isMultiple, type, schema: node })
-
-  // // 执行setSelectRect之后再去判断multiSelectedStates的长度
-  // if (multiSelectedStates.value.length === 1) {
-  //   const { schema: node, parent, type } = multiSelectedStates.value[0]
-  //   const loopId = type?.includes('loop-id') ? type.split('=')[1] : null
-  //   Object.assign(canvasState, {
-  //     loopId,
-  //     current: node,
-  //     parent
-  //   })
-  // } else {
-  //   // 没有选中或者有多选，则重置canvasState部份数据
-  //   Object.assign(canvasState, {
-  //     loopId: null,
-  //     current: null,
-  //     parent: null
-  //   })
-  // }
-
-  // if (nodeIsSelected) {
-  //   await scrollToNode(element)
-  // }
-
-  // if (multiSelectedStates.value.length === 1) {
-  //   const { schema: node, parent, type, id } = multiSelectedStates.value[0]
-  //   canvasState.emit('selected', node, parent, type, id)
-  //   return node
-  // } else {
-  //   canvasState.emit('selected')
-  //   return null
-  // }
 }
 
 /**
- * @deprecated 后续废弃，改为使用 hoverNodeById
+ * @deprecated 后续废弃，改为使用 useHoverNode().hoverNodeById
  * @param {*} id
- * @param {*} data
  */
 export const hoverNode = (id: string) => {
   const { hoverNodeById } = useHoverNode()
   hoverNodeById(id)
-  // const element = querySelectById(id)
-  // if (element) {
-  //   setHoverRect(element, data)
-  // }
 }
 
 export const insertNode = (
@@ -912,10 +706,10 @@ export const insertNode = (
     }
   }
 
-  const { selectNodeById } = useSelectNode()
-
   if (select) {
-    setTimeout(() => selectNodeById(node.data.id))
+    const { selectNodeById } = useSelectNode()
+    // TODO: 这里延时100ms 再选中，确保画布已经更新，后续可以尝试监听画布事件，画布发出来更新完成事件
+    setTimeout(() => selectNodeById(node.data.id, ''), 100)
   }
 
   getController().addHistory()
@@ -1034,22 +828,22 @@ export const canvasApi = {
   dragMove,
   setLocales,
   getRenderer,
-  clearSelect: (...args) => {
+  clearSelect: () => {
     const { clearSelect } = useSelectNode()
 
-    return clearSelect(...args)
+    return clearSelect()
   },
-  selectNodeById: (...args) => {
+  selectNodeById: (id: string, type: string) => {
     const { selectNodeById } = useSelectNode()
 
-    return selectNodeById(...args)
+    return selectNodeById(id, type)
   },
   selectNode,
   hoverNode,
-  hoverNodeById: (...args) => {
+  hoverNodeById: (id: string) => {
     const { hoverNodeById } = useHoverNode()
 
-    return hoverNodeById(...args)
+    return hoverNodeById(id)
   },
   insertNode,
   removeNode,

@@ -58,7 +58,7 @@ function handlerDelete() {
   selectState.value.forEach(({ node }) => {
     if (node?.id) {
       removeNodeById(node.id)
-      if (curHoverState.value?.id === node.id) {
+      if (curHoverState.value?.node?.id === node.id) {
         clearHover()
       }
     }
@@ -143,7 +143,7 @@ const handleClipboardPaste = (event) => {
     return
   }
 
-  const { schema, parent } = lastSelected
+  const { node: schema, parent } = useCanvas().getNodeWithParentById(lastSelected.node?.id) || {}
 
   nodeList.forEach((node) => {
     if (node?.componentName && schema?.componentName && allowInsert(getConfigure(schema.componentName), node)) {

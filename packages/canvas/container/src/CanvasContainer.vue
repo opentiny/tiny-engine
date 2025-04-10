@@ -122,12 +122,13 @@ export default {
       const { clientX, clientY } = event
       closeMenu()
       await updateSelectedNode(event)
-      const node = selectState.value.node
+      // TODO: 需要支持多选状态下的拖拽逻辑
+      const node = selectState.value[0]?.node
 
       if (node) {
-        const element = selectState.value.element
+        const element = selectState.value[0]?.element
         if (event.button === 0 && element !== element?.ownerDocument?.body) {
-          const { left: x, top: y } = selectState.value.rect
+          const { left: x, top: y } = selectState.value[0]?.rect || {}
           dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
         }
 
@@ -251,6 +252,9 @@ export default {
           handleCanvasEvent(() => {
             // 更新当前鼠标 hover 的节点
             updateHoverNode(ev)
+            // 清空拖拽线条
+            lineState.position = ''
+            lineState.width = 0
           })
         })
 
@@ -321,7 +325,6 @@ export default {
     return {
       iframe,
       dragState,
-      // hoverState,
       computedSelectState,
       lineState,
       multiStateLength,

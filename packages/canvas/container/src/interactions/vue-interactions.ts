@@ -60,10 +60,6 @@ const curHoverState = ref<HoverOrSelectState>({
   rect: { ...initialHoverState.rect }
 })
 
-// const selectState = ref({
-//   ...initialHoverState,
-//   rect: { ...initialHoverState.rect }
-// })
 const selectState = ref<HoverOrSelectState[]>([])
 
 const clearHover = () => commonClearHover(curHoverState)
