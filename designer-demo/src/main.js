@@ -11,6 +11,7 @@
  */
 import { defineEntry } from '@opentiny/tiny-engine-meta-register'
 import { configurators } from './configurators/'
+import registry from '../registry'
 
 import 'virtual:svg-icons-register'
 
@@ -18,8 +19,8 @@ async function startApp() {
   // 这里模拟临时的 hotfix 注册表
   const hotfixRegistry = await import('http://localhost:8090/hotfixRegistry.js')
   // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
-  defineEntry(hotfixRegistry.default)
-  const registry = await import('../registry')
+  defineEntry(Object.assign(registry, hotfixRegistry.default))
+  // const registry = await import('../registry')
   const { init } = await import('@opentiny/tiny-engine')
 
   init({
