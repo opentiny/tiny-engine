@@ -17,8 +17,9 @@ export default {
         '': {
           onMounted: [
             (ctx) => () => {
-              console.log('overWrite i18n onMounted', ctx.i18nSearchTypes, ctx.currentSearchType.value)
-              ctx.currentSearchType.value = ctx.i18nSearchTypes[0].value
+              const { i18nSearchTypes, currentSearchType } = ctx()
+              console.log('overWrite i18n onMounted', i18nSearchTypes, currentSearchType.value)
+              currentSearchType.value = i18nSearchTypes[0].value
             }
           ]
         }
