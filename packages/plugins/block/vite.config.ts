@@ -32,7 +32,7 @@ export default defineConfig({
       output: {
         banner: 'import "./style.css"'
       },
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, '@vue/shared', 'html2canvas', 'pinyin-pro']
     }
   }
 })

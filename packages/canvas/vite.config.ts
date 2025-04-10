@@ -52,7 +52,19 @@ export default defineConfig({
           return ''
         }
       },
-      external: ['vue', '@vueuse/core', 'vue-i18n', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: [
+        'vue',
+        '@vueuse/core',
+        'vue-i18n',
+        /@opentiny\/tiny-engine.*/,
+        /@opentiny\/vue.*/,
+        /^@babel.*/,
+        /^@vue.*/,
+        'diff-match-patch',
+        'jsondiffpatch',
+        'postcss',
+        'postcss-selector-parser'
+      ]
     },
     minify: true
   }

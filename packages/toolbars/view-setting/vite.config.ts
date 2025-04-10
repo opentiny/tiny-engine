@@ -30,7 +30,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, '@vueuse/core']
     }
   }
 })
