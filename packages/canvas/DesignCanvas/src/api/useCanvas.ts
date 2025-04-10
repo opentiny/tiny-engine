@@ -584,6 +584,7 @@ const importSchema = (data: any) => {
 
   // JSON 格式校验
   resetCanvasState({
+    ...pageState,
     pageSchema: importData
   })
 }
