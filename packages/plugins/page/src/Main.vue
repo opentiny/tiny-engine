@@ -62,6 +62,7 @@ export const api = {
   openPageSettingPanel
 }
 
+/* metaComponent: engine.plugins.page */
 export default {
   components: {
     PageSetting,

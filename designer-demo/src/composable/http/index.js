@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
-import { HttpService } from '@opentiny/tiny-engine'
+import { HttpService } from '@opentiny/tiny-engine-common'
+// import { HttpService } from '@opentiny/tiny-engine'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
 import Login from './Login.vue'
