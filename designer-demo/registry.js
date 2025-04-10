@@ -9,13 +9,22 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { META_SERVICE } from '@opentiny/tiny-engine'
+import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+// import { META_SERVICE } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
+import templateSetting from './src/template/setting.vue'
 
 export default {
   [META_SERVICE.Http]: HttpService,
   'engine.config': {
-    ...engineConfig,
+    ...engineConfig
+  },
+  'engine.plugins.page': {
+    overwrite: {
+      templates: {
+        PageSetting: templateSetting
+      }
+    }
   }
 }
