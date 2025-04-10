@@ -10,6 +10,8 @@
  *
  */
 
+/* metaService: engine.setting.event */
+
 export const commonEvents = {
   onClick: {
     label: {

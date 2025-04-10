@@ -112,6 +112,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { ref, onMounted, watchEffect } from 'vue'
 import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'

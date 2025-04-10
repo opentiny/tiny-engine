@@ -78,6 +78,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.engine.plugins.appmanage */
 import { ref, computed, watchEffect, reactive } from 'vue'
 import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
 import { iconFile } from '@opentiny/vue-icon'
