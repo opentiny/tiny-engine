@@ -130,6 +130,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService */
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
@@ -148,7 +149,6 @@ import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { BASE_URL } from '@opentiny/tiny-engine-common/js/environments'
 const { OPEN_DELAY } = constants
 
-/* metaComponent: engine.plugins.i18n */
 export default {
   components: {
     TinyPopover: Popover,
