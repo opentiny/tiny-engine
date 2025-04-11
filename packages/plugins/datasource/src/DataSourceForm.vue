@@ -36,6 +36,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.collections */
 import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'

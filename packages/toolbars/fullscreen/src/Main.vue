@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 

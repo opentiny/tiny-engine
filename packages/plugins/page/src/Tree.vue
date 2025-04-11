@@ -39,6 +39,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.engine.plugins.appmanage */
 import { computed, defineEmits, defineProps, ref } from 'vue'
 import LayerLines from './LayerLines.vue'
 

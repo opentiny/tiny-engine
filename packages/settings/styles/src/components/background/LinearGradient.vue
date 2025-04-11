@@ -49,6 +49,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles */
 import { ref, reactive, defineProps, defineEmits, onMounted } from 'vue'
 import BackgroundImageGradient from './BackgroundImageGradient.vue'
 import InputSelect from '../inputs/InputSelect.vue'

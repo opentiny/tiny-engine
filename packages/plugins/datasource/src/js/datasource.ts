@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.collections */
 import axios from 'axios'
 import { useResource } from '@opentiny/tiny-engine-meta-register'
 import { isMock } from '@opentiny/tiny-engine-common/js/environments'

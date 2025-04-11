@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage */
 import { reactive } from 'vue'
 
 export default {

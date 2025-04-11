@@ -25,6 +25,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles */
 import { reactive, onMounted } from 'vue'
 import { Tooltip, Checkbox } from '@opentiny/vue'
 import { ColorConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'

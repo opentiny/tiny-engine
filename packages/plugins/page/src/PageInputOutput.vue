@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.engine.plugins.appmanage */
 import { ref, watchEffect, computed } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'

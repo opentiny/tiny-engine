@@ -37,7 +37,7 @@ const { guid } = utils
 const defaultLifeCycles = {
   beforeAppCreate: ({ registry }) => {
     // 合并用户自定义注册表
-    mergeRegistry(defaultRegistry, registry)
+    mergeRegistry(defaultRegistry, ...(Array.isArray(registry) ? registry : [registry]))
 
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const config = getMergeMeta('engine.config')
@@ -125,7 +125,7 @@ const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
 
 export const init = async ({
   selector = '#app',
-  registry = defaultRegistry,
+  registry = [],
   lifeCycles = {},
   configurators = {},
   createAppSignal = [],

@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections */
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {

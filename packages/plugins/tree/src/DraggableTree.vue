@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.outlinetree */
 import { computed, defineEmits, defineProps, reactive, ref } from 'vue'
 
 const props = defineProps({
