@@ -13,6 +13,22 @@
 export default {
   'engine.plugins.i18n': {
     overwrite: {
+      methods: {
+        '': {
+          openEditor: (ctx) => (_event, row) => {
+            const { isEditMode, editingRow, i18nTable, langList, getActiveRow, utils } = ctx()
+            isEditMode.value = Boolean(row.key)
+            editingRow.value = row
+            if (!isEditMode.value) {
+              row.key = `custom.${utils.guid()}`
+              langList.value.unshift(row)
+            }
+            i18nTable.value.setActiveRow(row).then(() => {
+              getActiveRow()
+            })
+          }
+        }
+      },
       lifeCycles: {
         '': {
           onMounted: [
