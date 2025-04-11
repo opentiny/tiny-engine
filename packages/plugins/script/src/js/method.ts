@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.pagecontroller */
 import { ref, reactive, onActivated, nextTick, watch } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'

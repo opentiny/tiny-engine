@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections */
 import { inject } from 'vue'
 import { Numeric, FormItem } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'

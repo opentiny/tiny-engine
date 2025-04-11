@@ -34,6 +34,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.event */
 import { reactive, ref, defineProps, defineEmits } from 'vue'
 import {
   Input as TinyInput,

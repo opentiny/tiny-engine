@@ -6,6 +6,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService */
 import { ref, watch } from 'vue'
 import { useCanvas, useLayout, useModal } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'

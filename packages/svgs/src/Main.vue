@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { computed, defineComponent } from 'vue'
 
 export default defineComponent({

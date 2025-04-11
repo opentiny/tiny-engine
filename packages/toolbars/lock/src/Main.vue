@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'

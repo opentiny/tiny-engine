@@ -21,6 +21,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props */
 import { ref, watchEffect } from 'vue'
 import { Numeric, Select } from '@opentiny/vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'

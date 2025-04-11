@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService */
+/* metaService: engine.service.block */
 import { ref, reactive, readonly, type DeepReadonly, toRaw } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'

@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 export default {

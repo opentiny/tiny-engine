@@ -113,6 +113,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage */
 import { computed, ref, watch } from 'vue'
 import {
   Input as TinyInput,

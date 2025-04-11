@@ -161,3 +161,63 @@ export const afterCallEntry = ({ metaData, ctx }) => {
     customMethod(ctx)
   }
 }
+
+const FILE_TYPE = {
+  JS: 'js',
+  JSON: 'json'
+}
+
+async function checkFileType(url: string) {
+  try {
+    const res = await fetch(url, { method: 'HEAD' })
+    const contentType = res.headers.get('content-type')
+
+    if (contentType?.includes(FILE_TYPE.JS)) {
+      return 'js'
+    }
+
+    if (contentType?.includes(FILE_TYPE.JSON)) {
+      return 'json'
+    }
+
+    return 'unknown'
+  } catch (error) {
+    throw new Error('[hotfix registry] file type check failed, source file is not a valid js or json file')
+  }
+}
+
+export const fetchHotfixRegistry = async (url: string): Promise<any> => {
+  try {
+    const fileType = await checkFileType(url)
+    let registry = null
+
+    if (fileType === FILE_TYPE.JS) {
+      const res = await import(/* @vite-ignore */ url)
+      registry = res.default
+    } else if (fileType === FILE_TYPE.JSON) {
+      registry = await fetch(url).then((res) => res.json())
+    }
+    return registry
+  } catch (error) {
+    throw new Error('[hotfix registry] fetch registry failed, please check the url is valid')
+  }
+}
+
+export const tryGetAndDefineHotfixRegistry = async ({
+  url,
+  request = fetchHotfixRegistry
+}: {
+  url: string
+  request?: typeof fetchHotfixRegistry
+}) => {
+  try {
+    const registry = await request(url)
+
+    if (registry) {
+      defineEntry(registry)
+      return registry
+    }
+  } catch (error) {
+    throw new Error('[hotfix registry] define registry failed, please check the url is valid')
+  }
+}

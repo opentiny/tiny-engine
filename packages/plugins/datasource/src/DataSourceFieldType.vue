@@ -21,6 +21,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections */
 import { reactive, ref } from 'vue'
 import { iconArrowDown } from '@opentiny/vue-icon'
 import fieldTypes from './config'
