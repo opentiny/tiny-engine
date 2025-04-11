@@ -15,9 +15,14 @@ import registry from '../registry'
 
 import 'virtual:svg-icons-register'
 
+const fetchHotfixRegistry = async (url) => {
+  const response = await import(/* @vite-ignore */ url)
+  return response.default
+}
+
 async function startApp() {
   // 这里模拟临时的 hotfix 注册表，会根据配置的接口读取 registry并 执行 defineEntry，因为 overWrite 的逻辑需要提前读取
-  const hotfixRegistry = (await tryGetAndDefineHotfixRegistry({ url: 'http://localhost:8090/hotfixRegistry.js' })) || {}
+  const hotfixRegistry = (await tryGetAndDefineHotfixRegistry({ url: 'http://localhost:8090/hotfixRegistry.js', request: fetchHotfixRegistry })) || {}
 
   // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
   defineEntry(registry)
