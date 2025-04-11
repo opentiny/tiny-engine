@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

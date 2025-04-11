@@ -42,6 +42,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService */
 import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, usePage, useHelp, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'

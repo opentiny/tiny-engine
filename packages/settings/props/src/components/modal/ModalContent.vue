@@ -17,6 +17,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props */
 import { computed } from 'vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useResource } from '@opentiny/tiny-engine-meta-register'

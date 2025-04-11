@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections */
 import { onMounted, reactive, ref } from 'vue'
 import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'

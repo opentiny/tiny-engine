@@ -20,7 +20,7 @@ import App from './App.vue'
 export const initPreview = ({ registry, lifeCycles = {} }) => {
   const { beforeAppCreate } = lifeCycles
 
-  mergeRegistry(defaultRegistry, registry)
+  mergeRegistry(defaultRegistry, ...(Array.isArray(registry) ? registry : [registry]))
   beforeAppCreate?.()
 
   initServices()

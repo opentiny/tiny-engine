@@ -100,34 +100,36 @@ const genDefaultHashMap = (registry: any) => {
   })
 }
 
-export const mergeRegistry = (defaultRegistry: Record<string, any>, registry: Record<string, any>) => {
-  if (!registry || Object.prototype.toString.call(registry) !== '[object Object]') {
-    return
-  }
-
+export const mergeRegistry = (defaultRegistry: Record<string, any>, ...registry: Record<string, any>[]) => {
   // 默认的注册表，生成默认的 metaHashMap
   genDefaultHashMap(defaultRegistry)
 
-  Object.entries(registry).forEach(([key, value]) => {
-    const defaultRegistryItem = metaHashMap.get(key)
-    // 删除默认插件
-    if (defaultRegistryItem && !value) {
-      metaHashMap.delete(key)
+  registry.forEach((item) => {
+    if (!item || Object.prototype.toString.call(item) !== '[object Object]') {
       return
     }
 
-    // 新增插件
-    if (!defaultRegistryItem && value) {
-      metaHashMap.set(key, value)
-      registryApiAndOptionsMap(key, value)
-      return
-    }
+    Object.entries(item).forEach(([key, value]) => {
+      const defaultRegistryItem = metaHashMap.get(key)
+      // 删除默认插件
+      if (defaultRegistryItem && !value) {
+        metaHashMap.delete(key)
+        return
+      }
 
-    // 配置插件
-    if (defaultRegistryItem && value) {
-      const mergedRegistryItem = merge({}, defaultRegistryItem, value)
-      metaHashMap.set(key, mergedRegistryItem)
-      registryApiAndOptionsMap(key, mergedRegistryItem)
-    }
+      // 新增插件
+      if (!defaultRegistryItem && value) {
+        metaHashMap.set(key, value)
+        registryApiAndOptionsMap(key, value)
+        return
+      }
+
+      // 配置插件
+      if (defaultRegistryItem && value) {
+        const mergedRegistryItem = merge({}, defaultRegistryItem, value)
+        metaHashMap.set(key, mergedRegistryItem)
+        registryApiAndOptionsMap(key, mergedRegistryItem)
+      }
+    })
   })
 }
