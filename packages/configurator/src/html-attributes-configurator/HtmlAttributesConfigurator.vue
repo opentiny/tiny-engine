@@ -226,9 +226,10 @@ export default {
 }
 
 .attr-form {
-  padding: 0 10px 10px;
+  display: flex;
+  flex-direction: column;
   .icon-close {
-    float: right;
+    align-self: flex-end;
     margin: 10px 0;
   }
   .footer {
