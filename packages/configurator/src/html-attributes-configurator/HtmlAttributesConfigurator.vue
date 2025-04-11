@@ -226,14 +226,21 @@ export default {
 }
 
 .attr-form {
-  padding: 0 10px 10px;
+  // padding: 0 10px 10px;
+  padding-top: 10px;
   .icon-close {
-    float: right;
-    margin: 10px 0;
+    position: absolute;
+    right: 10px;
+    top: 10px;
   }
   .footer {
     width: 100%;
     text-align: center;
+    // display: flex;
+    // justify-content: space-between;
+  }
+  :deep(.tiny-form-item) {
+    // display: flex;
   }
 }
 
