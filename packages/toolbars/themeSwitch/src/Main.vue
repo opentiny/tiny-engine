@@ -39,6 +39,7 @@
 </template>
 
 <script>
+/* metaService */
 import { computed, ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyRadioGroup, TinyPopover } from '@opentiny/vue'

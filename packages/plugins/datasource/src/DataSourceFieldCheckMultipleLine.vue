@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections */
 import { inject } from 'vue'
 import { Radio, FormItem } from '@opentiny/vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'

@@ -5,6 +5,7 @@
   </div>
 </template>
 <script lang="ts">
+/* metaService: engine.plugins.state */
 import { CloseIcon } from '@opentiny/tiny-engine-common'
 export default {
   props: {

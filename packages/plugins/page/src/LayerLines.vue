@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.engine.plugins.appmanage */
 import { defineProps } from 'vue'
 
 defineProps({
