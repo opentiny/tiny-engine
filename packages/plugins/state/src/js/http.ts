@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.state */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 状态管理 —— 更新全局变量

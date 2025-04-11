@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
 import {
   useBlock,

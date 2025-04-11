@@ -86,6 +86,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.blockmanage */
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import {

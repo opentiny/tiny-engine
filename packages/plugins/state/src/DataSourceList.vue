@@ -21,6 +21,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.state */
 import { computed } from 'vue'
 import { useModal, useResource } from '@opentiny/tiny-engine-meta-register'
 import { findExpressionInAppSchema } from '@opentiny/tiny-engine-common/js/ast'

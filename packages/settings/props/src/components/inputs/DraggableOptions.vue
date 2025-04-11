@@ -13,6 +13,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props */
 import { reactive, watchEffect, ref, computed } from 'vue'
 import {
   IconDel,
