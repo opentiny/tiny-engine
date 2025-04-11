@@ -1,7 +1,9 @@
 import { expect, describe, it } from 'vitest'
-import { mergeRegistry, defineEntry } from '../src/entryHash'
+import { mergeRegistry } from '../src/common'
+import { defineEntry } from '../src/entryHash'
 import { getMergeMeta } from '../src/common'
 
+// TODO: 测试用例需要更新
 // run this test suite in parallel
 describe.concurrent('mergeRegistry', () => {
   const defaultRegistry = {

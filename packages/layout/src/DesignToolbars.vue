@@ -47,6 +47,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.layout */
 import { reactive } from 'vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'

@@ -4,6 +4,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import {
   useMaterial,
   useCanvas,

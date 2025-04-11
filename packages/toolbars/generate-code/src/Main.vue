@@ -14,6 +14,7 @@
 </template>
 
 <script lang="ts">
+/* metaService */
 import { reactive } from 'vue'
 import {
   useBlock,
