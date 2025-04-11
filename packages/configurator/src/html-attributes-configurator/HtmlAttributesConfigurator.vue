@@ -226,7 +226,6 @@ export default {
 }
 
 .attr-form {
-  // padding: 0 10px 10px;
   padding-top: 10px;
   .icon-close {
     position: absolute;
@@ -236,11 +235,6 @@ export default {
   .footer {
     width: 100%;
     text-align: center;
-    // display: flex;
-    // justify-content: space-between;
-  }
-  :deep(.tiny-form-item) {
-    // display: flex;
   }
 }
 
