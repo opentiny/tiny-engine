@@ -10,7 +10,6 @@
  *
  */
 
-/* metaService: engine.plugins.robot */
 import { reactive } from 'vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 

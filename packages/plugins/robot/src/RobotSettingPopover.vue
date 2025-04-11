@@ -27,7 +27,6 @@
   </div>
 </template>
 <script lang="ts">
-/* metaService: engine.plugins.robot */
 import { ref, reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinySelect, TinyTooltip } from '@opentiny/vue'
 import { AIModelOptions } from './js/robotSetting'
