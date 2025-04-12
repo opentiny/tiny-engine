@@ -67,7 +67,7 @@ export const getMergeMetaByType = (type: string) => {
 }
 
 export const getAllMergeMeta = () => {
-  return metaHashMap.values()
+  return Array.from(metaHashMap.values())
 }
 
 const registryApiAndOptionsMap = (id: string, value: any) => {
