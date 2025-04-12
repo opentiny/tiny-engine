@@ -15,21 +15,17 @@
         :class="{
           'list-item': true,
           'first-item': index === 0,
-          active: item.id === renderPanel,
+          active: getMergeMeta(item)?.id === renderPanel,
           prev: state.prevIdex - 1 === index
         }"
-        :title="item.title"
-        @click="clickMenu({ item, index })"
+        :title="getMergeMeta(item)?.title"
+        @click="clickMenu({ item: getMergeMeta(item), index })"
         @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftTop)"
       >
-        <div v-if="getPluginShown(item.id)">
+        <div v-if="getPluginShown(getMergeMeta(item)?.id)">
           <span class="item-icon">
-            <svg-icon
-              v-if="typeof iconComponents[item.id] === 'string'"
-              :name="iconComponents[item.id]"
-              class="panel-icon"
-            ></svg-icon>
-            <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+            <svg-icon v-if="getMergeMeta(item)?.icon" :name="getMergeMeta(item)?.icon" class="panel-icon"></svg-icon>
+            <component v-else :is="getMergeMeta(item)?.icon" class="panel-icon"></component>
           </span>
         </div>
       </div>
@@ -50,21 +46,25 @@
           :key="index"
           :class="[
             'list-item',
-            { active: renderPanel === item.id, prev: state.prevIdex - 1 === index, 'first-item': index === 0 }
+            {
+              active: renderPanel === getMergeMeta(item)?.id,
+              prev: state.prevIdex - 1 === index,
+              'first-item': index === 0
+            }
           ]"
-          :title="item.title"
-          @click="clickMenu({ item, index })"
+          :title="getMergeMeta(item)?.title"
+          @click="clickMenu({ item: getMergeMeta(item), index })"
           @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.leftBottom)"
         >
-          <div :class="{ 'is-show': renderPanel }" v-if="getPluginShown(item.id)">
+          <div :class="{ 'is-show': renderPanel }" v-if="getPluginShown(getMergeMeta(item)?.id)">
             <span class="item-icon">
               <public-icon
-                v-if="typeof iconComponents[item.id] === 'string'"
-                :name="iconComponents[item.id]"
+                v-if="typeof getMergeMeta(item)?.icon === 'string'"
+                :name="getMergeMeta(item)?.icon"
                 class="panel-icon"
                 svgClass="panel-svg"
               ></public-icon>
-              <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+              <component v-else :is="getMergeMeta(item)?.icon" class="panel-icon"></component>
             </span>
           </div>
         </div>
@@ -75,7 +75,7 @@
   <div :class="{ 'not-selected': getMoveDragBarState() }">
     <!-- 插件面板 -->
     <div
-      v-show="renderPanel && components[renderPanel]"
+      v-show="renderPanel && getMergeMeta(renderPanel)?.entry"
       id="tiny-engine-left-panel"
       :class="[renderPanel, { 'is-fixed': leftFixedPanelsStorage.includes(renderPanel) }]"
     >
@@ -83,7 +83,7 @@
         <keep-alive>
           <component
             ref="pluginRef"
-            :is="currentComponent"
+            :is="getMergeMeta(renderPanel)?.entry"
             :fixed-panels="leftFixedPanelsStorage"
             @close="close"
             @fixPanel="fixPanel"
@@ -106,7 +106,7 @@
 import { reactive, ref, watch, computed } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
-import { useLayout, usePage, META_APP } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, usePage, META_APP, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { PublicIcon, PluginRightMenu } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -147,7 +147,7 @@ export default {
       getMoveDragBarState,
       isSameSide,
       dragPluginLayout,
-      getPluginsByPosition
+      getFinalLayoutConfig
     } = useLayout()
 
     const rightMenu = ref(null)
@@ -161,8 +161,8 @@ export default {
 
     const state = reactive({
       prevIdex: -2,
-      topNavLists: getPluginsByPosition(PLUGIN_POSITION.leftTop, props.pluginList),
-      bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
+      topNavLists: getFinalLayoutConfig().plugins.top,
+      bottomNavLists: getFinalLayoutConfig().plugins.bottom
     })
 
     const changeAlign = (pluginId) => {
@@ -272,7 +272,8 @@ export default {
       pluginState,
       components,
       getMoveDragBarState,
-      iconComponents
+      iconComponents,
+      getMergeMeta
     }
   }
 }
