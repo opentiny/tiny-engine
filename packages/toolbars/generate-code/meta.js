@@ -7,5 +7,11 @@ export default {
       default: 'flow-download'
     },
     renderType: 'button'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'right',
+    group: 3,
+    order: 1
   }
 }

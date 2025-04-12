@@ -8,5 +8,11 @@ export default {
     },
     renderType: 'slot',
     collapsed: true
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'collapse',
+    group: 1,
+    order: 1
   }
 }

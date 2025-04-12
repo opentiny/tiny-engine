@@ -5,5 +5,10 @@ export default {
   icon: 'plugin-icon-page-schema',
   align: 'leftBottom',
   widthResizable: true,
-  width: 600
+  width: 600,
+  layoutConfig: {
+    region: 'left',
+    position: 'bottom',
+    order: 1
+  }
 }

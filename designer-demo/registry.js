@@ -14,6 +14,7 @@ import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import templateSetting from './src/template/setting.vue'
+import scriptPlugin from './src/plugins/script'
 
 export default {
   [META_SERVICE.Http]: HttpService,
@@ -25,6 +26,25 @@ export default {
       templates: {
         PageSetting: templateSetting
       }
+    }
+  },
+  // 配置 false 隐藏工具栏清空按钮
+  'engine.toolbars.clean': false,
+  // 配置 false 隐藏大纲树
+  'engine.plugins.outlinetree': false,
+  // 替换整个页面JS插件
+  'engine.plugins.pagecontroller': scriptPlugin,
+  // 调整插件顺序
+  'engine.plugins.materials': {
+    layoutConfig: {
+      order: 10
+    }
+  },
+  // 调整插件上下位置
+  'engine.plugins.schema': {
+    layoutConfig: {
+      position: 'top',
+      order: 11
     }
   }
 }

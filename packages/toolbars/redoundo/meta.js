@@ -8,5 +8,11 @@ export default {
       redo: 'redo'
     },
     renderType: 'slot'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'right',
+    order: 2,
+    group: 1
   }
 }

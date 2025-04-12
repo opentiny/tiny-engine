@@ -4,5 +4,11 @@ export default {
   title: 'themeSwitch',
   options: {
     renderType: 'icon'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'right',
+    order: 1,
+    group: 1
   }
 }

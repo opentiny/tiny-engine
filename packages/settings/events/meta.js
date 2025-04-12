@@ -4,5 +4,10 @@ export default {
   type: 'setting',
   align: 'rightTop',
   name: 'event',
-  icon: 'target'
+  icon: 'target',
+  layoutConfig: {
+    region: 'right',
+    position: 'top',
+    order: 3
+  }
 }

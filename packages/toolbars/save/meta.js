@@ -7,5 +7,11 @@ export default {
       default: 'save'
     },
     renderType: 'button'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'right',
+    order: 2,
+    group: 3
   }
 }

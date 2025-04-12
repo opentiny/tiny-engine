@@ -1,38 +1,20 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <component
-        :is="getMergeMeta(comp).entry"
-        v-for="comp in state.leftBar"
-        :key="comp"
-        :options="getMergeMeta(comp).options"
-      ></component>
+      <component :is="comp.entry" v-for="comp in toolbars.left" :key="comp" :options="comp.options"></component>
     </div>
     <div class="toolbar-center">
-      <component
-        :is="getMergeMeta(comp).entry"
-        v-for="comp in state.centerBar"
-        :key="comp"
-        :options="getMergeMeta(comp).options"
-      ></component>
+      <component :is="comp.entry" v-for="comp in toolbars.center" :key="comp" :options="comp.options"></component>
     </div>
     <div class="toolbar-right">
       <div class="toolbar-right-content">
-        <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
+        <div class="toolbar-right-item" v-for="(item, idx) in toolbars.right" :key="idx">
           <div v-if="typeof item === 'string'">
-            <component
-              :is="getMergeMeta(item)?.entry"
-              :options="getMergeMeta(item)?.options"
-              position="right"
-            ></component>
+            <component :is="item?.entry" :options="item?.options" position="right"></component>
           </div>
           <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
             <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
-              <component
-                :is="getMergeMeta(comp)?.entry"
-                :options="getMergeMeta(comp)?.options"
-                position="right"
-              ></component>
+              <component :is="comp?.entry" :options="comp?.options" position="right"></component>
             </div>
             <span class="toolbar-right-line" v-if="layoutRegistry.options?.isShowLine">|</span>
           </div>
@@ -48,8 +30,8 @@
 
 <script lang="ts">
 /* metaService: engine.layout */
-import { reactive } from 'vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { reactive, computed } from 'vue'
+import { getMergeMeta, useLayout } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 
 export default {
@@ -63,6 +45,19 @@ export default {
     }
   },
   setup(props) {
+    const { getPluginsByRegionAndPosition } = useLayout()
+
+    const toolbars = computed(() => {
+      const left = getPluginsByRegionAndPosition('top', 'left')
+      const right = getPluginsByRegionAndPosition('top', 'right')
+      const center = getPluginsByRegionAndPosition('top', 'center')
+
+      return {
+        left,
+        right,
+        center
+      }
+    })
     const state = reactive({
       leftBar: props.layoutRegistry?.options?.toolbars?.left,
       rightBar: props.layoutRegistry?.options?.toolbars?.right,
@@ -72,7 +67,8 @@ export default {
 
     return {
       getMergeMeta,
-      state
+      state,
+      toolbars
     }
   }
 }

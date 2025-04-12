@@ -14,7 +14,7 @@
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getAllMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
@@ -214,7 +214,36 @@ export default () => {
   }
 
   const getPluginsByPosition = (position, pluginList) => {
-    return getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
+    const res = getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
+    return res
+  }
+
+  const sortByOrder = (plugins) => {
+    return plugins.sort((a, b) => a.layoutConfig.order - b.layoutConfig.order)
+  }
+
+  const getPluginsByRegionAndPosition = (region, position) => {
+    const res = getAllMergeMeta().filter(
+      (item) => item.layoutConfig?.region === region && item.layoutConfig?.position === position
+    )
+
+    const containGroups = res.some((item) => Object.keys(item.layoutConfig).includes('group'))
+
+    if (containGroups) {
+      let groups = {}
+
+      res.forEach((item) => {
+        if (groups[item.layoutConfig.group]) {
+          groups[item.layoutConfig.group].push(item)
+        } else {
+          groups[item.layoutConfig.group] = [item]
+        }
+      })
+
+      return Object.values(groups).map((group) => sortByOrder(group))
+    }
+
+    return sortByOrder(res)
   }
 
   // 修改某个插件的布局
@@ -346,6 +375,7 @@ export default () => {
     changeMenuShown,
     getMoveDragBarState,
     changeMoveDragBarState,
-    getPluginsByPosition
+    getPluginsByPosition,
+    getPluginsByRegionAndPosition
   }
 }

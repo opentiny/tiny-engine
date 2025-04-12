@@ -147,7 +147,7 @@ export default {
       getMoveDragBarState,
       isSameSide,
       dragPluginLayout,
-      getPluginsByPosition
+      getPluginsByRegionAndPosition
     } = useLayout()
 
     const rightMenu = ref(null)
@@ -161,9 +161,12 @@ export default {
 
     const state = reactive({
       prevIdex: -2,
-      topNavLists: getPluginsByPosition(PLUGIN_POSITION.leftTop, props.pluginList),
-      bottomNavLists: getPluginsByPosition(PLUGIN_POSITION.leftBottom, props.pluginList)
+      topNavLists: getPluginsByRegionAndPosition('left', 'top'),
+      bottomNavLists: getPluginsByRegionAndPosition('left', 'bottom')
     })
+
+    // const test = getPluginsByRegionAndPosition('left', 'top')
+    // console.log('test', test)
 
     const changeAlign = (pluginId) => {
       const item = getPluginById(props.pluginList, pluginId)

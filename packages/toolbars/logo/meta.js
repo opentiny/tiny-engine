@@ -7,5 +7,10 @@ export default {
       default: 'logo'
     },
     renderType: 'slot'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'left',
+    order: 3
   }
 }

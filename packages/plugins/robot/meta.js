@@ -5,5 +5,10 @@ export default {
   title: 'AI对话框',
   type: 'plugins',
   icon: RobotIcon,
-  align: 'leftBottom'
+  align: 'leftBottom',
+  layoutConfig: {
+    region: 'left',
+    position: 'bottom',
+    order: 3
+  }
 }

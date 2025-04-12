@@ -84,7 +84,6 @@ export default {
     const iconComponents = {}
 
     const {
-      getPluginsByPosition,
       getPluginById,
       PLUGIN_POSITION,
       rightFixedPanelsStorage,
@@ -93,7 +92,8 @@ export default {
       isSameSide,
       getPluginShown,
       getMoveDragBarState,
-      layoutState: { settings: settingsState }
+      layoutState: { settings: settingsState },
+      getPluginsByRegionAndPosition
     } = useLayout()
 
     const rightMenu = ref(null)
@@ -111,7 +111,7 @@ export default {
       iconComponents[id] = icon
     })
 
-    const settingPlugins = ref(getPluginsByPosition(PLUGIN_POSITION.rightTop, props.pluginList))
+    const settingPlugins = ref(getPluginsByRegionAndPosition('right', 'top'))
 
     const currentComponent = computed(() => {
       const isExistedComponent = settingPlugins.value.some((item) => item.id === renderPanel.value)

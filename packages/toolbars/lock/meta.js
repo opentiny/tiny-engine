@@ -9,5 +9,10 @@ export default {
       unlocked: 'unlocked'
     },
     renderType: 'icon'
+  },
+  layoutConfig: {
+    region: 'top',
+    position: 'left',
+    order: 2
   }
 }

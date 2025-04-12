@@ -4,5 +4,10 @@ export default {
   type: 'setting',
   align: 'rightTop',
   name: 'props',
-  icon: 'form'
+  icon: 'form',
+  layoutConfig: {
+    region: 'right',
+    position: 'top',
+    order: 1
+  }
 }
