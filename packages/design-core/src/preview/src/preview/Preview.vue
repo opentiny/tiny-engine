@@ -137,6 +137,7 @@ export default {
       const blockSet = new Set()
       const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
       blocks = (await Promise.all(promises)).flat()
+      return blocks
     }
 
     const promiseList = [
