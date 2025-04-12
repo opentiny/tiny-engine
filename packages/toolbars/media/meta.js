@@ -7,10 +7,5 @@ export default {
       default: ''
     },
     renderType: 'slot'
-  },
-  layoutConfig: {
-    region: 'top',
-    position: 'center',
-    order: 1
   }
 }

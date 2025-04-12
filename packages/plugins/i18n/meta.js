@@ -4,10 +4,5 @@ export default {
   type: 'plugins',
   align: 'leftTop',
   width: 600,
-  icon: 'plugin-icon-i18n',
-  layoutConfig: {
-    region: 'left',
-    position: 'top',
-    order: 7
-  }
+  icon: 'plugin-icon-i18n'
 }

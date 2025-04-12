@@ -3,10 +3,5 @@ export default {
   title: '资源管理',
   type: 'plugins',
   align: 'leftTop',
-  icon: 'plugin-icon-sresources',
-  layoutConfig: {
-    region: 'left',
-    position: 'top',
-    order: 6
-  }
+  icon: 'plugin-icon-sresources'
 }

@@ -8,11 +8,5 @@ export default {
     },
     renderType: 'icon',
     collapsed: true
-  },
-  layoutConfig: {
-    region: 'top',
-    position: 'collapse',
-    group: 3,
-    order: 1
   }
 }

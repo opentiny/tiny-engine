@@ -4,10 +4,5 @@ export default {
   name: 'style',
   type: 'setting',
   align: 'rightTop',
-  icon: 'display-inline',
-  layoutConfig: {
-    region: 'right',
-    position: 'top',
-    order: 2
-  }
+  icon: 'display-inline'
 }

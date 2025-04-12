@@ -5,10 +5,5 @@ export default {
   icon: 'plugin-icon-tree',
   // icon: 'plugin-icon-var',
   widthResizable: true,
-  align: 'leftTop',
-  layoutConfig: {
-    region: 'left',
-    position: 'top',
-    order: 2
-  }
+  align: 'leftTop'
 }

@@ -36,15 +36,10 @@ export default {
   'engine.plugins.pagecontroller': scriptPlugin,
   // 调整插件顺序
   'engine.plugins.materials': {
-    layoutConfig: {
-      order: 10
-    }
+    insertAfter: 'engine.plugins.state'
   },
   // 调整插件上下位置
   'engine.plugins.schema': {
-    layoutConfig: {
-      position: 'top',
-      order: 11
-    }
+    insertBefore: 'engine.plugins.materials'
   }
 }

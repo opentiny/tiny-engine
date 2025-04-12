@@ -7,11 +7,5 @@ export default {
       default: 'preview'
     },
     renderType: 'icon'
-  },
-  layoutConfig: {
-    region: 'top',
-    position: 'right',
-    order: 1,
-    group: 2
   }
 }
