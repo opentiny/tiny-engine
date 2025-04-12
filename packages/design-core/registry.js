@@ -125,29 +125,7 @@ export default {
       }
     ]
   },
-  layout: {
-    ...Layout,
-    options: {
-      ...Layout.options,
-      isShowLine: true,
-      isShowCollapse: true,
-      toolbars: {
-        left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
-        center: ['engine.toolbars.media'],
-        right: [
-          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
-          ['engine.toolbars.preview'],
-          ['engine.toolbars.generate-code', 'engine.toolbars.save']
-        ],
-        collapse: [
-          ['engine.toolbars.collaboration'],
-          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang'],
-          ['engine.toolbars.viewSetting']
-        ]
-      }
-    }
-  },
+  layout: Layout,
   toolbars: [
     ThemeSwitch,
     Logo,
