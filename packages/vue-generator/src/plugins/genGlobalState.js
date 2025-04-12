@@ -31,63 +31,68 @@ function genDependenciesPlugin(options = {}) {
     run(schema) {
       const globalState = parseSchema(schema)
 
+      let importStatement = "import { defineStore } from 'pinia'"
+      const state = {}
+      const getters = {}
+      const actions = {}
+
       const res = []
-      const ids = []
 
       for (const stateItem of globalState) {
-        let importStatement = "import { defineStore } from 'pinia'"
-        const { id, state, getters, actions } = stateItem
+        const { id, state: stateValue, getters: gettersValue = [], actions: actionsValue = [] } = stateItem
 
-        ids.push(id)
-
-        const stateExpression = `() => ({ ${Object.entries(state)
-          .map((item) => {
-            let [key, value] = item
-
-            if (typeof value === 'string') {
-              value = `'${value}'`
+        state[id] = stateValue
+        Object.keys(gettersValue).forEach((key) => {
+          if (typeof gettersValue[key] === 'object' && gettersValue[key].type === 'JSFunction') {
+            if (gettersValue[key].value.includes('this')) {
+              gettersValue[key].value = gettersValue[key].value.replace(/this\./g, `this.${id}.`)
             }
-
-            if (value && typeof value === 'object') {
-              value = JSON.stringify(value)
+            getters[key] = gettersValue[key].value
+          }
+        })
+        Object.keys(actionsValue).forEach((key) => {
+          if (typeof actionsValue[key] === 'object' && actionsValue[key].type === 'JSFunction') {
+            if (actionsValue[key].value.includes('this')) {
+              actionsValue[key].value = actionsValue[key].value.replace(/this\./g, `this.${id}.`)
             }
-
-            return [key, value].join(':')
-          })
-          .join(',')} })`
-
-        const getterExpression = Object.entries(getters)
-          .filter((item) => item[1]?.type === 'JSFunction')
-          .map(([key, value]) => `${key}: ${value.value}`)
-          .join(',')
-
-        const actionExpressions = Object.entries(actions)
-          .filter((item) => item[1]?.type === 'JSFunction')
-          .map(([key, value]) => `${key}: ${value.value}`)
-          .join(',')
-
-        const storeFiles = `
-         ${importStatement}
-         export const ${id} = defineStore({
-           id: '${id}',
-           state: ${stateExpression},
-           getters: { ${getterExpression} },
-           actions: { ${actionExpressions} }
-         })
-        `
-        res.push({
-          fileType: 'js',
-          fileName: `${id}.js`,
-          path,
-          fileContent: storeFiles
+            actions[key] = actionsValue[key].value
+          }
         })
       }
+
+      const globalStateFiles = `
+        ${importStatement}
+        export const globalState = defineStore('globalState', {
+           state: () => (${JSON.stringify(state, null, 2)}),
+           getters: {${Object.entries(getters)
+             .map(([key, value]) => `${key}: ${value}`)
+             .join(',')}},
+           actions: {${Object.entries(actions)
+             .map(([key, value]) => `${key}: ${value}`)
+             .join(',')}}
+         })
+        
+         export const useGlobalState = () => {
+            // 获取 globalState 实例
+            const globalStateInstance = globalState();
+
+            return globalStateInstance;
+          };
+
+      `
+
+      res.push({
+        fileType: 'js',
+        fileName: 'globalState.js',
+        path: './src/stores',
+        fileContent: globalStateFiles
+      })
 
       res.push({
         fileType: 'js',
         fileName: 'index.js',
         path,
-        fileContent: ids.map((item) => `export { ${item} } from './${item}'`).join('\n')
+        fileContent: `export { globalState } from './globalState'`
       })
 
       return res

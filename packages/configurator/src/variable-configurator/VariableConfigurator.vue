@@ -142,7 +142,7 @@ const { EXPRESSION_TYPE } = constants
 const CONSTANTS = {
   THIS: 'this.',
   STATE: 'this.state.',
-  STORE: 'this.stores.',
+  STORE: 'this.globalState.',
   PROPS: 'this.props.',
   COLLECTION: 'Collection',
   ITEM: 'item',
