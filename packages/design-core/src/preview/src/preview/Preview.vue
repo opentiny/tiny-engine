@@ -136,7 +136,7 @@ export default {
       // blockSet 是为了防止重复出码同样的区块，同名区块只出码一遍
       const blockSet = new Set()
       const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
-      blocks = (await Promise.all(promises)).flat()
+      const blocks = (await Promise.all(promises)).flat()
       return blocks
     }
 
