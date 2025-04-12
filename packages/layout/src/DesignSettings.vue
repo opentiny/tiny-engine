@@ -2,13 +2,13 @@
 <template>
   <div :class="{ 'not-selected': getMoveDragBarState() }">
     <div
-      v-show="renderPanel && components[renderPanel]"
+      v-show="renderPanel && getMergeMeta(renderPanel)?.entry"
       id="tiny-engine-right-panel"
       :class="[renderPanel, { 'is-fixed': rightFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="right-panel-wrap">
         <component
-          :is="currentComponent"
+          :is="getMergeMeta(renderPanel)?.entry"
           :fixed-panels="rightFixedPanelsStorage"
           @close="close"
           @fixPanel="fixPanel"
@@ -30,13 +30,13 @@
         v-for="(item, index) in settingPlugins"
         :key="index"
         :class="['list-item', { 'first-item': item === settingPlugins[0], active: item.id === renderPanel }]"
-        :title="item.title"
-        @click="clickMenu({ item, index })"
+        :title="getMergeMeta(item)?.title"
+        @click="clickMenu({ item: getMergeMeta(item), index })"
         @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.rightTop)"
       >
-        <span class="item-icon" v-if="getPluginShown(item.id)">
-          <svg-icon v-if="iconComponents[item.id]" :name="iconComponents[item.id]" class="panel-icon"></svg-icon>
-          <component v-else :is="iconComponents[item.id]" class="panel-icon"></component>
+        <span class="item-icon" v-if="getPluginShown(getMergeMeta(item)?.id)">
+          <svg-icon v-if="getMergeMeta(item)?.icon" :name="getMergeMeta(item)?.icon" class="panel-icon"></svg-icon>
+          <component v-else :is="getMergeMeta(item)?.icon" class="panel-icon"></component>
         </span>
       </div>
       <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
@@ -55,7 +55,7 @@
 /* metaService: engine.layout */
 import { computed, ref, watch, toRefs } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { PluginRightMenu } from '@opentiny/tiny-engine-common'
 
@@ -84,7 +84,6 @@ export default {
     const iconComponents = {}
 
     const {
-      getPluginsByPosition,
       getPluginById,
       PLUGIN_POSITION,
       rightFixedPanelsStorage,
@@ -93,7 +92,8 @@ export default {
       isSameSide,
       getPluginShown,
       getMoveDragBarState,
-      layoutState: { settings: settingsState }
+      layoutState: { settings: settingsState },
+      getFinalLayoutConfig
     } = useLayout()
 
     const rightMenu = ref(null)
@@ -111,7 +111,7 @@ export default {
       iconComponents[id] = icon
     })
 
-    const settingPlugins = ref(getPluginsByPosition(PLUGIN_POSITION.rightTop, props.pluginList))
+    const settingPlugins = ref(getFinalLayoutConfig().settings)
 
     const currentComponent = computed(() => {
       const isExistedComponent = settingPlugins.value.some((item) => item.id === renderPanel.value)
@@ -189,7 +189,8 @@ export default {
       getPluginShown,
       switchAlign,
       rightMenu,
-      getMoveDragBarState
+      getMoveDragBarState,
+      getMergeMeta
     }
   }
 }
