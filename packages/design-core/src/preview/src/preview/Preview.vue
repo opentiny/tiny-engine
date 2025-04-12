@@ -132,15 +132,12 @@ export default {
       return familyPages
     }
 
-    const genAllBlocks = (ancestors) =>
-      new Promise((resolve) => {
-        const blocksTask = (ancestors || []).map((item) => {
-          return getAllNestedBlocksSchema(item?.page_content, fetchBlockSchema)
-        })
-        Promise.all(blocksTask).then((rs) => {
-          resolve((rs || [])?.flat())
-        })
-      })
+    const genAllBlocks = async (ancestors) => {
+      // blockSet 是为了防止重复出码同样的区块，同名区块只出码一遍
+      const blockSet = new Set()
+      const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
+      blocks = (await Promise.all(promises)).flat()
+    }
 
     const promiseList = [
       fetchAppSchema(queryParams?.app),
