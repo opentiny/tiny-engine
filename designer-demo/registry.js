@@ -14,6 +14,7 @@ import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import templateSetting from './src/template/setting.vue'
+import scriptPlugin from './src/plugins/script'
 
 export default {
   [META_SERVICE.Http]: HttpService,
@@ -26,5 +27,41 @@ export default {
         PageSetting: templateSetting
       }
     }
-  }
+  },
+  // 配置 false 隐藏工具栏清空按钮
+  'engine.toolbars.clean': false,
+  // 配置 false 隐藏大纲树
+  'engine.plugins.outlinetree': false,
+  // 替换整个页面JS插件
+  'engine.plugins.pagecontroller': scriptPlugin,
+  // 换了个id，代表新增模块
+  'engine.plugins.script': {
+    ...scriptPlugin,
+    id: 'engine.plugins.script',
+  },
+  'engine.layout': {
+    options: {
+      relativeLayoutConfig: {
+        'engine.plugins.script': {
+          insertBefore: 'engine.plugins.appmanage'
+        },
+        // 调整插件顺序
+        'engine.plugins.materials': {
+          insertAfter: 'engine.plugins.state'
+        },
+        // 调整插件上下位置
+        'engine.plugins.schema': {
+          insertBefore: 'engine.plugins.materials'
+        },
+        // 调整工具栏顺序
+        'engine.toolbars.save': {
+          insertBefore: 'engine.toolbars.themeSwitch'
+        },
+        // 支持切换组
+        'engine.toolbars.lang': {
+          insertAfter: 'engine.toolbars.breadcrumb'
+        }
+      }
+    }
+  },
 }
