@@ -34,12 +34,34 @@ export default {
   'engine.plugins.outlinetree': false,
   // 替换整个页面JS插件
   'engine.plugins.pagecontroller': scriptPlugin,
-  // 调整插件顺序
-  'engine.plugins.materials': {
-    insertAfter: 'engine.plugins.state'
+  // 换了个id，代表新增模块
+  'engine.plugins.script': {
+    ...scriptPlugin,
+    id: 'engine.plugins.script',
   },
-  // 调整插件上下位置
-  'engine.plugins.schema': {
-    insertBefore: 'engine.plugins.materials'
-  }
+  'engine.layout': {
+    options: {
+      relativeLayoutConfig: {
+        'engine.plugins.script': {
+          insertBefore: 'engine.plugins.appmanage'
+        },
+        // 调整插件顺序
+        'engine.plugins.materials': {
+          insertAfter: 'engine.plugins.state'
+        },
+        // 调整插件上下位置
+        'engine.plugins.schema': {
+          insertBefore: 'engine.plugins.materials'
+        },
+        // 调整工具栏顺序
+        'engine.toolbars.save': {
+          insertBefore: 'engine.toolbars.themeSwitch'
+        },
+        // 支持切换组
+        'engine.toolbars.lang': {
+          insertAfter: 'engine.toolbars.breadcrumb'
+        }
+      }
+    }
+  },
 }

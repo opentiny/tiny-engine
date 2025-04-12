@@ -320,131 +320,95 @@ export default () => {
     return defaultLayoutString !== userLayoutString
   }
 
-  const getPluginOrder = (plugins) => {
-    const { top, bottom } = plugins
-    const allPlugins = [
-      ...top.map((id) => ({ id, position: 'top' })),
-      ...bottom.map((id) => ({ id, position: 'bottom' }))
-    ]
-    const finalPlugins = [...allPlugins]
-
-    allPlugins.forEach((item, index) => {
-      const pluginItem = getMergeMeta(item.id)
-      if (!pluginItem) {
-        finalPlugins.splice(index, 1)
-        return
-      }
-      if (pluginItem.insertBefore && allPlugins.find((p) => p.id === pluginItem.insertBefore)) {
-        const targetIndex = allPlugins.findIndex((p) => p.id === pluginItem.insertBefore)
-        const insertBeforeItem = allPlugins[targetIndex]
-        // 如果位置和 insertBeforeItem 不相同，则修改相对位置
-        if (insertBeforeItem.position !== item.position) {
-          item.position = insertBeforeItem.position
+  const removeUndefineLayoutId = (layout) => {
+    if (Array.isArray(layout)) {
+      layout.forEach((item, index) => {
+        if (Array.isArray(item)) {
+          removeUndefineLayoutId(item)
         }
-        // 插入到前面
-        finalPlugins.splice(targetIndex, 0, item)
-        // 在原来的位置进行移除
-        const oldIndex = allPlugins.findIndex((p) => p.id === item.id)
-        finalPlugins.splice(oldIndex, 1)
-      } else if (pluginItem.insertAfter && allPlugins.find((p) => p.id === pluginItem.insertAfter)) {
-        const targetIndex = allPlugins.findIndex((p) => p.id === pluginItem.insertAfter)
-        const insertAfterItem = allPlugins[targetIndex]
-        // 如果位置和 insertAfterItem 不相同，则修改相对位置
-        if (insertAfterItem.position !== item.position) {
-          item.position = insertAfterItem.position
+        // 对象类型，则递归遍历
+        else if (Object.prototype.toString.call(item) === '[object Object]') {
+          removeUndefineLayoutId(item)
         }
-        // 插入到后面
-        finalPlugins.splice(targetIndex + 1, 0, item)
-        // 在原来的位置进行移除
-        const oldIndex = allPlugins.findIndex((p) => p.id === item.id)
-        finalPlugins.splice(oldIndex, 1)
-      }
-    })
+        // 注册表中找不到，则删除
+        else if (typeof item === 'string' && !getMergeMeta(item)) {
+          layout.splice(index, 1)
+        }
+      })
+    }
 
-    return {
-      top: finalPlugins.filter((item) => item.position === 'top').map((item) => item.id),
-      bottom: finalPlugins.filter((item) => item.position === 'bottom').map((item) => item.id)
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        removeUndefineLayoutId(value)
+      })
     }
   }
 
-  // const getToolbarsOrder = (toolbars) => {
-  //   const allToolbars = [
-  //     ...toolbars.left.map((id) => ({ id, position: 'left' })),
-  //     ...toolbars.center.map((id) => ({ id, position: 'center' })),
-  //     ...toolbars.right.map((id) => ({ id, position: 'right' })),
-  //     ...toolbars.collapse.map((id) => ({ id, position: 'collapse' }))
-  //   ]
-  //   const finalToolbars = [...allToolbars]
-  //   allToolbars.forEach((item, index) => {
-  //     // 暂时不支持组的 insertBefore、insertAfter，因为这里有组的概念
-  //     if (Array.isArray(item)) {
-  //       return
-  //     }
+  const removeById = (layout, id) => {
+    if (Array.isArray(layout)) {
+      layout.forEach((item, index) => {
+        if (Array.isArray(item)) {
+          removeById(item, id)
+        } else if (Object.prototype.toString.call(item) === '[object Object]') {
+          removeById(item, id)
+        } else if (item === id) {
+          layout.splice(index, 1)
+        }
+      })
+    }
 
-  //     const toolbarItem = getMergeMeta(item.id)
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        removeById(value, id)
+      })
+    }
+  }
 
-  //     if (!toolbarItem) {
-  //       finalToolbars.splice(index, 1)
-  //       return
-  //     }
-
-  //     if (toolbarItem.insertBefore && finalToolbars.find((p) => p.id === toolbarItem.insertBefore)) {
-  //       const insertBeforeItem = finalToolbars.find((p) => p.id === toolbarItem.insertBefore)
-  //       // 如果位置和 insertBeforeItem 不相同，则修改相对位置
-  //       if (insertBeforeItem.position !== item.position) {
-  //         item.position = insertBeforeItem.position
-  //       }
-  //       // 插入到前面
-  //       finalToolbars.splice(index, 0, item)
-  //       // 在原来的位置进行移除
-  //       const oldIndex = allToolbars.findIndex((p) => p.id === item.id)
-  //       finalToolbars.splice(oldIndex, 1)
-  //     } else if (toolbarItem.insertAfter && finalToolbars.find((p) => p.id === toolbarItem.insertAfter)) {
-  //       const insertAfterItem = finalToolbars.find((p) => p.id === toolbarItem.insertAfter)
-  //       // 如果位置和 insertAfterItem 不相同，则修改相对位置
-  //       if (insertAfterItem.position !== item.position) {
-  //         item.position = insertAfterItem.position
-  //       }
-  //       // 插入到后面
-  //       finalToolbars.splice(index + 1, 0, item)
-  //       // 在原来的位置进行移除
-  //       const oldIndex = allToolbars.findIndex((p) => p.id === item.id)
-  //       finalToolbars.splice(oldIndex, 1)
-  //     }
-  //   })
-
-  //   return {
-  //     left: finalToolbars.filter((item) => item.position === 'left').map((item) => item.id),
-  //     center: finalToolbars.filter((item) => item.position === 'center').map((item) => item.id),
-  //     right: finalToolbars.filter((item) => item.position === 'right').map((item) => item.id),
-  //     collapse: finalToolbars.filter((item) => item.position === 'collapse').map((item) => item.id)
-  //   }
-  // }
-
-  const getSettingsOrder = (settings) => {
-    const finalSettings = [...settings]
-    settings.forEach((item, index) => {
-      const settingItem = getMergeMeta(item)
-      if (!settingItem) {
-        finalSettings.splice(index, 1)
-        return
+  const replaceByPosition = (layout, originId, targetId, position) => {
+    if (Array.isArray(layout)) {
+      for (let i = 0; i < layout.length; i++) {
+        const item = layout[i]
+        if (Array.isArray(item)) {
+          replaceByPosition(item, originId, targetId, position)
+        } else if (Object.prototype.toString.call(item) === '[object Object]') {
+          replaceByPosition(item, originId, targetId, position)
+        } else if (item === targetId) {
+          const insertIndex = position === 'before' ? i : i + 1
+          layout.splice(insertIndex, 0, originId)
+          // 完成替换，结束循环，提前 return
+          return
+        }
       }
-      if (settingItem.insertBefore && finalSettings.find((p) => p === settingItem.insertBefore)) {
-        const targetIndex = finalSettings.findIndex((p) => p === settingItem.insertBefore)
-        finalSettings.splice(targetIndex, 0, item)
-        // 在原来的位置进行移除
-        const oldIndex = finalSettings.findIndex((p) => p === item.id)
-        finalSettings.splice(oldIndex, 1)
-      } else if (settingItem.insertAfter && finalSettings.find((p) => p === settingItem.insertAfter)) {
-        const targetIndex = finalSettings.findIndex((p) => p === settingItem.insertAfter)
-        finalSettings.splice(targetIndex + 1, 0, item)
-        // 在原来的位置进行移除
-        const oldIndex = finalSettings.findIndex((p) => p === item.id)
-        finalSettings.splice(oldIndex, 1)
+      return
+    }
+
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        replaceByPosition(value, originId, targetId, position)
+      })
+    }
+  }
+
+  const computeFinalLayoutConfig = (layout, relativeLayoutConfig) => {
+    const finalLayoutConfig = deepClone(layout)
+
+    Object.entries(relativeLayoutConfig).forEach(([key, value]) => {
+      if (value.insertBefore) {
+        // 移除原来的 id
+        removeById(finalLayoutConfig, key)
+        // 插入到指定 id 前面
+        replaceByPosition(finalLayoutConfig, key, value.insertBefore, 'before')
+      } else if (value.insertAfter) {
+        // 移除原来的 id
+        removeById(finalLayoutConfig, key)
+        // 插入到指定 id 后面
+        replaceByPosition(finalLayoutConfig, key, value.insertAfter, 'after')
       }
     })
 
-    return finalSettings
+    removeUndefineLayoutId(finalLayoutConfig)
+
+    return finalLayoutConfig
   }
 
   let finalLayoutConfig = null
@@ -457,20 +421,12 @@ export default () => {
     const isUserCustomLayout = getIsUserCustomLayout()
     // 用户传了自定义配置，则忽略 insertBefore insertAfter 的配置
     if (isUserCustomLayout) {
-      return getMergeMeta('engine.layout')?.options?.layoutConfig
+      finalLayoutConfig = getMergeMeta('engine.layout')?.options?.layoutConfig
+      return finalLayoutConfig
     }
 
-    const { plugins, toolbars, settings } = deepClone(defaultLayout)
-    const finalPlugins = getPluginOrder(plugins)
-    // 暂时不支持组的 insertBefore、insertAfter，因为这里有组的概念
-    const finalToolbars = toolbars
-    const finalSettings = getSettingsOrder(settings)
-
-    finalLayoutConfig = {
-      plugins: finalPlugins,
-      toolbars: finalToolbars,
-      settings: finalSettings
-    }
+    const relativeLayoutConfig = getMergeMeta('engine.layout')?.options?.relativeLayoutConfig || {}
+    finalLayoutConfig = computeFinalLayoutConfig(deepClone(defaultLayout), relativeLayoutConfig)
 
     return finalLayoutConfig
   }
