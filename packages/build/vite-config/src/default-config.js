@@ -14,6 +14,7 @@ import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './local
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
+import { treeShakingPlugin } from './vite-plugins/treeShakingPlugin.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -103,6 +104,11 @@ const getDefaultConfig = (engineConfig) => {
         exclude: ['node_modules/*monaco-editor*/**', 'node_modules/lodash-es/**', 'node_modules/@types/lodash-es/**']
       },
       minify: true,
+      // terserOptions: {
+      //   mangle: {
+      //     reserved: ['REMOVED_REGISTRY']
+      //   }
+      // },
       sourcemap: false,
       rollupOptions: {
         plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
@@ -146,6 +152,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
   const config = getDefaultConfig(engineConfig)
 
   config.plugins.push(
+    treeShakingPlugin(engineConfig.removedRegistry),
     createSvgIconsPlugin({
       iconDirs: engineConfig.iconDirs || [],
       symbolId: 'icon-[name]',
