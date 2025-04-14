@@ -15,6 +15,7 @@ import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import templateSetting from './src/template/setting.vue'
 import scriptPlugin from './src/plugins/script'
+import removedRegistry from './removedRegistry.json'
 
 export default {
   [META_SERVICE.Http]: HttpService,
@@ -28,10 +29,11 @@ export default {
       }
     }
   },
+  ...removedRegistry,
   // 配置 false 隐藏工具栏清空按钮
-  'engine.toolbars.clean': false,
+  // 'engine.toolbars.clean': false,
   // 配置 false 隐藏大纲树
-  'engine.plugins.outlinetree': false,
+  // 'engine.plugins.outlinetree': false,
   // 替换整个页面JS插件
   'engine.plugins.pagecontroller': scriptPlugin,
   // 换了个id，代表新增模块
