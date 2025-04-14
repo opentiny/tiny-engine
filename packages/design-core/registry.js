@@ -10,6 +10,8 @@
  *
  */
 
+/* eslint-disable no-undef */
+
 import {
   Breadcrumb,
   Fullscreen,
@@ -48,6 +50,8 @@ import {
   ThemeSwitchService,
   HttpService
 } from './re-export'
+
+window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
 export default {
   root: {
@@ -125,38 +129,42 @@ export default {
       }
     ]
   },
-  layout: Layout,
+  layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
-    ThemeSwitch,
-    Logo,
-    Breadcrumb,
-    Lock,
-    Media,
-    Redoundo,
-    Collaboration,
-    Clean,
-    Preview,
-    Refresh,
-    GenerateCode,
-    Save,
-    Fullscreen,
-    Lang,
-    ViewSetting
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.themeSwitch'] === false ? null : ThemeSwitch,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.breadcrumb'] === false ? null : Breadcrumb,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lock'] === false ? null : Lock,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.media'] === false ? null : Media,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.redoundo'] === false ? null : Redoundo,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.collaboration'] === false ? null : Collaboration,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.clean'] === false ? null : Clean,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.preview'] === false ? null : Preview,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.refresh'] === false ? null : Refresh,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.generate-code'] === false ? null : GenerateCode,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.save'] === false ? null : Save,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.fullscreen'] === false ? null : Fullscreen,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lang'] === false ? null : Lang,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting
   ],
   plugins: [
-    Materials,
-    Tree,
-    Page,
-    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
-    Datasource,
-    Bridge,
-    I18n,
-    Script,
-    State,
-    Schema,
-    Help,
-    Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.materials'] === false ? null : Materials,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.outlinetree'] === false ? null : Tree,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.appmanage'] === false ? null : Page,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.blockmanage'] === false ? null : Block,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.collections'] === false ? null : Datasource,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.bridge'] === false ? null : Bridge,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.i18n'] === false ? null : I18n,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.pagecontroller'] === false ? null : Script,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
   ],
-  settings: [Props, Styles, Events],
+  settings: [
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
+  ],
   canvas: Canvas
 }
