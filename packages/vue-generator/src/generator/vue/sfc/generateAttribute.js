@@ -469,6 +469,7 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
   return result
 }
 
+const normalKeyRegexp = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
 export const transformObjType = (obj, globalHooks, config) => {
   if (!obj || typeof obj !== 'object') {
     return {
@@ -481,7 +482,12 @@ export const transformObjType = (obj, globalHooks, config) => {
   let shouldRenderKey = !Array.isArray(obj)
 
   for (const [key, value] of Object.entries(obj)) {
-    let renderKey = shouldRenderKey ? `${key}: ` : ''
+    let renderKey = shouldRenderKey
+      ? // 如果 key 是合法的变量名，则直接使用 key: 的形式，否则需要添加引号，防止不合法的 key 导致语法错误
+        normalKeyRegexp.test(key)
+        ? `${key}: `
+        : `'${key}': `
+      : ''
 
     const { res, shouldBindToState: tmpShouldBindToState } = transformObjValue(
       renderKey,

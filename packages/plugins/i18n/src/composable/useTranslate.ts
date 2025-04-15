@@ -69,7 +69,7 @@ const removeI18n = (key = []) => {
 
 const ensureI18n = (obj: { [x: string]: any; key: string }, send?: boolean) => {
   const { locales } = i18nResource
-  const contents = Object.fromEntries(locales.map(({ lang }) => [lang, obj[lang]]))
+  const contents = Object.fromEntries(locales.map(({ lang }) => [lang, obj[lang] || '']))
   const langs = getLangs()
   const key = obj.key || utils.guid()
 

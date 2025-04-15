@@ -198,7 +198,7 @@ export default {
 #tiny-engine-right-panel {
   height: calc(100vh - var(--base-top-panel-height));
   border-left: 1px solid var(--te-layout-common-border-color);
-  background: var(--ti-lowcode-common-component-bg);
+  background: var(--te-layout-common-bg-color);
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -340,10 +340,10 @@ export default {
 
 @keyframes glow {
   0% {
-    box-shadow: inset 0px 0px 4px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 4px var(--te-layout-panel-active-color);
   }
   100% {
-    box-shadow: inset 0px 0px 14px var(--ti-lowcode-canvas-handle-hover-bg);
+    box-shadow: inset 0px 0px 14px var(--te-layout-panel-active-color);
   }
 }
 </style>

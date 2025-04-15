@@ -946,7 +946,11 @@ export const addScript = (src: string) => appendScript(src, getDocument())
  * @param {*} merge 是否合并，默认是重置所有数据
  */
 export const setLocales = (messages: any, merge?: boolean) => {
-  const i18n = getRenderer().getI18n()
+  const i18n = getRenderer()?.getI18n?.()
+
+  if (!i18n) {
+    return
+  }
 
   Object.keys(messages).forEach((lang) => {
     const fn = merge ? 'mergeLocaleMessage' : 'setLocaleMessage'

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-common",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "publishConfig": {
     "access": "public"
   },
@@ -50,8 +50,8 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "glob": "^10.3.4",
     "@vueuse/core": "^9.6.0",
+    "glob": "^10.3.4",
     "vite": "^5.4.2"
   },
   "peerDependencies": {

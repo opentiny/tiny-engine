@@ -58,6 +58,7 @@ export default {
     PluginPanel,
     IconDownloadLink: iconDownloadLink()
   },
+  inheritAttrs: false,
   props: {
     fixedPanels: {
       type: Array
