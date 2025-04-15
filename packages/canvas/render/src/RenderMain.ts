@@ -218,7 +218,12 @@ export default defineComponent({
         topic: 'schemaImport',
         subscriber: 'canvasRenderer',
         callback: () => {
-          setSchema(window.host.getSchema())
+          const schema = window.host.getSchema()
+          if (schema.componentName === 'Block') {
+            pageContext.pageId = ''
+            updatePageAncestor()
+          }
+          setSchema(schema)
         }
       })
 
