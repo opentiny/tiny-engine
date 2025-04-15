@@ -303,11 +303,6 @@ export default {
         }
         await scrollContent()
         await sleep(1000)
-        if (!tokenValue.value) {
-          messages.value.push({ role: 'assistant', content: '当前会话未设置API Token，请设置后再试！', name: 'AI' })
-          inProcesing.value = false
-          return
-        }
         messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
         await scrollContent()
         sendRequest()
