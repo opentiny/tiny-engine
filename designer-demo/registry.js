@@ -13,7 +13,6 @@ import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 // import { META_SERVICE } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
-import templateSetting from './src/template/setting.vue'
 import scriptPlugin from './src/plugins/script'
 import removedRegistry from './removedRegistry.json'
 
@@ -21,13 +20,6 @@ export default {
   [META_SERVICE.Http]: HttpService,
   'engine.config': {
     ...engineConfig
-  },
-  'engine.plugins.page': {
-    overwrite: {
-      templates: {
-        PageSetting: templateSetting
-      }
-    }
   },
   ...removedRegistry,
   // 配置 false 隐藏工具栏清空按钮
@@ -39,7 +31,7 @@ export default {
   // 换了个id，代表新增模块
   'engine.plugins.script': {
     ...scriptPlugin,
-    id: 'engine.plugins.script',
+    id: 'engine.plugins.script'
   },
   'engine.layout': {
     options: {
@@ -65,5 +57,5 @@ export default {
         }
       }
     }
-  },
+  }
 }
