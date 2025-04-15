@@ -83,7 +83,7 @@ const handleLifeCycles = (id: string, lifeCycles: any) => {
 
 const handleVueTemplate = (id: string, templates: any) => {
   Object.entries(templates).forEach(([name, template]) => {
-    if (typeof template === 'object') {
+    if (typeof template === 'string') {
       const prefix = name && name !== "''" ? `.${name}` : ''
       const templateId = `${id}${prefix}`
       templateHashMap[templateId] = template
