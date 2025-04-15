@@ -13,7 +13,7 @@ import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
-import { vitePluginMoveCanvas } from './vite-plugins/vitePluginMoveCanvas.js'
+import { vitePluginCopyCanvas } from './vite-plugins/vitePluginCopyCanvas.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
@@ -132,7 +132,7 @@ const getDefaultConfig = (engineConfig) => {
 }
 
 export function useTinyEngineBaseConfig(engineConfig) {
-  const { envDir = '', viteConfigEnv } = engineConfig
+  const { envDir = '', viteConfigEnv, useSourceAlias, assetsDir } = engineConfig
   const { command = 'serve', mode = 'serve' } = viteConfigEnv
   const env = loadEnv(mode, envDir)
   const { VITE_CDN_DOMAIN = 'https://unpkg.com', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = env
@@ -154,7 +154,10 @@ export function useTinyEngineBaseConfig(engineConfig) {
     }),
     monacoEditorPluginInstance,
     htmlUpgradeHttpsPlugin(mode),
-    vitePluginMoveCanvas(),
+    vitePluginCopyCanvas({
+      useSource: useSourceAlias,
+      assetsDir
+    }),
     isCopyBundleDeps
       ? copyBundleDeps({
           bundleFile: 'public/mock/bundle.json',
@@ -178,9 +181,9 @@ export function useTinyEngineBaseConfig(engineConfig) {
       : []
   )
 
-  config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
+  config.plugins.push(devAliasPlugin(env, useSourceAlias))
 
-  if (engineConfig.useSourceAlias && command === 'serve') {
+  if (useSourceAlias && command === 'serve') {
     config.plugins.push(canvasDevExternal())
   }
 

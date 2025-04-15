@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
@@ -14,7 +15,18 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    viteStaticCopy({
+      targets: [
+        {
+          src: path.resolve(__dirname, '..', 'canvas/dist/assets/canvas.js'),
+          dest: 'assets/'
+        }
+      ]
+    })
+  ],
   publicDir: false,
   optimizeDeps: {
     esbuildOptions: {

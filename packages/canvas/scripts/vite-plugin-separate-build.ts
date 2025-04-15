@@ -30,7 +30,7 @@ async function bundleBuildEntry(config, options) {
   const { map: sourcemap, fileName: chunkFileName, code } = outputChunk
   if (config.needAsset) {
     saveEmitBundleAssets(config, {
-      fileName: chunkFileName,
+      fileName: 'assets/canvas.js',
       source: code
     })
   }
@@ -89,14 +89,14 @@ export async function vitePluginBuildEntry(customBuildConfig) {
         return
       }
       const file = cleanUrl(id)
-      const { code, fileName } = await bundleBuildEntry(config, {
+      const { code } = await bundleBuildEntry(config, {
         customBuildConfig,
         buildConfig: match.groups.name,
         entries: [file]
       })
+      // canvas.js 单独打包，以url（./assets/canvas.js）方式引入
       if (config.needAsset) {
-        const pathName = `./${fileName}`
-        return `export default ${JSON.stringify(pathName)}\n`
+        return `export default ${JSON.stringify('./assets/canvas.js')}\n`
       } else {
         const formatBase64 = (code) => {
           return 'data:text/javascript;base64,' + Buffer.from(code).toString('base64')

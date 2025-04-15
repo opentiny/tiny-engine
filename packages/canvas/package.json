@@ -20,6 +20,9 @@
     },
     "./render": {
       "import": "./dist/render.js"
+    },
+    "./canvas": {
+      "import": "./dist/assets/canvas.js"
     }
   },
   "repository": {
