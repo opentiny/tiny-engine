@@ -420,7 +420,9 @@ const setMaterial = (name, data) => {
  */
 export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
-  const materials = await Promise.allSettled(bundleUrls.map((url) => getMetaApi(META_SERVICE.Http).get(url)))
+  const materials = await Promise.allSettled(
+    bundleUrls.map((url) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
+  )
   return materials
 }
 
