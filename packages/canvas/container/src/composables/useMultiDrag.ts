@@ -1,4 +1,6 @@
 import { reactive, computed, toRaw } from 'vue'
+import type { ComputedRef } from 'vue'
+import type { PositionType } from '../container'
 import { useMultiSelect } from './useMultiSelect'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
@@ -19,13 +21,66 @@ import {
   getDocument
 } from '../container'
 
-const initialMultiDragState = {
+interface Position {
+  x: number
+  y: number
+}
+
+interface Offset {
+  offsetX: number
+  offsetY: number
+  initialX: number
+  initialY: number
+}
+
+interface NodeSchema {
+  id: string
+  componentName: string
+  children?: NodeSchema[]
+  [key: string]: any
+}
+
+interface MultiDragState {
+  keydown: boolean
+  draging: boolean
+  dragStarted: boolean
+  initialMousePos: Position | null
+  nodes: NodeSchema[]
+  offsets: Map<string, Offset>
+  mouse: Position | null
+  position: PositionType | null
+  targetNodeId: string | null
+}
+
+interface SelectState {
+  id: string
+  componentName: string
+  schema: NodeSchema
+  top?: number
+  left?: number
+  width?: number
+  height?: number
+  doc?: Document
+  [key: string]: any
+}
+
+interface InsertOperation {
+  sourceId: string
+  targetNodeData: {
+    parent: NodeSchema | null
+    node: NodeSchema
+    data: NodeSchema
+  }
+  position: PositionType
+}
+
+const initialMultiDragState: MultiDragState = {
   keydown: false,
   draging: false,
   dragStarted: false, // 标记是否已经开始拖拽
   initialMousePos: null, // 初始鼠标位置
   nodes: [], // 存储被拖拽的多个节点信息
-  offsets: new Map(), // 存储每个节点的偏移量
+  offsets: new Map<string, Offset>(), // 存储每个节点的偏移量
   mouse: null, // 鼠标位置
   position: null, // 放置位置
   targetNodeId: null // 当前点击的节点ID
@@ -35,16 +90,17 @@ const initialMultiDragState = {
 const DRAG_THRESHOLD = 5
 
 export const useMultiDrag = () => {
-  const multiDragState = reactive({ ...initialMultiDragState })
-  const { multiSelectedStates, multiStateLength } = useMultiSelect()
+  const multiDragState = reactive<MultiDragState>({ ...initialMultiDragState })
+  const { multiSelectedStates } = useMultiSelect()
+  const multiStateLength = computed<number>(() => (multiSelectedStates.value as SelectState[]).length)
 
   // 准备拖拽 - 仅记录初始状态，不立即开始拖拽
-  const startMultiDrag = (event, element) => {
+  const startMultiDrag = (event: MouseEvent, element: HTMLElement): boolean => {
     if (multiStateLength.value <= 1) return false
 
     // 检查点击的元素是否是已选中的节点之一
     const clickedNodeId = element?.getAttribute(NODE_UID)
-    if (!clickedNodeId || !multiSelectedStates.value.some((state) => state.id === clickedNodeId)) {
+    if (!clickedNodeId || !(multiSelectedStates.value as SelectState[]).some((state) => state.id === clickedNodeId)) {
       return false
     }
 
@@ -54,10 +110,10 @@ export const useMultiDrag = () => {
     multiDragState.draging = false
     multiDragState.initialMousePos = { x: clientX, y: clientY }
     multiDragState.targetNodeId = clickedNodeId
-    multiDragState.nodes = toRaw(multiSelectedStates.value).map((state) => state.schema)
+    multiDragState.nodes = toRaw(multiSelectedStates.value as SelectState[]).map((state) => state.schema)
 
     // 计算每个节点相对于鼠标的偏移量
-    multiSelectedStates.value.forEach((state) => {
+    ;(multiSelectedStates.value as SelectState[]).forEach((state) => {
       const elem = querySelectById(state.id)
       if (elem) {
         const { x, y } = elem.getBoundingClientRect()
@@ -74,7 +130,11 @@ export const useMultiDrag = () => {
   }
 
   // 计算放置位置
-  const calculateDropPosition = (event, rect, configure) => {
+  const calculateDropPosition = (
+    event: MouseEvent,
+    rect: DOMRect,
+    configure: { isContainer?: boolean } | null
+  ): PositionType => {
     const { clientX: mouseX, clientY: mouseY } = event
     // 参考单选节点的实现，使用更精确的计算方式
     const yAbs = Math.min(20, rect.height / 3)
@@ -99,7 +159,7 @@ export const useMultiDrag = () => {
   }
 
   // 计算鼠标移动距离
-  const calculateDistance = (pos1, pos2) => {
+  const calculateDistance = (pos1: Position | null, pos2: Position | null): number => {
     if (!pos1 || !pos2) return 0
     const dx = pos1.x - pos2.x
     const dy = pos1.y - pos2.y
@@ -107,7 +167,12 @@ export const useMultiDrag = () => {
   }
 
   // 检查是否允许放置
-  const checkAllowInsert = (configure, nodes, targetId, position) => {
+  const checkAllowInsert = (
+    configure: { isContainer?: boolean } | null,
+    nodes: NodeSchema[],
+    targetId: string,
+    position: PositionType
+  ): boolean => {
     // 如果没有配置，不允许放置
     if (!configure) return false
 
@@ -183,11 +248,11 @@ export const useMultiDrag = () => {
   }
 
   // 拖拽移动
-  const moveMultiDrag = (event) => {
+  const moveMultiDrag = (event: MouseEvent): boolean => {
     if (!multiDragState.keydown || multiStateLength.value <= 1) return false
 
     const { clientX, clientY } = event
-    const currentMousePos = { x: clientX, y: clientY }
+    const currentMousePos: Position = { x: clientX, y: clientY }
 
     // 如果拖拽还未开始，检查是否超过阈值
     if (!multiDragState.dragStarted) {
@@ -217,7 +282,7 @@ export const useMultiDrag = () => {
       return false
     }
 
-    const targetElement = getElement(event.target)
+    const targetElement = getElement(event.target as HTMLElement)
 
     // 特殊处理：如果没有找到目标元素，检查是否是body元素或其直接子元素
     if (!targetElement) {
@@ -226,7 +291,11 @@ export const useMultiDrag = () => {
       const body = doc.body
 
       // 如果鼠标在body区域内，则视为拖拽到body
-      if (event.target === body || event.target.parentElement === body || event.target === doc.documentElement) {
+      if (
+        event.target === body ||
+        (event.target as HTMLElement).parentElement === body ||
+        event.target === doc.documentElement
+      ) {
         // 获取body中的所有顶级节点
         const { getSchema } = useCanvas()
         const bodySchema = getSchema()
@@ -252,9 +321,9 @@ export const useMultiDrag = () => {
         const { clientY } = event
 
         // 遍历body的直接子节点，找到最接近鼠标位置的节点
-        let closestNode = null
+        let closestNode: HTMLElement | null = null
         let closestDistance = Infinity
-        let position = POSITION.IN // 默认放置到body内部
+        let position: PositionType = POSITION.IN // 默认放置到body内部
 
         for (const childSchema of bodyChildren) {
           const childElement = querySelectById(childSchema.id)
@@ -283,7 +352,7 @@ export const useMultiDrag = () => {
           const rect = closestNode.getBoundingClientRect()
 
           // 检查是否允许放置
-          const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, nodeId, position)
+          const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, nodeId!, position)
 
           // 更新lineState
           Object.assign(lineState, {
@@ -341,7 +410,7 @@ export const useMultiDrag = () => {
       if (parent) {
         // 根据放置位置调整目标节点
         const children = parent.children || []
-        const targetIndex = children.findIndex((child) => child.id === targetId)
+        const targetIndex = children.findIndex((child: NodeSchema) => child.id === targetId)
 
         // 如果是放置到节点下方，使用下一个兄弟节点作为目标
         if ((position === POSITION.BOTTOM || position === POSITION.RIGHT) && targetIndex < children.length - 1) {
@@ -454,7 +523,7 @@ export const useMultiDrag = () => {
   }
 
   // 结束拖拽
-  const endMultiDrag = () => {
+  const endMultiDrag = (): boolean => {
     // 只有真正开始拖拽后才处理放置逻辑
     if (!multiDragState.draging || !multiDragState.dragStarted || multiStateLength.value <= 1) {
       // 重置状态
@@ -475,7 +544,7 @@ export const useMultiDrag = () => {
 
       if (finalTargetNode) {
         // 创建一个操作批次，以便能够一次性添加历史记录
-        const operations = []
+        const operations: InsertOperation[] = []
 
         // 收集要移动的节点ID，用于后续检查
         const movingNodeIds = multiDragState.nodes.map((node) => node.id)
@@ -512,7 +581,7 @@ export const useMultiDrag = () => {
           operations.push({
             sourceId,
             targetNodeData,
-            position
+            position: position as PositionType
           })
         })
 
@@ -560,7 +629,7 @@ export const useMultiDrag = () => {
           // 延迟执行，确保DOM已更新
           setTimeout(() => {
             // 重建多选状态
-            const newMultiSelection = []
+            const newMultiSelection: SelectState[] = []
 
             // 收集所有操作后的节点ID
             const newNodeIds = operations.map((op) => op.targetNodeData.data.id)
@@ -572,9 +641,9 @@ export const useMultiDrag = () => {
                 const { node } = useCanvas().getNodeWithParentById(nodeId) || {}
                 if (!node) return
 
-                const state = {
+                const state: SelectState = {
                   id: nodeId,
-                  componentName: element.getAttribute(NODE_TAG),
+                  componentName: element.getAttribute(NODE_TAG) || '',
                   schema: node
                 }
 
@@ -614,12 +683,12 @@ export const useMultiDrag = () => {
   }
 
   // 判断是否处于多选拖拽状态
-  const isMultiDragging = () => {
+  const isMultiDragging = (): boolean => {
     return multiDragState.draging && multiDragState.dragStarted && multiStateLength.value > 1
   }
 
   // 获取多选拖拽的位置描述
-  const getMultiDragPositionText = computed(() => {
+  const getMultiDragPositionText: ComputedRef<string> = computed(() => {
     if (!isMultiDragging()) return ''
 
     const { position, forbidden, id } = lineState
@@ -640,15 +709,15 @@ export const useMultiDrag = () => {
     }
 
     switch (position) {
-      case 'top':
+      case POSITION.TOP:
         return `放置到 ${targetComponentName || '目标节点'} 上方`
-      case 'bottom':
+      case POSITION.BOTTOM:
         return `放置到 ${targetComponentName || '目标节点'} 下方`
-      case 'left':
+      case POSITION.LEFT:
         return `放置到 ${targetComponentName || '目标节点'} 左侧`
-      case 'right':
+      case POSITION.RIGHT:
         return `放置到 ${targetComponentName || '目标节点'} 右侧`
-      case 'in':
+      case POSITION.IN:
         return `放置到 ${targetComponentName || '容器'} 内部`
       default:
         return ''

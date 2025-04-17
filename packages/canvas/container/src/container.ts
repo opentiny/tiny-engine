@@ -38,14 +38,16 @@ export interface DragOffset {
   y: number
 }
 
+export type PositionType = 'top' | 'bottom' | 'left' | 'right' | 'in' | 'out'
+
 export const POSITION = Object.freeze({
-  TOP: 'top',
-  BOTTOM: 'bottom',
-  LEFT: 'left',
-  RIGHT: 'right',
-  IN: 'in',
-  OUT: 'out'
-})
+  TOP: 'top' as PositionType,
+  BOTTOM: 'bottom' as PositionType,
+  LEFT: 'left' as PositionType,
+  RIGHT: 'right' as PositionType,
+  IN: 'in' as PositionType,
+  OUT: 'out' as PositionType
+} as const)
 
 export const initialDragState = {
   keydown: false,
@@ -506,7 +508,7 @@ export const allowInsert = (configure: any = hoverState.configure || {}, data: N
   return flag
 }
 
-const isAncestor = (ancestor: string | Node, descendant: string | Node) => {
+export const isAncestor = (ancestor: string | Node, descendant: string | Node) => {
   const ancestorId = typeof ancestor === 'string' ? ancestor : ancestor.id
   let descendantId = typeof descendant === 'string' ? descendant : descendant.id
 
@@ -848,7 +850,7 @@ export const hoverNode = (id: string, data: Node) => {
 
 export const insertNode = (
   node: { node: Node; parent: Node; data: Node },
-  position: string = POSITION.IN,
+  position: PositionType = POSITION.IN,
   select = true
 ) => {
   if (!node.parent) {
