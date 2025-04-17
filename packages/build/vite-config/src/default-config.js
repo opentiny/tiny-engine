@@ -152,7 +152,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
   const config = getDefaultConfig(engineConfig)
 
   config.plugins.push(
-    treeShakingPlugin(engineConfig.removedRegistry),
+    treeShakingPlugin(engineConfig.registryPath),
     createSvgIconsPlugin({
       iconDirs: engineConfig.iconDirs || [],
       symbolId: 'icon-[name]',

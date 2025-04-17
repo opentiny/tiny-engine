@@ -10,23 +10,22 @@
  *
  */
 import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-// import { META_SERVICE } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import scriptPlugin from './src/plugins/script'
-import removedRegistry from './removedRegistry.json'
 
 export default {
   [META_SERVICE.Http]: HttpService,
   'engine.config': {
     ...engineConfig
   },
-  ...removedRegistry,
   // 配置 false 隐藏工具栏清空按钮
-  // 'engine.toolbars.clean': false,
-  // 配置 false 隐藏大纲树
-  // 'engine.plugins.outlinetree': false,
-  // 替换整个页面JS插件
+  'engine.toolbars.clean': false,
+  // 配置 false 隐藏大纲树，手动配置 tree-shaking 为 false，仍然不会被 tree-shaking
+  // #__TINY_ENGINE_TREE_SHAKING__: false
+  'engine.plugins.outlinetree': false,
+  // 替换整个页面JS插件，手动配置 tree-shaking 为 true
+  /* #__TINY_ENGINE_TREE_SHAKING__: true */
   'engine.plugins.pagecontroller': scriptPlugin,
   // 换了个id，代表新增模块
   'engine.plugins.script': {
