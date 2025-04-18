@@ -41,5 +41,21 @@ export default {
         }
       }
     }
+  },
+  'engine.plugins.bridge': {
+    overwrite: {
+      templates: {
+        BridgeManage: `<template>
+  <h1
+        v-for="(item, index) in list"
+        :key="item.name"
+        @click.stop="openEdit(item, index)"
+      >
+        <div class="item-label">{{ item.name }}</div>
+  </h1>
+</template>
+`
+      }
+    }
   }
 }
