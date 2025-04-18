@@ -18,9 +18,7 @@ export const useRenderless = ({ props }) => {
     tableData: props.data || props.op.data || []
   })
 
-  onMounted(() => {})
-  onMounted(() => {})
-  onMounted(() => {})
+  const last1 = useLayout(last1)
 
   beforeMount(() => {})
 
@@ -32,21 +30,25 @@ export const useRenderless = ({ props }) => {
     bbb = 'bbb'
 
   const handleClick = (e) => {
-    console.log(e.target, aaa)
+    const dd = 'dd'
+    console.log(e.target, dd)
     state.tableData.push({
       key: 'TinyEngine',
       zhCN: '低代码引擎',
       enUS: 'TinyEngine'
     })
   }
+  const last = () => {}
+
+  last()
+
+  last1()
 
   const ccc = 111
 
   const sendMessage = () => {
     logMessage('自定义是的范德萨')
   }
-
-  function last() {}
 
   return {
     state,
