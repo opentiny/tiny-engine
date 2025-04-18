@@ -181,6 +181,7 @@ export const transform = (code, id) => {
     varDeclartion: new Map(),
     moduleId: '', // 自定义的模块ID，用于区分元服务中不同文件,
     noUseVars: [],
+    fileId: id,
     ArrowOrFunctionExpression: []
   }
 
@@ -215,7 +216,7 @@ export const transform = (code, id) => {
       ) {
         // eslint-disable-next-line no-console
         console.warn(
-          `函数 ${name} 在文件内部声明后直接调用，会造成函数覆盖场景报错！！！整改建议：1、导入后再调用。2、如果特殊场景需要直接调用请在文件最后调用`
+          `文件 ${state.fileId} 中函数 ${name} 在声明后直接调用了，可能造成函数覆盖场景报错！整改建议：1、导入后再调用。2、在文件最后调用`
         )
       }
     }
