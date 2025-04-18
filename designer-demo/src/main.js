@@ -11,7 +11,6 @@
  */
 import { defineEntry, tryGetAndDefineHotfixRegistry } from '@opentiny/tiny-engine-meta-register'
 import { configurators } from './configurators/'
-import registry from '../registry'
 
 import 'virtual:svg-icons-register'
 
@@ -25,15 +24,13 @@ async function startApp() {
   const hotfixRegistry = (await tryGetAndDefineHotfixRegistry({ url: 'http://localhost:8090/hotfixRegistry.js', request: fetchHotfixRegistry })) || {}
 
   // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
-  defineEntry(registry)
-  // TODO: 问题一：提前引入 @opentiny/tiny-engine 的依赖，会导致覆盖失败？
-  // TODO: 问题二：如果 registry 是异步的，会导致模板覆盖失败？
-  // const registry = await import('../registry')
+  const registry = await import('../registry')
+  defineEntry(registry.default)
   const { init } = await import('@opentiny/tiny-engine')
 
   init({
     // TODO: 这里支持数组，传入多个注册表
-    registry: [registry, hotfixRegistry],
+    registry: [registry.default, hotfixRegistry],
     configurators,
     createAppSignal: ['global_service_init_finish']
   })
