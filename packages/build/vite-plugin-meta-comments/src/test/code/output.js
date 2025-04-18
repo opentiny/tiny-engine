@@ -1,11 +1,18 @@
-import {
-  callEntry as _callEntry,
-  beforeCallEntry as _beforeCallEntry,
-  afterCallEntry as _afterCallEntry,
-  useCompile as _useCompile
-} from '@opentiny/tiny-engine-meta-register'
+import { callEntry as _callEntry, useCompile as _useCompile } from '@opentiny/tiny-engine-meta-register'
 import _metaData from '../meta.js'
 /* metaService */
+/**
+ * Copyright (c) 2024 - present TinyEngine Authors.
+ * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ *
+ * Use of this source code is governed by an MIT-style license.
+ *
+ * THE OPEN SOURCE SOFTWARE IN THIS PRODUCT IS DISTRIBUTED IN THE HOPE THAT IT WILL BE USEFUL,
+ * BUT WITHOUT ANY WARRANTY, WITHOUT EVEN THE IMPLIED WARRANTY OF MERCHANTABILITY OR FITNESS FOR
+ * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
+ *
+ */
+
 import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'
 import { deepCopy } from 'loash-es'
 export const useRenderless = _callEntry(
@@ -13,192 +20,28 @@ export const useRenderless = _callEntry(
     const state = reactive({
       tableData: props.data || props.op.data || []
     })
-    onMounted(
-      _callEntry(() => {}, {
-        metaData: {
-          id: `${_metaData.id}.onMounted[0]`
-        },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
-      })
-    )
-    onMounted(
-      _callEntry(() => {}, {
-        metaData: {
-          id: `${_metaData.id}.onMounted[1]`
-        },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
-      })
-    )
-    onMounted(
-      _callEntry(() => {}, {
-        metaData: {
-          id: `${_metaData.id}.onMounted[2]`
-        },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
-      })
-    )
+    const last1 = useLayout(last1)
     beforeMount(
       _callEntry(() => {}, {
         metaData: {
           id: `${_metaData.id}.onBeforeMount[0]`
         },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
+        ctx: () => ({
+          props,
+          state,
+          last1,
+          logMessage,
+          aaa,
+          bbb,
+          handleClick,
+          last,
+          ccc,
+          sendMessage,
+          deepCopy,
+          useRenderless
+        })
       })
     )
-    _beforeCallEntry({
-      metaData: {
-        id: `${_metaData.id}.logMessage`
-      },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
-    })
     const logMessage = _callEntry(
       () => {
         console.log('我是纯函数我不需要闭包参数')
@@ -207,126 +50,28 @@ export const useRenderless = _callEntry(
         metaData: {
           id: `${_metaData.id}.logMessage`
         },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              props,
-              state,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
+        ctx: () => ({
+          props,
+          state,
+          last1,
+          logMessage,
+          aaa,
+          bbb,
+          handleClick,
+          last,
+          ccc,
+          sendMessage,
+          deepCopy,
+          useRenderless
+        })
       }
     )
-    _afterCallEntry({
-      metaData: {
-        id: `${_metaData.id}.logMessage`
-      },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
-    })
     const aaa = 'aaa',
       bbb = 'bbb'
-    _beforeCallEntry({
-      metaData: {
-        id: `${_metaData.id}.handleClick`
-      },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            e,
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
-    })
     const handleClick = _callEntry(
       (e) => {
-        console.log(e.target, aaa)
+        const dd = 'dd'
+        console.log(e.target, dd)
         state.tableData.push({
           key: 'TinyEngine',
           zhCN: '低代码引擎',
@@ -337,131 +82,44 @@ export const useRenderless = _callEntry(
         metaData: {
           id: `${_metaData.id}.handleClick`
         },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              e,
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
+        ctx: () => ({
+          props,
+          state,
+          last1,
+          logMessage,
+          aaa,
+          bbb,
+          handleClick,
+          last,
+          ccc,
+          sendMessage,
+          deepCopy,
+          useRenderless
+        })
       }
     )
-    _afterCallEntry({
+    const last = _callEntry(() => {}, {
       metaData: {
-        id: `${_metaData.id}.handleClick`
+        id: `${_metaData.id}.last`
       },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            e,
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
+      ctx: () => ({
+        props,
+        state,
+        last1,
+        logMessage,
+        aaa,
+        bbb,
+        handleClick,
+        last,
+        ccc,
+        sendMessage,
+        deepCopy,
+        useRenderless
+      })
     })
+    last()
+    last1()
     const ccc = 111
-    _beforeCallEntry({
-      metaData: {
-        id: `${_metaData.id}.sendMessage`
-      },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
-    })
     const sendMessage = _callEntry(
       () => {
         logMessage('自定义是的范德萨')
@@ -470,90 +128,22 @@ export const useRenderless = _callEntry(
         metaData: {
           id: `${_metaData.id}.sendMessage`
         },
-        ctx: () => {
-          let asyncVars = {}
-          try {
-            asyncVars = {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              sendMessage,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          } catch (e) {
-            return {
-              props,
-              state,
-              logMessage,
-              aaa,
-              bbb,
-              handleClick,
-              ccc,
-              last,
-              reactive,
-              onMounted,
-              beforeMount,
-              deepCopy,
-              useRenderless
-            }
-          }
-          return asyncVars
-        }
+        ctx: () => ({
+          props,
+          state,
+          last1,
+          logMessage,
+          aaa,
+          bbb,
+          handleClick,
+          last,
+          ccc,
+          sendMessage,
+          deepCopy,
+          useRenderless
+        })
       }
     )
-    _afterCallEntry({
-      metaData: {
-        id: `${_metaData.id}.sendMessage`
-      },
-      ctx: () => {
-        let asyncVars = {}
-        try {
-          asyncVars = {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            sendMessage,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        } catch (e) {
-          return {
-            props,
-            state,
-            logMessage,
-            aaa,
-            bbb,
-            handleClick,
-            ccc,
-            last,
-            reactive,
-            onMounted,
-            beforeMount,
-            deepCopy,
-            useRenderless
-          }
-        }
-        return asyncVars
-      }
-    })
-    function last() {}
     return {
       state,
       aa,
@@ -565,34 +155,9 @@ export const useRenderless = _callEntry(
     metaData: {
       id: `${_metaData.id}.useRenderless`
     },
-    ctx: () => {
-      let asyncVars = {}
-      try {
-        asyncVars = {
-          props,
-          state,
-          logMessage,
-          aaa,
-          bbb,
-          handleClick,
-          ccc,
-          sendMessage,
-          last,
-          reactive,
-          onMounted,
-          beforeMount,
-          deepCopy,
-          useRenderless
-        }
-      } catch (e) {
-        return {
-          reactive,
-          onMounted,
-          beforeMount,
-          deepCopy
-        }
-      }
-      return asyncVars
-    }
+    ctx: () => ({
+      deepCopy,
+      useRenderless
+    })
   }
 )

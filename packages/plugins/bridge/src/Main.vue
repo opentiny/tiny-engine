@@ -26,6 +26,7 @@ import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
 import { RESOURCE_TIP } from './js/resource'
 
+/* metaComponent: engine.plugins.bridge */
 export default {
   components: {
     PluginPanel,

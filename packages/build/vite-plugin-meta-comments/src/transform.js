@@ -38,6 +38,7 @@ function handleFunctionExpression(state) {
 
     // 只有拿到函数的名称才可以被复写
     if (functionName) {
+      state.ArrowOrFunctionExpression.push(functionName)
       wrapEntryFuncNode({
         path,
         functionName,
@@ -72,15 +73,26 @@ function handleImportDeclaration(state) {
   }
 }
 
+/**
+ * 处理变量声明节点
+ * @param {Object} state - 状态对象,用于存储变量声明信息
+ * @returns {Function} 返回处理变量声明的函数
+ */
 function handleVariableDeclaration(state) {
   return function (path) {
+    // 遍历所有变量声明
     path.node.declarations?.forEach((val) => {
+      // 获取变量名
       const name = val.id.name
+      // 获取变量所在的作用域块
       const block = path.scope.block
+
+      // 如果该作用域块还没有记录过变量,则创建新数组
       if (!state.varDeclartion.has(block)) {
         const arr = [name]
         state.varDeclartion.set(block, arr)
       } else {
+        // 如果该作用域块已存在,则将变量名添加到数组中
         const arr = state.varDeclartion.get(block)
         arr.push(name)
       }
@@ -168,14 +180,15 @@ export const transform = (code, id) => {
     hooksIndex: {},
     varDeclartion: new Map(),
     moduleId: '', // 自定义的模块ID，用于区分元服务中不同文件,
-    noUseVars: []
+    noUseVars: [],
+    ArrowOrFunctionExpression: []
   }
 
   // 找不到meta.js告警并返回
   const metaPath = getMeataPath(id)
   if (!metaPath) {
     // eslint-disable-next-line no-console
-    console.log('找不到对应的meta.js')
+    console.log(`${id}: 找不到对应的meta.js`)
     return
   }
 
@@ -185,9 +198,33 @@ export const transform = (code, id) => {
     plugins: ['typescript', 'jsx']
   })
 
+  const handleCallExpression = (state) => (path) => {
+    const callee = path.node.callee
+    const name = callee.name
+    if (name === state.varName[CALLENTRY]) {
+      return
+    }
+    if (name) {
+      const bindings = path.scope.bindings
+      // 判断调用的函数是否来自本文件中的函数表达式,且在同一个函数作用域内
+      if (
+        callee.type === 'Identifier' &&
+        bindings?.[name] &&
+        bindings?.[name]?.kind !== 'module' &&
+        state.ArrowOrFunctionExpression.includes(name)
+      ) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `函数 ${name} 在文件内部声明后直接调用，会造成函数覆盖场景报错！！！整改建议：1、导入后再调用。2、如果特殊场景需要直接调用请在文件最后调用`
+        )
+      }
+    }
+  }
+
   generateTraverse(resultAst, {
     // 使用特定的类型回调处理、函数表达式、箭头函数、带导出的函数
     'ArrowFunctionExpression|FunctionExpression': handleFunctionExpression(state),
+    CallExpression: handleCallExpression(state),
     ImportDeclaration: handleImportDeclaration(state),
     VariableDeclaration: handleVariableDeclaration(state),
     ExpressionStatement: handleExpressionStatement(state),
