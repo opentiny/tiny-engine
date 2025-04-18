@@ -25,12 +25,12 @@ async function startApp() {
 
   // 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
   const registry = await import('../registry')
-  defineEntry(registry)
+  defineEntry(registry.default)
   const { init } = await import('@opentiny/tiny-engine')
 
   init({
     // TODO: 这里支持数组，传入多个注册表
-    registry: [registry, hotfixRegistry],
+    registry: [registry.default, hotfixRegistry],
     configurators,
     createAppSignal: ['global_service_init_finish']
   })
