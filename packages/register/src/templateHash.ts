@@ -25,7 +25,9 @@ export const useCompile = ({ component, metaData }: any) => {
   const customTem = templateHashMap[metaData.id]
   if (customTem) {
     const template = generateTemplate(customTem)
-    component.render = compile(template)
+    const render = compile(template)
+
+    component.render = render
   }
 
   return component
