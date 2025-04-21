@@ -48,8 +48,8 @@
         <div class="tip">
           <span class="text" v-if="!pageSettingState.currentPageData.route">路由将以website.com开头</span>
           <span class="route-text" v-else>
-            <span class="text">website.com/</span>
-            <span class="text-dim">{{ currentRoute }}</span>
+            <span class="tip-text">website.com/</span>
+            <span class="tip-text-dim">{{ currentRoute }}</span>
           </span>
         </div>
       </tiny-form-item>
@@ -64,13 +64,11 @@
           placeholder="请选择默认跳转页"
           @change="changeDefaultPage"
         ></tiny-select>
-        <div v-if="state.defaultPageId" class="tip default-page">
-          <span class="text"
-            >访问<span class="text-dim">/{{ currentRoute }}</span
-            >路由，默认跳转<span class="text-dim"
-              >/{{ currentRoute }}/{{ pageSettingState?.defaultPage?.route }}</span
-            ></span
-          >
+        <div v-if="state.defaultPageId" class="tip">
+          <div class="tip-text">访问</div>
+          <span class="tip-text-dim">/{{ currentRoute }}</span>
+          <div class="tip-text">路由，默认跳转</div>
+          <span class="tip-text-dim">/{{ currentRoute }}/{{ pageSettingState?.defaultPage?.route }}</span>
         </div>
       </tiny-form-item>
     </tiny-form>
@@ -324,20 +322,18 @@ export default {
     color: var(--te-page-manage-tip-color);
     font-size: 12px;
     border-radius: 3px;
-    display: flex;
-    align-items: center;
-    height: 16px;
     margin-top: 4px;
-    .text {
-      color: var(--te-page-manage-tip-text-color);
-    }
-    .text-dim {
-      color: var(--te-page-manage-tip-dim-text-color);
-    }
-  }
-  .default-page {
+    width: 100%;
+    word-wrap: break-word;
     height: auto;
     line-height: 16px;
+    .tip-text {
+      width: 100%;
+      color: var(--te-page-manage-tip-text-color);
+    }
+    .tip-text-dim {
+      color: var(--te-page-manage-tip-dim-text-color);
+    }
   }
 }
 </style>

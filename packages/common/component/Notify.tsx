@@ -9,10 +9,11 @@ const durationMap = {
 
 export interface NotifyOptions {
   [key: string]: any
-  customClass: string
-  title: string
+  title?: string
+  message: string
   type: keyof typeof durationMap
-  position: string
+  customClass?: string
+  position?: string
 }
 
 const useNotify = (config: NotifyOptions) => {

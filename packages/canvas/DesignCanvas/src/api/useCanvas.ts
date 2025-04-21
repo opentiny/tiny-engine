@@ -584,6 +584,7 @@ const importSchema = (data: any) => {
 
   // JSON 格式校验
   resetCanvasState({
+    ...pageState,
     pageSchema: importData
   })
 }
@@ -592,7 +593,7 @@ const exportSchema = () => {
   return JSON.stringify(pageState.pageSchema)
 }
 
-const getSchema = () => {
+const getSchema = (): RootNode | object => {
   return pageState.pageSchema || {}
 }
 

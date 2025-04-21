@@ -29,11 +29,7 @@ describe('generate whole application', () => {
       fs.mkdirSync(path.resolve(__dirname, `./result/appdemo01/${filePath}`), { recursive: true })
 
       if (typeof fileContent === 'string') {
-        fs.writeFileSync(
-          path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`),
-          // 这里需要将换行符替换成 CRLF 格式的
-          fileContent.replace(/\r?\n/g, '\r\n')
-        )
+        fs.writeFileSync(path.resolve(__dirname, `./result/appdemo01/${filePath}/${fileName}`), fileContent)
       } else if (fileContent instanceof Blob) {
         const arrayBuffer = await fileContent.arrayBuffer()
         const buffer = Buffer.from(arrayBuffer)
@@ -46,7 +42,9 @@ describe('generate whole application', () => {
       compareContent: true,
       ignoreLineEnding: true,
       ignoreAllWhiteSpaces: true,
-      ignoreEmptyLines: true
+      ignoreEmptyLines: true,
+      compareFileSync: dirCompare.fileCompareHandlers.lineBasedFileCompare.compareSync,
+      compareFileAsync: dirCompare.fileCompareHandlers.lineBasedFileCompare.compareAsync
     }
 
     const path1 = path.resolve(__dirname, './expected/appdemo01')

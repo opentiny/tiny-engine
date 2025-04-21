@@ -10,7 +10,7 @@
  *
  */
 
-import { ref, reactive, readonly } from 'vue'
+import { ref, reactive, readonly, type DeepReadonly } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
@@ -32,12 +32,24 @@ import {
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
+import type {
+  Block,
+  BlockContent,
+  BlockGroup,
+  BlockProperty,
+  CreateBlockOptions,
+  CreateEmptyBlockOptions,
+  ParseChildPropsOptions,
+  ParsePropToDataOptons,
+  Property,
+  SchemaData
+} from './types'
 
 const { SORT_TYPE, SCHEMA_DATA_TYPE, BLOCK_OPENNESS } = constants
 
 const NODE_TYPE_PAGE = 'Page'
 const nameCn = 'name_cn'
-const DEFAULT_PROPERTIES = readonly([
+const DEFAULT_PROPERTIES = readonly<Property[]>([
   {
     label: {
       zh_CN: '基础信息'
@@ -55,7 +67,7 @@ const DEFAULT_PROPERTIES = readonly([
   }
 ])
 
-const DEFAULT_BLOCK = readonly({
+const DEFAULT_BLOCK = readonly<DeepReadonly<BlockContent>>({
   componentName: 'Block',
   fileName: '',
   css: '',
@@ -70,63 +82,63 @@ const DEFAULT_BLOCK = readonly({
   dataSource: {}
 })
 
-const blockState = reactive({
+const blockState = reactive<{ list: Block[]; current: Block | null }>({
   list: [],
   current: null // 当前画布中正在渲染的区块数据
 })
 
 // 区块分组信息
-const groupState = reactive({
+const groupState = reactive<{ list: BlockGroup[]; selected: BlockGroup | object }>({
   list: [],
   selected: {}
 })
 
 // 区块分类
-const categoryState = reactive({
+const categoryState = reactive<{ list: BlockGroup[] }>({
   list: []
 })
 
 const getBlockList = () => blockState.list
 
-const setBlockList = (list) => {
+const setBlockList = (list: Block[]) => {
   blockState.list = list
 }
 
-const addBlock = (block) => {
+const addBlock = (block: Block) => {
   const blockList = getBlockList()
   blockList.unshift(block)
 }
 
-const delBlock = (block) => {
+const delBlock = (block: Block) => {
   remove(getBlockList(), block)
 }
 
 // 获取当前画布中的区块信息
 const getCurrentBlock = () => blockState.current
 
-const setCurrentBlock = (block) => {
+const setCurrentBlock = (block: Block) => {
   blockState.current = block
 }
 
 const getGroupList = () => groupState.list
 
-const setGroupList = (list) => {
+const setGroupList = (list: BlockGroup[]) => {
   groupState.list = list
 }
 
 const getCategoryList = () => categoryState.list
 
-const setCategoryList = (list) => {
+const setCategoryList = (list: BlockGroup[]) => {
   categoryState.list = list
 }
 
 const getSelectedGroup = () => groupState.selected
 
-const setSelectedGroup = (selected) => {
+const setSelectedGroup = (selected: BlockGroup) => {
   groupState.selected = selected
 }
 
-const copyCss = (css, classNameList) => {
+const copyCss = (css: string, classNameList: string[]) => {
   classNameList = Array.from(new Set(classNameList)).map((item) => '.' + item)
   const cssObject = getCssObjectFromStyleStr(css)
   let styleStr = ''
@@ -141,10 +153,10 @@ const copyCss = (css, classNameList) => {
   return styleStr
 }
 
-const copySchema = (schema, contentList, methods) => {
+const copySchema = (schema: Partial<BlockContent['schema']>, contentList: string[], methods: Record<string, any>) => {
   const content = schema?.properties?.[0]?.content || []
-  let emitList = []
-  const emitListCopies = {}
+  let emitList: string[] = []
+  const emitListCopies: Record<string, any> = {}
   Object.keys(methods).forEach((key) => {
     const item = JSON.stringify(methods[key].value).match(/emit..*?\)/g)
 
@@ -154,10 +166,16 @@ const copySchema = (schema, contentList, methods) => {
   })
 
   emitList.forEach((e) => {
-    let key = e.match(/'.*?'/g)[0].replace(/'/g, '')
+    const matches = e.match(/'.*?'/g)
+
+    if (!matches || !matches.length) {
+      return
+    }
+
+    let key = matches[0].replace(/'/g, '')
 
     key = `on${key[0].toLocaleUpperCase() + key.slice(1, key.length)}`
-    if (schema?.events[key]) {
+    if (schema?.events?.[key]) {
       emitListCopies[key] = schema?.events[key]
     }
   })
@@ -174,12 +192,12 @@ const copySchema = (schema, contentList, methods) => {
   return schemaCopies
 }
 
-const copyMethods = (schema) => {
-  const methodsListCopies = {}
+const copyMethods = (schema: Record<string, any>) => {
+  const methodsListCopies: Record<string, any> = {}
 
   // 因为methods方法里面大部分是用户的业务代码（无法复用）,所以只需要拷贝一个空方法即可
   Object.entries(schema).forEach(([key, value]) => {
-    const ast = parseExpression(value.value)
+    const ast: any = parseExpression(value.value)
 
     // 清空函数体
     if (ast.body?.body) {
@@ -194,8 +212,8 @@ const copyMethods = (schema) => {
   return methodsListCopies
 }
 
-const copyState = (stateObj = {}, methodsObj = {}) => {
-  const stateCopies = {}
+const copyState = (stateObj: Record<string, any> = {}, methodsObj: Record<string, any> = {}) => {
+  const stateCopies: Record<string, any> = {}
   const stateKey = Object.keys(stateObj).map((e) => `state.${e} `)
 
   stateKey.forEach((e) => {
@@ -210,7 +228,7 @@ const copyState = (stateObj = {}, methodsObj = {}) => {
   return stateCopies
 }
 
-const parsePropToData = (data, { prop, langs, state, methods }) => {
+const parsePropToData = (data: SchemaData, { prop, langs, state, methods }: ParsePropToDataOptons) => {
   if (prop.type === SCHEMA_DATA_TYPE.I18n) {
     data.langs[prop.key] = langs[prop.key]
   } else if (prop.type === SCHEMA_DATA_TYPE.JSExpression) {
@@ -228,9 +246,9 @@ const parsePropToData = (data, { prop, langs, state, methods }) => {
 }
 
 const filterDataFn =
-  (parseChildProps) =>
-  ({ children = [], langs = {}, methods = {}, state = {} }) => {
-    const data = {
+  (parseChildProps: (...args: any[]) => any) =>
+  ({ children = [] as any[], langs = {}, methods = {}, state = {} }) => {
+    const data: SchemaData = {
       langs: {},
       methods: {},
       state: {},
@@ -247,14 +265,14 @@ const filterDataFn =
     return data
   }
 
-const parseChildProps = (data, { child, langs, state, methods }) => {
+const parseChildProps = (data: SchemaData, { child, langs, state, methods }: ParseChildPropsOptions) => {
   if (child.props) {
     Object.entries(child.props).forEach(([propKey, prop]) => {
       if (typeof prop === 'object') {
         parsePropToData(data, { prop, langs, state, methods })
       } else {
         if (propKey === 'className' && prop) {
-          data.classNameList.push(...prop.split(' ').filter((item) => item))
+          data.classNameList.push(...prop.split(' ').filter((item: string) => item))
         }
       }
     })
@@ -271,14 +289,14 @@ const parseChildProps = (data, { child, langs, state, methods }) => {
   }
 }
 
-const getBlockPageSchema = (block) => {
+const getBlockPageSchema = (block: Block) => {
   const content = block?.content || {}
-  content.componentName = content.componentName || content.blockName
+  content.componentName = content.componentName || content.blockName || ''
 
   return content
 }
 
-const initBlock = async (block = {}, _langs = {}, isEdit) => {
+const initBlock = async (block: any = {}, _langs = {}, isEdit?: boolean) => {
   const { resetBlockCanvasState, setSaved, getSchema } = useCanvas()
   const { setBreadcrumbBlock } = useBreadcrumb()
 
@@ -305,7 +323,7 @@ const initBlock = async (block = {}, _langs = {}, isEdit) => {
   })
 }
 
-const createBlock = ({ name_cn, label, path, categories }) => {
+const createBlock = ({ name_cn, label, path, categories }: CreateBlockOptions) => {
   const { pageState } = useCanvas()
   const schema = extend(true, {}, pageState.currentSchema)
   // 选中 body 节点创建区块时需传递子节点数据
@@ -320,20 +338,20 @@ const createBlock = ({ name_cn, label, path, categories }) => {
     filterData({
       children,
       langs: getLangs(),
-      methods: pageState.pageSchema.methods,
-      state: pageState.pageSchema.state
+      methods: pageState.pageSchema?.methods,
+      state: pageState.pageSchema?.state
     })
   )
 
-  const css = copyCss(pageState.pageSchema.css, classNameList)
+  const css = copyCss(pageState.pageSchema?.css || '', classNameList)
   const methodsCopies = copyMethods(methods)
   Object.assign(methods, methodsCopies)
 
-  const schemaCopies = copySchema(pageState.pageSchema.schema, contentList, methods)
-  const stateCopies = copyState(pageState.pageSchema.state, methods)
+  const schemaCopies = copySchema(pageState.pageSchema?.schema, contentList, methods)
+  const stateCopies = copyState(pageState.pageSchema?.state, methods)
   Object.assign(state, stateCopies)
 
-  const block = {
+  const block: Block = {
     path,
     [nameCn]: name_cn,
     label,
@@ -355,8 +373,8 @@ const createBlock = ({ name_cn, label, path, categories }) => {
   initBlock(block, langs)
 }
 
-const createEmptyBlock = ({ name_cn, label, path, categories }) => {
-  const block = {
+const createEmptyBlock = ({ name_cn, label, path, categories }: CreateEmptyBlockOptions) => {
+  const block: Block = {
     path,
     [nameCn]: name_cn,
     label,
@@ -372,8 +390,8 @@ const createEmptyBlock = ({ name_cn, label, path, categories }) => {
   initBlock(block)
 }
 
-const setComponentLinkedValue = ({ propertyName, value }) => {
-  const { schema } = useCanvas().canvasApi.value?.getCurrent() || {}
+const setComponentLinkedValue = ({ propertyName, value }: { propertyName: string; value: any }) => {
+  const { schema } = useCanvas().canvasApi.value?.getCurrent?.() || {}
 
   if (!propertyName || !schema) {
     return
@@ -383,28 +401,28 @@ const setComponentLinkedValue = ({ propertyName, value }) => {
   schema.props[propertyName] = value
 }
 
-const getBlockI18n = (block) => block?.content?.i18n || {}
+const getBlockI18n = (block: Block) => block?.content?.i18n || {}
 
-const getBlockProperties = (block) => block?.content?.schema?.properties?.[0]?.content || []
+const getBlockProperties = (block: Block) => block?.content?.schema?.properties?.[0]?.content || []
 
-const addBlockProperty = (property, block) => {
+const addBlockProperty = (property: BlockProperty, block: Block) => {
   if (!block) {
     return
   }
 
   if (!block.content) {
-    block.content = {}
+    block.content = {} as BlockContent
   }
 
   if (!block.content.schema) {
-    block.content.schema = {}
+    block.content.schema = {} as BlockContent['schema']
   }
 
   if (!block.content.schema.properties) {
     block.content.schema.properties = copyArray(DEFAULT_PROPERTIES)
   }
 
-  block.content.schema.properties[0].content.push(property)
+  block.content.schema.properties?.[0].content?.push(property)
 
   if (property.linked) {
     setComponentLinkedValue({
@@ -417,7 +435,7 @@ const addBlockProperty = (property, block) => {
   }
 }
 
-const editBlockProperty = (property, data) => {
+const editBlockProperty = (property: BlockProperty, data: any) => {
   if (property.linked) {
     const value = {
       type: SCHEMA_DATA_TYPE.JSExpression,
@@ -431,13 +449,13 @@ const editBlockProperty = (property, data) => {
   }
 }
 
-const removePropertyLink = ({ componentProperty }) => {
+const removePropertyLink = ({ componentProperty }: { componentProperty: BlockProperty }) => {
   const linked = componentProperty.linked
   componentProperty.linked = null
-  const properties = getBlockProperties(getCurrentBlock())
+  const properties = getBlockProperties(getCurrentBlock()!)
 
   properties.forEach((property) => {
-    if (property.linked && property.property === linked.blockProperty) {
+    if (property.linked && property.property === linked?.blockProperty) {
       if (componentProperty.widget?.props?.modelValue) {
         componentProperty.widget.props.modelValue = property.defaultValue
       }
@@ -452,19 +470,19 @@ const removePropertyLink = ({ componentProperty }) => {
   })
 }
 
-const getBlockEvents = (block = {}) => block?.content?.schema?.events || {}
+const getBlockEvents = (block = {} as Block) => block?.content?.schema?.events || {}
 
-const addBlockEvent = ({ name, event }, block) => {
+const addBlockEvent = ({ name, event }: { name: string; event: any }, block: Block) => {
   if (!block) {
     return
   }
 
   if (!block.content) {
-    block.content = {}
+    block.content = {} as BlockContent
   }
 
   if (!block.content.schema) {
-    block.content.schema = {}
+    block.content.schema = {} as BlockContent['schema']
   }
 
   if (!block.content.schema.events) {
@@ -474,8 +492,8 @@ const addBlockEvent = ({ name, event }, block) => {
   block.content.schema.events[name] = event
 }
 
-const removeEventLink = (linkedEventName) => {
-  const events = getBlockEvents(getCurrentBlock())
+const removeEventLink = (linkedEventName: string) => {
+  const events = getBlockEvents(getCurrentBlock()!)
 
   Object.entries(events).forEach(([name, event]) => {
     if (linkedEventName === name) {
@@ -484,7 +502,7 @@ const removeEventLink = (linkedEventName) => {
   })
 }
 
-const appendEventEmit = ({ eventName, functionName } = {}) => {
+const appendEventEmit = ({ eventName, functionName }: { eventName?: string; functionName?: string } = {}) => {
   if (!eventName || !functionName) {
     return
   }
@@ -495,8 +513,8 @@ const appendEventEmit = ({ eventName, functionName } = {}) => {
     const method = getMethods()?.[functionName]
 
     if (method?.type === SCHEMA_DATA_TYPE.JSFunction) {
-      const ast = parseExpression(method.value)
-      const params = ast.params.map((param) => param.name)
+      const ast: any = parseExpression(method.value)
+      const params = ast.params.map((param: { name: string }) => param.name)
       const emitContent = `this.emit('${hyphenate(eventName.replace(/^on/i, ''))}', ${params.join(',')})`
 
       // 如果方法里面已经有了相同的emit语句就不添加了
@@ -534,13 +552,13 @@ const selectedGroup = ref({ ...DEFAULT_GROUPS[0] })
 const selectedBlock = ref('')
 
 // 已选择的区块数组，用于在当前分组里添加区块
-const selectedBlockArray = ref([])
+const selectedBlockArray = ref<Block[]>([])
 
 // 是否刷新区块列表，在当前分组里添加/删除区块后通知刷新区块列表
 const isRefresh = ref(false)
 
 // 切换分组时调用
-const groupChange = (group) => {
+const groupChange = (group?: BlockGroup) => {
   if (!group) return
 
   // 需要改变selectedGroup的引用地址才能触发tiny-select组件的watch事件
@@ -551,7 +569,7 @@ const groupChange = (group) => {
 }
 
 // 添加设计器默认区块分组
-const addDefaultGroup = (groups) => {
+const addDefaultGroup = (groups: BlockGroup[]) => {
   const result = DEFAULT_GROUPS.map((group) => ({
     label: group.groupName,
     value: group
@@ -573,15 +591,23 @@ const addDefaultGroup = (groups) => {
 }
 
 // 是否是设计器默认区块分组
-const isDefaultGroupId = (groupId) => groupId === DEFAULT_GROUP_ID
+const isDefaultGroupId = (groupId: string) => groupId === DEFAULT_GROUP_ID
 
-const isAllGroupId = (groupId) => groupId === DEFAULT_GROUPS[0].groupId
+const isAllGroupId = (groupId: string) => groupId === DEFAULT_GROUPS[0].groupId
 
 // 获取今天的开始时间
 const getCurrentDate = () => new Date().setHours(0, 0, 0, 0)
 
+interface DateInfo {
+  nowDayOfWeek: number
+  nowDay: number
+  nowMonth: number
+  nowYear: number
+  lastMonth: number
+}
+
 // 获取本周的开始时间
-const getCurrentWeek = (date) => {
+const getCurrentWeek = (date: DateInfo) => {
   const { nowDayOfWeek, nowDay, nowMonth, nowYear } = date
   const weekStartDate = new Date(nowYear, nowMonth, nowDay - nowDayOfWeek + 1)
 
@@ -589,7 +615,7 @@ const getCurrentWeek = (date) => {
 }
 
 // 获取本月的开始时间
-const getCurrentMonth = (date) => {
+const getCurrentMonth = (date: DateInfo) => {
   const { nowMonth, nowYear } = date
   const monthStartDate = new Date(nowYear, nowMonth, 1)
 
@@ -597,7 +623,7 @@ const getCurrentMonth = (date) => {
 }
 
 // 获取上月的开始时间
-const getLastMonth = (date) => {
+const getLastMonth = (date: DateInfo) => {
   const { nowYear, lastMonth } = date
   const lastMonthStartDate = new Date(nowYear, lastMonth, 1)
 
@@ -605,7 +631,7 @@ const getLastMonth = (date) => {
 }
 
 // 判断时间戳属于今天/本周/本月/上月/更久以前
-const getDateFromNow = (timeStamp) => {
+const getDateFromNow = (timeStamp: number = 0) => {
   // 当前日期
   const now = new Date()
   const nowDay = now.getDate()
@@ -621,7 +647,7 @@ const getDateFromNow = (timeStamp) => {
   lastMonthDate.setMonth(lastMonthDate.getMonth() - 1)
   const lastMonth = lastMonthDate.getMonth()
 
-  const date = { nowDayOfWeek, nowDay, nowMonth, nowYear, lastMonth }
+  const date: DateInfo = { nowDayOfWeek, nowDay, nowMonth, nowYear, lastMonth }
 
   // 存在currentDateStart与currentWeekStart相同的情况，故不可以用currentDateStart作key
   const dateMap = new Map([
@@ -629,7 +655,7 @@ const getDateFromNow = (timeStamp) => {
     ['本周', () => getCurrentWeek(date)],
     ['本月', () => getCurrentMonth(date)],
     ['上月', () => getLastMonth(date)],
-    ['更久以前', () => '']
+    ['更久以前', () => 0]
   ])
 
   for (const [key, value] of dateMap) {
@@ -642,14 +668,14 @@ const getDateFromNow = (timeStamp) => {
 }
 
 // 将历史记录分组
-const splitBackupGroups = (data) => {
-  const backupList = {}
+const splitBackupGroups = (data: { updated_at: string | number; message: string; id: string }[]) => {
+  const backupList: Record<string, any> = {}
 
   if (!data || !data.length) return backupList
 
-  data.sort((backup1, backup2) => new Date(backup2.updated_at) - new Date(backup1.updated_at))
+  data.sort((backup1, backup2) => new Date(backup2.updated_at).getTime() - new Date(backup1.updated_at).getTime())
   data.forEach((item) => {
-    const updateTime = item.updated_at && new Date(item.updated_at)
+    const updateTime = item.updated_at ? new Date(item.updated_at) : null
     const title = getDateFromNow(updateTime?.getTime()) || ''
     backupList[title] = backupList[title] || []
     backupList[title].push({
@@ -663,24 +689,28 @@ const splitBackupGroups = (data) => {
 }
 
 const sortTypeHandlerMap = {
-  [SORT_TYPE.timeAsc]: (blockList) => {
-    blockList.sort((block1, block2) => new Date(block1.updated_at) - new Date(block2.updated_at))
+  [SORT_TYPE.timeAsc]: (blockList: Block[]) => {
+    blockList.sort(
+      (block1, block2) => new Date(block1.updated_at || '').getTime() - new Date(block2.updated_at || '').getTime()
+    )
   },
-  [SORT_TYPE.timeDesc]: (blockList) => {
-    blockList.sort((block1, block2) => new Date(block2.updated_at) - new Date(block1.updated_at))
+  [SORT_TYPE.timeDesc]: (blockList: Block[]) => {
+    blockList.sort(
+      (block1, block2) => new Date(block2.updated_at || '').getTime() - new Date(block1.updated_at || '').getTime()
+    )
   },
-  [SORT_TYPE.alphabetDesc]: (blockList) => {
+  [SORT_TYPE.alphabetDesc]: (blockList: Block[]) => {
     // name_cn 包含中文，需要用 localeCompare
     blockList.sort((block1, block2) => (block2.name_cn || block2.label).localeCompare(block1.name_cn || block1.label))
   },
-  [SORT_TYPE.alphabetAsc]: (blockList) => {
+  [SORT_TYPE.alphabetAsc]: (blockList: Block[]) => {
     // name_cn 包含中文，需要用 localeCompare
     blockList.sort((block1, block2) => (block1.name_cn || block1.label).localeCompare(block2.name_cn || block2.label))
   }
 }
 
 // 排序
-const sort = (blockList, type) => {
+const sort = (blockList: Block[], type: string) => {
   if (blockList.length === 0) return blockList
 
   if (sortTypeHandlerMap[type]) {
@@ -694,7 +724,7 @@ const sort = (blockList, type) => {
 }
 
 // 在可选区块列表里选择区块
-const check = (block) => {
+const check = (block: Block) => {
   if (selectedBlockArray.value.some((item) => item.id === block.id)) {
     return
   }
@@ -703,11 +733,11 @@ const check = (block) => {
 }
 
 // 取消选择区块
-const cancelCheck = (block) => {
+const cancelCheck = (block: Block) => {
   selectedBlockArray.value = selectedBlockArray.value.filter((item) => item.id !== block.id)
 }
 
-const checkAll = (blockList) => {
+const checkAll = (blockList: Block[]) => {
   selectedBlockArray.value = blockList
 }
 
@@ -715,11 +745,11 @@ const cancelCheckAll = () => {
   selectedBlockArray.value = []
 }
 
-const getBlockAssetsByVersion = (block, version) => {
+const getBlockAssetsByVersion = (block: Block, version?: string) => {
   let assets = block.assets
 
   if (version) {
-    const replaceUri = (uri) => uri.replace(/@\d{1,3}(\.\d{1,3}){0,2}\//, `@${version}/`)
+    const replaceUri = (uri: string) => uri.replace(/@\d{1,3}(\.\d{1,3}){0,2}\//, `@${version}/`)
 
     assets = {
       ...block.assets,

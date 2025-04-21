@@ -19,5 +19,6 @@ export default defineConfig({
       transformMixedEsModules: true
     },
     cssCodeSplit: false
-  }
+  },
+  base: './'
 })

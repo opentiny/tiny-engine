@@ -20,7 +20,7 @@ const logger = console
 
 const defaultOptions = {
   theme: 'light',
-  platformId: 918,
+  platformId: 1,
   material: ['/mock/bundle.json'],
   scripts: [],
   styles: []

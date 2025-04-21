@@ -60,7 +60,7 @@
       ></tiny-grid>
     </div>
     <div :style="{ width: props.quotePopWidth }">循环渲染：</div>
-    <tiny-icon-help-circle v-if="false"></tiny-icon-help-circle>
+    <tiny-icon-help-circle v-if="false" fill="currentColor"></tiny-icon-help-circle>
 
     <tiny-button
       v-for="(item, index) in state.buttons"
@@ -181,7 +181,7 @@ const state = vue.reactive({
       slots: {
         default: ({ row }, h) => (
           <div>
-            <TinyIconEdit></TinyIconEdit>
+            <TinyIconEdit fill="currentColor"></TinyIconEdit>
             {props.isEdit && (
               <CrmQuoteListGridStatus isEdit={props.isEdit} status={row.status}></CrmQuoteListGridStatus>
             )}
@@ -207,7 +207,10 @@ const state = vue.reactive({
           >
             <TinyInput value={row.giveamount}></TinyInput>
             {state.cityOptions.length && <span>{t('operation.hello')}</span>}
-            <TinyIconHelpCircle style="margin-left: 6px; cursor: pointer;vertical-align: top;"></TinyIconHelpCircle>
+            <TinyIconHelpCircle
+              style="margin-left: 6px; cursor: pointer;vertical-align: top;"
+              fill="currentColor"
+            ></TinyIconHelpCircle>
           </div>
         )
       }

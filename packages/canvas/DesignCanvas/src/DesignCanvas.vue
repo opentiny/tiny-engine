@@ -273,7 +273,7 @@ export default {
         getMaterial: useMaterial().getMaterial,
         addHistory: useHistory().addHistory,
         request: getMetaApi(META_SERVICE.Http).getHttp(),
-        getPageById: getMetaApi(META_APP.AppManage).getPageById,
+        getPageById: getMetaApi(META_APP.AppManage)?.getPageById,
         getPageAncestors: usePage().getAncestors,
         getBaseInfo: () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo(),
         addHistoryDataChangedCallback,

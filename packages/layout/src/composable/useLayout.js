@@ -59,7 +59,10 @@ const layoutState = reactive({
   toolbars: {
     visiblePopover: false
   },
-  pageStatus: ''
+  pageStatus: {
+    state: '',
+    data: {}
+  }
 })
 const getMoveDragBarState = () => {
   return layoutState.isMoveDragBar

@@ -20,6 +20,7 @@ const { utils } = wrap(function () {
   return this
 })()
 const state = vue.reactive({
+  'a.b': 'test',
   firstName: 'Opentiny',
   lastName: 'TinyEngine',
   nullValue: null,
