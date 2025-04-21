@@ -265,7 +265,7 @@ export default () => {
   const changePluginWidth = (name: string, width: number, offset?: number): void => {
     if (Object.prototype.hasOwnProperty.call(pluginStorageReactive.value, name)) {
       pluginStorageReactive.value[name].width = width
-      if (offset !== undefined) {
+      if (typeof offset === 'number') {
         pluginStorageReactive.value[name].offset = offset
       }
     } else {
@@ -291,8 +291,10 @@ export default () => {
     return pluginList.find((item) => item.id === pluginId)
   }
 
-  const getPluginsByPosition = (position: string, pluginList: IPlugin[]): (IPlugin | undefined)[] => {
-    return getPluginsByLayout(position).map((pluginId) => getPluginById(pluginList, pluginId))
+  const getPluginsByPosition = (position: string, pluginList: IPlugin[]): IPlugin[] => {
+    return getPluginsByLayout(position)
+      .map((pluginId) => getPluginById(pluginList, pluginId))
+      .filter((plugin): plugin is IPlugin => Boolean(plugin))
   }
 
   // 修改某个插件的布局
