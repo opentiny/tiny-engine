@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { inject, onMounted, reactive, ref, watchEffect } from 'vue'
+import { inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty, CanvasDragItem } from '@opentiny/tiny-engine-common'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
@@ -57,7 +57,6 @@ export default {
     const { generateNode, materialState, getComponentsByGroup } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
     const panelState = inject('panelState', {})
-    const { components } = materialState
     const { locale } = i18n.global
 
     const fetchComponents = (components, name) => {
@@ -91,10 +90,10 @@ export default {
     const initComponents = () => {
       const groupName = panelState.materialGroup
       if (groupName) {
-        return getComponentsByGroup(components, groupName)
+        return getComponentsByGroup(materialState.components, groupName)
       }
 
-      return components
+      return materialState.components
     }
 
     const state = reactive({
@@ -104,12 +103,22 @@ export default {
     })
 
     watchEffect(() => {
-      state.activeName = [...Array(components.length).keys()]
+      state.activeName = [...Array(materialState.components.length).keys()]
     })
 
     const change = (value) => {
-      state.components = fetchComponents(components, value)
+      state.components = fetchComponents(materialState.components, value)
     }
+
+    watch(
+      () => materialState.components,
+      (value) => {
+        state.components = fetchComponents(value, state.searchValue)
+      },
+      {
+        deep: true
+      }
+    )
 
     const componentClick = (data) => {
       const { isShortcutPanel, emitEvent } = panelState
