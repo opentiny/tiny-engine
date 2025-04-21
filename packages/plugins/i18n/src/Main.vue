@@ -53,7 +53,7 @@
           :tooltip-config="{ appendToBody: false, placement: 'right' }"
           :edit-rules="validRules"
         >
-          <tiny-grid-column type="selection" width="44"></tiny-grid-column>
+          <tiny-grid-column type="selection" width="42"></tiny-grid-column>
           <tiny-grid-column
             width="120"
             field="key"

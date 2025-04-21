@@ -12,7 +12,7 @@ const materialsDir = 'materials'
 const bundlePath = path.join(process.cwd(), '/designer-demo/public/mock/bundle.json')
 // mockServer应用数据
 const appInfoPath = path.join(process.cwd(), '/mockServer/src/assets/json/appinfo.json')
-const appSchemaPath = path.join(process.cwd(), 'mockServer/src/mock/get/app-center/v1/apps/schema/918.json')
+const appSchemaPath = path.join(process.cwd(), 'mockServer/src/mock/get/app-center/v1/apps/schema/1.json')
 
 const appInfo = fsExtra.readJSONSync(appInfoPath)
 const appSchema = fsExtra.readJSONSync(appSchemaPath)

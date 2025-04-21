@@ -58,7 +58,7 @@ $ pnpm splitMaterials
 $ pnpm buildMaterials
 ```
 
-Open a browser: `http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
+Open a browser: `http://localhost:8080/?type=app&id=1&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
 `url search` Parameters:
 
 - `type=app` Application type

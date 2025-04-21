@@ -143,8 +143,18 @@ const handleClipboardPaste = (event) => {
 const handleCopyEvent = (event) => {
   const selectedNodes = multiSelectedStates.value.map(({ schema }) => copyObject(schema))
 
-  const dataToCopy = JSON.stringify(selectedNodes)
-  setClipboardSchema(event, dataToCopy)
+  // 如果没有选中任何节点，直接返回
+  if (!selectedNodes.length) {
+    return
+  }
+
+  // 验证所有选中的节点是否有效（不为空）
+  const isValidNodes = selectedNodes.every((node) => node && Object.keys(node).length > 0)
+
+  if (isValidNodes) {
+    const dataToCopy = JSON.stringify(selectedNodes)
+    setClipboardSchema(event, dataToCopy)
+  }
 }
 
 const eventFiltersMap = new WeakMap()

@@ -37,7 +37,8 @@ export const HOOK_NAME = {
   useModal: 'modal',
   useNotify: 'notify',
   useCustom: 'custom',
-  useMaterial: 'material'
+  useMaterial: 'material',
+  useStyle: 'style'
 } as const
 
 type HookName = typeof HOOK_NAME[keyof typeof HOOK_NAME]
@@ -61,6 +62,7 @@ const hooksState = {
   [HOOK_NAME.useNotify]: {},
   [HOOK_NAME.useModal]: {},
   [HOOK_NAME.useMaterial]: {},
+  [HOOK_NAME.useStyle]: {},
   [HOOK_NAME.useCustom]: {} // 自定义
 }
 
@@ -89,6 +91,7 @@ export const useEnv = (...args: any[]): ImportMetaEnv => getHook(HOOK_NAME.useEn
 export const useModal = (...args: any[]): UseModalApi => getHook(HOOK_NAME.useModal, args)
 export const useNotify = (...args: NotifyParams): NotifyResult => getHook(HOOK_NAME.useNotify, args)
 export const useMaterial = (...args: any[]): UseMaterialApi => getHook(HOOK_NAME.useMaterial, args)
+export const useStyle = (...args: any[]) => getHook(HOOK_NAME.useStyle, args)
 export const useCustom = (...args: any[]) => getHook(HOOK_NAME.useCustom, args)
 
 export function initHook(

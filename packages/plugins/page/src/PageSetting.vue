@@ -310,7 +310,11 @@ export default {
 
     const settingDefaultPage = async () => {
       const params = { ...pageSettingState.defaultPage, isDefault: true }
-      await updatePage(pageSettingState.defaultPage?.id, params, false)
+      updatePage(pageSettingState.defaultPage?.id, params, false).then((res) => {
+        if (res) {
+          editPage()
+        }
+      })
     }
 
     const createHistoryMessage = () => {
@@ -325,7 +329,7 @@ export default {
         const exec = () => {
           pageSettingState.currentPageData.message = state.historyMessage.trim() || 'Page auto save'
           if (pageSettingState.defaultPage?.id) {
-            settingDefaultPage().then(editPage)
+            settingDefaultPage()
           } else {
             editPage()
           }

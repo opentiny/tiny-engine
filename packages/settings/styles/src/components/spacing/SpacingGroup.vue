@@ -389,7 +389,7 @@
 </template>
 
 <script>
-import { computed, reactive } from 'vue'
+import { computed, reactive, watch } from 'vue'
 import SpacingSetting from './SpacingSetting.vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import useEvent from '../../js/useEvent'
@@ -480,6 +480,17 @@ export default {
       state.property.value = property[state.property.name]
       emit('update', property)
     }
+
+    watch(
+      () => props.style,
+      (newStyle) => {
+        if (state.showModal) {
+          // 弹窗打开时，更新当前编辑的属性值
+          state.property.value = newStyle[state.property.name]
+        }
+      },
+      { deep: true }
+    )
 
     return {
       state,

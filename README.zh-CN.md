@@ -58,7 +58,7 @@ $ pnpm splitMaterials
 $ pnpm buildMaterials
 ```
 
-浏览器打开：`http://localhost:8080/?type=app&id=918&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
+浏览器打开：`http://localhost:8080/?type=app&id=1&tenant=1&pageid=NTJ4MjvqoVj8OVsc`  
 `url search`参数：
 
 - `type=app` 应用类型
