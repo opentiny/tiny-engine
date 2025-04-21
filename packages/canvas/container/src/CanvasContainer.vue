@@ -8,7 +8,7 @@
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
-      :isMultiDragging="isMultiDragging()"
+      :isMultiDragging="isMultiDragging"
       @select-slot="selectSlot"
       @setting="settingModel"
     ></canvas-action>
@@ -17,7 +17,7 @@
     :lineState="lineState"
     :multiDragState="multiDragState"
     :multiStateLength="multiStateLength"
-    :isMultiDragging="isMultiDragging()"
+    :isMultiDragging="isMultiDragging"
     :getMultiDragPositionText="getMultiDragPositionText"
   ></canvas-multi-drag-indicator>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>

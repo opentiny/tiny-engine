@@ -20,7 +20,7 @@ import {
   NODE_LOOP,
   NODE_INACTIVE_UID
 } from '../../common'
-import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
@@ -624,8 +624,6 @@ const setHoverRect = (element?: Element, data?: Node | null) => {
         forbidden: posLine.forbidden
       })
     }
-
-    useLayout().closePlugin()
   }
 
   // 设置元素hover状态

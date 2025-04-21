@@ -683,13 +683,13 @@ export const useMultiDrag = () => {
   }
 
   // 判断是否处于多选拖拽状态
-  const isMultiDragging = (): boolean => {
+  const isMultiDragging = computed(() => {
     return multiDragState.draging && multiDragState.dragStarted && multiStateLength.value > 1
-  }
+  })
 
   // 获取多选拖拽的位置描述
   const getMultiDragPositionText: ComputedRef<string> = computed(() => {
-    if (!isMultiDragging()) return ''
+    if (!isMultiDragging.value) return ''
 
     const { position, forbidden, id } = lineState
 
