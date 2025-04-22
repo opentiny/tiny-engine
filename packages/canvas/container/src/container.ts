@@ -323,8 +323,7 @@ const insertReplace = ({ parent, node, data }: InsertOptions) => {
       parentId: parent.id || '',
       newNodeData: data,
       position: 'replace',
-      referTargetNodeId: node.id,
-      nodeIndex
+      referTargetNodeId: node.id
     })
   }
 }
@@ -906,22 +905,9 @@ export const insertNode = (
 }
 
 export const addComponent = (data: Node, position: string) => {
-  if (multiSelectedStates.value.length === 1) {
-    const { schema, parent } = getCurrent()
+  const { schema, parent } = getCurrent()
 
-    insertNode({ node: schema, parent, data }, position)
-  } else {
-    // 多选时，根据位置判断向上还是向下添加节点
-    const targetNode =
-      position === 'top'
-        ? multiSelectedStates.value[0]
-        : multiSelectedStates.value[multiSelectedStates.value.length - 1]
-
-    const node = targetNode.schema
-    const parent = useCanvas().getNodeWithParentById(targetNode.id)
-
-    insertNode({ node, parent, data }, position)
-  }
+  insertNode({ node: schema, parent, data }, position)
 }
 
 export const copyNode = (id: string) => {

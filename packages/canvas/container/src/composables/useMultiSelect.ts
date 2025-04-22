@@ -1,18 +1,8 @@
 import { ref } from 'vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage, useHistory } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { getDocument, getRect, querySelectById, POSITION, insertNode } from '../container'
-
-interface Schema {
-  id: string | null
-  componentName: string
-  props?: Record<string, any>
-  children?: Schema[]
-  parent?: {
-    id: string
-    children: Schema[]
-  }
-}
+import { getDocument, getRect, querySelectById, POSITION, insertNode, selectNode } from '../container'
+import type { Node } from '../../../types'
 
 interface SelectionState {
   id: string
@@ -20,10 +10,10 @@ interface SelectionState {
   left?: number
   width?: number
   height?: number
-  schema?: Schema
+  schema?: any
   parent?: {
     id: string
-    children: Schema[]
+    children: Node[]
   }
 }
 
@@ -83,6 +73,19 @@ export const useMultiSelect = () => {
   }
 
   /**
+   * 获取选中节点在父节点children中的索引位置
+   * @param {children} children 父节点的children
+   * @param {string[]} selectedIds 选中的节点ID列表
+   * @returns {number[]} 排序后的索引数组
+   */
+  const getSelectedNodeIndices = (children: Node[], selectedIds: string[]): number[] => {
+    return selectedIds
+      .map((id) => children.findIndex((child: Node) => child.id === id))
+      .filter((index) => index !== -1)
+      .sort((a, b) => a - b)
+  }
+
+  /**
    * 判断选中的节点是否都是兄弟节点且是连续的
    * @returns {boolean} 如果所有选中节点都有相同的父节点且在父节点的children中是连续的，返回true；否则返回false
    */
@@ -102,18 +105,12 @@ export const useMultiSelect = () => {
 
     if (nodesWithParent.some((node) => node.parent.id !== parentId)) return false
 
-    const nodeIndices = multiSelectedStates.value
-      .map((node) => firstParent.children.findIndex((child: Schema) => child.id === node.id))
-      .sort((a, b) => a - b)
+    // 获取并检查索引
+    const selectedIds = multiSelectedStates.value.map((state) => state.id)
+    const nodeIndices = getSelectedNodeIndices(firstParent.children, selectedIds)
 
     // 检查索引是否连续
-    for (let i = 1; i < nodeIndices.length; i++) {
-      if (nodeIndices[i] !== nodeIndices[i - 1] + 1) {
-        return false
-      }
-    }
-
-    return true
+    return nodeIndices.every((value, index) => value === nodeIndices[0] + index)
   }
 
   /**
@@ -138,36 +135,25 @@ export const useMultiSelect = () => {
     const selectedIds = multiSelectedStates.value.map((state) => state.id)
 
     // 找出所有选中节点在父节点children中的索引位置
-    const indices = selectedIds
-      .map((id) => parent.children.findIndex((child: Schema) => child.id === id))
-      .sort((a, b) => a - b)
+    const indices = getSelectedNodeIndices(parent.children, selectedIds)
 
-    // 检查索引是否连续
-    for (let i = 1; i < indices.length; i++) {
-      if (indices[i] !== indices[i - 1] + 1) {
-        return false
-      }
-    }
+    if (indices.length === 0) return false
 
-    // 记录最后一个节点和它的位置
-    const lastIndex = indices[indices.length - 1]
-    const lastNode = parent.children[lastIndex]
+    // 获取第一个和最后一个选中节点的索引
+    const firstIndex = indices[0]
 
-    // 从父节点中移除这些节点
-    const selectedNodes: Schema[] = []
-    indices.reverse().forEach((index) => {
-      selectedNodes.unshift(parent.children.splice(index, 1)[0])
-    })
+    // 复制选中的节点（不从原来的位置移除）
+    const selectedNodes = indices.map((index) => parent.children[index])
 
     // 创建新的包装组件
-    const wrapSchema: Schema = {
+    const wrapSchema: Node = {
       componentName,
       id: utils.guid(),
       props: { ...props },
       children: selectedNodes
     }
 
-    // 特殊处理popover等组件
+    // 特殊处理 TinyPopover 等组件
     if (componentName === 'TinyPopover') {
       wrapSchema.props = {
         width: 200,
@@ -203,16 +189,23 @@ export const useMultiSelect = () => {
       ]
     }
 
-    // 将包装组件插入到页面底部
-    insertNode(
-      {
-        node: lastNode,
-        parent,
-        data: wrapSchema
-      },
-      POSITION.RIGHT
-    )
+    // 从后向前删除原来的节点，避免索引变化
+    for (let i = indices.length - 1; i >= 0; i--) {
+      parent.children.splice(indices[i], 1)
+    }
 
+    // 将新容器插入到第一个选中节点的位置
+    parent.children.splice(firstIndex, 0, wrapSchema)
+
+    // 触发更新，重新选中节点
+    useMessage().publish({ topic: 'schemaChange', data: {} })
+
+    setTimeout(() => {
+      useCanvas().setNode(wrapSchema, parent)
+      selectNode(wrapSchema.id)
+    }, 0)
+
+    useHistory().addHistory()
     return true
   }
 
@@ -223,8 +216,8 @@ export const useMultiSelect = () => {
    * @param {Schema} childSchema 子组件架构
    * @returns {Schema} 包装组件架构
    */
-  const createWrapperSchema = (componentName: string, props: Record<string, any> = {}, childSchema: Schema): Schema => {
-    let wrapSchema: Schema = {
+  const createWrapperSchema = (componentName: string, props: Record<string, any> = {}, childSchema: Node): Node => {
+    let wrapSchema: Node = {
       componentName,
       id: null,
       props: {
