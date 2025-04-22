@@ -271,7 +271,9 @@ const addComponentSnippets = (componentSnippets, snippetsData) => {
     if (snippetsMap.has(snippetGroup.group)) {
       snippetsMap.get(snippetGroup.group).children.push(...snippetGroup.children)
     } else {
-      snippetsData.push(deepClone(snippetGroup))
+      const snippetGroupClone = deepClone(snippetGroup)
+      snippetsData.push(snippetGroupClone)
+      snippetsMap.set(snippetGroup.group, snippetGroupClone)
     }
   })
 
