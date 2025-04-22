@@ -624,7 +624,7 @@ const updateBlock = (block = {}) => {
     extraParams.categories = categories
   }
 
-  requestUpdateBlock(
+  return requestUpdateBlock(
     id,
     {
       [nameCn]: block[nameCn],
@@ -662,6 +662,8 @@ const updateBlock = (block = {}) => {
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
       useBlock().isRefresh.value = true
+
+      return data
     })
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
@@ -718,7 +720,7 @@ const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) 
   return deps
 }
 
-export const saveBlock = async (block) => {
+export const saveBlock = (block) => {
   if (block && validBlockSlotsName(block)) {
     const { scripts, styles } = generateBlockDeps(block.content.children)
 

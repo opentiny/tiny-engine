@@ -92,7 +92,7 @@ export default {
 
       promise.then((block) => {
         getMetaApi(META_SERVICE.GlobalService).updateBlockId(block.id)
-        activePlugin(PLUGIN_NAME.Materials) // ?? 疑问：新建区块后，这里为啥要激活物料
+        activePlugin(PLUGIN_NAME.Materials)
         cancel()
       })
     }
