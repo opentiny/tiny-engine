@@ -34,9 +34,11 @@ interface IPage {
 export const previewState: {
   currentPage: IPage | null
   ancestors: IPage[]
+  importMap: Record<string, string>
 } = reactive({
   currentPage: null,
-  ancestors: []
+  ancestors: [],
+  importMap: {}
 })
 
 interface IDeps {
@@ -331,7 +333,10 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     previewState.currentPage = params.currentPage
     previewState.ancestors = params.ancestors
 
-    store.setImportMap(importMapData)
+    if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
+      store.setImportMap(importMapData)
+      previewState.importMap = importMapData
+    }
 
     const blockSet = new Set()
 
