@@ -44,7 +44,8 @@ export const POSITION = Object.freeze({
   LEFT: 'left',
   RIGHT: 'right',
   IN: 'in',
-  OUT: 'out'
+  OUT: 'out',
+  REPLACE: 'replace'
 })
 
 const initialDragState = {
@@ -307,6 +308,25 @@ const insertAfter = ({ parent, node, data }: InsertOptions) => {
     position: 'after',
     referTargetNodeId: node.id
   })
+}
+
+const insertReplace = ({ parent, node, data }: InsertOptions) => {
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  const nodeIndex = parent.children?.findIndex((child) => child.id === node.id)
+
+  if (nodeIndex !== -1 && nodeIndex !== undefined) {
+    useCanvas().operateNode({
+      type: 'insert',
+      parentId: parent.id || '',
+      newNodeData: data,
+      position: 'replace',
+      referTargetNodeId: node.id,
+      nodeIndex
+    })
+  }
 }
 
 const insertBefore = ({ parent, node, data }: InsertOptions) => {
@@ -868,6 +888,9 @@ export const insertNode = (
         break
       case POSITION.OUT:
         insertContainer(node)
+        break
+      case POSITION.REPLACE:
+        insertReplace(node)
         break
       default:
         insertInner(node)

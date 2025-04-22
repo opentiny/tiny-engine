@@ -1,6 +1,7 @@
 import { ref } from 'vue'
-import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
-import { getDocument, getRect, querySelectById, getController } from '../container'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
+import { getDocument, getRect, querySelectById, POSITION, insertNode } from '../container'
 
 interface Schema {
   id: string | null
@@ -148,6 +149,10 @@ export const useMultiSelect = () => {
       }
     }
 
+    // 记录最后一个节点和它的位置
+    const lastIndex = indices[indices.length - 1]
+    const lastNode = parent.children[lastIndex]
+
     // 从父节点中移除这些节点
     const selectedNodes: Schema[] = []
     indices.reverse().forEach((index) => {
@@ -157,7 +162,7 @@ export const useMultiSelect = () => {
     // 创建新的包装组件
     const wrapSchema: Schema = {
       componentName,
-      id: null,
+      id: utils.guid(),
       props: { ...props },
       children: selectedNodes
     }
@@ -198,14 +203,15 @@ export const useMultiSelect = () => {
       ]
     }
 
-    // 将包装组件插入到第一个被选中节点的位置
-    parent.children.splice(indices[0], 0, wrapSchema)
-
-    getController().addHistory()
-    useMessage().publish({ topic: 'schemaChange', data: {} })
-    setTimeout(() => {
-      useCanvas().canvasApi.value?.updateRect?.()
-    }, 0)
+    // 将包装组件插入到页面底部
+    insertNode(
+      {
+        node: lastNode,
+        parent,
+        data: wrapSchema
+      },
+      POSITION.RIGHT
+    )
 
     return true
   }
@@ -283,9 +289,6 @@ export const useMultiSelect = () => {
       return false
     }
 
-    // 对每个选中的节点分别添加父级
-    let modified = false
-
     multiSelectedStates.value.forEach(({ schema, parent }) => {
       if (!schema || !parent) {
         return
@@ -299,20 +302,20 @@ export const useMultiSelect = () => {
       // 创建包装组件的模板
       const wrapSchema = createWrapperSchema(componentName, props, schema)
 
-      // 替换原节点
-      parent.children.splice(index, 1, wrapSchema)
-      modified = true
+      // 记录当前节点
+      const originalNode = schema
+
+      // 使用insertNode将包装组件替换原节点
+      insertNode(
+        {
+          node: originalNode,
+          parent,
+          data: wrapSchema
+        },
+        POSITION.REPLACE,
+        false
+      )
     })
-
-    if (modified) {
-      getController().addHistory()
-      useMessage().publish({ topic: 'schemaChange', data: {} })
-      setTimeout(() => {
-        useCanvas().canvasApi.value?.updateRect?.()
-      }, 0)
-
-      return true
-    }
 
     return false
   }

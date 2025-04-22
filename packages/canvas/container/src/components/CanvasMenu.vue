@@ -70,11 +70,11 @@ export const openMenu = (event) => {
       if (right > canvasRect.right) {
         menuState.position.left = `${parseInt(menuState.position.left) - width - 2}px`
       }
-      // sub-menu样式width为100px，少于100宽度的空白区域则放置到左侧
-      if (right + 100 < canvasRect.right) {
-        subMenuStyles.value = { right: '-100px' }
+      // sub-menu样式width为137px，少于100宽度的空白区域则放置到左侧
+      if (right + 137 < canvasRect.right) {
+        subMenuStyles.value = { right: '-137px' }
       } else {
-        subMenuStyles.value = { left: '-100px' }
+        subMenuStyles.value = { left: '-137px' }
       }
     }
   })
@@ -134,36 +134,26 @@ export default {
         name: '添加父级',
         items: [
           {
-            name: '批量添加-文字提示',
-            code: 'batchWrap',
-            value: 'TinyTooltip'
-          },
-          {
-            name: '批量添加-弹出框',
-            code: 'batchWrap',
-            value: 'TinyPopover'
-          },
-          {
-            name: '批量添加-容器',
+            name: '容器(批量)',
             code: 'batchWrap',
             value: 'div'
           },
           {
-            name: '整体添加-文字提示',
+            name: '容器(公共父级)',
+            code: 'groupWrap',
+            value: 'div',
+            check: () => areSiblingNodes()
+          },
+          {
+            name: '文字提示(公共父级)',
             code: 'groupWrap',
             value: 'TinyTooltip',
             check: () => areSiblingNodes()
           },
           {
-            name: '整体添加-弹出框',
+            name: '弹出框(公共父级)',
             code: 'groupWrap',
             value: 'TinyPopover',
-            check: () => areSiblingNodes()
-          },
-          {
-            name: '整体添加-容器',
-            code: 'groupWrap',
-            value: 'div',
             check: () => areSiblingNodes()
           }
         ],
@@ -415,7 +405,7 @@ export default {
     }
   }
   &.sub-menu {
-    width: 100px;
+    width: 137px;
     position: absolute;
     top: -2px;
   }
