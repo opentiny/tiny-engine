@@ -154,8 +154,14 @@ export default {
       let node = getCurrent().schema
 
       if (element) {
-        const currentElement = querySelectById(getCurrent().schema?.id)
+        // 首先尝试处理多选拖拽开始
+        // 只有在满足多选条件的情况下才会返回true并阻止后续的选择操作
+        if (startMultiDrag(event, element)) {
+          return
+        }
 
+        // 只有当不是多选拖拽的情况下，才进行选择操作
+        const currentElement = querySelectById(getCurrent().schema?.id)
         if (!currentElement?.contains(element) || event.button === 0) {
           const isCtrlKey = event.ctrlKey || event.metaKey
           const loopId = element.getAttribute(NODE_LOOP)
@@ -164,11 +170,6 @@ export default {
           } else {
             node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
           }
-        }
-
-        // 处理多选拖拽开始 - 确保在单节点拖拽之前处理
-        if (startMultiDrag(event, element)) {
-          return
         }
 
         // 处理单节点拖拽开始
@@ -278,6 +279,19 @@ export default {
           handleCanvasEvent(() => {
             if (ev.button === 0 && isMouseDown.value) {
               isMouseDown.value = false
+
+              // 判断是否需要切换到单选状态
+              // 只有当点击多选节点但没有拖动时，才需要切换到单选状态
+              if (multiDragState.keydown && !multiDragState.dragStarted && multiStateLength.value > 1) {
+                const element = getElement(ev.target)
+                if (element) {
+                  const clickedNodeId = element?.getAttribute(NODE_UID)
+                  // 只有点击的是多选节点中的一个时才切换到单选
+                  if (clickedNodeId && multiSelectedStates.value.some((state) => state.id === clickedNodeId)) {
+                    selectNode(clickedNodeId)
+                  }
+                }
+              }
             }
 
             // 优先处理多选拖拽结束

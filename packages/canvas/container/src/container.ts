@@ -38,16 +38,16 @@ export interface DragOffset {
   y: number
 }
 
-export type PositionType = 'top' | 'bottom' | 'left' | 'right' | 'in' | 'out'
-
 export const POSITION = Object.freeze({
-  TOP: 'top' as PositionType,
-  BOTTOM: 'bottom' as PositionType,
-  LEFT: 'left' as PositionType,
-  RIGHT: 'right' as PositionType,
-  IN: 'in' as PositionType,
-  OUT: 'out' as PositionType
+  TOP: 'top',
+  BOTTOM: 'bottom',
+  LEFT: 'left',
+  RIGHT: 'right',
+  IN: 'in',
+  OUT: 'out'
 } as const)
+
+export type PositionType = typeof POSITION[keyof typeof POSITION]
 
 export const initialDragState = {
   keydown: false,

@@ -260,7 +260,7 @@ export const useMultiDrag = () => {
 
       // 如果移动距离小于阈值，不触发拖拽
       if (distance < DRAG_THRESHOLD) {
-        return false
+        return true // 返回true表示已处理，但不启动拖拽
       }
 
       // 超过阈值，标记拖拽已开始
@@ -279,7 +279,7 @@ export const useMultiDrag = () => {
 
     // 如果没有真正开始拖拽，不处理后续逻辑
     if (!multiDragState.draging) {
-      return false
+      return true
     }
 
     const targetElement = getElement(event.target as HTMLElement)
@@ -524,8 +524,22 @@ export const useMultiDrag = () => {
 
   // 结束拖拽
   const endMultiDrag = (): boolean => {
+    // 检查是否处于多选状态
+    if (multiStateLength.value <= 1) {
+      // 重置状态但不做其他处理
+      Object.assign(multiDragState, initialMultiDragState)
+      return false
+    }
+
+    // 检查是否按下了鼠标但没有拖拽
+    if (!multiDragState.draging && !multiDragState.dragStarted && multiDragState.keydown) {
+      // 鼠标按下但没有拖拽，重置状态
+      Object.assign(multiDragState, initialMultiDragState)
+      return true // 返回true表示已处理
+    }
+
     // 只有真正开始拖拽后才处理放置逻辑
-    if (!multiDragState.draging || !multiDragState.dragStarted || multiStateLength.value <= 1) {
+    if (!multiDragState.draging || !multiDragState.dragStarted) {
       // 重置状态
       Object.assign(multiDragState, initialMultiDragState)
       return false
