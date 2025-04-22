@@ -63,6 +63,7 @@ export const usePluginToggle = () => {
     }
   }
 
+  // 显示菜单
   const showMenu = (event: MouseEvent) => {
     if (!toggleRef.value) return
 
@@ -74,6 +75,29 @@ export const usePluginToggle = () => {
       transform: 'translateX(0)'
     }
     isMenuVisible.value = true
+    event.stopPropagation()
+  }
+
+  // 切换菜单的显示状态
+  const toggleMenu = (event: MouseEvent) => {
+    if (!toggleRef.value) return
+
+    if (isMenuVisible.value) {
+      // 如果菜单已经显示，则隐藏所有菜单
+      isMenuVisible.value = false
+      showLeftMenu.value = false
+      showRightMenu.value = false
+    } else {
+      // 如果菜单未显示，则显示菜单
+      const rect = toggleRef.value.getBoundingClientRect()
+      menuPosition.value = {
+        position: 'fixed',
+        top: `${rect.top}px`,
+        right: `${window.innerWidth - rect.left + MENU_OFFSET}px`,
+        transform: 'translateX(0)'
+      }
+      isMenuVisible.value = true
+    }
     event.stopPropagation()
   }
 
@@ -96,7 +120,12 @@ export const usePluginToggle = () => {
   }
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (toggleRef.value && !toggleRef.value.contains(event.target as Node)) {
+    // 检查点击目标是否在菜单区域内
+    const isClickInMenu =
+      (event.target as Element)?.closest('.plugin-menu') || (event.target as Element)?.closest('.submenu')
+
+    // 如果点击的不是菜单区域，并且不是切换按钮本身，则隐藏菜单
+    if (!isClickInMenu && (!toggleRef.value || !toggleRef.value.contains(event.target as Node))) {
       isMenuVisible.value = false
       showLeftMenu.value = false
       showRightMenu.value = false
@@ -135,6 +164,7 @@ export const usePluginToggle = () => {
     rightPlugins,
     submenuStyle,
     showMenu,
+    toggleMenu,
     showLeftPlugins,
     showRightPlugins,
     togglePlugin
