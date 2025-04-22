@@ -62,10 +62,7 @@ export const initialHoverState = {
 }
 
 export const clearHover = (hoverState: Ref<HoverOrSelectState>) => {
-  hoverState.value = {
-    ...initialHoverState,
-    rect: { ...initialHoverState.rect }
-  }
+  hoverState.value = structuredClone(initialHoverState)
 }
 
 export const getClosedElementHasUid = (element: Element | null): Element | undefined => {

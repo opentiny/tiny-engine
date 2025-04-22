@@ -31,22 +31,13 @@ import {
 } from './common'
 import type { HoverOrSelectState } from './common'
 
-const curHoverState = ref<HoverOrSelectState>({
-  ...initialHoverState,
-  rect: { ...initialHoverState.rect }
-})
-
+const curHoverState = ref<HoverOrSelectState>(structuredClone(initialHoverState))
 const selectState = ref<HoverOrSelectState[]>([])
-
 const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e: MouseEvent): HoverOrSelectState | undefined => {
   const element = getClosedElementHasUid(e.target as Element)
-
-  let res: HoverOrSelectState = {
-    ...initialHoverState,
-    rect: { ...initialHoverState.rect }
-  }
+  let res: HoverOrSelectState = structuredClone(initialHoverState)
 
   if (!element) {
     return res
@@ -54,7 +45,7 @@ const getRectAndNode = (e: MouseEvent): HoverOrSelectState | undefined => {
 
   // hover 整个页面
   if (element === element?.ownerDocument?.body) {
-    res.rect = { ...getWindowRect() }
+    res.rect = getWindowRect()
 
     return res
   }
@@ -140,7 +131,7 @@ const updateSelectedNode = async (e: MouseEvent, type: string) => {
     }
 
     res = {
-      rect: { ...getWindowRect() },
+      rect: getWindowRect(),
       node: null,
       configure: null,
       element: getDocument().body,

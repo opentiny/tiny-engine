@@ -55,10 +55,7 @@ export const getClosedVueElement = (element: HTMLElementWithVue | null): VueInst
   return null
 }
 
-const curHoverState = ref<HoverOrSelectState>({
-  ...initialHoverState,
-  rect: { ...initialHoverState.rect }
-})
+const curHoverState = ref<HoverOrSelectState>(structuredClone(initialHoverState))
 
 const selectState = ref<HoverOrSelectState[]>([])
 
@@ -67,12 +64,7 @@ const clearHover = () => commonClearHover(curHoverState)
 const getRectAndNode = (e: { target: HTMLElementWithVue }): HoverOrSelectState => {
   // 拿到最近的带有 __vueComponent 的vue 实例
   let instance = getClosedVueElement(e.target)
-
-  const res: HoverOrSelectState = {
-    ...initialHoverState,
-    rect: { ...initialHoverState.rect }
-  }
-
+  const res: HoverOrSelectState = structuredClone(initialHoverState)
   const windowRect = getWindowRect()
 
   if (!instance) {
@@ -175,7 +167,7 @@ const updateSelectedNode = async (e: MouseEvent, type: string): Promise<void> =>
 
     // 非多选选中非激活节点，则选中整个画布
     res = {
-      rect: { ...getWindowRect() },
+      rect: getWindowRect(),
       node: null,
       configure: null,
       element: getDocument().body,
