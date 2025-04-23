@@ -522,8 +522,8 @@ export const useMultiDrag = () => {
     return true
   }
 
-  // 结束拖拽
-  const endMultiDrag = (): boolean => {
+  // 检查是否应该处理拖拽
+  const shouldProcessDrag = (): boolean => {
     // 检查是否处于多选状态
     if (multiStateLength.value <= 1) {
       // 重置状态但不做其他处理
@@ -545,142 +545,196 @@ export const useMultiDrag = () => {
       return false
     }
 
-    const { position, forbidden, id: targetId } = lineState
+    return true
+  }
 
-    if (!forbidden && targetId) {
-      const { getNodeWithParentById, getSchema } = useCanvas()
-      const { node: targetNode, parent: targetParent } = getNodeWithParentById(targetId) || {}
-      const isBodyTarget = targetId === 'body'
+  // 获取目标节点信息
+  const getTargetNodeInfo = (targetId: string) => {
+    const { getNodeWithParentById, getSchema } = useCanvas()
+    const { node: targetNode, parent: targetParent } = getNodeWithParentById(targetId) || {}
+    const isBodyTarget = targetId === 'body'
 
-      // 如果目标是body，使用页面schema作为目标节点
-      const finalTargetNode = isBodyTarget ? getSchema() : targetNode
-      const finalTargetParent = isBodyTarget ? null : targetParent
+    // 如果目标是body，使用页面schema作为目标节点
+    const finalTargetNode = isBodyTarget ? getSchema() : targetNode
+    const finalTargetParent = isBodyTarget ? null : targetParent
 
-      if (finalTargetNode) {
-        // 创建一个操作批次，以便能够一次性添加历史记录
-        const operations: InsertOperation[] = []
+    return {
+      targetNode,
+      targetParent,
+      isBodyTarget,
+      finalTargetNode,
+      finalTargetParent
+    }
+  }
 
-        // 收集要移动的节点ID，用于后续检查
-        const movingNodeIds = multiDragState.nodes.map((node) => node.id)
+  // 收集拖拽操作
+  const collectDragOperations = (targetInfo: any, position: PositionType | null): InsertOperation[] => {
+    const { finalTargetNode, finalTargetParent } = targetInfo
+    const targetId = lineState.id as string
+    const operations: InsertOperation[] = []
 
-        // 按照拖拽顺序依次插入节点
-        multiDragState.nodes.forEach((node) => {
-          const sourceId = node.id
-          const { node: sourceNode, parent: sourceParent } = getNodeWithParentById(sourceId) || {}
+    // 收集要移动的节点ID，用于后续检查
+    const movingNodeIds = multiDragState.nodes.map((node) => node.id)
 
-          // 跳过目标节点自身
-          if (sourceId === targetId) {
-            return
-          }
+    // 按照拖拽顺序依次插入节点
+    multiDragState.nodes.forEach((node) => {
+      const sourceId = node.id
+      const { node: sourceNode, parent: sourceParent } = useCanvas().getNodeWithParentById(sourceId) || {}
 
-          // 如果源节点的父节点是目标节点，且放置位置是IN，则跳过（避免循环引用）
-          if (position === POSITION.IN && sourceParent?.id === targetId) {
-            return
-          }
+      // 跳过目标节点自身
+      if (sourceId === targetId) {
+        return
+      }
 
-          // 如果目标节点的父节点是正在移动的节点之一，且不是放置到容器内，则跳过
-          if (position !== POSITION.IN && finalTargetParent && movingNodeIds.includes(finalTargetParent.id)) {
-            return
-          }
+      // 如果源节点的父节点是目标节点，且放置位置是IN，则跳过（避免循环引用）
+      if (position === POSITION.IN && sourceParent?.id === targetId) {
+        return
+      }
 
-          // 准备插入数据
-          const insertData = { ...sourceNode }
-          const targetNodeData = {
-            parent: toRaw(finalTargetParent),
-            node: toRaw(finalTargetNode),
-            data: { ...insertData, children: insertData.children || [] }
-          }
+      // 如果目标节点的父节点是正在移动的节点之一，且不是放置到容器内，则跳过
+      if (position !== POSITION.IN && finalTargetParent && movingNodeIds.includes(finalTargetParent.id)) {
+        return
+      }
 
-          // 记录操作
-          operations.push({
-            sourceId,
-            targetNodeData,
-            position: position as PositionType
-          })
-        })
+      // 准备插入数据
+      const insertData = { ...sourceNode }
+      const targetNodeData = {
+        parent: toRaw(finalTargetParent),
+        node: toRaw(finalTargetNode),
+        data: { ...insertData, children: insertData.children || [] }
+      }
 
-        // 执行所有操作
-        if (operations.length > 0) {
-          // 先移除所有源节点
-          operations.forEach((op) => {
-            removeNode(op.sourceId)
-          })
+      // 记录操作
+      operations.push({
+        sourceId,
+        targetNodeData,
+        position: position as PositionType
+      })
+    })
 
-          // 然后按照原始顺序插入所有节点到目标位置
-          operations.reverse().forEach((op) => {
-            // 对于body特殊处理
-            if (isBodyTarget) {
-              // 判断是否是放置到body内的特定位置（TOP或BOTTOM）
-              if (op.position === POSITION.TOP || op.position === POSITION.BOTTOM) {
-                // 这种情况下，targetId 实际上是 body 中的某个子节点的 ID
-                // 需要构建正确的目标节点数据
-                const { getNodeWithParentById } = useCanvas()
-                const { node: targetChildNode, parent: targetChildParent } = getNodeWithParentById(targetId) || {}
+    return operations
+  }
 
-                if (targetChildNode && targetChildParent) {
-                  const targetNodeData = {
-                    parent: toRaw(targetChildParent),
-                    node: toRaw(targetChildNode),
-                    data: op.targetNodeData.data
-                  }
+  // 按DOM顺序排序操作
+  const sortOperationsByDOMOrder = (operations: InsertOperation[]): InsertOperation[] => {
+    return [...operations].sort((a, b) => {
+      const elemA = querySelectById(a.sourceId)
+      const elemB = querySelectById(b.sourceId)
 
-                  // 使用正确的位置和目标节点插入
-                  insertNode(targetNodeData, op.position, false)
-                  return
-                }
-              }
+      if (!elemA || !elemB) return 0
 
-              // 如果没有特定位置或找不到目标子节点，则默认插入到body内部
-              insertNode({ node: getSchema(), data: op.targetNodeData.data }, POSITION.IN, false)
-            } else {
-              insertNode(op.targetNodeData, op.position, false)
-            }
-          })
-
-          // 更新画布历史
-          getController().addHistory()
-
-          // 延迟执行，确保DOM已更新
-          setTimeout(() => {
-            // 重建多选状态
-            const newMultiSelection: SelectState[] = []
-
-            // 收集所有操作后的节点ID
-            const newNodeIds = operations.map((op) => op.targetNodeData.data.id)
-
-            // 构建新的多选状态
-            newNodeIds.forEach((nodeId) => {
-              const element = querySelectById(nodeId)
-              if (element) {
-                const { node } = useCanvas().getNodeWithParentById(nodeId) || {}
-                if (!node) return
-
-                const state: SelectState = {
-                  id: nodeId,
-                  componentName: element.getAttribute(NODE_TAG) || '',
-                  schema: node
-                }
-
-                const rect = element.getBoundingClientRect()
-                Object.assign(state, {
-                  top: rect.top,
-                  left: rect.left,
-                  width: rect.width,
-                  height: rect.height,
-                  doc: getDocument()
-                })
-
-                newMultiSelection.push(state)
-              }
-            })
-
-            // 同步节点滚动位置
-            syncNodeScroll()
-          }, 100)
+      // compareDocumentPosition返回相对位置，按照节点在DOM中的顺序排序
+      if (elemA.compareDocumentPosition) {
+        const position = elemA.compareDocumentPosition(elemB)
+        // Node.DOCUMENT_POSITION_FOLLOWING表示B在A之后
+        if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
+          return -1
+        }
+        // Node.DOCUMENT_POSITION_PRECEDING表示B在A之前
+        if (position & Node.DOCUMENT_POSITION_PRECEDING) {
+          return 1
         }
       }
-    }
 
+      return 0
+    })
+  }
+
+  // 将节点插入到目标位置
+  const insertNodeToTarget = (op: InsertOperation, isBodyTarget: boolean, targetId: string) => {
+    // 对于body特殊处理
+    if (isBodyTarget) {
+      // 需要构建正确的目标节点数据
+      const { getNodeWithParentById } = useCanvas()
+      const { node: targetChildNode, parent: targetChildParent } = getNodeWithParentById(targetId) || {}
+
+      if (targetChildNode && targetChildParent) {
+        const targetNodeData = {
+          parent: toRaw(targetChildParent),
+          node: toRaw(targetChildNode),
+          data: op.targetNodeData.data
+        }
+
+        // 使用正确的位置和目标节点插入
+        insertNode(targetNodeData, op.position, false)
+        return
+      }
+
+      // 如果没有特定位置或找不到目标子节点，则默认插入到body内部
+      insertNode({ node: useCanvas().getSchema(), data: op.targetNodeData.data }, POSITION.IN, false)
+    } else {
+      insertNode(op.targetNodeData, op.position, false)
+    }
+  }
+
+  // 更新多选状态
+  const updateMultiSelectionAfterDrag = (operations: InsertOperation[]) => {
+    // 延迟执行，确保DOM已更新
+    setTimeout(() => {
+      // 重建多选状态
+      const newMultiSelection: SelectState[] = []
+
+      // 收集所有操作后的节点ID
+      const newNodeIds = operations.map((op) => op.targetNodeData.data.id)
+
+      // 构建新的多选状态
+      newNodeIds.forEach((nodeId) => {
+        const element = querySelectById(nodeId)
+        if (element) {
+          const { node } = useCanvas().getNodeWithParentById(nodeId) || {}
+          if (!node) return
+
+          const state: SelectState = {
+            id: nodeId,
+            componentName: element.getAttribute(NODE_TAG) || '',
+            schema: node
+          }
+
+          const rect = element.getBoundingClientRect()
+          Object.assign(state, {
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height,
+            doc: getDocument()
+          })
+
+          newMultiSelection.push(state)
+        }
+      })
+
+      // 同步节点滚动位置
+      syncNodeScroll()
+    }, 100)
+  }
+
+  // 执行拖拽操作
+  const executeDragOperations = (operations: InsertOperation[], targetInfo: any) => {
+    const { isBodyTarget } = targetInfo
+    const targetId = lineState.id as string
+
+    // 先移除所有源节点
+    operations.forEach((op) => {
+      removeNode(op.sourceId)
+    })
+
+    // 按DOM顺序排序操作
+    const sortedOperations = sortOperationsByDOMOrder(operations)
+
+    // 然后按照原始相对顺序插入所有节点到目标位置
+    sortedOperations.forEach((op) => {
+      insertNodeToTarget(op, isBodyTarget, targetId)
+    })
+
+    // 更新画布历史
+    getController().addHistory()
+
+    // 更新多选状态
+    updateMultiSelectionAfterDrag(sortedOperations)
+  }
+
+  // 清理拖拽状态
+  const cleanupDragState = () => {
     // 清理拖拽状态，但保留多选状态
     setTimeout(() => {
       // 只清理拖拽相关状态，不清理多选状态
@@ -692,6 +746,40 @@ export const useMultiDrag = () => {
       // 清除单选拖动状态
       Object.assign(dragState, initialDragState)
     }, 150)
+  }
+
+  // 结束拖拽
+  const endMultiDrag = (): boolean => {
+    // 检查是否处于多选状态或是否真正开始拖拽
+    if (!shouldProcessDrag()) {
+      return false
+    }
+
+    const { position, forbidden, id: targetId } = lineState
+
+    // 如果目标位置不允许放置或没有目标ID，直接返回
+    if (forbidden || !targetId) {
+      cleanupDragState()
+      return true
+    }
+
+    // 获取目标节点信息
+    const targetInfo = getTargetNodeInfo(targetId)
+    if (!targetInfo.finalTargetNode) {
+      cleanupDragState()
+      return true
+    }
+
+    // 收集拖拽操作
+    const operations = collectDragOperations(targetInfo, position as PositionType)
+
+    // 执行拖拽操作并更新选择状态
+    if (operations.length > 0) {
+      executeDragOperations(operations, targetInfo)
+    }
+
+    // 清理拖拽状态
+    cleanupDragState()
 
     return true
   }
