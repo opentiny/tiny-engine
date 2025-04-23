@@ -615,29 +615,55 @@ export const useMultiDrag = () => {
     return operations
   }
 
-  // 按DOM顺序排序操作
-  const sortOperationsByDOMOrder = (operations: InsertOperation[]): InsertOperation[] => {
-    return [...operations].sort((a, b) => {
-      const elemA = querySelectById(a.sourceId)
-      const elemB = querySelectById(b.sourceId)
+  // 计算节点之间的相对位置
+  const calculateRelativePositions = (nodeIds: string[]): Map<string, { top: number; left: number }> => {
+    const positions = new Map<string, { top: number; left: number }>()
 
-      if (!elemA || !elemB) return 0
+    // 获取所有节点的初始位置
+    nodeIds.forEach((id) => {
+      const elem = querySelectById(id)
+      if (elem) {
+        const rect = elem.getBoundingClientRect()
+        positions.set(id, {
+          top: rect.top,
+          left: rect.left
+        })
+      }
+    })
 
-      // compareDocumentPosition返回相对位置，按照节点在DOM中的顺序排序
-      if (elemA.compareDocumentPosition) {
-        const position = elemA.compareDocumentPosition(elemB)
-        // Node.DOCUMENT_POSITION_FOLLOWING表示B在A之后
-        if (position & Node.DOCUMENT_POSITION_FOLLOWING) {
-          return -1
-        }
-        // Node.DOCUMENT_POSITION_PRECEDING表示B在A之前
-        if (position & Node.DOCUMENT_POSITION_PRECEDING) {
-          return 1
-        }
+    return positions
+  }
+
+  // 按相对位置排序操作，并根据拖拽方向调整插入顺序
+  const sortOperationsByPosition = (
+    operations: InsertOperation[],
+    positions: Map<string, { top: number; left: number }>,
+    position: PositionType
+  ): InsertOperation[] => {
+    // 根据节点的原始位置进行排序
+    const sortedOperations = [...operations].sort((a, b) => {
+      const posA = positions.get(a.sourceId)
+      const posB = positions.get(b.sourceId)
+
+      if (!posA || !posB) return 0
+
+      // 先按垂直位置排序
+      if (Math.abs(posA.top - posB.top) > 5) {
+        return posA.top - posB.top
       }
 
-      return 0
+      // 如果垂直位置接近，则按水平位置排序
+      return posA.left - posB.left
     })
+
+    // 获取拖拽的目标位置，根据位置调整插入顺序
+    if (position === POSITION.BOTTOM || position === POSITION.RIGHT) {
+      return sortedOperations.reverse()
+    } else if (position === POSITION.IN) {
+      return sortedOperations
+    } else {
+      return sortedOperations
+    }
   }
 
   // 将节点插入到目标位置
@@ -712,19 +738,39 @@ export const useMultiDrag = () => {
   const executeDragOperations = (operations: InsertOperation[], targetInfo: any) => {
     const { isBodyTarget } = targetInfo
     const targetId = lineState.id as string
+    const position = lineState.position as PositionType
+
+    const nodeIds = operations.map((op) => op.sourceId)
+
+    // 计算节点的初始相对位置
+    const positions = calculateRelativePositions(nodeIds)
+
+    // 按照原始相对位置排序操作，并根据拖拽方向调整顺序
+    const sortedOperations = sortOperationsByPosition(operations, positions, position)
 
     // 先移除所有源节点
     operations.forEach((op) => {
       removeNode(op.sourceId)
     })
 
-    // 按DOM顺序排序操作
-    const sortedOperations = sortOperationsByDOMOrder(operations)
-
-    // 然后按照原始相对顺序插入所有节点到目标位置
-    sortedOperations.forEach((op) => {
-      insertNodeToTarget(op, isBodyTarget, targetId)
-    })
+    // 处理页面底部和容器的情况
+    if (isBodyTarget && position === POSITION.BOTTOM) {
+      // 放置到页面底部，始终保持从上到下的顺序
+      const reorderedOperations = [...sortedOperations].reverse()
+      reorderedOperations.forEach((op) => {
+        insertNodeToTarget(op, isBodyTarget, targetId)
+      })
+    } else if (position === POSITION.IN) {
+      // 放置到容器内部，应该保持原始从上到下的顺序
+      sortedOperations.forEach((op) => {
+        insertNodeToTarget(op, isBodyTarget, targetId)
+      })
+    } else {
+      // 其他情况按照排序后的顺序插入
+      sortedOperations.forEach((op) => {
+        insertNodeToTarget(op, isBodyTarget, targetId)
+      })
+    }
 
     // 更新画布历史
     getController().addHistory()
