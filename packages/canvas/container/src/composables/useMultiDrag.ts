@@ -247,20 +247,14 @@ export const useMultiDrag = () => {
     return true
   }
 
-  // 拖拽移动
-  const moveMultiDrag = (event: MouseEvent): boolean => {
-    if (!multiDragState.keydown || multiStateLength.value <= 1) return false
-
-    const { clientX, clientY } = event
-    const currentMousePos: Position = { x: clientX, y: clientY }
-
-    // 如果拖拽还未开始，检查是否超过阈值
+  // 初始化拖拽状态
+  const initDragState = (currentMousePos: Position): boolean => {
     if (!multiDragState.dragStarted) {
       const distance = calculateDistance(multiDragState.initialMousePos, currentMousePos)
 
       // 如果移动距离小于阈值，不触发拖拽
       if (distance < DRAG_THRESHOLD) {
-        return true // 返回true表示已处理，但不启动拖拽
+        return false // 不启动拖拽
       }
 
       // 超过阈值，标记拖拽已开始
@@ -270,194 +264,197 @@ export const useMultiDrag = () => {
       Object.assign(dragState, initialDragState)
     }
 
-    // 始终更新鼠标位置，确保拖拽预览能够跟随鼠标
-    multiDragState.mouse = currentMousePos
-
     if (!multiDragState.draging && multiDragState.dragStarted) {
       multiDragState.draging = true
     }
 
-    // 如果没有真正开始拖拽，不处理后续逻辑
-    if (!multiDragState.draging) {
+    return multiDragState.draging
+  }
+
+  // 处理 body 元素的放置逻辑
+  const handleBodyPlacement = (event: MouseEvent, body: HTMLElement): boolean => {
+    // 获取body中的所有顶级节点
+    const { getSchema } = useCanvas()
+    const bodySchema = getSchema()
+    const bodyChildren = bodySchema.children || []
+
+    // 如果body中没有子节点，直接放置到body内部
+    if (bodyChildren.length === 0) {
+      const bodyRect = body.getBoundingClientRect()
+      Object.assign(lineState, {
+        id: 'body',
+        top: bodyRect.top,
+        left: bodyRect.left,
+        width: bodyRect.width,
+        height: bodyRect.height,
+        position: POSITION.IN,
+        forbidden: false,
+        configure: { isContainer: true }
+      })
       return true
     }
 
-    const targetElement = getElement(event.target as HTMLElement)
+    // 如果body中有子节点，需要判断放置位置
+    const { clientY } = event
+    let closestNode: HTMLElement | null = null
+    let closestDistance = Infinity
+    let position: PositionType = POSITION.IN // 默认放置到body内部
 
-    // 特殊处理：如果没有找到目标元素，检查是否是body元素或其直接子元素
-    if (!targetElement) {
-      // 检查是否是body元素或其直接子元素
-      const doc = getDocument()
-      const body = doc.body
+    // 遍历body的直接子节点，找到最接近鼠标位置的节点
+    for (const childSchema of bodyChildren) {
+      const childElement = querySelectById(childSchema.id)
+      if (!childElement) continue
 
-      // 如果鼠标在body区域内，则视为拖拽到body
-      if (
-        event.target === body ||
-        (event.target as HTMLElement).parentElement === body ||
-        event.target === doc.documentElement
-      ) {
-        // 获取body中的所有顶级节点
-        const { getSchema } = useCanvas()
-        const bodySchema = getSchema()
-        const bodyChildren = bodySchema.children || []
+      const childRect = childElement.getBoundingClientRect()
+      const childMiddle = childRect.top + childRect.height / 2
 
-        // 如果body中没有子节点，直接放置到body内部
-        if (bodyChildren.length === 0) {
-          const bodyRect = body.getBoundingClientRect()
+      // 计算鼠标与节点中点的距离
+      const distance = Math.abs(clientY - childMiddle)
+
+      if (distance < closestDistance) {
+        closestDistance = distance
+        closestNode = childElement
+
+        // 判断放置位置：在节点上方还是下方
+        position = clientY < childMiddle ? POSITION.TOP : POSITION.BOTTOM
+      }
+    }
+
+    // 如果找到了最近的节点
+    if (closestNode) {
+      const nodeId = closestNode.getAttribute(NODE_UID)
+      const componentName = closestNode.getAttribute(NODE_TAG)
+      const configure = getConfigure(componentName)
+      const rect = closestNode.getBoundingClientRect()
+
+      // 检查是否允许放置
+      const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, nodeId!, position)
+
+      // 更新lineState
+      Object.assign(lineState, {
+        id: nodeId,
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+        position: position,
+        forbidden: isForbidden,
+        configure
+      })
+    } else {
+      // 如果没有找到合适的节点，放置到body内部
+      const bodyRect = body.getBoundingClientRect()
+      Object.assign(lineState, {
+        id: 'body',
+        top: bodyRect.top,
+        left: bodyRect.left,
+        width: bodyRect.width,
+        height: bodyRect.height,
+        position: POSITION.IN,
+        forbidden: false,
+        configure: { isContainer: true }
+      })
+    }
+
+    return true
+  }
+
+  // 处理自身节点的拖拽
+  const handleSelfNodeDrag = (targetId: string, rect: DOMRect, configure: any, position: PositionType): boolean => {
+    // 获取目标节点的父节点和兄弟节点
+    const { getNodeWithParentById } = useCanvas()
+    const { parent } = getNodeWithParentById(targetId) || {}
+
+    if (!parent) {
+      lineState.forbidden = true
+      return true
+    }
+
+    // 根据放置位置调整目标节点
+    const children = parent.children || []
+    const targetIndex = children.findIndex((child: NodeSchema) => child.id === targetId)
+
+    // 如果是放置到节点下方，使用下一个兄弟节点作为目标
+    if ((position === POSITION.BOTTOM || position === POSITION.RIGHT) && targetIndex < children.length - 1) {
+      const nextSibling = children[targetIndex + 1]
+      if (nextSibling && !multiDragState.nodes.some((node) => node.id === nextSibling.id)) {
+        // 使用下一个兄弟节点作为目标
+        const nextElement = querySelectById(nextSibling.id)
+        if (nextElement) {
+          const nextRect = nextElement.getBoundingClientRect()
+          const nextComponentName = nextElement.getAttribute(NODE_TAG)
+          const nextConfigure = getConfigure(nextComponentName)
+
+          // 更新lineState
           Object.assign(lineState, {
-            id: 'body',
-            top: bodyRect.top,
-            left: bodyRect.left,
-            width: bodyRect.width,
-            height: bodyRect.height,
-            position: POSITION.IN,
-            forbidden: false,
-            configure: { isContainer: true }
+            id: nextSibling.id,
+            top: nextRect.top,
+            left: nextRect.left,
+            width: nextRect.width,
+            height: nextRect.height,
+            position: POSITION.TOP, // 放置到下一个节点的上方
+            forbidden: !checkAllowInsert(nextConfigure, multiDragState.nodes, nextSibling.id, POSITION.TOP),
+            configure: nextConfigure
           })
+
           return true
         }
+      }
+    }
 
-        // 如果body中有子节点，需要判断放置位置
-        const { clientY } = event
+    // 如果是放置到节点上方，或者是最后一个节点的下方
+    if (
+      position === POSITION.TOP ||
+      position === POSITION.LEFT ||
+      (position === POSITION.BOTTOM && targetIndex === children.length - 1) ||
+      (position === POSITION.RIGHT && targetIndex === children.length - 1)
+    ) {
+      // 检查是否允许放置
+      const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, targetId, position)
 
-        // 遍历body的直接子节点，找到最接近鼠标位置的节点
-        let closestNode: HTMLElement | null = null
-        let closestDistance = Infinity
-        let position: PositionType = POSITION.IN // 默认放置到body内部
+      // 更新lineState
+      Object.assign(lineState, {
+        id: targetId,
+        top: rect.top,
+        left: rect.left,
+        width: rect.width,
+        height: rect.height,
+        position: position,
+        forbidden: isForbidden,
+        configure
+      })
 
-        for (const childSchema of bodyChildren) {
-          const childElement = querySelectById(childSchema.id)
-          if (!childElement) continue
+      return true
+    }
 
+    // 默认情况下，禁止放置
+    lineState.forbidden = true
+    return true
+  }
+
+  // 处理容器内放置
+  const handleContainerPlacement = (targetId: string, rect: DOMRect, configure: any, isForbidden: boolean): boolean => {
+    const { getNodeWithParentById, getSchema } = useCanvas()
+    const { node } = targetId === 'body' ? { node: getSchema() } : getNodeWithParentById(targetId) || {}
+    const children = node?.children || []
+
+    // 如果容器有子节点，考虑放置到最后一个子节点后面
+    if (children.length > 0) {
+      const lastChild = children[children.length - 1]
+      // 如果最后一个子节点不是被拖拽的节点之一
+      if (!multiDragState.nodes.some((node) => node.id === lastChild.id)) {
+        const childElement = querySelectById(lastChild.id)
+        if (childElement) {
           const childRect = childElement.getBoundingClientRect()
-          const childMiddle = childRect.top + childRect.height / 2
 
-          // 计算鼠标与节点中点的距离
-          const distance = Math.abs(clientY - childMiddle)
-
-          if (distance < closestDistance) {
-            closestDistance = distance
-            closestNode = childElement
-
-            // 判断放置位置：在节点上方还是下方
-            position = clientY < childMiddle ? POSITION.TOP : POSITION.BOTTOM
-          }
-        }
-
-        // 如果找到了最近的节点
-        if (closestNode) {
-          const nodeId = closestNode.getAttribute(NODE_UID)
-          const componentName = closestNode.getAttribute(NODE_TAG)
-          const configure = getConfigure(componentName)
-          const rect = closestNode.getBoundingClientRect()
-
-          // 检查是否允许放置
-          const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, nodeId!, position)
-
-          // 更新lineState
+          // 更新lineState，显示在最后一个子节点下方
           Object.assign(lineState, {
-            id: nodeId,
-            top: rect.top,
-            left: rect.left,
-            width: rect.width,
-            height: rect.height,
-            position: position,
-            forbidden: isForbidden,
-            configure
-          })
-        } else {
-          // 如果没有找到合适的节点，放置到body内部
-          const bodyRect = body.getBoundingClientRect()
-          Object.assign(lineState, {
-            id: 'body',
-            top: bodyRect.top,
-            left: bodyRect.left,
-            width: bodyRect.width,
-            height: bodyRect.height,
-            position: POSITION.IN,
-            forbidden: false,
-            configure: { isContainer: true }
-          })
-        }
-
-        return true
-      }
-
-      // 其他情况，设置为禁止放置
-      lineState.position = ''
-      lineState.forbidden = true
-      return true
-    }
-
-    // 更新放置位置指示器
-    const componentName = targetElement.getAttribute(NODE_TAG)
-    const configure = getConfigure(componentName)
-    const rect = targetElement.getBoundingClientRect()
-    const targetId = targetElement.getAttribute(NODE_UID) || 'body'
-
-    // 计算放置位置
-    const position = calculateDropPosition(event, rect, configure)
-
-    // 检查是否是拖拽自身节点
-    const isDraggingSelf = multiDragState.nodes.some((node) => node.id === targetId)
-
-    // 如果是拖拽到自身节点，需要特殊处理
-    if (isDraggingSelf && position !== POSITION.IN) {
-      // 获取目标节点的父节点和兄弟节点
-      const { getNodeWithParentById } = useCanvas()
-      const { parent } = getNodeWithParentById(targetId) || {}
-
-      if (parent) {
-        // 根据放置位置调整目标节点
-        const children = parent.children || []
-        const targetIndex = children.findIndex((child: NodeSchema) => child.id === targetId)
-
-        // 如果是放置到节点下方，使用下一个兄弟节点作为目标
-        if ((position === POSITION.BOTTOM || position === POSITION.RIGHT) && targetIndex < children.length - 1) {
-          const nextSibling = children[targetIndex + 1]
-          if (nextSibling && !multiDragState.nodes.some((node) => node.id === nextSibling.id)) {
-            // 使用下一个兄弟节点作为目标
-            const nextElement = querySelectById(nextSibling.id)
-            if (nextElement) {
-              const nextRect = nextElement.getBoundingClientRect()
-              const nextComponentName = nextElement.getAttribute(NODE_TAG)
-              const nextConfigure = getConfigure(nextComponentName)
-
-              // 更新lineState
-              Object.assign(lineState, {
-                id: nextSibling.id,
-                top: nextRect.top,
-                left: nextRect.left,
-                width: nextRect.width,
-                height: nextRect.height,
-                position: POSITION.TOP, // 放置到下一个节点的上方
-                forbidden: !checkAllowInsert(nextConfigure, multiDragState.nodes, nextSibling.id, POSITION.TOP),
-                configure: nextConfigure
-              })
-
-              return true
-            }
-          }
-        }
-
-        // 如果是放置到节点上方，或者是最后一个节点的下方
-        if (
-          position === POSITION.TOP ||
-          position === POSITION.LEFT ||
-          (position === POSITION.BOTTOM && targetIndex === children.length - 1) ||
-          (position === POSITION.RIGHT && targetIndex === children.length - 1)
-        ) {
-          // 检查是否允许放置
-          const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, targetId, position)
-
-          // 更新lineState
-          Object.assign(lineState, {
-            id: targetId,
-            top: rect.top,
-            left: rect.left,
-            width: rect.width,
-            height: rect.height,
-            position: position,
+            id: targetId, // 保持目标是容器
+            top: childRect.top,
+            left: childRect.left,
+            width: childRect.width,
+            height: childRect.height,
+            position: POSITION.IN, // 仍然表示放置到容器内
             forbidden: isForbidden,
             configure
           })
@@ -465,46 +462,32 @@ export const useMultiDrag = () => {
           return true
         }
       }
-
-      // 默认情况下，禁止放置
-      lineState.forbidden = true
-      return true
     }
 
+    // 更新lineState
+    Object.assign(lineState, {
+      id: targetId,
+      top: rect.top,
+      left: rect.left,
+      width: rect.width,
+      height: rect.height,
+      position: POSITION.IN,
+      forbidden: isForbidden,
+      configure
+    })
+
+    return true
+  }
+
+  // 更新线框提示状态
+  const updateLineFeedback = (targetId: string, rect: DOMRect, configure: any, position: PositionType): void => {
     // 检查是否允许放置
     const isForbidden = !checkAllowInsert(configure, multiDragState.nodes, targetId, position)
 
     // 特殊处理容器内放置
     if (position === POSITION.IN && configure?.isContainer) {
-      const { getNodeWithParentById, getSchema } = useCanvas()
-      const { node } = targetId === 'body' ? { node: getSchema() } : getNodeWithParentById(targetId) || {}
-      const children = node?.children || []
-
-      // 如果容器有子节点，考虑放置到最后一个子节点后面
-      if (children.length > 0) {
-        const lastChild = children[children.length - 1]
-        // 如果最后一个子节点不是被拖拽的节点之一
-        if (!multiDragState.nodes.some((node) => node.id === lastChild.id)) {
-          const childElement = querySelectById(lastChild.id)
-          if (childElement) {
-            const childRect = childElement.getBoundingClientRect()
-
-            // 更新lineState，显示在最后一个子节点下方
-            Object.assign(lineState, {
-              id: targetId, // 保持目标是容器
-              top: childRect.top,
-              left: childRect.left,
-              width: childRect.width,
-              height: childRect.height,
-              position: POSITION.IN, // 仍然表示放置到容器内
-              forbidden: isForbidden,
-              configure
-            })
-
-            return true
-          }
-        }
-      }
+      handleContainerPlacement(targetId, rect, configure, isForbidden)
+      return
     }
 
     // 更新lineState
@@ -518,6 +501,64 @@ export const useMultiDrag = () => {
       forbidden: isForbidden,
       configure
     })
+  }
+
+  // 拖拽移动
+  const moveMultiDrag = (event: MouseEvent): boolean => {
+    if (!multiDragState.keydown || multiStateLength.value <= 1) return false
+
+    const { clientX, clientY } = event
+    const currentMousePos: Position = { x: clientX, y: clientY }
+
+    // 更新鼠标位置
+    multiDragState.mouse = currentMousePos
+
+    // 初始化拖拽状态，检查是否应该开始拖拽
+    if (!initDragState(currentMousePos)) {
+      return true // 返回true表示已处理，但不启动拖拽
+    }
+
+    const targetElement = getElement(event.target as HTMLElement)
+
+    // 特殊处理：如果没有找到目标元素，检查是否是body元素或其直接子元素
+    if (!targetElement) {
+      const doc = getDocument()
+      const body = doc.body
+
+      // 如果鼠标在body区域内，则视为拖拽到body
+      if (
+        event.target === body ||
+        (event.target as HTMLElement).parentElement === body ||
+        event.target === doc.documentElement
+      ) {
+        return handleBodyPlacement(event, body)
+      }
+
+      // 其他情况，设置为禁止放置
+      lineState.position = ''
+      lineState.forbidden = true
+      return true
+    }
+
+    // 获取目标元素信息
+    const componentName = targetElement.getAttribute(NODE_TAG)
+    const configure = getConfigure(componentName)
+    const rect = targetElement.getBoundingClientRect()
+    const targetId = targetElement.getAttribute(NODE_UID) || 'body'
+
+    // 计算放置位置
+    const position = calculateDropPosition(event, rect, configure)
+
+    // 检查是否是拖拽自身节点
+    const isDraggingSelf = multiDragState.nodes.some((node) => node.id === targetId)
+
+    // 如果是拖拽到自身节点，需要特殊处理
+    if (isDraggingSelf && position !== POSITION.IN) {
+      return handleSelfNodeDrag(targetId, rect, configure, position)
+    }
+
+    // 更新线框提示状态
+    updateLineFeedback(targetId, rect, configure, position)
 
     return true
   }
@@ -791,7 +832,7 @@ export const useMultiDrag = () => {
 
       // 清除单选拖动状态
       Object.assign(dragState, initialDragState)
-    }, 150)
+    }, 50)
   }
 
   // 结束拖拽
