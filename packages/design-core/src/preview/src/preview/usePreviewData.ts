@@ -186,7 +186,6 @@ const getPageAncestryFiles = (
 ) => {
   const familyPages: IPanelType[] = []
   const ancestors = params.ancestors
-  // @ts-ignore
   const { generatePageCode } = getMetaApi('engine.service.generateCode')
 
   // 区块预览，没有祖先
@@ -341,7 +340,6 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     const blockSet = new Set()
 
     let blocks = []
-    // @ts-ignore
     const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
 
     if (params.ancestors?.length) {
@@ -371,7 +369,7 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
 
     const newFiles = store.getFiles()
     const searchParams = new URLSearchParams(location.search)
-    const appJsCode = processAppJsCode(newFiles['app.js'], JSON.parse(searchParams.get('styles') || '{}'))
+    const appJsCode = processAppJsCode(newFiles['app.js'], JSON.parse(searchParams.get('styles') || '[]'))
 
     newFiles['app.js'] = appJsCode
 

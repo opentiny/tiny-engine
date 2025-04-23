@@ -30,9 +30,6 @@ const { deepClone } = utils
 // 保存预览窗口引用
 let previewWindow = null
 
-// 创建 BroadcastChannel 实例用于通信
-const previewChannel = new BroadcastChannel('tiny-engine-preview-channel')
-
 const getScriptAndStyleDeps = () => {
   const { scripts, styles } = useMaterial().getCanvasDeps()
   const utilsDeps = useResource().getUtilsDeps()
@@ -184,11 +181,16 @@ const setupMessageListener = () => {
     }
   })
 
+  // 创建 BroadcastChannel 实例用于通信
+  const previewChannel = new BroadcastChannel('tiny-engine-preview-channel')
+
   // 可能是刷新，需要重新建立连接
   previewChannel.postMessage({
     event: 'connect',
     source: 'designer'
   })
+
+  previewChannel.close()
 }
 
 // 初始化消息监听
