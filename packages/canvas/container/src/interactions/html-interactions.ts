@@ -20,6 +20,7 @@
  */
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { NODE_TAG, NODE_UID, NODE_INACTIVE_UID } from '../../../common'
 import { getConfigure, scrollToNode, canvasState, getDocument, querySelectById } from '../container'
 import {
@@ -32,13 +33,14 @@ import {
 } from './common'
 import type { HoverOrSelectState } from './common'
 
-const curHoverState = ref<HoverOrSelectState>(structuredClone(initialHoverState))
+const { deepClone } = utils
+const curHoverState = ref<HoverOrSelectState>(deepClone(initialHoverState))
 const selectState = ref<HoverOrSelectState[]>([])
 const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e: MouseEvent): HoverOrSelectState | undefined => {
   const element = getClosedElementHasUid(e.target as Element)
-  let res: HoverOrSelectState = structuredClone(initialHoverState)
+  let res: HoverOrSelectState = deepClone(initialHoverState)
 
   if (!element) {
     return res
@@ -182,7 +184,7 @@ const updateSelectedRect = () => {
 
     selectState.value = selectState.value.map((stateItem) => {
       // 优先需要尝试使用 querySelectById 计算 位置
-      const element = querySelectById(stateItem.node.id)
+      const element = querySelectById(stateItem.node?.id)
 
       if (element) {
         const rect = element.getBoundingClientRect()

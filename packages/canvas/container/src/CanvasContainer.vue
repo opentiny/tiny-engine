@@ -1,5 +1,5 @@
 <template>
-  <div v-for="state in selectState" :key="state.id">
+  <div v-for="state in selectState" :key="state.node?.id || state.componentName">
     <canvas-action
       :selectState="state"
       :windowGetClickEventTarget="target"

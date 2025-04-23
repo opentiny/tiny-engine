@@ -1,6 +1,9 @@
 import type { Ref } from 'vue'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { NODE_INACTIVE_UID, NODE_UID } from '../../../common'
 import { getWindow, querySelectById } from '../container'
+
+const { deepClone } = utils
 
 // 定义hover状态结构
 export interface HoverOrSelectState {
@@ -62,7 +65,7 @@ export const initialHoverState = {
 }
 
 export const clearHover = (hoverState: Ref<HoverOrSelectState>) => {
-  hoverState.value = structuredClone(initialHoverState)
+  hoverState.value = deepClone(initialHoverState)
 }
 
 export const getClosedElementHasUid = (element: Element | null): Element | undefined => {

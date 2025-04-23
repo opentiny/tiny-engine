@@ -23,6 +23,7 @@
 
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { NODE_TAG, NODE_UID } from '../../../common'
 import { canvasState, getConfigure, scrollToNode, getDocument, querySelectById } from '../container'
 import {
@@ -55,14 +56,15 @@ export const getClosedVueElement = (element: HTMLElementWithVue | null): VueInst
   return null
 }
 
-const curHoverState = ref<HoverOrSelectState>(structuredClone(initialHoverState))
+const { deepClone } = utils
+const curHoverState = ref<HoverOrSelectState>(deepClone(initialHoverState))
 const selectState = ref<HoverOrSelectState[]>([])
 const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e: { target: HTMLElementWithVue }): HoverOrSelectState => {
   // 拿到最近的带有 __vueComponent 的vue 实例
   let instance = getClosedVueElement(e.target)
-  const res: HoverOrSelectState = structuredClone(initialHoverState)
+  const res: HoverOrSelectState = deepClone(initialHoverState)
   const windowRect = getWindowRect()
 
   if (!instance) {
