@@ -12,30 +12,32 @@
 import { ref } from 'vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { useHoverNode as useVueHoverNode, useSelectNode as useVueSelectNode } from './vue-interactions'
-import { useHoverNode as useDefaultHoverNode, useSelectNode as useDefaultSelectNode } from './default-interactions'
+import { useHoverNode as useDefaultHoverNode, useSelectNode as useDefaultSelectNode } from './html-interactions'
 
 const interactionHooksMap = {
   vue: {
     useHoverNode: useVueHoverNode,
     useSelectNode: useVueSelectNode
   },
-  default: {
+  html: {
     useHoverNode: useDefaultHoverNode,
     useSelectNode: useDefaultSelectNode
   }
 }
 
-const getInteractionFn = () => {
-  const dslMode = getMergeMeta('engine.config')?.dslMode?.toLowerCase?.() as keyof typeof interactionHooksMap
+type IInteractionHooksMap = typeof interactionHooksMap
 
-  if (interactionHooksMap[dslMode]) {
-    return interactionHooksMap[dslMode]
+const getInteractionFn = () => {
+  const selectMode = getMergeMeta('engine.config')?.selectMode?.toLowerCase?.() as keyof IInteractionHooksMap
+
+  if (interactionHooksMap[selectMode]) {
+    return interactionHooksMap[selectMode]
   }
 
-  return interactionHooksMap.default
+  return interactionHooksMap.vue
 }
 
-const interactionsFn = ref<typeof interactionHooksMap[keyof typeof interactionHooksMap] | null>(null)
+const interactionsFn = ref<IInteractionHooksMap[keyof IInteractionHooksMap] | null>(null)
 
 export const useHoverNode = () => {
   if (!interactionsFn.value) {

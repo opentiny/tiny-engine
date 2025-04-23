@@ -27,27 +27,27 @@ const KEY_DEL = 46
 
 function handlerLeft({ parent }) {
   const { selectNodeById } = useSelectNode()
-  selectNodeById(parent?.id)
+  selectNodeById(parent?.id, '', false)
 }
 function handlerRight({ schema }) {
   const id = schema.children?.[0]?.id
   if (id) {
     const { selectNodeById } = useSelectNode()
-    selectNodeById(id)
+    selectNodeById(id, '', false)
   }
 }
 function handlerUp({ index, parent }) {
   const id = (parent?.children[index - 1] || parent)?.id
   if (id) {
     const { selectNodeById } = useSelectNode()
-    selectNodeById(id)
+    selectNodeById(id, '', false)
   }
 }
 function handlerDown({ index, parent }) {
   const id = parent?.children[index + 1]?.id
   if (id) {
     const { selectNodeById } = useSelectNode()
-    selectNodeById(id)
+    selectNodeById(id, '', false)
   }
 }
 

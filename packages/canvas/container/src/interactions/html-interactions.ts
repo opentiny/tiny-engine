@@ -18,7 +18,7 @@
  * 缺陷：
  * 1. 如果画布无法挂载 data-uid 属性到 DOM 节点上，那么该节点无法反查到对应的 node 节点，导致 hover 、选中等逻辑无法生效。
  */
-import { nextTick, ref } from 'vue'
+import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID, NODE_INACTIVE_UID } from '../../../common'
 import { getConfigure, scrollToNode, canvasState, getDocument, querySelectById } from '../container'
@@ -27,7 +27,8 @@ import {
   clearHover as commonClearHover,
   getClosedElementHasUid,
   getWindowRect,
-  hoverNodeById as commonHoverNodeById
+  hoverNodeById as commonHoverNodeById,
+  selectNodeById as commonSelectNodeById
 } from './common'
 import type { HoverOrSelectState } from './common'
 
@@ -112,7 +113,7 @@ export const useHoverNode = () => {
   }
 }
 
-const updateSelectedNode = async (e: MouseEvent, type: string) => {
+const updateSelectedNode = async (e: MouseEvent, type: string, isMultipleSelect = false) => {
   let res = getRectAndNode(e)
 
   if (!res) {
@@ -120,8 +121,6 @@ const updateSelectedNode = async (e: MouseEvent, type: string) => {
 
     return
   }
-
-  const isMultipleSelect = e.ctrlKey || e.metaKey
 
   // 选中的是非当前编辑页的节点，改为选中顶层节点
   if (!res.node && res.isInactiveNode) {
@@ -171,44 +170,8 @@ const updateSelectedNode = async (e: MouseEvent, type: string) => {
   }
 }
 
-// TODO: 支持多选
-const selectNodeById = async (id: string, type: string) => {
-  // commonSelectNodeById(updateSelectedNode, id, type)
-  const element = querySelectById(id)
-  const { node, parent } = useCanvas().getNodeWithParentById(id) || {}
-
-  if (!element || !node) {
-    clearSelect()
-
-    return
-  }
-
-  const rect = element.getBoundingClientRect()
-  const componentName = node.componentName
-  const configure = getConfigure(componentName)
-
-  canvasState.current = node
-  canvasState.parent = parent
-  selectState.value = [
-    {
-      rect: {
-        top: rect.top,
-        left: rect.left,
-        width: rect.width,
-        height: rect.height
-      },
-      node,
-      configure,
-      element,
-      componentName,
-      isInactiveNode: false
-    }
-  ]
-
-  // TODO: 改成事件通知
-  canvasState.emit('selected', node, parent, type, node?.id)
-  await nextTick()
-  await scrollToNode(element)
+const selectNodeById = async (id: string, type: string, isMultipleSelect = false) => {
+  commonSelectNodeById(updateSelectedNode, id, type, isMultipleSelect)
 }
 
 const updateSelectedRect = () => {
@@ -218,29 +181,27 @@ const updateSelectedRect = () => {
     }
 
     selectState.value = selectState.value.map((stateItem) => {
+      // 优先需要尝试使用 querySelectById 计算 位置
+      const element = querySelectById(stateItem.node.id)
+
+      if (element) {
+        const rect = element.getBoundingClientRect()
+
+        return {
+          ...stateItem,
+          rect: {
+            top: rect.top,
+            left: rect.left,
+            width: rect.width,
+            height: rect.height
+          }
+        }
+      }
+
       const res = getRectAndNode({ target: stateItem.element } as unknown as MouseEvent)
 
       if (res?.node) {
         return res
-      }
-
-      // 通过节点没法直接计算到 rect，可能是没法挂载 data-uid 属性，需要尝试使用 querySelectById
-      if (!res?.node) {
-        const element = querySelectById(stateItem.node.id)
-
-        if (element) {
-          const rect = element.getBoundingClientRect()
-
-          return {
-            ...stateItem,
-            rect: {
-              top: rect.top,
-              left: rect.left,
-              width: rect.width,
-              height: rect.height
-            }
-          }
-        }
       }
 
       return stateItem

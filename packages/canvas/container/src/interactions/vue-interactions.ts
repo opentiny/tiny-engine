@@ -24,7 +24,7 @@
 import { ref } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
-import { canvasState, getConfigure, scrollToNode, getDocument } from '../container'
+import { canvasState, getConfigure, scrollToNode, getDocument, querySelectById } from '../container'
 import {
   initialHoverState,
   clearHover as commonClearHover,
@@ -56,9 +56,7 @@ export const getClosedVueElement = (element: HTMLElementWithVue | null): VueInst
 }
 
 const curHoverState = ref<HoverOrSelectState>(structuredClone(initialHoverState))
-
 const selectState = ref<HoverOrSelectState[]>([])
-
 const clearHover = () => commonClearHover(curHoverState)
 
 const getRectAndNode = (e: { target: HTMLElementWithVue }): HoverOrSelectState => {
@@ -82,15 +80,7 @@ const getRectAndNode = (e: { target: HTMLElementWithVue }): HoverOrSelectState =
   if (!uid) {
     let closedVueEle: VueInstanceInternal | undefined = instance
 
-    // TODO: 同步 develop 主干分支后，确认是否仍然需要  closedVueEle?.props?.schema?.id （当前没有的话选不中表格插槽里面的组件）
-    while (
-      closedVueEle &&
-      !(
-        closedVueEle.props?.schema?.id ||
-        closedVueEle.attrs?.[NODE_UID] ||
-        closedVueEle.attrs?.[NODE_TAG] === 'RouterView'
-      )
-    ) {
+    while (closedVueEle && !(closedVueEle.attrs?.[NODE_UID] || closedVueEle.attrs?.[NODE_TAG] === 'RouterView')) {
       closedVueEle = closedVueEle.parent
     }
 
@@ -149,15 +139,13 @@ const hoverNodeById = (id: string): void => {
   commonHoverNodeById(id, updateHoverNode)
 }
 
-const updateSelectedNode = async (e: MouseEvent, type: string): Promise<void> => {
+const updateSelectedNode = async (e: MouseEvent, type: string, isMultipleSelect = false): Promise<void> => {
   let res = getRectAndNode({ target: e.target as HTMLElementWithVue })
 
   if (!res) {
     clearSelect()
     return
   }
-
-  const isMultipleSelect = e.ctrlKey || e.metaKey
 
   if (!res.node && res.isInactiveNode) {
     // 多选选中非激活节点，忽略
@@ -213,8 +201,8 @@ const updateSelectedNode = async (e: MouseEvent, type: string): Promise<void> =>
   }
 }
 
-const selectNodeById = (id: string, type: string): void => {
-  commonSelectNodeById(updateSelectedNode, id, type)
+const selectNodeById = (id: string, type: string, isMultipleSelect = false): void => {
+  commonSelectNodeById(updateSelectedNode, id, type, isMultipleSelect)
 }
 
 export const useHoverNode = () => {
@@ -233,9 +221,18 @@ const updateSelectedRect = (): void => {
       return
     }
 
-    selectState.value = selectState.value.map((state) =>
-      getRectAndNode({ target: state.element as HTMLElementWithVue })
-    )
+    selectState.value = selectState.value.map((state) => {
+      // 这里不能直接计算原来的 element 来获取 rect，因为 element 可能已经被移除
+      // 或者是 text 节点，直接更新文本，并没有更新 element。
+      // 需要优先使用 querySelectById 来获取
+      const target = querySelectById(state.node?.id)
+
+      if (target) {
+        return getRectAndNode({ target: target as HTMLElementWithVue })
+      }
+
+      return getRectAndNode({ target: state.element as HTMLElementWithVue })
+    })
   }, 0)
 }
 

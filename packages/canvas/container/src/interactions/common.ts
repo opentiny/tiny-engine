@@ -110,13 +110,14 @@ export const hoverNodeById = (id: string, updateHoverNode: (e: MouseEvent) => vo
 }
 
 export const selectNodeById = async (
-  updateSelectedNode: (e: MouseEvent, type: string) => void,
+  updateSelectedNode: (e: MouseEvent, type: string, isMultipleSelect: boolean) => void,
   id: string,
-  type: string
+  type: string,
+  isMultipleSelect: boolean
 ) => {
   const element = querySelectById(id)
 
   if (element) {
-    updateSelectedNode({ target: element } as unknown as MouseEvent, type)
+    updateSelectedNode({ target: element } as unknown as MouseEvent, type, isMultipleSelect)
   }
 }

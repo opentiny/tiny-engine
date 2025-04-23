@@ -4,5 +4,6 @@ export default {
   material: ['/mock/bundle.json'],
   scripts: [],
   styles: [],
-  dslMode: 'vue'
+  dslMode: 'vue',
+  selectMode: 'vue'
 }

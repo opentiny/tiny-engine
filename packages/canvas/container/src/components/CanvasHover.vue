@@ -3,7 +3,7 @@
     v-show="hoverState.rect.height && hoverState.rect.width && !hoverState.isInactiveNode"
     class="canvas-rect common-hover hover"
   >
-    <div class="corner-mark-left" @click="handleSelectHoverNode">
+    <div class="corner-mark-left" @click="(e) => handleSelectHoverNode(e)">
       {{ hoverState.componentName }}
     </div>
     <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
@@ -29,7 +29,7 @@ export default {
     }
   },
   setup(props) {
-    const handleSelectHoverNode = () => {
+    const handleSelectHoverNode = (e) => {
       const node = props.hoverState.node
       const element = props.hoverState.element
 
@@ -38,11 +38,12 @@ export default {
       }
 
       const { selectNodeById, updateSelectedNode } = useSelectNode()
+      const isMultipleSelect = e.ctrlKey || e.metaKey
 
       if (element) {
-        updateSelectedNode({ target: element })
+        updateSelectedNode({ target: element }, '', isMultipleSelect)
       } else {
-        selectNodeById(node.id)
+        selectNodeById(node.id, '', isMultipleSelect)
       }
     }
 
@@ -66,6 +67,7 @@ export default {
     left: v-bind("hoverState.rect.left + 'px'");
     height: v-bind("hoverState.rect.height + 'px'");
     width: v-bind("hoverState.rect.width + 'px'");
+    transition: all 0.15s ease-in-out;
     .corner-mark-left {
       height: 14px;
       top: -14px;

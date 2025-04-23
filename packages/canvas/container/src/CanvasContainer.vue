@@ -121,7 +121,8 @@ export default {
     const handleNodeInteractions = async (event) => {
       const { clientX, clientY } = event
       closeMenu()
-      await updateSelectedNode(event)
+      const isMultipleSelect = event.ctrlKey || event.metaKey
+      await updateSelectedNode(event, '', isMultipleSelect)
       // TODO: 需要支持多选状态下的拖拽逻辑
       const node = selectState.value[0]?.node
 
@@ -233,7 +234,6 @@ export default {
 
           insertPosition.value = false
           insertContainer.value = false
-          // handleNodeInteractions(event)
           target.value = event.target
         })
 

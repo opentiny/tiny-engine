@@ -383,7 +383,6 @@ export const scrollToNode = (element?: Element | null) => {
   return nextTick()
 }
 
-// TODO:
 export const updateRect = () => {
   const { clearHover } = useHoverNode()
   const { updateSelectedRect } = useSelectNode()
@@ -662,10 +661,10 @@ export const dragMove = (event: DragEvent) => {
  * @param {*} type
  * @returns
  */
-export const selectNode = async (id: string, type?: string) => {
+export const selectNode = async (id: string, type?: string, isMultipleSelect = false) => {
   const { selectNodeById } = useSelectNode()
 
-  selectNodeById(id, type || '')
+  selectNodeById(id, type || '', isMultipleSelect)
 }
 
 /**
@@ -833,10 +832,10 @@ export const canvasApi = {
 
     return clearSelect()
   },
-  selectNodeById: (id: string, type: string) => {
+  selectNodeById: (id: string, type: string, isMultipleSelect = false) => {
     const { selectNodeById } = useSelectNode()
 
-    return selectNodeById(id, type)
+    return selectNodeById(id, type, isMultipleSelect)
   },
   selectNode,
   hoverNode,
