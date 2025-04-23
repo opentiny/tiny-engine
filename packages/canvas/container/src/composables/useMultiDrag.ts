@@ -606,8 +606,8 @@ export const useMultiDrag = () => {
             removeNode(op.sourceId)
           })
 
-          // 然后插入所有节点到目标位置
-          operations.forEach((op) => {
+          // 然后按照原始顺序插入所有节点到目标位置
+          operations.reverse().forEach((op) => {
             // 对于body特殊处理
             if (isBodyTarget) {
               // 判断是否是放置到body内的特定位置（TOP或BOTTOM）
