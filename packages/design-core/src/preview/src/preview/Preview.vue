@@ -16,6 +16,7 @@
 <script>
 import { defineComponent, computed, defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { injectDebugSwitch } from './debugSwitch'
 import { usePreviewCommunication } from './usePreviewCommunication'
 import { usePreviewData } from './usePreviewData'
@@ -61,8 +62,10 @@ export default {
     const onSchemaReceivedAction = async (data) => {
       updateUrl(data.currentPage, { scripts: data.scripts, styles: data.styles })
       const isHistory = new URLSearchParams(location.search).get('history')
+      const previewHotReload = getMergeMeta('engine.config').previewHotReload
       // 如果是历史预览，则不需要实时预览，接收到消息之后直接取消监听(需要监听到第一次消息接受页面信息)
-      if (isHistory) {
+      // 如果预览热更新关闭，则不需要实时预览
+      if (isHistory || previewHotReload === false) {
         cleanupCommunicationAction()
       }
       await updatePreview(data)
