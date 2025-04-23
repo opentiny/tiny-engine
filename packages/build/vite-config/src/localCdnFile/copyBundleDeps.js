@@ -42,6 +42,19 @@ export function extraBundleCdnLink(filename, originCdnPrefix) {
 }
 
 export function replaceBundleCdnLink(bundle, fileMap) {
+  // 兼容旧版的 npm 协议
+  bundle.data?.materials?.components?.forEach((component) => {
+    if (component.npm) {
+      const possibleUrl = ['script', 'css']
+      possibleUrl.forEach((key) => {
+        const matchRule = fileMap.find((rule) => component.npm[key] === rule.originUrl)
+        if (matchRule) {
+          component.npm[key] = matchRule.newUrl
+        }
+      })
+    }
+  })
+
   bundle.data?.materials?.packages?.forEach((packageItem) => {
     if (packageItem) {
       const possibleUrl = ['script', 'css']
