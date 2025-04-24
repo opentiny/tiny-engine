@@ -38,18 +38,7 @@
 </template>
 
 <script lang="ts">
-import {
-  reactive,
-  watch,
-  computed,
-  onActivated,
-  onDeactivated,
-  provide,
-  onMounted,
-  onBeforeUnmount,
-  nextTick,
-  ref
-} from 'vue'
+import { reactive, watch, computed, onActivated, onDeactivated, provide, onMounted, onBeforeUnmount, ref } from 'vue'
 import { PluginPanel } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
 import {
@@ -82,13 +71,13 @@ export default {
 
     const panelFixed = computed(() => props.fixedPanels?.includes(PLUGIN_NAME.OutlineTree))
 
-    const { useMultiSelect, registerHotkeyEvent, removeHotkeyEvent } = getMergeMeta('engine.canvas.container').api
-
-    const selectedIds = computed(() => useMultiSelect().multiSelectedStates.value.map((state) => state.id))
+    const { useSelectNode, registerHotkeyEvent, removeHotkeyEvent } = getMergeMeta('engine.canvas.container').api
+    const selectedIds = computed(() => useSelectNode().selectState.value.map((stateItem) => stateItem.node.id))
 
     const panelState = reactive({
       emitEvent: emit
     })
+
     provide('panelState', panelState)
 
     const filterSchema = (data) => {
@@ -210,15 +199,12 @@ export default {
         }
       }
 
-      const { insertNode, removeNode, selectNode } = useCanvas().canvasApi.value
+      const { insertNode, removeNode } = useCanvas().canvasApi.value
       removeNode(dragged.id)
       insertNode(
         { data: dragged.rawData, node: target.rawData, parent: target.parent.rawData },
         position === 'center' ? 'in' : position
       )
-      nextTick(() => {
-        selectNode(dragged.id, 'clickTree')
-      })
     }
 
     const handleClickRow = (event, row) => {

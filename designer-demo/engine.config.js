@@ -3,5 +3,7 @@ export default {
   theme: 'light',
   material: ['/mock/bundle.json'],
   scripts: [],
-  styles: []
+  styles: [],
+  dslMode: 'vue',
+  selectMode: 'vue'
 }

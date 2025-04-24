@@ -98,7 +98,6 @@ const getBindProps = (schema, scope, context, pageContext) => {
   }
 
   if (getDesignMode() === DESIGN_MODE.DESIGN && active) {
-    bindProps.onMouseover = stopEvent
     bindProps.onFocus = stopEvent
   }
 

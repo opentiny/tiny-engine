@@ -1,12 +1,12 @@
 <template>
   <div
-    v-show="selectState.height && selectState.width"
+    v-show="selectState.rect.height && selectState.rect.width"
     class="canvas-rect select"
     :style="{
-      top: selectState.top + 'px',
-      left: selectState.left + 'px',
-      height: selectState.height + 'px',
-      width: selectState.width + 'px'
+      top: selectState.rect.top + 'px',
+      left: selectState.rect.left + 'px',
+      height: selectState.rect.height + 'px',
+      width: selectState.rect.width + 'px'
     }"
   >
     <div v-if="showQuickAction" ref="labelRef" class="corner-mark-left" :style="labelStyle">
@@ -93,22 +93,6 @@
       </div>
     </div>
   </div>
-  <div v-show="hoverState.height && hoverState.width" class="canvas-rect hover">
-    <div class="corner-mark-left">
-      {{ hoverState.componentName }}
-    </div>
-    <div v-show="hoverState.configure?.isContainer" class="corner-mark-bottom-right">拖放元素到容器内</div>
-  </div>
-  <div v-show="inactiveHoverState.height && inactiveHoverState.width" class="canvas-rect inactive-hover">
-    <div class="corner-mark-left">
-      {{ inactiveHoverState.componentName }}
-    </div>
-  </div>
-  <div v-show="lineState.height && lineState.width" class="canvas-rect line">
-    <div :class="['hover-line', lineState.position, { forbidden: lineState.forbidden }]">
-      <div v-if="lineState.position === 'in' && hoverState.configure" class="choose-slots"></div>
-    </div>
-  </div>
 </template>
 <script>
 import { watchPostEffect, ref, watch, computed, nextTick } from 'vue'
@@ -125,16 +109,17 @@ import {
   canvasState,
   getCurrent,
   removeNodeById,
-  selectNode,
   updateRect,
   copyNode,
   getRenderer,
   dragStart,
-  getCurrentElement
+  getCurrentElement,
+  getDocument
 } from '../container'
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import { useSelectNode } from '../interactions'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -165,19 +150,7 @@ export default {
     TinyPopover: Popover
   },
   props: {
-    hoverState: {
-      type: Object,
-      default: () => ({})
-    },
-    inactiveHoverState: {
-      type: Object,
-      default: () => ({})
-    },
     selectState: {
-      type: Object,
-      default: () => ({})
-    },
-    lineState: {
       type: Object,
       default: () => ({})
     },
@@ -229,7 +202,8 @@ export default {
     const selectParent = () => {
       const parentId = getCurrent().parent?.id
       if (parentId) {
-        selectNode(parentId)
+        const { selectNodeById } = useSelectNode()
+        selectNodeById(parentId)
       }
     }
 
@@ -405,7 +379,8 @@ export default {
     }
 
     const getStyleValues = (selectState, canvasSize, labelWidth, optionWidth) => {
-      const { left, top, width, height, doc } = selectState
+      const { left, top, width, height } = selectState
+      const doc = getDocument()
       const { width: canvasWidth, height: canvasHeight } = canvasSize
       // 标签宽度和工具操作条宽度之和加上间距
       const fullRectWidth = labelWidth + optionWidth + OPTION_SPACE
@@ -482,7 +457,7 @@ export default {
     }
 
     watchPostEffect(async () => {
-      const { left, top, width, height, doc } = props.selectState
+      const { left, top, width, height } = props.selectState.rect
 
       // template上虽然已经判断了showQuickAction，这里再加上主要是为了watchPostEffect能够监听它，然后刷新action
       if (!showQuickAction.value) {
@@ -509,7 +484,7 @@ export default {
 
       // canvas容器中，iframe以及iframe之外的元素clientRect的尺寸都是缩放过的，除以scale得到原始大小
       const { labelStyleValue, optionStyleValue } = getStyleValues(
-        { left, top, width, height, doc },
+        { left, top, width, height },
         { width: canvasRect.width / scale, height: canvasRect.height / scale },
         labelWidth / scale,
         optionWidth / scale
@@ -551,105 +526,6 @@ export default {
   z-index: 2;
   &.absolute {
     pointer-events: all;
-  }
-  &.hover {
-    border-style: dashed;
-    top: v-bind("hoverState.top + 'px'");
-    left: v-bind("hoverState.left + 'px'");
-    height: v-bind("hoverState.height + 'px'");
-    width: v-bind("hoverState.width + 'px'");
-
-    .corner-mark-left {
-      height: 14px;
-      top: -14px;
-      padding-left: 0;
-      font-size: 12px;
-    }
-  }
-  &.inactive-hover {
-    border-style: dashed;
-    top: v-bind("inactiveHoverState.top + 'px'");
-    left: v-bind("inactiveHoverState.left + 'px'");
-    height: v-bind("inactiveHoverState.height + 'px'");
-    width: v-bind("inactiveHoverState.width + 'px'");
-    border-color: var(--te-canvas-container-border-color-hover);
-
-    .corner-mark-left {
-      height: 14px;
-      top: -14px;
-      padding-left: 0;
-      font-size: 12px;
-      color: var(--te-canvas-container-text-color-weaken);
-    }
-  }
-  &.line {
-    border-color: transparent;
-    top: v-bind("lineState.top + 'px'");
-    left: v-bind("lineState.left + 'px'");
-    height: v-bind("lineState.height + 'px'");
-    width: v-bind("lineState.width + 'px'");
-  }
-  .hover-line {
-    &.top {
-      width: 100%;
-      height: 5px;
-      background: var(--te-canvas-container-text-color-checked);
-      position: absolute;
-      top: -3px;
-    }
-    &.left {
-      width: 5px;
-      height: 100%;
-      background: var(--te-canvas-container-text-color-checked);
-      position: absolute;
-      left: -3px;
-    }
-    &.bottom {
-      width: 100%;
-      height: 5px;
-      background: var(--te-canvas-container-text-color-checked);
-      position: absolute;
-      bottom: -3px;
-    }
-    &.right {
-      width: 5px;
-      height: 100%;
-      background: var(--te-canvas-container-text-color-checked);
-      position: absolute;
-      right: -3px;
-    }
-    &.in {
-      width: 100%;
-      height: 100%;
-      background: var(--te-canvas-container-hover-line-in-bg-color);
-    }
-    &.forbidden:not(.in) {
-      background: var(--te-canvas-container-hover-line-forbid-bg-color);
-    }
-    &.forbidden.in {
-      background: var(--te-canvas-container-hover-line-in-forbid-bg-color);
-    }
-  }
-
-  .choose-slots {
-    display: flex;
-    justify-content: left;
-    align-items: left;
-    height: 100%;
-    & > div {
-      pointer-events: all;
-      width: 40px;
-      border: 1px solid var(--te-canvas-container-border-color-checked);
-      color: var(--te-canvas-container-choose-slot-text-color);
-      overflow: hidden;
-      font-size: 10px;
-      margin: 2px;
-      text-align: center;
-      &:hover {
-        background: #40a9ff;
-        color: #fff;
-      }
-    }
   }
 
   .corner-mark-left {

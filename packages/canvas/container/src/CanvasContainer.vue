@@ -1,10 +1,7 @@
 <template>
-  <div v-for="state in multiSelectedStates" :key="state.id">
+  <div v-for="state in selectState" :key="state.node?.id || state.componentName">
     <canvas-action
-      :hoverState="hoverState"
-      :inactiveHoverState="inactiveHoverState"
       :selectState="state"
-      :lineState="lineState"
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
@@ -12,8 +9,10 @@
       @setting="settingModel"
     ></canvas-action>
   </div>
-  <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
-  <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
+  <canvas-hover :hoverState="curHoverState"></canvas-hover>
+  <canvas-insert-line :lineState="lineState" :hoverState="curHoverState"></canvas-insert-line>
+  <canvas-router-jumper :hoverState="curHoverState"></canvas-router-jumper>
+  <canvas-viewer-switcher :hoverState="curHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="computedSelectState"></canvas-divider>
   <canvas-resize-border :selectState="computedSelectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -53,7 +52,7 @@
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
-import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
+import { DESIGN_MODE } from '../../common'
 import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
@@ -62,27 +61,22 @@ import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
-import { useMultiSelect } from './composables/useMultiSelect'
+import CanvasHover from './components/CanvasHover.vue'
+import CanvasInsertLine from './components/CanvasInsertLine.vue'
 import {
   canvasState,
   onMouseUp,
   dragMove,
   dragState,
-  initialRectState,
-  hoverState,
-  inactiveHoverState,
   lineState,
   removeNodeById,
   syncNodeScroll,
-  getElement,
   dragStart,
-  selectNode,
   initCanvas,
   clearLineState,
-  querySelectById,
-  getCurrent,
   canvasApi
 } from './container'
+import { useHoverNode, useSelectNode } from './interactions'
 
 export default {
   components: {
@@ -92,7 +86,9 @@ export default {
     CanvasDivider,
     CanvasResizeBorder,
     CanvasRouterJumper,
-    CanvasViewerSwitcher
+    CanvasViewerSwitcher,
+    CanvasHover,
+    CanvasInsertLine
   },
   props: {
     controller: Object,
@@ -109,44 +105,31 @@ export default {
     const showSettingModel = ref(false)
     const target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
-
     const containerPanel = ref(null)
     const insertContainer = ref(false)
-
-    const { multiSelectedStates } = useMultiSelect()
-
-    const multiStateLength = computed(() => multiSelectedStates.value.length)
-
+    const { selectState, updateSelectedNode, defaultSelectState } = useSelectNode()
+    const { curHoverState, updateHoverNode } = useHoverNode()
+    const multiStateLength = computed(() => selectState.value.length)
     const computedSelectState = computed(() => {
-      if (multiSelectedStates.value.length === 1) {
-        return multiSelectedStates.value[0]
+      if (selectState.value.length === 1) {
+        return selectState.value[0]
       }
 
-      return initialRectState
+      return defaultSelectState
     })
 
-    const setCurrentNode = async (event) => {
+    const handleNodeInteractions = async (event) => {
       const { clientX, clientY } = event
-      const element = getElement(event.target)
       closeMenu()
-      let node = getCurrent().schema
+      const isMultipleSelect = event.ctrlKey || event.metaKey
+      await updateSelectedNode(event, '', isMultipleSelect)
+      // TODO: 需要支持多选状态下的拖拽逻辑
+      const node = selectState.value[0]?.node
 
-      if (element) {
-        const currentElement = querySelectById(getCurrent().schema?.id)
-
-        if (!currentElement?.contains(element) || event.button === 0) {
-          const isCtrlKey = event.ctrlKey || event.metaKey
-          const loopId = element.getAttribute(NODE_LOOP)
-          if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`, isCtrlKey)
-          } else {
-            node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
-          }
-        }
-
-        if (event.button === 0 && element !== element.ownerDocument.body) {
-          const { x, y } = element.getBoundingClientRect()
-
+      if (node) {
+        const element = selectState.value[0]?.element
+        if (event.button === 0 && element !== element?.ownerDocument?.body) {
+          const { left: x, top: y } = selectState.value[0]?.rect || {}
           dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
         }
 
@@ -211,30 +194,39 @@ export default {
         // 以下是内部iframe监听的事件
         win.addEventListener('mousedown', (event) => {
           handleCanvasEvent(() => {
-            // html元素使用scroll和mouseup事件处理
-            if (event.target === doc.documentElement) {
-              isScrolling = false
-              return
-            }
-
-            const element = getElement(event.target)
-            if (!element) {
-              return
-            }
-
             insertPosition.value = false
             insertContainer.value = false
-            setCurrentNode(event)
+            handleNodeInteractions(event)
             target.value = event.target
           })
 
           useMessage().publish({ topic: 'canvas-mousedown', data: { event } })
         })
+        win.addEventListener('contextmenu', (event) => {
+          handleCanvasEvent(() => {
+            if (event.target === doc.documentElement) {
+              return
+            }
 
-        win.addEventListener('scroll', () => {
-          isScrolling = true
+            insertPosition.value = false
+            insertContainer.value = false
+            handleNodeInteractions(event)
+            target.value = event.target
+          })
         })
 
+        let scrollTimeout = null
+        win.addEventListener('scroll', () => {
+          isScrolling = true
+
+          clearTimeout(scrollTimeout)
+
+          scrollTimeout = setTimeout(() => {
+            isScrolling = false
+          }, 100)
+        })
+
+        // TODO: 需要确认下该事件还是否需要
         win.addEventListener('mouseup', (event) => {
           if (event.target !== doc.documentElement || isScrolling) {
             return
@@ -242,7 +234,6 @@ export default {
 
           insertPosition.value = false
           insertContainer.value = false
-          setCurrentNode(event)
           target.value = event.target
         })
 
@@ -257,9 +248,13 @@ export default {
           onMouseUp(ev)
         })
 
-        win.addEventListener('mousemove', (ev) => {
+        win.addEventListener('mouseover', (ev) => {
           handleCanvasEvent(() => {
-            dragMove(ev, true)
+            // 更新当前鼠标 hover 的节点
+            updateHoverNode(ev)
+            // 清空拖拽线条
+            lineState.position = ''
+            lineState.width = 0
           })
         })
 
@@ -311,8 +306,9 @@ export default {
       insertPosition.value = position
     }
 
-    const selectSlot = (slotName) => {
-      hoverState.slot = slotName
+    // TODO: 需要确认下该事件还是否需要
+    const selectSlot = (_slotName) => {
+      // hoverState.slot = slotName
     }
 
     onMounted(() => run(iframe))
@@ -329,11 +325,8 @@ export default {
     return {
       iframe,
       dragState,
-      hoverState,
-      inactiveHoverState,
       computedSelectState,
       lineState,
-      multiSelectedStates,
       multiStateLength,
       removeNodeById,
       selectSlot,
@@ -347,7 +340,9 @@ export default {
       insertPosition,
       insertContainer,
       loading,
-      srcAttrName
+      srcAttrName,
+      selectState,
+      curHoverState
     }
   }
 }

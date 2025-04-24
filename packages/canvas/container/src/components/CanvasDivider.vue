@@ -150,7 +150,8 @@ export default {
     watch(
       () => props.selectState,
       (selectState) => {
-        const { width, height, left, top, componentName } = selectState
+        const { width, height, left, top } = selectState.rect
+        const componentName = selectState.componentName
 
         if (!LEGAL_DIVIDER_COMPONENT.includes(componentName)) {
           state.showHorizontalDivider = false
@@ -176,7 +177,7 @@ export default {
 
     // 鼠标进入剪刀按钮，出现剪刀线
     const handleMouseEnter = (type) => {
-      const { width, height, left, top } = props.selectState
+      const { width, height, left, top } = props.selectState.rect
       if (type === 'vertical') {
         state.dividerStyle = {
           width: '1px',
