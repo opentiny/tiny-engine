@@ -74,7 +74,6 @@
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-code": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
-    "@opentiny/tiny-engine-toolbar-layout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lock": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logout": "workspace:*",

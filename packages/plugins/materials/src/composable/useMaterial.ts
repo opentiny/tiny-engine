@@ -26,31 +26,45 @@ import {
 } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 import { getBlockCompileRes, getBlockByName, updateBlockCompileCache } from './block-compile'
+import type {
+  Block,
+  BlockResource,
+  Component,
+  ComponentMap,
+  Dependency,
+  InitMaterialOptions,
+  Material,
+  MaterialState,
+  Property,
+  Resource,
+  Schema,
+  Snippet
+} from './types'
 
 const { camelize, capitalize, deepClone } = utils
 const { MATERIAL_TYPE } = constants
 
 // 这里存放所有TinyVue组件、原生HTML、内置组件的缓存，包含了物料插件面板里所有显示的组件，也包含了没显示的一些联动组件
-const resource = new Map()
+const resource = new Map<string, Resource>()
 
 // 这里涉及到区块发布后的更新问题，所以需要单独缓存区块
-const blockResource = new Map()
+const blockResource = new Map<string, BlockResource>()
 
-const materialState = reactive({
+const materialState = reactive<MaterialState>({
   components: [], // 这里存放的是物料插件面板里所有显示的组件
   blocks: [],
   componentsDepsMap: { scripts: [], styles: new Set() }, //
   packages: [] // 物料依赖的包
 })
 
-const componentState = reactive({
+const componentState = reactive<{ componentsMap: Record<string, ComponentMap> }>({
   componentsMap: {}
 })
-const getSnippet = (component) => {
-  let schema = {}
+const getSnippet = (component: string) => {
+  let schema: Schema = {}
   materialState.components.some(({ children }) => {
     const child = children.find(({ snippetName }) => snippetName === component)
-    if (child) {
+    if (child?.schema) {
       schema = child.schema
       return true
     }
@@ -60,10 +74,10 @@ const getSnippet = (component) => {
   return schema
 }
 
-const generateNode = ({ type, component }) => {
+const generateNode = ({ type, component }: { type: string; component: string }) => {
   const snippet = getSnippet(component) || {}
 
-  const schema = {
+  const schema: Schema & Required<Pick<Schema, 'props'>> = {
     componentName: component,
     ...snippet,
     props: {
@@ -93,10 +107,10 @@ const getConfigureMap = () => {
 
 /**
  * 附加基础属性，基础属性可以通过注册表配置
- * @param {any[]} schemaProperties
+ * @param schemaProperties
  * @returns
  */
-const patchBaseProps = (schemaProperties) => {
+const patchBaseProps = (schemaProperties?: Property[]) => {
   if (!Array.isArray(schemaProperties)) {
     return
   }
@@ -106,7 +120,7 @@ const patchBaseProps = (schemaProperties) => {
   for (const basePropGroup of properties) {
     const group = schemaProperties.find((item) => {
       // 如果存在了包含'其他'字符串的分组，统一为'其他'分组
-      if (item.label.zh_CN.includes('其他')) {
+      if (item.label.zh_CN?.includes('其他')) {
         item.label.zh_CN = '其他'
       }
 
@@ -117,7 +131,7 @@ const patchBaseProps = (schemaProperties) => {
 
     if (group) {
       const targetInsertContent = basePropGroup.content.filter(
-        (item) => !group.content.some((prop) => prop.property === item.property)
+        (item: { property: string }) => !group.content.some((prop) => prop.property === item.property)
       )
 
       if (insertPosition === 'start') {
@@ -133,9 +147,9 @@ const patchBaseProps = (schemaProperties) => {
 
 /**
  * 将component里的内容注册到resource变量中
- * @param {*} data
+ * @param data
  */
-const registerComponentToResource = (data) => {
+const registerComponentToResource = (data: Component) => {
   patchBaseProps(data.schema?.properties)
 
   if (Array.isArray(data.component)) {
@@ -148,10 +162,10 @@ const registerComponentToResource = (data) => {
   }
 }
 
-export const fetchBlockDetail = async (blockName) => {
+export const fetchBlockDetail = async (blockName: string) => {
   const { getBlockAssetsByVersion } = useBlock()
   const currentVersion = componentState.componentsMap?.[blockName]?.version
-  const block = (await getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`))?.[0]
+  const block: Block = (await getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`))?.[0]
 
   if (!block) {
     throw new Error(`区块${blockName}不存在！`)
@@ -166,17 +180,17 @@ export const fetchBlockDetail = async (blockName) => {
 /**
  * registerBlock 注册区块
  * @deprecated
- * @param {String|Object} data 当为字符串时请求详细信息
- * @param {*} notFetchResouce 是否添加js css资源到页面
+ * @param data 当为字符串时请求详细信息
+ * @param notFetchResouce 是否添加js css资源到页面
  * @returns
  */
-const registerBlock = async (data, notFetchResouce) => {
+const registerBlock = async (data: string | any, notFetchResouce?: boolean) => {
   let block = data
 
   if (typeof block === 'string') {
     try {
       block = await fetchBlockDetail(block)
-    } catch (error) {
+    } catch (error: any) {
       useNotify({
         type: 'warning',
         title: '区块读取错误',
@@ -201,7 +215,7 @@ const registerBlock = async (data, notFetchResouce) => {
   if (!notFetchResouce && !blockResource.get(label)) {
     const { addScript, addStyle } = useCanvas().canvasApi.value
     const promises = scripts
-      .filter((item) => item.includes('umd.js'))
+      .filter((item: string) => item.includes('umd.js'))
       .map(addScript)
       .concat(styles.map(addStyle))
     // 此处删除await，提前放行区块数据，在区块渲染前找到区块数据源映射关系
@@ -221,11 +235,11 @@ const clearBlockResources = () => blockResource.clear()
 
 /**
  * 生成组件依赖映射
- * @param {array} components 组件物料列表
+ * @param components 组件物料列表
  */
-const generateThirdPartyDeps = (components) => {
-  const styles = []
-  const scripts = []
+const generateThirdPartyDeps = (components: Component[]) => {
+  const styles: string[] = []
+  const scripts: { package: string; script?: string; components: Record<string, string> }[] = []
 
   components.forEach((item) => {
     const { npm, component } = item
@@ -258,18 +272,18 @@ const generateThirdPartyDeps = (components) => {
 
 /**
  * 添加组件snippets(分组相同则合并)
- * @param {*} componentsSnippets 待添加的组件snippets
- * @param {*} snippetsData 当前snippets
- * @returns {*} snippetsData 合并后的snippets
+ * @param componentSnippets 待添加的组件snippets
+ * @param snippetsData 当前snippets
+ * @returns snippetsData 合并后的snippets
  */
-const addComponentSnippets = (componentSnippets, snippetsData) => {
+const addComponentSnippets = (componentSnippets: Snippet[] | undefined, snippetsData: Snippet[]) => {
   if (!componentSnippets) return
 
-  const snippetsMap = new Map()
+  const snippetsMap = new Map<string, Snippet>()
   snippetsData.forEach((snippetGroup) => snippetsMap.set(snippetGroup.group, snippetGroup))
   componentSnippets.forEach((snippetGroup) => {
     if (snippetsMap.has(snippetGroup.group)) {
-      snippetsMap.get(snippetGroup.group).children.push(...snippetGroup.children)
+      snippetsMap.get(snippetGroup.group)!.children.push(...snippetGroup.children)
     } else {
       snippetsData.push(snippetGroup)
     }
@@ -298,7 +312,7 @@ const updateCanvasDeps = () => {
 }
 
 //
-const parseMaterialsDependencies = (materialBundle) => {
+const parseMaterialsDependencies = (materialBundle: Material) => {
   const { packages, components } = materialBundle
 
   const { scripts: scriptsDeps, styles: stylesDeps } = useResource().appSchemaState.materialsDeps
@@ -348,10 +362,10 @@ const parseMaterialsDependencies = (materialBundle) => {
 
 /**
  * 添加物料Bundle文件中的组件类型物料
- * @param {*} materialBundle 物料包Bundle.json文件对象
+ * @param materialBundle 物料包Bundle.json文件对象
  * @returns null
  */
-const addComponents = (materialBundle) => {
+const addComponents = (materialBundle: Material) => {
   const { snippets, components } = materialBundle
   // 解析物料依赖
   parseMaterialsDependencies(materialBundle)
@@ -363,9 +377,9 @@ const addComponents = (materialBundle) => {
 
 /**
  * 添加物料Bundle文件中的区块类型物料
- * @param {*} blocks 物料包Bundle.json文件中blocks对象
+ * @param blocks 物料包Bundle.json文件中blocks对象
  */
-const addBlocks = (blocks) => {
+const addBlocks = (blocks?: Block[]) => {
   if (!Array.isArray(blocks) || !blocks.length) {
     return
   }
@@ -388,14 +402,14 @@ const addBlocks = (blocks) => {
 
 /**
  * 获取到符合物料协议的bundle.json之后，处理组件与区块物料
- * @param {*} materials
+ * @param materials
  */
-const addMaterials = (materials = {}) => {
+const addMaterials = (materials: Material) => {
   addComponents(materials)
   addBlocks(materials.blocks)
 }
 
-const getMaterial = (name) => {
+const getMaterial = (name?: string): Partial<Resource & BlockResource> => {
   if (name) {
     // 先读取组件缓存，再读取区块缓存
     return (
@@ -410,7 +424,7 @@ const getMaterial = (name) => {
   }
 }
 
-const setMaterial = (name, data) => {
+const setMaterial = (name: string, data: Resource) => {
   resource.set(name, data)
 }
 
@@ -421,7 +435,7 @@ const setMaterial = (name, data) => {
 export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(
-    bundleUrls.map((url) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
+    bundleUrls.map((url: any) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
   )
   return materials
 }
@@ -442,7 +456,7 @@ const fetchMaterial = async () => {
  * 获取区块保存的依赖信息，合并到appSchemaState.thirdPartyDeps
  * @param {object} dependencies 区块保存的依赖信息
  */
-const getBlockDeps = (dependencies = {}) => {
+const getBlockDeps = (dependencies: { scripts?: Dependency[]; styles?: any[] } = {}) => {
   const { scripts = [], styles = [] } = dependencies
 
   if (scripts.length) {
@@ -468,12 +482,12 @@ const getBlockDeps = (dependencies = {}) => {
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
   // 添加画布物料
-  addMaterials(Builtin.data.materials)
+  addMaterials(Builtin!.data.materials)
   // 添加builtin-component NPM包物料
   addMaterials(BuiltinComponentMaterials)
 }
 
-const initMaterial = ({ isInit = true, appData = {} } = {}) => {
+const initMaterial = ({ isInit = true, appData = {} }: InitMaterialOptions = {}) => {
   initBuiltinMaterial()
   if (isInit) {
     componentState.componentsMap = {}
@@ -488,21 +502,21 @@ const initMaterial = ({ isInit = true, appData = {} } = {}) => {
 
 /**
  * 根据组名获取指定分组组件
- * @param {Array} components 所有组件
- * @param {String} groupName 组件分组名
+ * @param components 所有组件
+ * @param groupName 组件分组名
  * @returns
  */
-const getComponentsByGroup = (components, groupName) => {
+const getComponentsByGroup = (components: Component[], groupName: string) => {
   if (!Array.isArray(components)) return []
   return components.filter((item) => item.group === groupName)
 }
 
 /**
  * 增加区块缓存
- * @param {String} id 区块 id，也就是 label 字段
- * @param {Object} resource 区块信息，区块详情中的 content 字段
+ * @param id 区块 id，也就是 label 字段
+ * @param resource 区块信息，区块详情中的 content 字段
  */
-export const addBlockResources = (id, resource) => {
+export const addBlockResources = (id: string, resource: BlockResource) => {
   blockResource.set(id, resource)
 }
 

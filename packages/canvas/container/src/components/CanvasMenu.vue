@@ -36,6 +36,7 @@ import { ref, reactive, nextTick, computed } from 'vue'
 import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
 import { useLayout, useModal, useCanvas, usePage, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
+import { useMultiSelect } from '../composables/useMultiSelect'
 
 const menuState = reactive({
   position: null,
@@ -46,6 +47,9 @@ const menuState = reactive({
 const current = ref(null)
 const menuDom = ref(null)
 const subMenuStyles = ref(null)
+
+// 子菜单宽度常量
+const SUB_MENU_WIDTH = 137
 
 export const closeMenu = () => {
   menuState.show = false
@@ -69,11 +73,11 @@ export const openMenu = (event) => {
       if (right > canvasRect.right) {
         menuState.position.left = `${parseInt(menuState.position.left) - width - 2}px`
       }
-      // sub-menu样式width为100px，少于100宽度的空白区域则放置到左侧
-      if (right + 100 < canvasRect.right) {
-        subMenuStyles.value = { right: '-100px' }
+      // sub-menu样式width为 137 px，少于 137 宽度的空白区域则放置到左侧
+      if (right + SUB_MENU_WIDTH < canvasRect.right) {
+        subMenuStyles.value = { right: `-${SUB_MENU_WIDTH}px`, width: `${SUB_MENU_WIDTH}px` }
       } else {
-        subMenuStyles.value = { left: '-100px' }
+        subMenuStyles.value = { left: `-${SUB_MENU_WIDTH}px`, width: `${SUB_MENU_WIDTH}px` }
       }
     }
   })
@@ -84,6 +88,8 @@ export default {
     IconRight: iconRight()
   },
   setup(props, { emit }) {
+    const { multiSelectedStates, areSiblingNodes, batchAddParent, groupAddParent } = useMultiSelect()
+
     const menus = ref([
       { name: '修改属性', code: 'config' },
       {
@@ -116,10 +122,40 @@ export default {
       { name: '绑定事件', code: 'bindEvent' }
     ])
 
+    // 多选菜单
+    const multiSelectMenus = ref([
+      { name: '删除', code: 'multiDel' },
+      { name: '复制', code: 'multiCopy' },
+      {
+        name: '添加父级',
+        items: [
+          {
+            name: '容器(批量)',
+            code: 'batchWrap',
+            value: 'div'
+          },
+          {
+            name: '容器(公共父级)',
+            code: 'groupWrap',
+            value: 'div',
+            check: () => areSiblingNodes()
+          },
+          {
+            name: '弹出框(公共父级)',
+            code: 'groupWrap',
+            value: 'TinyPopover',
+            check: () => areSiblingNodes()
+          }
+        ],
+        code: 'multiAddParent'
+      }
+    ])
+
     // 通过画布右键快捷新建区块
     const { SaveNewBlock } = getMergeMeta('engine.plugins.blockmanage')?.components || {}
     if (SaveNewBlock) {
       menus.value.push({ name: '新建区块', code: 'createBlock' })
+      multiSelectMenus.value.push({ name: '新建区块', code: 'createBlock' })
     }
 
     menus.value.unshift({
@@ -132,14 +168,26 @@ export default {
       }
     })
 
-    const filteredMenus = computed(() =>
-      menus.value.filter((item) => {
+    const isMultiSelect = computed(() => multiSelectedStates.value.length > 1)
+
+    const filteredMenus = computed(() => {
+      // 如果是多选，则展示多选菜单
+      if (isMultiSelect.value) {
+        return multiSelectMenus.value.filter((item) => {
+          if (typeof item.show === 'function') {
+            return item.show()
+          }
+          return true
+        })
+      }
+
+      return menus.value.filter((item) => {
         if (typeof item.show === 'function') {
           return item.show()
         }
         return true
       })
-    )
+    })
 
     const boxVisibility = ref(false)
 
@@ -153,6 +201,16 @@ export default {
       },
       copy() {
         copyNode(getCurrent().schema?.id)
+      },
+      multiDel() {
+        const ids = multiSelectedStates.value.map((state) => state.id)
+        ids.forEach((id) => removeNodeById(id))
+      },
+      multiCopy() {
+        const ids = multiSelectedStates.value.map((state) => state.id)
+        ids.forEach((id) => copyNode(id))
+
+        useCanvas().canvasApi.value.updateRect?.()
       },
       config() {
         activeSetting(PLUGIN_NAME.Props)
@@ -218,6 +276,14 @@ export default {
         parent.children.splice(index, 1, wrapSchema)
         getController().addHistory()
       },
+      // 处理批量添加父级的操作
+      batchWrap({ value }) {
+        batchAddParent(value)
+      },
+      // 处理整体添加父级的操作
+      groupWrap({ value }) {
+        groupAddParent(value)
+      },
       createBlock() {
         if (useCanvas().isSaved()) {
           boxVisibility.value = true
@@ -240,8 +306,13 @@ export default {
         return true
       }
 
-      const actions = ['del', 'copy', 'addParent']
-      return actions.includes(actionItem.code) && !getCurrent().schema?.id
+      if (isMultiSelect.value) {
+        const multiSelectActions = ['multiDel', 'multiCopy', 'multiAddParent']
+        return multiSelectActions.includes(actionItem.code) && multiSelectedStates.value.length === 0
+      } else {
+        const actions = ['del', 'copy', 'addParent']
+        return actions.includes(actionItem.code) && !getCurrent().schema?.id
+      }
     }
 
     const onShowChildrenMenu = (menuItem) => {
@@ -326,7 +397,6 @@ export default {
     }
   }
   &.sub-menu {
-    width: 100px;
     position: absolute;
     top: -2px;
   }

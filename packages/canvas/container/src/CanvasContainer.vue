@@ -189,6 +189,13 @@ export default {
 
         // 只有当不是多选拖拽的情况下，才进行选择操作
         const currentElement = querySelectById(getCurrent().schema?.id)
+
+        // 如果是点击右键则打开右键菜单
+        if (event.button === 2) {
+          openMenu(event)
+          return
+        }
+
         if (!currentElement?.contains(element) || event.button === 0) {
           const isCtrlKey = event.ctrlKey || event.metaKey
           const loopId = element.getAttribute(NODE_LOOP)

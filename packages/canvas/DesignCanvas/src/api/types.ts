@@ -4,9 +4,11 @@ export type PageSchema = RootNode
 
 export interface PageState {
   currentVm?: unknown
-  currentSchema?: unknown
+  currentSchema?: { [x: string]: any; id: string }
   currentType?: unknown
-  currentPage?: unknown
+  currentPage?: { [x: string]: any; id: string; name: string } | null
+  currentPageId?: string
+  currentPageName?: string
   hoverVm?: unknown
   pageSchema: RootNode | null
   properties?: unknown

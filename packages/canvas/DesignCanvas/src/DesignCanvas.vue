@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
 import {
   useProperties,
   useCanvas,
@@ -43,6 +43,7 @@ import {
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { initCanvas } from '../../init-canvas/init-canvas'
+import { useMultiSelect } from '../../container/src/composables/useMultiSelect'
 import { getImportMapData } from './importMap'
 import meta from '../meta'
 
@@ -152,6 +153,9 @@ export default {
       }
     )
 
+    const { multiSelectedStates } = useMultiSelect()
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
+
     const nodeSelected = (node, parent, type, id) => {
       const { leftPanelFixed, rightPanelFixed } = getFixedPanelsStatus()
 
@@ -176,7 +180,9 @@ export default {
 
       // 如果选中的节点是画布，就设置成默认选中最外层schema
       useProperties().getProps(schemaItem || pageSchema, parent)
-      useCanvas().setCurrentSchema(schemaItem || pageSchema)
+      const multiSchemas = multiSelectedStates.value.map(({ schema }) => schema)
+      const currentSchema = multiStateLength.value > 1 ? multiSchemas : schemaItem || pageSchema
+      useCanvas().setCurrentSchema(currentSchema)
       footData.value = getNodePath(schemaItem?.id)
       toolbars.visiblePopover = false
     }

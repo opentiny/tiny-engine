@@ -10536,6 +10536,27 @@
                       "zh_CN": "是否禁用"
                     },
                     "labelPosition": "left"
+                  },
+                  {
+                    "property": "auto-lookup",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自动请求数据"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "初始化时是否自动请求数据,默认 true"
+                    },
+                    "labelPosition": "left"
                   }
                 ]
               },

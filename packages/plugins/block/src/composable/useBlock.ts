@@ -10,7 +10,7 @@
  *
  */
 
-import { ref, reactive, readonly, type DeepReadonly } from 'vue'
+import { ref, reactive, readonly, type DeepReadonly, toRaw } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
 import { format } from '@opentiny/vue-renderless/common/date'
@@ -325,14 +325,28 @@ const initBlock = async (block: any = {}, _langs = {}, isEdit?: boolean) => {
 
 const createBlock = ({ name_cn, label, path, categories }: CreateBlockOptions) => {
   const { pageState } = useCanvas()
-  const schema = extend(true, {}, pageState.currentSchema)
-  // 选中 body 节点创建区块时需传递子节点数据
-  const children = schema.componentName === NODE_TYPE_PAGE ? schema.children : [schema]
+  const rawSchema = toRaw(pageState.currentSchema)
+
+  let processedSchema = []
+  if (!rawSchema) {
+    processedSchema = []
+  } else if (Array.isArray(rawSchema)) {
+    processedSchema = rawSchema.map((schemaItem) => extend(true, {}, schemaItem))
+  } else {
+    processedSchema = extend(true, {}, rawSchema)
+  }
+
+  // 判断 node 类型 以及 schema 类型
+  // 选中 body 节点 创建区块时需传递子节点数据
+  const isPageNode = processedSchema.componentName === NODE_TYPE_PAGE
+  const hasMultiSchema = Array.isArray(processedSchema) && processedSchema.length
+
+  const children = isPageNode ? processedSchema.children : hasMultiSchema ? processedSchema : [processedSchema]
 
   // 过滤只有新区块内使用到的数据
   const { getLangs } = useTranslate()
   const filterData = filterDataFn(parseChildProps)
-  const { langs, methods, state, classNameList, contentList } = extend(
+  const { methods, state, classNameList, contentList } = extend(
     true,
     {},
     filterData({
@@ -370,7 +384,9 @@ const createBlock = ({ name_cn, label, path, categories }: CreateBlockOptions) =
     }
   }
 
-  initBlock(block, langs)
+  const api = getMetaApi(META_APP.BlockManage)
+  // saveBlock 内部会调用 blockSettings.tsx 中的 createBlock 接口，成功后会自动初始化区块
+  return api.saveBlock?.(block)
 }
 
 const createEmptyBlock = ({ name_cn, label, path, categories }: CreateEmptyBlockOptions) => {
@@ -387,7 +403,9 @@ const createEmptyBlock = ({ name_cn, label, path, categories }: CreateEmptyBlock
     }
   }
 
-  initBlock(block)
+  const api = getMetaApi(META_APP.BlockManage)
+  // saveBlock 内部会调用 blockSettings.tsx 中的 createBlock 接口，成功后会自动初始化区块
+  return api.saveBlock?.(block)
 }
 
 const setComponentLinkedValue = ({ propertyName, value }: { propertyName: string; value: any }) => {

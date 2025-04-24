@@ -113,7 +113,7 @@ const initBlock = async (blockId: string) => {
   const blockApi = getMetaApi(META_APP.BlockManage)
   const blockContent = await blockApi.getBlockById(blockId)
 
-  if (blockContent.public_scope_tenants.length) {
+  if (blockContent.public_scope_tenants?.length) {
     blockContent.public_scope_tenants = blockContent.public_scope_tenants.map((e: { id: string }) => e.id)
   }
 

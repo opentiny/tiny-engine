@@ -347,6 +347,11 @@ const operationTypeMap = {
           parentNode.children.splice(index, 1, newNodeData)
         }
         break
+      case 'replace':
+        if (index !== -1) {
+          parentNode.children.splice(index, 1, newNodeData)
+        }
+        break
       case 'bottom':
         parentNode.children.splice(index + 1, 0, newNodeData)
         break
