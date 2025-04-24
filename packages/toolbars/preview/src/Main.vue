@@ -2,7 +2,7 @@
   <div class="toolbar-save">
     <toolbar-base
       content="预览页面"
-      :icon="options.icon.default || options.icon"
+      :icon="options.icon?.default || options?.icon"
       :options="options"
       @click-api="preview"
     >
@@ -11,18 +11,8 @@
 </template>
 
 <script lang="ts">
-import { previewPage, previewBlock } from '@opentiny/tiny-engine-common/js/preview'
-import {
-  useBlock,
-  useCanvas,
-  useLayout,
-  useNotify,
-  usePage,
-  getMergeMeta,
-  getOptions,
-  META_SERVICE,
-  getMetaApi
-} from '@opentiny/tiny-engine-meta-register'
+import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
+import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
@@ -37,10 +27,6 @@ export default {
     }
   },
   setup() {
-    const { isBlock, getCurrentPage, getSchema } = useCanvas()
-    const { getCurrentBlock } = useBlock()
-    const { getFamily } = usePage()
-
     const preview = async () => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
 
@@ -72,28 +58,7 @@ export default {
         return
       }
 
-      const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
-      const params = {
-        framework: getMergeMeta('engine.config')?.dslMode,
-        platform: getMergeMeta('engine.config')?.platformId,
-        pageInfo: {
-          schema: getSchema?.()
-        },
-        theme
-      }
-
-      if (isBlock()) {
-        const block = getCurrentBlock()
-        params.id = block?.id
-        params.pageInfo.name = block?.label
-        previewBlock(params)
-      } else {
-        const page = getCurrentPage()
-        params.id = page?.id
-        params.pageInfo.name = page?.name
-        params.ancestors = await getFamily(params)
-        previewPage(params)
-      }
+      previewPage()
 
       if (typeof afterPreview === 'function') {
         try {

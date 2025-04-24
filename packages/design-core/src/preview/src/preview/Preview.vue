@@ -14,17 +14,12 @@
 </template>
 
 <script>
-import { defineComponent, computed, defineAsyncComponent } from 'vue'
+import { defineComponent, computed, defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue'
 import { Repl, ReplStore } from '@vue/repl'
-import vueJsx from '@vue/babel-plugin-jsx'
-import { transformSync } from '@babel/core'
-import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
-import { getImportMap as getInitImportMap } from './importMap'
-import srcFiles from './srcFiles'
-import generateMetaFiles, { processAppJsCode } from './generate'
-import { getSearchParams, fetchMetaData, fetchImportMap, fetchAppSchema, fetchBlockSchema } from './http'
-import { PanelType, PreviewTips } from '../constant'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { injectDebugSwitch } from './debugSwitch'
+import { usePreviewCommunication } from './usePreviewCommunication'
+import { usePreviewData } from './usePreviewData'
 import '@vue/repl/style.css'
 
 const Monaco = defineAsyncComponent(() => import('@vue/repl/monaco-editor')) // 异步组件实现懒加载，打开debug后再加载
@@ -43,9 +38,6 @@ export default {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
     const store = new ReplStore()
-    const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
-    const ROOT_ID = '0'
-
     const sfcOptions = {
       script: {
         // scirpt setup 编译后注入 import { * } from "vue"
@@ -61,162 +53,33 @@ export default {
       store['initTsConfig']() // 触发获取组件d.ts方便调试
     }
 
-    const queryParams = getSearchParams()
-    document.documentElement?.setAttribute?.('data-theme', queryParams.theme || 'light')
+    const queryParams = new URLSearchParams(location.search)
+    document.documentElement?.setAttribute?.('data-theme', queryParams.get('theme') || 'light')
 
-    const getImportMap = async () => {
-      if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
-        const mapJSON = await fetchImportMap()
-        return {
-          imports: {
-            ...mapJSON.imports,
-            ...getSearchParams().scripts
-          }
-        }
+    const { loadInitialData, updateUrl, updatePreview } = usePreviewData({ setFiles, store })
+
+    let cleanupCommunicationAction = null
+    const onSchemaReceivedAction = async (data) => {
+      updateUrl(data.currentPage, { scripts: data.scripts, styles: data.styles })
+      const isHistory = new URLSearchParams(location.search).get('history')
+      const previewHotReload = getMergeMeta('engine.config').previewHotReload
+      // 如果是历史预览，则不需要实时预览，接收到消息之后直接取消监听(需要监听到第一次消息接受页面信息)
+      // 如果预览热更新关闭，则不需要实时预览
+      if (isHistory || previewHotReload === false) {
+        cleanupCommunicationAction()
       }
-      return getInitImportMap()
+      await updatePreview(data)
     }
 
-    const getFamilyPages = (appData) => {
-      const familyPages = []
-      const ancestors = queryParams.ancestors
-
-      if (queryParams.type === 'Block') {
-        familyPages.push({
-          panelName: 'Main.vue',
-          panelValue:
-            generatePageCode(queryParams.pageInfo?.schema, appData?.componentsMap || [], {
-              blockRelativePath: './'
-            }) || '',
-          panelType: 'vue',
-          index: true
-        })
-
-        return familyPages
-      }
-
-      if (!ancestors?.length || !appData?.componentsMap) {
-        return familyPages
-      }
-
-      for (let i = 0; i < ancestors.length; i++) {
-        const nextPage = i < ancestors.length - 1 ? ancestors[i + 1].name : null
-        const panelValueAndType = {
-          panelValue:
-            generatePageCode(
-              ancestors[i].page_content,
-              appData?.componentsMap || [],
-              {
-                blockRelativePath: './'
-              },
-              nextPage
-            ) || '',
-          panelType: 'vue'
-        }
-
-        if (ancestors[i]?.parentId === ROOT_ID) {
-          familyPages.push({
-            ...panelValueAndType,
-            panelName: 'Main.vue',
-            index: true
-          })
-        } else {
-          familyPages.push({
-            ...panelValueAndType,
-            panelName: `${ancestors[i].name}.vue`,
-            index: false
-          })
-        }
-      }
-
-      return familyPages
-    }
-
-    const genAllBlocks = async (ancestors) => {
-      // blockSet 是为了防止重复出码同样的区块，同名区块只出码一遍
-      const blockSet = new Set()
-      const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
-      const blocks = (await Promise.all(promises)).flat()
-      return blocks
-    }
-
-    const promiseList = [
-      fetchAppSchema(queryParams?.app),
-      fetchMetaData(queryParams),
-      genAllBlocks(queryParams.ancestors),
-      setFiles(srcFiles, 'src/Main.vue'),
-      getImportMap()
-    ]
-    Promise.all(promiseList).then(async ([appData, metaData, blocks, _void, importMapData]) => {
-      store.setImportMap(importMapData)
-
-      // TODO: 需要验证级联生成 block schema
-      // TODO: 物料内置 block 需要如何处理？
-      const pageCode = [
-        ...getFamilyPages(appData),
-        ...(blocks || []).map((blockSchema) => {
-          return {
-            panelName: `${blockSchema.fileName}.vue`,
-            panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-            panelType: 'vue'
-          }
-        })
-      ]
-
-      // [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
-      const langReg = /lang="jsx"/
-      const fixScriptLang = (generatedCode) => {
-        const fixedCode = { ...generatedCode }
-
-        if (generatedCode.panelType === PanelType.VUE) {
-          fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
-        }
-
-        return fixedCode
-      }
-
-      const newFiles = store.getFiles()
-
-      const assignFiles = ({ panelName, panelValue, index }) => {
-        if (index) {
-          panelName = 'Main.vue'
-        }
-
-        const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-          if (!p1) {
-            // eslint-disable-next-line no-useless-escape
-            return '<script setup><\/script>'
-          }
-
-          const transformedScript = transformSync(p1, {
-            babelrc: false,
-            plugins: [[vueJsx, { pragma: 'h' }]],
-            sourceMaps: false,
-            configFile: false
-          })
-
-          const res = `<script setup>${transformedScript.code}`
-          // eslint-disable-next-line no-useless-escape
-          const endTag = '<\/script>'
-
-          return `${res}${endTag}`
-        })
-
-        newFiles[panelName] = newPanelValue
-      }
-
-      const appJsCode = processAppJsCode(newFiles['app.js'], queryParams.styles)
-
-      newFiles['app.js'] = appJsCode
-
-      pageCode.map(fixScriptLang).forEach(assignFiles)
-
-      const metaFiles = generateMetaFiles(metaData)
-      Object.assign(newFiles, metaFiles)
-
-      setFiles(newFiles)
-      return PreviewTips.READY_FOR_PREVIEW
+    const { initCommunication, cleanupCommunication } = usePreviewCommunication({
+      onSchemaReceived: onSchemaReceivedAction,
+      loadInitialData
     })
+
+    cleanupCommunicationAction = cleanupCommunication
+
+    onMounted(initCommunication)
+    onBeforeUnmount(cleanupCommunication)
 
     return {
       store,
