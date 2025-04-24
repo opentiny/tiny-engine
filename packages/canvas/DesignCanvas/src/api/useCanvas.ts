@@ -573,6 +573,7 @@ const importSchema = (data) => {
 
   // JSON 格式校验
   resetCanvasState({
+    ...pageState,
     pageSchema: importData
   })
 }

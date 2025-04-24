@@ -8020,7 +8020,9 @@
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",
-                      "props": {}
+                      "props": {
+                        "language": "json"
+                      }
                     },
                     "description": {
                       "zh_CN": "checkbox组件列表"
@@ -13029,7 +13031,7 @@
               "schema": {
                 "componentName": "video",
                 "props": {
-                  "src": "img/webNova.jpg",
+                  "src": "https://tinyengine-assets.obs.myhuaweicloud.com/files/in-action.mp4#t=1.5",
                   "width": "200",
                   "height": "100",
                   "style": "border:1px solid #ccc"
