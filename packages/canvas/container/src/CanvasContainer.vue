@@ -368,13 +368,10 @@ export default {
           ev.preventDefault()
 
           // 根据当前拖拽类型执行相应操作
-          switch (currentDragType.value) {
-            case DRAG_TYPE.MULTI:
-              moveMultiDrag(ev)
-              break
-            case DRAG_TYPE.SINGLE:
-              dragMove(ev)
-              break
+          if (currentDragType.value === DRAG_TYPE.MULTI) {
+            moveMultiDrag(ev)
+          } else {
+            dragMove(ev)
           }
         })
 
@@ -383,13 +380,10 @@ export default {
           ev.preventDefault()
 
           // 根据当前拖拽类型执行相应的结束操作
-          switch (currentDragType.value) {
-            case DRAG_TYPE.MULTI:
-              endMultiDrag()
-              break
-            case DRAG_TYPE.SINGLE:
-              onMouseUp(ev)
-              break
+          if (currentDragType.value === DRAG_TYPE.MULTI) {
+            endMultiDrag()
+          } else {
+            onMouseUp(ev)
           }
 
           clearAllDragStates()
