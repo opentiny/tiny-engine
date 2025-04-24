@@ -48,6 +48,9 @@ const current = ref(null)
 const menuDom = ref(null)
 const subMenuStyles = ref(null)
 
+// 子菜单宽度常量
+const SUB_MENU_WIDTH = 137
+
 export const closeMenu = () => {
   menuState.show = false
   current.value = null
@@ -70,11 +73,11 @@ export const openMenu = (event) => {
       if (right > canvasRect.right) {
         menuState.position.left = `${parseInt(menuState.position.left) - width - 2}px`
       }
-      // sub-menu样式width为137px，少于100宽度的空白区域则放置到左侧
-      if (right + 137 < canvasRect.right) {
-        subMenuStyles.value = { right: '-137px' }
+      // sub-menu样式width为 137 px，少于 137 宽度的空白区域则放置到左侧
+      if (right + SUB_MENU_WIDTH < canvasRect.right) {
+        subMenuStyles.value = { right: `-${SUB_MENU_WIDTH}px`, width: `${SUB_MENU_WIDTH}px` }
       } else {
-        subMenuStyles.value = { left: '-137px' }
+        subMenuStyles.value = { left: `-${SUB_MENU_WIDTH}px`, width: `${SUB_MENU_WIDTH}px` }
       }
     }
   })
@@ -135,12 +138,6 @@ export default {
             name: '容器(公共父级)',
             code: 'groupWrap',
             value: 'div',
-            check: () => areSiblingNodes()
-          },
-          {
-            name: '文字提示(公共父级)',
-            code: 'groupWrap',
-            value: 'TinyTooltip',
             check: () => areSiblingNodes()
           },
           {
@@ -400,7 +397,6 @@ export default {
     }
   }
   &.sub-menu {
-    width: 137px;
     position: absolute;
     top: -2px;
   }

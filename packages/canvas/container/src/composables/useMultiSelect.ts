@@ -20,6 +20,54 @@ interface SelectionState {
 // 初始化多选节点
 const multiSelectedStates = ref<SelectionState[]>([])
 
+/**
+ * 创建TinyPopover组件结构
+ * @param {Object} props 组件属性
+ * @param {Node | Node[]} content 内容节点
+ * @returns {Node} TinyPopover组件结构
+ */
+const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node | Node[]): Node => {
+  const children = Array.isArray(content) ? content : [content]
+
+  return {
+    componentName: 'TinyPopover',
+    id: props.id !== undefined ? props.id : null,
+    props: {
+      width: 200,
+      title: '弹框标题',
+      trigger: 'manual',
+      modelValue: true,
+      ...props
+    },
+    children: [
+      {
+        componentName: 'Template',
+        id: null,
+        props: {
+          slot: 'reference'
+        },
+        children
+      },
+      {
+        componentName: 'Template',
+        id: null,
+        props: {
+          slot: 'default'
+        },
+        children: [
+          {
+            componentName: 'div',
+            id: null,
+            props: {
+              placeholder: '提示内容'
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
+
 export const useMultiSelect = () => {
   /**
    * 添加state到多选列表
@@ -146,7 +194,7 @@ export const useMultiSelect = () => {
     const selectedNodes = indices.map((index) => parent.children[index])
 
     // 创建新的包装组件
-    const wrapSchema: Node = {
+    let wrapSchema: Node = {
       componentName,
       id: utils.guid(),
       props: { ...props },
@@ -155,38 +203,7 @@ export const useMultiSelect = () => {
 
     // 特殊处理 TinyPopover 等组件
     if (componentName === 'TinyPopover') {
-      wrapSchema.props = {
-        width: 200,
-        title: '弹框标题',
-        trigger: 'manual',
-        modelValue: true
-      }
-      wrapSchema.children = [
-        {
-          componentName: 'Template',
-          id: null,
-          props: {
-            slot: 'reference'
-          },
-          children: selectedNodes
-        },
-        {
-          componentName: 'Template',
-          id: null,
-          props: {
-            slot: 'default'
-          },
-          children: [
-            {
-              componentName: 'div',
-              id: null,
-              props: {
-                placeholder: '提示内容'
-              }
-            }
-          ]
-        }
-      ]
+      wrapSchema = createTinyPopoverSchema({ ...props, id: utils.guid() }, selectedNodes)
     }
 
     // 从后向前删除原来的节点，避免索引变化
@@ -229,43 +246,7 @@ export const useMultiSelect = () => {
 
     // 需要对popover特殊处理
     if (componentName === 'TinyPopover') {
-      wrapSchema = {
-        componentName,
-        id: null,
-        props: {
-          width: 200,
-          title: '弹框标题',
-          trigger: 'manual',
-          modelValue: true,
-          ...props
-        },
-        children: [
-          {
-            componentName: 'Template',
-            id: null,
-            props: {
-              slot: 'reference'
-            },
-            children: [childSchema]
-          },
-          {
-            componentName: 'Template',
-            id: null,
-            props: {
-              slot: 'default'
-            },
-            children: [
-              {
-                componentName: 'div',
-                id: null,
-                props: {
-                  placeholder: '提示内容'
-                }
-              }
-            ]
-          }
-        ]
-      }
+      wrapSchema = createTinyPopoverSchema(props, childSchema)
     }
 
     return wrapSchema
@@ -310,7 +291,7 @@ export const useMultiSelect = () => {
       )
     })
 
-    return false
+    return true
   }
 
   return {
