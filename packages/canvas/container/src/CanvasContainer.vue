@@ -124,11 +124,30 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
+    const DRAG_TYPE = {
+      // 无拖拽
+      NONE: 'none',
+      // 单选拖拽
+      SINGLE: 'single',
+      // 多选拖拽
+      MULTI: 'multi'
+    }
+
+    // 当前拖拽类型状态
+    const currentDragType = ref(DRAG_TYPE.NONE)
+
     const { multiSelectedStates, isMouseDown } = useMultiSelect()
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
-    const { startMultiDrag, moveMultiDrag, endMultiDrag, isMultiDragging, getMultiDragPositionText, multiDragState } =
-      useMultiDrag()
+    const {
+      startMultiDrag,
+      moveMultiDrag,
+      endMultiDrag,
+      isMultiDragging,
+      getMultiDragPositionText,
+      multiDragState,
+      cleanupDragState
+    } = useMultiDrag()
 
     const computedSelectState = computed(() => {
       if (multiSelectedStates.value.length === 1) {
@@ -137,6 +156,13 @@ export default {
 
       return initialRectState
     })
+
+    // 强制清除所有拖拽指示状态
+    const clearAllDragStates = () => {
+      clearLineState()
+      cleanupDragState()
+      currentDragType.value = DRAG_TYPE.NONE
+    }
 
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
@@ -155,8 +181,9 @@ export default {
 
       if (element) {
         // 首先尝试处理多选拖拽开始
-        // 只有在满足多选条件的情况下才会返回true并阻止后续的选择操作
         if (startMultiDrag(event, element)) {
+          // 设置为多选拖拽状态
+          currentDragType.value = DRAG_TYPE.MULTI
           return
         }
 
@@ -177,6 +204,8 @@ export default {
           const { x, y } = element.getBoundingClientRect()
           if (multiStateLength.value === 1) {
             dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+            // 设置为单选拖拽状态
+            currentDragType.value = DRAG_TYPE.SINGLE
           }
         }
       }
@@ -249,6 +278,8 @@ export default {
             }
 
             isMouseDown.value = true
+            // 重置拖拽状态
+            currentDragType.value = DRAG_TYPE.NONE
 
             insertPosition.value = false
             insertContainer.value = false
@@ -266,10 +297,26 @@ export default {
         // 监听鼠标移动事件
         win.addEventListener('mousemove', (ev) => {
           handleCanvasEvent(() => {
-            // 优先处理多选拖拽移动
-            if (!moveMultiDrag(ev)) {
-              // 如果不是多选拖拽，则处理普通拖拽
-              dragMove(ev, true)
+            // 根据当前拖拽类型执行相应操作
+            switch (currentDragType.value) {
+              case DRAG_TYPE.MULTI:
+                moveMultiDrag(ev)
+                break
+              case DRAG_TYPE.SINGLE:
+                dragMove(ev, true)
+                break
+              case DRAG_TYPE.NONE:
+                // 如果尚未确定拖拽类型，尝试确定
+                if (isMouseDown.value) {
+                  if (multiDragState.keydown) {
+                    currentDragType.value = DRAG_TYPE.MULTI
+                    moveMultiDrag(ev)
+                  } else if (dragState.element) {
+                    currentDragType.value = DRAG_TYPE.SINGLE
+                    dragMove(ev, true)
+                  }
+                }
+                break
             }
           })
         })
@@ -294,11 +341,17 @@ export default {
               }
             }
 
-            // 优先处理多选拖拽结束
-            if (!endMultiDrag()) {
-              // 如果不是多选拖拽，则处理普通拖拽结束
-              onMouseUp(ev)
+            // 根据当前拖拽类型执行相应的结束操作
+            switch (currentDragType.value) {
+              case DRAG_TYPE.MULTI:
+                endMultiDrag()
+                break
+              case DRAG_TYPE.SINGLE:
+                onMouseUp(ev)
+                break
             }
+
+            clearAllDragStates()
           })
         })
 
@@ -306,19 +359,33 @@ export default {
         win.addEventListener('dragover', (ev) => {
           ev.dataTransfer.dropEffect = 'move'
           ev.preventDefault()
-          // 优先处理多选拖拽移动
-          if (!moveMultiDrag(ev)) {
-            dragMove(ev)
+
+          // 根据当前拖拽类型执行相应操作
+          switch (currentDragType.value) {
+            case DRAG_TYPE.MULTI:
+              moveMultiDrag(ev)
+              break
+            case DRAG_TYPE.SINGLE:
+              dragMove(ev)
+              break
           }
         })
 
         // 监听放置事件
         win.addEventListener('drop', (ev) => {
           ev.preventDefault()
-          // 优先处理多选拖拽结束
-          if (!endMultiDrag()) {
-            onMouseUp(ev)
+
+          // 根据当前拖拽类型执行相应的结束操作
+          switch (currentDragType.value) {
+            case DRAG_TYPE.MULTI:
+              endMultiDrag()
+              break
+            case DRAG_TYPE.SINGLE:
+              onMouseUp(ev)
+              break
           }
+
+          clearAllDragStates()
         })
 
         // 阻止浏览器默认的右键菜单功能

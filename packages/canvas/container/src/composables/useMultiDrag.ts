@@ -823,16 +823,10 @@ export const useMultiDrag = () => {
   // 清理拖拽状态
   const cleanupDragState = () => {
     // 清理拖拽状态，但保留多选状态
-    setTimeout(() => {
-      // 只清理拖拽相关状态，不清理多选状态
-      Object.assign(multiDragState, {
-        ...initialMultiDragState,
-        nodes: [] // 确保清空nodes数组，避免影响后续操作
-      })
-
-      // 清除单选拖动状态
-      Object.assign(dragState, initialDragState)
-    }, 50)
+    Object.assign(multiDragState, {
+      ...initialMultiDragState,
+      nodes: []
+    })
   }
 
   // 结束拖拽
@@ -919,6 +913,7 @@ export const useMultiDrag = () => {
     startMultiDrag,
     moveMultiDrag,
     endMultiDrag,
+    cleanupDragState,
     isMultiDragging
   }
 }
