@@ -11169,35 +11169,6 @@
                 },
                 "content": [
                   {
-                    "property": "horizontal",
-                    "type": "Boolean",
-                    "defaultValue": {
-                      "type": "i18n",
-                      "zh_CN": "布局",
-                      "en_US": "layout",
-                      "key": ""
-                    },
-                    "label": {
-                      "text": {
-                        "zh_CN": "水平布局"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "widget": {
-                      "component": "CheckBoxConfigurator",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "节点和文字横向布局"
-                    },
-                    "labelPosition": "left"
-                  },
-                  {
                     "property": "vertical",
                     "type": "Boolean",
                     "defaultValue": {
