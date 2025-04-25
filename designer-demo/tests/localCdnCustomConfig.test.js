@@ -75,7 +75,7 @@ describe('localCDN 自定义配置测试', () => {
     localCdnConfig: {
       importMap: { 
         imports: {
-          'vue': "\${VITE_CDN_DOMAIN}/vue\${versionDelimiter}3.4.21\${fileDelimiter}/dist/vue.runtime.esm-browser.js"
+          'vue': "\${VITE_CDN_DOMAIN}/vue\${versionDelimiter}3.4.21\${fileDelimiter}/dist/vue.runtime.esm-browser.prod.js"
         } 
       },
       copy: {
@@ -94,6 +94,8 @@ describe('localCDN 自定义配置测试', () => {
     // 确保关键环境变量已启用
     envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_IMPORT_MAPS')
     envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_BUNDLE_DEPS')
+    envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_CDN_PATH', './local-cdn-static')
+    envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_BUNDLE_PATH', 'local-cdn-static')
     
     // 写回更新后的环境变量
     fs.writeFileSync(envAlphaPath, envContent)
@@ -154,20 +156,5 @@ describe('localCDN 自定义配置测试', () => {
     })
     
     expect(distFileCount).toBe(true)
-  })
-  
-  it('should modify the environment variable to set VITE_CDN_DOMAIN to ./local-cdn-static', () => {
-    // 检查构建后生成的JS文件中是否包含 VITE_CDN_DOMAIN: './local-cdn-static'
-    const jsFiles = fs.readdirSync(path.resolve(distDir, 'assets'))
-      .filter(file => file.endsWith('.js') && file.startsWith('preview-'))
-      .map(file => path.resolve(distDir, 'assets', file))
-    
-    expect(jsFiles.length).toBeGreaterThan(0)
-    
-    // 检查文件内容
-    const mainJsContent = fs.readFileSync(jsFiles[0], 'utf-8')
-    
-    // 检查 VITE_CDN_DOMAIN 环境变量是否被替换为本地路径
-    expect(mainJsContent).toContain('VITE_CDN_DOMAIN:"./local-cdn-static"')
   })
 }) 

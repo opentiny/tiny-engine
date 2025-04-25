@@ -9,17 +9,17 @@ import fs from 'node:fs'
  * @param {string} key - 环境变量名
  * @returns {string} - 更新后的内容
  */
-export function ensureEnvVarEnabled(content, key) {
+export function ensureEnvVarEnabled(content, key, value = 'true') {
   // 检查是否包含该环境变量
   const regex = new RegExp(`${key}\\s*=\\s*(.*)`, 'm')
   const match = content.match(regex)
   
   if (!match) {
     // 变量不存在，添加
-    return `${content}\n${key}=true`
-  } else if (match[1].trim() === 'false') {
-    // 变量存在但值为false，替换为true
-    return content.replace(regex, `${key}=true`)
+    return `${content}\n${key}=${value}`
+  } else if (match[1].trim() !== value) {
+    // 变量存在但值为跟 value 不相等，替换为提供的值 value
+    return content.replace(regex, `${key}=${value}`)
   }
   
   // 变量已存在且不是false，保持不变
