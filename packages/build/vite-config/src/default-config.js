@@ -14,7 +14,6 @@ import { getBaseUrlFromCli, copyBundleDeps, localCdnPlugin } from './localCdnFil
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
-import { createDynamicImportMapPlugin } from './vite-plugins/createDynamicImportMapPlugin.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -135,7 +134,12 @@ export function useTinyEngineBaseConfig(engineConfig) {
   const { envDir = '', viteConfigEnv } = engineConfig
   const { command = 'serve', mode = 'serve' } = viteConfigEnv
   const env = loadEnv(mode, envDir)
-  const { VITE_CDN_DOMAIN = 'https://unpkg.com', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = env
+  const {
+    VITE_CDN_DOMAIN = 'https://unpkg.com',
+    VITE_LOCAL_IMPORT_MAPS,
+    VITE_LOCAL_BUNDLE_DEPS,
+    VITE_LOCAL_BUNDLE_PATH
+  } = env
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
   const monacoPublicPath = 'editor/monaco-workers'
@@ -172,21 +176,13 @@ export function useTinyEngineBaseConfig(engineConfig) {
     const cdnPlugins = localCdnPlugin({
       localCdnConfig: engineConfig.localCdnConfig,
       base: getBaseUrlFromCli(config.base),
-      cdnDir: 'local-cdn-static'
+      cdnDir: VITE_LOCAL_BUNDLE_PATH
     })
 
     if (cdnPlugins && cdnPlugins.length > 0) {
       config.plugins.push(...cdnPlugins)
     }
   }
-
-  config.plugins.push(
-    createDynamicImportMapPlugin({
-      base: getBaseUrlFromCli(config.base),
-      cdnDir: 'local-cdn-static',
-      isLocalImportMap
-    })
-  )
 
   config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
 
