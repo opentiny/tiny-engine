@@ -3,7 +3,6 @@ import fs from 'fs-extra'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary.js'
 import { copyPlugin } from '../vite-plugins/cdnCopyPlugin.js'
 import { dedupeCopyFiles } from './locateCdnNpmInfo.js'
-import { importMapConfig as importMapConfigFile } from './import-map.js'
 
 const logger = console
 
@@ -156,7 +155,9 @@ export function localCdnPlugin({
 }) {
   const importMapConfig = localCdnConfig.importMap || { imports: {} }
   const copyConfig = localCdnConfig.copy || {}
-  const defaultImportMapConfig = importMapConfigFile
+  const defaultImportMapConfig = JSON.parse(
+    fs.readFileSync(path.resolve(process.cwd(), './node_modules/@opentiny/tiny-engine/dist/import-map.json'), 'utf-8')
+  )
   const parsedDefaultImportMapConfig = Object.values(defaultImportMapConfig.imports).map((item) => extractInfo(item))
   const parsedImportMapConfig = Object.values(importMapConfig.imports).map((item) => extractInfo(item))
   const overriddenImportMap = parsedDefaultImportMapConfig.filter((item) => {
