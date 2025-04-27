@@ -4,20 +4,28 @@ import { importMapConfig } from '@opentiny/tiny-engine-common/js/importMap'
 const getImportUrl = (pkgName: string) => {
   // 自定义的 importMap
   const customImportMap = getMergeMeta('engine.config')?.importMap
-  const { VITE_CDN_TYPE, VITE_CDN_DOMAIN, VITE_LOCAL_CDN_PATH } = useEnv()
-  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/' : '@'
-  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/files' : ''
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_BUNDLE_DEPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
 
   if (customImportMap?.imports?.[pkgName]) {
     return customImportMap.imports[pkgName]
-      .replace('${VITE_CDN_DOMAIN}', VITE_LOCAL_CDN_PATH || VITE_CDN_DOMAIN)
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
       .replace('${versionDelimiter}', versionDelimiter)
       .replace('${fileDelimiter}', fileDelimiter)
   }
 
   if (importMapConfig.imports[pkgName]) {
     return importMapConfig.imports[pkgName]
-      .replace('${VITE_CDN_DOMAIN}', VITE_LOCAL_CDN_PATH || VITE_CDN_DOMAIN)
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
       .replace('${versionDelimiter}', versionDelimiter)
       .replace('${fileDelimiter}', fileDelimiter)
   }
@@ -25,13 +33,21 @@ const getImportUrl = (pkgName: string) => {
 
 // 获取样式文件的URL，后续去除物料内置逻辑之后，需要用户自行引入，相关逻辑也需要同步删除
 const getImportStyleUrl = (pkgName: string) => {
-  const { VITE_CDN_TYPE, VITE_CDN_DOMAIN, VITE_LOCAL_CDN_PATH } = useEnv()
-  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/' : '@'
-  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/files' : ''
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_BUNDLE_DEPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
 
   if (importMapConfig.importStyles[pkgName]) {
     return importMapConfig.importStyles[pkgName]
-      .replace('${VITE_CDN_DOMAIN}', VITE_LOCAL_CDN_PATH || VITE_CDN_DOMAIN)
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
       .replace('${versionDelimiter}', versionDelimiter)
       .replace('${fileDelimiter}', fileDelimiter)
   }

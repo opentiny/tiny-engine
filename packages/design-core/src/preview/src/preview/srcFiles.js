@@ -26,16 +26,20 @@ import storesJS from './srcFiles/stores.js?raw'
 import storesHelperJS from './srcFiles/storesHelper.js?raw'
 
 const srcFiles = {}
-const versionDelimiter =
-  import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !import.meta.env.VITE_LOCAL_CDN_PATH ? '/' : '@'
-const fileDelimiter =
-  import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !import.meta.env.VITE_LOCAL_CDN_PATH ? '/files' : ''
+const isLocalBundle = import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true'
+const versionDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+const fileDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
 
 srcFiles['App.vue'] = appVue
 srcFiles['Main.vue'] = mainVue
 srcFiles['constant.js'] = constantJS
 srcFiles['app.js'] = appJS
-  .replaceAll('${VITE_CDN_DOMAIN}', import.meta.env.VITE_LOCAL_CDN_PATH || import.meta.env.VITE_CDN_DOMAIN)
+  .replaceAll(
+    '${VITE_CDN_DOMAIN}',
+    isLocalBundle
+      ? import.meta.env.BASE_URL + (import.meta.env.VITE_LOCAL_BUNDLE_PATH || 'local-cdn-static')
+      : import.meta.env.VITE_CDN_DOMAIN
+  )
   .replaceAll('${versionDelimiter}', versionDelimiter)
   .replaceAll('${fileDelimiter}', fileDelimiter)
 
@@ -50,6 +54,9 @@ srcFiles['stores.js'] = storesJS
 srcFiles['storesHelper.js'] = storesHelperJS
 
 export const genPreviewTemplate = () => {
+  const { VITE_CDN_DOMAIN, VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static', BASE_URL, VITE_LOCAL_BUNDLE_DEPS } = useEnv()
+  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+
   return [
     {
       fileName: 'App.vue',
@@ -64,7 +71,10 @@ export const genPreviewTemplate = () => {
     {
       fileName: 'app.js',
       path: '',
-      fileContent: appJS.replace(/VITE_CDN_DOMAIN/g, useEnv().VITE_LOCAL_CDN_PATH || useEnv().VITE_CDN_DOMAIN)
+      fileContent: appJS.replace(
+        /VITE_CDN_DOMAIN/g,
+        isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
+      )
     },
     {
       fileName: 'injectGlobal.js',

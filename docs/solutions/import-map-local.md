@@ -32,14 +32,8 @@ VITE_LOCAL_IMPORT_MAPS=true
 # 将物料需要的CDN 资源进行本地化。注意⚠️：这里需要您的物料package需要能够通过 npm 的方式进行下载，否则会失效。
 VITE_LOCAL_BUNDLE_DEPS=true
 
-# 将 VITE_LOCAL_BUNDLE_DEPS 复制到构建产物中的目录名称
+# 将 VITE_LOCAL_BUNDLE_DEPS 复制到构建产物中的目录名称，默认为 local-cdn-static
 VITE_LOCAL_BUNDLE_PATH=local-cdn-static
-
-# VITE_LOCAL_BUNDLE_DEPS 的完整访问路径，如果 vite.config.js 中 base 配置为 ./，则为 base + 复制的目录名称
-VITE_LOCAL_CDN_PATH=./local-cdn-static
-
-# ⚠️注意：如果 vite.config.js 中 base 不为  ./，则需要加上 base的路径，比如 base 为：http://opentiny.design
-# VITE_LOCAL_CDN_PATH=http://opentiny.design/local-cdn-static
 ```
 
 2. 【可选】 在 `vite.config.js` 中传入自定义配置

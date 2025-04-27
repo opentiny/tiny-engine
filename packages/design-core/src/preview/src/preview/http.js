@@ -36,11 +36,6 @@ export const fetchMetaData = async ({ platform, app, type, id, history, tenant }
       })
     : {}
 
-export const fetchImportMap = async () => {
-  const baseUrl = new URL(import.meta.env.BASE_URL, location.href)
-  return fetch(new URL('./preview-import-map-static/preview-importmap.json', baseUrl).href).then((res) => res.json())
-}
-
 export const fetchAppSchema = async (id) => getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)

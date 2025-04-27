@@ -18,12 +18,20 @@ const importMap = {}
 const opentinyVueVersion = '~3.20'
 
 function replacePlaceholder(v) {
-  const { VITE_CDN_TYPE, VITE_CDN_DOMAIN, VITE_LOCAL_CDN_PATH } = useEnv()
-  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/' : '@'
-  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/files' : ''
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_BUNDLE_DEPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
 
   return v
-    .replace('${VITE_CDN_DOMAIN}', VITE_LOCAL_CDN_PATH || VITE_CDN_DOMAIN)
+    .replace('${VITE_CDN_DOMAIN}', cdnDomain)
     .replace('${opentinyVueVersion}', opentinyVueVersion)
     .replace('${versionDelimiter}', versionDelimiter)
     .replace('${fileDelimiter}', fileDelimiter)

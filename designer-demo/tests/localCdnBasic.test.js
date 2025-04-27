@@ -27,7 +27,6 @@ describe('localCDN 功能测试', () => {
     // 确保关键环境变量已启用
     envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_IMPORT_MAPS')
     envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_BUNDLE_DEPS')
-    envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_CDN_PATH', './local-cdn-static')
     envContent = ensureEnvVarEnabled(envContent, 'VITE_LOCAL_BUNDLE_PATH', 'local-cdn-static')
     
     // 写回更新后的环境变量

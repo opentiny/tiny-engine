@@ -4,15 +4,7 @@ import vueJsx from '@vue/babel-plugin-jsx'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
-import {
-  fetchMetaData,
-  fetchImportMap,
-  fetchAppSchema,
-  fetchBlockSchema,
-  getPageById,
-  getBlockById,
-  fetchPageHistory
-} from './http'
+import { fetchMetaData, fetchAppSchema, fetchBlockSchema, getPageById, getBlockById, fetchPageHistory } from './http'
 import { PanelType } from '../constant'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import srcFiles from './srcFiles'
@@ -154,16 +146,6 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   }
 }
 const getImportMap = async (scripts = {}) => {
-  if (import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true') {
-    const mapJSON = await fetchImportMap()
-
-    return {
-      imports: {
-        ...mapJSON.imports,
-        ...scripts
-      }
-    }
-  }
   return getInitImportMap(scripts || {})
 }
 
