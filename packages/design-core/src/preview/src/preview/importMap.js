@@ -12,7 +12,6 @@
 
 import { useEnv } from '@opentiny/tiny-engine-meta-register'
 import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap'
-import { getSearchParams } from './http'
 
 const importMap = {}
 
@@ -30,10 +29,10 @@ function replacePlaceholder(v) {
     .replace('${fileDelimiter}', fileDelimiter)
 }
 
-export const getImportMap = () => {
+export const getImportMap = (scripts = {}) => {
   importMap.imports = {
     ...Object.fromEntries(Object.entries(importMapJSON.imports).map(([k, v]) => [k, replacePlaceholder(v)])),
-    ...getSearchParams().scripts
+    ...scripts
   }
 
   return importMap
