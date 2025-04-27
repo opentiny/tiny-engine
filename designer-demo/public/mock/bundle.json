@@ -12906,7 +12906,7 @@
             "zh_CN": "穿梭框"
           },
           "component": "TinyTransfer",
-          "icon": "numeric",
+          "icon": "transfer",
           "description": "穿梭框，实现左右表格数据的双向交换的组件",
           "docUrl": "",
           "screenshot": "",
@@ -12945,6 +12945,27 @@
                     },
                     "description": {
                       "zh_CN": "双向绑定值"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "data",
+                    "label": {
+                      "text": {
+                        "zh_CN": "左右列表的全量数据源"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "左右列表的全量数据源"
                     },
                     "labelPosition": "left"
                   },
@@ -13648,7 +13669,7 @@
               "name": {
                 "zh_CN": "穿梭框"
               },
-              "icon": "breadcrumb",
+              "icon": "transfer",
               "screenshot": "",
               "snippetName": "TinyTransfer",
               "schema": {
