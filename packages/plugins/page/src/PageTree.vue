@@ -335,6 +335,7 @@ export default {
           .then((pageDetail) => {
             pageDetail.parentId = newParent.id
             if (pageDetail.isPage) {
+              pageDetail.isDefault = false
               updatePage(pageDetail)
             } else {
               updateFolder(pageDetail)

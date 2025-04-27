@@ -13,11 +13,12 @@
 import { toRaw, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'
+import type { Property, Schema } from '@opentiny/tiny-engine-plugin-materials'
 
 const { COMPONENT_NAME } = constants
 const propsUpdateKey = ref(0)
 
-const getSlotSwitch = (properties, slots = {}) => {
+const getSlotSwitch = (properties: Property[], slots: Record<string, any> = {}) => {
   if (Object.keys(slots).length) {
     properties.push({
       label: {
@@ -52,7 +53,7 @@ const getSlotSwitch = (properties, slots = {}) => {
  * @param {*} groups 组件元数据
  * @returns
  */
-const mergeProps = (pageProps = {}, groups = []) => {
+const mergeProps = (pageProps: Record<string, any> = {}, groups: Property[] = []) => {
   const group = groups.map(({ content = [], ...group }) => {
     return {
       ...group,
@@ -71,7 +72,7 @@ const mergeProps = (pageProps = {}, groups = []) => {
   return group
 }
 
-const translateProp = (value) => {
+const translateProp = (value: { type: string }) => {
   if (value?.type === 'i18n') {
     return useTranslate().translate(value)
   }
@@ -84,14 +85,15 @@ const translateProp = (value) => {
  * @param {*} instance 画布上当前选中节点信息
  */
 
-const properties = shallowReactive({
+const properties = shallowReactive<{ schema: Schema | null; parent: Schema | null }>({
   schema: null,
   parent: null
 })
 
-const isPageOrBlock = (schema) => [COMPONENT_NAME.Block, COMPONENT_NAME.Page].includes(schema?.componentName)
+const isPageOrBlock = (schema: Schema) =>
+  [COMPONENT_NAME.Block, COMPONENT_NAME.Page].includes(schema?.componentName || '')
 
-const getProps = (schema, parent) => {
+const getProps = (schema: Schema, parent: Schema) => {
   // 1 现在选中的节点和当前节点一样，不需要重新计算, 2 默认进来由于scheme和properities.schema相等，因此判断如果是“页面或者区块”需要进入if判断
   if (schema && (properties.schema !== schema || isPageOrBlock(schema))) {
     const { props, componentName } = schema
@@ -114,7 +116,7 @@ const getProps = (schema, parent) => {
   properties.parent = parent
 }
 
-const setProp = (name, value, type) => {
+const setProp = (name: string, value: unknown, type?: unknown) => {
   if (!properties.schema) {
     return
   }
@@ -134,7 +136,7 @@ const setProp = (name, value, type) => {
 
   useCanvas().operateNode({
     type: 'changeProps',
-    id: properties.schema.id,
+    id: properties.schema.id || '',
     value: { props: newProps },
     option: { overwrite }
   })
@@ -142,29 +144,29 @@ const setProp = (name, value, type) => {
   propsUpdateKey.value++
 }
 
-const getProp = (key) => {
-  return (properties.schema.props || {})[key]
+const getProp = (key: string) => {
+  return (properties.schema?.props || {})[key]
 }
 
-const delProp = (name) => {
-  const newProps = { ...(properties.schema.props || {}) }
+const delProp = (name: string) => {
+  const newProps = { ...(properties.schema?.props || {}) }
 
   delete newProps[name]
 
   useCanvas().operateNode({
     type: 'changeProps',
-    id: properties.schema.id,
+    id: properties.schema?.id || '',
     value: { props: newProps },
     option: { overwrite: true }
   })
   propsUpdateKey.value++
 }
 
-const setProps = (schema) => {
+const setProps = (schema: Schema) => {
   Object.entries(schema.props || {}).map(([key, value]) => setProp(key, value))
 }
 
-const getSchema = (parent) => {
+const getSchema = (parent: boolean) => {
   return parent ? properties : properties.schema
 }
 

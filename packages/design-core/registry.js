@@ -23,7 +23,7 @@ export default {
       scripts: []
     },
     dslMode: 'Vue',
-    platformId: 918,
+    platformId: 1,
     // TODO: 声明周期相关配置拆分到页面管理的配置项里面
     // 生命周期函数
     lifeCyclesOptions: {

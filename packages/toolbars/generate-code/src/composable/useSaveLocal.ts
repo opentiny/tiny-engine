@@ -19,8 +19,8 @@ const bridge = window.vscodeBridge
 
 const confirmSaveLocal = async () => {
   const { pageState, setSaved } = useCanvas()
-  const currentPageId = pageState.currentPageId || pageState.currentPage.id
-  const currentPageName = pageState.currentPageName || pageState.currentPage.name
+  const currentPageId = pageState.currentPageId || pageState.currentPage?.id
+  const currentPageName = pageState.currentPageName || pageState.currentPage?.name
 
   const { VITE_ORIGIN } = useEnv()
   const savePage = await bridge.callHandler('save-page', {
@@ -52,8 +52,8 @@ const savePageLocal = async () => {
   // 查询本地页面文件是否存在
   const { currentPageId, currentPageName, currentPage } = useCanvas().pageState
   const fileExistRes = await bridge.callHandler('page-is-exist', {
-    pageName: currentPageName || currentPage.name,
-    pageId: currentPageId || currentPage.id,
+    pageName: currentPageName || currentPage?.name,
+    pageId: currentPageId || currentPage?.id,
     platformId: getMergeMeta('engine.config')?.platformId
   })
 

@@ -37,7 +37,6 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-fullscreen': path.resolve(basePath, 'packages/toolbars/fullscreen/index.ts'),
     '@opentiny/tiny-engine-toolbar-lang': path.resolve(basePath, 'packages/toolbars/lang/index.ts'),
     '@opentiny/tiny-engine-toolbar-view-setting': path.resolve(basePath, 'packages/toolbars/view-setting/index.ts'),
-    '@opentiny/tiny-engine-toolbar-layout': path.resolve(basePath, 'packages/toolbars/layout/index.ts'),
     '@opentiny/tiny-engine-toolbar-lock': path.resolve(basePath, 'packages/toolbars/lock/index.ts'),
     '@opentiny/tiny-engine-toolbar-logo': path.resolve(basePath, 'packages/toolbars/logo/index.ts'),
     '@opentiny/tiny-engine-toolbar-logout': path.resolve(basePath, 'packages/toolbars/logout/index.ts'),

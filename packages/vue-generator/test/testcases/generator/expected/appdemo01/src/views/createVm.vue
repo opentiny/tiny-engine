@@ -285,7 +285,10 @@
       >
         <tiny-form-item label="数据盘" style="border-radius: 0px">
           <div v-for="() in state.dataDisk" style="margin-top: 12px; display: flex">
-            <tiny-icon-panel-mini style="margin-right: 10px; width: 16px; height: 16px"></tiny-icon-panel-mini>
+            <tiny-icon-panel-mini
+              style="margin-right: 10px; width: 16px; height: 16px"
+              fill="currentColor"
+            ></tiny-icon-panel-mini>
             <tiny-select
               modelValue=""
               placeholder="请选择"
@@ -300,7 +303,7 @@
             <tiny-input placeholder="请输入" modelValue="" style="width: 120px"></tiny-input>
           </div>
           <div style="display: flex; margin-top: 12px; border-radius: 0px">
-            <tiny-icon-plus style="width: 16px; height: 16px; margin-right: 10px"></tiny-icon-plus>
+            <tiny-icon-plus style="width: 16px; height: 16px; margin-right: 10px" fill="currentColor"></tiny-icon-plus>
             <span style="font-size: 12px; border-radius: 0px; margin-right: 10px">增加一块数据盘</span>
             <span style="color: #8a8e99; font-size: 12px">您还可以挂载 21 块磁盘（云硬盘）</span>
           </div></tiny-form-item

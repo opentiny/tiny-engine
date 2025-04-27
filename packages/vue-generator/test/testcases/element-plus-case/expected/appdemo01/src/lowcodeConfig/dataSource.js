@@ -68,7 +68,9 @@ dataSources.list.forEach((config) => {
     return data
   }
   const errorHandler = (error) => {
-    config.errorHandler?.value && createFn(config.errorHandler.value)(error)
+    if (config.errorHandler?.value) {
+      createFn(config.errorHandler.value)(error)
+    }
     dataSource.status = 'error'
     dataSource.error = error
   }

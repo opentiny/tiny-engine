@@ -80,7 +80,7 @@ export default {
     const getFamilyPages = (appData) => {
       const familyPages = []
       const ancestors = queryParams.ancestors
-      
+
       if (queryParams.type === 'Block') {
         familyPages.push({
           panelName: 'Main.vue',
@@ -94,7 +94,7 @@ export default {
 
         return familyPages
       }
-      
+
       if (!ancestors?.length || !appData?.componentsMap) {
         return familyPages
       }
@@ -131,16 +131,23 @@ export default {
 
       return familyPages
     }
+    const genAllBlocks = async (ancestors) => {
+      // blockSet 是为了防止重复出码同样的区块，同名区块只出码一遍
+      const blockSet = new Set()
+      const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
+      const blocks = (await Promise.all(promises)).flat()
+      return blocks
+    }
+
     const promiseList = [
       fetchAppSchema(queryParams?.app),
       fetchMetaData(queryParams),
+      genAllBlocks(queryParams.ancestors),
       setFiles(srcFiles, 'src/Main.vue'),
       getImportMap()
     ]
-    Promise.all(promiseList).then(async ([appData, metaData, _void, importMapData]) => {
+    Promise.all(promiseList).then(async ([appData, metaData, blocks, _void, importMapData]) => {
       store.setImportMap(importMapData)
-
-      const blocks = await getAllNestedBlocksSchema(queryParams.pageInfo?.schema, fetchBlockSchema)
 
       // TODO: 需要验证级联生成 block schema
       // TODO: 物料内置 block 需要如何处理？

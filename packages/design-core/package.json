@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.3.0",
+  "version": "2.5.0-alpha.2",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -74,7 +74,6 @@
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-code": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
-    "@opentiny/tiny-engine-toolbar-layout": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lock": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logout": "workspace:*",

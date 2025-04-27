@@ -27,7 +27,8 @@ export default (schema) => {
         transformMixedEsModules: true
       },
       cssCodeSplit: false
-    }
+    },
+    base: './'
   })`
 
   return res

@@ -44,7 +44,7 @@ program
   .command('create-platform <name>')
   .description('create a new tiny-engine platform 创建一个新的tiny-engine低代码平台')
   .addOption(new Option('-t, --theme <theme>', 'platform theme 平台主题', 'light').choices(['light', 'dark']))
-  .option('-pid, --platformId <platformId>', 'platform id 平台主题', 918)
+  .option('-pid, --platformId <platformId>', 'platform id 平台主题', 1)
   .option('-m, --material [material...]', 'material address 物料地址', ['/mock/bundle.json'])
   .option('--scripts [script...]', '物料 script', [])
   .option('--styles [styles...]', '物料 styles', [])

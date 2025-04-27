@@ -121,18 +121,23 @@ export default {
 
     const MIN_WIDTH = PLUGIN_DEFAULT_WIDTH // 固定的最小宽度值
     const MAX_WIDTH = 1000 // 固定的最大宽度值
-    const panel = ref(null)
+    const panel = ref<HTMLElement | null>(null)
     let startX = 0
     let startWidth = 0
+    let rafId: number | null = null // 添加 requestAnimationFrame 标识
 
     const isCollapsed = ref(false)
     const settingIcon = computed(() => (isCollapsed.value ? 'collapse_all' : 'expand_all'))
 
     provide('isCollapsed', isCollapsed)
 
-    const panelState = inject('panelState')
+    interface PanelState {
+      emitEvent: (event: string, ...args: any[]) => void
+    }
+
+    const panelState = inject<PanelState>('panelState')
     const fixPanel = () => {
-      panelState.emitEvent('fixPanel', props.fixedName)
+      panelState?.emitEvent('fixPanel', props.fixedName)
     }
 
     const headerBottomLine = computed(() => (props.showBottomBorder ? 'header-bottom-line' : ''))
@@ -146,65 +151,101 @@ export default {
     const isRightResizer = ref(align.value.includes('right'))
     const isWidthResizable = computed(() => isPanelWidthResizable(props.fixedName))
 
-    const onMouseMoveRight = (event) => {
+    const updateWidth = (newWidth: number) => {
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+      }
+
+      rafId = requestAnimationFrame(() => {
+        panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
+        changePluginWidth(props.fixedName, panelWidth.value)
+      })
+    }
+
+    const onMouseMoveRight = (event: MouseEvent) => {
       const newWidth = startWidth + (event.clientX - startX)
-      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      changePluginWidth(props.fixedName, panelWidth.value)
+      updateWidth(newWidth)
     }
 
-    const onMouseMoveLeft = (event) => {
+    const onMouseMoveLeft = (event: MouseEvent) => {
       const newWidth = startWidth - (event.clientX - startX)
-      panelWidth.value = Math.max(MIN_WIDTH, Math.min(newWidth, MAX_WIDTH))
-      changePluginWidth(props.fixedName, panelWidth.value)
+      updateWidth(newWidth)
     }
 
-    const throttledMouseMoveRight = useThrottleFn(onMouseMoveRight, 50)
-    const throttledMouseMoveLeft = useThrottleFn(onMouseMoveLeft, 50)
+    // 降低节流时间，提高响应速度
+    const throttledMouseMoveRight = useThrottleFn(onMouseMoveRight, 16)
+    const throttledMouseMoveLeft = useThrottleFn(onMouseMoveLeft, 16)
 
-    const leftResizer = ref(null)
-    const rightResizer = ref(null)
+    type ResizerElement = HTMLElement | null
+
+    const leftResizer = ref<ResizerElement>(null)
+    const rightResizer = ref<ResizerElement>(null)
 
     const onMouseUpRight = () => {
       changeMoveDragBarState(false)
       document.removeEventListener('mousemove', throttledMouseMoveRight)
       document.removeEventListener('mouseup', onMouseUpRight)
-      rightResizer.value.style.cursor = ''
-      rightResizer.value.classList.remove('dragging')
+      document.body.style.cursor = ''
+      if (rightResizer.value) {
+        rightResizer.value.classList.remove('dragging')
+      }
+
+      // 清理 requestAnimationFrame
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
     }
 
-    const onMouseDownRight = (event) => {
+    const onMouseDownRight = (event: MouseEvent) => {
       changeMoveDragBarState(true)
       startX = event.clientX
-      startWidth = panel.value.offsetWidth
+      startWidth = panel.value?.offsetWidth || 0
       document.addEventListener('mousemove', throttledMouseMoveRight)
       document.addEventListener('mouseup', onMouseUpRight)
-      rightResizer.value.style.cursor = 'ew-resize'
-      rightResizer.value.classList.add('dragging')
+      document.body.style.cursor = 'col-resize'
+      if (rightResizer.value) {
+        rightResizer.value.classList.add('dragging')
+      }
     }
 
     const onMouseUpLeft = () => {
       changeMoveDragBarState(false)
       document.removeEventListener('mousemove', throttledMouseMoveLeft)
       document.removeEventListener('mouseup', onMouseUpLeft)
-      leftResizer.value.style.cursor = ''
-      leftResizer.value.classList.remove('dragging')
+      document.body.style.cursor = ''
+      if (leftResizer.value) {
+        leftResizer.value.classList.remove('dragging')
+      }
+
+      if (rafId) {
+        cancelAnimationFrame(rafId)
+        rafId = null
+      }
     }
 
-    const onMouseDownLeft = (event) => {
+    const onMouseDownLeft = (event: MouseEvent) => {
       changeMoveDragBarState(true)
       startX = event.clientX
-      startWidth = panel.value.offsetWidth
+      startWidth = panel.value?.offsetWidth || 0
       document.addEventListener('mousemove', throttledMouseMoveLeft)
       document.addEventListener('mouseup', onMouseUpLeft)
-      leftResizer.value.style.cursor = 'ew-resize'
-      leftResizer.value.classList.add('dragging')
+      document.body.style.cursor = 'col-resize'
+      if (leftResizer.value) {
+        leftResizer.value.classList.add('dragging')
+      }
     }
 
     const initResizerDOM = () => {
-      leftResizer.value = document.querySelector('.resizer-left')
-      rightResizer.value = document.querySelector('.resizer-right')
+      const leftEl = document.querySelector('.resizer-left')
+      const rightEl = document.querySelector('.resizer-right')
+      if (leftEl instanceof HTMLElement) {
+        leftResizer.value = leftEl
+      }
+      if (rightEl instanceof HTMLElement) {
+        rightResizer.value = rightEl
+      }
     }
-
     const clickCollapseIcon = () => {
       isCollapsed.value = !isCollapsed.value
       emit('updateCollapseStatus', isCollapsed.value)
@@ -289,11 +330,21 @@ export default {
   position: absolute;
   top: 0;
   right: 0;
-  width: 1px;
+  width: 3px;
   height: 100%;
-  cursor: ew-resize;
-  background-color: rgba(0, 0, 0, 0.1);
-  transition: width 0.3s ease;
+  cursor: col-resize;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    left: 3px;
+    width: 1px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
 }
 
 .header-bottom-line {
@@ -301,13 +352,19 @@ export default {
 }
 
 .dragging {
-  width: 2px !important;
-  background-color: var(--te-component-common-resizer-border-color) !important;
+  background-color: var(--te-component-common-resizer-border-color);
+
+  &::after {
+    width: 2px !important;
+  }
 }
 
 .resizer-right:hover {
-  width: 2px;
   background-color: var(--te-component-common-resizer-border-color);
+
+  &::after {
+    width: 2px;
+  }
 }
 
 // 左边拖拽线
@@ -315,16 +372,29 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1px;
+  width: 3px;
   height: 100%;
-  cursor: ew-resize;
-  background-color: rgba(0, 0, 0, 0.1);
-  transition: width 0.3s ease;
+  cursor: col-resize;
+  background-color: transparent;
+  transition: background-color 0.3s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: 3px;
+    width: 1px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
 }
 
 .resizer-left:hover {
-  width: 2px;
   background-color: var(--te-component-common-resizer-border-color);
+
+  &::after {
+    width: 2px;
+  }
 }
 
 .scroll-content {

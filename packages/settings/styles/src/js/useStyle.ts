@@ -338,17 +338,11 @@ const updateStyle = (properties: any) => {
   updateRect()
 }
 
-let hasWatchInitialized = false
-
 export default () => {
-  if (!hasWatchInitialized) {
-    initStylePanelWatch()
-    hasWatchInitialized = true
-  }
-
   return {
     state,
-    updateStyle
+    updateStyle,
+    initStylePanelWatch
   }
 }
 

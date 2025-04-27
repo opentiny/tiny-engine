@@ -18,7 +18,7 @@ const CONSTANTS = {
   BLOCKTEXT: '区块'
 }
 
-const setBreadcrumbPage = (value: string) => {
+const setBreadcrumbPage = (value: any) => {
   breadcrumbData.value = [CONSTANTS.PAGETEXT, ...value]
   sessionStorage.setItem('pageInfo', value)
 }

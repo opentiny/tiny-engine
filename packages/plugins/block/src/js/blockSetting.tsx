@@ -577,7 +577,7 @@ const createBlock = (block = {}) => {
     }
   }
 
-  requestCreateBlock(params)
+  return requestCreateBlock(params)
     .then((data) => {
       // 后台获取区块id后保存id信息
       block.id = data.id
@@ -585,7 +585,7 @@ const createBlock = (block = {}) => {
       useCanvas().setSaved(true)
       // 新建区块成功后需要同步更新画布上的区块数据ctx上下文环境
       useBlock().initBlock(data, {}, true)
-      message({ message: '新建区块成功！', status: 'success' })
+      useNotify({ message: '新建区块成功！!', type: 'success' })
       // 本地生成区块服务
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
@@ -593,6 +593,8 @@ const createBlock = (block = {}) => {
       updateBlockList()
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
+
+      return data
     })
     .catch((error) => {
       message({ message: error.message, status: 'error' })
@@ -622,7 +624,7 @@ const updateBlock = (block = {}) => {
     extraParams.categories = categories
   }
 
-  requestUpdateBlock(
+  return requestUpdateBlock(
     id,
     {
       [nameCn]: block[nameCn],
@@ -651,7 +653,7 @@ const updateBlock = (block = {}) => {
       }
 
       // 弹出保存区块成功
-      useModal().message({ message: '保存区块成功！', status: 'success' })
+      useNotify({ message: '保存区块成功！', type: 'success' })
       // 本地生成区块服务
       if (isVsCodeEnv) {
         generateBlock({ schema: data.content, blockPath: data.path })
@@ -660,6 +662,8 @@ const updateBlock = (block = {}) => {
       // 更新区块分类数据，分类下区块不为空的不能删除
       getCategories()
       useBlock().isRefresh.value = true
+
+      return data
     })
     .catch((error) => {
       useModal().message({ message: error.message, status: 'error' })
@@ -716,14 +720,14 @@ const generateBlockDeps = (children, deps = { scripts: [], styles: new Set() }) 
   return deps
 }
 
-export const saveBlock = async (block) => {
+export const saveBlock = (block) => {
   if (block && validBlockSlotsName(block)) {
     const { scripts, styles } = generateBlockDeps(block.content.children)
 
     block.content.dependencies = { scripts, styles: [...styles] }
 
     const actionPromise = block.id ? updateBlock(block) : createBlock(block)
-    await actionPromise
+    return actionPromise
   }
 }
 
