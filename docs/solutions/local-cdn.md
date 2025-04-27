@@ -2,7 +2,7 @@
 
 ## 概述
 
-本地化CDN是一种在生产环境中将远程CDN资源替换为本地文件的解决方案。它解决了以下问题：
+本地化CDN是一种在生产环境中将远程CDN资源替换为本地文件的解决方案。它具有以下优势：
 
 1. 减少对外部CDN的依赖，提高应用的可靠性
 2. 在离线环境或内网环境中使用CDN资源
@@ -24,6 +24,15 @@ VITE_LOCAL_IMPORT_MAPS=true
 
 # 将物料需要的CDN 资源进行本地化。注意⚠️：这里需要您的物料package需要能够通过 npm 的方式进行下载，否则会失效。
 VITE_LOCAL_BUNDLE_DEPS=true
+
+# 将 VITE_LOCAL_BUNDLE_DEPS 复制到构建产物中的目录名称
+VITE_LOCAL_BUNDLE_PATH=local-cdn-static
+
+# VITE_LOCAL_BUNDLE_DEPS 的完整访问路径，如果 vite.config.js 中 base 配置为 ./，则为 base + 复制的目录名称
+VITE_LOCAL_CDN_PATH=./local-cdn-static
+
+# ⚠️注意：如果 vite.config.js 中 base 不为  ./，则需要加上 base的路径，比如 base 为：http://opentiny.design
+# VITE_LOCAL_CDN_PATH=http://opentiny.design/local-cdn-static
 ```
 
 2. 【可选】 在 `vite.config.js` 中传入自定义配置
@@ -180,11 +189,7 @@ VITE_CDN_DOMAIN=https://unpkg.com
 
 插件会检查所需的依赖包是否已在本地存在，对于不存在或版本不匹配的包，会通过`installPackageTemporary`函数临时安装到指定目录。
 
-### 3. 替换环境变量
-
-通过创建`createEnvReplacementPlugin`插件，将环境变量中的CDN域名替换为本地路径，确保应用在构建时使用本地资源而不是远程CDN。
-
-### 4. 复制并转换文件
+### 3. 复制并转换文件
 
 对于已识别的CDN依赖，插件会：
 
@@ -192,7 +197,7 @@ VITE_CDN_DOMAIN=https://unpkg.com
 - 对JavaScript文件进行路径替换转换 (比如： `import push from './push'` 需要改成 `import push from './push.js'`)
 - 保持目录结构与原始CDN一致
 
-### 5. 处理Bundle文件
+### 4. 处理Bundle文件
 
 `copyBundleDeps`功能专门处理bundle文件中的CDN链接：
 
@@ -202,6 +207,5 @@ VITE_CDN_DOMAIN=https://unpkg.com
 
 ## 注意事项
 
-1. 确保所有需要本地化的CDN依赖在package.json中有相应的版本定义
-2. 本地化CDN会增加构建输出的大小，但会提高应用的可靠性和性能
-3. 某些特定格式的CDN URL可能需要在`copy`中进行特别配置 
+1. 本地化CDN会增加构建输出的大小，但会提高应用的可靠性和性能
+2. 某些特定格式的CDN URL可能需要在`copy`中进行特别配置
