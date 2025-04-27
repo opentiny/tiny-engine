@@ -70,6 +70,7 @@
     - [全局布局API](./api/frontend-api/global-layout-api.md)
     - [物料API](./api/frontend-api/material-api.md)
     - [设置面板API](./api/frontend-api/settings-panel-api.md)
+    - [预览API](./api/frontend-api/preview-api.md)
   - 后端API
     - [AI功能接口](./api/backend-api/ai-function-api.md)
     - [应用管理](./api/backend-api/app-management.md)
