@@ -11,7 +11,7 @@
  */
 
 import { useEnv } from '@opentiny/tiny-engine-meta-register'
-import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap/index'
+import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap'
 
 const importMap = {}
 

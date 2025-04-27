@@ -33,7 +33,7 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: './js/importMap/import-map.json',
+          src: './js/import-map.json',
           dest: '.'
         }
       ]
