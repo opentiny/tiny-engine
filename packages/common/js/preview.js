@@ -122,6 +122,7 @@ const handleSchemaChange = async () => {
   // 如果预览窗口不存在或已关闭，则取消订阅
   if (!previewWindow || previewWindow.closed) {
     cleanupSchemaChangeListener()
+    previewWindow = null
     return
   }
 

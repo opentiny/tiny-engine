@@ -332,6 +332,7 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     previewState.currentPage = params.currentPage
     previewState.ancestors = params.ancestors
 
+    // importMap 发生变化才更新 importMap
     if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
       store.setImportMap(importMapData)
       previewState.importMap = importMapData
