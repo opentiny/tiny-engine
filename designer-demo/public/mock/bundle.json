@@ -10166,7 +10166,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TinyGridColumn"
+            "exportName": "TinyGridColumn",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,

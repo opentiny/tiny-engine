@@ -46,6 +46,7 @@
   - [区块局域网发布方案(Node.js服务端)](./solutions/block-lan-release-solution.md)
   - [设计器中引入第三方组件库](./solutions/third-party-library-in-designer.md)
   - [物料同步方案](./solutions/material-sync-solution.md)
+  - [本地化CDN方案](./solutions/import-map-local.md)
 - 扩展能力介绍
   - [新架构介绍](./extension-capabilities-overview/new-architecture.md)
   - [注册表](./extension-capabilities-overview/registry.md)

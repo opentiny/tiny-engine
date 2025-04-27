@@ -17,6 +17,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const jsEntries = glob.sync('./js/**/*.js').map((file) => {
   return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
@@ -24,7 +25,20 @@ const jsEntries = glob.sync('./js/**/*.js').map((file) => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [generateComments(), vue(), vueJsx()],
+  plugins: [
+    generateComments(),
+    vue(),
+    vueJsx(),
+    // 复制 import-map.json到产物，提供给构建插件读取
+    viteStaticCopy({
+      targets: [
+        {
+          src: './js/import-map.json',
+          dest: '.'
+        }
+      ]
+    })
+  ],
   publicDir: false,
   resolve: {},
   base: './',

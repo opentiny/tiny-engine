@@ -10,7 +10,7 @@ import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import { getBaseUrlFromCli, copyBundleDeps, copyPreviewImportMap } from './localCdnFile/index.js'
+import { getBaseUrlFromCli, copyBundleDeps, importMapLocalPlugin } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
@@ -134,7 +134,12 @@ export function useTinyEngineBaseConfig(engineConfig) {
   const { envDir = '', viteConfigEnv } = engineConfig
   const { command = 'serve', mode = 'serve' } = viteConfigEnv
   const env = loadEnv(mode, envDir)
-  const { VITE_CDN_DOMAIN = 'https://unpkg.com', VITE_LOCAL_IMPORT_MAPS, VITE_LOCAL_BUNDLE_DEPS } = env
+  const {
+    VITE_CDN_DOMAIN = 'https://unpkg.com',
+    VITE_LOCAL_IMPORT_MAPS,
+    VITE_LOCAL_BUNDLE_DEPS,
+    VITE_LOCAL_BUNDLE_PATH
+  } = env
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
   const monacoPublicPath = 'editor/monaco-workers'
@@ -160,21 +165,24 @@ export function useTinyEngineBaseConfig(engineConfig) {
           originCdnPrefix: VITE_CDN_DOMAIN, // mock 中bundle的域名当前和环境的VITE_CDN_DOMAIN一致
           base: getBaseUrlFromCli(config.base)
         }).plugin(command === 'serve')
-      : [],
-    isLocalImportMap
-      ? copyPreviewImportMap({
-          // FIXME: 相对路径需要修正
-          importMapJson: './src/preview/src/preview/importMap.json',
-          targetImportMapJson: 'preview-import-map-static/preview-importmap.json',
-          originCdnPrefix: VITE_CDN_DOMAIN,
-          base: getBaseUrlFromCli(config.base),
-          packageCopyLib: [
-            // 以下的js存在相对路径引用，不能单独拷贝一个文件，需要整个包拷贝
-            '@vue/devtools-api'
-          ]
-        })
       : []
   )
+
+  // 添加本地化CDN插件支持
+  if (isLocalImportMap) {
+    const logger = console
+    logger.log('[local-cdn-plugin]: Initializing local CDN plugin')
+
+    const importMapPlugins = importMapLocalPlugin({
+      importMapLocalConfig: engineConfig.importMapLocalConfig,
+      base: getBaseUrlFromCli(config.base),
+      cdnDir: VITE_LOCAL_BUNDLE_PATH
+    })
+
+    if (importMapPlugins && importMapPlugins.length > 0) {
+      config.plugins.push(...importMapPlugins)
+    }
+  }
 
   config.plugins.push(devAliasPlugin(env, engineConfig.useSourceAlias))
 

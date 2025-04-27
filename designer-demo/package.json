@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env vite",
-    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build --mode alpha",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
+    "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build --mode alpha",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@opentiny/tiny-engine": "workspace:^",
@@ -25,6 +27,7 @@
     "@opentiny/tiny-engine-vite-config": "workspace:^",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vitest": "3.0.9"
   }
 }

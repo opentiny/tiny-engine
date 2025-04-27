@@ -26,9 +26,15 @@ export const copyLocalImportMap = ({
       }
       return getCdnPathNpmInfoForSingleFile(libPath, originCdnPrefix, base, dir, false, bundleTempDir)
     })
+    // 比如 url 前缀跟 originCdnPrefix 不匹配，或者 url 格式不正确 的场景有可能会导致匹配失败
+    // 匹配失败时，会返回 null，需要过滤掉
+    .filter(Boolean)
   const styleFiles = styleUrls
     .filter((styleUrl) => styleUrl.startsWith(originCdnPrefix))
     .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false), bundleTempDir)
+    // 比如 url 前缀跟 originCdnPrefix 不匹配，或者 url 格式不正确 的场景有可能会导致匹配失败
+    // 匹配失败时，会返回 null，需要过滤掉
+    .filter(Boolean)
 
   const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(
     importMapFiles.concat(styleFiles)
