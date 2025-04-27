@@ -72,7 +72,7 @@ describe('localCDN 自定义配置测试', () => {
     const updatedViteConfig = originalViteConfig.replace(
       'const baseConfig = useTinyEngineBaseConfig({',
       `const baseConfig = useTinyEngineBaseConfig({
-    localCdnConfig: {
+    importMapLocalConfig: {
       importMap: { 
         imports: {
           'vue': "\${VITE_CDN_DOMAIN}/vue\${versionDelimiter}3.4.21\${fileDelimiter}/dist/vue.runtime.esm-browser.prod.js"

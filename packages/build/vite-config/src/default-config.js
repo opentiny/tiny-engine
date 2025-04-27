@@ -10,7 +10,7 @@ import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
-import { getBaseUrlFromCli, copyBundleDeps, localCdnPlugin } from './localCdnFile/index.js'
+import { getBaseUrlFromCli, copyBundleDeps, importMapLocalPlugin } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
@@ -173,14 +173,14 @@ export function useTinyEngineBaseConfig(engineConfig) {
     const logger = console
     logger.log('[local-cdn-plugin]: Initializing local CDN plugin')
 
-    const cdnPlugins = localCdnPlugin({
-      localCdnConfig: engineConfig.localCdnConfig,
+    const importMapPlugins = importMapLocalPlugin({
+      importMapLocalConfig: engineConfig.importMapLocalConfig,
       base: getBaseUrlFromCli(config.base),
       cdnDir: VITE_LOCAL_BUNDLE_PATH
     })
 
-    if (cdnPlugins && cdnPlugins.length > 0) {
-      config.plugins.push(...cdnPlugins)
+    if (importMapPlugins && importMapPlugins.length > 0) {
+      config.plugins.push(...importMapPlugins)
     }
   }
 
