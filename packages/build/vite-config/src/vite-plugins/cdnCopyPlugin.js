@@ -69,8 +69,6 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
       // 确保目标目录存在
       await fs.ensureDir(path.dirname(fullDestPath))
 
-      logger.log(`[vite-cdn-copy-plugin]: Copying from ${srcPath} to ${fullDestPath}`)
-
       if (isDirectory) {
         // 如果是目录，使用 fast-glob 遍历所有文件并处理
         logger.log(`[vite-cdn-copy-plugin]: Copying directory recursively: ${srcPath} -> ${fullDestPath}`)
@@ -99,8 +97,6 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
 
         await copyFile(srcPath, finalDestPath)
       }
-
-      logger.log(`[vite-cdn-copy-plugin]: Successfully copied: ${srcPath} -> ${fullDestPath}`)
     } catch (err) {
       logger.error(`[vite-cdn-copy-plugin]: Failed to copy ${srcPath} to ${fullDestPath}`, err)
     }

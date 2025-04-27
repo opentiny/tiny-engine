@@ -25,6 +25,15 @@ const defaultCopyConfig = {
 
 /**
  * 从importMapUrl字符串中提取包名、版本和文件路径
+ * ${versionDelimiter} 和 ${fileDelimiter} 是默认的 importMapUrl 中的占位符，
+ * 例如：
+ * importMapUrl = '${VITE_CDN_DOMAIN}/${packageName}${versionDelimiter}${version}${fileDelimiter}${filePath}'
+ * 提取的信息对象：
+ * {
+ *   packageName: '${packageName}',
+ *   version: '${version}',
+ *   filePathInPackage: '${filePath}'
+ * }
  * @param {string} str - 导入字符串
  * @returns {Object} - 提取的信息对象
  * @returns {string} packageName - 包名
@@ -43,7 +52,7 @@ function extractInfo(str) {
       filePathInPackage: filePath || '/'
     }
   } catch (error) {
-    logger.error(`[local-cdn-plugin]: Failed to extract info from ${str} 提取 importMap 信息失败`, error)
+    logger.error(`[import-map-local-plugin]: Failed to extract info from ${str} 提取 importMap 信息失败`, error)
   }
 }
 
@@ -130,22 +139,41 @@ function getCdnPathNpmInfo(
 /**
  * 本地化CDN插件
  * @param {Object} options - 配置选项
- * @param {Object} options.localCdnConfig - 本地CDN配置
- * @param {Object} options.localCdnConfig.importMap - 导入映射配置，定义需要本地化的CDN依赖
- * @param {Object} options.localCdnConfig.copy - 自定义复制配置，可以覆盖特定包的默认配置
+ * @param {Object} options.importMapLocalConfig - 本地CDN配置
+ * @param {Object} options.importMapLocalConfig.importMap - 导入映射配置，定义需要本地化的CDN依赖
+ * @param {Object} options.importMapLocalConfig.copy - 自定义复制配置，可以覆盖特定包的默认配置
  * @param {string} options.base - 构建的base URL
  * @param {string} options.cdnDir - 构建目录中的CDN文件夹名称
  * @param {string} options.bundleTempDir - 临时存放下载的包的目录
  * @returns {Array} - Vite插件数组
  */
-export function localCdnPlugin({
-  localCdnConfig = { importMap: { imports: {} }, copy: {} },
+export function importMapLocalPlugin({
+  importMapLocalConfig = { importMap: { imports: {} }, copy: {} },
   base = './',
   cdnDir = 'local-cdn-static', // 构建目录中的CDN文件夹名称
   bundleTempDir = 'bundle-deps/local-cdn' // 临时存放下载的包的目录
 }) {
-  const importMapConfig = localCdnConfig.importMap || { imports: {} }
-  const copyConfig = localCdnConfig.copy || {}
+  let importMapConfig = importMapLocalConfig.importMap
+
+  if (!importMapConfig || typeof importMapConfig !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid importMapLocalConfig, using defaults')
+
+    importMapConfig = { imports: {}, copy: {} }
+  }
+
+  if (!importMapConfig.imports || typeof importMapConfig.imports !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid importMapConfig, using defaults')
+
+    importMapConfig.imports = {}
+  }
+
+  if (!importMapConfig.copy || typeof importMapConfig.copy !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid copyConfig, using defaults')
+
+    importMapConfig.copy = {}
+  }
+
+  const copyConfig = importMapConfig.copy || {}
   const defaultImportMapConfig = JSON.parse(
     fs.readFileSync(path.resolve(process.cwd(), './node_modules/@opentiny/tiny-engine/dist/import-map.json'), 'utf-8')
   )
@@ -157,7 +185,7 @@ export function localCdnPlugin({
   const combinedImportMapConfig = [...overriddenImportMap, ...parsedImportMapConfig]
 
   if (combinedImportMapConfig.length === 0) {
-    logger.warn('[local-cdn-plugin]: No CDN dependencies found or configured')
+    logger.warn('[import-map-local-plugin]: No CDN dependencies found or configured')
     return []
   }
   const combinedCopyConfig = { ...defaultCopyConfig, ...copyConfig }
@@ -181,9 +209,9 @@ export function localCdnPlugin({
 
   // 日志一下将要处理的内容
   logger.log(
-    `[local-cdn-plugin]: Processing ${combinedImportMapConfig.length} CDN dependencies to local directory: ${cdnDir}`
+    `[import-map-local-plugin]: Processing ${combinedImportMapConfig.length} CDN dependencies to local directory: ${cdnDir}`
   )
-  logger.log(`[local-cdn-plugin]: Need to install ${packageNeedToInstall.length} packages`)
+  logger.log(`[import-map-local-plugin]: Need to install ${packageNeedToInstall.length} packages`)
 
   const targetFiles = dedupeCopyFiles(cdnFiles)
   // 返回插件数组
