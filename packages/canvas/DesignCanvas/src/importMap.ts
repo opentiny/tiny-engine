@@ -1,5 +1,5 @@
 import { useEnv, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
-import { importMapConfig } from '@opentiny/tiny-engine-common/js/importMap/index'
+import { importMapConfig } from '@opentiny/tiny-engine-common/js/importMap'
 
 const getImportUrl = (pkgName: string) => {
   // 自定义的 importMap
