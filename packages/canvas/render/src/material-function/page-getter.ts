@@ -88,6 +88,6 @@ export async function getPageAncestors(pageId?: string) {
     // 如果不支持查询祖先 则返回自己
     return [pageId]
   }
-  const pageChain = await getController().getPageAncestors(pageId)
+  const pageChain = (await getController().getPageAncestors(pageId)) || []
   return [...pageChain.map((id: number | string) => String(id)), pageId]
 }

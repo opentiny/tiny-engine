@@ -132,7 +132,7 @@ export default {
       return familyPages
     }
 
-    const genAllBlocks = async (ancestors) => {
+    const genAllBlocks = async (ancestors = []) => {
       // blockSet 是为了防止重复出码同样的区块，同名区块只出码一遍
       const blockSet = new Set()
       const promises = ancestors.map((item) => getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet))
