@@ -25,7 +25,7 @@ initPreview({
       id: 'engine.root',
       metas: [HttpService, GenerateCodeService]
     },
-    config: { id: 'engine.config', theme: 'light', previewHotReload: false },
+    config: { id: 'engine.config', theme: 'light' },
     toolbars: [Breadcrumb, Media, Lang]
   },
   lifeCycles: {
