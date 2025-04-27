@@ -136,6 +136,30 @@ function getCdnPathNpmInfo(
   }
 }
 
+function parseImportMapLocalConfig(importMapLocalConfig) {
+  let parsedImportMapLocalConfig = importMapLocalConfig
+
+  if (!parsedImportMapLocalConfig || typeof parsedImportMapLocalConfig !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid importMapLocalConfig, using defaults')
+
+    parsedImportMapLocalConfig = { importMap: { imports: {} }, copy: {} }
+  }
+
+  if (!parsedImportMapLocalConfig.importMap || typeof parsedImportMapLocalConfig.importMap !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid importMapConfig, using defaults')
+
+    parsedImportMapLocalConfig.importMap = { imports: {} }
+  }
+
+  if (!parsedImportMapLocalConfig.copy || typeof parsedImportMapLocalConfig.copy !== 'object') {
+    logger.warn('[import-map-local-plugin]: Invalid copyConfig, using defaults')
+
+    parsedImportMapLocalConfig.copy = {}
+  }
+
+  return parsedImportMapLocalConfig
+}
+
 /**
  * 本地化CDN插件
  * @param {Object} options - 配置选项
@@ -153,32 +177,18 @@ export function importMapLocalPlugin({
   cdnDir = 'local-cdn-static', // 构建目录中的CDN文件夹名称
   bundleTempDir = 'bundle-deps/local-cdn' // 临时存放下载的包的目录
 }) {
-  let importMapConfig = importMapLocalConfig.importMap
+  let parsedImportMapLocalConfig = parseImportMapLocalConfig(importMapLocalConfig)
 
-  if (!importMapConfig || typeof importMapConfig !== 'object') {
-    logger.warn('[import-map-local-plugin]: Invalid importMapLocalConfig, using defaults')
-
-    importMapConfig = { imports: {}, copy: {} }
-  }
-
-  if (!importMapConfig.imports || typeof importMapConfig.imports !== 'object') {
-    logger.warn('[import-map-local-plugin]: Invalid importMapConfig, using defaults')
-
-    importMapConfig.imports = {}
-  }
-
-  if (!importMapConfig.copy || typeof importMapConfig.copy !== 'object') {
-    logger.warn('[import-map-local-plugin]: Invalid copyConfig, using defaults')
-
-    importMapConfig.copy = {}
-  }
-
-  const copyConfig = importMapConfig.copy || {}
+  const copyConfig = parsedImportMapLocalConfig.copy || {}
   const defaultImportMapConfig = JSON.parse(
     fs.readFileSync(path.resolve(process.cwd(), './node_modules/@opentiny/tiny-engine/dist/import-map.json'), 'utf-8')
   )
-  const parsedDefaultImportMapConfig = Object.values(defaultImportMapConfig.imports).map((item) => extractInfo(item))
-  const parsedImportMapConfig = Object.values(importMapConfig.imports).map((item) => extractInfo(item))
+  const parsedDefaultImportMapConfig = Object.values(defaultImportMapConfig.imports)
+    .map((item) => extractInfo(item))
+    .filter(Boolean)
+  const parsedImportMapConfig = Object.values(parsedImportMapLocalConfig.importMap.imports)
+    .map((item) => extractInfo(item))
+    .filter(Boolean)
   const overriddenImportMap = parsedDefaultImportMapConfig.filter((item) => {
     return !parsedImportMapConfig.find((parsedItem) => parsedItem.packageName === item.packageName)
   })
