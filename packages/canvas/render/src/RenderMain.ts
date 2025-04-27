@@ -29,7 +29,7 @@ import CanvasEmpty from './canvas-function/CanvasEmpty.vue'
 import { setCurrentPage } from './canvas-function/page-switcher'
 import { useThrottleFn } from '@vueuse/core'
 import { useRouterPreview } from './canvas-function/router-preview'
-
+import { constants } from '@opentiny/tiny-engine-utils'
 // global-context singleton
 const { context: globalContext, setContext: setGlobalContext } = useContext()
 const { refreshKey, utils, getUtils, setUtils } = useUtils(globalContext)
@@ -219,7 +219,7 @@ export default defineComponent({
         subscriber: 'canvasRenderer',
         callback: () => {
           const schema = window.host.getSchema()
-          if (schema.componentName === 'Block') {
+          if (schema.componentName === constants.COMPONENT_NAME.Block) {
             pageContext.pageId = ''
             updatePageAncestor()
           }
