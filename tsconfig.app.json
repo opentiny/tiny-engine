@@ -43,7 +43,6 @@
       "@opentiny/tiny-engine-toolbar-fullscreen": ["packages/toolbars/fullscreen/index"],
       "@opentiny/tiny-engine-toolbar-generate-code": ["packages/toolbars/generate-code/index"],
       "@opentiny/tiny-engine-toolbar-lang": ["packages/toolbars/lang/index"],
-      "@opentiny/tiny-engine-toolbar-layout": ["packages/toolbars/layout/index"],
       "@opentiny/tiny-engine-toolbar-lock": ["packages/toolbars/lock/index"],
       "@opentiny/tiny-engine-toolbar-logo": ["packages/toolbars/logo/index"],
       "@opentiny/tiny-engine-toolbar-media": ["packages/toolbars/media/index"],

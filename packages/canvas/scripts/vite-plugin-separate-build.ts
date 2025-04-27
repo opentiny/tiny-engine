@@ -5,7 +5,7 @@ const queryRE = /[?#].*$/
 
 const bundleCache = new WeakMap()
 
-function cleanUrl(url) {
+function cleanUrl(url: string) {
   return url.replace(queryRE, '')
 }
 function saveEmitBundleAssets(config, asset) {
@@ -98,10 +98,7 @@ export async function vitePluginBuildEntry(customBuildConfig) {
       if (config.needAsset) {
         return `export default ${JSON.stringify('./assets/canvas.js')}\n`
       } else {
-        const formatBase64 = (code) => {
-          return 'data:text/javascript;base64,' + Buffer.from(code).toString('base64')
-        }
-        return `export default ${JSON.stringify(formatBase64(code))}\n`
+        return `export default ${JSON.stringify(code)}`
       }
     },
     generateBundle(opts, bundle) {

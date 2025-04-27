@@ -20,7 +20,7 @@ import {
   NODE_LOOP,
   NODE_INACTIVE_UID
 } from '../../common'
-import { useCanvas, useLayout, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useTranslate, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
@@ -44,10 +44,13 @@ export const POSITION = Object.freeze({
   LEFT: 'left',
   RIGHT: 'right',
   IN: 'in',
-  OUT: 'out'
-})
+  OUT: 'out',
+  REPLACE: 'replace'
+} as const)
 
-const initialDragState = {
+export type PositionType = typeof POSITION[keyof typeof POSITION]
+
+export const initialDragState = {
   keydown: false,
   draging: false,
   data: null as Node | null,
@@ -309,6 +312,24 @@ const insertAfter = ({ parent, node, data }: InsertOptions) => {
   })
 }
 
+const insertReplace = ({ parent, node, data }: InsertOptions) => {
+  if (!data.id) {
+    data.id = utils.guid()
+  }
+
+  const nodeIndex = parent.children?.findIndex((child) => child.id === node.id)
+
+  if (nodeIndex !== -1 && nodeIndex !== undefined) {
+    useCanvas().operateNode({
+      type: 'insert',
+      parentId: parent.id || '',
+      newNodeData: data,
+      position: 'replace',
+      referTargetNodeId: node.id
+    })
+  }
+}
+
 const insertBefore = ({ parent, node, data }: InsertOptions) => {
   if (!data.id) {
     data.id = utils.guid()
@@ -506,7 +527,7 @@ export const allowInsert = (configure: any = hoverState.configure || {}, data: N
   return flag
 }
 
-const isAncestor = (ancestor: string | Node, descendant: string | Node) => {
+export const isAncestor = (ancestor: string | Node, descendant: string | Node) => {
   const ancestorId = typeof ancestor === 'string' ? ancestor : ancestor.id
   let descendantId = typeof descendant === 'string' ? descendant : descendant.id
 
@@ -622,8 +643,6 @@ const setHoverRect = (element?: Element, data?: Node | null) => {
         forbidden: posLine.forbidden
       })
     }
-
-    useLayout().closePlugin()
   }
 
   // 设置元素hover状态
@@ -848,7 +867,7 @@ export const hoverNode = (id: string, data: Node) => {
 
 export const insertNode = (
   node: { node: Node; parent: Node; data: Node },
-  position: string = POSITION.IN,
+  position: PositionType = POSITION.IN,
   select = true
 ) => {
   if (!node.parent) {
@@ -868,6 +887,9 @@ export const insertNode = (
         break
       case POSITION.OUT:
         insertContainer(node)
+        break
+      case POSITION.REPLACE:
+        insertReplace(node)
         break
       default:
         insertInner(node)
