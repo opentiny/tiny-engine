@@ -1,5 +1,6 @@
 import path from 'node:path'
 import fs from 'fs-extra'
+import semver from 'semver'
 import { installPackageTemporary } from '../vite-plugins/installPackageTemporary.js'
 import { copyPlugin } from '../vite-plugins/cdnCopyPlugin.js'
 import { dedupeCopyFiles } from './locateCdnNpmInfo.js'
@@ -57,17 +58,7 @@ const compareIsSameVersion = (versionOrigin, versionTarget) => {
     return true
   }
 
-  if (versionOrigin.startsWith('^')) {
-    // 如果源版本号是 ^ 开头，则只比较第一个数字是否相同
-    return versionOrigin.slice(1, 2) === versionTarget.slice(0, 1)
-  }
-
-  if (versionOrigin.startsWith('~')) {
-    // 如果源版本号是 ~ 开头，则只比较前两个数字是否相同
-    return versionOrigin.slice(1, 3) === versionTarget.slice(0, 3)
-  }
-
-  return false
+  return semver.satisfies(versionTarget, versionOrigin)
 }
 
 function getCdnPathNpmInfo(
