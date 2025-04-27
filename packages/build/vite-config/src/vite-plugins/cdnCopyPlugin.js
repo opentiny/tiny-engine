@@ -4,20 +4,36 @@ import fg from 'fast-glob'
 import { babelReplaceImportPathWithCertainFileName } from '../localCdnFile/replaceImportPath.mjs'
 
 /**
- * 对文件内容进行转换处理
+ * 对.js和.mjs文件内容进行转换处理，将import路径如 import { a } from './b' 转换为 import { a} from './b.js'
  * @param {string} content - 文件内容
  * @param {string} filename - 文件名
  * @returns {string} - 处理后的内容
  */
 function replaceJsImportPaths(content, filename) {
-  if (filename.endsWith('.js')) {
-    const result = babelReplaceImportPathWithCertainFileName(content, filename, console)
-    return result.code || content
-  }
-  return content
+  const result = babelReplaceImportPathWithCertainFileName(content, filename, console)
+
+  return result.code || content
 }
 
 const logger = console
+
+async function copyFile(srcPath, destPath) {
+  // 确保目标文件的目录存在
+  await fs.ensureDir(path.dirname(destPath))
+
+  if (srcPath.endsWith('.js') || srcPath.endsWith('.mjs')) {
+    // 读取文件内容
+    const content = await fs.readFile(srcPath, 'utf-8')
+
+    // 应用转换
+    const transformedContent = replaceJsImportPaths(content, srcPath)
+    // 写入转换后的内容
+    await fs.writeFile(destPath, transformedContent)
+  } else {
+    // 复制文件
+    await fs.copyFile(srcPath, destPath)
+  }
+}
 
 /**
  * 复制文件或目录到目标路径
@@ -73,17 +89,7 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
           const relativePath = path.relative(absoluteSrcPath, file)
           const destFilePath = path.join(fullDestPath, relativePath)
 
-          // 确保目标文件的目录存在
-          await fs.ensureDir(path.dirname(destFilePath))
-
-          // 读取文件内容
-          const content = await fs.readFile(file, 'utf-8')
-
-          // 应用转换
-          const transformedContent = replaceJsImportPaths(content, file)
-
-          // 写入转换后的内容
-          await fs.writeFile(destFilePath, transformedContent)
+          await copyFile(file, destFilePath)
         }
       } else {
         // 如果是单个文件
@@ -91,17 +97,7 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
 
         let finalDestPath = path.join(fullDestPath, path.basename(srcPath))
 
-        // 确保目标文件的目录存在
-        await fs.ensureDir(path.dirname(finalDestPath))
-
-        // 读取文件内容
-        const content = await fs.readFile(srcPath, 'utf-8')
-
-        // 应用转换
-        const transformedContent = replaceJsImportPaths(content, srcPath)
-
-        // 写入转换后的内容
-        await fs.writeFile(finalDestPath, transformedContent)
+        await copyFile(srcPath, finalDestPath)
       }
 
       logger.log(`[vite-cdn-copy-plugin]: Successfully copied: ${srcPath} -> ${fullDestPath}`)
