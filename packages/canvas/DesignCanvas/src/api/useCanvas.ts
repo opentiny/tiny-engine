@@ -221,11 +221,11 @@ const setSaved = (flag = false) => {
 const clearCanvas = () => {
   pageState.properties = null
 
+  const { currentPage: page } = pageState
   const { fileName, componentName } = pageState.pageSchema || {}
-
-  resetCanvasState({
-    pageSchema: { ...deepClone(getDefaultSchema(componentName, fileName)) }
-  })
+  const pageSchema = { ...deepClone(getDefaultSchema(componentName, fileName)) }
+  const currentPage = page ? { ...page, page_content: pageSchema } : null
+  resetCanvasState({ currentPage, pageSchema })
 
   setSaved(false)
 
