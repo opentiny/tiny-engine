@@ -23,6 +23,20 @@ const getImportUrl = (pkgName: string) => {
   }
 }
 
+// 获取样式文件的URL，后续去除物料内置逻辑之后，需要用户自行引入，相关逻辑也需要同步删除
+const getImportStyleUrl = (pkgName: string) => {
+  const { VITE_CDN_TYPE, VITE_CDN_DOMAIN, VITE_LOCAL_CDN_PATH } = useEnv()
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !VITE_LOCAL_CDN_PATH ? '/files' : ''
+
+  if (importMapConfig.importStyles[pkgName]) {
+    return importMapConfig.importStyles[pkgName]
+      .replace('${VITE_CDN_DOMAIN}', VITE_LOCAL_CDN_PATH || VITE_CDN_DOMAIN)
+      .replace('${versionDelimiter}', versionDelimiter)
+      .replace('${fileDelimiter}', fileDelimiter)
+  }
+}
+
 export function getImportMapData(canvasDeps = { scripts: [], styles: [] }) {
   // 以下内容由于区块WebComponent加载需要补充
   const blockRequire = {
@@ -32,7 +46,7 @@ export function getImportMapData(canvasDeps = { scripts: [], styles: [] }) {
       '@opentiny/vue-icon': getImportUrl('@opentiny/vue-icon'),
       '@opentiny/tiny-engine-builtin-component': getImportUrl('@opentiny/tiny-engine-builtin-component')
     },
-    importStyles: []
+    importStyles: [getImportStyleUrl('@opentiny/vue-theme')]
   }
 
   // 以下内容由于物料协议不支持声明子依赖而@opentiny/vue需要依赖所以需要补充

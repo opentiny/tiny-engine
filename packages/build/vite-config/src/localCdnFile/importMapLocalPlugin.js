@@ -189,10 +189,14 @@ export function importMapLocalPlugin({
   const parsedImportMapConfig = Object.values(parsedImportMapLocalConfig.importMap.imports)
     .map((item) => extractInfo(item))
     .filter(Boolean)
+  // 处理内置的物料样式，后续不再内置物料后，需要用户自行引入，相关逻辑也需要同步删除
+  const parsedImportMapStylesConfig = Object.values(defaultImportMapConfig.importStyles || {})
+    .map((item) => extractInfo(item))
+    .filter(Boolean)
   const overriddenImportMap = parsedDefaultImportMapConfig.filter((item) => {
     return !parsedImportMapConfig.find((parsedItem) => parsedItem.packageName === item.packageName)
   })
-  const combinedImportMapConfig = [...overriddenImportMap, ...parsedImportMapConfig]
+  const combinedImportMapConfig = [...overriddenImportMap, ...parsedImportMapConfig, ...parsedImportMapStylesConfig]
 
   if (combinedImportMapConfig.length === 0) {
     logger.warn('[import-map-local-plugin]: No CDN dependencies found or configured')
