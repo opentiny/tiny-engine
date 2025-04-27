@@ -13675,7 +13675,7 @@
               "schema": {
                 "componentName": "TinyTransfer",
                 "props": {
-                  "modelValue": [],
+                  "modelValue": [3],
                   "data": [
                     {
                       "key": 1,
