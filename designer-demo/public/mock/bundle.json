@@ -13680,21 +13680,22 @@
                     {
                       "key": 1,
                       "label": "备选项1",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 2,
                       "label": "备选项2",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 3,
                       "label": "备选项3",
-                      "disabled":false
-                    }, {
+                      "disabled": false
+                    },
+                    {
                       "key": 4,
                       "label": "备选项4",
-                      "disabled":false
+                      "disabled": false
                     }
                   ]
                 }
