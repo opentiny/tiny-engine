@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename)
 const templateSrcPath = path.resolve(__dirname, '../designer-demo')
 const templateDistPath = path.resolve(__dirname, '../packages/engine-cli/template/designer')
 
-const ignoreFolder = ['node_modules', 'dist', 'temp', 'tmp']
+const ignoreFolder = ['node_modules', 'dist', 'temp', 'tmp', 'vitest.config.js', 'tests', 'bundle-deps']
 
 const filter = (src, _dest) => {
   if (ignoreFolder.some((item) => src.includes(item))) {
