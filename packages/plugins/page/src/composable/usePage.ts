@@ -463,9 +463,11 @@ const switchPageWithConfirm = (pageId: string, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (page: { id: any; page_content: any }, currentPage: { id: string; pageInfo?: any }) => {
-  if (currentPage.id && currentPage.pageInfo?.schema && page.id === currentPage.id) {
-    page.page_content = currentPage.pageInfo?.schema
+const updatePageContent = (familyPages: { id: any; page_content: any }[], currentPage: { id: string; page_content?: any }) => {
+  const currentPageSchema = familyPages.find((item) => item.id === currentPage.id)
+  // 替换为当前页面最新的 schema
+  if (currentPageSchema) {
+    currentPageSchema.page_content = currentPage.page_content
   }
 }
 
@@ -487,13 +489,12 @@ const updateParentId = (page: { parentId: any }, pages: any[], index: number, RO
   }
 }
 
-const handlePageDetail = async (pages: any[], currentPage: { id: string }) => {
+const handlePageDetail = async (pages: any[]) => {
   const { ROOT_ID } = pageSettingState
 
   if (pages.length > 0) {
     await Promise.all(
       pages.map(async (page, index) => {
-        updatePageContent(page, currentPage)
         await fetchPageDetailIfNeeded(page)
         updateParentId(page, pages, index, ROOT_ID)
       })
@@ -501,16 +502,31 @@ const handlePageDetail = async (pages: any[], currentPage: { id: string }) => {
   }
 }
 
-const getFamily = async (previewParams: { id: string }) => {
+const getFamily = async (currentPage: { id: string }) => {
   if (pageSettingState.pages.length === 0) {
     await getPageList()
   }
 
-  const familyPages = getAncestorsRecursively(previewParams.id)
+  const familyPages = getAncestorsRecursively(currentPage.id)
     .filter((item) => item.isPage)
     .reverse()
+    .map((item) => ({
+      id: item.id,
+      page_content: item.page_content,
+      name: item.name,
+      parentId: item.parentId,
+      route: item.route,
+      isPage: item.isPage,
+      isBody: item.isBody,
+      isHome: item.isHome,
+      group: item.group,
+      isDefault: item.isDefault,
+      depth: item.depth
+    }))
 
-  await handlePageDetail(familyPages, previewParams)
+  await handlePageDetail(familyPages)
+
+  updatePageContent(familyPages, currentPage)
 
   return familyPages
 }

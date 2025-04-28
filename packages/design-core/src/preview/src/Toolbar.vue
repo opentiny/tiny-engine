@@ -14,11 +14,13 @@
 </template>
 
 <script lang="jsx">
+import { watch } from 'vue'
 import { useBreadcrumb, getMergeRegistry, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { Switch as TinySwitch } from '@opentiny/vue'
-import { getSearchParams } from './preview/http'
+import { constants } from '@opentiny/tiny-engine-utils'
 import { BROADCAST_CHANNEL } from '../src/preview/srcFiles/constant'
 import { injectDebugSwitch } from './preview/debugSwitch'
+import { previewState } from './preview/usePreviewData'
 
 export default {
   components: {
@@ -30,10 +32,18 @@ export default {
     const ChangeLang = getMergeRegistry('toolbars', 'engine.toolbars.lang')?.entry
     const langOptions = getMergeMeta('engine.toolbars.lang').options
     const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
+    const { setBreadcrumbPage, setBreadcrumbBlock } = useBreadcrumb()
 
-    const { setBreadcrumbPage } = useBreadcrumb()
-    const { pageInfo } = getSearchParams()
-    setBreadcrumbPage([pageInfo?.name])
+    watch(
+      () => previewState.currentPage,
+      (newVal) => {
+        if (newVal?.page_content?.componentName === constants.COMPONENT_NAME.Block) {
+          setBreadcrumbBlock([newVal?.name_cn || newVal?.page_content?.fileName])
+        } else {
+          setBreadcrumbPage([newVal?.name])
+        }
+      }
+    )
 
     const setViewPort = (item) => {
       const iframe = document.getElementsByClassName('iframe-container')[0]
