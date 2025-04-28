@@ -39,6 +39,7 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
+    "@vueuse/core": "^9.6.0",
     "axios": "~0.28.0",
     "css-tree": "^2.3.1",
     "eslint-linter-browserify": "8.57.0",
@@ -50,7 +51,6 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "@vueuse/core": "^9.6.0",
     "glob": "^10.3.4",
     "vite": "^5.4.2"
   },

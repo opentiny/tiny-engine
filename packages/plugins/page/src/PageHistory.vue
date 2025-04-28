@@ -7,7 +7,6 @@ import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { usePage, useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { fetchPageHistory } from './http'
 
 export default {
@@ -54,20 +53,13 @@ export default {
 
     const previewHistory = async (item) => {
       if (item) {
-        const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
         const params = {
+          ...item,
           id: Number(item.page),
-          history: item.id,
-          framework: getMergeMeta('engine.config')?.dslMode,
-          platform: getMergeMeta('engine.config')?.platformId,
-          pageInfo: {
-            name: item.name,
-            schema: item.page_content
-          },
-          theme
+          history: item.id
         }
         params.ancestors = await getFamily(params)
-        previewPage(params)
+        previewPage(params, true)
       }
     }
 

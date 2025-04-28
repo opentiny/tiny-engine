@@ -125,7 +125,8 @@
                 { "title": "画布API", "name": "canvas-api.md" },
                 { "title": "全局布局API", "name": "global-layout-api.md" },
                 { "title": "物料API", "name": "material-api.md" },
-                { "title": "设置面板API", "name": "settings-panel-api.md" }
+                { "title": "设置面板API", "name": "settings-panel-api.md" },
+                { "title": "预览API", "name": "preview-api.md" }
               ]
             },
             {
