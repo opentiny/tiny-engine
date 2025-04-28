@@ -44,23 +44,16 @@
 另外还给大纲树补充了几个其他常用的快捷键，具体看如下表格
 
 
-<table>
-  <thead class="ant-table-thead">
-    <tr>
-      <th key=name>大纲树支持的快捷键</th><th key=type>功能说明</th><th key=required>支持多选</th>
-    </tr>
-  </thead>
-  <tbody className="ant-table-tbody">
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+鼠标点击</span></td><td key=1><span>选择多个节点。如点击已选中节点后，则为取消选中</span></td><td key=2>否</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+c</span></td><td key=1><span>复制节点</span></td><td key=2>是</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+v</span></td><td key=1><span>粘贴节点</span></td><td key=2>是</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+x</span></td><td key=1><span>剪切节点</span></td><td key=2>是</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> delete</span></td><td key=1><span>删除节点</span></td><td key=2>是</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+z</span></td><td key=1><span>撤销历史记录</span></td><td key=2>否</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+y</span></td><td key=1><span>回退历史记录</span></td><td key=2>否</td></tr>
-      <tr key=0-0><td key=0><span style="padding-left: 0px"><span style="color: #8c8a8a"></span> ctrl+s</span></td><td key=1><span>保存页面schema</span></td><td key=2>否</td></tr>
-   </tbody>
-</table>
+| 大纲树支持的快捷键  | 功能说明 | 支持多选 |
+| --------- | -------- | ------------- |
+| ctrl+鼠标点击 | 选择多个节点。如点击已选中节点后，则为取消选中       | 否 |
+| ctrl+c       | 复制节点           | 是 |
+| ctrl+v       | 粘贴节点           | 是 |
+| ctrl+x       | 剪切节点           | 是 |
+| delete       | 删除节点           | 是 |
+| ctrl+z       | 撤销历史记录       | 否 |
+| ctrl+y       | 回退历史记录       | 否 |
+| ctrl+s       | 保存页面schema     | 否 |
 
 
 
