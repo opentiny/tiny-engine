@@ -67,8 +67,8 @@ export default defineConfig({
     'import.meta.env.VITE_CDN_DOMAIN': 'import.meta.env.VITE_CDN_DOMAIN',
     'import.meta.env.VITE_API_MOCK': 'import.meta.env.VITE_API_MOCK',
     'import.meta.env.VITE_CDN_TYPE': 'import.meta.env.VITE_CDN_TYPE',
-    'import.meta.env.VITE_LOCAL_BUNDLE_PATH': 'import.meta.env.VITE_LOCAL_BUNDLE_PATH',
-    'import.meta.env.VITE_LOCAL_BUNDLE_DEPS': 'import.meta.env.VITE_LOCAL_BUNDLE_DEPS'
+    'import.meta.env.VITE_LOCAL_IMPORT_PATH': 'import.meta.env.VITE_LOCAL_IMPORT_PATH',
+    'import.meta.env.VITE_LOCAL_IMPORT_MAPS': 'import.meta.env.VITE_LOCAL_IMPORT_MAPS'
   },
   build: {
     commonjsOptions: {

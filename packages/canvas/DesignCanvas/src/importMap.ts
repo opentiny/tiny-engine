@@ -7,14 +7,14 @@ const getImportUrl = (pkgName: string) => {
   const {
     VITE_CDN_TYPE,
     VITE_CDN_DOMAIN,
-    VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static',
+    VITE_LOCAL_IMPORT_PATH = 'local-cdn-static',
     BASE_URL,
-    VITE_LOCAL_BUNDLE_DEPS
+    VITE_LOCAL_IMPORT_MAPS
   } = useEnv()
-  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
   const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
   const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
-  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
 
   if (customImportMap?.imports?.[pkgName]) {
     return customImportMap.imports[pkgName]
@@ -36,14 +36,14 @@ const getImportStyleUrl = (pkgName: string) => {
   const {
     VITE_CDN_TYPE,
     VITE_CDN_DOMAIN,
-    VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static',
+    VITE_LOCAL_IMPORT_PATH = 'local-cdn-static',
     BASE_URL,
-    VITE_LOCAL_BUNDLE_DEPS
+    VITE_LOCAL_IMPORT_MAPS
   } = useEnv()
-  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
   const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
   const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
-  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
 
   if (importMapConfig.importStyles[pkgName]) {
     return importMapConfig.importStyles[pkgName]

@@ -33,7 +33,7 @@ VITE_LOCAL_IMPORT_MAPS=true
 VITE_LOCAL_BUNDLE_DEPS=true
 
 # 定义本地化资源存放目录，默认为 local-cdn-static
-VITE_LOCAL_BUNDLE_PATH=local-cdn-static
+VITE_LOCAL_IMPORT_PATH=local-cdn-static
 ```
 
 2. 【可选】 在 `vite.config.js` 中传入自定义配置

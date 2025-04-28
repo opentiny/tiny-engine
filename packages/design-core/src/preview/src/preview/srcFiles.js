@@ -26,7 +26,7 @@ import storesJS from './srcFiles/stores.js?raw'
 import storesHelperJS from './srcFiles/storesHelper.js?raw'
 
 const srcFiles = {}
-const isLocalBundle = import.meta.env.VITE_LOCAL_BUNDLE_DEPS === 'true'
+const isLocalBundle = import.meta.env.VITE_LOCAL_IMPORT_MAPS === 'true'
 const versionDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
 const fileDelimiter = import.meta.env.VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
 
@@ -37,7 +37,7 @@ srcFiles['app.js'] = appJS
   .replaceAll(
     '${VITE_CDN_DOMAIN}',
     isLocalBundle
-      ? import.meta.env.BASE_URL + (import.meta.env.VITE_LOCAL_BUNDLE_PATH || 'local-cdn-static')
+      ? import.meta.env.BASE_URL + (import.meta.env.VITE_LOCAL_IMPORT_PATH || 'local-cdn-static')
       : import.meta.env.VITE_CDN_DOMAIN
   )
   .replaceAll('${versionDelimiter}', versionDelimiter)
@@ -54,8 +54,8 @@ srcFiles['stores.js'] = storesJS
 srcFiles['storesHelper.js'] = storesHelperJS
 
 export const genPreviewTemplate = () => {
-  const { VITE_CDN_DOMAIN, VITE_LOCAL_BUNDLE_PATH = 'local-cdn-static', BASE_URL, VITE_LOCAL_BUNDLE_DEPS } = useEnv()
-  const isLocalBundle = VITE_LOCAL_BUNDLE_DEPS === 'true'
+  const { VITE_CDN_DOMAIN, VITE_LOCAL_IMPORT_PATH = 'local-cdn-static', BASE_URL, VITE_LOCAL_IMPORT_MAPS } = useEnv()
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
 
   return [
     {
@@ -73,7 +73,7 @@ export const genPreviewTemplate = () => {
       path: '',
       fileContent: appJS.replace(
         /VITE_CDN_DOMAIN/g,
-        isLocalBundle ? BASE_URL + VITE_LOCAL_BUNDLE_PATH : VITE_CDN_DOMAIN
+        isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
       )
     },
     {

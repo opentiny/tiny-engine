@@ -138,7 +138,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
     VITE_CDN_DOMAIN = 'https://unpkg.com',
     VITE_LOCAL_IMPORT_MAPS,
     VITE_LOCAL_BUNDLE_DEPS,
-    VITE_LOCAL_BUNDLE_PATH
+    VITE_LOCAL_IMPORT_PATH
   } = env
   const isLocalImportMap = VITE_LOCAL_IMPORT_MAPS === 'true' // true公共依赖库使用本地打包文件，false公共依赖库使用公共CDN
   const isCopyBundleDeps = VITE_LOCAL_BUNDLE_DEPS === 'true' // true bundle里的cdn依赖处理成本地依赖， false 不处理
@@ -176,7 +176,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
     const importMapPlugins = importMapLocalPlugin({
       importMapLocalConfig: engineConfig.importMapLocalConfig,
       base: getBaseUrlFromCli(config.base),
-      cdnDir: VITE_LOCAL_BUNDLE_PATH
+      cdnDir: VITE_LOCAL_IMPORT_PATH
     })
 
     if (importMapPlugins && importMapPlugins.length > 0) {
