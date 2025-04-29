@@ -203,13 +203,15 @@ export const fetchHotfixRegistry = async (url: string): Promise<any> => {
   }
 }
 
-export const tryGetAndDefineHotfixRegistry = async ({
-  url,
-  request = fetchHotfixRegistry
-}: {
+interface HotfixRegistryOptions {
   url: string
   request?: typeof fetchHotfixRegistry
-}) => {
+}
+
+export const initializeHotfixRegistry = async ({
+  url,
+  request = fetchHotfixRegistry
+}: HotfixRegistryOptions): Promise<any> => {
   try {
     const registry = await request(url)
 
@@ -218,6 +220,8 @@ export const tryGetAndDefineHotfixRegistry = async ({
       return registry
     }
   } catch (error) {
-    throw new Error('[hotfix registry] define registry failed, please check the url is valid')
+    const logger = console
+    logger.warn('[hotfix registry] Failed to load and register registry. Please verify the URL is valid')
+    // 忽略错误，这里有可能是没有线上的 hotfix 注册表
   }
 }
