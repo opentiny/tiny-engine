@@ -98,7 +98,7 @@ export const getEntryParam = ({ functionName = '', asyncVars, state }) => {
  * @param {Object} path - Babel路径对象
  * @returns {Object} 外部绑定变量对象
  */
-export const getOuterBingdings = (path) => {
+export const getOuterBindings = (path) => {
   const outerBindings = {}
   const allBindings = path.scope.getAllBindings()
   const selfBindings = path.scope.bindings
@@ -135,7 +135,7 @@ export const getModuleBindings = (path) => {
  * @param {Object} params.state - 状态对象
  */
 export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) => {
-  const asyncVars = getOuterBingdings(path)
+  const asyncVars = getOuterBindings(path)
   const entryParam = getEntryParam({
     functionName,
     asyncVars,
