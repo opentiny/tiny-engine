@@ -12,7 +12,7 @@
 
 export { getMergeMeta, getMetaApi, getOptions, getMergeMetaByType, getAllMergeMeta, mergeRegistry } from './common'
 export { useCompile } from './templateHash'
-export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, tryGetAndDefineHotfixRegistry } from './entryHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, initializeHotfixRegistry } from './entryHash'
 export { default as useMessage } from './useMessage'
 export { getConfigurator, addConfigurator } from './configurators'
 export * from './hooks'
