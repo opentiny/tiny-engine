@@ -208,7 +208,7 @@ interface HotfixRegistryOptions {
   request?: typeof fetchHotfixRegistry
 }
 
-export const initializeHotfixRegistry = async ({
+export const initHotfixRegistry = async ({
   url,
   request = fetchHotfixRegistry
 }: HotfixRegistryOptions): Promise<any> => {
