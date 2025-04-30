@@ -18,6 +18,7 @@ import MaterialBlock from './src/meta/block/index'
 import MaterialComponent from './src/meta/component/index'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
+import { getComponentDetail, getComponentList } from './src/tools'
 import './src/styles/vars.less'
 
 export default {
@@ -42,7 +43,8 @@ export default {
     header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
-  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService]
+  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService],
+  aiTools: [getComponentDetail, getComponentList]
 }
 
 export { entry, ResourceService, MaterialService }

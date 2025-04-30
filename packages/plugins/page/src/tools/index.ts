@@ -1,0 +1,6 @@
+export { getPageList } from './getPageList'
+export { getPageDetail } from './getPageDetail'
+export { changePageBasicInfo } from './changePageBasicInfo'
+export { editSpecificPage } from './editSpecificPage'
+export { delPage } from './delPage'
+export { addPage } from './addPage'

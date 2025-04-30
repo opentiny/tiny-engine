@@ -67,15 +67,19 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
+import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent, onBeforeUnmount } from 'vue'
 import { Notify, Loading, TinyPopover } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
+import { useModal, getAllAiTools } from '@opentiny/tiny-engine-meta-register'
 import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender } from '@opentiny/tiny-robot'
 import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
+import { zodToJsonSchema } from 'zod-to-json-schema'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import { initBlockList, AIModelOptions } from './js/robotSetting'
+
+// WebSocket连接配置
+const WS_URL = 'ws://localhost:4090'
+const logger = console
 
 export default {
   components: {
@@ -90,7 +94,6 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -104,9 +107,10 @@ export default {
     const { confirm } = useModal()
     const tokenValue = ref('')
     const showPopover = ref(false)
+    const ws = ref(null)
+    const wsConnected = ref(false)
+    const aiTools = getAllAiTools()
 
-    const { pageSettingState, getDefaultPage } = usePage()
-    const ROOT_ID = pageSettingState.ROOT_ID
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -129,45 +133,18 @@ export default {
       )
     }
 
-    const createNewPage = (schema) => {
-      if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
-        pageSettingState.isNew = true
-        pageSettingState.isAIPage = true
-        pageSettingState.currentPageData = {
-          ...getDefaultPage(),
-          parentId: ROOT_ID,
-          route: 'temporaryPage',
-          name: 'TemporaryPage',
-          group: 'staticPages'
-        }
-      }
-      pageSettingState.currentPageData['page_content'] = schema
-      pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
-      clearCurrentState()
-      // 已经创建过临时页面只更新schema
-      initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
-      useHistory().addHistory()
-    }
-
-    const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
-
     // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
-      const firstMessage = sendProcess.messages[0]
+      // const firstMessage = sendProcess.messages[0]
       sendProcess.messages = [
-        { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
-        ...sendProcess.messages.slice(1)
+        // { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
+        ...sendProcess.messages.map((item) => ({
+          ...item
+          // content: marked(item.content, { sanitize: false })
+        }))
       ]
       delete sendProcess.displayMessages
       return sendProcess
@@ -178,29 +155,189 @@ export default {
       content,
       name: 'AI'
     })
-    const sendRequest = () => {
-      getMetaApi(META_SERVICE.Http)
-        .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
-        .then((res) => {
-          const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
-          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
-          sessionProcess.messages.push(responseMessage)
-          sessionProcess.displayMessages.push(respDisplayMessage)
-          messages.value[messages.value.length - 1].content = replyWithoutCode
-          setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
+
+    // 初始化WebSocket连接
+    const initWebSocket = () => {
+      if (ws.value) {
+        ws.value.close()
+      }
+
+      try {
+        ws.value = new WebSocket(WS_URL)
+
+        ws.value.onopen = () => {
+          wsConnected.value = true
+          // 发送初始化消息
+          ws.value.send(JSON.stringify({ type: 'ping', timestamp: Date.now() }))
+        }
+
+        ws.value.onmessage = async (event) => {
+          try {
+            const data = JSON.parse(event.data)
+
+            // 根据消息类型处理不同的响应
+            switch (data.type) {
+              case 'ping':
+                // 处理ping响应
+                logger.log('ping', data)
+                break
+              case 'welcome':
+                // 处理欢迎消息
+                break
+              case 'get_builtin_tools': {
+                const toolsFiltered = aiTools.map(({ handler, inputSchema, ...rest }) => ({
+                  ...rest,
+                  inputSchema: zodToJsonSchema(inputSchema)
+                }))
+                logger.log('tools', JSON.stringify(toolsFiltered))
+                // 获取内置工具
+                ws.value.send(
+                  JSON.stringify({
+                    type: 'register_builtin_tools',
+                    tools: toolsFiltered
+                  })
+                )
+                break
+              }
+              case 'call_builtin_tool': {
+                // 获取内置工具
+                try {
+                  logger.log('call_builtin_tool', data)
+                  const tool = aiTools.find((tool) => tool.name === data.toolName)
+                  logger.log('tool will be called', tool)
+
+                  if (tool) {
+                    const res = await tool.handler({ ...JSON.parse(data.arg_string), toolCallId: data.toolCallId })
+                    logger.log('res', res)
+
+                    ws.value.send(
+                      JSON.stringify({
+                        type: 'call_builtin_tool_response',
+                        toolCallId: data.toolCallId,
+                        content: res
+                      })
+                    )
+                  }
+                } catch (error) {
+                  logger.error('error', error)
+                  ws.value.send(
+                    JSON.stringify({
+                      type: 'call_builtin_tool_response',
+                      toolCallId: data.toolCallId,
+                      error: error.message
+                    })
+                  )
+                }
+                break
+              }
+              case 'chat_response': {
+                // 处理AI聊天响应
+                logger.log('event ', event)
+                logger.log('data', data)
+                if (data.data?.originalResponse) {
+                  const { originalResponse, replyWithoutCode } = data.data
+                  const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+                  const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode.content)
+                  sessionProcess.messages.push(responseMessage)
+                  sessionProcess.displayMessages.push(respDisplayMessage)
+                  messages.value[messages.value.length - 1].content = replyWithoutCode.content
+                  messages.value[messages.value.length - 1].type = 'markdown'
+                  setContextSession()
+                  inProcesing.value = false
+                  connectedFailed.value = false
+                }
+                break
+              }
+              default:
+              // 处理其他类型消息
+            }
+          } catch (error) {
+            // 处理消息解析错误
           }
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
-        .catch(() => {
+        }
+
+        ws.value.onerror = () => {
+          wsConnected.value = false
+        }
+
+        ws.value.onclose = () => {
+          wsConnected.value = false
+          // 添加重连逻辑
+          setTimeout(() => {
+            if (!ws.value || ws.value.readyState === WebSocket.CLOSED) {
+              initWebSocket()
+            }
+          }, 3000)
+        }
+      } catch (error) {
+        wsConnected.value = false
+      }
+    }
+
+    const sendRequest = () => {
+      // 尝试通过WebSocket发送，如果不成功则fallback到HTTP
+      if (wsConnected.value && ws.value && ws.value.readyState === WebSocket.OPEN) {
+        const message = {
+          type: 'chat',
+          content: getSendSeesionProcess(),
+          // content: {
+          //   query: messages.value[messages.value.length - 2].content,
+          //   model: selectedModel.value.value,
+          //   token: tokenValue.value
+          // },
+          timestamp: Date.now()
+        }
+
+        try {
+          ws.value.send(JSON.stringify(message))
+          // console.log('res', res)
+          // const {
+          //   originalResponse,
+          //   replyWithoutCode
+          //   // schema
+          // } = res
+          // const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+          // const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode.content)
+          // sessionProcess.messages.push(responseMessage)
+          // sessionProcess.displayMessages.push(respDisplayMessage)
+          // messages.value[messages.value.length - 1].content = replyWithoutCode.content
+          // setContextSession()
+          // // if (schema?.schema) {
+          // //   createNewPage(schema.schema)
+          // // }
+          // inProcesing.value = false
+          // connectedFailed.value = false
+          // WebSocket请求已发送，响应将通过onmessage事件处理
+          return
+        } catch (error) {
           messages.value[messages.value.length - 1].content = '连接失败'
           localStorage.removeItem('aiChat')
           inProcesing.value = false
-          connectedFailed.value = false
-        })
+          connectedFailed.value = true
+        }
+      }
+      // getMetaApi(META_SERVICE.Http)
+      //   .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
+      //   .then((res) => {
+      //     const { originalResponse, schema, replyWithoutCode } = res
+      //     const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
+      //     const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
+      //     sessionProcess.messages.push(responseMessage)
+      //     sessionProcess.displayMessages.push(respDisplayMessage)
+      //     messages.value[messages.value.length - 1].content = replyWithoutCode
+      //     setContextSession()
+      //     if (schema?.schema) {
+      //       createNewPage(schema.schema)
+      //     }
+      //     inProcesing.value = false
+      //     connectedFailed.value = false
+      //   })
+      //   .catch(() => {
+      //     messages.value[messages.value.length - 1].content = '连接失败'
+      //     localStorage.removeItem('aiChat')
+      //     inProcesing.value = false
+      //     connectedFailed.value = false
+      //   })
     }
     const scrollContent = async () => {
       await sleep(100)
@@ -228,15 +365,15 @@ export default {
     })
 
     const sendContent = async (content, isModel) => {
-      if (!isSaved() && !pageSettingState.isNew) {
-        Notify({
-          type: 'error',
-          message: `当前${isBlock() ? '区块' : '页面'}尚未保存，请保存后再试！`,
-          position: 'top-right',
-          duration: 5000
-        })
-        return
-      }
+      // if (!isSaved() && !pageSettingState.isNew) {
+      //   Notify({
+      //     type: 'error',
+      //     message: `当前${isBlock() ? '区块' : '页面'}尚未保存，请保存后再试！`,
+      //     position: 'top-right',
+      //     duration: 5000
+      //   })
+      //   return
+      // }
       if (inProcesing.value) {
         Notify({
           type: 'error',
@@ -299,6 +436,16 @@ export default {
       await initBlockList()
       loadingInstance.close()
       initChat()
+      // 初始化WebSocket连接
+      initWebSocket()
+    })
+
+    // 组件卸载前关闭WebSocket连接
+    onBeforeUnmount(() => {
+      if (ws.value) {
+        ws.value.close()
+        ws.value = null
+      }
     })
 
     const endContent = () => {
