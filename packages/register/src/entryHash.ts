@@ -53,8 +53,9 @@ const handleMethods = (id: string, methods: any) => {
 const handleVueLifeCycle = (id: string, value: any) => {
   for (const hookName of vueLifeHook) {
     const hookConfig = value[hookName]
+
     if (!hookConfig) {
-      return
+      continue
     }
 
     if (typeof hookConfig === 'function') {
@@ -163,7 +164,7 @@ export const afterCallEntry = ({ metaData, ctx }) => {
 }
 
 const FILE_TYPE = {
-  JS: 'js',
+  JAVASCRIPT: 'javascript',
   JSON: 'json'
 }
 
@@ -172,12 +173,12 @@ async function checkFileType(url: string) {
     const res = await fetch(url, { method: 'HEAD' })
     const contentType = res.headers.get('content-type')
 
-    if (contentType?.includes(FILE_TYPE.JS)) {
-      return 'js'
+    if (contentType?.includes(FILE_TYPE.JAVASCRIPT)) {
+      return FILE_TYPE.JAVASCRIPT
     }
 
     if (contentType?.includes(FILE_TYPE.JSON)) {
-      return 'json'
+      return FILE_TYPE.JSON
     }
 
     return 'unknown'
@@ -191,7 +192,7 @@ export const fetchHotfixRegistry = async (url: string): Promise<any> => {
     const fileType = await checkFileType(url)
     let registry = null
 
-    if (fileType === FILE_TYPE.JS) {
+    if (fileType === FILE_TYPE.JAVASCRIPT) {
       const res = await import(/* @vite-ignore */ url)
       registry = res.default
     } else if (fileType === FILE_TYPE.JSON) {
