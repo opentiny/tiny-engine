@@ -14,6 +14,7 @@ import entry, { api } from './src/Main.vue'
 import metaData from './meta'
 import { PageService } from './src/composable/index'
 import PageGeneral from './src/PageGeneral.vue'
+import { getPageList, getPageDetail, changePageBasicInfo, editSpecificPage, delPage, addPage } from './src/tools'
 import './src/styles/vars.less'
 
 export default {
@@ -29,7 +30,8 @@ export default {
   components: {
     PageGeneral
   },
-  metas: [PageService]
+  metas: [PageService],
+  aiTools: [getPageList, getPageDetail, changePageBasicInfo, editSpecificPage, delPage, addPage]
 }
 
 export { PageService }

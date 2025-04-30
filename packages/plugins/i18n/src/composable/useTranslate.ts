@@ -250,6 +250,12 @@ const batchCreateI18n = ({ host, hostType }: Pick<I18nOptions, 'host' | 'hostTyp
   })
 }
 
+const existI18nKey = (key) => {
+  const exist = getLangs()[key]
+
+  return exist
+}
+
 export default () => {
   return {
     i18nResource,
@@ -265,6 +271,7 @@ export default () => {
     initAppI18n,
     initBlockI18n,
     getI18nData,
-    initBlockLocalI18n
+    initBlockLocalI18n,
+    existI18nKey
   }
 }

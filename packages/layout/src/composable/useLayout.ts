@@ -13,7 +13,7 @@
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
 
@@ -388,6 +388,16 @@ export default () => {
     pluginStorageReactive.value = pluginList
   }
 
+  const getAllPlugins = () => {
+    return getMergeRegistry('plugins').map((item) => {
+      return {
+        id: item.id,
+        title: item.title,
+        type: item.type
+      }
+    })
+  }
+
   return {
     isPanelWidthResizable,
     getFixedPanelsStatus,
@@ -425,6 +435,7 @@ export default () => {
     changeMenuShown,
     getMoveDragBarState,
     changeMoveDragBarState,
-    getPluginsByPosition
+    getPluginsByPosition,
+    getAllPlugins
   }
 }

@@ -4535,7 +4535,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "配置按钮组数据"
+                      "zh_CN": "配置按钮组数据，例如：[{\"text\": \"包年/包月\",\"value\": \"1\"},{\"text\": \"按需计费\",\"value\": \"2\"}]"
                     }
                   },
                   {
@@ -13681,21 +13681,22 @@
                     {
                       "key": 1,
                       "label": "备选项1",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 2,
                       "label": "备选项2",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 3,
                       "label": "备选项3",
-                      "disabled":false
-                    }, {
+                      "disabled": false
+                    },
+                    {
                       "key": 4,
                       "label": "备选项4",
-                      "disabled":false
+                      "disabled": false
                     }
                   ]
                 }
