@@ -25,7 +25,10 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@opentiny/tiny-engine-meta-register": "workspace:*"
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-robot": "0.2.0-alpha.1",
+    "@opentiny/tiny-robot-kit": "0.2.0-alpha.1",
+    "@opentiny/tiny-robot-svgs": "0.2.0-alpha.1"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
