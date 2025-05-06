@@ -16,6 +16,7 @@
   "dependencies": {
     "@babel/core": "~7.23.2",
     "@babel/generator": "~7.23.2",
+    "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
