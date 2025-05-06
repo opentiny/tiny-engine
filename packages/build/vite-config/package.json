@@ -27,6 +27,7 @@
     "fast-glob": "^3.3.2",
     "fs-extra": "^10.1.0",
     "less": "^4.1.2",
+    "path": "^0.12.7",
     "rollup-plugin-polyfill-node": "^0.13.0",
     "rollup-plugin-visualizer": "^5.8.3",
     "semver": "^7.7.1",
