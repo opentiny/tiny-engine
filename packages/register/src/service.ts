@@ -28,7 +28,7 @@ type Service<T, K> = Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
  * @template K
  * @type {WeakMap<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init'>>}
  */
-const servicesMap = new WeakMap()
+const servicesMap = new Map()
 
 export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Service<T, K> => {
   const { id, type, initialState, options, init, apis } = serviceOptions
@@ -68,7 +68,7 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
     Object.assign(state, kv)
   }
 
-  servicesMap.set(resultService, {
+  servicesMap.set(resultService.id, {
     state,
     init: typeof init === 'function' ? init : () => {}
   })
@@ -80,7 +80,7 @@ export const initServices = () => {
   const services = Object.values(metaHashMap).filter((service) => service.type === 'MetaService')
 
   services.forEach((service) => {
-    const context = servicesMap.get(service)
+    const context = servicesMap.get(service.id)
     if (context) {
       const { state, init } = context
       const { options } = service
