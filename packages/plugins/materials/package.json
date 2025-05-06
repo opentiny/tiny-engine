@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-materials",
-  "version": "2.5.0-alpha.8",
+  "version": "2.5.0-alpha.9",
   "publishConfig": {
     "access": "public"
   },
