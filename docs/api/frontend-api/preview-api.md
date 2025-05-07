@@ -13,14 +13,16 @@
 
 适用场景：仅修改跳转 url，不修改 query 查询字符串部分，比如：
 
-```javascript
+<pre>
+<code>
 import { Preview } from '@opentiny/tiny-engine'
 export default {
    toolbars: [
-     [Preview, { options: { ...Preview.options,  previewUrl:  import.meta.env.MODE.includes('prod') ? 'http://tiny-engine-preview.com/customPreview' : '' } }]
+     [Preview, { options: { ...Preview.options,  previewUrl:  import.meta<wbr>.env.MODE.includes('prod') ? 'http://tiny-engine-preview.com/customPreview' : '' } }]
    ]
 }
-```
+</code>
+</pre>
 
 配置完成之后，在生产环境，TinyEngine 会增加必要的 query部分，然后跳转到配置的 url，比如：`http://tiny-engine-preview.com/customPreview?tenant=1&id=1&...`。
 
