@@ -248,6 +248,7 @@ export default {
         if (pageState?.currentPage?.id === data?.id) {
           initData(data.page_content, data)
         }
+        initCurrentPageData(data)
       })
     }
 
