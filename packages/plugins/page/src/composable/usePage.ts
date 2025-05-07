@@ -174,7 +174,17 @@ const compareValues = (value1: any, value2: any): boolean => {
   }
 }
 
+/**
+ * 更新配置页面数据
+ */
+const syncPageContent = () => {
+  const pageContent = useCanvas().getPageSchema()
+  pageSettingState.currentPageData.page_content = pageContent
+}
+
 const isCurrentDataSame = () => {
+  syncPageContent()
+
   const data: Record<string, any> = pageSettingState.currentPageData || {}
   const dataCopy: Record<string, any> = pageSettingState.currentPageDataCopy || {}
   let isEqual = true
@@ -187,12 +197,14 @@ const isCurrentDataSame = () => {
       const obj = {
         inputs: dataCopy[item].inputs,
         outputs: dataCopy[item].outputs,
-        lifeCycles: dataCopy[item].lifeCycles
+        lifeCycles: dataCopy[item].lifeCycles,
+        children: dataCopy[item].children
       }
       const objCopy = {
         inputs: data[item].inputs,
         outputs: data[item].outputs,
-        lifeCycles: data[item].lifeCycles
+        lifeCycles: data[item].lifeCycles,
+        children: data[item].children
       }
 
       if (JSON.stringify(obj) !== JSON.stringify(objCopy)) {
