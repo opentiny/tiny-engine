@@ -232,18 +232,21 @@ export default {
     }
 
     const restorePage = (pageData) => {
-      pageData.id = pageData.page
+      const currentData = {
+        ...pageData,
+        id: pageData.page
+      }
 
       const unnecessaryFields = ['page', 'backupTime', 'backupTitle', 'time']
-      unnecessaryFields.forEach((key) => delete pageData[key])
+      unnecessaryFields.forEach((key) => delete currentData[key])
 
       const params = {
         ...pageSettingState.currentPageData,
-        ...pageData,
+        ...currentData,
         message: '还原页面'
       }
 
-      updatePage(pageData.id, params).then((data) => {
+      updatePage(currentData.id, params).then((data) => {
         // 还原的页面是当前页，需要同步更新画布
         if (pageState?.currentPage?.id === data?.id) {
           initData(data.page_content, data)
