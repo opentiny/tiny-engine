@@ -27,5 +27,6 @@ defineProps({
 .gap {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
 }
 </style>

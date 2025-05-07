@@ -451,11 +451,11 @@ export default {
       outline: none;
     }
     .auto-hidden {
-      display: none;
+      visibility: hidden;
     }
   }
   .row:hover .actions .auto-hidden {
-    display: unset;
+    visibility: visible;
   }
 }
 </style>

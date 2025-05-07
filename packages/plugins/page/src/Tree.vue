@@ -8,6 +8,7 @@
   >
     <div
       v-for="(node, rowIndex) of filteredNodesWithAncestors"
+      v-show="!node.collapsed"
       :class="[
         'row',
         'border-transparent',
@@ -26,9 +27,10 @@
     >
       <div class="content" @click="handleClickRow(node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
-        <div class="prefix-icon">
+        <div class="prefix-icon" @click.stop="switchCollapse(node.id)">
           <svg-icon v-if="node.rawData.isPage" name="text-page-common"></svg-icon>
-          <svg-icon v-else name="text-page-folder-closed"></svg-icon>
+          <svg-icon v-else-if="collapseMap[node.id]" name="folder"></svg-icon>
+          <svg-icon v-else name="folder-wold"></svg-icon>
         </div>
         <label>{{ node.label }}</label>
       </div>
@@ -77,7 +79,23 @@ const props = defineProps({
 
 const emit = defineEmits(['clickRow', 'moveNode'])
 
-const flattenTreeData = (node, parentId, level = 0) => {
+const useCollapseMap = () => {
+  const collapseMap = ref<Record<string, boolean>>({})
+
+  const setCollapse = (id: string, value: boolean) => {
+    collapseMap.value[id] = value
+  }
+
+  const switchCollapse = (id: string) => {
+    collapseMap.value[id] = !collapseMap.value[id]
+  }
+
+  return { collapseMap, setCollapse, switchCollapse }
+}
+
+const { collapseMap, switchCollapse } = useCollapseMap()
+
+const flattenTreeData = (node, parentId, level = 0, collapsed = false) => {
   const { idKey, labelKey, childrenKey } = props
 
   const currentNode = {
@@ -85,6 +103,7 @@ const flattenTreeData = (node, parentId, level = 0) => {
     label: node[labelKey],
     parentId,
     level,
+    collapsed,
     rawData: node
   }
   const result = [currentNode]
@@ -93,7 +112,7 @@ const flattenTreeData = (node, parentId, level = 0) => {
 
   if (Array.isArray(children)) {
     for (const child of children) {
-      result.push(...flattenTreeData(child, currentNode.id, level + 1))
+      result.push(...flattenTreeData(child, currentNode.id, level + 1, collapsed || collapseMap.value[currentNode.id]))
     }
   }
 
@@ -250,7 +269,10 @@ const handleContainerDragLeave = (event) => {
 <style lang="less" scoped>
 .draggable-tree {
   padding: 6px 0;
+  overflow-x: auto;
   .row {
+    width: fit-content;
+    min-width: 100%;
     height: 24px;
     padding: 0 12px;
     margin: 0 -1px;
@@ -275,8 +297,6 @@ const handleContainerDragLeave = (event) => {
       font-size: 12px;
       line-height: 18px;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
     }
     .prefix-icon {
       display: flex;
