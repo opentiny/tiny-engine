@@ -192,29 +192,29 @@ export default {
         await beforeCreatePage(createParams)
       }
 
-      requestCreatePage(createParams)
-        .then((data) => {
-          pageSettingState.updateTreeData()
-          pageSettingState.isNew = false
-          isTemporaryPage.saved = false
-          emit('openNewPage', data)
-          closePageSettingPanel()
-          useLayout().closePlugin()
-          useNotify({
-            type: 'success',
-            message: '新建页面成功!'
-          })
-          if (isVsCodeEnv) {
-            generatePage(data)
-          }
+      try {
+        const data = await requestCreatePage(createParams)
+
+        await pageSettingState.updateTreeData()
+        pageSettingState.isNew = false
+        isTemporaryPage.saved = false
+        emit('openNewPage', data)
+        closePageSettingPanel()
+        useLayout().closePlugin()
+        useNotify({
+          type: 'success',
+          message: '新建页面成功!'
         })
-        .catch((err) => {
-          useNotify({
-            type: 'error',
-            title: '新建页面失败',
-            message: JSON.stringify(err?.message || err)
-          })
+        if (isVsCodeEnv) {
+          generatePage(data)
+        }
+      } catch (err) {
+        useNotify({
+          type: 'error',
+          title: '新建页面失败',
+          message: JSON.stringify(err?.message || err)
         })
+      }
     }
 
     const updatePage = (id, params, isUpdateTree = true) => {
