@@ -153,6 +153,27 @@ const getDefaultPage = () => {
   }
 }
 
+/**
+ * 比较两个值是否相等: 处理对象、数组和原始类型的情况
+ * @param value1 数值1
+ * @param value2 数值2
+ * @returns 是否相等
+ */
+const compareValues = (value1: any, value2: any): boolean => {
+  // 处理数组比较
+  if (Array.isArray(value1) && Array.isArray(value2)) {
+    return value1.length === value2.length && JSON.stringify(value1) === JSON.stringify(value2)
+  }
+  // 处理对象比较
+  else if (typeof value1 === 'object' && value1 !== null && typeof value2 === 'object' && value2 !== null) {
+    return JSON.stringify(value1) === JSON.stringify(value2)
+  }
+  // 处理原始类型比较
+  else {
+    return value1 === value2
+  }
+}
+
 const isCurrentDataSame = () => {
   const data: Record<string, any> = pageSettingState.currentPageData || {}
   const dataCopy: Record<string, any> = pageSettingState.currentPageDataCopy || {}
@@ -178,7 +199,7 @@ const isCurrentDataSame = () => {
         isEqual = false
       }
     } else {
-      if (dataCopy[item] !== data[item]) {
+      if (!compareValues(dataCopy[item], data[item])) {
         isEqual = false
       }
     }
@@ -463,7 +484,10 @@ const switchPageWithConfirm = (pageId: string, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (familyPages: { id: any; page_content: any }[], currentPage: { id: string; page_content?: any }) => {
+const updatePageContent = (
+  familyPages: { id: any; page_content: any }[],
+  currentPage: { id: string; page_content?: any }
+) => {
   const currentPageSchema = familyPages.find((item) => item.id === currentPage.id)
   // 替换为当前页面最新的 schema
   if (currentPageSchema) {
