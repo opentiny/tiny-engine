@@ -11,7 +11,7 @@
  */
 
 import { reactive, ref } from 'vue'
-import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
+import { extend, isEqual as isValuesEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
@@ -154,27 +154,6 @@ const getDefaultPage = () => {
 }
 
 /**
- * 比较两个值是否相等: 处理对象、数组和原始类型的情况
- * @param value1 数值1
- * @param value2 数值2
- * @returns 是否相等
- */
-const compareValues = (value1: any, value2: any): boolean => {
-  // 处理数组比较
-  if (Array.isArray(value1) && Array.isArray(value2)) {
-    return value1.length === value2.length && JSON.stringify(value1) === JSON.stringify(value2)
-  }
-  // 处理对象比较
-  else if (typeof value1 === 'object' && value1 !== null && typeof value2 === 'object' && value2 !== null) {
-    return JSON.stringify(value1) === JSON.stringify(value2)
-  }
-  // 处理原始类型比较
-  else {
-    return value1 === value2
-  }
-}
-
-/**
  * 更新配置页面数据
  */
 const syncPageContent = () => {
@@ -183,6 +162,7 @@ const syncPageContent = () => {
 }
 
 const isCurrentDataSame = () => {
+  // 如果页面内容有修改，则需要同步页面内容
   syncPageContent()
 
   const data: Record<string, any> = pageSettingState.currentPageData || {}
@@ -211,7 +191,7 @@ const isCurrentDataSame = () => {
         isEqual = false
       }
     } else {
-      if (!compareValues(dataCopy[item], data[item])) {
+      if (!isValuesEqual(dataCopy[item], data[item])) {
         isEqual = false
       }
     }
@@ -268,7 +248,7 @@ const resetPageData = () => {
 }
 
 // 判断当前页面内容是否有修改
-const isChangePageData = () => !isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
+const isChangePageData = () => !isValuesEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
 
 const generateTree = (data: PageData[]) => {
   const { ROOT_ID } = pageSettingState
