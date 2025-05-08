@@ -158,11 +158,16 @@ const getDefaultPage = () => {
  */
 const syncPageContent = () => {
   const pageContent = useCanvas().getPageSchema()
+  // 此处赋值是确保页面内容与当前画布保持同步。
+  // 当用户在画布中编辑页面内容时，这些变更存储在Canvas内部状态，
+  // 但pageSettingState中的currentPageData.page_content并不会自动更新。
+  // 不同步会导致：
+  // 1. 保存检测失效 - isCurrentDataSame()无法检测到真实变更
+  // 2. 未保存提示缺失 - 用户离开页面时不会收到未保存变更警告
   pageSettingState.currentPageData.page_content = pageContent
 }
 
 const isCurrentDataSame = () => {
-  // 如果页面内容有修改，则需要同步页面内容
   syncPageContent()
 
   const data: Record<string, any> = pageSettingState.currentPageData || {}
