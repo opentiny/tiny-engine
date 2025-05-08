@@ -21,7 +21,8 @@ import {
   handleObjBindAttrHook,
   handleEventAttrHook,
   handleTinyIconPropsHook,
-  handleJsxModelValueUpdate
+  handleJsxModelValueUpdate,
+  handleJSFunctionAttrHook
 } from './generateAttribute'
 import {
   GEN_SCRIPT_HOOKS,
@@ -227,6 +228,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
     handleAttrKeyHook,
     handlePrimitiveAttributeHook,
     handleExpressionAttrHook,
+    handleJSFunctionAttrHook,
     handleI18nAttrHook,
     handleTinyIconPropsHook,
     handleObjBindAttrHook,
