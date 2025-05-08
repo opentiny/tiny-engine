@@ -391,7 +391,14 @@ export default () => {
       // 遍历新的插件列表，添加不存在的插件或更新现有插件
       Object.keys(pluginList).forEach((pluginId) => {
         if (!mergedPlugins[pluginId]) {
+          // 如果插件不存在，直接添加
           mergedPlugins[pluginId] = pluginList[pluginId]
+        } else {
+          // 如果插件已存在，更新所有属性
+          mergedPlugins[pluginId] = {
+            ...mergedPlugins[pluginId],
+            ...pluginList[pluginId]
+          }
         }
       })
 
