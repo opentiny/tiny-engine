@@ -40,4 +40,4 @@ npm install
 
 重新打开项目页面，可以看到主题展示为列表切换，可以切换自定义主题
 
-![cunstom-theme](./imgs/cunstom-theme.gif)
+![cunstom-theme](./imgs/custom-theme.gif)
