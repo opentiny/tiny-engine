@@ -262,12 +262,10 @@ export default {
     const generalForm = ref(null)
 
     const validGeneralForm = () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         generalForm.value.validate((valid) => {
           if (valid) {
             resolve(valid)
-          } else {
-            reject(valid)
           }
         })
       })
