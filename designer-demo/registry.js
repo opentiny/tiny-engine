@@ -100,7 +100,7 @@ export default {
     Redoundo,
     Collaboration,
     Clean,
-    [Preview, { options: { ...Preview.options,  previewUrl:  import.meta.env.MODE.includes('prod') ? './preview.html' : '' } }],
+    [Preview, { options: { ...Preview.options,  previewUrl:  ['prod', 'alpha'].includes(import.meta.env.MODE) ? './preview.html' : '' } }],
     Refresh,
     GenerateCode,
     Save,
