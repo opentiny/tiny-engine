@@ -22,6 +22,25 @@
 
 如果需要自定义标题，可以设置为 false。然后通过 document.title 来设置标题
 
+配置示例：
+
+```javascript
+import { GlobalService } from '@opentiny/tiny-engine'
+
+export default {
+  root: {
+    id: 'engine.root',
+    metas: [
+      HttpService,
+      GenerateCodeService,
+      { ...GlobalService, options: { ...GlobalService.options, enableTitleUpdate: false } },
+      ThemeSwitchService
+    ]
+  },
+  //...
+}
+```
+
 ## api
 
 ### getBaseInfo
@@ -48,7 +67,7 @@
 使用示例：
 ```js
 // 导入全局服务
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine'
 
 // 更新pageId和previewId
 getMetaApi(META_SERVICE.GlobalService).updateParams({ 
@@ -76,7 +95,7 @@ getMetaApi(META_SERVICE.GlobalService).updateParams({
 
 使用示例：
 ```js
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine'
 
 // 更新到新页面
 getMetaApi(META_SERVICE.GlobalService).updatePageId('page123')
@@ -96,7 +115,7 @@ getMetaApi(META_SERVICE.GlobalService).updatePageId('page123')
 
 使用示例：
 ```js
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine'
 
 // 更新到新区块
 getMetaApi(META_SERVICE.GlobalService).updateBlockId('block789')
@@ -117,7 +136,7 @@ getMetaApi(META_SERVICE.GlobalService).updateBlockId('block789')
 
 使用示例：
 ```js
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine'
 
 // 添加预览ID并创建新历史记录
 getMetaApi(META_SERVICE.GlobalService).updatePreviewId('preview456')
