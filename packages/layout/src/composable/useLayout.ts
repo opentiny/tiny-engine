@@ -384,27 +384,6 @@ export default () => {
   const isPanelWidthResizable = (name: string): boolean => pluginStorageReactive.value[name]?.widthResizable || false
 
   const initPluginStorageReactive = (pluginList: IPluginStorage): void => {
-    if (Object.keys(pluginStorageReactive.value).length) {
-      // 合并新的插件信息到现有的缓存中
-      const mergedPlugins = { ...pluginStorageReactive.value }
-
-      // 遍历新的插件列表，添加不存在的插件或更新现有插件
-      Object.keys(pluginList).forEach((pluginId) => {
-        if (!mergedPlugins[pluginId]) {
-          // 如果插件不存在，直接添加
-          mergedPlugins[pluginId] = pluginList[pluginId]
-        } else {
-          // 如果插件已存在，更新所有属性
-          mergedPlugins[pluginId] = {
-            ...mergedPlugins[pluginId],
-            ...pluginList[pluginId]
-          }
-        }
-      })
-
-      pluginStorageReactive.value = mergedPlugins
-      return
-    }
     pluginStorageReactive.value = pluginList
   }
 
