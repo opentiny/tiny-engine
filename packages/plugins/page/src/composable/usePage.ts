@@ -161,7 +161,7 @@ const syncPageContent = () => {
 
   // 只有当前页面设置的ID与正在编辑的页面ID一致时才同步内容
   // 避免将正在编辑的页面内容错误同步到其他打开的页面设置中
-  if (pageSettingState.currentPageData.id === getBaseInfo().pageId) {
+  if (pageSettingState.currentPageData.id === Number.parseInt(getBaseInfo().pageId)) {
     const pageContent = useCanvas().getPageSchema()
 
     // 此处赋值是确保页面内容与当前画布保持同步。
