@@ -64,6 +64,9 @@ const savePage = async (pageSchema: any) => {
   }
   await handlePageUpdate(updateParams)
   isLoading.value = false
+
+  // 更新页面设置状态，同步 currentPageDataCopy
+  usePage().updatePageSettingAfterSave()
 }
 
 export const saveCommon = (value: string) => {

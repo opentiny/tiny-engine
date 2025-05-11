@@ -174,6 +174,16 @@ const syncPageContent = () => {
   }
 }
 
+/**
+ * 在页面保存后更新页面设置状态
+ * 当用户通过工具栏保存按钮保存页面时，需要调用此方法来同步currentPageDataCopy
+ * 以确保isCurrentDataSame()能够正确判断页面是否被修改
+ */
+const updatePageSettingAfterSave = () => {
+  syncPageContent()
+  pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
+}
+
 const isCurrentDataSame = () => {
   syncPageContent()
 
@@ -577,6 +587,7 @@ export default () => {
     switchPageWithConfirm,
     getFamily,
     getPageChildren,
+    updatePageSettingAfterSave,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }
