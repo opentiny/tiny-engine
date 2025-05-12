@@ -19,11 +19,14 @@ import {
   usePage,
   getOptions,
   getMetaApi,
-  META_APP
+  META_APP,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import meta from '../../meta'
+
+const { publish } = useMessage()
 
 const { PAGE_STATUS, AUTO_SAVED } = constants
 const state = reactive({
@@ -65,8 +68,8 @@ const savePage = async (pageSchema: any) => {
   await handlePageUpdate(updateParams)
   isLoading.value = false
 
-  // 更新页面设置状态，同步 currentPageDataCopy
-  usePage().updatePageSettingAfterSave()
+  // 发布页面保存事件，通知其他组件进行相应处理
+  publish({ topic: 'page-saved' })
 }
 
 export const saveCommon = (value: string) => {

@@ -21,11 +21,14 @@ import {
   useModal,
   useNotify,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import http from '../http'
 
 const { ELEMENT_TAG, COMPONENT_NAME } = constants
+
+const { subscribe } = useMessage()
 
 import { getOptions } from '@opentiny/tiny-engine-meta-register'
 
@@ -183,6 +186,15 @@ const updatePageSettingAfterSave = () => {
   syncPageContent()
   pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
 }
+
+// 监听页面保存事件，当收到page-saved事件时，自动更新页面设置状态
+subscribe({
+  topic: 'page-saved',
+  callback: () => {
+    // 当收到页面保存事件时，更新页面设置状态
+    updatePageSettingAfterSave()
+  }
+})
 
 const isCurrentDataSame = () => {
   syncPageContent()
