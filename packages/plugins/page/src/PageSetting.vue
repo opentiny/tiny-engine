@@ -60,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onUnmounted } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -71,7 +71,8 @@ import {
   useNotify,
   getMergeRegistry,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -133,7 +134,8 @@ export default {
       isCurrentDataSame,
       initCurrentPageData,
       isTemporaryPage,
-      STATIC_PAGE_GROUP_ID
+      STATIC_PAGE_GROUP_ID,
+      updatePageSettingAfterSave
     } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
@@ -144,6 +146,21 @@ export default {
 
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
+    const { subscribe } = useMessage()
+
+    // 监听页面保存事件
+    const unsubscribePageSaved = subscribe({
+      topic: 'page-saved',
+      callback: () => {
+        // 当收到页面保存事件时，更新页面设置状态
+        updatePageSettingAfterSave()
+      }
+    })
+
+    // 组件卸载时取消订阅
+    onUnmounted(() => {
+      unsubscribePageSaved?.()
+    })
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
