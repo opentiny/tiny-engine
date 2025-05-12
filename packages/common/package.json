@@ -30,9 +30,9 @@
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
-    "@babel/generator": "~7.23.2",
-    "@babel/parser": "~7.23.2",
-    "@babel/traverse": "~7.23.2",
+    "@babel/generator": "~7.26.10",
+    "@babel/parser": "~7.26.10",
+    "@babel/traverse": "~7.26.10",
     "@eslint/js": "^8.57.1",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
