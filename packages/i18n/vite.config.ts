@@ -25,6 +25,7 @@ export default {
     })
   ],
   build: {
+    sourcemap: true,
     minify: false,
     emptyOutDir: false,
     lib: {
