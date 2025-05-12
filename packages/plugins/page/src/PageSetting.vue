@@ -60,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, computed, onUnmounted } from 'vue'
+import { reactive, ref, computed, onActivated, onDeactivated } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -146,20 +146,27 @@ export default {
 
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
-    const { subscribe } = useMessage()
+    const { subscribe, unsubscribe } = useMessage()
 
-    // 监听页面保存事件
-    const unsubscribePageSaved = subscribe({
-      topic: 'page-saved',
-      callback: () => {
-        // 当收到页面保存事件时，更新页面设置状态
-        updatePageSettingAfterSave()
-      }
+    // 初始化订阅
+    let subscriber = null
+
+    // 组件激活时订阅
+    onActivated(() => {
+      subscriber = subscribe({
+        topic: 'page-saved',
+        callback: () => {
+          // 当收到页面保存事件时，更新页面设置状态
+          updatePageSettingAfterSave()
+        }
+      })
     })
 
-    // 组件卸载时取消订阅
-    onUnmounted(() => {
-      unsubscribePageSaved?.()
+    // 组件卸载或失活时取消订阅
+    onDeactivated(() => {
+      if (subscriber) {
+        unsubscribe(subscriber)
+      }
     })
 
     const state = reactive({
