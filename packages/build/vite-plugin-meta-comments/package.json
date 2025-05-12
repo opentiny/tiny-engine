@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "build": "vite build",
-    "test": "node ./src/test/index.js"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:legacy": "node ./test/legacy/index.js"
   },
   "devDependencies": {
     "@babel/generator": "^7.18.13",
@@ -19,7 +21,8 @@
     "@babel/traverse": "^7.18.13",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vue/compiler-sfc": "^3.4.21",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vitest": "^3.1.3"
   },
   "keywords": [],
   "publishConfig": {
