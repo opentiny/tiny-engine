@@ -11,8 +11,8 @@
  */
 
 import { parse } from '@babel/parser'
-import generate from '@babel/generator'
-import traverse from '@babel/traverse'
+import generateLib from '@babel/generator'
+import traverseLib from '@babel/traverse'
 import template from '@babel/template'
 import {
   wrapEntryFuncNode,
@@ -29,7 +29,9 @@ import {
   getModuleId
 } from './utils.js'
 
-const generateTraverse = traverse.default
+// 在ESM模式中，traverse默认是以命名导出的形式提供
+const traverse = traverseLib.default || traverseLib
+const generate = generateLib.default || generateLib
 
 function handleFunctionExpression(state) {
   return function (path) {
@@ -222,7 +224,7 @@ export const transform = (code, id) => {
     }
   }
 
-  generateTraverse(resultAst, {
+  traverse(resultAst, {
     // 使用特定的类型回调处理、函数表达式、箭头函数、带导出的函数
     'ArrowFunctionExpression|FunctionExpression': handleFunctionExpression(state),
     CallExpression: handleCallExpression(state),
@@ -233,5 +235,5 @@ export const transform = (code, id) => {
     ExportDefaultDeclaration: handleExportDefaultDeclaration(state)
   })
 
-  return generate.default(resultAst).code || ''
+  return generate(resultAst).code || ''
 }
