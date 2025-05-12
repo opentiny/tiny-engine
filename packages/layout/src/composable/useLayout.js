@@ -304,7 +304,6 @@ export default () => {
   const isPanelWidthResizable = (name) => pluginStorageReactive.value[name]?.widthResizable
 
   const initPluginStorageReactive = (pluginList) => {
-    if (Object.keys(pluginStorageReactive.value).length) return
     pluginStorageReactive.value = pluginList
   }
 
