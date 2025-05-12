@@ -78,6 +78,7 @@ export default {
       default: () => []
     }
   },
+  emits: ['changeRightAlign'],
   setup(props, { emit }) {
     const components = {}
     const iconComponents = {}

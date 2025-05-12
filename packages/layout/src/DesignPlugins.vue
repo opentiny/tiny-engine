@@ -96,7 +96,7 @@
   <plugin-right-menu
     ref="rightMenu"
     :list="[...state.topNavLists, ...state.bottomNavLists]"
-    :align="left"
+    :align="LEFT"
     @switchAlign="switchAlign"
   />
 </template>
@@ -129,7 +129,7 @@ export default {
       default: () => []
     }
   },
-  emits: ['click', 'node-click'],
+  emits: ['click', 'node-click', 'changeLeftAlign'],
   setup(props, { emit }) {
     const components: any = {}
     const iconComponents: any = {}
@@ -150,6 +150,7 @@ export default {
     } = useLayout()
 
     const rightMenu = ref(null)
+    const LEFT = 'left'
     const showContextMenu = (event, type, item, index, align) => {
       if (!type) {
         rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
@@ -254,6 +255,7 @@ export default {
     }
 
     return {
+      LEFT,
       leftFixedPanelsStorage,
       currentComponent,
       changeAlign,
