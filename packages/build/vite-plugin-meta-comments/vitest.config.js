@@ -10,17 +10,24 @@
  *
  */
 
-import fs from 'fs'
-import { transform } from '../transform.js'
+import { defineConfig } from 'vitest/config'
 import { fileURLToPath } from 'node:url'
-import * as path from 'path'
+import path from 'node:path'
 
-const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
-const __dirname = path.dirname(__filename)
-
-const code = fs.readFileSync(path.join(__dirname, './code/entry.js'), 'utf8')
-
-const id = path.resolve(__dirname, './code/entry.js')
-
-fs.writeFileSync(path.join(__dirname, './code/output.js'), transform(code, id) || '', 'utf8')
+export default defineConfig({
+  test: {
+    globals: true,
+    environment: 'node',
+    include: ['./test/**/*.test.js'],
+    exclude: ['./test/legacy/code/**/*'],
+    reporters: ['default'],
+    testTimeout: 10000
+  },
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, './src')
+    }
+  }
+})
