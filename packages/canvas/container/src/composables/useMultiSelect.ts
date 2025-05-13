@@ -1,7 +1,7 @@
 import { ref } from 'vue'
 import { useCanvas, useMessage, useHistory } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { getRect, querySelectById, POSITION, insertNode, selectNode } from '../container'
+import { getRect, querySelectById, POSITION, insertNode, selectNode, canvasState } from '../container'
 import type { Node } from '../../../types'
 
 interface SelectionState {
@@ -42,7 +42,7 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
     children: [
       {
         componentName: 'Template',
-        id: null,
+        id: utils.guid(),
         props: {
           slot: 'reference'
         },
@@ -50,14 +50,14 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
       },
       {
         componentName: 'Template',
-        id: null,
+        id: utils.guid(),
         props: {
           slot: 'default'
         },
         children: [
           {
             componentName: 'div',
-            id: null,
+            id: utils.guid(),
             props: {
               placeholder: '提示内容'
             }
@@ -268,7 +268,11 @@ export const useMultiSelect = () => {
     let wrapSchema: Node = {
       componentName,
       id: utils.guid(),
-      props: { ...props },
+      props: {
+        ...props,
+        // 如果是div，添加component-base-style类
+        ...(componentName === 'div' ? { className: 'component-base-style' } : {})
+      },
       children: selectedNodes
     }
 
@@ -284,6 +288,23 @@ export const useMultiSelect = () => {
 
     // 将新容器插入到第一个选中节点的位置
     parent.children.splice(firstIndex, 0, wrapSchema)
+
+    // 先更新nodesMap中的节点关系
+    const canvas = useCanvas()
+
+    // 设置新创建的父节点
+    canvas.setNode(wrapSchema, parent)
+
+    // 为所有子节点更新父节点关系
+    selectedNodes.forEach((node) => {
+      canvas.setNode(node, wrapSchema)
+    })
+
+    // 更新canvasState，保证向左箭头显示
+    Object.assign(canvasState, {
+      current: wrapSchema,
+      parent: parent
+    })
 
     // 更新选中状态
     updateSelectionAfterAddParent([wrapSchema.id])
@@ -305,7 +326,9 @@ export const useMultiSelect = () => {
       id: utils.guid(),
       props: {
         content: '提示信息',
-        ...props
+        ...props,
+        // 如果是div，添加component-base-style类
+        ...(componentName === 'div' ? { className: 'component-base-style' } : {})
       },
       children: [childSchema]
     }
