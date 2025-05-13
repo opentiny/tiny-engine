@@ -240,3 +240,4 @@ VITE_CDN_DOMAIN=https://unpkg.com
 
 1. 本地化CDN会增加构建输出的大小，但会提高应用的可靠性和性能
 2. 某些特定格式的CDN URL可能需要在`copy`中进行特别配置
+3. 使用本地化 CDN 之后，需要确保 .mjs 后缀文件资源的响应头 content-type 为 `application/javascript`，否则会导致无法正常加载。
