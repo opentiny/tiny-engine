@@ -1,5 +1,5 @@
 import { ref } from 'vue'
-import { useCanvas, useMessage, useHistory } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage, useHistory, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { getRect, querySelectById, POSITION, insertNode, selectNode, canvasState } from '../container'
 import type { Node } from '../../../types'
@@ -233,6 +233,17 @@ export const useMultiSelect = () => {
   }
 
   /**
+   * 获取组件基础样式的className
+   * @returns {string} 组件基础样式类名
+   */
+  const getComponentBaseStyleClassName = () => {
+    const materialsOptions = getOptions('engine.plugins.materials') || {}
+    return materialsOptions.useBaseStyle && materialsOptions.componentBaseStyle?.className
+      ? materialsOptions.componentBaseStyle.className
+      : 'component-base-style' // 默认值作为后备
+  }
+
+  /**
    * 为一组兄弟节点添加共同的父级
    * @param {string} componentName 父级组件名称
    * @param {Object} props 父级组件属性
@@ -270,8 +281,8 @@ export const useMultiSelect = () => {
       id: utils.guid(),
       props: {
         ...props,
-        // 如果是div，添加component-base-style类
-        ...(componentName === 'div' ? { className: 'component-base-style' } : {})
+        // 如果是div，添加组件基础样式类
+        ...(componentName === 'div' ? { className: getComponentBaseStyleClassName() } : {})
       },
       children: selectedNodes
     }
@@ -327,8 +338,8 @@ export const useMultiSelect = () => {
       props: {
         content: '提示信息',
         ...props,
-        // 如果是div，添加component-base-style类
-        ...(componentName === 'div' ? { className: 'component-base-style' } : {})
+        // 如果是div，添加组件基础样式类
+        ...(componentName === 'div' ? { className: getComponentBaseStyleClassName() } : {})
       },
       children: [childSchema]
     }
