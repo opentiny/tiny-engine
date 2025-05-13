@@ -121,3 +121,83 @@ const register = {
   plugins: [Materials, Tree, customPlugin],
 }
 ```
+
+## engine.config 配置项详解
+
+engine.config 是注册表中的重要配置项，它控制着低代码引擎的核心行为。
+
+engine.config 配置示例：
+
+```javascript
+const registry = {
+  config: {
+    id: 'engine.config',
+    theme: 'light',
+    material: ['/mock/bundle.json'],
+  }
+}
+```
+
+以下是 engine.config 中关键配置项的详细说明：
+
+### material 配置
+
+material 配置用于指定物料资源的来源，它接受一个数组，每个元素表示一个物料资源的 URL 路径, 也可以是 JSON 对象。
+注：JSON 对象的格式需要符合 TinyEngine 的物料格式。直接配置 JSON 对象的形式 v2.5+ 版本开始支持。
+
+```javascript
+import bundle from './bundle.json'
+// engine.config.js 示例
+export default {
+  // ...
+  material: ['/mock/bundle.json', bundle],
+  // ...
+}
+```
+
+- 物料资源通常是 JSON 格式的文件，包含了组件的元数据信息
+- 支持配置多个物料源，引擎会按照顺序加载这些物料
+- 如果多个物料源中存在同名组件，后加载的会覆盖先加载的
+
+### theme 配置
+
+theme 配置用于指定低代码平台的主题，它接受一个字符串值，对应注册表中 themes 数组里定义的主题 type。
+
+```javascript
+// engine.config.js 示例
+export default {
+  // ...
+  theme: 'light', // 或 'dark'，对应 themes 数组中的主题 type
+  // ...
+}
+```
+
+主题的定义示例：
+
+```javascript
+const registry = {
+  // ...
+  // 默认的 theme 配置
+  themes: [
+    {
+      id: 'engine.theme.light',
+      text: '浅色主题',
+      type: 'light',
+      icon: 'light',
+      oppositeTheme: 'dark'
+    },
+    {
+      id: 'engine.theme.dark',
+      text: '深色主题',
+      type: 'dark',
+      icon: 'dark',
+      oppositeTheme: 'light'
+    }
+  ],
+  // ...
+}
+```
+
+- theme 的值需要与注册表中 themes 数组里某个主题的 type 相匹配
+- 主题切换可以通过修改此配置项的值来实现
+- 主题会影响整个低代码平台的视觉样式
