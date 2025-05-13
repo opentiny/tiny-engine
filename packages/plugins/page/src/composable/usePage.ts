@@ -456,7 +456,14 @@ const switchPage = (pageId: string | number, clearPreview = false) => {
       } else {
         getMetaApi(META_SERVICE.GlobalService).updatePageId(pageId)
       }
-      useLayout().closePlugin()
+
+      // 如果面板未固定，则关闭面板
+      const { PLUGIN_NAME, leftFixedPanelsStorage } = useLayout()
+      const isPanelFixed = leftFixedPanelsStorage.value.includes(PLUGIN_NAME.AppManage)
+      if (!isPanelFixed) {
+        useLayout().closePlugin()
+      }
+
       useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
       useCanvas().initData(data['page_content'], data)
     })
