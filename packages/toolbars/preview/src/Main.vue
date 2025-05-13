@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar-save">
+  <div class="toolbar-save toolbar-helpGuid">
     <toolbar-base
       content="预览页面"
       :icon="options.icon?.default || options?.icon"

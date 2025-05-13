@@ -1,14 +1,16 @@
 <template>
-  <toolbar-base content="出码" :icon="options.icon.default || options.icon" :options="options" @click-api="generate">
-    <template #default>
-      <generate-file-selector
-        :visible="state.showDialogbox"
-        :data="state.saveFilesInfo"
-        @confirm="confirm"
-        @cancel="cancel"
-      ></generate-file-selector>
-    </template>
-  </toolbar-base>
+  <div class="toolbar-helpGuid">
+    <toolbar-base content="出码" :icon="options.icon.default || options.icon" :options="options" @click-api="generate">
+      <template #default>
+        <generate-file-selector
+          :visible="state.showDialogbox"
+          :data="state.saveFilesInfo"
+          @confirm="confirm"
+          @cancel="cancel"
+        ></generate-file-selector>
+      </template>
+    </toolbar-base>
+  </div>
 </template>
 
 <script lang="ts">
