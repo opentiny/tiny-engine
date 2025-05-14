@@ -20,7 +20,7 @@ interface SelectionState {
 // 初始化多选节点
 const multiSelectedStates = ref<SelectionState[]>([])
 // 存储定时器引用，用于取消定时任务
-let selectionUpdateTimer: NodeJS.Timeout | null = null
+let selectionUpdateTimer: ReturnType<typeof setTimeout> | null = null
 
 /**
  * 创建TinyPopover组件结构
@@ -301,8 +301,10 @@ export const useMultiSelect = () => {
       id: utils.guid(),
       props: {
         ...props,
-        // 如果是div，添加组件基础样式类
-        ...(componentName === 'div' ? { className: getComponentBaseStyleClassName() } : {})
+        // 如果是div且基础样式类名不为空，才添加className
+        ...(componentName === 'div' && getComponentBaseStyleClassName()
+          ? { className: getComponentBaseStyleClassName() }
+          : {})
       },
       children: selectedNodes
     }
@@ -358,8 +360,10 @@ export const useMultiSelect = () => {
       props: {
         content: '提示信息',
         ...props,
-        // 如果是div，添加组件基础样式类
-        ...(componentName === 'div' ? { className: getComponentBaseStyleClassName() } : {})
+        // 如果是div且基础样式类名不为空，才添加className
+        ...(componentName === 'div' && getComponentBaseStyleClassName()
+          ? { className: getComponentBaseStyleClassName() }
+          : {})
       },
       children: [childSchema]
     }
