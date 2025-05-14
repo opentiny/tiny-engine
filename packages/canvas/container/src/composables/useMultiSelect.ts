@@ -20,7 +20,7 @@ interface SelectionState {
 // 初始化多选节点
 const multiSelectedStates = ref<SelectionState[]>([])
 // 存储定时器引用，用于取消定时任务
-const selectionUpdateTimer = ref<number | null>(null)
+let selectionUpdateTimer: NodeJS.Timeout | null = null
 
 /**
  * 创建TinyPopover组件结构
@@ -33,7 +33,7 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
 
   return {
     componentName: 'TinyPopover',
-    id: props.id !== undefined ? props.id : null,
+    id: utils.guid(),
     props: {
       width: 200,
       title: '弹框标题',
@@ -78,9 +78,9 @@ export const useMultiSelect = () => {
    */
   const cancelSelectionUpdate = (): void => {
     // 清除定时器
-    if (selectionUpdateTimer.value !== null) {
-      clearTimeout(selectionUpdateTimer.value)
-      selectionUpdateTimer.value = null
+    if (selectionUpdateTimer !== null) {
+      clearTimeout(selectionUpdateTimer)
+      selectionUpdateTimer = null
     }
   }
 
@@ -201,7 +201,7 @@ export const useMultiSelect = () => {
     cancelSelectionUpdate()
 
     // 设置新的定时器并保存引用
-    selectionUpdateTimer.value = setTimeout(() => {
+    selectionUpdateTimer = setTimeout(() => {
       if (newParentIds.length > 0) {
         // 如果只有一个容器，直接选中
         if (newParentIds.length === 1) {
@@ -260,7 +260,7 @@ export const useMultiSelect = () => {
     const materialsOptions = getOptions('engine.plugins.materials') || {}
     return materialsOptions.useBaseStyle && materialsOptions.componentBaseStyle?.className
       ? materialsOptions.componentBaseStyle.className
-      : 'component-base-style' // 默认值作为后备
+      : ''
   }
 
   /**
@@ -309,7 +309,7 @@ export const useMultiSelect = () => {
 
     // 特殊处理 TinyPopover 等组件
     if (componentName === 'TinyPopover') {
-      wrapSchema = createTinyPopoverSchema({ ...props, id: utils.guid() }, selectedNodes)
+      wrapSchema = createTinyPopoverSchema(props, selectedNodes)
     }
 
     // 从后向前删除原来的节点，避免索引变化
@@ -366,7 +366,7 @@ export const useMultiSelect = () => {
 
     // 需要对popover特殊处理
     if (componentName === 'TinyPopover') {
-      wrapSchema = createTinyPopoverSchema({ ...props, id: utils.guid() }, childSchema)
+      wrapSchema = createTinyPopoverSchema(props, childSchema)
     }
 
     return wrapSchema
