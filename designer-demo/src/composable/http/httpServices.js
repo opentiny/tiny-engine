@@ -56,23 +56,33 @@ export default defineService({
     if (enableMock) {
       mock = new AxiosMockAdapter(http)
       mock.onGet(/\/mock\/bundle\.json$/).passThrough()
-  
+      mock.onPost(/\/app-center\/api\/ai\/chat/).passThrough()
+
+      http.interceptors.request.use((config) => {
+        const AI_PATH = '/app-center/api/ai/chat'
+
+        if (config.url === AI_PATH) {
+          config.url = `/tiny-engine${AI_PATH}` // 修改路径
+        }
+        return config
+      })
+
       mock.onAny().reply((config) => {
         const { mockConfig = [] } = options
         const mockItem = mockConfig.find((item) => {
           if (config.method.toUpperCase() !== item.method) {
             return false
           }
-  
+
           if (typeof item.url === 'string') {
             return item.url === config.url
           }
-  
+
           if (item.url instanceof RegExp) {
             return item.url.test(config.url)
           }
         })
-  
+
         if (mockItem) {
           if (typeof mockItem.response === 'function') {
             return mockItem.response(config)
@@ -82,10 +92,10 @@ export default defineService({
 
         return [
           200,
-          { 
+          {
             code: 200,
             errMsg: '当前 demo 暂未支持该接口，请前往GitHub 或者 Gitee 克隆项目完整体验',
-            error: '当前 demo 暂未支持该接口，请前往GitHub 或者 Gitee 克隆项目完整体验', 
+            error: '当前 demo 暂未支持该接口，请前往GitHub 或者 Gitee 克隆项目完整体验'
           }
         ]
       })
