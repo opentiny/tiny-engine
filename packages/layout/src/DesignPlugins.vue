@@ -96,7 +96,7 @@
   <plugin-right-menu
     ref="rightMenu"
     :list="[...state.topNavLists, ...state.bottomNavLists]"
-    :align="LEFT"
+    align="left"
     @switchAlign="switchAlign"
   />
 </template>
@@ -150,7 +150,6 @@ export default {
     } = useLayout()
 
     const rightMenu = ref(null)
-    const LEFT = 'left'
     const showContextMenu = (event, type, item, index, align) => {
       if (!type) {
         rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
@@ -255,7 +254,6 @@ export default {
     }
 
     return {
-      LEFT,
       leftFixedPanelsStorage,
       currentComponent,
       changeAlign,
