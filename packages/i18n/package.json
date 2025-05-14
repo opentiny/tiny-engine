@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-i18n-host",
-  "version": "2.5.0-rc.5",
+  "version": "2.5.0",
   "publishConfig": {
     "access": "public"
   },

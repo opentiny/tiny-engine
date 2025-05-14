@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-cli",
-  "version": "2.5.0-rc.5",
+  "version": "2.5.0",
   "description": "",
   "main": "dist/index.js",
   "scripts": {
