@@ -12583,7 +12583,7 @@
                         "zh_CN": "加减按钮位置"
                       }
                     },
-                    "required": true,
+                    "required": false,
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
@@ -13612,7 +13612,7 @@
                 "props": {
                   "allow-empty": true,
                   "placeholder": "请输入",
-                  "controlsPosition": "right",
+                  "controlsPosition": "",
                   "step": 1
                 }
               }
