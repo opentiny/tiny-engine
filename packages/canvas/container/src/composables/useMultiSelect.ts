@@ -19,10 +19,8 @@ interface SelectionState {
 
 // 初始化多选节点
 const multiSelectedStates = ref<SelectionState[]>([])
-// 添加一个标记，跟踪最后一次更新选择状态的时间戳
-const lastSelectionUpdate = ref<number>(0)
-// 添加一个标记，跟踪是否已有用户操作中断了选择更新
-const selectionUpdateCancelled = ref<boolean>(false)
+// 存储定时器引用，用于取消定时任务
+const selectionUpdateTimer = ref<number | null>(null)
 
 /**
  * 创建TinyPopover组件结构
@@ -79,7 +77,11 @@ export const useMultiSelect = () => {
    * 取消待执行的选择更新
    */
   const cancelSelectionUpdate = (): void => {
-    selectionUpdateCancelled.value = true
+    // 清除定时器
+    if (selectionUpdateTimer.value !== null) {
+      clearTimeout(selectionUpdateTimer.value)
+      selectionUpdateTimer.value = null
+    }
   }
 
   /**
@@ -95,8 +97,6 @@ export const useMultiSelect = () => {
 
     // 用户进行了新的选择操作，取消之前的延时选择更新
     cancelSelectionUpdate()
-    // 更新时间戳，确保之前的更新不会执行
-    lastSelectionUpdate.value = Date.now()
 
     // 多选
     if (isMultiple) {
@@ -197,17 +197,11 @@ export const useMultiSelect = () => {
     // 清除原有选中状态
     clearMultiSelection()
 
-    // 记录当前的更新时间戳
-    const currentUpdateTime = Date.now()
-    lastSelectionUpdate.value = currentUpdateTime
-    selectionUpdateCancelled.value = false
+    // 取消之前可能存在的定时器
+    cancelSelectionUpdate()
 
-    setTimeout(() => {
-      // 如果在延时期间有新的选择操作，取消此次更新
-      if (selectionUpdateCancelled.value || lastSelectionUpdate.value !== currentUpdateTime) {
-        return
-      }
-
+    // 设置新的定时器并保存引用
+    selectionUpdateTimer.value = setTimeout(() => {
       if (newParentIds.length > 0) {
         // 如果只有一个容器，直接选中
         if (newParentIds.length === 1) {
