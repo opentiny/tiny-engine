@@ -213,7 +213,7 @@ const getFixedPanelsStatus = () => {
 
 const closeSetting = (forceClose?: boolean) => {
   const { settings } = layoutState
-  if (!settings.fixedPanels.includes(settings.render) || forceClose) {
+  if (!rightFixedPanelsStorage.value.includes(settings.render) || forceClose) {
     settings.render = ''
   }
 }
