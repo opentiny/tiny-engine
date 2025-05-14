@@ -13612,7 +13612,7 @@
                 "props": {
                   "allow-empty": true,
                   "placeholder": "请输入",
-                  "controlsPosition": "",
+                  "controls-position": "right",
                   "step": 1
                 }
               }
