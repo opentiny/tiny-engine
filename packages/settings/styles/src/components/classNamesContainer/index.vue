@@ -2,7 +2,7 @@
   <div class="className-container">
     <h6 class="title">
       <span>全局样式</span>
-      <link-button :href="docsUrl" class="help-link"></link-button>
+      <link-button :href="docsUrl" :tips="docsContent" class="help-link"></link-button>
     </h6>
     <div class="selector-container">
       <code-configurator
@@ -132,6 +132,8 @@ const OPTION_TYPE = {
 }
 
 const docsUrl = useHelp().getDocsUrl('stylePanel')
+
+const docsContent = ref('声明多条CSS样式或其他媒体查询的样式，然后通过组件的 class 或者 id 进行绑定')
 
 const classNameState = reactive({
   curSelector: '',

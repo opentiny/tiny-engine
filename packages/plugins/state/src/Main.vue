@@ -6,6 +6,7 @@
     :fixed-name="PLUGIN_NAME.State"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
     @close="closePanel"
   >
@@ -133,6 +134,7 @@ export default {
     const { setSaved } = useCanvas()
     const { openCommon } = getMetaApi(META_APP.Save)
     const docsUrl = useHelp().getDocsUrl('data')
+    const docsContent = ref('对 state 的响应式变量进行系统管理，包含添加、删除、搜索、编辑 state。')
     const state = reactive({
       dataSource: {},
       createData: {
@@ -414,6 +416,7 @@ export default {
       OPTION_TYPE,
       open,
       docsUrl,
+      docsContent,
       onMouseLeaveVariable,
       onMouseLeaveStore
     }

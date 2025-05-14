@@ -4,6 +4,8 @@
     class="plugin-bridge"
     :fixed-name="PLUGIN_NAME.Bridge"
     :fixedPanels="fixedPanels"
+    :docsContent="docsContent"
+    :isShowDocsIcon="true"
     @close="closePanel"
   >
     <template #header>
@@ -41,6 +43,9 @@ export default {
     const activedName = ref(RESOURCE_TYPE.Util)
     const utilsRef = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
+    const docsContent = ref(
+      '资源管理插件提供「工具类方法」功能，支持自定义函数和npm包引用，实现代码复用。轻松添加公共函数或第三方库，应用内全局调用，提升开发效率。'
+    )
 
     const { PLUGIN_NAME } = useLayout()
 
@@ -70,7 +75,8 @@ export default {
       closePanel,
       refreshList,
       utilsRef,
-      tips
+      tips,
+      docsContent
     }
   }
 }

@@ -4,6 +4,7 @@
     :fixed-name="PLUGIN_NAME.Page"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
     @close="$emit('close')"
     class="plugin-page-js-container plugin-script"
@@ -30,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { onBeforeUnmount, reactive, provide } from 'vue'
+import { onBeforeUnmount, reactive, provide, ref } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
@@ -59,6 +60,7 @@ export default {
   emits: ['close'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
+    const docsContent = ref('同一页面/区块的添加事件会统一保存到对应的页面JS中。')
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const { PLUGIN_NAME } = useLayout()
@@ -127,7 +129,8 @@ export default {
       change,
       saveMethods,
       editorDidMount,
-      docsUrl
+      docsUrl,
+      docsContent
     }
   }
 }

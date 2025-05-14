@@ -5,6 +5,7 @@
     :fixed-name="PLUGIN_NAME.I18n"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
   >
     <template #content>
@@ -198,6 +199,9 @@ export default {
       }
     ]
     const docsUrl = useHelp().getDocsUrl('i18n')
+    const docsContent = ref(
+      '针对画布中的项目，可能需要同时支持多个语言，设计器提供了中英文切换，可一键切换语言，国际化资源是应用级别的，在任何一个页面都可以访问。'
+    )
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')
@@ -449,6 +453,7 @@ export default {
       editingRow,
       batchDelete,
       docsUrl,
+      docsContent,
       OPEN_DELAY
     }
   }
