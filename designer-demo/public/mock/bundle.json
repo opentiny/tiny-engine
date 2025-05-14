@@ -13872,7 +13872,7 @@
                 "props": {
                   "modelValue": "",
                   "placeholder": "请选择",
-                  "gridOp": {
+                  "grid-op": {
                     "columns": [
                       {
                         "field": "id",
