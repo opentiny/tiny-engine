@@ -531,7 +531,7 @@ const handleDeleteCurSelector = () => {
     row-gap: 2px;
     align-items: center;
     max-width: 180px;
-    min-width: 0;
+    min-width: 144px;
     padding: 1px 10px;
     border: 1px solid var(--te-styles-common-border-color);
     border-radius: var(--te-base-border-radius-1);
