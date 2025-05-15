@@ -60,7 +60,7 @@ export default {
 
     let cleanupCommunicationAction = null
     const onSchemaReceivedAction = async (data) => {
-      updateUrl(data.currentPage, { scripts: data.scripts, styles: data.styles })
+      updateUrl(data.currentPage)
       const isHistory = new URLSearchParams(location.search).get('history')
       const previewHotReload = getMergeMeta('engine.config').previewHotReload
       // 如果是历史预览，则不需要实时预览，接收到消息之后直接取消监听(需要监听到第一次消息接受页面信息)

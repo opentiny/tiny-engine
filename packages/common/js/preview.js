@@ -238,11 +238,10 @@ const getQueryParams = (params = {}, isHistory = false) => {
   const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
   const framework = getMergeMeta('engine.config')?.dslMode
   const platform = getMergeMeta('engine.config')?.platformId
-  const { scripts, styles } = getScriptAndStyleDeps()
 
   let query = `tenant=${tenant}&id=${paramsMap.get('id')}&theme=${theme}&framework=${framework}`
 
-  query += `&platform=${platform}&scripts=${JSON.stringify(scripts)}&styles=${JSON.stringify(styles)}`
+  query += `&platform=${platform}`
 
   if (pageId) {
     query += `&pageid=${pageId}`
