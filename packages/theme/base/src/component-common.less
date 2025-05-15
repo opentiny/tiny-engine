@@ -298,6 +298,7 @@
 .tiny-dialog-box.tiny-dialog-box.tiny-dialog-box {
   padding: 20px;
   background-color: var(--te-common-bg-popover);
+  border-radius: var(--te-base-border-radius-1);
   .tiny-dialog-box__header {
     height: auto;
     font-size: var(--te-base-font-size-1);
@@ -474,6 +475,7 @@
       .tiny-modal__title {
         font-weight: var(--te-base-font-weight-bold);
         color: var(--te-common-text-primary);
+        font-size: var(--te-base-font-size-1);
       }
       .tiny-modal__close-btn {
         top: -4px;
@@ -536,7 +538,7 @@
 }
 
 // 11、numeric 组件
-.tiny-numeric.tiny-numeric {
+.tiny-numeric.tiny-numeric.tiny-numeric {
   .tiny-numeric__input-inner {
     height: 24px;
     border-radius: var(--te-base-border-radius-1);
@@ -595,6 +597,7 @@
   background-color: var(--te-common-bg-popover);
   border: 0;
   box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
+  border-radius: var(--te-base-border-radius-1);
 
   height: auto;
   .popper__arrow {
@@ -617,9 +620,6 @@
 // 14、radio 单选
 .tiny-radio.tiny-radio {
   margin-right: 20px;
-  .tiny-radio__inner {
-    border: 1px solid var(--te-common-border-hover);
-  }
   .tiny-radio__label {
     font-size: var(--te-base-font-size-base);
     color: var(--te-common-text-primary);
@@ -948,10 +948,6 @@
     }
     .tiny-grid-checkbox {
       color: var(--te-common-border-hover);
-      border-radius: var(--te-base-border-radius-1);
-    }
-    .row__selected .tiny-grid-checkbox {
-      color: var(--te-common-color-info);
     }
   }
 }

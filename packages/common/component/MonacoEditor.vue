@@ -200,7 +200,7 @@ export default {
 .editor {
   flex: 1;
   overflow: hidden;
-  border: 1px solid var(--te-component-common-border-color-hover);
+  border: 1px solid var(--te-component-common-border-color-divider);
   border-radius: 6px;
 }
 </style>

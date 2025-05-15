@@ -526,6 +526,9 @@ export default {
     .tiny-dropdown__suffix-inner {
       color: var(--te-block-panel-footer-icon-color);
       height: 10px;
+      .tiny-svg {
+        fill: currentcolor;
+      }
     }
   }
   :deep(.tiny-dropdown-menu) {

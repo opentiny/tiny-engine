@@ -1,5 +1,5 @@
 <template>
-  <monaco-editor :value="modelValue" class="monaco-editor" :options="options" @change="change" />
+  <monaco-editor :value="modelValue" class="editor" :options="options" @change="change" />
 </template>
 
 <script lang="ts">
@@ -40,7 +40,7 @@ export default {
   font-size: 14px;
 }
 
-.monaco-editor {
+.editor {
   height: 180px;
   margin-top: 8px;
   border: 1px solid var(--te-datasource-common-border-color-divider);

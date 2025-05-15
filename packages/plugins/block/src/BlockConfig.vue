@@ -371,3 +371,8 @@ export default {
   max-width: 100px;
 }
 </style>
+<style>
+.block-openness .block-openness-tenants .tiny-input__inner {
+  height: 24px !important;
+}
+</style>

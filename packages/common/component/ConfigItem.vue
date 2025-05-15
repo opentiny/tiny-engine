@@ -201,9 +201,12 @@ export default {
         !props.onlyEdit &&
         propLabel.value &&
         (isBindingState.value ||
-          !['GroupItemConfigurator', 'ArrayItemConfigurator', 'RelatedColumnsConfigurator'].includes(
-            widget.value.component
-          )) &&
+          ![
+            'GroupItemConfigurator',
+            'ArrayItemConfigurator',
+            'RelatedColumnsConfigurator',
+            'TableColumnsConfigurator'
+          ].includes(widget.value.component)) &&
         !multiType.value
     )
     const propDescription = computed(

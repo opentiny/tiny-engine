@@ -94,9 +94,13 @@ export default {
       height: 20px;
       display: flex;
       align-items: center;
+      .tiny-svg {
+        fill: var(--te-datasource-field-cell-type-icon-color);
+      }
     }
     .field-cell-name {
       margin-left: 5px;
+      font-weight: bold;
       .description {
         color: var(--te-datasource-input-icon-color);
         margin-left: 5px;

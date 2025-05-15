@@ -649,8 +649,10 @@ export default {
 }
 
 .record-list-data {
-  :deep(.tiny-grid.tiny-grid-editable .tiny-grid-body__column.col__ellipsis) {
-    padding-left: 8px;
+  :deep(.tiny-grid__wrapper) {
+    .tiny-grid-editor {
+      line-height: 32px;
+    }
   }
   :deep(.data-source-list-pager) {
     padding-right: 8px;
