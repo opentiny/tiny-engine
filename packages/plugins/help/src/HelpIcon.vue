@@ -74,6 +74,8 @@ export default {
     const helpTitle = '帮助与指引'
     const questionTitle = '常见问题'
     const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
+    const imgUrl =
+      'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/designer/drag-drop-action-guide.svg'
     const questionList = [
       {
         label: '如何引入第三方组件库',
@@ -129,7 +131,11 @@ export default {
       {
         popPosition: 'right',
         title: '选择组件/区块',
-        text: '组件和区块来源于物料资源包（门户网站），下拉滚动面板或搜索您需要的组件（区块），拖拽至画布中，进行页面构建。',
+        text: `<div>
+          <div><img src="${imgUrl}" /></div>
+          <div>组件和区块来源于物料资源包（门户网站），下拉滚动面板或搜索您需要的组件（区块），拖拽至画布中，进行页面搭建。</div>
+        </div>
+        `,
         domElement: '#tiny-engine-left-panel',
         classes: 'lwocode-guide-materials',
         button: [
