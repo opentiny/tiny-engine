@@ -1,6 +1,6 @@
 <template>
   <span class="link-button">
-    <tiny-tooltip effect="light" :content="tips" :placement="placement">
+    <tiny-tooltip effect="light" :content="tips">
       <template #content>
         <div class="tip-content">
           {{ tips }}
