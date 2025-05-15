@@ -74,8 +74,7 @@ export default {
     const helpTitle = '帮助与指引'
     const questionTitle = '常见问题'
     const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
-    const imgUrl =
-      'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/designer/drag-drop-action-guide.svg'
+    const imgUrl = 'https://tinyengine-assets.obs.myhuaweicloud.com/files/designer/drag-drop-action-guide.svg'
     const questionList = [
       {
         label: '如何引入第三方组件库',
