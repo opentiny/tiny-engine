@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-     viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+	 viewBox="0 0 44 44" style="enable-background:new 0 0 44 44;" xml:space="preserve">
 <style type="text/css">
-    .st0{fill:currentcolor;}
-    .st1{fill:none;stroke:currentcolor;stroke-width:4;stroke-linejoin:round;stroke-miterlimit:10;}
-    .st2{fill:none;stroke:currentcolor;stroke-width:3;stroke-linejoin:round;stroke-miterlimit:10;}
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
 </style>
-<g id="Clip-30">
-</g>
-<g id="Clip-30_00000082359790372202237170000007339004850009255582_">
-</g>
-<rect x="6.2" y="11.6" class="st1" width="50.5" height="12"/>
-<line class="st2" x1="4.9" y1="22.4" x2="55.5" y2="22.4"/>
-<line class="st2" x1="23" y1="13.2" x2="23" y2="21.8"/>
-<line class="st2" x1="39.9" y1="13.2" x2="39.9" y2="21.8"/>
+<desc>Created with Pixso.</desc>
+<path id="矢量_133" class="st0" d="M38.5,6.7c-0.3-0.1-0.6-0.2-1-0.2h-31C5.7,6.5,5,6.7,4.6,7.1S4,8.2,4,9v26
+	c0,0.8,0.2,1.5,0.6,1.9c0.4,0.4,1,0.6,1.9,0.6h31c0.8,0,1.5-0.2,1.9-0.6c0.4-0.4,0.6-1,0.6-1.9V9c0-0.4-0.1-0.7-0.2-1v0l0,0
+	c-0.1-0.3-0.3-0.6-0.6-0.8C39,7,38.8,6.8,38.5,6.7z M6.5,7.5h31c0.5,0,0.9,0.1,1.1,0.4C38.9,8.1,39,8.5,39,9v9.5H5V9
+	c0-0.5,0.1-0.9,0.4-1.1C5.6,7.6,6,7.5,6.5,7.5z M7.7,12c0-0.6,0.4-1,1-1h5.5c0.6,0,1,0.4,1,1v2c0,0.6-0.4,1-1,1H8.7
+	c-0.6,0-1-0.4-1-1V12z M19.3,11c-0.6,0-1,0.4-1,1v2c0,0.6,0.4,1,1,1h5.5c0.6,0,1-0.4,1-1v-2c0-0.6-0.4-1-1-1H19.3z M28.9,12
+	c0-0.6,0.4-1,1-1h5.5c0.5,0,1,0.4,1,1v2c0,0.6-0.5,1-1,1h-5.5c-0.6,0-1-0.4-1-1V12z M8.7,12h5.5v2H8.7V12z M24.8,12h-5.5v2h5.5V12z
+	 M29.9,12h5.5v2h-5.5V12z M5,19.5h34V35c0,0.5-0.1,0.9-0.4,1.1c-0.2,0.3-0.6,0.4-1.1,0.4h-31c-0.5,0-0.9-0.1-1.1-0.4
+	C5.1,35.9,5,35.5,5,35V19.5z"/>
 </svg>

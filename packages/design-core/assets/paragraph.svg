@@ -1,13 +1,14 @@
-<svg version="1.1" id="图层_1"
-  xmlns="http://www.w3.org/2000/svg"
-  xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
-  <style type="text/css">
-	.st0{fill:currentcolor;}
-  </style>
-  <g>
-    <rect x="5.8" y="13.3" class="st0" width="52" height="5"/>
-    <rect x="5.8" y="23.5" class="st0" width="33.9" height="5"/>
-    <rect x="5.8" y="33.7" class="st0" width="52" height="5"/>
-    <rect x="5.8" y="43.9" class="st0" width="33.9" height="5"/>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 44 44" style="enable-background:new 0 0 44 44;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
+</style>
+<desc>Created with Pixso.</desc>
+<path id="矢量_86" class="st0" d="M4.6,13.2h34c0.3,0,0.6-0.3,0.6-0.6c0-0.3-0.3-0.6-0.6-0.6h-34C4.3,12,4,12.3,4,12.6
+	C4,12.9,4.3,13.2,4.6,13.2z M4.6,19.2h23c0.3,0,0.6-0.3,0.6-0.6c0-0.3-0.3-0.6-0.6-0.6h-23C4.3,18,4,18.3,4,18.6
+	C4,18.9,4.3,19.2,4.6,19.2z M38.6,25.2h-34c-0.3,0-0.6-0.3-0.6-0.6C4,24.3,4.3,24,4.6,24h34c0.3,0,0.6,0.3,0.6,0.6
+	C39.2,24.9,38.9,25.2,38.6,25.2z M4.6,31.2h14c0.3,0,0.6-0.3,0.6-0.6c0-0.3-0.3-0.6-0.6-0.6h-14C4.3,30,4,30.3,4,30.6
+	C4,30.9,4.3,31.2,4.6,31.2z"/>
 </svg>
