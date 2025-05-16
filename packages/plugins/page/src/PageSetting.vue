@@ -60,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-/* metaService: engine.plugins.engine.plugins.appmanage */
+/* metaService: engine.plugins.appmanage-PageSetting */
 import { reactive, ref, computed, onActivated, onDeactivated } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'

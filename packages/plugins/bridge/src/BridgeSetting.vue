@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.bridge */
+/* metaService: engine.plugins.bridge-BridgeSetting */
 import { computed, onMounted, reactive, ref, watchEffect, nextTick, watch } from 'vue'
 import {
   Input as TinyInput,

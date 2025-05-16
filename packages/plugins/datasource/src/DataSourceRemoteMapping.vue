@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections */
+/* metaService: engine.plugins.collections-DataSourceRemoteMapping */
 import { reactive, watchEffect, ref } from 'vue'
 import { Input, Select, Checkbox } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'

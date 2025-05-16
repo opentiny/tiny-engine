@@ -38,7 +38,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.plugins.outlinetree-Main */
 import {
   reactive,
   watch,

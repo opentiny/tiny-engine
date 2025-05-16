@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.savelocal */
+/* metaService: engine.service.savelocal-useSaveLocal */
 import { Modal } from '@opentiny/vue'
 import { useCanvas, getMergeMeta, useEnv } from '@opentiny/tiny-engine-meta-register'
 

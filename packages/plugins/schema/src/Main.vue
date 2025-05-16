@@ -40,7 +40,7 @@
 </template>
 
 <script lang="tsx">
-/* metaService */
+/* metaService: engine.plugins.schema-Main */
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
