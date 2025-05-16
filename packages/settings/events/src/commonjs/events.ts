@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.setting.event-commonjs-events */
+/* metaService: engine.setting.event.commonjs-events */
 
 export const commonEvents = {
   onClick: {

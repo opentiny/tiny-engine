@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.materials.block-BlockGroupFilters */
+/* metaService: engine.plugins.materials.block.BlockGroupFilters */
 import { computed, reactive } from 'vue'
 import { CheckboxGroup, Checkbox, Select, Option } from '@opentiny/vue'
 

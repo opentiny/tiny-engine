@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.plugins.materials.block-js-usePanel */
+/* metaService: engine.plugins.materials.block.js-usePanel */
 
 import { reactive } from 'vue'
 

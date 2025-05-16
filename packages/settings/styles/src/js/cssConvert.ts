@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.setting.styles-cssConvert */
+/* metaService: engine.setting.styles.cssConvert */
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { camelize } = utils

@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.bridge-Main */
+/* metaService: engine.plugins.bridge.Main */
 import { ref, reactive, computed, provide } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'

@@ -144,7 +144,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.styles-TypographyGroup */
+/* metaService: engine.setting.styles.TypographyGroup */
 import { ref, reactive } from 'vue'
 import NumericSelect from '../inputs/NumericSelect.vue'
 import { ColorConfigurator, SelectConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'

@@ -29,7 +29,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.styles-BackgroundImageGradient */
+/* metaService: engine.setting.styles.BackgroundImageGradient */
 import { computed, reactive, watchEffect } from 'vue'
 import { Input, Checkbox } from '@opentiny/vue'
 import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'

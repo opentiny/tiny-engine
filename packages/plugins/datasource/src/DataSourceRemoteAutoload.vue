@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections-DataSourceRemoteAutoload */
+/* metaService: engine.plugins.collections.DataSourceRemoteAutoload */
 import { reactive } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 

@@ -15,7 +15,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.styles-ModalMask */
+/* metaService: engine.setting.styles.ModalMask */
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 

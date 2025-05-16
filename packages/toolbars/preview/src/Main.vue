@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.toolbars.preview-Main */
+/* metaService: engine.toolbars.preview.Main */
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'

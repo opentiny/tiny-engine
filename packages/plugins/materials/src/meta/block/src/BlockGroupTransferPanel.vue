@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.materials.block-BlockGroupTransferPanel */
+/* metaService: engine.plugins.materials.block.BlockGroupTransferPanel */
 import BlockList from './BlockList.vue'
 
 export default {

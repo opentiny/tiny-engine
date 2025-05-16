@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.toolbars.lock-Main */
+/* metaService: engine.toolbars.lock.Main */
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
