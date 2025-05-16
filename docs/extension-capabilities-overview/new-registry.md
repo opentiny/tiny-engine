@@ -355,23 +355,6 @@ export default {
         }
       }
     }
-  },
-  'engine.plugins.bridge': {
-    overwrite: {
-      templates: {
-        // 覆盖 utils 插件的 BridgeManage 模板
-        BridgeManage: `<template>
-  <h1
-        v-for="(item, index) in list"
-        :key="item.name"
-        @click.stop="openEdit(item, index)"
-      >
-        <div class="item-label">{{ item.name }}</div>
-  </h1>
-</template>
-`
-      }
-    }
   }
 }
 ```
@@ -413,9 +396,111 @@ async function startApp() {
 
 ##### 覆盖插件的 methods 方法
 
+假如我们希望覆盖 i18n 插件中 Main.vue 文件的 openEditor 方法：
+
+1. 查看 i18n 插件的 src/Main.vue 文件，发现有 metaService 的注释，确认可以对该文件进行覆盖。（没有 metaService 或者是 metaComponent 注释的文件，无法进行覆盖）
+
+metaService 或者是 metaComponent 注释的格式如下：
+
+```javascript
+/* metaService: engine.plugins.i18n-Main */
+
+/* metaComponent: engine.plugins.i18n-Main */
+```
+
+2. 查看 Main.vue 文件的 metaService 注释，确认 id 为 engine.plugins.i18n-Main。
+
+id 的作用：指定覆盖的文件。
+
+于是：我们就可以得到如下代码：
+
+```javascript
+export default {
+  'engine.plugins.i18n': {
+    overwrite: {
+      methods: {
+        'engine.plugins.i18n-Main': {
+          openEditor: (ctx) => (_event, row) => {
+            const { isEditMode, editingRow, i18nTable, langList, getActiveRow, utils } = ctx()
+            isEditMode.value = Boolean(row.key)
+            editingRow.value = row
+            if (!isEditMode.value) {
+              row.key = `custom.${utils.guid()}`
+              langList.value.unshift(row)
+            }
+            i18nTable.value.setActiveRow(row).then(() => {
+              getActiveRow()
+            })
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+代码解析：
+- 'engine.plugins.i18n'，指定我们要配置 i18n 插件。
+- overwrite 指定我们要使用覆盖功能。
+- methods 指定我们要覆盖 i18n 插件的 methods 方法。
+- 'engine.plugins.i18n-Main'，指定我们要覆盖 i18n 插件的 Main.vue 文件。
+- openEditor 指定我们要覆盖 i18n 插件的 openEditor 方法。
+
+方法覆盖说明：
+- 方法覆盖的格式为：`方法名: (ctx) => (_event, row) => { ... }`。
+- ctx 为上下文对象方法，通过 ctx() 获取，可以得到原来的上下文对象。
+- _event, row 为原来方法形参（入参），不可以覆盖。
+- `{...}` 为新方法的实现，在这里实现函数覆盖的逻辑。
+
 ##### 覆盖插件的 lifeCycles 方法
 
-##### 覆盖插件的 templates 模板
+假如我们希望覆盖 i18n 插件的 onMounted 方法：
+
+1. 查看 i18n 插件的 src/Main.vue 文件，发现有 metaService 的注释，确认可以对该文件进行覆盖。（没有 metaService 或者是 metaComponent 注释的文件，无法进行覆盖）
+
+2. 确认 Main.vue 文件的 metaService 注释，确认 id 为 engine.plugins.i18n-Main。
+
+3. 于是：我们就可以得到如下代码：
+
+```javascript
+export default {
+  'engine.plugins.i18n': {
+    overwrite: {
+      lifeCycles: {
+        'engine.plugins.i18n-Main': {
+          onMounted: [
+            (ctx) => () => {
+              const { i18nSearchTypes, currentSearchType } = ctx()
+              console.log('overWrite i18n onMounted', i18nSearchTypes, currentSearchType.value)
+              currentSearchType.value = i18nSearchTypes[0].value
+            }
+          ]
+        }
+      }
+    }
+  }
+}
+```
+
+代码解析：
+
+- 'engine.plugins.i18n'，指定我们要配置 i18n 插件。
+- overwrite 指定我们要使用覆盖功能。
+- lifeCycles 指定我们要覆盖 i18n 插件的 lifeCycles 方法 (vue 生命周期)。
+- 'engine.plugins.i18n-Main'，指定我们要覆盖 i18n 插件的 Main.vue 文件。
+- onMounted 指定我们要覆盖 i18n 插件的 onMounted 方法，由于 onMounted 方法可能会声明多次，所以我们这里需要使用数组，需要覆盖第几次 onMounted 方法，就在数组对应的排列顺序上写覆盖方法，如果前面的不需要覆盖，则写空字符串。
+
+比如：
+
+```javascript
+onMounted: [
+  '',
+  '',
+  '',
+  // 这里覆盖第4次 onMounted 方法
+  'onMounted: (ctx) => () => { ... }'
+]
+```
 
 #### hotfix 注册表注意事项
 
