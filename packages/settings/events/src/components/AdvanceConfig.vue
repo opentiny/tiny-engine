@@ -72,7 +72,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.event */
+/* metaService: engine.setting.event-AdvanceConfig */
 import { ref, computed, reactive, watch } from 'vue'
 import {
   CodeConfigurator,

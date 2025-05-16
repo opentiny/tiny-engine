@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.toolbars.breadcrumb-Main */
 import { reactive, computed } from 'vue'
 import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'

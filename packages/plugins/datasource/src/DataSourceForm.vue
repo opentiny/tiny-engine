@@ -33,7 +33,7 @@
 </template>
 
 <script lang="tsx">
-/* metaService: engine.plugins.collections */
+/* metaService: engine.plugins.collections-DataSourceForm */
 import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'

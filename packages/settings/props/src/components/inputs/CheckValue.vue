@@ -3,7 +3,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.props */
+/* metaService: engine.setting.props-CheckValue */
 import { ref, watchEffect } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'

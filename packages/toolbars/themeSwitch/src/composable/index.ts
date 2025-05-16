@@ -1,4 +1,4 @@
-/* metaService: engine.toolbars.themeSwitch */
+/* metaService: engine.toolbars.themeSwitch-composable-index */
 import { reactive, ref } from 'vue'
 import { defineService, getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { setGlobalMonacoEditorTheme } from '@opentiny/tiny-engine-common'

@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.page */
+/* metaService: engine.service.page-usePage */
 import { reactive, ref } from 'vue'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -464,7 +464,10 @@ const switchPageWithConfirm = (pageId: string, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (familyPages: { id: any; page_content: any }[], currentPage: { id: string; page_content?: any }) => {
+const updatePageContent = (
+  familyPages: { id: any; page_content: any }[],
+  currentPage: { id: string; page_content?: any }
+) => {
   const currentPageSchema = familyPages.find((item) => item.id === currentPage.id)
   // 替换为当前页面最新的 schema
   if (currentPageSchema) {

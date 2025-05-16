@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.layout-Main */
 import { ref } from 'vue'
 import { useLayout, getMergeMeta, getMergeMetaByType } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'

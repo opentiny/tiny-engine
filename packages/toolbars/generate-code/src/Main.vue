@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.toolbars.generate-code-Main */
 import { reactive } from 'vue'
 import {
   useBlock,

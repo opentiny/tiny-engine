@@ -93,7 +93,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.styles */
+/* metaService: engine.setting.styles-EffectGroup */
 import { reactive } from 'vue'
 import { Select, Option, OptionGroup } from '@opentiny/vue'
 import { ColorConfigurator, SliderConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'

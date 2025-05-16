@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.layout */
+/* metaService: engine.service.layout-useLayout */
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
