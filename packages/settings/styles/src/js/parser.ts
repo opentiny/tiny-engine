@@ -1,4 +1,4 @@
-/* metaService: engine.setting.styles-parser */
+/* metaService: engine.setting.styles.parser */
 
 import postcss from 'postcss'
 

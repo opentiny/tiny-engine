@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.appmanage-PageFolderSetting */
+/* metaService: engine.plugins.appmanage.PageFolderSetting */
 import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'

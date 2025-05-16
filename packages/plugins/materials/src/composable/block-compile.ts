@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.material-block-compile */
+/* metaService: engine.service.material.block-compile */
 import { getMetaApi, META_SERVICE, useMaterial, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { compile as blockCompiler } from '@opentiny/tiny-engine-block-compiler'
 

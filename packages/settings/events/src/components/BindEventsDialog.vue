@@ -26,7 +26,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.event-BindEventsDialog */
+/* metaService: engine.setting.event.BindEventsDialog */
 import { ast2String, string2Ast } from '@opentiny/tiny-engine-common/js/ast'
 import {
   getMergeMeta,

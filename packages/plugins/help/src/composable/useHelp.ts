@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.help-useHelp */
+/* metaService: engine.service.help.useHelp */
 const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
 
 const helpState = {

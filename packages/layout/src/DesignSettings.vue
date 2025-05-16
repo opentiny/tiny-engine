@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.layout-DesignSettings */
+/* metaService: engine.layout.DesignSettings */
 import { computed, ref, watch, toRefs } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'

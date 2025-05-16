@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections-DataSourceRemoteDataAdapter */
+/* metaService: engine.plugins.collections.DataSourceRemoteDataAdapter */
 import { reactive, ref, watch } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'

@@ -47,7 +47,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.layout-DesignToolbars */
+/* metaService: engine.layout.DesignToolbars */
 import { reactive, computed } from 'vue'
 import { getMergeMeta, useLayout } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'

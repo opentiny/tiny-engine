@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections-DataSourceRemotePanel */
+/* metaService: engine.plugins.collections.DataSourceRemotePanel */
 import { reactive, watch, ref, computed } from 'vue'
 import { Collapse, CollapseItem, Tabs, TabItem, Button } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'

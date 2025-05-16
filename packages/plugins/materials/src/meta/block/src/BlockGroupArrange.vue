@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.materials.block-BlockGroupArrange */
+/* metaService: engine.plugins.materials.block.BlockGroupArrange */
 import { reactive, inject } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 

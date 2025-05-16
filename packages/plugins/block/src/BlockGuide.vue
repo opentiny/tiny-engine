@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.blockmanage-BlockGuide */
+/* metaService: engine.plugins.blockmanage.BlockGuide */
 import { VideoGuide } from '@opentiny/tiny-engine-common'
 
 export default {

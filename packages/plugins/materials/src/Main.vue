@@ -3,7 +3,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.materials-Main */
+/* metaService: engine.plugins.materials.Main */
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 export default {

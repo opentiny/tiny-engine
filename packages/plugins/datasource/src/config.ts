@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.plugins.collections-config */
+/* metaService: engine.plugins.collections.config */
 export default [
   {
     name: '字符串',

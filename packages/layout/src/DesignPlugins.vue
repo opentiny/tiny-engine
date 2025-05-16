@@ -102,7 +102,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.layout-DesignPlugins */
+/* metaService: engine.layout.DesignPlugins */
 import { reactive, ref, watch, computed } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
