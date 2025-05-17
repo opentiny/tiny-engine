@@ -27,7 +27,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, 'lodash-es']
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })

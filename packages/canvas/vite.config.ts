@@ -60,10 +60,7 @@ export default defineConfig({
         /@opentiny\/vue.*/,
         /^@babel.*/,
         /^@vue.*/,
-        'diff-match-patch',
-        'jsondiffpatch',
-        'postcss',
-        'postcss-selector-parser'
+        'postcss'
       ]
     },
     minify: true

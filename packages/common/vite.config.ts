@@ -86,8 +86,6 @@ export default defineConfig({
         /^@vueuse.*/,
         /^@vue.*/,
         'axios',
-        'css-tree',
-        'eslint-linter-browserify',
         'vue-draggable-next'
       ]
     }

@@ -26,7 +26,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, 'jszip']
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })

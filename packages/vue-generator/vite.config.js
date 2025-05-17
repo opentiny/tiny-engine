@@ -44,15 +44,7 @@ export default defineConfig({
     },
     sourcemap: true,
     rollupOptions: {
-      external: [
-        '@babel/parser',
-        '@babel/traverse',
-        '@babel/generator',
-        'vue',
-        'vue-eslint-parser',
-        /@vue\/.*/,
-        /@opentiny\/tiny-engine.*/
-      ]
+      external: ['@babel/parser', '@babel/traverse', '@babel/generator', 'vue', /@vue\/.*/, /@opentiny\/tiny-engine.*/]
     }
   }
 })

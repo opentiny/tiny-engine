@@ -32,15 +32,7 @@ export default defineConfig({
       output: {
         banner: 'import "./style.css"'
       },
-      external: [
-        'vue',
-        /@opentiny\/tiny-engine.*/,
-        /@opentiny\/vue.*/,
-        '@vue/shared',
-        'axios',
-        'vue-clipboard3',
-        'xlsx'
-      ]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/, '@vue/shared', 'axios', 'vue-clipboard3']
     }
   }
 })
