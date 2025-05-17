@@ -115,7 +115,6 @@ const getBindProps = (
   }
 
   if (getDesignMode() === DESIGN_MODE.DESIGN && active) {
-    bindProps.onMouseover = stopEvent
     bindProps.onFocus = stopEvent
   }
 

@@ -1,10 +1,7 @@
 <template>
-  <div v-for="state in multiSelectedStates" :key="state.id">
+  <div v-for="state in selectState" :key="state.node?.id || state.componentName">
     <canvas-action
-      :hoverState="hoverState"
-      :inactiveHoverState="inactiveHoverState"
       :selectState="state"
-      :lineState="lineState"
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
@@ -13,6 +10,8 @@
       @setting="settingModel"
     ></canvas-action>
   </div>
+  <canvas-hover :hoverState="curHoverState"></canvas-hover>
+  <canvas-insert-line :lineState="lineState" :hoverState="curHoverState"></canvas-insert-line>
   <canvas-multi-drag-indicator
     :lineState="lineState"
     :multiDragState="multiDragState"
@@ -20,8 +19,8 @@
     :isMultiDragging="isMultiDragging"
     :getMultiDragPositionText="getMultiDragPositionText"
   ></canvas-multi-drag-indicator>
-  <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
-  <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
+  <canvas-router-jumper :hoverState="curHoverState"></canvas-router-jumper>
+  <canvas-viewer-switcher :hoverState="curHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="computedSelectState"></canvas-divider>
   <canvas-resize-border :selectState="computedSelectState" :iframe="iframe"></canvas-resize-border>
   <canvas-resize>
@@ -61,7 +60,10 @@
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
 import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
-import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
+import {
+  // NODE_UID,
+  DESIGN_MODE
+} from '../../common'
 import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
 import CanvasAction from './components/CanvasAction.vue'
@@ -71,28 +73,27 @@ import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
 import CanvasMultiDragIndicator from './components/CanvasMultiDragIndicator.vue'
-import { useMultiSelect } from './composables/useMultiSelect'
+import CanvasHover from './components/CanvasHover.vue'
+import CanvasInsertLine from './components/CanvasInsertLine.vue'
+// import { useMultiSelect } from './composables/useMultiSelect'
 import { useMultiDrag } from './composables/useMultiDrag'
 import {
   canvasState,
   onMouseUp,
   dragMove,
   dragState,
-  initialRectState,
-  hoverState,
-  inactiveHoverState,
+  // hoverState,
   lineState,
   removeNodeById,
   syncNodeScroll,
   getElement,
   dragStart,
-  selectNode,
+  // selectNode,
   initCanvas,
   clearLineState,
-  querySelectById,
-  getCurrent,
   canvasApi
 } from './container'
+import { useHoverNode, useSelectNode } from './interactions'
 
 export default {
   components: {
@@ -103,7 +104,9 @@ export default {
     CanvasResizeBorder,
     CanvasRouterJumper,
     CanvasViewerSwitcher,
-    CanvasMultiDragIndicator
+    CanvasMultiDragIndicator,
+    CanvasHover,
+    CanvasInsertLine
   },
   props: {
     controller: Object,
@@ -120,6 +123,7 @@ export default {
     const showSettingModel = ref(false)
     const target = ref(null)
     const srcAttrName = computed(() => (props.canvasSrc ? 'src' : 'srcdoc'))
+    const isMouseDown = ref(false)
 
     const containerPanel = ref(null)
     const insertContainer = ref(false)
@@ -136,9 +140,10 @@ export default {
     // 当前拖拽类型状态
     const currentDragType = ref(DRAG_TYPE.NONE)
 
-    const { multiSelectedStates, isMouseDown } = useMultiSelect()
+    const { selectState, updateSelectedNode, defaultSelectState } = useSelectNode()
+    const { curHoverState, updateHoverNode } = useHoverNode()
 
-    const multiStateLength = computed(() => multiSelectedStates.value.length)
+    const multiStateLength = computed(() => selectState.value.length)
     const {
       startMultiDrag,
       moveMultiDrag,
@@ -150,11 +155,11 @@ export default {
     } = useMultiDrag()
 
     const computedSelectState = computed(() => {
-      if (multiSelectedStates.value.length === 1) {
-        return multiSelectedStates.value[0]
+      if (selectState.value.length === 1) {
+        return selectState.value[0]
       }
 
-      return initialRectState
+      return defaultSelectState
     })
 
     // 强制清除所有拖拽指示状态
@@ -164,31 +169,44 @@ export default {
       currentDragType.value = DRAG_TYPE.NONE
     }
 
-    const setCurrentNode = async (event) => {
+    const handleNodeInteractions = async (event) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
-
-      if (!element) return
-
       // 优先处理右键菜单
-      if (event.button === 2) {
+      // if (event.button === 2) {
+      //   openMenu(event)
+      //   return
+      // }
+
+      // 首先尝试处理多选拖拽开始
+      if (startMultiDrag(event, element) && event.button !== 2) {
+        // 设置为多选拖拽状态
+        currentDragType.value = DRAG_TYPE.MULTI
+        return
+      }
+
+      if (event.button === 2 && selectState.value.length > 0) {
         openMenu(event)
         return
       }
 
-      let node = getCurrent().schema
+      const isMultipleSelect = event.ctrlKey || event.metaKey
+      await updateSelectedNode(event, '', isMultipleSelect)
+      const node = selectState.value[0]?.node
 
-      if (element) {
-        // 首先尝试处理多选拖拽开始
-        if (startMultiDrag(event, element)) {
-          // 设置为多选拖拽状态
-          currentDragType.value = DRAG_TYPE.MULTI
-          return
-        }
+      // let node = getCurrent().schema
+
+      if (node) {
+        // // 首先尝试处理多选拖拽开始
+        // if (startMultiDrag(event, element)) {
+        //   // 设置为多选拖拽状态
+        //   currentDragType.value = DRAG_TYPE.MULTI
+        //   return
+        // }
 
         // 只有当不是多选拖拽的情况下，才进行选择操作
-        const currentElement = querySelectById(getCurrent().schema?.id)
+        // const currentElement = querySelectById(getCurrent().schema?.id)
 
         // 如果是点击右键则打开右键菜单
         if (event.button === 2) {
@@ -196,21 +214,22 @@ export default {
           return
         }
 
-        if (!currentElement?.contains(element) || event.button === 0) {
-          const isCtrlKey = event.ctrlKey || event.metaKey
-          const loopId = element.getAttribute(NODE_LOOP)
-          if (loopId) {
-            node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`, isCtrlKey)
-          } else {
-            node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
-          }
-        }
+        // if (!currentElement?.contains(element) || event.button === 0) {
+        //   const isCtrlKey = event.ctrlKey || event.metaKey
+        //   const loopId = element.getAttribute(NODE_LOOP)
+        //   if (loopId) {
+        //     node = await selectNode(element.getAttribute(NODE_UID), `loop-id=${loopId}`, isCtrlKey)
+        //   } else {
+        //     node = await selectNode(element.getAttribute(NODE_UID), undefined, isCtrlKey)
+        //   }
+        // }
 
         // 处理单节点拖拽开始
         if (event.button === 0 && element !== element.ownerDocument.body) {
-          const { x, y } = element.getBoundingClientRect()
-          if (multiStateLength.value === 1) {
-            dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+          const { x, y } = selectState.value[0]?.rect || {}
+          if (selectState.value.length === 1) {
+            const selectedElement = selectState.value[0]?.node
+            dragStart(node, selectedElement, { offsetX: clientX - x, offsetY: clientY - y })
             // 设置为单选拖拽状态
             currentDragType.value = DRAG_TYPE.SINGLE
           }
@@ -274,10 +293,10 @@ export default {
         win.addEventListener('mousedown', (event) => {
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
-            if (event.target === doc.documentElement) {
-              isScrolling = false
-              return
-            }
+            // if (event.target === doc.documentElement) {
+            //   isScrolling = false
+            //   return
+            // }
 
             const element = getElement(event.target)
             if (!element) {
@@ -290,15 +309,34 @@ export default {
 
             insertPosition.value = false
             insertContainer.value = false
-            setCurrentNode(event)
+            handleNodeInteractions(event)
             target.value = event.target
           })
 
           useMessage().publish({ topic: 'canvas-mousedown', data: { event } })
         })
 
+        win.addEventListener('contextmenu', (event) => {
+          handleCanvasEvent(() => {
+            if (event.target === doc.documentElement) {
+              return
+            }
+
+            insertPosition.value = false
+            insertContainer.value = false
+            handleNodeInteractions(event)
+            target.value = event.target
+          })
+        })
+
+        let scrollTimeout = null
         win.addEventListener('scroll', () => {
           isScrolling = true
+          clearTimeout(scrollTimeout)
+
+          scrollTimeout = setTimeout(() => {
+            isScrolling = false
+          }, 100)
         })
 
         // 监听鼠标移动事件
@@ -336,16 +374,16 @@ export default {
 
               // 判断是否需要切换到单选状态
               // 只有当点击多选节点但没有拖动时，才需要切换到单选状态
-              if (multiDragState.keydown && !multiDragState.dragStarted && multiStateLength.value > 1) {
-                const element = getElement(ev.target)
-                if (element) {
-                  const clickedNodeId = element?.getAttribute(NODE_UID)
-                  // 只有点击的是多选节点中的一个时才切换到单选
-                  if (clickedNodeId && multiSelectedStates.value.some((state) => state.id === clickedNodeId)) {
-                    selectNode(clickedNodeId)
-                  }
-                }
-              }
+              // if (multiDragState.keydown && !multiDragState.dragStarted && multiStateLength.value > 1) {
+              //   const element = getElement(ev.target)
+              //   if (element) {
+              //     const clickedNodeId = element?.getAttribute(NODE_UID)
+              //     // 只有点击的是多选节点中的一个时才切换到单选
+              //     if (clickedNodeId && selectState.value.some((state) => state.node?.id === clickedNodeId)) {
+              //       selectNode(clickedNodeId)
+              //     }
+              //   }
+              // }
             }
 
             // 根据当前拖拽类型执行相应的结束操作
@@ -387,6 +425,16 @@ export default {
           }
 
           clearAllDragStates()
+        })
+
+        win.addEventListener('mouseover', (ev) => {
+          handleCanvasEvent(() => {
+            // 更新当前鼠标 hover 的节点
+            updateHoverNode(ev)
+            // 清空拖拽线条
+            lineState.position = ''
+            lineState.width = 0
+          })
         })
 
         // 阻止浏览器默认的右键菜单功能
@@ -437,8 +485,9 @@ export default {
       insertPosition.value = position
     }
 
-    const selectSlot = (slotName) => {
-      hoverState.slot = slotName
+    // TODO: 需要确认下该事件还是否需要
+    const selectSlot = (_slotName) => {
+      // hoverState.slot = slotName
     }
 
     onMounted(() => run(iframe))
@@ -453,14 +502,13 @@ export default {
     document.addEventListener('canvasReady', canvasReady)
 
     return {
-      isMouseDown,
+      // isMouseDown,
       iframe,
       dragState,
-      hoverState,
-      inactiveHoverState,
+      // hoverState,
       computedSelectState,
       lineState,
-      multiSelectedStates,
+      // multiSelectedStates,
       multiStateLength,
       removeNodeById,
       selectSlot,
@@ -477,7 +525,9 @@ export default {
       srcAttrName,
       isMultiDragging,
       multiDragState,
-      getMultiDragPositionText
+      getMultiDragPositionText,
+      selectState,
+      curHoverState
     }
   }
 }

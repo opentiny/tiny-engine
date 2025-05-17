@@ -121,7 +121,7 @@ export default {
     }
 
     const handleResizeStart = () => {
-      const { top, left, width, height } = props.selectState
+      const { top, left, width, height } = props.selectState.rect
       const { parent, schema } = getCurrent()
 
       let startX = left
@@ -151,7 +151,8 @@ export default {
     watch(
       () => props.selectState,
       (selectState) => {
-        const { top, left, width, height, componentName } = selectState
+        const { top, left, width, height } = selectState.rect
+        const componentName = selectState.componentName
         const { parent, schema } = getCurrent()
 
         if (!['CanvasRow', 'CanvasCol'].includes(componentName)) {

@@ -33,10 +33,21 @@
 
 <script lang="jsx">
 import { ref, reactive, nextTick, computed } from 'vue'
-import { canvasState, getConfigure, getController, getCurrent, copyNode, removeNodeById } from '../container'
+import {
+  canvasState,
+  getConfigure,
+  getController,
+  getCurrent,
+  copyNode,
+  removeNodeById,
+  areSiblingNodes,
+  batchAddParent,
+  groupAddParent
+} from '../container'
 import { useLayout, useModal, useCanvas, usePage, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { iconRight } from '@opentiny/vue-icon'
-import { useMultiSelect } from '../composables/useMultiSelect'
+// import { useMultiSelect } from '../composables/useMultiSelect'
+import { useSelectNode } from '../interactions'
 
 const menuState = reactive({
   position: null,
@@ -88,7 +99,8 @@ export default {
     IconRight: iconRight()
   },
   setup(props, { emit }) {
-    const { multiSelectedStates, areSiblingNodes, batchAddParent, groupAddParent } = useMultiSelect()
+    // const { multiSelectedStates, areSiblingNodes, batchAddParent, groupAddParent } = useMultiSelect()
+    const { selectState } = useSelectNode()
 
     const menus = ref([
       { name: '修改属性', code: 'config' },
@@ -168,7 +180,8 @@ export default {
       }
     })
 
-    const isMultiSelect = computed(() => multiSelectedStates.value.length > 1)
+    // const isMultiSelect = computed(() => multiSelectedStates.value.length > 1)
+    const isMultiSelect = computed(() => selectState.value.length > 1)
 
     const filteredMenus = computed(() => {
       // 如果是多选，则展示多选菜单
@@ -203,11 +216,13 @@ export default {
         copyNode(getCurrent().schema?.id)
       },
       multiDel() {
-        const ids = multiSelectedStates.value.map((state) => state.id)
+        // const ids = multiSelectedStates.value.map((state) => state.id)
+        const ids = selectState.value.map((state) => state.node?.id)
         ids.forEach((id) => removeNodeById(id))
       },
       multiCopy() {
-        const ids = multiSelectedStates.value.map((state) => state.id)
+        // const ids = multiSelectedStates.value.map((state) => state.id)
+        const ids = selectState.value.map((state) => state.node?.id)
         ids.forEach((id) => copyNode(id))
 
         useCanvas().canvasApi.value.updateRect?.()
@@ -308,7 +323,8 @@ export default {
 
       if (isMultiSelect.value) {
         const multiSelectActions = ['multiDel', 'multiCopy', 'multiAddParent']
-        return multiSelectActions.includes(actionItem.code) && multiSelectedStates.value.length === 0
+        // return multiSelectActions.includes(actionItem.code) && multiSelectedStates.value.length === 0
+        return multiSelectActions.includes(actionItem.code) && selectState.value.length === 0
       } else {
         const actions = ['del', 'copy', 'addParent']
         return actions.includes(actionItem.code) && !getCurrent().schema?.id

@@ -1,7 +1,8 @@
 import { reactive, computed, toRaw } from 'vue'
 import type { ComputedRef } from 'vue'
 import type { PositionType } from '../container'
-import { useMultiSelect } from './useMultiSelect'
+// import { useMultiSelect } from './useMultiSelect'
+import { useSelectNode } from '../interactions'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { NODE_TAG, NODE_UID } from '../../../common'
 import {
@@ -91,8 +92,10 @@ const DRAG_THRESHOLD = 5
 
 export const useMultiDrag = () => {
   const multiDragState = reactive<MultiDragState>({ ...initialMultiDragState })
-  const { multiSelectedStates } = useMultiSelect()
-  const multiStateLength = computed<number>(() => (multiSelectedStates.value as SelectState[]).length)
+  // const { multiSelectedStates } = useMultiSelect()
+  const { selectState } = useSelectNode()
+  const multiStateLength = computed<number>(() => selectState.value.length)
+  // const multiStateLength = computed<number>(() => (multiSelectedStates.value as SelectState[]).length)
 
   // 准备拖拽 - 仅记录初始状态，不立即开始拖拽
   const startMultiDrag = (event: MouseEvent, element: HTMLElement): boolean => {
@@ -100,7 +103,8 @@ export const useMultiDrag = () => {
 
     // 检查点击的元素是否是已选中的节点之一
     const clickedNodeId = element?.getAttribute(NODE_UID)
-    if (!clickedNodeId || !(multiSelectedStates.value as SelectState[]).some((state) => state.id === clickedNodeId)) {
+    // if (!clickedNodeId || !(multiSelectedStates.value as SelectState[]).some((state) => state.id === clickedNodeId)) {
+    if (!clickedNodeId || !selectState.value.some((state) => state.node?.id === clickedNodeId)) {
       return false
     }
 
@@ -110,14 +114,14 @@ export const useMultiDrag = () => {
     multiDragState.draging = false
     multiDragState.initialMousePos = { x: clientX, y: clientY }
     multiDragState.targetNodeId = clickedNodeId
-    multiDragState.nodes = toRaw(multiSelectedStates.value as SelectState[]).map((state) => state.schema)
+    multiDragState.nodes = toRaw(selectState.value).map((state) => state.node)
 
     // 计算每个节点相对于鼠标的偏移量
-    ;(multiSelectedStates.value as SelectState[]).forEach((state) => {
-      const elem = querySelectById(state.id)
+    selectState.value.forEach((state) => {
+      const elem = querySelectById(state.node?.id)
       if (elem) {
         const { x, y } = elem.getBoundingClientRect()
-        multiDragState.offsets.set(state.id, {
+        multiDragState.offsets.set(state.node?.id, {
           offsetX: clientX - x,
           offsetY: clientY - y,
           initialX: x,
