@@ -329,7 +329,7 @@ const generateImports = (description, moduleName, type, componentsMap) => {
       blocks.push(`import ${block} from '${depPath}/${block}.vue'`)
     } else {
       const blockDefaultPath =
-        type === 'Block' ? `import ${block} from './${block}.vue'` : `import ${block} from '../components/${block}.vue'`
+        type === 'Block' ? `import ${block} from './${block}.vue'` : `import ${block} from '@/components/${block}.vue'`
 
       blocks.push(blockDefaultPath)
     }

@@ -42,7 +42,7 @@ export const getImportMap = (schema, componentsMap, config) => {
     pkgMap[key].push(item)
   })
 
-  const { blockRelativePath = '../components', blockSuffix = '.vue' } = config
+  const { blockRelativePath = '@/components', blockSuffix = '.vue' } = config
   const blockPkgMap = {}
   const relativePath = blockRelativePath.endsWith('/') ? blockRelativePath.slice(0, -1) : blockRelativePath
 
@@ -67,7 +67,7 @@ export const getImportMap = (schema, componentsMap, config) => {
 export const genCompImport = (schema, componentsMap, config = {}) => {
   const { components, blocks } = parseImport(schema.children)
   const pkgMap = {}
-  const { blockRelativePath = '../components/', blockSuffix = '.vue' } = config
+  const { blockRelativePath = '@/components/', blockSuffix = '.vue' } = config
 
   const importComps = componentsMap.filter(({ componentName }) => components.includes(componentName))
 

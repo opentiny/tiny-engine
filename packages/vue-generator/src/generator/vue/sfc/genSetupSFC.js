@@ -42,7 +42,7 @@ import {
 
 const parseConfig = (config = {}) => {
   const {
-    blockRelativePath = '../components/',
+    blockRelativePath = '@/components/',
     blockSuffix = '.vue',
     scriptConfig = {},
     styleConfig = {}
