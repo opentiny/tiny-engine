@@ -15,8 +15,8 @@ import { transformSFC } from './src/transform-sfc.js'
 export default function () {
   return {
     name: 'vite-plugin-generate-comments',
-    enforce: 'pre',
-    transform(code, id) {
+    order: 'pre',
+    handler(code, id) {
       if (id.endsWith('.vue')) {
         const result = transformSFC(code, id)
         return result
