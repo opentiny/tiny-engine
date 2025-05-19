@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.materials.block.BlockGroupSort */
 import { reactive } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { iconDeltaDown } from '@opentiny/vue-icon'

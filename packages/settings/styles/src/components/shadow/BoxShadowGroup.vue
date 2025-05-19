@@ -10,7 +10,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.styles */
+/* metaService: engine.setting.styles.BoxShadowGroup */
 import { reactive } from 'vue'
 
 export default {
