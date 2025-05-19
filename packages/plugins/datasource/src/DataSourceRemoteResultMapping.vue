@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections */
+/* metaService: engine.plugins.collections.DataSourceRemoteMapping */
 import { reactive, watchEffect, ref } from 'vue'
 import { TinyInput, TinySelect, TinyCheckbox } from '@opentiny/vue'
 import mappingType from './config.js'

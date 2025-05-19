@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.property */
+/* metaService: engine.service.property.useProperty */
 import { computed } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useBlock } from '@opentiny/tiny-engine-meta-register'

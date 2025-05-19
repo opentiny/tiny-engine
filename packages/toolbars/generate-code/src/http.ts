@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.toolbars.generate-code */
+/* metaService: engine.toolbars.generate-code.http */
 
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 

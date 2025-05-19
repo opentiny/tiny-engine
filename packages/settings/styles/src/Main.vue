@@ -79,7 +79,7 @@
 </template>
 
 <script>
-/* metaService */
+/* metaService: engine.setting.styles.Main */
 import { watch, ref, reactive, provide } from 'vue'
 import { Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { useLayout, useHistory, useCanvas, useProperties, getConfigurator } from '@opentiny/tiny-engine-meta-register'
