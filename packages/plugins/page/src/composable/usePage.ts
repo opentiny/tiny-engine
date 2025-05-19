@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.service.page */
+/* metaService: engine.service.page.usePage */
 import { reactive, ref } from 'vue'
 import { extend, isEqual as isValuesEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'

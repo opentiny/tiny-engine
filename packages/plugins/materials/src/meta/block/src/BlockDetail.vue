@@ -30,6 +30,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.materials.block.BlockDetail */
 import { Button } from '@opentiny/vue'
 import { IconDel, iconDoubleRight } from '@opentiny/vue-icon'
 import { inject } from 'vue'

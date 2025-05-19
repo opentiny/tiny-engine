@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.toolbars.refresh.Main */
 import {
   useMaterial,
   useCanvas,

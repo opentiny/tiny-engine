@@ -10,7 +10,7 @@
 </template>
 
 <script>
-/* metaService */
+/* metaService: engine.settings.Main */
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { TabItem, Tabs } from '@opentiny/vue'
 

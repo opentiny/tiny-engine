@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.blockmanage */
+/* metaService: engine.plugins.blockmanage.BlockGroupArrange */
 import { reactive } from 'vue'
 
 export default {

@@ -21,6 +21,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.materials.block.BlockList */
 import { computed, inject, reactive, ref } from 'vue'
 import {
   useBlock,

@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.materials.block.http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 

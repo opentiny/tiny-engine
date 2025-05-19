@@ -16,6 +16,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.materials.block.BlockPanel */
 import { onMounted, reactive, watch, provide, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'

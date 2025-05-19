@@ -10,6 +10,8 @@
  *
  */
 
+/* metaService: engine.plugins.materials.block.js-usePanel */
+
 import { reactive } from 'vue'
 
 const generateInitPanelState = () => ({
