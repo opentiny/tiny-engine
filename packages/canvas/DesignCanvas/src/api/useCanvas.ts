@@ -122,10 +122,17 @@ const generateNodesMap = (nodes: Node[], parent: RootNode | Node) => {
       nodeItem.id = utils.guid()
     }
 
-    nodesMap.value.set(nodeItem.id, {
-      node: nodeItem,
-      parent
-    })
+    if (parent.componentName === 'Template') {
+      nodesMap.value.set(nodeItem.id, {
+        node: nodeItem,
+        parent: nodesMap.value.get(parent.id || '')?.parent
+      })
+    } else {
+      nodesMap.value.set(nodeItem.id, {
+        node: nodeItem,
+        parent
+      })
+    }
 
     handleNodesInProps(nodeItem)
 
