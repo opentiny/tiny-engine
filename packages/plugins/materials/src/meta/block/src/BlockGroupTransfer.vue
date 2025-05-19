@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.materials.block.BlockGroupTransfer */
 import { computed, onMounted, provide, reactive, watch } from 'vue'
 import { useBlock, useModal } from '@opentiny/tiny-engine-meta-register'
 import { SelectAll } from '@opentiny/tiny-engine-common'
