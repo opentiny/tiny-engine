@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-/* metaService: engine.plugins.engine.plugins.appmanage */
+/* metaService: engine.plugins.appmanage.LayerLines */
 import { defineProps } from 'vue'
 
 defineProps({

@@ -30,7 +30,7 @@
 </template>
 
 <script lang="ts">
-/* metaService */
+/* metaService: engine.plugins.pagecontroller.Main */
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'

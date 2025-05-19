@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-/* metaService: engine.plugins.collections */
+/* metaService: engine.plugins.collections.DataSourceGlobalDataHandler */
 import DataHandlerEditor from './RemoteDataAdapterForm.vue'
 import { watch, ref, nextTick, reactive, computed } from 'vue'
 import { requestGlobalDataHandler } from './js/http'

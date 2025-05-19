@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.resource.useResource */
 import { reactive, toRaw } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'

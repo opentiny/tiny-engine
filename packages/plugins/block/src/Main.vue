@@ -122,7 +122,7 @@
 </template>
 
 <script lang="tsx">
-/* metaService */
+/* metaService: engine.plugins.blockmanage.Main */
 import { ref, reactive, computed, watch, provide } from 'vue'
 import {
   Search as TinySearch,

@@ -13,7 +13,7 @@
 </template>
 
 <script>
-/* metaService: engine.setting.props */
+/* metaService: engine.setting.props.DraggableOptions */
 import { reactive, watchEffect, ref, computed } from 'vue'
 import {
   IconDel,
