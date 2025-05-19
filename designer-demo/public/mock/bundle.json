@@ -43,7 +43,7 @@
               "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -320,7 +320,7 @@
               "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -786,7 +786,7 @@
               "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -1103,7 +1103,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -1554,7 +1554,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -1899,7 +1899,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -3132,7 +3132,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
