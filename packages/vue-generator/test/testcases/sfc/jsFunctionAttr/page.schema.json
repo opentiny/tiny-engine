@@ -1,0 +1,73 @@
+{
+  "state": {},
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "85375559",
+      "children": [
+        {
+          "componentName": "TinyTree",
+          "props": {
+            "data": [
+              {
+                "label": "一级 1",
+                "children": [
+                  {
+                    "label": "二级 1-1",
+                    "children": [
+                      {
+                        "label": "三级 1-1-1"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "label": "一级 2",
+                "children": [
+                  {
+                    "label": "二级 2-1",
+                    "children": [
+                      {
+                        "label": "三级 2-1-1"
+                      }
+                    ]
+                  },
+                  {
+                    "label": "二级 2-2",
+                    "children": [
+                      {
+                        "label": "三级 2-2-1"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            "className": "component-base-style",
+            "render-content": {
+              "type": "JSFunction",
+              "value": "function render(h, { node, data }) {\n  return <span style=\"color: red;font-size: 20px;\">{node.label}</span>\n}\n"
+            }
+          },
+          "children": [],
+          "id": "43235432"
+        }
+      ]
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "utils": [],
+  "bridge": [],
+  "inputs": [],
+  "outputs": [],
+  "fileName": "jsFunctionAttrTest"
+}
