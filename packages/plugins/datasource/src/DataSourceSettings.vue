@@ -15,7 +15,7 @@
           <data-source-field v-model="state.dataSource.data.columns" :editable="editable"></data-source-field>
         </div>
       </tiny-tab-item>
-      <tiny-tab-item title="静态数据" name="record">
+      <tiny-tab-item title="静态数据" name="record" v-if="editable">
         <data-source-setting-record-list
           :data="state.currentData"
           @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
