@@ -82,7 +82,9 @@ export default {
       lifeCycles: {
         'Main': {
           onMounted: [
-            // 覆盖 i18n 插件的 onMounted 方法
+            // i18n 插件 Main.vue 文件的第一个 onMounted 方法，不覆盖
+            '',
+            // 覆盖 i18n 插件 Main.vue 文件的第二个 onMounted 方法
             (ctx) => () => {
               const { i18nSearchTypes, currentSearchType } = ctx()
               console.log('overWrite i18n onMounted', i18nSearchTypes, currentSearchType.value)
