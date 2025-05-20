@@ -201,7 +201,6 @@ export default {
       getDataSourceName().validate((valid) => {
         if (valid) {
           close()
-          closeRemotePanel()
           closeRemoteResult()
 
           const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
