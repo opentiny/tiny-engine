@@ -130,7 +130,8 @@ import {
   copyNode,
   getRenderer,
   dragStart,
-  getCurrentElement
+  getCurrentElement,
+  querySelectById
 } from '../container'
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
@@ -231,8 +232,16 @@ export default {
     }
 
     const selectParent = () => {
-      const parentId = getCurrent().parent?.id
-      if (parentId) {
+      const parent = getCurrent().parent
+      const parentId = parent?.id
+
+      if (parent?.componentName === 'Template' && !querySelectById(parentId)) {
+        const grandParent = useCanvas().getNodeWithParentById(parentId)?.parent
+
+        if (grandParent) {
+          selectNode(grandParent?.id)
+        }
+      } else if (parentId) {
         selectNode(parentId)
       }
     }

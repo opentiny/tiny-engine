@@ -122,18 +122,10 @@ const generateNodesMap = (nodes: Node[], parent: RootNode | Node) => {
       nodeItem.id = utils.guid()
     }
 
-    if (parent.componentName === 'Template') {
-      nodesMap.value.set(nodeItem.id, {
-        node: nodeItem,
-        parent: nodesMap.value.get(parent.id || '')?.parent,
-        templateParent: parent
-      })
-    } else {
-      nodesMap.value.set(nodeItem.id, {
-        node: nodeItem,
-        parent
-      })
-    }
+    nodesMap.value.set(nodeItem.id, {
+      node: nodeItem,
+      parent
+    })
 
     handleNodesInProps(nodeItem)
 
@@ -307,15 +299,7 @@ const clearNodes = () => {
 const setNode = (schema: Node, parent: Node | RootNode) => {
   schema.id = schema.id || utils.guid()
 
-  if (parent.componentName === 'Template') {
-    nodesMap.value.set(schema.id, {
-      node: schema,
-      parent: nodesMap.value.get(parent.id || '')?.parent,
-      templateParent: parent
-    })
-  } else {
-    nodesMap.value.set(schema.id, { node: schema, parent })
-  }
+  nodesMap.value.set(schema.id, { node: schema, parent })
 }
 
 const getNode = (id: string, parent?: boolean) => {
@@ -399,19 +383,13 @@ const operationTypeMap = {
       return
     }
 
-    const { parent, node, templateParent } = targetNode
+    const { parent, node } = targetNode
 
     const index = parent.children.indexOf(node)
 
     if (index > -1) {
       parent.children.splice(index, 1)
       nodesMap.value.delete(node.id)
-    } else if (templateParent) {
-      const templateIndex = templateParent.children.indexOf(node)
-      if (templateIndex > -1) {
-        templateParent.children.splice(templateIndex, 1)
-        nodesMap.value.delete(node.id)
-      }
     }
 
     let children = [...(node.children || [])]
