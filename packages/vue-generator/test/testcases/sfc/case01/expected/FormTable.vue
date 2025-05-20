@@ -98,9 +98,9 @@ import { IconSearch, IconDel, iconHelpCircle, IconEdit } from '@opentiny/vue-ico
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import CrmQuoteListGridStatus from '../components/CrmQuoteListGridStatus.vue'
+import CrmQuoteListGridStatus from '@/components/CrmQuoteListGridStatus.vue'
 
-import ImageTitle from '../components/ImageTitle.vue'
+import ImageTitle from '@/components/ImageTitle.vue'
 
 const TinyIconSearch = IconSearch()
 const TinyIconDel = IconDel()

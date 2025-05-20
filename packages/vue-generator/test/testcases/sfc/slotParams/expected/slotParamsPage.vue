@@ -12,7 +12,7 @@
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import BlockSlotParams from '../components/BlockSlotParams.vue'
+import BlockSlotParams from '@/components/BlockSlotParams.vue'
 
 const props = defineProps({})
 
