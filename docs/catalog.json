@@ -43,7 +43,19 @@
             { "title": "集成ChatGPT搭建简单页面能力", "name": "integrating-chatgpt-for-simple-pages.md" },
             { "title": "数据源和Collection—远程字段", "name": "data-source-and-collection-remote-fields.md" },
             { "title": "数据源和Collection—mock数据", "name": "data-source-and-collection-mock-data.md" },
-            { "title": "数据源和Collection—使用数据源", "name": "data-source-and-collection-usage.md" }
+            { "title": "数据源和Collection—使用数据源", "name": "data-source-and-collection-usage.md" },
+            {
+              "title": "路由能力",
+              "name": "route-capabilities",
+              "articles": [
+                { "title": "页面支持嵌套路由", "name": "page-support-nested-route.md" },
+                { "title": "路由bar一键清除预览页面路径", "name": "route-bar-clear-preview-page.md" },
+                { "title": "路由bar高亮显示预览页面路径", "name": "route-bar-current-page-highlight.md" },
+                { "title": "RouterView组件支持预览子界面", "name": "route-view-support-preview-subpage.md" }
+              ]
+            },
+            { "title": "主题切换功能", "name": "theme-switch.md" },
+            { "title": "画布快捷操作", "name": "canvas-shortcuts.md" }
           ]
         },
         {
@@ -79,7 +91,9 @@
             { "title": "区块局域网发布方案(Node.js服务端)", "name": "block-lan-release-solution.md" },
             { "title": "设计器中引入第三方组件库", "name": "third-party-library-in-designer.md" },
             { "title": "物料同步方案", "name": "material-sync-solution.md" },
-            { "title": "本地化CDN方案", "name": "import-map-local.md" }
+            { "title": "本地化CDN方案", "name": "import-map-local.md" },
+            { "title": "全新区块构建方案", "name": "block-construction-solution.md" },
+            { "title": "全新画布通信方案", "name": "canvas-communication-solution.md" }
           ]
         },
         {
@@ -110,7 +124,8 @@
             { "title": "定制插件UI", "name": "customize-plugin-ui.md" },
             { "title": "定制元服务逻辑", "name": "customize-meta-service-logic.md" },
             { "title": "开发设置器组件", "name": "develop-configurator-components.md" },
-            { "title": "AI插件使用前配置", "name": "ai-plugin-configuration.md" }
+            { "title": "AI插件使用前配置", "name": "ai-plugin-configuration.md" },
+            { "title": "如何自定义主题", "name": "how-to-custom-theme.md" }
           ]
         },
         {

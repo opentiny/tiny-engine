@@ -22,6 +22,7 @@ export default defineConfig({
   publicDir: false,
   resolve: {},
   build: {
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
       name: 'toolbar-clean',

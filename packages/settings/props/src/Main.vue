@@ -32,6 +32,11 @@ export default {
     Empty,
     PluginPanel
   },
+  props: {
+    fixedPanels: {
+      type: Array
+    }
+  },
   setup(props, { emit }) {
     const { pageState } = useCanvas()
     const { properties } = useProperty().getProperty({ pageState })

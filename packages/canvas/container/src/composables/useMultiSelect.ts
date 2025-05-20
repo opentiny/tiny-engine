@@ -1,7 +1,7 @@
 import { ref } from 'vue'
-import { useCanvas, useMessage, useHistory } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage, useHistory, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { getDocument, getRect, querySelectById, POSITION, insertNode, selectNode } from '../container'
+import { getRect, querySelectById, POSITION, insertNode, selectNode, canvasState } from '../container'
 import type { Node } from '../../../types'
 
 interface SelectionState {
@@ -19,6 +19,8 @@ interface SelectionState {
 
 // 初始化多选节点
 const multiSelectedStates = ref<SelectionState[]>([])
+// 存储定时器引用，用于取消定时任务
+let selectionUpdateTimer: ReturnType<typeof setTimeout> | null = null
 
 /**
  * 创建TinyPopover组件结构
@@ -31,7 +33,7 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
 
   return {
     componentName: 'TinyPopover',
-    id: props.id !== undefined ? props.id : null,
+    id: utils.guid(),
     props: {
       width: 200,
       title: '弹框标题',
@@ -42,7 +44,7 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
     children: [
       {
         componentName: 'Template',
-        id: null,
+        id: utils.guid(),
         props: {
           slot: 'reference'
         },
@@ -50,14 +52,14 @@ const createTinyPopoverSchema = (props: Record<string, any> = {}, content: Node 
       },
       {
         componentName: 'Template',
-        id: null,
+        id: utils.guid(),
         props: {
           slot: 'default'
         },
         children: [
           {
             componentName: 'div',
-            id: null,
+            id: utils.guid(),
             props: {
               placeholder: '提示内容'
             }
@@ -72,6 +74,17 @@ export const useMultiSelect = () => {
   const isMouseDown = ref(false)
 
   /**
+   * 取消待执行的选择更新
+   */
+  const cancelSelectionUpdate = (): void => {
+    // 清除定时器
+    if (selectionUpdateTimer !== null) {
+      clearTimeout(selectionUpdateTimer)
+      selectionUpdateTimer = null
+    }
+  }
+
+  /**
    * 添加state到多选列表
    * @param {SelectionState} selectState
    * @param {boolean} isMultiple 是否多选
@@ -81,6 +94,9 @@ export const useMultiSelect = () => {
     if (!selectState || typeof selectState !== 'object') {
       return false
     }
+
+    // 用户进行了新的选择操作，取消之前的延时选择更新
+    cancelSelectionUpdate()
 
     // 多选
     if (isMultiple) {
@@ -102,18 +118,25 @@ export const useMultiSelect = () => {
   }
 
   const refreshSelectionState = (): SelectionState[] => {
-    multiSelectedStates.value = multiSelectedStates.value.map((state) => {
-      const element = querySelectById(state.id) || getDocument().body
-      const { top, left, width, height } = getRect(element)
+    multiSelectedStates.value = multiSelectedStates.value
+      .filter((state) => {
+        // 先检查元素是否存在，如果不存在则从选择列表移除
+        const element = querySelectById(state.id)
+        return !!element
+      })
+      .map((state) => {
+        const element = querySelectById(state.id)
+        // 由于上面已经过滤，这里element一定存在
+        const { top, left, width, height } = getRect(element!)
 
-      return {
-        ...state,
-        top,
-        left,
-        width,
-        height
-      }
-    })
+        return {
+          ...state,
+          top,
+          left,
+          width,
+          height
+        }
+      })
 
     return multiSelectedStates.value
   }
@@ -164,6 +187,83 @@ export const useMultiSelect = () => {
   }
 
   /**
+   * 更新添加父级节点后的选中状态
+   * @param {string[]} newParentIds 新创建的父容器ID数组
+   */
+  const updateSelectionAfterAddParent = (newParentIds: string[]): void => {
+    // 触发更新，通知结构变更
+    useMessage().publish({ topic: 'schemaChange', data: {} })
+
+    // 清除原有选中状态
+    clearMultiSelection()
+
+    // 取消之前可能存在的定时器
+    cancelSelectionUpdate()
+
+    // 设置新的定时器并保存引用
+    selectionUpdateTimer = setTimeout(() => {
+      if (newParentIds.length > 0) {
+        // 如果只有一个容器，直接选中
+        if (newParentIds.length === 1) {
+          const canvas = useCanvas()
+          const nodeId = newParentIds[0]
+          const nodeWithParent = canvas.getNodeWithParentById(nodeId)
+          if (nodeWithParent) {
+            canvas.setNode(nodeWithParent.node, nodeWithParent.parent)
+          }
+          selectNode(nodeId)
+        } else {
+          // 先收集所有有效的节点，确保DOM元素存在
+          const validNodes: SelectionState[] = []
+
+          newParentIds.forEach((id) => {
+            // 先检查DOM元素是否存在
+            const element = querySelectById(id)
+            if (!element) return
+
+            const canvas = useCanvas()
+            const nodeWithParent = canvas.getNodeWithParentById(id)
+            if (nodeWithParent) {
+              const { top, left, width, height } = getRect(element)
+              validNodes.push({
+                id,
+                top,
+                left,
+                width,
+                height,
+                schema: nodeWithParent.node,
+                parent: nodeWithParent.parent
+              })
+            }
+          })
+
+          // 批量设置多选状态，避免一个一个添加造成的问题
+          if (validNodes.length > 0) {
+            // 先选中第一个
+            toggleMultiSelection(validNodes[0], false)
+
+            // 再添加其他的到多选状态
+            for (let i = 1; i < validNodes.length; i++) {
+              toggleMultiSelection(validNodes[i], true)
+            }
+          }
+        }
+      }
+    }, 100)
+  }
+
+  /**
+   * 获取组件基础样式的className
+   * @returns {string} 组件基础样式类名
+   */
+  const getComponentBaseStyleClassName = () => {
+    const materialsOptions = getOptions('engine.plugins.materials') || {}
+    return materialsOptions.useBaseStyle && materialsOptions.componentBaseStyle?.className
+      ? materialsOptions.componentBaseStyle.className
+      : ''
+  }
+
+  /**
    * 为一组兄弟节点添加共同的父级
    * @param {string} componentName 父级组件名称
    * @param {Object} props 父级组件属性
@@ -199,13 +299,19 @@ export const useMultiSelect = () => {
     let wrapSchema: Node = {
       componentName,
       id: utils.guid(),
-      props: { ...props },
+      props: {
+        ...props,
+        // 如果是div且基础样式类名不为空，才添加className
+        ...(componentName === 'div' && getComponentBaseStyleClassName()
+          ? { className: getComponentBaseStyleClassName() }
+          : {})
+      },
       children: selectedNodes
     }
 
     // 特殊处理 TinyPopover 等组件
     if (componentName === 'TinyPopover') {
-      wrapSchema = createTinyPopoverSchema({ ...props, id: utils.guid() }, selectedNodes)
+      wrapSchema = createTinyPopoverSchema(props, selectedNodes)
     }
 
     // 从后向前删除原来的节点，避免索引变化
@@ -216,13 +322,25 @@ export const useMultiSelect = () => {
     // 将新容器插入到第一个选中节点的位置
     parent.children.splice(firstIndex, 0, wrapSchema)
 
-    // 触发更新，重新选中节点
-    useMessage().publish({ topic: 'schemaChange', data: {} })
+    // 先更新nodesMap中的节点关系
+    const canvas = useCanvas()
 
-    setTimeout(() => {
-      useCanvas().setNode(wrapSchema, parent)
-      selectNode(wrapSchema.id)
-    }, 0)
+    // 设置新创建的父节点
+    canvas.setNode(wrapSchema, parent)
+
+    // 为所有子节点更新父节点关系
+    selectedNodes.forEach((node) => {
+      canvas.setNode(node, wrapSchema)
+    })
+
+    // 更新canvasState，保证向左箭头显示
+    Object.assign(canvasState, {
+      current: wrapSchema,
+      parent: parent
+    })
+
+    // 更新选中状态
+    updateSelectionAfterAddParent([wrapSchema.id])
 
     useHistory().addHistory()
     return true
@@ -238,10 +356,14 @@ export const useMultiSelect = () => {
   const createWrapperSchema = (componentName: string, props: Record<string, any> = {}, childSchema: Node): Node => {
     let wrapSchema: Node = {
       componentName,
-      id: null,
+      id: utils.guid(),
       props: {
         content: '提示信息',
-        ...props
+        ...props,
+        // 如果是div且基础样式类名不为空，才添加className
+        ...(componentName === 'div' && getComponentBaseStyleClassName()
+          ? { className: getComponentBaseStyleClassName() }
+          : {})
       },
       children: [childSchema]
     }
@@ -265,6 +387,9 @@ export const useMultiSelect = () => {
       return false
     }
 
+    // 记录创建的父容器ID，用于后续选中
+    const newParentIds: string[] = []
+
     multiSelectedStates.value.forEach(({ schema, parent }) => {
       if (!schema || !parent) {
         return
@@ -275,8 +400,10 @@ export const useMultiSelect = () => {
         return
       }
 
-      // 创建包装组件的模板
+      // 创建包装组件的模板，并确保有唯一ID
       const wrapSchema = createWrapperSchema(componentName, props, schema)
+      wrapSchema.id = utils.guid()
+      newParentIds.push(wrapSchema.id)
 
       // 记录当前节点
       const originalNode = schema
@@ -293,6 +420,11 @@ export const useMultiSelect = () => {
       )
     })
 
+    // 更新选中状态
+    updateSelectionAfterAddParent(newParentIds)
+
+    // 添加历史记录
+    useHistory().addHistory()
     return true
   }
 

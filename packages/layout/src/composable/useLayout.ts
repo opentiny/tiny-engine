@@ -213,7 +213,7 @@ const getFixedPanelsStatus = () => {
 
 const closeSetting = (forceClose?: boolean) => {
   const { settings } = layoutState
-  if (!settings.fixedPanels.includes(settings.render) || forceClose) {
+  if (!rightFixedPanelsStorage.value.includes(settings.render) || forceClose) {
     settings.render = ''
   }
 }
@@ -234,7 +234,7 @@ const activePlugin = (name: string, noActiveRender?: boolean) => {
 // 关闭插件面板
 const closePlugin = (forceClose?: boolean) => {
   const { plugins } = layoutState
-  if (!plugins.fixedPanels.includes(plugins.render) || forceClose) {
+  if (!leftFixedPanelsStorage.value.includes(plugins.render) || forceClose) {
     plugins.render = ''
   }
 }
@@ -384,7 +384,6 @@ export default () => {
   const isPanelWidthResizable = (name: string): boolean => pluginStorageReactive.value[name]?.widthResizable || false
 
   const initPluginStorageReactive = (pluginList: IPluginStorage): void => {
-    if (Object.keys(pluginStorageReactive.value).length) return
     pluginStorageReactive.value = pluginList
   }
 

@@ -21,6 +21,7 @@ export default defineConfig({
   publicDir: false,
   resolve: {},
   build: {
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './src/lib.ts'),
       name: 'setting-design',

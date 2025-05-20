@@ -8439,26 +8439,6 @@
                 },
                 "content": [
                   {
-                    "property": "showEditIcon",
-                    "label": {
-                      "text": {
-                        "zh_CN": "显示编辑图标"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "CheckBoxConfigurator",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "是否显示标题后编辑 ICON"
-                    },
-                    "labelPosition": "left"
-                  },
-                  {
                     "property": "tabs",
                     "label": {
                       "text": {
@@ -11170,35 +11150,6 @@
                 },
                 "content": [
                   {
-                    "property": "horizontal",
-                    "type": "Boolean",
-                    "defaultValue": {
-                      "type": "i18n",
-                      "zh_CN": "布局",
-                      "en_US": "layout",
-                      "key": ""
-                    },
-                    "label": {
-                      "text": {
-                        "zh_CN": "水平布局"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "widget": {
-                      "component": "CheckBoxConfigurator",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "节点和文字横向布局"
-                    },
-                    "labelPosition": "left"
-                  },
-                  {
                     "property": "vertical",
                     "type": "Boolean",
                     "defaultValue": {
@@ -12632,7 +12583,7 @@
                         "zh_CN": "加减按钮位置"
                       }
                     },
-                    "required": true,
+                    "required": false,
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
@@ -13661,7 +13612,7 @@
                 "props": {
                   "allow-empty": true,
                   "placeholder": "请输入",
-                  "controlsPosition": "right",
+                  "controls-position": "right",
                   "step": 1
                 }
               }
@@ -13681,21 +13632,22 @@
                     {
                       "key": 1,
                       "label": "备选项1",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 2,
                       "label": "备选项2",
-                      "disabled":false
+                      "disabled": false
                     },
                     {
                       "key": 3,
                       "label": "备选项3",
-                      "disabled":false
-                    }, {
+                      "disabled": false
+                    },
+                    {
                       "key": 4,
                       "label": "备选项4",
-                      "disabled":false
+                      "disabled": false
                     }
                   ]
                 }
@@ -13921,7 +13873,7 @@
                 "props": {
                   "modelValue": "",
                   "placeholder": "请选择",
-                  "gridOp": {
+                  "grid-op": {
                     "columns": [
                       {
                         "field": "id",

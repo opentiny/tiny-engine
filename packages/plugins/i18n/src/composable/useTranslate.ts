@@ -109,7 +109,6 @@ const ensureI18n = (obj: { [x: string]: any; key: string }, send?: boolean) => {
 
     useCanvas().canvasApi.value?.setLocales?.(messages, true)
   } catch (e) {
-    throw new Error(String(e))
     // 不需要处理，有报错的词条会在画布初始化的时候统一调setLocales这个方法
   }
 

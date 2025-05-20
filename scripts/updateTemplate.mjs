@@ -51,6 +51,36 @@ async function copyTemplate() {
   }
 }
 
+function removePkgDependencies(pkg, { dependencies = [], devDependencies = [] } = {}) {
+  dependencies?.forEach((name) => delete pkg.dependencies[name])
+  devDependencies?.forEach((name) => delete pkg.devDependencies[name])
+}
+
+function removePkgScripts(pkg, scripts) {
+  if (!scripts || !scripts.length) {
+    return
+  }
+  scripts.forEach((name) => delete pkg.scripts[name])
+}
+
+async function removeFiles(files) {
+  if (!files || !files.length) {
+    return
+  }
+  for (const file of files) {
+    const filePath = path.resolve(templateDistPath, file)
+    if (await fs.pathExists(filePath)) {
+      await fs.remove(filePath)
+    }
+  }
+}
+
+async function removeVitest(pkg) {
+  removePkgDependencies(pkg, { devDependencies: ['vitest', 'vite-plugin-vitest']})
+  removePkgScripts(pkg, ['test', 'test:watch'])
+  await removeFiles(['vitest.config.js', 'tests'])
+}
+
 async function updatePkgJson() {
   const { version } = pkg
   const pkgJsonPath = path.resolve(templateDistPath, 'package.json')
@@ -76,12 +106,13 @@ async function updatePkgJson() {
     Object.keys(deps)
       .filter((name) => name.includes('@opentiny/tiny-engine'))
       .forEach((name) => {
-        deps[name] = version
+        deps[name] = `^${version}`
       })
   }
   updateDependencyVersions(pkgData.dependencies)
   updateDependencyVersions(pkgData.devDependencies)
 
+  await removeVitest(pkgData)
   await fs.writeJSON(pkgJsonPath, pkgData, { spaces: 2 })
 }
 

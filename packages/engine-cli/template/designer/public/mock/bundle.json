@@ -8020,7 +8020,9 @@
                     "cols": 12,
                     "widget": {
                       "component": "CodeConfigurator",
-                      "props": {}
+                      "props": {
+                        "language": "json"
+                      }
                     },
                     "description": {
                       "zh_CN": "checkbox组件列表"
@@ -10164,7 +10166,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TinyGridColumn"
+            "exportName": "TinyGridColumn",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -10532,6 +10535,27 @@
                     },
                     "description": {
                       "zh_CN": "是否禁用"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "auto-lookup",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自动请求数据"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "初始化时是否自动请求数据,默认 true"
                     },
                     "labelPosition": "left"
                   }
@@ -12877,6 +12901,270 @@
               "disable": ["copy", "remove"]
             }
           }
+        },
+        {
+          "name": {
+            "zh_CN": "穿梭框"
+          },
+          "component": "TinyTransfer",
+          "icon": "transfer",
+          "description": "穿梭框，实现左右表格数据的双向交换的组件",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyTransfer"
+          },
+          "group": "component",
+          "priority": 1,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "modelValue",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "I18nConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "双向绑定值"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "data",
+                    "label": {
+                      "text": {
+                        "zh_CN": "左右列表的全量数据源"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "左右列表的全量数据源"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "filterable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否启用搜索的功能"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "是否启用搜索的功能"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "showAllBtn",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否显示全部移动按钮"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "是否显示全部移动按钮"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "toLeftDisable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "组件初始化状态下未选中时，默认按钮显示禁用状态"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "组件初始化状态下未选中时，默认按钮显示禁用状态"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "toRightDisable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "组件初始化状态下未选中时，默认按钮显示禁用状态"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "组件初始化状态下未选中时，默认按钮显示禁用状态"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "titles",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自定义列表的标题"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "自定义列表的标题；不设置titles时，左右列表的标题默认显示为： 列表 1， 列表 2"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "右侧列表元素变化时触发"
+                },
+                "description": {
+                  "zh_CN": "右侧列表元素变化时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "右侧列表元素变化时触发"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onLeftCheckChange": {
+                "label": {
+                  "zh_CN": "左侧列表元素被用户选中 / 取消选中时触发;"
+                },
+                "description": {
+                  "zh_CN": "左侧列表元素被用户选中 / 取消选中时触发;"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "左侧列表元素被用户选中 / 取消选中时触发;"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onRightCheckChange": {
+                "label": {
+                  "zh_CN": "右侧列表元素被用户选中 / 取消选中时触发"
+                },
+                "description": {
+                  "zh_CN": "右侧列表元素被用户选中 / 取消选中时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "右侧列表元素被用户选中 / 取消选中时触发"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["value", "disabled"]
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
         }
       ],
       "blocks": [],
@@ -13029,7 +13317,7 @@
               "schema": {
                 "componentName": "video",
                 "props": {
-                  "src": "img/webNova.jpg",
+                  "src": "https://tinyengine-assets.obs.myhuaweicloud.com/files/in-action.mp4#t=1.5",
                   "width": "200",
                   "height": "100",
                   "style": "border:1px solid #ccc"
@@ -13375,6 +13663,42 @@
                   "placeholder": "请输入",
                   "controlsPosition": "right",
                   "step": 1
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "穿梭框"
+              },
+              "icon": "transfer",
+              "screenshot": "",
+              "snippetName": "TinyTransfer",
+              "schema": {
+                "componentName": "TinyTransfer",
+                "props": {
+                  "modelValue": [3],
+                  "data": [
+                    {
+                      "key": 1,
+                      "label": "备选项1",
+                      "disabled": false
+                    },
+                    {
+                      "key": 2,
+                      "label": "备选项2",
+                      "disabled": false
+                    },
+                    {
+                      "key": 3,
+                      "label": "备选项3",
+                      "disabled": false
+                    },
+                    {
+                      "key": 4,
+                      "label": "备选项4",
+                      "disabled": false
+                    }
+                  ]
                 }
               }
             }

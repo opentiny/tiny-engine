@@ -11,7 +11,7 @@
  */
 
 import { reactive, ref } from 'vue'
-import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
+import { extend, isEqual as isValuesEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getCanvasStatus } from '@opentiny/tiny-engine-common/js/canvas'
 import {
@@ -153,7 +153,40 @@ const getDefaultPage = () => {
   }
 }
 
+/**
+ * 更新配置页面数据
+ */
+const syncPageContent = () => {
+  const { getBaseInfo } = getMetaApi(META_SERVICE.GlobalService)
+
+  // 只有当前页面设置的ID与正在编辑的页面ID一致时才同步内容
+  // 避免将正在编辑的页面内容错误同步到其他打开的页面设置中
+  if (pageSettingState.currentPageData.id === Number.parseInt(getBaseInfo().pageId)) {
+    const pageContent = useCanvas().getPageSchema()
+
+    // 此处赋值是确保页面内容与当前画布保持同步。
+    // 当用户在画布中编辑页面内容时，这些变更存储在Canvas内部状态，
+    // 但pageSettingState中的currentPageData.page_content并不会自动更新。
+    // 不同步会导致：
+    // 1. 保存检测失效 - isCurrentDataSame()无法检测到真实变更
+    // 2. 未保存提示缺失 - 用户离开页面时不会收到未保存变更警告
+    pageSettingState.currentPageData.page_content = pageContent
+  }
+}
+
+/**
+ * 在页面保存后更新页面设置状态
+ * 当用户通过工具栏保存按钮保存页面时，需要调用此方法来同步currentPageDataCopy
+ * 以确保isCurrentDataSame()能够正确判断页面是否被修改
+ */
+const updatePageSettingAfterSave = () => {
+  syncPageContent()
+  pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
+}
+
 const isCurrentDataSame = () => {
+  syncPageContent()
+
   const data: Record<string, any> = pageSettingState.currentPageData || {}
   const dataCopy: Record<string, any> = pageSettingState.currentPageDataCopy || {}
   let isEqual = true
@@ -166,19 +199,21 @@ const isCurrentDataSame = () => {
       const obj = {
         inputs: dataCopy[item].inputs,
         outputs: dataCopy[item].outputs,
-        lifeCycles: dataCopy[item].lifeCycles
+        lifeCycles: dataCopy[item].lifeCycles,
+        children: dataCopy[item].children
       }
       const objCopy = {
         inputs: data[item].inputs,
         outputs: data[item].outputs,
-        lifeCycles: data[item].lifeCycles
+        lifeCycles: data[item].lifeCycles,
+        children: data[item].children
       }
 
       if (JSON.stringify(obj) !== JSON.stringify(objCopy)) {
         isEqual = false
       }
     } else {
-      if (dataCopy[item] !== data[item]) {
+      if (!isValuesEqual(dataCopy[item], data[item])) {
         isEqual = false
       }
     }
@@ -235,7 +270,7 @@ const resetPageData = () => {
 }
 
 // 判断当前页面内容是否有修改
-const isChangePageData = () => !isEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
+const isChangePageData = () => !isValuesEqual(pageSettingState.currentPageData, pageSettingState.currentPageDataCopy)
 
 const generateTree = (data: PageData[]) => {
   const { ROOT_ID } = pageSettingState
@@ -463,7 +498,10 @@ const switchPageWithConfirm = (pageId: string, clearPreview = false) => {
   })
 }
 
-const updatePageContent = (familyPages: { id: any; page_content: any }[], currentPage: { id: string; page_content?: any }) => {
+const updatePageContent = (
+  familyPages: { id: any; page_content: any }[],
+  currentPage: { id: string; page_content?: any }
+) => {
   const currentPageSchema = familyPages.find((item) => item.id === currentPage.id)
   // 替换为当前页面最新的 schema
   if (currentPageSchema) {
@@ -549,6 +587,7 @@ export default () => {
     switchPageWithConfirm,
     getFamily,
     getPageChildren,
+    updatePageSettingAfterSave,
     STATIC_PAGE_GROUP_ID,
     COMMON_PAGE_GROUP_ID
   }

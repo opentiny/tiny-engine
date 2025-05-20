@@ -19,6 +19,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx(), vitePluginCssInjectedByJs()],
   publicDir: false,
   build: {
+    sourcemap: true,
     cssCodeSplit: false,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),

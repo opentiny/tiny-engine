@@ -60,7 +60,7 @@
 </template>
 
 <script lang="jsx">
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, onActivated, onDeactivated } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -71,7 +71,8 @@ import {
   useNotify,
   getMergeRegistry,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import { extend, isEqual } from '@opentiny/vue-renderless/common/object'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -133,7 +134,8 @@ export default {
       isCurrentDataSame,
       initCurrentPageData,
       isTemporaryPage,
-      STATIC_PAGE_GROUP_ID
+      STATIC_PAGE_GROUP_ID,
+      updatePageSettingAfterSave
     } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
@@ -144,6 +146,28 @@ export default {
 
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.AppManage))
+    const { subscribe, unsubscribe } = useMessage()
+
+    // 初始化订阅
+    let subscriber = null
+
+    // 组件激活时订阅
+    onActivated(() => {
+      subscriber = subscribe({
+        topic: 'page-saved',
+        callback: () => {
+          // 当收到页面保存事件时，更新页面设置状态
+          updatePageSettingAfterSave()
+        }
+      })
+    })
+
+    // 组件卸载或失活时取消订阅
+    onDeactivated(() => {
+      if (subscriber) {
+        unsubscribe(subscriber)
+      }
+    })
 
     const state = reactive({
       activeName: Object.values(PAGE_SETTING_SESSION),
@@ -192,29 +216,29 @@ export default {
         await beforeCreatePage(createParams)
       }
 
-      requestCreatePage(createParams)
-        .then((data) => {
-          pageSettingState.updateTreeData()
-          pageSettingState.isNew = false
-          isTemporaryPage.saved = false
-          emit('openNewPage', data)
-          closePageSettingPanel()
-          useLayout().closePlugin()
-          useNotify({
-            type: 'success',
-            message: '新建页面成功!'
-          })
-          if (isVsCodeEnv) {
-            generatePage(data)
-          }
+      try {
+        const data = await requestCreatePage(createParams)
+
+        await pageSettingState.updateTreeData()
+        pageSettingState.isNew = false
+        isTemporaryPage.saved = false
+        emit('openNewPage', data)
+        closePageSettingPanel()
+        useLayout().closePlugin()
+        useNotify({
+          type: 'success',
+          message: '新建页面成功!'
         })
-        .catch((err) => {
-          useNotify({
-            type: 'error',
-            title: '新建页面失败',
-            message: JSON.stringify(err?.message || err)
-          })
+        if (isVsCodeEnv) {
+          generatePage(data)
+        }
+      } catch (err) {
+        useNotify({
+          type: 'error',
+          title: '新建页面失败',
+          message: JSON.stringify(err?.message || err)
         })
+      }
     }
 
     const updatePage = (id, params, isUpdateTree = true) => {
@@ -232,22 +256,26 @@ export default {
     }
 
     const restorePage = (pageData) => {
-      pageData.id = pageData.page
+      const currentData = {
+        ...pageData,
+        id: pageData.page
+      }
 
       const unnecessaryFields = ['page', 'backupTime', 'backupTitle', 'time']
-      unnecessaryFields.forEach((key) => delete pageData[key])
+      unnecessaryFields.forEach((key) => delete currentData[key])
 
       const params = {
         ...pageSettingState.currentPageData,
-        ...pageData,
+        ...currentData,
         message: '还原页面'
       }
 
-      updatePage(pageData.id, params).then((data) => {
+      updatePage(currentData.id, params).then((data) => {
         // 还原的页面是当前页，需要同步更新画布
         if (pageState?.currentPage?.id === data?.id) {
           initData(data.page_content, data)
         }
+        initCurrentPageData(data)
       })
     }
 

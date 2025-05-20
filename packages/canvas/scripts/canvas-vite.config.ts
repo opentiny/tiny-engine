@@ -44,6 +44,11 @@ export default defineConfig({
     }
   ],
   publicDir: false,
+  resolve: {
+    alias: {
+      assert: 'rollup-plugin-node-polyfills/polyfills/assert'
+    }
+  },
   build: {
     cssCodeSplit: true,
     rollupOptions: {

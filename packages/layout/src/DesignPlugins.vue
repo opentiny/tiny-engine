@@ -96,7 +96,7 @@
   <plugin-right-menu
     ref="rightMenu"
     :list="[...state.topNavLists, ...state.bottomNavLists]"
-    :align="left"
+    align="left"
     @switchAlign="switchAlign"
   />
 </template>
@@ -129,7 +129,7 @@ export default {
       default: () => []
     }
   },
-  emits: ['click', 'node-click'],
+  emits: ['click', 'node-click', 'changeLeftAlign'],
   setup(props, { emit }) {
     const components: any = {}
     const iconComponents: any = {}

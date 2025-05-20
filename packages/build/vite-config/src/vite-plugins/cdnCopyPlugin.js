@@ -1,6 +1,7 @@
 import path from 'node:path'
 import fs from 'fs-extra'
 import fg from 'fast-glob'
+import { normalizePath } from 'vite'
 import { babelReplaceImportPathWithCertainFileName } from '../localCdnFile/replaceImportPath.mjs'
 
 /**
@@ -77,7 +78,7 @@ async function copyFileOrDirectory(srcPath, destPaths, copiedFiles, outDir) {
         await fs.ensureDir(fullDestPath)
 
         // 使用绝对路径
-        const absoluteSrcPath = path.resolve(process.cwd(), srcPath)
+        const absoluteSrcPath = normalizePath(path.resolve(process.cwd(), srcPath))
 
         // 使用 fast-glob 查找所有文件
         const files = fg.sync(`${absoluteSrcPath}/**/*`, { onlyFiles: true })

@@ -53,6 +53,7 @@ export default defineConfig({
     'import.meta.env.VITE_CDN_TYPE': 'import.meta.env.VITE_CDN_TYPE'
   },
   build: {
+    sourcemap: true,
     cssCodeSplit: false,
     lib: {
       entry: {

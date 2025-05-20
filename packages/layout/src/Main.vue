@@ -24,7 +24,6 @@
             :settings="registry.settings"
             :render-panel="settings.render"
             :plugin-list="pluginList"
-            v-show="layoutState.settings.showDesignSettings"
             @changeRightAlign="changeRightAlign"
           ></design-settings>
         </div>

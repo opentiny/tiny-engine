@@ -143,6 +143,8 @@ export default {
     const getFunctionBody = () => {
       let method = getMethods()?.[state.bindMethodInfo.name]?.value
       let preBody = '{}'
+      let isAsync = false
+      let isGenerator = false
 
       if (method) {
         let astStr = {}
@@ -156,9 +158,21 @@ export default {
         if (astStr?.program?.body[0]?.body) {
           preBody = ast2String(astStr.program.body[0].body)
         }
+
+        if (astStr?.program?.body[0]?.async) {
+          isAsync = true
+        }
+
+        if (astStr?.program?.body[0]?.generator) {
+          isGenerator = true
+        }
       }
 
-      return preBody || '{\n}'
+      return {
+        preBody: preBody || '{\n}',
+        isAsync,
+        isGenerator
+      }
     }
 
     const activePagePlugin = () => {
@@ -193,13 +207,14 @@ export default {
       bindMethod({ ...state.bindMethodInfo, params, extra: extraParams })
 
       // 需要在bindMethod之后
-      const functionBody = getFunctionBody()
+      const { preBody: functionBody, isAsync, isGenerator } = getFunctionBody()
       const { name } = state.bindMethodInfo
+      const functionName = `${isAsync ? 'async' : ''} function${isGenerator ? '*' : ''} ${name}`
       const method = {
         name,
         content: state.enableExtraParams
-          ? `function ${name}(eventArgs,${formatParams}) ${functionBody}`
-          : `function ${name}(${formatParams})  ${functionBody}`
+          ? `${functionName}(eventArgs,${formatParams}) ${functionBody}`
+          : `${functionName}(${formatParams})  ${functionBody}`
       }
       const { beforeSaveMethod } = getOptions(meta.id)
 
