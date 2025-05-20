@@ -27,10 +27,12 @@
     >
       <div class="content" @click="handleClickRow(node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
-        <div class="prefix-icon" @click.stop="switchCollapse(node.id)">
-          <svg-icon v-if="node.rawData.isPage" name="text-page-common"></svg-icon>
-          <svg-icon v-else-if="collapseMap[node.id]" name="folder"></svg-icon>
-          <svg-icon v-else name="folder-wold"></svg-icon>
+        <div class="prefix-icon" @click.stop="handleSwitchCollapse(node)">
+          <svg-icon
+            v-if="node.rawData.isPage"
+            :name="collapseMap[node.id] ? 'page-multiple' : 'page-single'"
+          ></svg-icon>
+          <svg-icon v-else :name="collapseMap[node.id] ? 'folder' : 'folder-wold'"></svg-icon>
         </div>
         <label>{{ node.label }}</label>
       </div>
@@ -94,6 +96,13 @@ const useCollapseMap = () => {
 }
 
 const { collapseMap, switchCollapse } = useCollapseMap()
+
+const handleSwitchCollapse = (node) => {
+  const children = node.rawData[props.childrenKey]
+  if (Array.isArray(children) && children.length > 0) {
+    switchCollapse(node.id)
+  }
+}
 
 const flattenTreeData = (node, parentId, level = 0, collapsed = false) => {
   const { idKey, labelKey, childrenKey } = props
