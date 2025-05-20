@@ -211,7 +211,11 @@ const getChildren = (
       return renderSlot(renderChildren, mergeScope, schema, pageContext, ancestors, renderComponent)
     }
 
-    return renderChildren.map((child) => renderComponent(child, mergeScope, pageContext, parent, ancestors))
+    // 这里 children 需要返回一个默认插槽的函数，避免 vue 告警：
+    // Non-function value encountered for default slot. Prefer function slots for better performance.
+    return {
+      default: () => renderChildren.map((child) => renderComponent(child, mergeScope, pageContext, parent, ancestors))
+    }
   }
 
   return parseData(renderChildren, mergeScope, pageContext?.context)
@@ -252,7 +256,7 @@ const renderComponent = (
     const renderPageId = getRenderPageId(pageContext.pageId, isPageStart)
     if (renderPageId) {
       return h(getPage(renderPageId), {
-        key: ancestors,
+        key: ancestors.join('-'),
         [DESIGN_TAGKEY]: `${componentName}`,
         'data-te-page-id': pageContext.pageId,
         ...(pageContext.active && !isPageStart

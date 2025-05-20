@@ -8,7 +8,7 @@ export interface Node {
   params?: string[]
   loop?: Record<string, any>
   loopArgs?: string[]
-  condition?: boolean
+  condition?: boolean | Record<string, any>
 }
 
 export type RootNode = Omit<Node, 'id'> & {
