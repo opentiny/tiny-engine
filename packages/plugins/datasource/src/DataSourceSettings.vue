@@ -89,6 +89,7 @@ export default {
     }
 
     const changeRecord = () => {
+      state.currentData = state.dataSource
       closeRemoteResult()
       closeGlobalDataHandler()
     }
@@ -104,7 +105,6 @@ export default {
       () => props.modelValue,
       (value) => {
         state.dataSource = value || {}
-        state.currentData = value || {}
         const {
           id,
           name,
