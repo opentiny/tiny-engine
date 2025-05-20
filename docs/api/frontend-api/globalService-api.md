@@ -5,8 +5,7 @@
 默认的全局服务是 defaultGlobalService，它提供了一些常用的功能，例如：
 
 - 获取当前应用信息
-- 获取当前用户信息
-
+- 更新URL参数
 
 ## options 配置项
 
