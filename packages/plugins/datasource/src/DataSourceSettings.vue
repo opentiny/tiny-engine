@@ -36,7 +36,7 @@ import DataSourceField from './DataSourceField.vue'
 import DataSourceSettingRecordList from './DataSourceSettingRecordList.vue'
 import { close as closeGlobalDataHandler } from './DataSourceGlobalDataHandler.vue'
 import { close as closeRemoteResult } from './DataSourceSettingRemoteResult.vue'
-import { fetchDataSourceList, fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
+import { fetchDataSourceList } from './js/http'
 
 const dataSourceList = ref([])
 
@@ -73,7 +73,7 @@ export default {
     }
   },
   setup(props, { emit }) {
-    const { dataSourceState, saveDataSource } = useDataSource()
+    const { dataSourceState } = useDataSource()
     const recordRef = ref(null)
 
     const state = reactive({
@@ -89,14 +89,8 @@ export default {
     }
 
     const changeRecord = () => {
-      saveDataSource(requestUpdateDataSource).then(() => {
-        fetchDataSourceDetail(state.dataSource.id).then((data) => {
-          dataSourceState.dataSource = data
-          state.currentData = data
-          closeRemoteResult()
-          closeGlobalDataHandler()
-        })
-      })
+      closeRemoteResult()
+      closeGlobalDataHandler()
     }
 
     const tabClick = (e) => {
@@ -110,6 +104,7 @@ export default {
       () => props.modelValue,
       (value) => {
         state.dataSource = value || {}
+        state.currentData = value || {}
         const {
           id,
           name,
