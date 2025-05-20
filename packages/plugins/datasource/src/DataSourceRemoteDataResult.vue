@@ -10,13 +10,7 @@
         <tiny-button plain @click="check">查看已获取的字段</tiny-button>
         <tiny-button plain @click="copyData">复制代码</tiny-button>
       </div>
-      <monaco-editor
-        ref="editor"
-        :value="state.value"
-        class="monaco-editor"
-        :options="state.options"
-        @change="handleChange"
-      />
+      <monaco-editor ref="editor" :value="state.value" class="editor" :options="state.options" @change="handleChange" />
     </div>
   </div>
 </template>
@@ -69,7 +63,7 @@ export default {
       emit('copy', state.value)
     }
     const check = () => {
-      emit('check')
+      emit('change', state.value)
     }
     const handleChange = (val) => {
       state.value = val
@@ -123,7 +117,7 @@ export default {
     }
   }
 
-  .monaco-editor {
+  .editor {
     height: 120px;
     margin-top: 8px;
     border: 1px solid var(--te-datasource-common-border-color-divider);

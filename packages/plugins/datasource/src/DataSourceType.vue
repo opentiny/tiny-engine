@@ -30,7 +30,7 @@ export default {
   props: {
     modelValue: {
       type: String,
-      default: 'array'
+      default: 'remote'
     },
     editable: {
       type: Boolean,
@@ -41,12 +41,12 @@ export default {
   setup(props, { emit }) {
     const RADIO_GROUP = [
       {
-        name: '对象数组',
-        value: 'array'
+        name: '远程数据源',
+        value: 'remote'
       },
       {
-        name: '树结构',
-        value: 'tree'
+        name: '静态数据源',
+        value: 'field'
       }
     ]
 

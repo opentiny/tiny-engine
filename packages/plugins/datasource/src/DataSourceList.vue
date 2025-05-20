@@ -15,14 +15,6 @@
             <svg-button
               class="set-page"
               :hoverBgColor="false"
-              tips="编辑静态数据"
-              name="data-edit"
-              @mousedown.stop.prevent="openRecordListPanel(item, index)"
-            >
-            </svg-button>
-            <svg-button
-              class="set-page"
-              :hoverBgColor="false"
               tips="设置数据源"
               name="setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
@@ -43,7 +35,6 @@
 <script lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
 import { close as closeDataSourceForm } from './DataSourceForm.vue'
 import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
@@ -92,7 +83,6 @@ export default {
           dataSourceState.dataSource = data
           state.currentData = data
           activeIndex.value = index
-          closeRemotePanel()
           closeDataSourceForm()
           closeRecordForm()
           openRecordList()

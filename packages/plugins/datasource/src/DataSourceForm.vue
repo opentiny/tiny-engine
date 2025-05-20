@@ -21,13 +21,15 @@
         <!-- dataSource name -->
         <data-source-name v-model="state.dataSource.name"></data-source-name>
 
-        <!-- dataSource field -->
-        <data-source-field
-          v-model="state.dataSource.data.columns"
-          :editable="editable"
-          @openRemotePanel="openRemotePanel"
-        ></data-source-field>
+        <!-- dataSource settings -->
       </tiny-form>
+      <data-source-settings
+        v-model="state.dataSource"
+        :editable="editable"
+        @renderRemoteData="renderRemoteData"
+        :activeTabName="state.activeTabName"
+        @activeTab="activeTabChange"
+      ></data-source-settings>
     </template>
   </plugin-setting>
 </template>
@@ -38,8 +40,8 @@ import { Form, Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
-import DataSourceField from './DataSourceField.vue'
-import { close as closeRemotePanel, open as openRemotePanel } from './DataSourceRemotePanel.vue'
+import DataSourceSettings from './DataSourceSettings.vue'
+import { close as closeRemoteResult, open as openRemoteResult } from './DataSourceSettingRemoteResult.vue'
 import {
   requestUpdateDataSource,
   requestAddDataSource,
@@ -76,7 +78,7 @@ export default {
     PluginSetting,
     DataSourceType,
     DataSourceName,
-    DataSourceField
+    DataSourceSettings
   },
   props: {
     modelValue: {
@@ -86,6 +88,10 @@ export default {
     editable: {
       type: Boolean,
       default: true
+    },
+    activeTabName: {
+      type: String,
+      default: 'remote'
     }
   },
   emits: ['update:modelValue', 'save'],
@@ -94,7 +100,8 @@ export default {
     const { dataSourceState } = useDataSource()
 
     const state = reactive({
-      dataSource: {}
+      dataSource: {},
+      activeTabName: props.activeTabName
     })
 
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
@@ -145,15 +152,23 @@ export default {
           format
         }))
 
-        dataSourceState.dataSourceColumn = { name, type: type || 'array', columns: filterColumns }
+        dataSourceState.dataSourceColumn = { name, type: type || 'remote', columns: filterColumns }
         dataSourceState.dataSourceColumnCopies = extend(true, {}, dataSourceState.dataSourceColumn)
       },
       { immediate: true }
     )
 
+    watch(
+      () => props.activeTabName,
+      (value) => {
+        state.activeTabName = value
+      },
+      { immediate: true, deep: true }
+    )
+
     const closeAllPanel = () => {
       close()
-      closeRemotePanel()
+      closeRemoteResult()
     }
 
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -187,6 +202,7 @@ export default {
         if (valid) {
           close()
           closeRemotePanel()
+          closeRemoteResult()
 
           const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
             return {
@@ -220,7 +236,7 @@ export default {
               data: {
                 columns,
                 data: [],
-                type: state.dataSource.data.type ? state.dataSource.data.type : 'array',
+                type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
                 ...dataSourceState.remoteConfig
               }
             })
@@ -256,6 +272,14 @@ export default {
       })
     }
 
+    const renderRemoteData = (remoteData) => {
+      emit('renderRemoteData', remoteData)
+    }
+
+    const activeTabChange = (name) => {
+      emit('activeTab', name)
+    }
+
     return {
       align,
       PLUGIN_NAME,
@@ -263,9 +287,11 @@ export default {
       isOpen,
       save,
       closeAllPanel,
-      openRemotePanel,
+      openRemoteResult,
       selectDataSourceTemplate,
-      deleteDataSource
+      deleteDataSource,
+      renderRemoteData,
+      activeTabChange
     }
   }
 }

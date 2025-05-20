@@ -2,7 +2,7 @@
   <div v-if="name" class="data-handle">
     <div>{{ name }}<slot name="title"></slot></div>
   </div>
-  <monaco-editor ref="editor" :value="modelValue" class="monaco-editor" :options="options" @change="change" />
+  <monaco-editor ref="editor" :value="modelValue" class="editor" :options="options" @change="change" />
 </template>
 
 <script lang="ts">
@@ -67,7 +67,7 @@ export default {
   }
 }
 
-.monaco-editor {
+.editor {
   min-height: 120px;
   height: 100%;
   border: 1px solid var(--te-datasource-common-border-color-divider);

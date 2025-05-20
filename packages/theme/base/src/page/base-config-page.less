@@ -40,10 +40,10 @@ body {
   --base-bottom-panel-height: 30px;
   --base-nav-panel-width: 40px; // 插件导航栏宽度
   --base-collection-panel-width: calc(
-    (99vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px)) / 2
+    (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) * 2 - 1px)) / 2
   );
   --base-collection-panel-full-screen-width: calc(
-    (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) - 1px))
+    (100vw - (var(--base-left-panel-width) + var(--base-right-panel-width) + var(--base-nav-panel-width) * 2 - 1px))
   );
   -webkit-font-smoothing: subpixel-antialiased;
   padding: 0;

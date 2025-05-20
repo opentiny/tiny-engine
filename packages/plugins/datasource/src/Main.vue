@@ -30,22 +30,21 @@
       <data-source-list @edit="openDataSourceFormPanel"></data-source-list>
     </template>
   </plugin-panel>
-  <data-source-remote-panel
-    v-if="isOpenRemotePanel"
-    v-model="state.currentDataSource.data"
-    :editable="state.editable"
-    @confirm="getRomoteReponseData"
-  ></data-source-remote-panel>
   <data-source-form
     v-model="state.currentDataSource"
     :editable="state.editable"
+    :activeTabName="state.activeTabName"
+    @renderRemoteData="renderRemoteData"
+    @activeTab="activeTabChange"
     @save="refreshDataSource"
   ></data-source-form>
-  <data-source-remote-mapping
-    v-if="isOpenSourceRemoteMapping"
+  <data-source-setting-remote-result
+    v-if="isOpenRemoteResult"
+    :remoteData="state.remoteData"
+    @activeTab="activeTabChange"
     v-model="state.remoteFields"
-    :data="state.remoteResponData"
-  ></data-source-remote-mapping>
+  >
+  </data-source-setting-remote-result>
   <data-source-global-data-handler></data-source-global-data-handler>
 </template>
 
@@ -53,15 +52,14 @@
 import { reactive, watch, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
-import DataSourceRemotePanel, {
-  close as closeRemotePanel,
-  isOpen as isOpenRemotePanel
-} from './DataSourceRemotePanel.vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceForm, { open as openDataSourceForm, close as closeDataSourceForm } from './DataSourceForm.vue'
-import { close as closeRecordList } from './DataSourceRecordList.vue'
 import { close as closeRecordForm } from './DataSourceRecordForm.vue'
-import DataSourceRemoteMapping, { isOpen as isOpenSourceRemoteMapping } from './DataSourceRemoteMapping.vue'
+import DataSourceSettingRemoteResult, {
+  close as closeRemoteResult,
+  open as openRemoteResult,
+  isOpen as isOpenRemoteResult
+} from './DataSourceSettingRemoteResult.vue'
 import { useDataSource, useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateDataSource } from './js/http'
 import DataSourceGlobalDataHandler, {
@@ -73,12 +71,11 @@ export default {
   components: {
     TinyButton: Button,
     DataSourceList,
-    DataSourceRemotePanel,
-    DataSourceRemoteMapping,
     DataSourceGlobalDataHandler,
     PluginPanel,
     DataSourceForm,
-    SvgButton
+    SvgButton,
+    DataSourceSettingRemoteResult
   },
   props: {
     fixedPanels: {
@@ -91,9 +88,11 @@ export default {
       '用来配合画布中组件/区块渲染，便捷地应用于表格组件的表格列，也可灵活地应用于手动调用指定的远程API。'
     const state = reactive({
       editable: true,
-      currentDataSource: { name: 'untitled', data: { type: 'array', columns: [] } },
+      currentDataSource: { name: 'untitled', data: { type: 'remote', columns: [] } },
       remoteFields: [],
-      remoteResponData: {}
+      remoteData: {},
+      remoteResponData: {},
+      activeTabName: 'remote'
     })
 
     const { PLUGIN_NAME } = useLayout()
@@ -112,9 +111,10 @@ export default {
         const {
           id,
           name,
+          data,
           data: { columns, type }
         } = state.currentDataSource
-        state.currentDataSource = { id, name, data: { type, columns: [...columns, ...value] } }
+        state.currentDataSource = { id, name, data: { ...data, type, columns: [...columns, ...value] } }
       }
     )
 
@@ -122,7 +122,16 @@ export default {
       state.remoteResponData = data
     }
 
+    const activeTabChange = (name) => {
+      state.activeTabName = name
+    }
+
     const openDataSourceFormPanel = (data) => {
+      if (!data || data?.data?.type === 'remote') {
+        activeTabChange('remote')
+      } else {
+        activeTabChange('field')
+      }
       saveDataSource(requestUpdateDataSource).then(() => {
         state.editable = data !== undefined
         dataSourceState.dataSource = data
@@ -130,41 +139,47 @@ export default {
           state.currentDataSource = data
         } else {
           clearActive()
-          state.currentDataSource = { name: 'untitled', data: { type: 'array', columns: [] } }
+          state.currentDataSource = { name: 'untitled', data: { type: 'remote', columns: [] } }
         }
-        closeRecordList()
         closeRecordForm()
         openDataSourceForm()
         closeGlobalDataHandler()
-        closeRemotePanel()
+        closeRemoteResult()
       })
     }
 
     const openGlobalDataHanderPanel = () => {
       openGlobalDataHander()
       closeDataSourceForm()
-      closeRecordList()
       closeRecordForm()
-      closeRemotePanel()
+      closeRemoteResult()
     }
 
     const refreshDataSource = () => {
       refreshDataSourceList()
-      closeRemotePanel()
+      closeRemoteResult()
+      activeTabChange(state.activeTabName)
+    }
+
+    const renderRemoteData = (remoteData) => {
+      state.remoteData = remoteData
+      openRemoteResult()
     }
 
     return {
       PLUGIN_NAME,
       state,
       open,
-      isOpenRemotePanel,
-      isOpenSourceRemoteMapping,
       openDataSourceFormPanel,
       getRomoteReponseData,
       refreshDataSource,
       openGlobalDataHanderPanel,
       docsUrl,
-      docsContent
+      docsContent,
+      renderRemoteData,
+      isOpenRemoteResult,
+      openRemoteResult,
+      activeTabChange
     }
   }
 }

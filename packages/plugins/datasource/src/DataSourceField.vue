@@ -4,7 +4,6 @@
       <span class="title">数据源字段</span>
       <div class="btn">
         <tiny-button @click="openNewFieldForm"><svg-icon name="add"></svg-icon>添加字段</tiny-button>
-        <tiny-button @click="$emit('openRemotePanel')">{{ editable ? '修改远程配置' : '获取远程字段' }}</tiny-button>
       </div>
     </span>
     <div class="section">

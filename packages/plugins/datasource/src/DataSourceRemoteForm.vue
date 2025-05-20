@@ -68,8 +68,8 @@ export default {
     })
 
     const rules = {
-      uri: [{ required: true, message: '必填', trigger: ['change', 'blur'] }],
-      method: { required: true, message: '必选', trigger: ['change', 'blur'] }
+      uri: [{ required: true, message: '必填', trigger: ['blur'] }],
+      method: { required: true, message: '必选', trigger: ['blur'] }
     }
 
     return {
