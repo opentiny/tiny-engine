@@ -227,6 +227,7 @@ export default {
                 title: '数据源修改成功',
                 type: 'success'
               })
+              settingRef.value.saveRecord()
               emit('save')
               dataSourceState.dataSourceColumn = {}
               dataSourceState.dataSourceColumnCopies = {}
@@ -256,7 +257,6 @@ export default {
                 message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
               })
           }
-          settingRef.value.saveRecord()
         }
       })
     }
