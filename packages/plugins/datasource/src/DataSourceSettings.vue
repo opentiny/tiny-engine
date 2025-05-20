@@ -19,6 +19,7 @@
         <data-source-setting-record-list
           :data="state.currentData"
           @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
+          ref="recordRef"
           @refresh="refresh()"
         ></data-source-setting-record-list>
       </tiny-tab-item>
@@ -73,6 +74,7 @@ export default {
   },
   setup(props, { emit }) {
     const { dataSourceState, saveDataSource } = useDataSource()
+    const recordRef = ref(null)
 
     const state = reactive({
       dataSource: {},
@@ -81,6 +83,10 @@ export default {
     })
 
     const showRemote = computed(() => !state.dataSource.data || state.dataSource.data.type === 'remote')
+
+    const saveRecord = () => {
+      recordRef.value.saveRecordList()
+    }
 
     const changeRecord = () => {
       saveDataSource(requestUpdateDataSource).then(() => {
@@ -149,10 +155,12 @@ export default {
     }
     return {
       state,
+      recordRef,
       showRemote,
       tabClick,
       renderRemoteData,
-      refresh
+      refresh,
+      saveRecord
     }
   }
 }

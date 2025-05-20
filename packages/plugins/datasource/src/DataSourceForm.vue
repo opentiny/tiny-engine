@@ -26,6 +26,7 @@
       <data-source-settings
         v-model="state.dataSource"
         :editable="editable"
+        ref="settingRef"
         @renderRemoteData="renderRemoteData"
         :activeTabName="state.activeTabName"
         @activeTab="activeTabChange"
@@ -98,6 +99,8 @@ export default {
   setup(props, { emit }) {
     const { message } = useModal()
     const { dataSourceState } = useDataSource()
+
+    const settingRef = ref(null)
 
     const state = reactive({
       dataSource: {},
@@ -253,6 +256,7 @@ export default {
                 message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
               })
           }
+          settingRef.value.saveRecord()
         }
       })
     }
@@ -281,6 +285,7 @@ export default {
 
     return {
       align,
+      settingRef,
       PLUGIN_NAME,
       state,
       isOpen,
