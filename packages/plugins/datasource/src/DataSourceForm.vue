@@ -232,7 +232,7 @@ export default {
               requestAddDataSource({
                 name: state.dataSource.name,
                 app: getAppId(),
-                data: record.requestData
+                data: record.requestData.data
               })
                 .then(() => {
                   requestGenerateDataSource(getAppId())
