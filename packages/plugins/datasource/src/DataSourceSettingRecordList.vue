@@ -403,6 +403,10 @@ export default {
           if (!valid) {
             return
           }
+          if (state.totalData) {
+            resolve(null)
+            return
+          }
           const totalData = state.totalData
           const columnsKeys = state.columns.map(({ name }) => name)
           const data = totalData.map((item) =>

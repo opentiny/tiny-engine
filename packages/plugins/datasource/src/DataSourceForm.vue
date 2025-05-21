@@ -208,17 +208,43 @@ export default {
           close()
           closeRemoteResult()
 
+          const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
+            return {
+              name,
+              title,
+              field,
+              type,
+              format
+            }
+          })
+
           settingRef.value.saveRecord().then((record) => {
+            const editRequestData = record
+              ? record.requestData
+              : {
+                  name: state.dataSource.name,
+                  data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
+                }
+            const addRequestData = record
+              ? record.requestData.data
+              : {
+                  columns,
+                  data: [],
+                  type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
+                  ...dataSourceState.remoteConfig
+                }
             if (props.editable) {
-              requestUpdateDataSource(state.dataSource.id, record.requestData).then(() => {
+              requestUpdateDataSource(state.dataSource.id, editRequestData).then(() => {
                 requestGenerateDataSource(getAppId())
                 // 修改dataSource成功
-                const { name } = record.requestData
-                const key = `datasource${capitalize(camelize(name))}`
-                const pageSchema = useCanvas().getSchema()
+                if (record) {
+                  const { name } = record.requestData
+                  const key = `datasource${capitalize(camelize(name))}`
+                  const pageSchema = useCanvas().getSchema()
 
-                if (pageSchema.state[key]) {
-                  pageSchema.state[key] = record.data.map(({ _id, ...other }) => other)
+                  if (pageSchema.state[key]) {
+                    pageSchema.state[key] = record.data.map(({ _id, ...other }) => other)
+                  }
                 }
                 useNotify({
                   title: '数据源修改成功',
@@ -232,7 +258,7 @@ export default {
               requestAddDataSource({
                 name: state.dataSource.name,
                 app: getAppId(),
-                data: record.requestData.data
+                data: addRequestData
               })
                 .then(() => {
                   requestGenerateDataSource(getAppId())
