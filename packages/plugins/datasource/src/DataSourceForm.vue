@@ -38,6 +38,7 @@
 <script lang="tsx">
 import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
+import { camelize, capitalize } from '@vue/shared'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
@@ -56,7 +57,8 @@ import {
   useDataSource,
   useNotify,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useCanvas
 } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
@@ -206,57 +208,47 @@ export default {
           close()
           closeRemoteResult()
 
-          const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
-            return {
-              name,
-              title,
-              field,
-              type,
-              format
-            }
-          })
-
-          if (props.editable) {
-            requestUpdateDataSource(state.dataSource.id, {
-              name: state.dataSource.name,
-              data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
-            }).then(() => {
-              requestGenerateDataSource(getAppId())
-              // 修改dataSource成功
-              useNotify({
-                title: '数据源修改成功',
-                type: 'success'
-              })
-              emit('save')
-              dataSourceState.dataSourceColumn = {}
-              dataSourceState.dataSourceColumnCopies = {}
-            })
-          } else {
-            requestAddDataSource({
-              name: state.dataSource.name,
-              app: getAppId(),
-              data: {
-                columns,
-                data: [],
-                type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
-                ...dataSourceState.remoteConfig
-              }
-            })
-              .then(() => {
+          settingRef.value.saveRecord().then((record) => {
+            if (props.editable) {
+              requestUpdateDataSource(state.dataSource.id, record.requestData).then(() => {
                 requestGenerateDataSource(getAppId())
+                // 修改dataSource成功
+                const { name } = record.requestData
+                const key = `datasource${capitalize(camelize(name))}`
+                const pageSchema = useCanvas().getSchema()
+
+                if (pageSchema.state[key]) {
+                  pageSchema.state[key] = record.data.map(({ _id, ...other }) => other)
+                }
                 useNotify({
-                  title: '数据源新增成功',
+                  title: '数据源修改成功',
                   type: 'success'
                 })
                 emit('save')
                 dataSourceState.dataSourceColumn = {}
                 dataSourceState.dataSourceColumnCopies = {}
               })
-              .catch((error) => {
-                message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
+            } else {
+              requestAddDataSource({
+                name: state.dataSource.name,
+                app: getAppId(),
+                data: record.requestData
               })
-          }
-          settingRef.value.saveRecord()
+                .then(() => {
+                  requestGenerateDataSource(getAppId())
+                  useNotify({
+                    title: '数据源新增成功',
+                    type: 'success'
+                  })
+                  emit('save')
+                  dataSourceState.dataSourceColumn = {}
+                  dataSourceState.dataSourceColumnCopies = {}
+                })
+                .catch((error) => {
+                  message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
+                })
+            }
+          })
         }
       })
     }

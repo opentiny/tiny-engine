@@ -84,7 +84,7 @@ export default {
     const showRemote = computed(() => !state.dataSource.data || state.dataSource.data.type === 'remote')
 
     const saveRecord = () => {
-      recordRef.value.saveRecordList()
+      return recordRef.value.saveRecordList()
     }
 
     const changeRecord = () => {
@@ -124,16 +124,6 @@ export default {
         dataSourceState.dataSourceColumn = { name, type: type || 'remote', columns: filterColumns }
       },
       { immediate: true }
-    )
-
-    watch(
-      () => state.dataSource?.data?.type,
-      (value) => {
-        if (value) {
-          state.activeTabName = value
-        }
-      },
-      { immediate: true, deep: true }
     )
 
     watch(

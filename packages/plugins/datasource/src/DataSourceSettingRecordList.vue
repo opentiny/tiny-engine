@@ -68,13 +68,12 @@
 
 <script lang="tsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
-import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { iconUpload } from '@opentiny/vue-icon'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useModal, useLayout, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useModal, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import useClipboard from 'vue-clipboard3'
-import { fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
+import { fetchDataSourceDetail } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
@@ -395,40 +394,23 @@ export default {
 
       const requestData = { name, id, data: { columns, type, ...other, data } }
 
-      requestUpdateDataSource(props.data.id, requestData).then((res) => {
-        if (!res) {
-          return
-        }
-
-        const key = `datasource${capitalize(camelize(name))}`
-        const pageSchema = useCanvas().getSchema()
-
-        if (pageSchema.state[key]) {
-          pageSchema.state[key] = data.map(({ _id, ...other }) => other)
-        }
-
-        useNotify({
-          type: 'success',
-          message: '数据源修改成功'
-        })
-
-        fetchData(true)
-      })
+      return { requestData, data }
     }
 
     const saveRecordList = () => {
-      grid.value.validate((valid) => {
-        if (!valid) {
-          return
-        }
+      return new Promise((resolve) => {
+        grid.value.validate((valid) => {
+          if (!valid) {
+            return
+          }
+          const totalData = state.totalData
+          const columnsKeys = state.columns.map(({ name }) => name)
+          const data = totalData.map((item) =>
+            Object.fromEntries(Object.entries(item).filter(([key]) => columnsKeys.includes(key) || key === '_id'))
+          )
 
-        const totalData = state.totalData
-        const columnsKeys = state.columns.map(({ name }) => name)
-        const data = totalData.map((item) =>
-          Object.fromEntries(Object.entries(item).filter(([key]) => columnsKeys.includes(key) || key === '_id'))
-        )
-
-        saveRecordFormData(data)
+          resolve(saveRecordFormData(data))
+        })
       })
     }
 
