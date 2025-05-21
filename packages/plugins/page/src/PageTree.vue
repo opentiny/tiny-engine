@@ -66,6 +66,7 @@ import {
   useNotify,
   useMessage,
   getMetaApi,
+  getOptions,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
@@ -77,6 +78,7 @@ import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http'
 import DraggableTree from './Tree.vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
+import meta from '../meta'
 
 const { PAGE_STATUS } = constants
 
@@ -265,6 +267,7 @@ export default {
     }))
 
     const getRowOperations = (groupId, node) => {
+      const { customOption } = getOptions(meta.id)
       if (groupId === COMMON_PAGE_GROUP_ID) {
         return rowOperations.slice(0, 1)
       }
@@ -276,7 +279,7 @@ export default {
       //   return rowOperations.filter((item) => item.type !== 'copy')
       // }
 
-      return rowOperations
+      return rowOperations.concat(customOption)
     }
 
     const updatePage = (pageDetail) => {
