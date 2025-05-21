@@ -78,16 +78,6 @@ import { fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
-const isOpen = ref(false)
-
-export const open = () => {
-  isOpen.value = true
-}
-
-export const close = () => {
-  isOpen.value = false
-}
-
 export default {
   components: {
     TinyGrid: Grid,
@@ -109,7 +99,7 @@ export default {
     const grid = ref(null)
     const { confirm } = useModal()
     const { toClipboard } = useClipboard()
-    const { layoutState, PLUGIN_NAME, getPluginByLayout } = useLayout()
+    const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
     const state = reactive({
@@ -213,6 +203,7 @@ export default {
     }
 
     const getMockPageData = async (offset, pageSize) => {
+      if (!props.data.id) return
       const res = await fetchDataSourceDetail(props.data.id)
       const columns = res?.data?.columns
 
@@ -441,10 +432,6 @@ export default {
       })
     }
 
-    const fullScreenChange = (value) => {
-      layoutState.settings.showDesignSettings = !value
-    }
-
     const download = () => {
       downloadFn(state.columns, '静态数据.xlsx')
     }
@@ -489,15 +476,6 @@ export default {
           fetchData()
         }
       })
-    }
-
-    const showDesignSettings = () => {
-      layoutState.settings.showDesignSettings = true
-    }
-
-    const closeRecordList = () => {
-      showDesignSettings()
-      close()
     }
 
     const handleSelectChange = () => {
@@ -550,10 +528,8 @@ export default {
     return {
       align,
       PLUGIN_NAME,
-      isOpen,
       state,
       grid,
-      closeRecordList,
       insertNewData,
       saveRecordFormData,
       getGridData,
@@ -561,7 +537,6 @@ export default {
       download,
       showImportModal,
       batchDelete,
-      fullScreenChange,
       editClosed,
       allowCreate,
       isEmptyColumn,

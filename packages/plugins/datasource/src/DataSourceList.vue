@@ -25,21 +25,12 @@
       </div>
     </div>
   </div>
-  <data-source-record-list
-    :data="state.currentData"
-    @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
-    @refresh="refresh()"
-  ></data-source-record-list>
 </template>
 
 <script lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { close as closeDataSourceForm } from './DataSourceForm.vue'
-import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
-import { close as closeRecordForm } from './DataSourceRecordForm.vue'
-import { fetchDataSourceList, fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
-import { close as closeGlobalDataHandler } from './DataSourceGlobalDataHandler.vue'
+import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { fetchDataSourceList, fetchDataSourceDetail } from './js/http'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 
 const dataSourceList = ref([])
@@ -61,8 +52,7 @@ export const clearActive = () => {
 
 export default {
   components: {
-    SvgButton,
-    DataSourceRecordList
+    SvgButton
   },
   emits: ['edit'],
   setup(props, { emit }) {
@@ -70,26 +60,9 @@ export default {
       currentData: { name: '', columns: [], data: [] }
     })
 
-    const { dataSourceState, saveDataSource } = useDataSource()
-
     onMounted(() => {
       dataSourceList.value = useResource().appSchemaState.dataSource
     })
-
-    // 打开新增数据面板
-    const openRecordListPanel = (item, index) => {
-      saveDataSource(requestUpdateDataSource).then(() => {
-        fetchDataSourceDetail(item.id).then((data) => {
-          dataSourceState.dataSource = data
-          state.currentData = data
-          activeIndex.value = index
-          closeDataSourceForm()
-          closeRecordForm()
-          openRecordList()
-          closeGlobalDataHandler()
-        })
-      })
-    }
 
     // 打开数据源新增和修改面板
     const openDataSourceForm = (item, index) => {
@@ -101,7 +74,6 @@ export default {
 
     return {
       state,
-      openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
       activeIndex,
