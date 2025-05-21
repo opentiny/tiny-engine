@@ -61,7 +61,6 @@ export default {
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
     const footData = ref([])
-    const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
     const { canvasSrc = '' } = getOptions(meta.id) || {}
@@ -272,7 +271,6 @@ export default {
       nodeSelected,
       footData,
       materialsPanel,
-      showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法
         getMaterial: useMaterial().getMaterial,
