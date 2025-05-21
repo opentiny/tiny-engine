@@ -13331,7 +13331,7 @@
               "name": {
                 "zh_CN": "互斥按钮组"
               },
-              "icon": "buttons",
+              "icon": "MutexButtons",
               "snippetName": "TinyButtonGroup",
               "screenshot": "",
               "schema": {
