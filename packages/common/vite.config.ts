@@ -81,7 +81,11 @@ export default defineConfig({
         /@opentiny\/tiny-engine.*/,
         /@opentiny\/vue.*/,
         /^prettier.*/,
-        /^@babel.*/
+        /^@babel.*/,
+        /^@vueuse.*/,
+        /^@vue.*/,
+        'axios',
+        'vue-draggable-next'
       ]
     }
   }
