@@ -82,7 +82,6 @@ export default defineConfig({
         /@opentiny\/vue.*/,
         /^prettier.*/,
         /^@babel.*/,
-        /^@eslint.*/,
         /^@vueuse.*/,
         /^@vue.*/,
         'axios',
