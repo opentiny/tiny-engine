@@ -28,10 +28,7 @@
       <div class="content" @click="handleClickRow(node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
         <div class="prefix-icon" @click.stop="handleSwitchCollapse(node)">
-          <svg-icon
-            v-if="node.rawData.isPage"
-            :name="collapseMap[node.id] ? 'page-multiple' : 'page-single'"
-          ></svg-icon>
+          <svg-icon v-if="node.rawData.isPage" :name="collapseMap[node.id] ? 'page-collection' : 'page'"></svg-icon>
           <svg-icon v-else :name="collapseMap[node.id] ? 'folder' : 'folder-wold'"></svg-icon>
         </div>
         <label>{{ node.label }}</label>
