@@ -17,11 +17,10 @@
       <template #title>
         <tiny-popover placement="top" trigger="hover">
           <div>为了支持mock数据和表格快捷生成字段功能，数据源最终返回的格式建议是：</div>
-          <div>对于对象数组：<code>{ code: string, msg: string, data: {items: any[], total: number} }</code></div>
-          <div>对于树结构：<code>{ code: string, msg: string, data: any }</code></div>
+          <div><code>{ code: string, msg: string, data: {items: any[], total: number} }</code></div>
           <template #reference>
             <div>
-              <icon-help-circle class="help-icon"></icon-help-circle>
+              <svg-icon name="flow-help-center"></svg-icon>
             </div>
           </template>
         </tiny-popover>
@@ -37,7 +36,6 @@
 <script lang="ts">
 import { reactive, ref, watch } from 'vue'
 import { Popover } from '@opentiny/vue'
-import { iconHelpCircle } from '@opentiny/vue-icon'
 import { constants } from '@opentiny/tiny-engine-utils'
 import RemoteDataAdapterForm from './RemoteDataAdapterForm.vue'
 
@@ -51,7 +49,6 @@ const errorHandler = ref(null)
 export default {
   components: {
     TinyPopover: Popover,
-    IconHelpCircle: iconHelpCircle(),
     RemoteDataAdapterForm
   },
   props: {
@@ -112,5 +109,8 @@ export default {
     font-size: var(--te-base-font-size-base);
     color: var(--te-datasource-common-tip-text-color);
   }
+}
+.svg-icon.plugin-icon-plugin-help {
+  font-size: 16px;
 }
 </style>

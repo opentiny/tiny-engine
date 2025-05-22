@@ -68,8 +68,7 @@
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useModal, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
-import useClipboard from 'vue-clipboard3'
+import { useModal, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { fetchDataSourceDetail } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
@@ -93,7 +92,6 @@ export default {
   setup(props, { emit }) {
     const grid = ref(null)
     const { confirm } = useModal()
-    const { toClipboard } = useClipboard()
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
 
@@ -120,18 +118,6 @@ export default {
     const allowCreate = computed(() => state.columns?.length > 0)
     const isEmptyColumn = computed(() => state.columns?.length <= 0)
 
-    const copyData = async (id) => {
-      try {
-        await toClipboard(id)
-      } catch (e) {
-        useNotify({
-          message: '复制失败，请尝试手动复制',
-          type: 'error'
-        })
-        throw new Error(e)
-      }
-    }
-
     const genValidateRules = (columns) => {
       const res = {}
 
@@ -151,23 +137,6 @@ export default {
       }
 
       return res
-    }
-
-    const renderer = (h, { row }) => {
-      return (
-        <span
-          class="copy-data"
-          title="复制"
-          onClick={(e) => {
-            e.stopPropagation()
-            e.preventDefault()
-            copyData(row._id)
-          }}
-        >
-          {row._id}
-          <icon-copy></icon-copy>
-        </span>
-      )
     }
 
     const editorMap = {
@@ -298,32 +267,13 @@ export default {
     }
 
     watchEffect(() => {
-      const { columns, type } = props.data.data
+      const { columns } = props.data.data
       let newColumns = columns?.map((column) => ({
         ...column,
         title: column.title?.zh_CN || column.title || column.field,
         field: column.name,
         formatText: column.type === 'date' ? 'date' : ''
       }))
-
-      if (type === 'tree') {
-        newColumns = [
-          {
-            title: '_id',
-            field: '_id',
-            name: '_id',
-            type: 'string',
-            renderer
-          },
-          {
-            title: '父ID',
-            field: '_pid',
-            name: '_pid',
-            type: 'string'
-          },
-          ...newColumns
-        ]
-      }
 
       newColumns = newColumns?.map((item) => {
         const editor = editorMap[item.type]
