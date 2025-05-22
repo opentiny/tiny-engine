@@ -56,7 +56,8 @@ export default {
   }
 }
 .tip-content {
-  width: 180px;
+  width: 220px;
+  margin-bottom: 6px;
   color: var(--te-component-common-text-color-secondary);
 }
 .tip-jump {
