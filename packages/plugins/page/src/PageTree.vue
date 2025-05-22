@@ -114,6 +114,7 @@ export default {
     } = usePage()
     const { fetchPageDetail, requestUpdatePage } = http
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    const { customOption = [] } = getOptions(meta.id)
 
     const state = reactive({
       pageSearchValue: '',
@@ -252,7 +253,8 @@ export default {
       { type: 'divider' },
       { type: 'createPage', label: '新建子页面', action: createPage },
       { type: 'createFolder', label: '新建子文件夹', action: createFolder },
-      { type: 'settingHome', label: '设置为主页', action: settingHome }
+      { type: 'settingHome', label: '设置为主页', action: settingHome },
+      ...customOption
       // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
       // { type: 'divider' },
       // { type: 'copy', label: '复制页面', action: copyPage },
@@ -260,14 +262,13 @@ export default {
     ].map((item) => ({
       ...item,
       action: (node) => {
-        item.action?.(node)
+        item.action?.(node, emit)
         // 点击 action 后，关闭 popover 弹窗
         popoverRefs[node.id]?.doClose?.()
       }
     }))
 
     const getRowOperations = (groupId, node) => {
-      const { customOption } = getOptions(meta.id)
       if (groupId === COMMON_PAGE_GROUP_ID) {
         return rowOperations.slice(0, 1)
       }
@@ -279,7 +280,7 @@ export default {
       //   return rowOperations.filter((item) => item.type !== 'copy')
       // }
 
-      return rowOperations.concat(customOption)
+      return rowOperations
     }
 
     const updatePage = (pageDetail) => {

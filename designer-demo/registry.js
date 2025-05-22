@@ -49,7 +49,6 @@ import {
 } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
-import { handleClickDelete } from './tests/utils'
 
 export default {
   root: {
@@ -108,7 +107,7 @@ export default {
   plugins: [
     Materials,
     Tree,
-    [Page, { options: { ...Page.options, customOption: [{type: 'delete', label: '删除',  action: handleClickDelete}] } }],
+    Page,
     [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
     Datasource,
     Bridge,
