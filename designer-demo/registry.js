@@ -9,7 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import { META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import scriptPlugin from './src/plugins/script'
@@ -20,39 +20,39 @@ export default {
     ...engineConfig
   },
   // 配置 false 隐藏工具栏清空按钮
-  'engine.toolbars.clean': false,
+  [META_APP.Clean]: false,
   // 配置 false 隐藏大纲树，手动配置 tree-shaking 为 false，仍然不会被 tree-shaking
   // #__TINY_ENGINE_TREE_SHAKING__: false
-  'engine.plugins.outlinetree': false,
+  [META_APP.OutlineTree]: false,
   // 替换整个页面JS插件，手动配置 tree-shaking 为 true
   /* #__TINY_ENGINE_TREE_SHAKING__: true */
-  'engine.plugins.pagecontroller': scriptPlugin,
+  [META_APP.Page]: scriptPlugin,
   // 换了个id，代表新增模块
-  'engine.plugins.script': {
+  [META_APP.Script]: {
     ...scriptPlugin,
-    id: 'engine.plugins.script'
+    id: META_APP.Script
   },
-  'engine.layout': {
+  [META_APP.Layout]: {
     options: {
       relativeLayoutConfig: {
-        'engine.plugins.script': {
-          insertBefore: 'engine.plugins.appmanage'
+        [META_APP.Script]: {
+          insertBefore: META_APP.AppManage
         },
         // 调整插件顺序
-        'engine.plugins.materials': {
-          insertAfter: 'engine.plugins.state'
+        [META_APP.Materials]: {
+          insertAfter: META_APP.State
         },
         // 调整插件上下位置
-        'engine.plugins.schema': {
-          insertBefore: 'engine.plugins.materials'
+        [META_APP.Schema]: {
+          insertBefore: META_APP.Materials
         },
         // 调整工具栏顺序
-        'engine.toolbars.save': {
-          insertBefore: 'engine.toolbars.themeSwitch'
+        [META_APP.Save]: {
+          insertBefore: META_APP.ThemeSwitch
         },
         // 支持切换组
-        'engine.toolbars.lang': {
-          insertAfter: 'engine.toolbars.breadcrumb'
+        [META_APP.Lang]: {
+          insertAfter: META_APP.Breadcrumb
         }
       }
     }
