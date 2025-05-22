@@ -110,7 +110,7 @@ export default {
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
-      border-color: var(--te-datasource-common-btn-border-color);
+      border-color: var(--te-datasource-editor-btn-border-color);
       & + .tiny-button {
         margin-left: 4px;
       }
@@ -120,7 +120,7 @@ export default {
   .editor {
     height: 250px;
     margin-top: 8px;
-    border: 1px solid var(--te-datasource-common-border-color-divider);
+    border: 1px solid var(--te-datasource-editor-border-color-divider);
     border-radius: 4px;
   }
 }
