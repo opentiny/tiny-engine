@@ -9,37 +9,52 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+// 注册表示例
 import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
+import scriptPlugin from './src/plugins/script'
 
 export default {
   [META_SERVICE.Http]: HttpService,
   'engine.config': {
     ...engineConfig
   },
-  // 调整插件顺序示例:
+  // 配置 false 隐藏工具栏清空按钮
+  [META_APP.Clean]: false,
+  // 配置 false 隐藏大纲树，手动配置 tree-shaking 为 false，仍然不会被 tree-shaking
+  // #__TINY_ENGINE_TREE_SHAKING__: false
+  [META_APP.OutlineTree]: false,
+  // 替换整个页面JS插件，手动配置 tree-shaking 为 true
+  /* #__TINY_ENGINE_TREE_SHAKING__: true */
+  [META_APP.Page]: scriptPlugin,
+  // 新增模块
+  'engine.plugins.custom_id': {
+    ...cuttomPlugin,
+    id: 'engine.plugins.custom_id'
+  },
+  // 调整插件顺序
   [META_APP.Layout]: {
     options: {
       relativeLayoutConfig: {
-        [META_APP.Page]: {
-          insertBefore: META_APP.State
+        [META_APP.Script]: {
+          insertBefore: META_APP.AppManage
         },
         // 调整插件顺序
-        [META_APP.OutlineTree]: {
-          insertAfter: META_APP.Materials
+        [META_APP.Materials]: {
+          insertAfter: META_APP.State
         },
         // 调整插件上下位置
         [META_APP.Schema]: {
-          insertBefore: META_APP.Help
+          insertBefore: META_APP.Materials
         },
         // 调整工具栏顺序
         [META_APP.Save]: {
-          insertAfter: META_APP.GenerateCode
+          insertBefore: META_APP.ThemeSwitch
         },
         // 支持切换组
         [META_APP.Lang]: {
-          insertAfter: META_APP.ViewSetting
+          insertAfter: META_APP.Breadcrumb
         }
       }
     }
