@@ -81,6 +81,15 @@
             { "title": "前后端启动联调(Java服务端)", "name": "debugging-of-java-backend.md" }
           ]
         },
+
+        {
+          "title": "更新日志",
+          "name": "changelog",
+          "articles": [
+            { "title": "更新日志", "name": "changelog.md" },
+            { "title": "v2.6升级指南", "name": "v2.6-upgrade-guide.md" }
+          ]
+        },
         {
           "title": "解决方案",
           "name": "solutions",
@@ -102,6 +111,8 @@
           "articles": [
             { "title": "新架构介绍", "name": "new-architecture.md" },
             { "title": "注册表", "name": "registry.md" },
+            { "title": "注册表（新版）", "name": "new-registry.md" },
+            { "title": "注册表高级特性", "name": "new-registry-advanced.md" },
             { "title": "元服务和元应用", "name": "meta-services-and-meta-apps.md" }
           ]
         },

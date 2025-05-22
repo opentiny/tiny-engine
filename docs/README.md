@@ -29,6 +29,13 @@
   - [数据源和Collection—远程字段](./advanced-features/data-source-and-collection-remote-fields.md)
   - [数据源和Collection—mock数据](./advanced-features/data-source-and-collection-mock-data.md)
   - [数据源和Collection—使用数据源](./advanced-features/data-source-and-collection-usage.md)
+  - 路由能力
+    - [页面支持嵌套路由](./advanced-features/route-capabilities/page-support-nested-route.md)
+    - [路由bar一键清除预览页面路径](./advanced-features/route-capabilities/route-bar-clear-preview-page.md)
+    - [路由bar高亮显示预览页面路径](./advanced-features/route-capabilities/route-bar-current-page-highlight.md)
+    - [RouterView组件支持预览子界面](./advanced-features/route-capabilities/route-view-support-preview-subpage.md)
+  - [主题切换功能](./advanced-features/theme-switch.md)
+  - [画布快捷操作](./advanced-features/canvas-shortcuts.md)
 - 教程
   - [从零搭建一个页面](./tutorials/build-a-page-from-scratch.md)
   - [第一期2023.10.27](./tutorials/issue-1-2023.10.27.md)
@@ -39,6 +46,9 @@
   - [简介](./development-getting-started/dev-intro.md)
   - [快速上手](./development-getting-started/dev-quick-start.md)
   - [前后端启动联调(Java服务端)](./development-getting-started/debugging-of-java-backend.md)
+- 更新日志
+  - [更新日志](./changelog/changelog.md)
+  - [v2.6升级指南](./changelog/v2.6-upgrade-guide.md)
 - 解决方案
   - [Java服务端部署](./solutions/server-deployment-solution-java.md)
   - [Node.js服务端部署](./solutions/server-deployment-solution.md)
@@ -47,9 +57,13 @@
   - [设计器中引入第三方组件库](./solutions/third-party-library-in-designer.md)
   - [物料同步方案](./solutions/material-sync-solution.md)
   - [本地化CDN方案](./solutions/import-map-local.md)
+  - [全新区块构建方案](./solutions/block-construction-solution.md)
+  - [全新画布通信方案](./solutions/canvas-communication-solution.md)
 - 扩展能力介绍
   - [新架构介绍](./extension-capabilities-overview/new-architecture.md)
   - [注册表](./extension-capabilities-overview/registry.md)
+  - [注册表（新版）](./extension-capabilities-overview/new-registry.md)
+  - [注册表高级特性](./extension-capabilities-overview/new-registry-advanced.md)
   - [元服务和元应用](./extension-capabilities-overview/meta-services-and-meta-apps.md)
 - 扩展能力使用教程
   - [如何开发插件](./extension-capabilities-tutorial/how-to-develop-plugins.md)
@@ -63,6 +77,7 @@
   - [定制元服务逻辑](./extension-capabilities-tutorial/customize-meta-service-logic.md)
   - [开发设置器组件](./extension-capabilities-tutorial/develop-configurator-components.md)
   - [AI插件使用前配置](./extension-capabilities-tutorial/ai-plugin-configuration.md)
+  - [如何自定义主题](./extension-capabilities-tutorial/how-to-custom-theme.md)
 - API
   - [API总览](./api/api-overview.md)
   - 前端API

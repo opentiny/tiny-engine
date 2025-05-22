@@ -19,6 +19,7 @@
 传入到TinyEngine底层引擎的示例：
 
 ```javascript
+import { META_APP } from '@opentiny/tiny-engine'
 // 注册表配置示例
 const register = {
   'engine.root': {
@@ -27,16 +28,15 @@ const register = {
   },
   'engine.config': engineConfig,
   // 覆盖官方的配置
-  'engine.layout': {
-    ...Layout
+  [META_APP.Layout]: {
     options: {...}
   },
   // 配置 false 隐藏工具栏清空按钮，并且在构建的时候，会将工具栏插件的相关代码做 tree-shaking
-  'engine.toolbars.clean': false,
+  [META_APP.Clean]: false,
   // 替换整个页面JS插件，手动配置 tree-shaking 为 true，会将原来的页面JS插件的代码做 tree-shaking
   /* #__TINY_ENGINE_TREE_SHAKING__: true */
-  'engine.plugins.pagecontroller': scriptPlugin,
-  // 使用跟官方的插件不相同的唯一 id，代表新增的插件
+  [META_APP.Script]: scriptPlugin,
+  // 新增的插件，需要使用与官方插件不相同的唯一 id
   'engine.plugins.customPlugin': {
     ...customPlugin,
     id: 'engine.plugins.customPlugin'
@@ -48,9 +48,9 @@ const register = {
 1. 最外层为一个对象结构，每个键都是一个唯一的注册表ID。
 2. `engine.root`：配置核心的元服务，许多的插件依赖这些核心的元服务。
 3. `engine.config`：低代码引擎的配置，主要配置物料、主题等等。
-4. `engine.layout`：配置低代码引擎的布局，可以通过扩展官方布局来自定义。
-5. `engine.toolbars.clean: false`：通过设置为 `false` 来隐藏特定工具栏按钮，同时在构建时会进行 tree-shaking 优化。
-6. `engine.plugins.pagecontroller`：替换整个页面JS插件，并通过注释 `#__TINY_ENGINE_TREE_SHAKING__: true` 指示构建工具对原插件代码进行 tree-shaking。
+4. `[META_APP.Layout]`：配置低代码引擎的布局，可以通过扩展官方布局来自定义。
+5. `[META_APP.Clean]: false`：通过设置为 `false` 来隐藏特定工具栏按钮，同时在构建时会进行 tree-shaking 优化。
+6. `[META_APP.Script]`：替换整个页面JS插件，并通过注释 `#__TINY_ENGINE_TREE_SHAKING__: true` 指示构建工具对原插件代码进行 tree-shaking。
 7. `engine.plugins.customPlugin`：添加新的自定义插件，需要使用与官方插件不同的唯一ID。
 
 通过这种基于ID的注册方式，可以更精细地控制平台的各个部分，实现添加、替换或移除特定功能，而不需要重新配置整个注册表结构。
@@ -78,11 +78,11 @@ export default {
     ...engineConfig
   },
   // 删除工具栏清空按钮
-  'engine.toolbars.clean': false,
+  [META_APP.Clean]: false,
   // 替换整个页面JS插件
-  'engine.plugins.pagecontroller': scriptPlugin,
+  [META_APP.Script]: scriptPlugin,
   // 传入插件配置
-  'engine.layout': {
+  [META_APP.Layout]: {
     options: {
       relativeLayoutConfig: {
         // ...
