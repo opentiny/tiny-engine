@@ -23,7 +23,7 @@ export const META_SERVICE = {
 
 export const META_APP = {
   // 画布视图设置工具
-  VIEW_SETTING: 'engine.toolbars.viewSetting',
+  ViewSetting: 'engine.toolbars.viewSetting',
   // layout 插件
   Layout: 'engine.layout',
   Logo: 'engine.toolbars.logo',
