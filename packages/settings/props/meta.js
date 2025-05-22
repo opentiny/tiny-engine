@@ -1,8 +1,7 @@
 export default {
   id: 'engine.setting.props',
   title: '属性',
-  type: 'setting',
-  align: 'rightTop',
+  type: 'plugins',
   name: 'props',
   icon: 'form'
 }

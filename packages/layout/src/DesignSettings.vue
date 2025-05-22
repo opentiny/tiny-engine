@@ -2,18 +2,18 @@
 <template>
   <div :class="{ 'not-selected': getMoveDragBarState() }">
     <div
-      v-show="renderPanel && getMergeMeta(renderPanel)?.entry"
+      v-show="renderPanel && settingPluginsMeta[renderPanel]?.entry"
       id="tiny-engine-right-panel"
       :class="[renderPanel, { 'is-fixed': rightFixedPanelsStorage.includes(renderPanel) }]"
     >
       <div class="right-panel-wrap">
         <component
-          :is="getMergeMeta(renderPanel)?.entry"
+          :is="settingPluginsMeta[renderPanel]?.entry"
           :fixed-panels="rightFixedPanelsStorage"
           @close="close"
           @fixPanel="fixPanel"
         ></component>
-        <div v-show="activating" class="active2" />
+        <div v-show="settingsState.activating" class="active2" />
       </div>
     </div>
   </div>
@@ -29,14 +29,18 @@
       <div
         v-for="(item, index) in settingPlugins"
         :key="index"
-        :class="['list-item', { 'first-item': item === settingPlugins[0], active: item.id === renderPanel }]"
-        :title="getMergeMeta(item)?.title"
-        @click="clickMenu({ item: getMergeMeta(item), index })"
+        :class="['list-item', { active: item === renderPanel }]"
+        :title="settingPluginsMeta[item]?.title"
+        @click="clickMenu({ item: settingPluginsMeta[item], index })"
         @contextmenu.prevent="showContextMenu($event, true, item, index, PLUGIN_POSITION.rightTop)"
       >
-        <span class="item-icon" v-if="getPluginShown(getMergeMeta(item)?.id)">
-          <svg-icon v-if="getMergeMeta(item)?.icon" :name="getMergeMeta(item)?.icon" class="panel-icon"></svg-icon>
-          <component v-else :is="getMergeMeta(item)?.icon" class="panel-icon"></component>
+        <span class="item-icon" v-if="getPluginShown(item)">
+          <svg-icon
+            v-if="settingPluginsMeta[item]?.icon"
+            :name="settingPluginsMeta[item]?.icon"
+            class="panel-icon"
+          ></svg-icon>
+          <component v-else :is="settingPluginsMeta[item]?.icon" class="panel-icon"></component>
         </span>
       </div>
       <div style="flex: 1" class="list-item" @contextmenu.prevent="showContextMenu($event, false)"></div>
@@ -45,7 +49,7 @@
 
   <plugin-right-menu
     ref="rightMenu"
-    :list="settingPlugins"
+    :list="Object.values(settingPluginsMeta)"
     :align="PLUGIN_POSITION.rightTop"
     @switchAlign="switchAlign"
   />
@@ -53,7 +57,7 @@
 
 <script lang="ts">
 /* metaService: engine.layout.DesignSettings */
-import { computed, ref, watch, toRefs } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -67,12 +71,9 @@ export default {
     VueDraggableNext
   },
   props: {
-    settings: {
-      type: Array,
-      default: () => []
-    },
     renderPanel: {
-      type: String
+      type: String,
+      default: ''
     },
     pluginList: {
       type: Array,
@@ -81,9 +82,6 @@ export default {
   },
   emits: ['changeRightAlign'],
   setup(props, { emit }) {
-    const components = {}
-    const iconComponents = {}
-
     const {
       getPluginById,
       PLUGIN_POSITION,
@@ -98,7 +96,6 @@ export default {
     } = useLayout()
 
     const rightMenu = ref(null)
-    const { renderPanel } = toRefs(props)
     const showContextMenu = (event, type, item, index, align) => {
       if (!type) {
         rightMenu.value.showContextMenu(event.clientX, event.clientY, type)
@@ -107,16 +104,18 @@ export default {
       }
     }
 
-    props.pluginList.forEach(({ id, entry, icon }) => {
-      components[id] = entry
-      iconComponents[id] = icon
-    })
+    const settingPlugins = ref(getFinalLayoutConfig().plugins.right.top)
+    const settingPluginsMeta = computed(() => {
+      const result: Record<string, any> = {}
 
-    const settingPlugins = ref(getFinalLayoutConfig().settings)
+      settingPlugins.value.forEach((item) => {
+        const meta = getMergeMeta(item)
+        if (meta) {
+          result[item] = meta
+        }
+      })
 
-    const currentComponent = computed(() => {
-      const isExistedComponent = settingPlugins.value.some((item) => item.id === renderPanel.value)
-      return isExistedComponent ? components[renderPanel.value] : null
+      return result
     })
 
     const close = () => {
@@ -153,9 +152,12 @@ export default {
       setRender(item.id)
     }
 
-    watch(renderPanel, (n) => {
-      setRender(n)
-    })
+    watch(
+      () => props.renderPanel,
+      (n) => {
+        setRender(n)
+      }
+    )
 
     //切换面板状态
     const fixPanel = (pluginName) => {
@@ -168,18 +170,10 @@ export default {
       dragPluginLayout(e.from.id, e.to.id, e.oldIndex, e.newIndex)
     }
 
-    const activating = computed(() => settingsState.activating)
-    const showMask = ref(true)
-
     return {
-      currentComponent,
       changeAlign,
-      showMask,
-      activating,
       settingsState,
       settingPlugins,
-      components,
-      iconComponents,
       clickMenu,
       close,
       fixPanel,
@@ -191,7 +185,8 @@ export default {
       switchAlign,
       rightMenu,
       getMoveDragBarState,
-      getMergeMeta
+      getMergeMeta,
+      settingPluginsMeta
     }
   }
 }
