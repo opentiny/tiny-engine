@@ -11,10 +11,10 @@ export default {
         META_APP.Collections,
         META_APP.Bridge,
         META_APP.I18n,
-        META_APP.PageController,
+        META_APP.Page,
         META_APP.State
       ],
-      bottom: [META_APP.Schema, META_APP.EditorHelp, META_APP.Robot]
+      bottom: [META_APP.Schema, META_APP.Help, META_APP.Robot]
     },
     right: {
       top: [META_APP.Props, META_APP.Styles, META_APP.Event]
