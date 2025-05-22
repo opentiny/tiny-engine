@@ -48,7 +48,7 @@
 
 <script lang="ts">
 /* metaService: engine.layout.DesignToolbars */
-import { reactive, computed } from 'vue'
+import { computed } from 'vue'
 import { getMergeMeta, useLayout } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 
@@ -59,36 +59,20 @@ export default {
   props: {
     layoutRegistry: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
-  setup(props) {
+  setup() {
     const { getFinalLayoutConfig } = useLayout()
 
     const toolbars = computed(() => {
       const layoutConfig = getFinalLayoutConfig()
-      const left = layoutConfig.toolbars.left
-      const right = layoutConfig.toolbars.right
-      const center = layoutConfig.toolbars.center
-      const collapse = layoutConfig.toolbars.collapse
 
-      return {
-        left,
-        right,
-        center,
-        collapse
-      }
-    })
-    const state = reactive({
-      leftBar: props.layoutRegistry?.options?.toolbars?.left,
-      rightBar: props.layoutRegistry?.options?.toolbars?.right,
-      centerBar: props.layoutRegistry?.options?.toolbars?.center,
-      collapseBar: props.layoutRegistry?.options?.toolbars?.collapse
+      return layoutConfig.toolbars
     })
 
     return {
       getMergeMeta,
-      state,
       toolbars
     }
   }
