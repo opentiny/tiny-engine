@@ -180,6 +180,19 @@ export default {
       overflow-y: auto;
       padding: 0;
       margin: 0;
+      &::-webkit-scrollbar-track,
+      &::-webkit-scrollbar-track-piece,
+      &::-webkit-scrollbar-corner {
+        background-color: transparent;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: transparent;
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
     }
     .tiny-tabs__nav.is-show-active-bar .tiny-tabs__item {
       margin-right: 8px;
