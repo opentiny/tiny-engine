@@ -272,6 +272,9 @@ const change = (item) => {
       background-color: var(--te-configurator-common-bg-color-hover);
       color: var(--te-configurator-common-text-color-primary);
     }
+    .tiny-dropdown-item__label {
+      font-size: var(--te-base-font-size-base);
+    }
   }
 
   :deep(.tiny-dropdown-item__wrap) {

@@ -102,7 +102,7 @@ export default {
 <style scoped lang="less">
 .lowcode-icon {
   position: relative;
-  height: 30px;
+  height: 24px;
   display: flex;
   padding-right: 20px;
   width: 136px;
@@ -113,7 +113,7 @@ export default {
   border-radius: 3px;
   .icon-box {
     border-right: 1px solid var(--te-configurator-common-border-color-divider);
-    padding: 4px 8px;
+    padding: 0px 8px;
     .tiny-svg {
       color: var(--te-configurator-common-text-color-secondary);
       font-size: 14px;
@@ -121,7 +121,7 @@ export default {
   }
   .icon-text {
     padding: 4px 0 4px 8px;
-    line-height: 20px;
+    line-height: 14px;
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -129,8 +129,8 @@ export default {
   .icon-close {
     position: absolute;
     right: 4px;
-    height: 30px;
-    line-height: 20px;
+    height: 22px;
+    line-height: 14px;
     width: 16px;
     cursor: pointer;
   }
@@ -142,7 +142,7 @@ export default {
     margin-bottom: 5px;
     .icon-manage-clear {
       display: block;
-      color: #5e7ce0;
+      color: var(--te-configurator-common-text-color-emphasize);
       min-width: 48px;
       margin-left: 5px;
       cursor: pointer;

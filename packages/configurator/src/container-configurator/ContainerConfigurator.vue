@@ -16,7 +16,10 @@
         </tiny-tooltip>
       </template>
     </meta-list-items>
-    <div class="add-btn"><span @click="addChildren">+ 添加标签页</span></div>
+    <div class="add-btn" @click="addChildren">
+      <svg-icon name="flow-add"></svg-icon>
+      <span>添加标签页</span>
+    </div>
   </div>
 </template>
 <script>
@@ -137,9 +140,18 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.add-btn span {
-  line-height: 26px;
-  cursor: pointer;
+.add-btn {
+  display: flex;
+  align-items: center;
+  color: var(--te-configurator-common-text-color-emphasize);
+  margin-top: 4px;
+  &:hover {
+    cursor: pointer;
+  }
+
+  & .svg-icon {
+    margin-right: 4px;
+  }
 }
 .item-icon {
   display: flex;

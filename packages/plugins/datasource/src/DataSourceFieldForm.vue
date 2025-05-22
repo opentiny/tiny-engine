@@ -216,6 +216,11 @@ export default {
   svg {
     color: var(--te-datasource-toolbar-icon-color);
   }
+  .title-content {
+    :deep(.tiny-input__inner) {
+      padding-right: 30px;
+    }
+  }
 }
 #default-item {
   height: 24px;

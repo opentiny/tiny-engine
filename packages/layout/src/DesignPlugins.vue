@@ -281,7 +281,7 @@ export default {
 #tiny-engine-left-panel {
   width: auto !important;
   height: calc(100vh - var(--base-top-panel-height));
-  border-right: 1px solid var(--te-layout-common-border-color);
+  // border-right: 1px solid var(--te-layout-common-border-color);
   background: var(--te-layout-common-bg-color);
   display: flex;
   flex-direction: column;

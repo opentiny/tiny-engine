@@ -214,7 +214,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 40px;
+    height: 48px;
     line-height: 40px;
     font-size: 14px;
     line-height: 18px;

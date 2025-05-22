@@ -10,7 +10,12 @@
     @opened="openedDialog"
   >
     <div class="bind-event-dialog-tip">
-      选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。
+      <tiny-alert
+        type="info"
+        description="选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。"
+        class="header-alert"
+        :closable="false"
+      ></tiny-alert>
     </div>
     <div class="bind-event-dialog-content">
       <component :is="BindEventsDialogSidebar" :dialogVisible="dialogVisible" :eventBinding="eventBinding"></component>
@@ -36,7 +41,7 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
-import { Button, DialogBox } from '@opentiny/vue'
+import { Button, DialogBox, TinyAlert } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
 import meta from '../../meta'
 
@@ -53,7 +58,8 @@ export const close = () => {
 export default {
   components: {
     TinyButton: Button,
-    TinyDialogBox: DialogBox
+    TinyDialogBox: DialogBox,
+    TinyAlert
   },
   inheritAttrs: false,
   props: {
@@ -262,10 +268,9 @@ export default {
 }
 
 .bind-event-dialog-tip {
-  padding: var(--te-common-vertical-item-spacing-normal) 14px;
-  margin-bottom: var(--te-common-vertical-item-spacing-normal);
-  background-color: var(--te-bind-event-dialog-tip-bg-color);
-  color: var(--te-bind-event-dialog-tip-text-color);
+  .tiny-alert.tiny-alert--normal {
+    margin: 12px 0;
+  }
 }
 
 .bind-event-dialog-content {

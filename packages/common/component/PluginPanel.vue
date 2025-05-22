@@ -279,6 +279,7 @@ export default {
   width: 100%;
   height: 100%;
   background: var(--te-component-common-bg-color);
+  border-right: 1px solid var(--te-component-common-border-color-divider);
   display: flex;
   flex-direction: column;
   position: relative;

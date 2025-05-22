@@ -612,7 +612,7 @@ const getNodePath = (id: string, nodes: { name: string; node: string }[] = []) =
   if (parent) {
     getNodePath(parent.id, nodes)
   } else {
-    nodes.unshift({ name: 'BODY', node: id })
+    nodes.unshift({ name: 'body', node: id })
   }
 
   return nodes

@@ -320,6 +320,7 @@
     color: var(--te-common-text-secondary);
     padding: 0;
     margin-top: 16px;
+    font-size: var(--te-base-font-size-base);
     .tiny-form-item.is-text.is-no-asterisk.tiny-form-item--default {
       margin-bottom: 12px;
       &:last-of-type {
@@ -465,7 +466,7 @@
     padding: 20px;
     border-radius: var(--te-base-border-radius-1);
     box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-common-bg-default);
     .tiny-modal__header {
       padding: 0;
       font-size: var(--te-base-font-size-1);
@@ -546,6 +547,7 @@
     border-color: var(--te-common-border-default);
     text-align: left;
     background-color: var(--te-common-bg-default);
+    font-size: var(--te-base-font-size-base);
   }
   &.is-controls-right {
     .tiny-numeric__input-inner {
@@ -586,6 +588,7 @@
     width: 14px;
     margin-right: 4px;
     height: auto;
+    line-height: 18px;
   }
 }
 
@@ -948,6 +951,7 @@
     }
     .tiny-grid-checkbox {
       color: var(--te-common-border-hover);
+      border-radius: var(--te-base-border-radius-1);
     }
   }
 }
@@ -1005,6 +1009,7 @@
     border-color: var(--te-common-border-default);
     color: var(--te-common-text-primary);
     background-color: transparent;
+    font-size: var(--te-base-font-size-base);
     &:hover {
       border-color: var(--te-common-border-active);
     }
@@ -1048,9 +1053,15 @@
 }
 
 .tiny-alert {
+  font-size: var(--te-base-font-size-base);
   &.tiny-alert--info {
     background: var(--te-common-bg-info);
     border-color: transparent;
     color: var(--te-common-text-primary);
+  }
+  .tiny-alert__content {
+    .tiny-alert__description {
+      font-size: var(--te-base-font-size-base);
+    }
   }
 }

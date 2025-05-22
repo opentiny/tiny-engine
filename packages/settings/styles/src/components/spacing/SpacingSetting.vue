@@ -20,8 +20,8 @@
         </li>
       </ul>
     </div>
+    <reset-button v-show="isReset" @reset="reset" />
   </div>
-  <reset-button v-show="isReset" @reset="reset" />
 </template>
 
 <script>
@@ -117,7 +117,7 @@ export default {
 <style lang="less" scoped>
 .content-wrap {
   width: 236px;
-  margin-bottom: 10px;
+  padding: 12px 12px 4px;
   .content-input {
     display: flex;
     justify-content: flex-start;
@@ -138,22 +138,23 @@ export default {
   .content-value {
     display: flex;
     align-items: center;
-    margin-top: 12px;
+    margin: 12px 0;
 
     .auto {
       width: 60px;
       height: 60px;
       line-height: 60px;
       text-align: center;
-      border: 1px solid var(--te-styles-common-border-color);
       background: var(--te-styles-spacing-setting-bg-color);
+      color: var(--te-styles-common-text-color-secondary);
+      border-radius: var(--te-base-border-radius-1);
       cursor: pointer;
       box-sizing: border-box;
 
       &:hover,
       &.active {
-        color: var(--te-styles-common-setting-text-color);
-        background: var(--te-styles-common-setting-bg-color);
+        color: var(--te-styles-common-text-color-primary);
+        background: var(--te-styles-spacing-setting-bg-color-active);
       }
     }
 
@@ -168,7 +169,7 @@ export default {
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        column-gap: 3%;
+        gap: 7px;
         .option {
           width: auto;
           margin-left: 0;
@@ -177,20 +178,21 @@ export default {
 
       .option {
         width: 22%;
-        height: 26px;
-        line-height: 26px;
+        height: 24px;
+        line-height: 24px;
         margin-left: 3%;
         text-align: center;
-        border: 1px solid var(--te-styles-common-border-color);
         background: var(--te-styles-spacing-setting-bg-color);
+        color: var(--te-styles-common-text-color-secondary);
+        border-radius: var(--te-base-border-radius-1);
         cursor: pointer;
         transition: 0.3s;
         box-sizing: border-box;
 
         &:hover,
         &.active {
-          color: var(--te-styles-common-setting-text-color);
-          background: var(--te-styles-common-setting-bg-color);
+          color: var(--te-styles-common-text-color-primary);
+          background: var(--te-styles-spacing-setting-bg-color-active);
         }
       }
     }

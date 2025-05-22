@@ -135,6 +135,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-page-js-container {
+  border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-plugin-js-panel-shadow-color);
   z-index: 999;
 

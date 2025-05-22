@@ -34,7 +34,7 @@
           @change="handleChange"
         >
           <template #trigger>
-            <tiny-button><icon-upload class="btn-icon"></icon-upload>批量上传</tiny-button>
+            <tiny-button><svg-icon class="btn-icon" name="upload"></svg-icon>批量上传</tiny-button>
           </template>
         </tiny-file-upload>
         <a class="download-btn" @click="downloadFile"> 下载导入模板 </a>
@@ -54,14 +54,7 @@
           :edit-rules="validRules"
         >
           <tiny-grid-column type="selection" width="42"></tiny-grid-column>
-          <tiny-grid-column
-            width="120"
-            field="key"
-            title="key"
-            show-overflow
-            :show-icon="false"
-            :editor="{ component: 'input', autoselect: true, attrs: { disabled: isEditMode } }"
-          ></tiny-grid-column>
+          <tiny-grid-column width="120" field="key" title="key" show-overflow :show-icon="false"></tiny-grid-column>
           <tiny-grid-column
             width="160"
             field="zh_CN"
@@ -123,7 +116,7 @@
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
-import { iconLoadingShadow, iconUpload } from '@opentiny/vue-icon'
+import { iconLoadingShadow } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import {
   useTranslate,
@@ -149,8 +142,7 @@ export default {
     PluginPanel,
     TinySelect: Select,
     TinyFileUpload: FileUpload,
-    SearchEmpty,
-    IconUpload: iconUpload()
+    SearchEmpty
   },
   props: {
     fixedPanels: {
@@ -457,6 +449,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-i18n {
+  border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-i18n-panel-shadow-color);
 }
 .stripe-tiny-grid {

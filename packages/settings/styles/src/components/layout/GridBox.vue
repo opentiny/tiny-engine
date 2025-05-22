@@ -2,7 +2,7 @@
   <div class="grid-box-container">
     <tiny-popover
       placement="top-start"
-      width="240"
+      width="264"
       popper-class="toolbar-media-popper grid-edit-popper"
       append-to-body
       @show="state.showMask = true"
@@ -23,23 +23,24 @@
             <span
               :class="['gap-label', { 'is-setting': getGapSetting() }]"
               @click="openSetting(GRID_PROPERTY.GridGap, $event)"
-              >间隔</span
+              >列间距</span
             >
-            <div class="gap-input">
-              <numeric-select
-                :name="getProperty(GRID_PROPERTY.GridColumnGap).name"
-                :numericalText="getProperty(GRID_PROPERTY.GridColumnGap).text"
-                @update="updateStyle"
-              />
-              <svg-icon :name="state.icon"></svg-icon>
-              <numeric-select
-                :name="getProperty(GRID_PROPERTY.GridRowGap).name"
-                :numericalText="getProperty(GRID_PROPERTY.GridRowGap).text"
-                @update="updateStyle"
-              />
-              <span :class="['col', { 'is-setting': getGapSetting() }]">列</span>
-              <span :class="['row', { 'is-setting': getGapSetting() }]">行</span>
-            </div>
+            <numeric-select
+              :name="getProperty(GRID_PROPERTY.GridColumnGap).name"
+              :numericalText="getProperty(GRID_PROPERTY.GridColumnGap).text"
+              @update="updateStyle"
+            />
+            <svg-icon :name="state.icon"></svg-icon>
+            <span
+              :class="['gap-label', { 'is-setting': getGapSetting() }]"
+              @click="openSetting(GRID_PROPERTY.GridGap, $event)"
+              >行间距</span
+            >
+            <numeric-select
+              :name="getProperty(GRID_PROPERTY.GridRowGap).name"
+              :numericalText="getProperty(GRID_PROPERTY.GridRowGap).text"
+              @update="updateStyle"
+            />
           </div>
           <div class="direction">
             <span
@@ -65,7 +66,7 @@
             />
             <label for="dense">Dense</label>
             <tiny-tooltip :open-delay="500" content="dense 表示尽可能紧密填满，尽量不出现空格" effect="light">
-              <icon-help-solid></icon-help-solid>
+              <svg-icon class="btn-icon" name="plugin-icon-plugin-help"></svg-icon>
             </tiny-tooltip>
           </div>
         </div>
@@ -73,7 +74,7 @@
           <div v-for="(item, index) in state.metaOptions" :key="index" class="layout-item">
             <div class="top">
               <span>{{ item.label }}</span>
-              <component :is="item.icon" @click="addItem(item)"></component>
+              <span class="add" @click="addItem(item)">添加</span>
             </div>
             <meta-list-items :optionsList="item.list">
               <template #content="{ data }">
@@ -83,12 +84,12 @@
               <template #operate="{ data }">
                 <tiny-tooltip class="item" effect="light" :open-delay="500" content="复制" placement="top">
                   <span class="item-icon">
-                    <icon-copy @click="copyItem(item.list, data)"></icon-copy>
+                    <svg-icon name="copy" @click="copyItem(item.list, data)"></svg-icon>
                   </span>
                 </tiny-tooltip>
                 <tiny-tooltip class="item" effect="light" :open-delay="500" content="删除" placement="top">
                   <span class="item-icon">
-                    <icon-del @click="deleteItem(item.list, data)"></icon-del>
+                    <svg-icon name="delete" @click="deleteItem(item.list, data)"></svg-icon>
                   </span>
                 </tiny-tooltip>
               </template>
@@ -131,7 +132,6 @@ import { reactive, watchEffect } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { MetaListItems, MaskModal } from '@opentiny/tiny-engine-common'
 import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
-import { iconHelpSolid, iconCopy, iconDel } from '@opentiny/vue-icon'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'
 import ResetButton from '../inputs/ResetButton.vue'
@@ -148,10 +148,7 @@ export default {
     NumericSelect,
     MaskModal,
     TinyPopover: Popover,
-    TinyTooltip: Tooltip,
-    IconHelpSolid: iconHelpSolid(),
-    IconCopy: iconCopy(),
-    IconDel: iconDel()
+    TinyTooltip: Tooltip
   },
   props: {
     style: {
@@ -570,5 +567,74 @@ export default {
 .grid-edit-spacing {
   padding-top: 12px;
   padding-bottom: 12px;
+  .gap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    .style-numeric {
+      width: 52px;
+    }
+    .gap-label {
+      color: var(--te-styles-common-text-color-secondary);
+    }
+  }
+  .direction {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 12px;
+    color: var(--te-styles-common-text-color-secondary);
+    .radio-group {
+      width: 180px;
+      background-color: var(--te-styles-layout-grid-box-bg-color);
+      color: var(--te-styles-common-text-color-secondary);
+      border-radius: 4px;
+      :deep(.radio-button) {
+        color: var(--te-styles-common-text-color-secondary);
+        &.active {
+          border-radius: 4px;
+          background-color: var(--te-styles-layout-grid-box-radio-bg-color-active);
+          color: var(--te-styles-common-text-color-primary);
+        }
+      }
+    }
+  }
+  .dense {
+    display: flex;
+    align-items: center;
+    .btn-icon {
+      color: var(--te-styles-layout-grid-box-icon-color);
+      margin-left: 4px;
+    }
+  }
+}
+.grid-edit-layout {
+  .layout-item {
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--te-styles-common-text-color-secondary);
+      .add {
+        color: var(--te-styles-layout-grid-box-text-color-emphasize);
+      }
+      background-color: var(--te-styles-layout-grid-box-bg-color);
+      height: 24px;
+      padding: 3px 8px 3px 16px;
+    }
+    & + .layout-item {
+      margin-top: 15px;
+    }
+  }
+}
+.item-icon {
+  color: var(--te-styles-layout-grid-box-icon-color);
+  .svg-icon {
+    font-size: 14px;
+  }
+  & + .item-icon {
+    margin-left: 4px;
+  }
 }
 </style>
