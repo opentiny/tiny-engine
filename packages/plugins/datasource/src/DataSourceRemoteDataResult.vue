@@ -118,7 +118,7 @@ export default {
   }
 
   .editor {
-    height: 120px;
+    height: 250px;
     margin-top: 8px;
     border: 1px solid var(--te-datasource-common-border-color-divider);
     border-radius: 4px;

@@ -9,24 +9,20 @@
       </template>
       <template #content>
         <div class="create-config">
-          <div>
-            <tiny-collapse v-model="state.activeName">
-              <tiny-collapse-item name="result">
-                <template #title>请求结果</template>
-                <data-srouce-remote-data-result
-                  v-model="state.remoteData.result"
-                  @change="resultChange"
-                ></data-srouce-remote-data-result>
-              </tiny-collapse-item>
-              <tiny-collapse-item name="field">
-                <template #title>查看字段</template>
-                <data-source-remote-result-mapping
-                  ref="dataSourceRemoteResultMappingref"
-                  :data="mappingData()"
-                  :modelValue="state.remoteFields"
-                ></data-source-remote-result-mapping>
-              </tiny-collapse-item>
-            </tiny-collapse>
+          <div class="item">
+            <div class="item-title">请求结果</div>
+            <data-srouce-remote-data-result
+              v-model="state.remoteData.result"
+              @change="resultChange"
+            ></data-srouce-remote-data-result>
+          </div>
+          <div class="item">
+            <div class="item-title field">查看字段</div>
+            <data-source-remote-result-mapping
+              ref="dataSourceRemoteResultMappingref"
+              :data="mappingData()"
+              :modelValue="state.remoteFields"
+            ></data-source-remote-result-mapping>
           </div>
         </div>
       </template>
@@ -36,7 +32,7 @@
 
 <script lang="ts">
 import { reactive, watch, ref, computed } from 'vue'
-import { Collapse, CollapseItem, Button } from '@opentiny/vue'
+import { Button } from '@opentiny/vue'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSrouceRemoteDataResult from './DataSourceRemoteDataResult.vue'
 import DataSourceRemoteResultMapping from './DataSourceRemoteResultMapping.vue'
@@ -57,9 +53,7 @@ export const close = () => {
 
 export default {
   components: {
-    TinyCollapse: Collapse,
     TinyButton: Button,
-    TinyCollapseItem: CollapseItem,
     PluginSetting,
     ButtonGroup,
     SvgButton,
@@ -90,7 +84,6 @@ export default {
 
     const state = reactive({
       remoteData: props.remoteData,
-      activeName: ['result', 'field'],
       remoteFields: {}
     })
 
@@ -163,14 +156,16 @@ export default {
     padding: 0;
   }
   .create-config {
-    :deep(.title) {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 12px;
-      background: var(--te-datasource-toolbar-bg-color);
-      border-top: 1px solid var(--te-datasource-tabs-border-color);
-      color: var(--te-datasource-toolbar-breadcrumb-text-color);
+    padding: 0 12px;
+    .item {
+      .item-title {
+        padding: 12px 0;
+        font-weight: var(--te-base-font-weight-bold);
+        color: var(--te-datasource-toolbar-breadcrumb-text-color);
+        &.field {
+          padding-bottom: 0;
+        }
+      }
     }
     .send {
     }

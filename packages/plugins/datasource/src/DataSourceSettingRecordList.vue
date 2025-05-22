@@ -8,11 +8,9 @@
         ><svg-icon class="btn-icon" name="delete"></svg-icon>删除</tiny-button
       >
       <tiny-button plain :disabled="!allowCreate" @click.stop="showImportModal(true)"
-        ><icon-upload class="btn-icon"></icon-upload>批量导入</tiny-button
+        ><svg-icon class="btn-icon" name="upload"></svg-icon>批量导入</tiny-button
       >
-      <tiny-link type="primary" class="download" :underline="false" @click="download"
-        ><icon-download class="tiny-svg-size icon-download"></icon-download>下载导入模板</tiny-link
-      >
+      <tiny-link type="primary" class="download" :underline="false" @click="download">下载导入模板</tiny-link>
     </div>
     <div class="record-list-data">
       <tiny-grid
@@ -69,7 +67,6 @@
 <script lang="tsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
-import { iconUpload } from '@opentiny/vue-icon'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useModal, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import useClipboard from 'vue-clipboard3'
@@ -83,8 +80,7 @@ export default {
     TinyPager: Pager,
     DataSourceRecordUpload,
     TinyLink: Link,
-    TinyButton: Button,
-    IconUpload: iconUpload()
+    TinyButton: Button
   },
   props: {
     // 数据源对象
@@ -624,6 +620,9 @@ export default {
         }
       }
     }
+  }
+  :deep(.tiny-grid .tiny-grid-editor, .tiny-grid__filter-wrapper .tiny-grid-editor) {
+    height: 24px;
   }
 }
 </style>
