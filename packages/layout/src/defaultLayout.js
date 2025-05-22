@@ -1,36 +1,38 @@
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
+
 export default {
   plugins: {
     left: {
       top: [
-        'engine.plugins.materials',
-        'engine.plugins.outlinetree',
-        'engine.plugins.appmanage',
-        'engine.plugins.blockmanage',
-        'engine.plugins.collections',
-        'engine.plugins.bridge',
-        'engine.plugins.i18n',
-        'engine.plugins.pagecontroller',
-        'engine.plugins.state'
+        META_APP.Materials,
+        META_APP.OutlineTree,
+        META_APP.AppManage,
+        META_APP.BlockManage,
+        META_APP.Collections,
+        META_APP.Bridge,
+        META_APP.I18n,
+        META_APP.PageController,
+        META_APP.State
       ],
-      bottom: ['engine.plugins.schema', 'engine.plugins.editorhelp', 'engine.plugins.robot']
+      bottom: [META_APP.Schema, META_APP.EditorHelp, META_APP.Robot]
     },
     right: {
-      top: ['engine.setting.props', 'engine.setting.styles', 'engine.setting.event']
+      top: [META_APP.Props, META_APP.Styles, META_APP.Event]
     }
   },
   toolbars: {
-    left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
-    center: ['engine.toolbars.media'],
+    left: [META_APP.Breadcrumb, META_APP.Lock, META_APP.Logo],
+    center: [META_APP.Media],
     right: [
-      ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
-      ['engine.toolbars.preview'],
-      ['engine.toolbars.generate-code', 'engine.toolbars.save']
+      [META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
+      [META_APP.Preview],
+      [META_APP.GenerateCode, META_APP.Save]
     ],
     collapse: [
-      ['engine.toolbars.collaboration'],
-      ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-      ['engine.toolbars.lang'],
-      ['engine.toolbars.viewSetting']
+      [META_APP.Collaboration],
+      [META_APP.Refresh, META_APP.Fullscreen],
+      [META_APP.Lang],
+      [META_APP.ViewSetting]
     ]
   }
 }
