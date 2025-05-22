@@ -1,6 +1,6 @@
 <template>
   <div class="remote">
-    <plugin-setting title="查看远程字段" class="remote-setting plugin-datasource" :isSecond="true">
+    <plugin-setting title="查看远程字段" class="remote-setting" :align="align" :isSecond="true">
       <template #header>
         <button-group>
           <tiny-button class="field-save" type="primary" @click="saveMapping">保存</tiny-button>
@@ -222,16 +222,6 @@ export default {
       :deep(.is-active) {
         .tiny-tabs__item__title {
           color: var(--te-datasource-common-text-color-primary);
-        }
-      }
-    }
-    :deep(.tiny-collapse) {
-      .tiny-collapse-item:first-child {
-        border-top: 0;
-      }
-      .tiny-collapse-item__header {
-        .tiny-collapse-item__word-overflow {
-          margin: var(--te-common-vertical-item-spacing-normal) 0px 0;
         }
       }
     }
