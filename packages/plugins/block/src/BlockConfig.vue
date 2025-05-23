@@ -363,6 +363,12 @@ export default {
   }
   &-tenants {
     display: inline-block;
+    height: 24px;
+    .tiny-select {
+      :deep(.tiny-tag) {
+        height: 17px;
+      }
+    }
   }
 }
 .tag-item-text {

@@ -530,6 +530,9 @@ export default {
         fill: currentcolor;
       }
     }
+    .tiny-dropdown__title {
+      font-size: var(--te-base-font-size-base);
+    }
   }
   :deep(.tiny-dropdown-menu) {
     padding: var(--te-common-vertical-form-label-spacing) 0;
@@ -555,6 +558,7 @@ export default {
   line-height: 24px;
 }
 :deep(.tiny-dropdown-item) {
+  font-size: var(--te-base-font-size-base);
   &:not(.is-disabled):active,
   &:not(.is-disabled):hover,
   &:focus {

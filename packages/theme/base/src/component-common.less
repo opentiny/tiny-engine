@@ -18,8 +18,6 @@
   }
   .tiny-select__tags {
     .tiny-tag {
-      color: var(--te-common-text-weaken);
-      background-color: var(--te-common-bg-tag); // 选择框
       border-radius: var(--te-base-border-radius-normal);
 
       .tiny-tag__close {
@@ -64,7 +62,10 @@
     font-size: var(--te-base-font-size-base);
     // 选中状态
     &.selected {
-      color: var(--te-common-text-emphasize);
+      // color: var(--te-common-text-emphasize);
+      .tiny-svg {
+        color: var(--te-common-text-emphasize);
+      }
       background-color: var(--te-common-bg-popover);
       &:hover {
         background-color: var(--te-common-bg-container);
@@ -611,8 +612,6 @@
 // 13、tag标签
 .tiny-tag.tiny-tag {
   font-size: var(--te-base-font-size-base);
-  color: var(--te-common-text-secondary);
-  background: var(--te-common-bg-disabled);
   border-radius: var(--te-base-border-radius-1);
   .tiny-tag__close {
     margin: 0 0 0 4px;

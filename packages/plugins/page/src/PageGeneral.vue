@@ -325,6 +325,9 @@ export default {
     word-wrap: break-word;
     height: auto;
     line-height: 16px;
+    .text {
+      color: var(--te-page-manage-tip-text-color);
+    }
     .tip-text {
       width: 100%;
       color: var(--te-page-manage-tip-text-color);

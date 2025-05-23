@@ -302,7 +302,7 @@ export default {
   }
   .resource-form {
     .tip {
-      font-size: 11px;
+      font-size: 12px;
       line-height: 18px;
       margin-top: 8px;
       color: var(--te-bridge-setting-tip-text-color);
