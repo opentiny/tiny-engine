@@ -2,8 +2,8 @@ import { callEntry as _callEntry, useCompile as _useCompile } from '@opentiny/ti
 import _metaData from './meta.js'
 /* metaService */
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *

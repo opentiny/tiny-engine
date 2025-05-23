@@ -232,8 +232,6 @@ export default {
     })
 
     onMounted(() => {
-      // eslint-disable-next-line no-console
-      console.log('original i18n onMounted')
       currentSearchType.value = i18nSearchTypes[0].value
     })
 
