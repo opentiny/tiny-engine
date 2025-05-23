@@ -162,7 +162,7 @@ export default {
   top: var(--base-top-panel-height);
   bottom: 0;
   left: calc(var(--base-nav-panel-width) + var(--base-left-panel-width));
-  right: var(--base-right-panel-width);
+  right: calc(var(--base-nav-panel-width) + var(--base-right-panel-width));
   z-index: 100;
   padding: 10px 16px 16px 16px;
   background-color: var(--te-component-common-bg-color);
