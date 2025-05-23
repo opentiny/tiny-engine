@@ -14,7 +14,7 @@ import _metaData from '../meta.js'
  */
 
 import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'
-import { deepCopy } from 'loash-es'
+import { deepCopy } from 'lodash-es'
 export const useRenderless = _callEntry(
   ({ props }) => {
     const state = reactive({
@@ -34,7 +34,6 @@ export const useRenderless = _callEntry(
           aaa,
           bbb,
           handleClick,
-          last,
           ccc,
           sendMessage,
           deepCopy,
@@ -58,7 +57,6 @@ export const useRenderless = _callEntry(
           aaa,
           bbb,
           handleClick,
-          last,
           ccc,
           sendMessage,
           deepCopy,
@@ -70,8 +68,6 @@ export const useRenderless = _callEntry(
       bbb = 'bbb'
     const handleClick = _callEntry(
       (e) => {
-        const dd = 'dd'
-        console.log(e.target, dd)
         state.tableData.push({
           key: 'TinyEngine',
           zhCN: '低代码引擎',
@@ -90,7 +86,6 @@ export const useRenderless = _callEntry(
           aaa,
           bbb,
           handleClick,
-          last,
           ccc,
           sendMessage,
           deepCopy,
@@ -98,27 +93,6 @@ export const useRenderless = _callEntry(
         })
       }
     )
-    const last = _callEntry(() => {}, {
-      metaData: {
-        id: `${_metaData.id}.last`
-      },
-      ctx: () => ({
-        props,
-        state,
-        last1,
-        logMessage,
-        aaa,
-        bbb,
-        handleClick,
-        last,
-        ccc,
-        sendMessage,
-        deepCopy,
-        useRenderless
-      })
-    })
-    last()
-    last1()
     const ccc = 111
     const sendMessage = _callEntry(
       () => {
@@ -136,7 +110,6 @@ export const useRenderless = _callEntry(
           aaa,
           bbb,
           handleClick,
-          last,
           ccc,
           sendMessage,
           deepCopy,

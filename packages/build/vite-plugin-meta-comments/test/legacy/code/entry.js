@@ -12,7 +12,7 @@
  */
 
 import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'
-import { deepCopy } from 'loash-es'
+import { deepCopy } from 'lodash-es'
 export const useRenderless = ({ props }) => {
   const state = reactive({
     tableData: props.data || props.op.data || []
