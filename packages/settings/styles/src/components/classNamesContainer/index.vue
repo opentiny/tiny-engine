@@ -133,7 +133,7 @@ const OPTION_TYPE = {
 
 const docsUrl = useHelp().getDocsUrl('stylePanel')
 
-const docsContent = ref('声明多条CSS样式或其他媒体查询的样式，然后通过组件的 class 或者 id 进行绑定')
+const docsContent = '声明多条CSS样式或其他媒体查询的样式，然后通过组件的 class 或者 id 进行绑定'
 
 const classNameState = reactive({
   curSelector: '',

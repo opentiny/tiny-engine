@@ -225,9 +225,8 @@ export default {
   emits: ['close'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('block')
-    const docsContent = ref(
+    const docsContent =
       '区块类似于前端开发中的 Component，我们可以将页面中一样的结构（比如Header），构建到区块中，发布后直接拖入页面使用。'
-    )
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()

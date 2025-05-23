@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, watch, provide, ref } from 'vue'
+import { reactive, watch, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import DataSourceRemotePanel, {
@@ -87,9 +87,8 @@ export default {
   },
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('datasource')
-    const docsContent = ref(
+    const docsContent =
       '用来配合画布中组件/区块渲染，便捷地应用于表格组件的表格列，也可灵活地应用于手动调用指定的远程API。'
-    )
     const state = reactive({
       editable: true,
       currentDataSource: { name: 'untitled', data: { type: 'array', columns: [] } },

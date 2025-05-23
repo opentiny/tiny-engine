@@ -97,7 +97,7 @@ export default {
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
-    const docsContent = ref('在这里新增页面/文件夹，还可以对已有的页面进行生命周期管理。')
+    const docsContent = '在这里新增页面/文件夹，还可以对已有的页面进行生命周期管理。'
 
     const state = reactive({
       isFolder: false
