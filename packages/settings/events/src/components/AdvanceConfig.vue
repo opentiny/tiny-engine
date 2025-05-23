@@ -292,7 +292,7 @@ export default {
       line-height: 14px;
       padding: 4px 8px;
       --ellipsis-line: 1;
-      border-radius: 6px;
+      border-radius: var(--te-base-border-radius-1);
     }
 
     .advance-config-loop-wrap {
