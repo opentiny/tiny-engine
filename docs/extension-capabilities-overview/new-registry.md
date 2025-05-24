@@ -269,3 +269,42 @@ export default {
 通过以上示例，可以看到注册表提供了一种统一的方式来获取和操作低代码平台中的各种服务和插件，实现了解耦和灵活的通信机制。这使得开发者可以更容易地扩展和定制 TinyEngine 平台，而不需要深入了解底层实现细节。
 
 更多高级特性，请参考 [注册表高级配置](./new-registry-advanced.md)。
+
+
+## Vite 配置要求
+
+**重要说明⚠️**：为了使注册表的 tree-shaking 功能正常工作，您需要在 `vite.config.js` 中配置 `registryPath` 参数，指向您的注册表文件路径。
+
+```javascript
+// vite.config.js
+import { defineConfig, mergeConfig } from 'vite'
+import { useTinyEngineBaseConfig } from '@opentiny/tiny-engine-vite-config'
+
+export default defineConfig((configEnv) => {
+  const baseConfig = useTinyEngineBaseConfig({
+    viteConfigEnv: configEnv,
+    root: __dirname,
+    // 其他配置...
+    registryPath: './registry.js'  // 必须配置，指向注册表文件路径
+  })
+  
+  const customConfig = {
+    // 您的自定义配置...
+  }
+
+  return mergeConfig(baseConfig, customConfig)
+})
+```
+
+### 为什么需要配置 registryPath？
+
+1. **Tree-shaking 优化**：TinyEngine 需要在构建时解析注册表文件，识别哪些插件被设置为 `false`，从而在构建时移除相关代码，减小最终打包体积。
+
+2. **注释指令解析**：支持解析注册表中的特殊注释（如 `#__TINY_ENGINE_TREE_SHAKING__: true`），实现更精细的代码优化。
+
+3. **构建优化**：通过静态分析注册表配置，在构建时就确定最终需要包含的功能模块，提高运行时性能。
+
+如果没有配置 `registryPath`，以下功能可能无法正常工作：
+- 插件的 tree-shaking 优化
+- 通过设置 `false` 来移除插件的功能
+- 构建时的代码体积优化
