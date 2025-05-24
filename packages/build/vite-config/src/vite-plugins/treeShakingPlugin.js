@@ -12,7 +12,6 @@ export function treeShakingPlugin(registryPath) {
   const filePath = path.resolve(process.cwd(), registryPath)
 
   if (!fs.existsSync(filePath)) {
-    // TODO: 测试可否返回 null
     return null
   }
 
@@ -31,8 +30,6 @@ export function treeShakingPlugin(registryPath) {
             // 有 comment，解析 comment。
             // 通过 comment 指定 treeshaking，优先以 comment 为标准
             if (propertyItem.leadingComments?.length) {
-              // TODO: 测试多行匹配
-              // TODO: 需要确认是仅解析前面一个注释，还是解析所有注释
               for (const commentItem of propertyItem.leadingComments) {
                 const match = commentItem.value.match(commentPattern)
 
@@ -65,7 +62,7 @@ export function treeShakingPlugin(registryPath) {
     })
   } catch (error) {
     const logger = console
-    logger.warn('[]')
+    logger.warn('[TinyEngine] tree-shaking plugin error', error)
   }
 
   return null

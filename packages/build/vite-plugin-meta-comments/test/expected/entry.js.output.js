@@ -1,9 +1,9 @@
-import { callEntry as _callEntry, useCompile as _useCompile } from '@opentiny/tiny-engine-meta-register'
-import _metaData from './meta.js'
+import { callEntry as _callEntry, useCompile as _useCompile } from '@opentiny/tiny-engine-meta-register';
+import _metaData from './meta.js';
 /* metaService */
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -13,151 +13,112 @@ import _metaData from './meta.js'
  *
  */
 
-import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'
-import { deepCopy } from 'loash-es'
-export const useRenderless = _callEntry(
-  ({ props }) => {
-    const state = reactive({
-      tableData: props.data || props.op.data || []
-    })
-    const last1 = useLayout(last1)
-    beforeMount(
-      _callEntry(() => {}, {
-        metaData: {
-          id: `${_metaData.id}.onBeforeMount[0]`
-        },
-        ctx: () => ({
-          props,
-          state,
-          last1,
-          logMessage,
-          aaa,
-          bbb,
-          handleClick,
-          last,
-          ccc,
-          sendMessage,
-          deepCopy,
-          useRenderless
-        })
-      })
-    )
-    const logMessage = _callEntry(
-      () => {
-        console.log('我是纯函数我不需要闭包参数')
-      },
-      {
-        metaData: {
-          id: `${_metaData.id}.logMessage`
-        },
-        ctx: () => ({
-          props,
-          state,
-          last1,
-          logMessage,
-          aaa,
-          bbb,
-          handleClick,
-          last,
-          ccc,
-          sendMessage,
-          deepCopy,
-          useRenderless
-        })
-      }
-    )
-    const aaa = 'aaa',
-      bbb = 'bbb'
-    const handleClick = _callEntry(
-      (e) => {
-        const dd = 'dd'
-        console.log(e.target, dd)
-        state.tableData.push({
-          key: 'TinyEngine',
-          zhCN: '低代码引擎',
-          enUS: 'TinyEngine'
-        })
-      },
-      {
-        metaData: {
-          id: `${_metaData.id}.handleClick`
-        },
-        ctx: () => ({
-          props,
-          state,
-          last1,
-          logMessage,
-          aaa,
-          bbb,
-          handleClick,
-          last,
-          ccc,
-          sendMessage,
-          deepCopy,
-          useRenderless
-        })
-      }
-    )
-    const last = _callEntry(() => {}, {
-      metaData: {
-        id: `${_metaData.id}.last`
-      },
-      ctx: () => ({
-        props,
-        state,
-        last1,
-        logMessage,
-        aaa,
-        bbb,
-        handleClick,
-        last,
-        ccc,
-        sendMessage,
-        deepCopy,
-        useRenderless
-      })
-    })
-    last()
-    last1()
-    const ccc = 111
-    const sendMessage = _callEntry(
-      () => {
-        logMessage('自定义是的范德萨')
-      },
-      {
-        metaData: {
-          id: `${_metaData.id}.sendMessage`
-        },
-        ctx: () => ({
-          props,
-          state,
-          last1,
-          logMessage,
-          aaa,
-          bbb,
-          handleClick,
-          last,
-          ccc,
-          sendMessage,
-          deepCopy,
-          useRenderless
-        })
-      }
-    )
-    return {
-      state,
-      aa,
-      handleClick,
-      sendMessage
-    }
-  },
-  {
+import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue';
+import { deepCopy } from 'lodash-es';
+export const useRenderless = _callEntry(({
+  props
+}) => {
+  const state = reactive({
+    tableData: props.data || props.op.data || []
+  });
+  const last1 = useLayout(last1);
+  beforeMount(_callEntry(() => {}, {
     metaData: {
-      id: `${_metaData.id}.useRenderless`
+      id: `${_metaData.id}.onBeforeMount[0]`
     },
     ctx: () => ({
+      props,
+      state,
+      last1,
+      logMessage,
+      aaa,
+      bbb,
+      handleClick,
+      ccc,
+      sendMessage,
       deepCopy,
       useRenderless
     })
-  }
-)
+  }));
+  const logMessage = _callEntry(() => {
+    console.log('我是纯函数我不需要闭包参数');
+  }, {
+    metaData: {
+      id: `${_metaData.id}.logMessage`
+    },
+    ctx: () => ({
+      props,
+      state,
+      last1,
+      logMessage,
+      aaa,
+      bbb,
+      handleClick,
+      ccc,
+      sendMessage,
+      deepCopy,
+      useRenderless
+    })
+  });
+  const aaa = 'aaa',
+    bbb = 'bbb';
+  const handleClick = _callEntry(e => {
+    state.tableData.push({
+      key: 'TinyEngine',
+      zhCN: '低代码引擎',
+      enUS: 'TinyEngine'
+    });
+  }, {
+    metaData: {
+      id: `${_metaData.id}.handleClick`
+    },
+    ctx: () => ({
+      props,
+      state,
+      last1,
+      logMessage,
+      aaa,
+      bbb,
+      handleClick,
+      ccc,
+      sendMessage,
+      deepCopy,
+      useRenderless
+    })
+  });
+  const ccc = 111;
+  const sendMessage = _callEntry(() => {
+    logMessage('自定义是的范德萨');
+  }, {
+    metaData: {
+      id: `${_metaData.id}.sendMessage`
+    },
+    ctx: () => ({
+      props,
+      state,
+      last1,
+      logMessage,
+      aaa,
+      bbb,
+      handleClick,
+      ccc,
+      sendMessage,
+      deepCopy,
+      useRenderless
+    })
+  });
+  return {
+    state,
+    aa,
+    handleClick,
+    sendMessage
+  };
+}, {
+  metaData: {
+    id: `${_metaData.id}.useRenderless`
+  },
+  ctx: () => ({
+    deepCopy,
+    useRenderless
+  })
+});
