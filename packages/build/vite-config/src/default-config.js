@@ -104,11 +104,6 @@ const getDefaultConfig = (engineConfig) => {
         exclude: ['node_modules/*monaco-editor*/**', 'node_modules/lodash-es/**', 'node_modules/@types/lodash-es/**']
       },
       minify: true,
-      // terserOptions: {
-      //   mangle: {
-      //     reserved: ['REMOVED_REGISTRY']
-      //   }
-      // },
       sourcemap: false,
       rollupOptions: {
         plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
