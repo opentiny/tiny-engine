@@ -94,7 +94,15 @@ export default defineConfig({
           }
         }
       },
-      external: ['vue', 'monaco-editor', 'prettier', /@opentiny\/vue.*/, /@opentiny\/tiny-engine.*/]
+      external: [
+        'vue',
+        'monaco-editor',
+        'prettier',
+        /@opentiny\/vue.*/,
+        /@opentiny\/tiny-engine.*/,
+        /^@babel\/.*/,
+        '@vue/babel-plugin-jsx'
+      ]
     }
   }
 })
