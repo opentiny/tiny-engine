@@ -8,7 +8,7 @@ const pageSchema: Record<string, any> = {}
 async function fetchPageSchema(pageId: string) {
   return getController()
     .getPageById(pageId)
-    .then((res) => {
+    .then((res: any) => {
       return res.page_content
     })
 }
@@ -46,25 +46,37 @@ export const wrapPageComponent = (pageId: string) => {
           active.value = newValue
         }
       })
+      let timer: ReturnType<typeof setTimeout> | null = null
       const watchStop = watch(
         () => active.value,
         (activeValue) => {
           if (!activeValue) {
             asyncData.value = null
-            updateSchema()
+            if (timer) {
+              clearTimeout(timer)
+            }
+            // 延迟更新 schema，避免场景：
+            // 1. 当前页面为当前正在编辑的页面
+            // 2. 当前页面被直接删除，仍然触发当前的 watch 函数，导致请求被删除的页面，接口报错。
+            timer = setTimeout(() => {
+              updateSchema()
+            }, 0)
           }
         }
       )
       onUnmounted(() => {
         stop()
         watchStop()
+        if (timer) {
+          clearTimeout(timer)
+        }
       })
 
       return () => {
         if (active.value || asyncData.value) {
           return h(RenderMain, {
             cssScopeId: key,
-            renderSchema: asyncData.value,
+            renderSchema: asyncData.value as any,
             active: active.value,
             pageId: pageId,
             entry: false
