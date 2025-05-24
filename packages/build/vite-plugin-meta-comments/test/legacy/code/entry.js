@@ -1,7 +1,7 @@
 /* metaService */
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -12,7 +12,7 @@
  */
 
 import { reactive, onMounted, onBeforeMount as beforeMount } from 'vue'
-import { deepCopy } from 'loash-es'
+import { deepCopy } from 'lodash-es'
 export const useRenderless = ({ props }) => {
   const state = reactive({
     tableData: props.data || props.op.data || []
@@ -30,19 +30,12 @@ export const useRenderless = ({ props }) => {
     bbb = 'bbb'
 
   const handleClick = (e) => {
-    const dd = 'dd'
-    console.log(e.target, dd)
     state.tableData.push({
       key: 'TinyEngine',
       zhCN: '低代码引擎',
       enUS: 'TinyEngine'
     })
   }
-  const last = () => {}
-
-  last()
-
-  last1()
 
   const ccc = 111
 

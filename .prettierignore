@@ -1,3 +1,5 @@
 dist
 package-lock.json
 **/node_modules/**
+# 忽略该文件夹下的测试对比文件，防止自动去掉分号之后导致测试失败
+packages/build/vite-plugin-meta-comments/test/expected/**
