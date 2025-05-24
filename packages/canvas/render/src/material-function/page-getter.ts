@@ -1,4 +1,4 @@
-import { defineComponent, h, onUnmounted, ref, watch } from 'vue'
+import { defineComponent, h, ref, onMounted } from 'vue'
 import { getController } from '../canvas-function'
 import RenderMain from '../RenderMain'
 import { handleScopedCss } from './handle-scoped-css'
@@ -40,36 +40,13 @@ export const wrapPageComponent = (pageId: string) => {
     name: `page-${pageId}`,
     setup() {
       const active = ref(pageId === getController().getBaseInfo().pageId)
-      const stop = getController().addHistoryDataChangedCallback(() => {
-        const newValue = pageId === getController().getBaseInfo().pageId
-        if (active.value !== newValue) {
-          active.value = newValue
-        }
-      })
-      let timer: ReturnType<typeof setTimeout> | null = null
-      const watchStop = watch(
-        () => active.value,
-        (activeValue) => {
-          if (!activeValue) {
-            asyncData.value = null
-            if (timer) {
-              clearTimeout(timer)
-            }
-            // 延迟更新 schema，避免场景：
-            // 1. 当前页面为当前正在编辑的页面
-            // 2. 当前页面被直接删除，仍然触发当前的 watch 函数，导致请求被删除的页面，接口报错。
-            timer = setTimeout(() => {
-              updateSchema()
-            }, 0)
-          }
-        }
-      )
-      onUnmounted(() => {
-        stop()
-        watchStop()
-        if (timer) {
-          clearTimeout(timer)
-        }
+
+      onMounted(() => {
+        // 切换页面会重新渲染进来，重新渲染说明可能是切换页面了
+        // 切换页面后，可能原页面的 schema 更新了，但是我们这里是根据 pageId 获取的 schema，
+        // 且是在闭包获取的 schema，不会得到更新的 schema
+        // 所以需要重新获取下 schema，不然可能会造成页面数据未更新
+        updateSchema()
       })
 
       return () => {
