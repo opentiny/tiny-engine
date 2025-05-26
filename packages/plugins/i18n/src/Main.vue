@@ -212,7 +212,7 @@ export default {
     const upload = ref('upload')
     const i18nTable = ref(null)
     const selectedRowLength = computed(() => {
-      return i18nTable.value?.getAllSelection().length
+      return i18nTable.value?.getAllSelection?.().length || 0
     })
     const notEmpty = computed(() => langList.value.length > 0)
     const current = ref({
