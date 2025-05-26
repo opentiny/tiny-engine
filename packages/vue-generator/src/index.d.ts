@@ -1,7 +1,4 @@
 declare module '@opentiny/tiny-engine-dsl-vue' {
-  export function generateCode(param: { pageInfo: any; componentsMap?: Array<any>; blocksData?: Array<any> }): {
-    [key: string]: any
-  }
   export type defaultPlugins =
     | 'template'
     | 'block'
