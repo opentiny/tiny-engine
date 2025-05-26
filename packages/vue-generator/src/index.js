@@ -12,14 +12,6 @@
 
 import './index.d.ts'
 
-export {
-  generateCode,
-  generateBlocksCode,
-  generatePageCode,
-  generateApp,
-  CodeGenerator,
-  genSFCWithDefaultPlugin,
-  generateSFCFile
-} from './generator'
+export { generateApp, CodeGenerator, genSFCWithDefaultPlugin, generateSFCFile } from './generator'
 
 export { parseRequiredBlocks } from './utils/parseRequiredBlocks'
