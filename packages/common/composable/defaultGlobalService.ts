@@ -184,7 +184,7 @@ export default defineService({
 
           if (options.enableTitleUpdate) {
             // 监听应用 ID 变化，根据应用名称设置网页 title
-            document.title = `${app.name} —— TinyEditor 前端可视化设计器`
+            document.title = `${app.name} —— TinyEngine 前端可视化设计器`
           }
         })
       }

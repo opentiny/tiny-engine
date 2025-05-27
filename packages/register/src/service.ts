@@ -26,7 +26,7 @@ type Service<T, K> = Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
 /**
  * @template T
  * @template K
- * @type {WeakMap<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init'>>}
+ * @type {Map<Service<T, K>, {state: T} & Pick<ServiceOptions<T, K>, 'init'>>}
  */
 const servicesMap = new Map()
 
