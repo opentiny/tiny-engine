@@ -301,6 +301,13 @@ export default {
       emit('activeTab', name)
     }
 
+    watch(
+      () => state.dataSource.data?.type,
+      (value) => {
+        activeTabChange(value)
+      }
+    )
+
     return {
       align,
       settingRef,
