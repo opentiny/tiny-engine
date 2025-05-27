@@ -18,7 +18,7 @@
     </meta-list-items>
     <div class="bottom">
       <div class="add-btn" @click="addChildren">
-        <svg-icon name="flow-add"></svg-icon>
+        <svg-icon name="add"></svg-icon>
         <span>添加标签页</span>
       </div>
     </div>

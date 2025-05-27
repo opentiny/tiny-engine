@@ -40,7 +40,7 @@
       </template>
       <template #bottom>
         <div class="add" @click="addItem">
-          <svg-icon name="flow-add"></svg-icon>
+          <svg-icon name="add"></svg-icon>
           <span>新增一列</span>
         </div>
       </template>
