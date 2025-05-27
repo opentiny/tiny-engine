@@ -43,10 +43,6 @@ export default {
       {
         name: '远程数据源',
         value: 'remote'
-      },
-      {
-        name: '静态数据源',
-        value: 'field'
       }
     ]
 
