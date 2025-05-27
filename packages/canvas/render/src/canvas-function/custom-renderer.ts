@@ -26,8 +26,7 @@ function defaultRenderer(schema, refreshKey, entry, active, isPage = true) {
   }
 
   return h(
-    // TODO: 这里顶层的 i18n-host 在不支持 webComponent 的区块之后，应该也不需要webComponent 的 i18n provider 了
-    'tiny-i18n-host',
+    'div',
     {
       locale: 'zh_CN',
       key: refreshKey.value,

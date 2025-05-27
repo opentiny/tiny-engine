@@ -7,10 +7,7 @@
   "description": "webcomponent vue i18n host",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext .js,.vue --fix",
-    "format": "prettier --write **/*{.vue,.js,.ts,.html,.json}",
-    "publish:npm": "npm run build && npm publish --verbose"
+    "build": "vite build"
   },
   "files": [
     "dist"
@@ -29,9 +26,6 @@
   "author": "OpenTiny Team",
   "license": "MIT",
   "homepage": "https://opentiny.design/tiny-engine",
-  "dependencies": {
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:*"
-  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
     "eslint": "^7.32.0",
