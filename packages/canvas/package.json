@@ -42,7 +42,6 @@
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@vue/babel-plugin-jsx": "^1.2.5",
     "@vue/shared": "^3.3.4",
     "@vueuse/core": "^9.6.0",

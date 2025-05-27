@@ -86,7 +86,6 @@
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@vue/babel-plugin-jsx": "^1.2.5",
     "@vue/repl": "^2.9.0",
     "@vueuse/core": "^9.6.0",
