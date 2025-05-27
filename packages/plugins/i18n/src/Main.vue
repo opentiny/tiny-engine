@@ -54,7 +54,23 @@
           :edit-rules="validRules"
         >
           <tiny-grid-column type="selection" width="42"></tiny-grid-column>
-          <tiny-grid-column width="120" field="key" title="key" show-overflow :show-icon="false"></tiny-grid-column>
+          <tiny-grid-column
+            v-if="isEditMode"
+            width="120"
+            field="key"
+            title="key"
+            show-overflow
+            :show-icon="false"
+          ></tiny-grid-column>
+          <tiny-grid-column
+            v-else
+            width="120"
+            field="key"
+            title="key"
+            show-overflow
+            :show-icon="false"
+            :editor="{ component: 'input', autoselect: true, attrs: { disabled: isEditMode } }"
+          ></tiny-grid-column>
           <tiny-grid-column
             width="160"
             field="zh_CN"
