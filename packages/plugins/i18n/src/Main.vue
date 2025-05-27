@@ -69,7 +69,7 @@
             title="key"
             show-overflow
             :show-icon="false"
-            :editor="{ component: 'input', autoselect: true, attrs: { disabled: isEditMode } }"
+            :editor="{ component: 'input', autoselect: true }"
           ></tiny-grid-column>
           <tiny-grid-column
             width="160"
