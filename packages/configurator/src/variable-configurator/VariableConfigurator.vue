@@ -569,11 +569,6 @@ export default {
     margin-top: 0;
     margin-bottom: 12px;
   }
-  .bind-dialog-container-header {
-    .tiny-alert.tiny-alert--normal {
-      margin: 12px 0;
-    }
-  }
 
   .bind-dialog-content {
     display: flex;

@@ -107,7 +107,7 @@
           </span>
           <template #dropdown>
             <tiny-dropdown-menu
-              popper-class="my-class"
+              popper-class="block-footer-dropdown"
               placement="top"
               :options="state.sortOptions"
             ></tiny-dropdown-menu>
