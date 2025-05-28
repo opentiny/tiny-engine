@@ -117,7 +117,6 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  display: inline-block;
   line-height: 30px;
   display: flex;
   align-items: center;
