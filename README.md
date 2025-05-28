@@ -48,7 +48,7 @@ $ pnpm dev
 <img alt="Modify port" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
 
 
-### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/dev/material-sync-solution)
 
 ```sh
 $ pnpm splitMaterials

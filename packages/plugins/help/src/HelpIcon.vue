@@ -78,15 +78,15 @@ export default {
     const questionList = [
       {
         label: '如何引入第三方组件库',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/15'
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/dev/third-party-library-in-designer'
       },
       {
         label: '如何使用AI功能创建页面',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/16'
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/integrating-chatgpt-for-simple-pages'
       },
       {
         label: '答疑视频回放',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/video/38'
+        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/issue-1-2023.10.27'
       }
     ]
 

@@ -48,7 +48,7 @@ $ pnpm dev
 <img alt="修改端口" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
 
 
-### 物料同步[方案](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+### 物料同步[方案](https://opentiny.design/tiny-engine#/help-center/course/dev/material-sync-solution)
 
 ```sh
 $ pnpm splitMaterials
