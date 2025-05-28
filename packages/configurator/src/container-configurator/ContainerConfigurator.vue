@@ -21,9 +21,11 @@
         </tiny-tooltip>
       </template>
     </meta-list-items>
-    <div class="add-btn" @click="addChildren">
-      <svg-icon name="flow-add"></svg-icon>
-      <span>添加标签页</span>
+    <div class="bottom">
+      <div class="add-btn" @click="addChildren">
+        <svg-icon name="add"></svg-icon>
+        <span>添加标签页</span>
+      </div>
     </div>
   </div>
 </template>
