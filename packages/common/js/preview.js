@@ -35,7 +35,7 @@ const getScriptAndStyleDeps = () => {
   const utilsDeps = useResource().getUtilsDeps()
 
   const scriptsDeps = [...scripts, ...utilsDeps].reduce((res, item) => {
-    res[item.package] = item.script
+    res[item.package] = res[item.package] || item.script
 
     return res
   }, {})
