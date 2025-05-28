@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="componentName === 'TinyTabs'" class="tabs-header">
+    <div class="tabs-header">
       <div>页签标题</div>
       <div class="tabs-header-id">页签值</div>
     </div>
