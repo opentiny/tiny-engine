@@ -5,6 +5,7 @@
     :is-drop-inherit-width="true"
     :show-alloption="false"
     :clearable="true"
+    collapse-tags
     @change="handleChange"
   >
     <template v-if="groups?.length">
@@ -118,5 +119,7 @@ export default {
   white-space: nowrap;
   display: inline-block;
   line-height: 30px;
+  display: flex;
+  align-items: center;
 }
 </style>
