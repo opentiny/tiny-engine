@@ -8,7 +8,7 @@
 
 ## 通过配置项来定制
 
-- `customOption`：自定义操作配置项
+- `customPageOperations`：自定义操作配置项
 - `type`：菜单项类型
 - `label`：菜单项名称
 - `action`：菜单项操作
@@ -20,7 +20,7 @@ export default {
   // ...
   plugins: [
     // ...
-    [Page, { options: { ...Page.options, customOption: [{type: 'delete', label: '删除',  action: handleClickDelete}] } }]
+    [Page, { options: { ...Page.options, customPageOperations: [{type: 'delete', label: '删除',  action: handleClickDelete}] } }]
     // ...
   ]
   // ...

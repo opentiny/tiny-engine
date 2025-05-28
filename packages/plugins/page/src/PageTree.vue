@@ -114,7 +114,7 @@ export default {
     } = usePage()
     const { fetchPageDetail, requestUpdatePage } = http
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    const { customOption = [] } = getOptions(meta.id)
+    const { customPageOperations = [] } = getOptions(meta.id)
 
     const state = reactive({
       pageSearchValue: '',
@@ -254,7 +254,7 @@ export default {
       { type: 'createPage', label: '新建子页面', action: createPage },
       { type: 'createFolder', label: '新建子文件夹', action: createFolder },
       { type: 'settingHome', label: '设置为主页', action: settingHome },
-      ...customOption
+      ...customPageOperations
       // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
       // { type: 'divider' },
       // { type: 'copy', label: '复制页面', action: copyPage },
