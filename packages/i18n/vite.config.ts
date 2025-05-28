@@ -32,7 +32,7 @@ export default {
       entry: path.resolve(__dirname, './src/lib.ts'),
       name: 'LowcodeDesignI18nHost',
       formats: ['es', 'umd'],
-      fileName: (format) => `lowcode-design-i18n-host.${format}.js`
+      fileName: (format: string) => `lowcode-design-i18n-host.${format}.js`
     },
     commonjsOptions: {
       transformMixedEsModules: true

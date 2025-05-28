@@ -17,7 +17,7 @@ import { ref, provide, watch } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
 import TestVueUse from './test/TestVueUse.vue'
 import TestVueInject from './test/TestVueInject.vue'
-import i18n from './i18n'
+import i18n from './lib'
 
 export default {
   components: {
@@ -30,9 +30,13 @@ export default {
     // 通过 provide ，可以让该组件树结构下的 vue 组件通过 inject(I18nInjectionKey)，获取 i18n 对象
     provide(I18nInjectionKey, i18n)
 
-    watch(locale, (newVal) => {
-      i18n.global.locale.value = newVal
-    })
+    watch(
+      locale,
+      (newVal) => {
+        i18n.global.locale.value = newVal
+      },
+      { immediate: true }
+    )
 
     return {
       locale

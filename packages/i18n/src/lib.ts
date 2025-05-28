@@ -10,8 +10,19 @@
  *
  */
 
-import i18n, { defineCustomI18n } from './i18n'
+import { createI18n } from 'vue-i18n'
 
-export { defineCustomI18n }
+// 这里需要展开才能再下面进行合并操作，要不然会报错
+const i18n = {
+  ...createI18n({
+    locale: 'zh_CN',
+    messages: {},
+    legacy: false
+  })
+}
+
+export const defineCustomI18n = (customI18n: any) => {
+  Object.assign(i18n, customI18n)
+}
 
 export default i18n
