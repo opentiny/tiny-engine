@@ -164,7 +164,7 @@ export default {
     display: flex;
     flex-direction: column;
     .tiny-tabs__header .tiny-tabs__nav {
-      width: 42%;
+      width: 280px;
       margin-bottom: 16px;
       background-color: var(--te-datasource-settings-tabs-bg-color);
     }

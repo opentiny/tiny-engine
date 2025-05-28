@@ -349,7 +349,7 @@ export default {
           if (!valid) {
             return
           }
-          if (state.totalData) {
+          if (!state.totalData?.length) {
             resolve(null)
             return
           }
