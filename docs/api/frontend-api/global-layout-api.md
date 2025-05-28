@@ -9,7 +9,7 @@ Layout 插件是 Tiny Engine 的核心布局组件，它定义了整个设计器
 - 右侧设置插件（Settings）
 - 中间内容区域（Canvas）
 
-![设计器布局示意图](./images/platformExpend.png)
+![设计器布局示意图](./imgs/platformExpend.png)
 
 ### 使用方法
 
@@ -160,11 +160,11 @@ export default {
 
 显示分隔线示意图：
 
-![显示分隔线示意图](./images/showLineTrue.png)
+![显示分隔线示意图](./imgs/showLineTrue.png)
 
 不显示分隔线示意图：
 
-![不显示分隔线示意图](./images/showLineFalse.png)
+![不显示分隔线示意图](./imgs/showLineFalse.png)
 
 #### isShowCollapse 是否显示工具栏折叠菜单
 
@@ -184,11 +184,11 @@ export default {
 
 显示折叠菜单示意图：
 
-![显示折叠菜单示意图](./images/showCollapseTrue.png)
+![显示折叠菜单示意图](./imgs/showCollapseTrue.png)
 
 不显示折叠菜单示意图：
 
-![不显示折叠菜单示意图](./images/showCollapseFalse.png)
+![不显示折叠菜单示意图](./imgs/showCollapseFalse.png)
 
 #### configProvider 全局配置组件
 
