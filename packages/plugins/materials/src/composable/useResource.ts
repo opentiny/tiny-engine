@@ -141,6 +141,7 @@ const initPageOrBlock = async () => {
     }
 
   if (pageInfo.meta?.id) {
+    // 这里重新请求一遍页面详情数据，是因为 appSchemaState 的页面信息存在字段转换，比如 route 被转换成了 router 字段，导致调用页面保存接口的时候报错
     const data = await pagePluginApi.getPageById(pageInfo.meta.id)
     initPage(data)
   } else {
