@@ -14,9 +14,6 @@
     "build": ""
   },
   "dependencies": {
-    "@babel/core": "~7.23.2",
-    "@babel/generator": "~7.23.2",
-    "@babel/traverse": "~7.23.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^",
@@ -37,6 +34,13 @@
     "vite-plugin-monaco-editor": "^1.1.0",
     "vite-plugin-static-copy": "^1.0.6",
     "vite-plugin-svg-icons": "^2.0.1"
+  },
+  "peerDependencies": {
+    "@babel/eslint-parser": "~7.21.3",
+    "@babel/core": "~7.26.10",
+    "@babel/generator": "~7.26.10",
+    "@babel/traverse": "~7.26.10",
+    "@babel/parser": "~7.26.10"
   },
   "keywords": [],
   "publishConfig": {

@@ -35,7 +35,6 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "type": "module",
   "dependencies": {
-    "@babel/core": "7.18.13",
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
@@ -60,6 +59,7 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
+    "@babel/core": "~7.26.10",
     "@opentiny/vue": "^3.20.0",
     "@opentiny/vue-icon": "^3.20.0",
     "@opentiny/vue-renderless": "^3.20.0",
