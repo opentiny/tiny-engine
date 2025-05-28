@@ -219,20 +219,20 @@ export default {
           })
 
           settingRef.value.saveRecord().then((record) => {
-            const editRequestData = record
-              ? record.requestData
-              : {
-                  name: state.dataSource.name,
-                  data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
-                }
-            const addRequestData = record
-              ? record.requestData.data
-              : {
-                  columns,
-                  data: [],
-                  type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
-                  ...dataSourceState.remoteConfig
-                }
+            const editRequestData = {
+              name: state.dataSource.name,
+              data: Object.assign(state.dataSource.data, {
+                columns,
+                ...dataSourceState.remoteConfig,
+                data: record ? record.requestData.data.data : state.dataSource.data.data
+              })
+            }
+            const addRequestData = {
+              columns,
+              data: record ? record.requestData.data.data : [],
+              type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
+              ...dataSourceState.remoteConfig
+            }
             if (props.editable) {
               requestUpdateDataSource(state.dataSource.id, editRequestData).then(() => {
                 requestGenerateDataSource(getAppId())

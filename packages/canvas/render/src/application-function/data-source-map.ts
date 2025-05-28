@@ -36,7 +36,7 @@ export function useDataSourceMap() {
         data: {}
       }
       result.data =
-        dataSource.config.type === 'array'
+        dataSource.config.type === 'remote'
           ? { items: dataSource?.config?.data ?? [], total: dataSource?.config?.data?.length }
           : dataSource?.config?.data
 
