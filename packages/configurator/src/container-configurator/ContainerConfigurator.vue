@@ -1,10 +1,15 @@
 <template>
   <div>
+    <div v-if="componentName === 'TinyTabs'" class="tabs-header">
+      <div>页签标题</div>
+      <div class="tabs-header-id">页签值</div>
+    </div>
     <meta-list-items class="list" :optionsList="children" @dragEnd="dragEnd">
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
             <tiny-input v-model="data.props.title" @update:modelValue="onTitleUpdate(data)" />
+            <tiny-input v-model="data.props.name" @update:modelValue="onTitleUpdate(data)" />
           </div>
         </div>
       </template>
@@ -16,11 +21,9 @@
         </tiny-tooltip>
       </template>
     </meta-list-items>
-    <div class="bottom">
-      <div class="add-btn" @click="addChildren">
-        <svg-icon name="add"></svg-icon>
-        <span>添加标签页</span>
-      </div>
+    <div class="add-btn" @click="addChildren">
+      <svg-icon name="flow-add"></svg-icon>
+      <span>添加标签页</span>
     </div>
   </div>
 </template>
@@ -137,7 +140,7 @@ export default {
       operateNode({ type: 'changeProps', id, value: { props: value.props } })
     }
 
-    return { children, addChildren, delChildren, dragEnd, onTitleUpdate }
+    return { children, addChildren, delChildren, dragEnd, onTitleUpdate, componentName }
   }
 }
 </script>
@@ -166,6 +169,42 @@ export default {
   svg {
     margin-left: 4px;
     cursor: pointer;
+  }
+}
+:deep(.item-content .option-input) {
+  height: auto;
+}
+.item-text {
+  margin: 4px 0;
+  .tiny-input {
+    display: inline-flex;
+    gap: 4px;
+  }
+}
+.tabs-header {
+  display: inline-flex;
+  align-items: center;
+  padding-left: 22px;
+  gap: 4px;
+  height: 24px;
+  color: var(--te-configurator-common-text-color-secondary);
+  background-color: var(--te-configurator-container-bg-color);
+  width: 100%;
+  & > div {
+    width: calc(50% - 14px);
+  }
+  .tabs-header-id {
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      left: -7px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 1px;
+      height: 10px;
+      background-color: var(--te-configurator-container-border-color-divider);
+    }
   }
 }
 </style>
