@@ -79,30 +79,21 @@ interface PageInfo {
 
 const initPage = (pageInfo: PageInfo) => {
   try {
-    if (pageInfo.meta) {
-      const { occupier } = pageInfo.meta
-
-      useLayout().layoutState.pageStatus = getCanvasStatus(occupier)
-      goPage(pageInfo.meta?.id)
+    if (pageInfo?.occupier) {
+      useLayout().layoutState.pageStatus = getCanvasStatus(pageInfo.occupier)
+      goPage(pageInfo.id)
     } else {
       useLayout().layoutState.pageStatus = {
         state: 'empty',
         data: {}
       }
     }
-
-    pageInfo.id = pageInfo.meta?.id
   } catch (error) {
     console.log(error) // eslint-disable-line
   }
 
-  const { id, meta, ...pageSchema } = pageInfo
-  // 画布传递 schema ，多余的数据不能传递
-  useCanvas().initData(pageSchema, {
-    id,
-    name: pageInfo?.fileName
-  })
-  useBreadcrumb().setBreadcrumbPage([pageInfo.fileName])
+  useCanvas().initData(pageInfo?.page_content || {}, pageInfo)
+  useBreadcrumb().setBreadcrumbPage([pageInfo?.name || ''])
 }
 
 /**
@@ -125,16 +116,11 @@ const initBlock = async (blockId: string) => {
 
 const initPageOrBlock = async () => {
   const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-  const { setBreadcrumbPage } = useBreadcrumb()
+  const pagePluginApi = getMetaApi(META_APP.AppManage)
 
   if (pageId) {
-    const pagePluginApi = getMetaApi(META_APP.AppManage)
-
     const data = await pagePluginApi.getPageById(pageId)
-
-    useLayout().layoutState.pageStatus = getCanvasStatus(data.occupier)
-    useCanvas().initData(data.page_content, data)
-    setBreadcrumbPage([data.name])
+    initPage(data)
     return
   }
 
@@ -149,9 +135,18 @@ const initPageOrBlock = async () => {
     appSchemaState.pageTree.find(
       (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
     ) || {
-      componentName: COMPONENT_NAME.Page
+      page_content: {
+        componentName: COMPONENT_NAME.Page
+      }
     }
-  initPage(toRaw(pageInfo))
+
+  if (pageInfo.meta?.id) {
+    // 这里重新请求一遍页面详情数据，是因为 appSchemaState 的页面信息存在字段转换，比如 route 被转换成了 router 字段，导致调用页面保存接口的时候报错
+    const data = await pagePluginApi.getPageById(pageInfo.meta.id)
+    initPage(data)
+  } else {
+    initPage(toRaw(pageInfo))
+  }
 }
 
 const handlePopStateEvent = async () => {
