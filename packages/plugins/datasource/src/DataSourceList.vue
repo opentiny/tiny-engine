@@ -68,7 +68,11 @@ export default {
     const openDataSourceForm = (item, index) => {
       activeIndex.value = index
       fetchDataSourceDetail(item.id).then((data) => {
-        emit('edit', data || item)
+        const editData = { ...data, data: { ...data.data, type: 'remote' } } || {
+          ...item,
+          data: { ...item.data, type: 'remote' }
+        }
+        emit('edit', editData)
       })
     }
 
