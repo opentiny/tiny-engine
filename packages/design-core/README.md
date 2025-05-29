@@ -62,7 +62,7 @@ Start Java backend for frontend-backend integration:
 
 [Frontend-Backend Integration Documentation](https://opentiny.design/tiny-engine#/help-center/course/dev/debugging-of-java-backend)
 
-### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/engine/56)
+### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/dev/material-sync-solution)
 
 ```sh
 $ pnpm splitMaterials
