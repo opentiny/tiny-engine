@@ -114,8 +114,7 @@ export default {
 
       /**
        * 按照数据源请求面板的提示，dataSourceMap函数的相应结果的结构应该会是：
-       * 对于对象数组：{ code: string, msg: string, data: {items: any[], total: number} }
-       * 对于树结构：{ code: string, msg: string, data: any }
+       * { code: string, msg: string, data: {items: any[], total: number} }
        */
       request
         .load()
