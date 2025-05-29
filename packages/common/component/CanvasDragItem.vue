@@ -1,5 +1,5 @@
 <template>
-  <div draggable="true" class="drag-item" @dragstart="dragstart" @click="handleClick">
+  <div draggable="true" class="drag-item" @dragstart="dragstart" @dragend="dragend" @click="handleClick">
     <slot></slot>
   </div>
 </template>
@@ -30,6 +30,13 @@ export default {
       }
     }
 
+    const dragend = () => {
+      // 拖拽结束，使用一个延迟 setTimeout 触发 dragEnd 的事件清理
+      setTimeout(() => {
+        canvasApi.value?.dragEnd?.()
+      }, 0)
+    }
+
     const handleClick = () => {
       if (props.data) {
         const data = deepClone(props.data)
@@ -40,6 +47,7 @@ export default {
 
     return {
       dragstart,
+      dragend,
       handleClick
     }
   }
