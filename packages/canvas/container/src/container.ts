@@ -927,8 +927,8 @@ export const onMouseUp = () => {
   const absolute = canvasState.type === 'absolute'
   const lineId = lineState.id
   const { getNodeWithParentById, getSchema } = useCanvas()
-
-  if (draging && !forbidden) {
+  // 如果lineId为空，说明找不到参照物节点，则不进行插入
+  if (draging && !forbidden && !['', null, undefined].includes(lineId)) {
     const { parent, node } = getNodeWithParentById(lineId) || {} // target
     const data = dragState.data!
     const sourceId = data.id
