@@ -30,11 +30,11 @@ export default {
       }
     }
 
-    const dragend = () => {
-      // 拖拽结束，使用一个延迟 setTimeout 触发 dragEnd 的事件清理
-      setTimeout(() => {
+    const dragend = (e) => {
+      // 拖拽结束，但是此时的 dropEffect 为 none ，说明此时没有完成拖拽，需要清理一下拖拽状态
+      if (e.dataTransfer?.dropEffect === 'none') {
         canvasApi.value?.dragEnd?.()
-      }, 0)
+      }
     }
 
     const handleClick = () => {
