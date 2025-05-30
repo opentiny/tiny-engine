@@ -17,6 +17,9 @@ import './src/styles/vars.less'
 export default {
   ...metaData,
   entry,
+  options: {
+    batchImportTempDownloadUrl: 'dfdsafds'
+  },
   metas: [TranslateService]
 }
 
