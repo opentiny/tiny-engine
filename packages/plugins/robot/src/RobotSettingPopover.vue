@@ -188,6 +188,8 @@ export default {
           label: initModel.label,
           ...data
         }
+        const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
+        state.modelOptions = options?.model
       }
       if (state.activeName === CUSTOMIZE) {
         state.customizeFormData = data

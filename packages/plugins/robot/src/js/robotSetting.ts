@@ -13,11 +13,49 @@
 import { reactive } from 'vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
+export const EXISTING_MODELS = 'existingModels'
+export const CUSTOMIZE = 'customize'
+
 export const AIModelOptions = [
-  { label: 'ChatGPT：gpt-3.5-turbo', value: 'gpt-3.5-turbo', manufacturer: 'openai' },
-  { label: '文心一言：ERNIE-4.0-8K', value: 'ERNIE-4.0-8K', manufacturer: 'baiduai' },
-  { label: 'DeepSeek：DeepSeek-V3', value: 'deepseek-chat', manufacturer: 'deepseek' }
+  {
+    label: 'DeepSeek',
+    value: 'https://api.deepseek.com/v1',
+    model: [
+      { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
+      { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
+    ]
+  },
+  {
+    label: '阿里云百炼',
+    value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    model: [
+      { label: 'qwen-plus', value: 'qwen-plus', maxTokens: 131072 },
+      { label: 'qwen-max', value: 'qwen-max', maxTokens: 32768 },
+      { label: 'qwen-turbo', value: 'qwen-turbo', maxTokens: 1000000 },
+      { label: 'qwen-long', value: 'qwen-long', maxTokens: 1000000 },
+      { label: 'deepseek-r1', value: 'deepseek-r1', maxTokens: 65792 },
+      { label: 'deepseek-v3', value: 'deepseek-v3', maxTokens: 65792 }
+    ]
+  },
+  {
+    label: '月之暗面',
+    value: 'https://api.moonshot.cn/v1',
+    model: [
+      { label: 'moonshot-v1-8k', value: 'moonshot-v1-8k', maxTokens: 8192 },
+      { label: 'moonshot-v1-32k', value: 'moonshot-v1-32k', maxTokens: 32768 },
+      { label: 'moonshot-v1-128k', value: 'moonshot-v1-128k', maxTokens: 131072 }
+    ]
+  }
 ]
+
+export const defaultSelectedModel = {
+  label: AIModelOptions[0].label,
+  activeName: EXISTING_MODELS,
+  baseUrl: AIModelOptions[0].value,
+  model: AIModelOptions[0].model[0].value,
+  maxTokens: AIModelOptions[0].model[0].maxTokens,
+  apiKey: ''
+}
 
 // 这里存放的是aichat的响应式数据
 const state = reactive({
@@ -68,4 +106,51 @@ export const initBlockList = async () => {
     // 捕获错误
     throw new Error('获取block列表失败', { cause: err })
   }
+}
+
+export const isValidOperation = (operation) => {
+  const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get'];
+
+  if (typeof operation !== 'object' || operation === null) {
+      return false;
+  }
+
+  // 检查操作类型是否有效
+  if (!operation.op || !allowedOps.includes(operation.op)) {
+      return false;
+  }
+
+  // 检查path字段是否存在且为字符串
+  if (!operation.path || typeof operation.path !== 'string') {
+      return false;
+  }
+
+  // 根据操作类型检查其他必需字段
+  switch (operation.op) {
+      case 'add':
+      case 'replace':
+      case 'test':
+          if (!('value' in operation)) {
+              return false;
+          }
+          break;
+      case 'move':
+      case 'copy':
+          if (!operation.from || typeof operation.from !== 'string') {
+              return false;
+          }
+          break;
+  }
+
+  return true;
+}
+
+export const isValidFastJsonPatch = (patch) => {
+  if (Array.isArray(patch)) {
+      return patch.every(isValidOperation);
+  }
+  else if (typeof patch === 'object' && patch !== null) {
+      return isValidOperation(patch);
+  }
+  return false;
 }

@@ -13,7 +13,7 @@
         >
           <template #operations>
             <tiny-popover
-              width="270"
+              width="290"
               trigger="manual"
               v-model="showPopover"
               :visible-arrow="false"
@@ -22,7 +22,6 @@
               <robot-setting-popover
                 v-if="showPopover"
                 :typeValue="selectedModel"
-                :tokenValue="tokenValue"
                 @changeType="changeModel"
                 @close="closePanel"
               ></robot-setting-popover>
@@ -39,13 +38,6 @@
           <template v-if="activeMessages.length === 0">
             <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
             </tr-welcome>
-            <tr-prompts
-              :items="promptItems"
-              :wrap="true"
-              item-class="prompt-item"
-              class="tiny-prompts"
-              @item-click="handlePromptItemClick"
-            ></tr-prompts>
           </template>
           <tr-bubble-list v-else :items="activeMessages" :roles="roles"></tr-bubble-list>
           <template #footer>
@@ -56,11 +48,14 @@
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
               :showWordLimit="true"
-              :maxLength="1000"
+              :allowFiles="true"
               @submit="sendContent(inputContent, false)"
             ></tr-sender>
           </template>
         </tr-container>
+        <tiny-dialog-box v-model:visible="showPreview" title="当前AI渲染效果" width="80%">
+          <schema-renderer :schema="currentSchema"></schema-renderer>
+        </tiny-dialog-box>
       </div>
     </Teleport>
   </div>
@@ -68,29 +63,35 @@
 
 <script lang="ts">
 import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
-import { Notify, Loading, TinyPopover } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
-import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender } from '@opentiny/tiny-robot'
-import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
+import { Notify, Loading, TinyPopover, TinyDialogBox, TinyButton } from '@opentiny/vue'
+import { useCanvas, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender, TrFeedback } from '@opentiny/tiny-robot'
+import type { BubbleRoleConfig } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
+import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import { initBlockList, AIModelOptions, defaultSelectedModel, isValidFastJsonPatch } from './js/robotSetting'
+import { PROMPTS } from './js/prompts'
+import * as jsonpatch from 'fast-json-patch'
 
 export default {
   components: {
     TinyPopover,
+    TinyDialogBox,
+    TinyButton,
     RobotSettingPopover,
     TrContainer,
     TrWelcome,
     TrPrompts,
     TrBubbleList,
     TrSender,
-    IconNewSession
+    TrFeedback,
+    IconNewSession,
+    SchemaRenderer
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const { isBlock, isSaved, pageState, importSchema, setSaved } = useCanvas()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -100,13 +101,16 @@ export default {
     const connectedFailed = ref(false)
     const inputContent = ref('')
     const inProcesing = ref(false)
-    const selectedModel = ref(AIModelOptions[0])
+    const selectedModel = ref(defaultSelectedModel)
     const { confirm } = useModal()
     const tokenValue = ref('')
     const showPopover = ref(false)
+    const searchContent = ref('')
+    const currentSchema = ref(null)
+    const showPreview = ref(false)
+    const MESSAGE_TIP = '已生成新的页面效果，请点击下方预览按钮确认是否更新schema'
 
-    const { pageSettingState, getDefaultPage } = usePage()
-    const ROOT_ID = pageSettingState.ROOT_ID
+    const { pageSettingState } = usePage()
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -119,9 +123,7 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value,
-                token: tokenValue.value
+                ...selectedModel.value
               },
               messages: [],
               displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -129,71 +131,75 @@ export default {
       )
     }
 
-    const createNewPage = (schema) => {
-      if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
-        pageSettingState.isNew = true
-        pageSettingState.isAIPage = true
-        pageSettingState.currentPageData = {
-          ...getDefaultPage(),
-          parentId: ROOT_ID,
-          route: 'temporaryPage',
-          name: 'TemporaryPage',
-          group: 'staticPages'
-        }
-      }
-      pageSettingState.currentPageData['page_content'] = schema
-      pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
-      clearCurrentState()
-      // 已经创建过临时页面只更新schema
-      initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
-      useHistory().addHistory()
-    }
-
-    const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
-
-    // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
+    // 在每一次发送请求之前，都把提示词，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       sendProcess.messages = [
-        { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
+        { ...firstMessage, content: `${PROMPTS}\n${firstMessage.content}` },
         ...sendProcess.messages.slice(1)
       ]
       delete sendProcess.displayMessages
       return sendProcess
     }
 
-    const getAiRespMessage = (role = 'assistant', content) => ({
+    const getAiRespMessage = (content, role = 'assistant') => ({
       role,
       content,
       name: 'AI'
     })
+
+    const getAiDisplayMessage = (content, role = 'assistant', schema = {}, id = null) => ({
+      role,
+      content,
+      name: 'AI',
+      schema,
+      id
+    })
+
+    const setSchema = () => {
+      const value = {
+        ...pageState.pageSchema,
+        ...currentSchema.value,
+        componentName: pageState.pageSchema.componentName
+      }
+
+      importSchema(value)
+      setSaved(false)
+      showPreview.value = false
+    }
+
     const sendRequest = () => {
       getMetaApi(META_SERVICE.Http)
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
-        .then((res) => {
-          const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
-          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
-          sessionProcess.messages.push(responseMessage)
-          sessionProcess.displayMessages.push(respDisplayMessage)
-          messages.value[messages.value.length - 1].content = replyWithoutCode
-          setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
+        .then((res: any) => {
+          const { choices } = res
+          const chatMessage = choices[0]?.message
+          const jsonString = chatMessage?.content.replace(/^```json|```$/g, '').trim()
+          const newValue = JSON.parse(jsonString)
+          try {
+            if (isValidFastJsonPatch(newValue)) {
+              // 使用 applyPatch 修改 Schema
+              const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+
+              sessionProcess.messages.push(
+                getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
+              )
+              sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
+              messages.value[messages.value.length - 1].content = MESSAGE_TIP
+              messages.value[messages.value.length - 1].schema = result
+              messages.value[messages.value.length - 1].id = res.id
+            }
+            setContextSession()
+            inProcesing.value = false
+            connectedFailed.value = false
+          } catch (e) {
+            messages.value[messages.value.length - 1].content = '处理响应时出错'
+            inProcesing.value = false
+            connectedFailed.value = false
           }
-          inProcesing.value = false
-          connectedFailed.value = false
         })
         .catch(() => {
           messages.value[messages.value.length - 1].content = '连接失败'
@@ -202,6 +208,7 @@ export default {
           connectedFailed.value = false
         })
     }
+
     const scrollContent = async () => {
       await sleep(100)
       const scrollElement = document.getElementById('chatgpt-window')
@@ -221,7 +228,19 @@ export default {
       await resetContent()
     }
 
-    const getMessage = (content) => ({
+    const search = async (content) => {
+      try {
+        const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
+
+        res.slice(0, 10).forEach((item) => {
+          searchContent.value += item.content
+        })
+      } catch (error) {
+        console.error('Search failed:', error)
+      }
+    }
+
+    const getMessage = async (content) => ({
       role: 'user',
       content,
       name: 'John'
@@ -251,18 +270,19 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        const message = getMessage(realContent)
+        await search(realContent)
+        const message = await getMessage(realContent)
         inProcesing.value = true
-
         messages.value.push(message)
-        sessionProcess?.messages.push(message)
+        sessionProcess?.messages.push({ ...message, content: [content, searchContent.value].join(',') })
         sessionProcess?.displayMessages.push(message)
+
         if (!isModel) {
           inputContent.value = ''
         }
         await scrollContent()
         await sleep(1000)
-        messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
+        messages.value.push(getAiDisplayMessage('好的，正在执行相关操作，请稍等片刻...'))
         await scrollContent()
         sendRequest()
       }
@@ -270,9 +290,9 @@ export default {
 
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
-      const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
-      tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
+      selectedModel.value = {
+        ...JSON.parse(aiSession)?.foundationModel
+      }
     }
 
     const initChat = () => {
@@ -307,7 +327,7 @@ export default {
       initChat()
     }
 
-    const changeTokenValue = () => {
+    const changeApiKey = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
       setContextSession()
@@ -315,19 +335,25 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.type) {
+      if (selectedModel.value.baseUrl !== model.baseUrl) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = AIModelOptions.find((item) => item.value === model.type)
-            tokenValue.value = model.tokenVal
+            selectedModel.value = {
+              label: model.label || model.model,
+              activeName: model.activeName,
+              baseUrl: model.baseUrl,
+              model: model.model,
+              maxTokens: model.maxTokens,
+              apiKey: model.apiKey
+            }
             endContent()
           }
         })
-      } else if (tokenValue.value !== model.tokenVal && selectedModel.value.value === model.type) {
-        tokenValue.value = model.tokenVal
-        changeTokenValue()
+      } else if (selectedModel.value.apiKey !== model.apiKey && selectedModel.value.baseUrl === model.baseUrl) {
+        selectedModel.value.apiKey = model.apiKey
+        changeApiKey()
       }
     }
 
@@ -342,29 +368,15 @@ export default {
     // 控制全屏切换
     const fullscreen = ref(false)
 
-    // 欢迎界面提示
-    const promptItems: PromptProps[] = [
-      {
-        label: '页面搭建场景',
-        description: '如何生成表单嵌进我的网站？',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨'),
-        badge: 'NEW'
-      },
-      {
-        label: '学习/知识型场景',
-        description: '有什么想了解的吗？可以是“Vue3 和 React 的区别”！',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🤔')
-      },
-      {
-        label: '创意生成场景',
-        description: '想写段文案、起个名字，还是来点灵感？',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '💡')
-      }
-    ]
-
     // 处理提示项点击事件
     const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       sendContent(item.description, true)
+    }
+
+    const getItemSchema = (item) => {
+      const targetMessage = messages.value.find((message) => message.id && message.id === item.id)
+
+      return targetMessage
     }
 
     // Icon
@@ -374,12 +386,40 @@ export default {
     const aiAvatar = getSvgIcon('AI')
     const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
     const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
+    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
+    const saveIcon = getSvgIcon('save', { fontSize: '20px' })
 
     // 对话角色配置
-    const roles: Record<string, BubbleRoleConfig> = {
-      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '80%' },
+    const roles = ref({
+      assistant: {
+        placement: 'start',
+        avatar: aiAvatar,
+        maxWidth: '80%',
+        slots: {
+          footer: ({ bubbleProps }) => {
+            return h(TrFeedback, {
+              style: {
+                display: getItemSchema(bubbleProps)?.schema ? 'block' : 'none'
+              },
+              actions: [
+                { name: 'preview', label: '预览', icon: previewIcon },
+                { name: 'run', label: '运行', icon: saveIcon }
+              ],
+              onAction(name) {
+                currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
+                if (name === 'preview') {
+                  showPreview.value = true
+                }
+                if (name === 'run') {
+                  setSchema()
+                }
+              }
+            })
+          }
+        }
+      },
       user: { placement: 'end', avatar: userAvatar, maxWidth: '80%' }
-    }
+    })
 
     return {
       robotVisible,
@@ -388,22 +428,24 @@ export default {
       activeMessages,
       inputContent,
       connectedFailed,
-      sendContent,
-      endContent,
-      changeTokenValue,
-      resizeChatWindow,
       AIModelOptions,
       selectedModel,
-      changeModel,
-      openAIRobot,
-      closePanel,
       tokenValue,
       showPopover,
       fullscreen,
-      promptItems,
-      handlePromptItemClick,
       welcomeIcon,
-      roles
+      roles,
+      currentSchema,
+      showPreview,
+      sendContent,
+      endContent,
+      changeApiKey,
+      resizeChatWindow,
+      changeModel,
+      openAIRobot,
+      closePanel,
+      handlePromptItemClick,
+      setSchema
     }
   }
 }
@@ -416,6 +458,7 @@ export default {
   align-items: center;
   width: 26px;
   height: 26px;
+
   .chatgpt-icon {
     width: 18px;
     height: 18px;
@@ -462,6 +505,7 @@ export default {
     .prompt-item {
       width: 100%;
       box-sizing: border-box;
+
       @container (width >=64rem) {
         width: calc(50% - 8px);
       }
@@ -470,6 +514,7 @@ export default {
         font-size: 14px;
         line-height: 24px;
       }
+
       &:hover {
         background-color: #c3d3f6;
       }
