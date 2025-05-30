@@ -1,7 +1,31 @@
 <template>
   <tiny-form label-position="left" label-width="60px" show-message :model="formData" :rules="rules">
     <tiny-form-item label="事件名" prop="eventName">
-      <tiny-input v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName"></tiny-input>
+      <tiny-input v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
+        <template #suffix>
+          <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
+            <template #reference>
+              <tiny-icon-rich-text-link :class="{ 'bind-propertys': isUpdateEvent }" />
+            </template>
+            <div class="property-list">
+              <div class="property-list-title">
+                <tiny-icon-rich-text-link />
+                双向绑定属性
+              </div>
+              <ul>
+                <li
+                  v-for="(item, index) in state.propertys"
+                  :key="index"
+                  :class="{ existed: state.events.hasOwnProperty('onUpdate:' + item.property) }"
+                  @click="usePropertysToBeEvent(item)"
+                >
+                  <div>{{ item.property }}</div>
+                </li>
+              </ul>
+            </div>
+          </tiny-popover>
+        </template>
+      </tiny-input>
     </tiny-form-item>
     <tiny-form-item label="标签名">
       <tiny-input v-model="label"></tiny-input>
@@ -15,17 +39,31 @@
 
 <script lang="ts">
 import { computed, reactive, watch } from 'vue'
-import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem } from '@opentiny/vue'
+import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, TinyPopover } from '@opentiny/vue'
 import { REGEXP_EVENT_NAME, verifyEventName } from '@opentiny/tiny-engine-common/js/verification'
-import { getEditEvent, getEditEventName, renameBlockEventName } from './js/blockSetting'
+import {
+  getEditBlockPropertyList,
+  getEditBlockEvents,
+  getEditEvent,
+  getEditEventName,
+  renameBlockEventName
+} from './js/blockSetting'
+import { IconRichTextLink } from '@opentiny/vue-icon'
 
 export default {
   components: {
     TinyForm,
     TinyInput,
-    TinyFormItem
+    TinyFormItem,
+    TinyPopover,
+    TinyIconRichTextLink: IconRichTextLink()
   },
   setup() {
+    const state = reactive({
+      showPopover: false,
+      propertys: getEditBlockPropertyList(),
+      events: getEditBlockEvents()
+    })
     const eventNameTip = '事件名为小写字符开头的驼峰形式，例：customEvent'
     const linked = computed(() => (getEditEvent() || {}).linked)
 
@@ -55,8 +93,30 @@ export default {
       eventName: getEditEventName() || ''
     })
 
+    const isUpdateEvent = computed(() => formData.eventName.startsWith('onUpdate:'))
+
+    const usePropertysToBeEvent = (item: any) => {
+      if (item.label?.text?.zh_CN) label.value = item.label.text.zh_CN
+      renameBlockEventName(`onUpdate:${item.property}`, getEditEventName())
+      state.showPopover = false
+    }
+
     const rules = {
-      eventName: [{ pattern: REGEXP_EVENT_NAME, message: eventNameTip, trigger: 'change' }]
+      eventName: [
+        {
+          pattern: REGEXP_EVENT_NAME,
+          message: eventNameTip,
+          validator: (rule: any /* IFormInnerRule */, value: string, callback: (e?: Error) => void) => {
+            if (isUpdateEvent.value) return callback()
+            if (!rule.pattern.test(value)) {
+              callback(new Error(rule.message))
+            } else {
+              callback()
+            }
+          },
+          trigger: 'change'
+        }
+      ]
     }
 
     watch(
@@ -73,13 +133,16 @@ export default {
     }
 
     return {
+      state,
       rules,
       label,
       linked,
       formData,
       description,
       eventNameTip,
-      changeEventName
+      isUpdateEvent,
+      changeEventName,
+      usePropertysToBeEvent
     }
   }
 }
@@ -90,5 +153,35 @@ export default {
   margin-top: 10px;
   padding: 15px 0px;
   border-top: 1px solid var(--te-block-event-link-border-color);
+}
+
+.bind-propertys {
+  fill: var(--te-component-common-block-add-text-color);
+}
+
+.property-list {
+  .property-list-title {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    text-align: left;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  li {
+    padding: 0 12px;
+    margin: 0 -16px;
+    line-height: 24px;
+    cursor: pointer;
+    &:hover {
+      background: var(--te-component-common-bg-color-hover);
+    }
+  }
+
+  .existed {
+    cursor: not-allowed;
+    pointer-events: none;
+    color: var(--te-component-common-text-color-disabled);
+  }
 }
 </style>
