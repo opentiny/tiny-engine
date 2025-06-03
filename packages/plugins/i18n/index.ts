@@ -18,7 +18,7 @@ export default {
   ...metaData,
   entry,
   options: {
-    batchImportTempDownloadUrl: 'dfdsafds'
+    batchImportTempDownloadUrl: ''
   },
   metas: [TranslateService]
 }
