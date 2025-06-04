@@ -1752,7 +1752,7 @@
   "pages": [
     {
       "name": "createVm",
-      "id": "NTJ4MjvqoVj8OVsc",
+      "id": "1",
       "app": "1",
       "route": "createVm",
       "page_content": {
@@ -2706,12 +2706,11 @@
         "id": 86,
         "username": "开发者",
         "email": "developer@lowcode.com",
-        "resetPasswordToken": "developer",
         "confirmationToken": "dfb2c162-351f-4f44-ad5f-8998",
         "is_admin": true
       },
       "isHome": false,
-      "_id": "NTJ4MjvqoVj8OVsc"
+      "_id": "1"
     },
     {
       "name": "ComponentsSetting",
@@ -3595,7 +3594,6 @@
         "id": 86,
         "username": "开发者",
         "email": "developer@lowcode.com",
-        "resetPasswordToken": "developer",
         "confirmationToken": "dfb2c162-351f-4f44-ad5f-8998",
         "is_admin": true
       },
@@ -4011,8 +4009,7 @@
       },
       "createdBy": {
         "id": 86,
-        "username": "开发者",
-        "resetPasswordToken": "developer"
+        "username": "开发者"
       },
       "description": null,
       "tags": null,
@@ -4021,8 +4018,7 @@
       "path": "portal",
       "occupier": {
         "id": 86,
-        "username": "开发者",
-        "resetPasswordToken": "developer"
+        "username": "开发者"
       },
       "isOfficial": null,
       "public": 1,
@@ -29699,7 +29695,7 @@
     "createdBy": 86,
     "updatedBy": 564,
     "tenant": 1,
-    "home_page": "NTJ4MjvqoVj8OVsc",
+    "home_page": "1",
     "css": null,
     "config": {},
     "git_group": "",

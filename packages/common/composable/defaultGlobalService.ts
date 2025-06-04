@@ -212,9 +212,8 @@ export default defineService({
       publish({ topic: 'global_service_init_finish' })
     })
   },
-  apis: ({ state }) => ({
+  apis: () => ({
     getBaseInfo,
-    isAdmin: () => state.userInfo.resetPasswordToken === 'p_webcenter',
     postLocationHistoryChanged,
     updateParams,
     updatePageId,
