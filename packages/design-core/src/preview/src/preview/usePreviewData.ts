@@ -1,11 +1,8 @@
 import { reactive } from 'vue'
-import { transformSync } from '@babel/core'
-import vueJsx from '@vue/babel-plugin-jsx'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
 import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { fetchMetaData, fetchAppSchema, fetchBlockSchema, getPageById, getBlockById, fetchPageHistory } from './http'
-import { PanelType } from '../constant'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import srcFiles from './srcFiles'
 
@@ -307,18 +304,6 @@ const getBasicData = async (basicFilesPromise: Promise<any>, scripts: Record<str
   }
 }
 
-// [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
-const langReg = /lang="jsx"/
-const fixScriptLang = (generatedCode: IPanelType) => {
-  const fixedCode = { ...generatedCode }
-
-  if (generatedCode.panelType === PanelType.VUE) {
-    fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
-  }
-
-  return fixedCode
-}
-
 interface IMetaDataParams {
   platform: string
   app: string
@@ -331,9 +316,10 @@ interface IMetaDataParams {
 interface IUsePreviewData {
   setFiles: (files: Record<string, string>, mainFileName?: string) => Promise<void>
   store: any
+  setImportMap: (importMap: Record<string, string>) => void
 }
 
-export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
+export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewData) => {
   const basicFiles = setFiles(srcFiles, 'src/Main.vue')
 
   const assignFiles = ({ panelName, panelValue, index }: IPanelType, newFiles: Record<string, string>) => {
@@ -341,27 +327,7 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
       panelName = 'Main.vue'
     }
 
-    const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-      if (!p1) {
-        // eslint-disable-next-line no-useless-escape
-        return '<script setup></script>'
-      }
-
-      const transformedScript = transformSync(p1, {
-        babelrc: false,
-        plugins: [[vueJsx, { pragma: 'h' }]],
-        sourceMaps: false,
-        configFile: false
-      })
-
-      const res = `<script setup>${transformedScript?.code || ''}`
-      // eslint-disable-next-line no-useless-escape
-      const endTag = '</script>'
-
-      return `${res}${endTag}`
-    })
-
-    newFiles[panelName] = newPanelValue
+    newFiles[panelName] = panelValue
   }
 
   // 根据新的参数更新预览
@@ -378,7 +344,7 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
 
     // importMap 发生变化才更新 importMap
     if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
-      store.setImportMap(importMapData)
+      setImportMap(importMapData)
       previewState.importMap = importMapData
     }
 
@@ -417,12 +383,12 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
 
     newFiles['app.js'] = appJsCode
 
-    pageCode.map(fixScriptLang).forEach((item) => assignFiles(item, newFiles))
+    pageCode.forEach((item) => assignFiles(item, newFiles))
 
     const metaFiles = generateMetaFiles(metaData)
     Object.assign(newFiles, metaFiles)
 
-    setFiles(newFiles)
+    setFiles(newFiles, 'App.vue')
   }
 
   const loadInitialData = async () => {
