@@ -427,8 +427,7 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
         })
       }
 
-      const prop = !isNaN(key) && !isNaN(+key) ? 'icon' : key
-      attributes.push(isJSX ? `${prop}={${iconName}}` : `:${prop}="${iconName}"`)
+      attributes.push(isJSX ? `${key}={${iconName}}` : `:${key}="${iconName}"`)
 
       delete props[key]
     }
