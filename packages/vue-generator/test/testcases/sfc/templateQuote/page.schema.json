@@ -1,0 +1,46 @@
+{
+  "state": {
+    "customAttrTest": {
+      "value": [
+        {
+          "defaultValue": "{\"class\": \"test-class\", \"id\": \"test-id\"}"
+        }
+      ]
+    }
+  },
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyButton",
+      "props": {
+        "type": "primary",
+        "text": "test",
+        "subStr": "pri\"ma\"ry'subStr'",
+        "customAttrTest": {
+          "value": [
+            {
+              "defaultValue": "{\"class\": \"test-class\", \"id\": \"test-id\", \"class2\": \"te'st'-class2\"}",
+              "subStr": "test-'cl'ass2"
+            }
+          ]
+        },
+        "customExpressionTest": {
+          "type": "JSExpression",
+          "value": "{\n  \"value\": [\n    {\n      \"defaultValue\": \"{\\\"class\\\": \\\"test-class\\\", \\\"id\\\": \\\"test-id\\\"}\"\n    }\n  ]\n}"
+        }
+      },
+      "loopArgs": ["item", "index"],
+      "loop": {
+        "type": "JSExpression",
+        "value": "[\n  {\n    type: 'primary'\n, subStr: \"primary'subStr'\"\n  },\n  {\n    type: \"\"\n  },\n  {\n    type: \"info\"\n  },\n  {\n    type: \"success\"\n  },\n  {\n    type: \"warning\"\n  },\n  {\n    type: \"danger\"\n  }\n]"
+      },
+      "id": "63623253",
+      "children": []
+    }
+  ],
+  "fileName": "testTemplateQuote"
+}

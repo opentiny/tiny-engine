@@ -70,7 +70,7 @@ export const checkHasSpecialType = (obj) => {
   return false
 }
 
-const handleJSExpressionBinding = (key, value, isJSX) => {
+const handleJSExpressionBinding = (key, value, isJSX, globalHooks) => {
   const expressValue = value.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
 
   if (isJSX) {
@@ -85,7 +85,19 @@ const handleJSExpressionBinding = (key, value, isJSX) => {
   }
 
   // expression 使用 v-bind 绑定
-  return `:${key}="${expressValue}"`
+  if (expressValue.includes('"')) {
+    let stateKey = `${key}_${randomString()}`
+    let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${expressValue}`)
+
+    while (!addSuccess) {
+      stateKey = `${key}_${randomString()}`
+      addSuccess = globalHooks.addState(stateKey, `${stateKey}:${expressValue}`)
+    }
+
+    return `:${key}="state.${stateKey}"`
+  } else {
+    return `:${key}="${expressValue}"`
+  }
 }
 
 const handleBindI18n = (key, value, isJSX) => {
@@ -182,7 +194,19 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
   const iterVar = [...loopArgs]
 
   if (!isJSX) {
-    attributes.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+    if (source.includes('"')) {
+      let stateKey = `loop_${randomString()}`
+      let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${source}`)
+
+      while (!addSuccess) {
+        stateKey = `loop_${randomString()}`
+        addSuccess = globalHooks.addState(stateKey, `${stateKey}:${source}`)
+      }
+
+      attributes.push(`v-for="(${iterVar.join(',')}) in state.${stateKey}"`)
+    } else {
+      attributes.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+    }
 
     return
   }
@@ -352,7 +376,7 @@ export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
   Object.entries(props).forEach(([key, value]) => {
     if (value?.type === JS_EXPRESSION && !isOn(key)) {
       specialTypeHandler[JS_RESOURCE](value, globalHooks, config)
-      attributes.push(handleJSExpressionBinding(key, value, isJSX))
+      attributes.push(handleJSExpressionBinding(key, value, isJSX, globalHooks))
 
       delete props[key]
     }
@@ -384,7 +408,7 @@ export const handleJSFunctionAttrHook = (schemaData, globalHooks, config) => {
         functionName = value.value
       }
 
-      attributes.push(handleJSExpressionBinding(key, { value: functionName }, isJSX))
+      attributes.push(handleJSExpressionBinding(key, { value: functionName }, isJSX, globalHooks))
 
       delete props[key]
     }
@@ -451,11 +475,15 @@ const genStateAccessor = (value, globalHooks) => {
   }
 }
 
-const transformObjValue = (renderKey, value, globalHooks, config, transformObjType) => {
+const transformObjValue = (renderKey, value, globalHooks, config, transformObjType, shouldConvertQuote = false) => {
   const result = { shouldBindToState: false, res: null }
 
   if (typeof value === 'string') {
-    result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
+    if (shouldConvertQuote) {
+      result.res = `${renderKey}'${value.replaceAll(/"/g, "'").replaceAll(/'/g, "\\'")}'`
+    } else {
+      result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
+    }
 
     return result
   }
@@ -468,7 +496,11 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
 
   if (specialTypeHandler[value?.type]) {
     const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
-    result.res = `${renderKey}${specialVal}`
+    if (shouldConvertQuote) {
+      result.res = `${renderKey}${specialVal.replaceAll(/"/g, "'")}`
+    } else {
+      result.res = `${renderKey}${specialVal}`
+    }
 
     if (specialTypes.includes(value.type)) {
       result.shouldBindToState = true
@@ -503,7 +535,7 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
 }
 
 const normalKeyRegexp = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
-export const transformObjType = (obj, globalHooks, config) => {
+export const transformObjType = (obj, globalHooks, config, shouldConvertQuote = false) => {
   if (!obj || typeof obj !== 'object') {
     return {
       res: obj
@@ -527,7 +559,8 @@ export const transformObjType = (obj, globalHooks, config) => {
       value,
       globalHooks,
       config,
-      transformObjType
+      transformObjType,
+      shouldConvertQuote
     )
 
     if (tmpShouldBindToState) {
@@ -541,7 +574,7 @@ export const transformObjType = (obj, globalHooks, config) => {
 
     // 复杂的 object 类型，需要递归处理
     const { res: tempRes, shouldBindToState: tempShouldBindToState } =
-      transformObjType(value, globalHooks, config) || {}
+      transformObjType(value, globalHooks, config, shouldConvertQuote) || {}
 
     resStr.push(`${renderKey}${tempRes}`)
 
@@ -570,7 +603,7 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
       return
     }
 
-    const { res, shouldBindToState } = transformObjType(value, globalHooks, config)
+    const { res, shouldBindToState } = transformObjType(value, globalHooks, config, true)
 
     if (shouldBindToState && !isJSX) {
       let stateKey = key
@@ -583,7 +616,7 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
 
       attributes.push(`:${key}="state.${stateKey}"`)
     } else {
-      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res.replaceAll(/"/g, "'")}"`)
+      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res}"`)
     }
 
     delete props[key]
