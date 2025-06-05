@@ -20,7 +20,12 @@ async function startApp () {
     initHook(HOOK_NAME.useEnv, import.meta.env)
   }
   const registry = {
-    [META_SERVICE.Http]: HttpService
+    [META_SERVICE.Http]: HttpService,
+    'engine.config': {
+      id: 'engine.config',
+      theme: 'light',
+      material: ['/mock/bundle.json']
+    }
   }
 
   defineEntry(registry)
