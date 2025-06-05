@@ -23,7 +23,11 @@
       >
         <div v-if="getPluginShown(item)">
           <span class="item-icon">
-            <svg-icon v-if="getMergeMeta(item)?.icon" :name="getMergeMeta(item)?.icon" class="panel-icon"></svg-icon>
+            <svg-icon
+              v-if="typeof getMergeMeta(item)?.icon === 'string'"
+              :name="getMergeMeta(item)?.icon"
+              class="panel-icon"
+            ></svg-icon>
             <component v-else :is="getMergeMeta(item)?.icon" class="panel-icon"></component>
           </span>
         </div>

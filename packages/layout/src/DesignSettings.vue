@@ -36,7 +36,7 @@
       >
         <span class="item-icon" v-if="getPluginShown(item)">
           <svg-icon
-            v-if="settingPluginsMeta[item]?.icon"
+            v-if="typeof settingPluginsMeta[item]?.icon === 'string'"
             :name="settingPluginsMeta[item]?.icon"
             class="panel-icon"
           ></svg-icon>
