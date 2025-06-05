@@ -9,15 +9,19 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-// 导入@opentiny/tiny-engine时，内部的依赖包也会逐个导入，可能会执行useComplie，此时需要templateHashMap。所以需要先执行一次defineEntry
-import { init } from '@opentiny/tiny-engine'
 import { configurators } from './configurators/'
-import registry from '../registry'
 import 'virtual:svg-icons-register'
 
-init({
-  registry,
-  configurators,
-  createAppSignal: ['global_service_init_finish']
-})
+async function startApp() {
+  const registry = await import('../registry')
+  const { init } = await import('@opentiny/tiny-engine')
+
+  init({
+    // 合并多个注册表
+    registry: [registry.default],
+    configurators,
+    createAppSignal: ['global_service_init_finish']
+  })
+}
+
+startApp()
