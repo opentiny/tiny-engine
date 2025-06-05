@@ -1,12 +1,12 @@
 <p align="center">
   <a href="https://opentiny.design/tiny-engine" target="_blank" rel="noopener noreferrer">
-    <img alt="OpenTiny Logo" src="logo.svg" height="100" style="max-width:100%;">
+    <img alt="OpenTiny Logo" src="https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/main-logo-2135292a.svg" height="100" style="max-width:100%;">
   </a>
 </p>
 
 <p align="center">TinyEngine enables developers to customize low-code platforms, build low-code platforms online in real time, and support secondary development or integration of low-code platform capabilities.</p>
 
-English | [简体中文](README.zh-CN.md)
+English | [简体中文](https://github.com/opentiny/tiny-engine/blob/develop/README.zh-CN.md)
 
 🌈 Features:
 
@@ -109,7 +109,7 @@ axisFormat %Y-%m-%d
 
 If you are interested in our open source project, please join us! 🎉
 
-Please read the [Contribution Guide](CONTRIBUTING.md) before participating in the contribution.
+Please read the [Contribution Guide](https://github.com/opentiny/tiny-engine/blob/main/CONTRIBUTING.md) before participating in the contribution.
 
 - Add official assistant WeChat opentiny-official and join the technical exchange group
 - Join the mailing list opentiny@googlegroups.com
