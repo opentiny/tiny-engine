@@ -25,7 +25,11 @@ initPreview({
       id: 'engine.root',
       metas: [HttpService, GenerateCodeService]
     },
-    config: { id: 'engine.config', theme: 'light' },
+    config: {
+      id: 'engine.config',
+      theme: 'light',
+      material: ['/mock/bundle.json']
+    },
     toolbars: [Breadcrumb, Media, Lang]
   },
   lifeCycles: {
