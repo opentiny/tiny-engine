@@ -15,6 +15,7 @@ import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export const EXISTING_MODELS = 'existingModels'
 export const CUSTOMIZE = 'customize'
+export const VISUAL_MODEL = ['qwen-vl-max','qwen-vl-plus']
 
 export const AIModelOptions = [
   {
@@ -29,6 +30,8 @@ export const AIModelOptions = [
     label: '阿里云百炼',
     value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     model: [
+      { label: 'qwen-vl-max', value: 'qwen-vl-max', maxTokens: 32000 },
+      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', maxTokens: 32000 },
       { label: 'qwen-plus', value: 'qwen-plus', maxTokens: 131072 },
       { label: 'qwen-max', value: 'qwen-max', maxTokens: 32768 },
       { label: 'qwen-turbo', value: 'qwen-turbo', maxTokens: 1000000 },

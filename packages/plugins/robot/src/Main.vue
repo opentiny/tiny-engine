@@ -48,9 +48,28 @@
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="true"
+              :allowFiles="singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model)"
+              uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
-            ></tr-sender>
+              @files-selected="handleSingleFilesSelected"
+            >
+              <template #header v-if="singleAttachmentItems.length > 0">
+                <div>
+                  <tr-attachments
+                    ref="singleAttachmentRef"
+                    v-model:items="singleAttachmentItems"
+                    status-type="message"
+                    @file-remove="handleSingleFileRemove"
+                    @file-retry="handleSingleFileRetry"
+                  >
+                  </tr-attachments>
+                  <!-- <div style="width: 100px; height: 100px" v-show="showPreview">
+                    <schema-renderer :schema="currentSchema"></schema-renderer>
+                    <tiny-button @click="showPreview = false">关闭</tiny-button>
+                  </div> -->
+                </div>
+              </template>
+            </tr-sender>
           </template>
         </tr-container>
         <tiny-dialog-box v-model:visible="showPreview" title="当前AI渲染效果" width="80%">
@@ -65,12 +84,26 @@
 import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox, TinyButton } from '@opentiny/vue'
 import { useCanvas, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender, TrFeedback } from '@opentiny/tiny-robot'
+import {
+  TrContainer,
+  TrWelcome,
+  TrPrompts,
+  TrBubbleList,
+  TrSender,
+  TrFeedback,
+  TrAttachments
+} from '@opentiny/tiny-robot'
 import type { BubbleRoleConfig } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { initBlockList, AIModelOptions, defaultSelectedModel, isValidFastJsonPatch } from './js/robotSetting'
+import {
+  initBlockList,
+  AIModelOptions,
+  defaultSelectedModel,
+  isValidFastJsonPatch,
+  VISUAL_MODEL
+} from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
 
@@ -86,6 +119,7 @@ export default {
     TrBubbleList,
     TrSender,
     TrFeedback,
+    TrAttachments,
     IconNewSession,
     SchemaRenderer
   },
@@ -108,6 +142,8 @@ export default {
     const searchContent = ref('')
     const currentSchema = ref(null)
     const showPreview = ref(false)
+    const singleAttachmentItems = ref([])
+    const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果，请点击下方预览按钮确认是否更新schema'
 
     const { pageSettingState } = usePage()
@@ -137,8 +173,18 @@ export default {
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
+      const firstContent = firstMessage.content.map((item) => {
+        if (item.type === 'text') {
+          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[提问] ${item.text}`
+        }
+        return item
+      })
+
       sendProcess.messages = [
-        { ...firstMessage, content: `${PROMPTS}\n${firstMessage.content}` },
+        {
+          ...firstMessage,
+          content: firstContent
+        },
         ...sendProcess.messages.slice(1)
       ]
       delete sendProcess.displayMessages
@@ -171,26 +217,67 @@ export default {
       showPreview.value = false
     }
 
+    const fixedJson = (op) => {
+      // 修正 path：替换 ; 和 : 为 /
+      if (op.path) {
+        op.path = op.path.replace(/[;:]/g, '/').replace(/\/+/g, '/')
+      }
+
+      // 修正 value：如果是字符串且包含 %20，解码 URL 编码
+      if (typeof op.value === 'string') {
+        op.value = op.value.replace(/%20/g, ' ')
+      }
+
+      // 如果 path 包含 style，尝试解析成对象
+      if (op.path.includes('style') && typeof op.value === 'string') {
+        try {
+          // 示例：将 "margin:10px 0 0 30px" 转为 { margin: "10px 0 0 30px" }
+          const [key, val] = op.value.split(':')
+          if (key && val) {
+            op.value = { [key.trim()]: val.trim() }
+          }
+        } catch (e) {
+          console.warn('Failed to parse style:', op.value)
+        }
+      }
+
+      return op
+    }
+
     const sendRequest = () => {
       getMetaApi(META_SERVICE.Http)
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res: any) => {
           const { choices } = res
           const chatMessage = choices[0]?.message
-          const jsonString = chatMessage?.content.replace(/^```json|```$/g, '').trim()
-          const newValue = JSON.parse(jsonString)
           try {
-            if (isValidFastJsonPatch(newValue)) {
-              // 使用 applyPatch 修改 Schema
-              const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+            const regex = /```json([\s\S]*?)```/
+            const match = chatMessage?.content.match(regex)
 
-              sessionProcess.messages.push(
-                getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
-              )
-              sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
-              messages.value[messages.value.length - 1].content = MESSAGE_TIP
-              messages.value[messages.value.length - 1].schema = result
-              messages.value[messages.value.length - 1].id = res.id
+            if (match && match[1]) {
+              // const jsonContent = match[1].trim().replace(
+              //   /(\s*)([a-zA-Z0-9_]+)(\s*):/g, // 匹配 key:
+              //   '$1"$2"$3:' // 替换成 "key":
+              // )
+              const jsonContent = chatMessage?.content.replace(/^```json|```$/g, '').trim()
+              const newValue = JSON.parse(jsonContent).map((op) => fixedJson(op))
+
+              if (newValue && isValidFastJsonPatch(newValue)) {
+                // 使用 applyPatch 修改 Schema
+                const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+
+                sessionProcess.messages.push(
+                  getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
+                )
+                sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
+                messages.value[messages.value.length - 1].content = MESSAGE_TIP
+                messages.value[messages.value.length - 1].schema = result
+                messages.value[messages.value.length - 1].id = res.id
+              }
+            } else {
+              sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
+              sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
+              messages.value[messages.value.length - 1].content = chatMessage?.content
             }
             setContextSession()
             inProcesing.value = false
@@ -232,19 +319,41 @@ export default {
       try {
         const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
 
-        res.slice(0, 10).forEach((item) => {
+        res.forEach((item) => {
           searchContent.value += item.content
         })
       } catch (error) {
-        console.error('Search failed:', error)
+        // error
       }
     }
 
-    const getMessage = async (content) => ({
+    const getMessage = (content) => ({
       role: 'user',
       content,
       name: 'John'
     })
+
+    const getSessionMessage = (text) => {
+      const content = [
+        {
+          type: 'text',
+          text
+        }
+      ]
+      if (singleAttachmentItems.value.length > 0) {
+        content.push({
+          type: 'image_url',
+          image_url: {
+            url: imageUrl.value
+          }
+        })
+      }
+      return {
+        role: 'user',
+        content,
+        name: 'John'
+      }
+    }
 
     const sendContent = async (content, isModel) => {
       if (!isSaved() && !pageSettingState.isNew) {
@@ -270,13 +379,17 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        await search(realContent)
-        const message = await getMessage(realContent)
+        const message = getMessage(realContent)
         inProcesing.value = true
         messages.value.push(message)
-        sessionProcess?.messages.push({ ...message, content: [content, searchContent.value].join(',') })
+        sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
+        if (!searchContent.value || !sessionProcess.messages?.length) {
+          await search(realContent)
+        }
 
+        singleAttachmentItems.value = []
+        imageUrl.value = ''
         if (!isModel) {
           inputContent.value = ''
         }
@@ -335,7 +448,7 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.baseUrl !== model.baseUrl) {
+      if (selectedModel.value.baseUrl !== model.baseUrl || selectedModel.value !== model.model) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
@@ -348,10 +461,17 @@ export default {
               maxTokens: model.maxTokens,
               apiKey: model.apiKey
             }
+            singleAttachmentItems.value = []
+            imageUrl.value = ''
             endContent()
           }
         })
-      } else if (selectedModel.value.apiKey !== model.apiKey && selectedModel.value.baseUrl === model.baseUrl) {
+      }
+      if (
+        selectedModel.value.apiKey !== model.apiKey &&
+        selectedModel.value.baseUrl === model.baseUrl &&
+        selectedModel.value.model === model.model
+      ) {
         selectedModel.value.apiKey = model.apiKey
         changeApiKey()
       }
@@ -421,6 +541,75 @@ export default {
       user: { placement: 'end', avatar: userAvatar, maxWidth: '80%' }
     })
 
+    // 处理文件选择事件
+    const handleSingleFilesSelected = (files: FileList | null) => {
+      if (!files.length) return
+
+      if (files && files.length > 1) {
+        Notify({
+          type: 'error',
+          message: '当前仅支持上传一张图片',
+          position: 'top-right',
+          duration: 5000
+        })
+        return
+      }
+
+      if (files && files.length > 0) {
+        // 将选中的文件转换为 Attachment 格式并添加到附件列表
+        const newAttachments = Array.from(files).map((file, index) => ({
+          uid: `${Date.now()}-${index}`,
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          status: 'uploading',
+          isUploading: true,
+          messageType: 'uploading',
+          file: file
+        }))
+
+        singleAttachmentItems.value.push(...newAttachments)
+
+        // 开始上传
+        const formData = new FormData()
+        formData.append('modelName', String(sessionProcess.foundationModel.model))
+        formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
+        formData.append('file', files[0])
+
+        try {
+          getMetaApi(META_SERVICE.Http)
+            .post('/app-center/api/ai/uploadFile', formData, {
+              headers: {
+                'Content-Type': 'multipart/form-data'
+              }
+            })
+            .then((res) => {
+              if (res?.url) {
+                imageUrl.value = res.url
+                singleAttachmentItems.value[0].status = 'done'
+                singleAttachmentItems.value[0].isUploading = false
+                singleAttachmentItems.value[0].messageType = 'success'
+              } else {
+                imageUrl.value = ''
+                singleAttachmentItems.value[0].status = 'error'
+                singleAttachmentItems.value[0].isUploading = false
+                singleAttachmentItems.value[0].messageType = 'error'
+              }
+            })
+        } catch (error) {
+          console.error('上传失败', error)
+        }
+      }
+    }
+
+    const handleSingleFileRemove = () => {
+      imageUrl.value = ''
+    }
+
+    const handleSingleFileRetry = (file) => {
+      handleSingleFilesSelected([file])
+    }
+
     return {
       robotVisible,
       avatarUrl,
@@ -437,6 +626,8 @@ export default {
       roles,
       currentSchema,
       showPreview,
+      singleAttachmentItems,
+      VISUAL_MODEL,
       sendContent,
       endContent,
       changeApiKey,
@@ -445,7 +636,10 @@ export default {
       openAIRobot,
       closePanel,
       handlePromptItemClick,
-      setSchema
+      setSchema,
+      handleSingleFilesSelected,
+      handleSingleFileRemove,
+      handleSingleFileRetry
     }
   }
 }
@@ -546,5 +740,9 @@ export default {
       font-size: 20px;
     }
   }
+}
+
+.tiny-sender__header-slot .tr-attachments .tr-attachments__file-list .tr-attachments__add-button {
+  display: none;
 }
 </style>
