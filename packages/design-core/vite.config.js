@@ -2,14 +2,14 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
-import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
-import nodePolyfill from 'rollup-plugin-polyfill-node'
+// import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
+// import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
+// import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import { fileURLToPath } from 'node:url'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
-const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
-const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
+// const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
+// const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -44,19 +44,36 @@ export default defineConfig({
         }
       ]
     })
+    // nodePolyfills({
+    //   globals: {
+    //     Buffer: true,
+    //     global: true,
+    //     process: true
+    //   }
+    // })
   ],
   publicDir: false,
-  optimizeDeps: {
-    esbuildOptions: {
-      plugins: [
-        nodeGlobalsPolyfillPlugin({
-          process: true,
-          buffer: true
-        }),
-        nodeModulesPolyfillPlugin()
-      ]
+  resolve: {
+    alias: {
+      ...Object.fromEntries(
+        ['buffer', 'global', 'process'].map((k) => {
+          const location = `vite-plugin-node-polyfills/shims/${k}`
+          return [location, path.resolve(`node_modules/${location}/dist/index.cjs`)]
+        })
+      )
     }
   },
+  // optimizeDeps: {
+  //   esbuildOptions: {
+  //     plugins: [
+  //       nodeGlobalsPolyfillPlugin({
+  //         process: true,
+  //         buffer: true
+  //       }),
+  //       nodeModulesPolyfillPlugin()
+  //     ]
+  //   }
+  // },
   base: './',
   define: {
     'import.meta': 'import.meta',
@@ -86,7 +103,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      plugins: [nodePolyfill({ include: null }), addViteIgnorePlugin()],
+      plugins: [addViteIgnorePlugin()],
       output: {
         banner: (chunk) => {
           if (chunk.name === 'index') {

@@ -13,13 +13,21 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import nodePolyfill from 'rollup-plugin-polyfill-node'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import path from 'node:path'
 // https://vitejs.dev/config/
 export default defineConfig({
   base: './',
   plugins: [
     vue(),
     vueJsx(),
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+        global: true,
+        process: true
+      }
+    }),
     {
       name: 'vite-plugin-style-inline-loader',
       apply: 'build',
@@ -46,13 +54,17 @@ export default defineConfig({
   publicDir: false,
   resolve: {
     alias: {
-      assert: 'rollup-plugin-node-polyfills/polyfills/assert'
+      ...Object.fromEntries(
+        ['buffer', 'global', 'process'].map((k) => {
+          const location = `vite-plugin-node-polyfills/shims/${k}`
+          return [location, path.resolve(`node_modules/${location}/dist/index.cjs`)]
+        })
+      )
     }
   },
   build: {
     cssCodeSplit: true,
     rollupOptions: {
-      plugins: [nodePolyfill({ include: null })],
       external: [
         'vue',
         'vue-i18n',

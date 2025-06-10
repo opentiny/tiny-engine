@@ -5,7 +5,7 @@ import monacoEditorPluginCjs from 'vite-plugin-monaco-editor'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
-import nodePolyfill from 'rollup-plugin-polyfill-node'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import visualizerCjs from 'rollup-plugin-visualizer'
@@ -31,7 +31,17 @@ const getDefaultConfig = (engineConfig) => {
     publicDir: path.resolve(root, './public'),
     resolve: {
       extensions: ['.js', '.jsx', '.vue', '.ts', '.tsx'],
-      alias: {}
+      alias: {
+        ...Object.fromEntries(
+          ['buffer', 'global', 'process'].map((k) => {
+            const location = `vite-plugin-node-polyfills/shims/${k}`
+            return [
+              location,
+              path.resolve(`node_modules/@opentiny/tiny-engine-vite-config/node_modules/${location}/dist/index.cjs`)
+            ]
+          })
+        )
+      }
     },
     server: {
       // 这里保证本地启动服务是localhost,支持js多线程和谷歌浏览器读写本地文件api
@@ -75,7 +85,14 @@ const getDefaultConfig = (engineConfig) => {
           }
         }
       }),
-      vueJsx()
+      vueJsx(),
+      nodePolyfills({
+        globals: {
+          Buffer: true, // can also be 'build', 'dev', or false
+          global: true,
+          process: true
+        }
+      })
     ],
     optimizeDeps: {
       esbuildOptions: {
@@ -106,7 +123,6 @@ const getDefaultConfig = (engineConfig) => {
       minify: true,
       sourcemap: false,
       rollupOptions: {
-        plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
         input: {
           index: path.resolve(process.cwd(), './index.html'),
           preview: path.resolve(process.cwd(), './preview.html')
