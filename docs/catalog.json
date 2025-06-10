@@ -87,7 +87,7 @@
           "name": "changelog",
           "articles": [
             { "title": "更新日志", "name": "changelog.md" },
-            { "title": "v2.6升级指南", "name": "v2.6-upgrade-guide.md" }
+            { "title": "v2.7升级指南", "name": "v2.7-upgrade-guide.md" }
           ]
         },
         {

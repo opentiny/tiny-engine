@@ -48,7 +48,7 @@
   - [前后端启动联调(Java服务端)](./development-getting-started/debugging-of-java-backend.md)
 - 更新日志
   - [更新日志](./changelog/changelog.md)
-  - [v2.6升级指南](./changelog/v2.6-upgrade-guide.md)
+  - [v2.7升级指南](./changelog/v2.7-upgrade-guide.md)
 - 解决方案
   - [Java服务端部署](./solutions/server-deployment-solution-java.md)
   - [Node.js服务端部署](./solutions/server-deployment-solution.md)
