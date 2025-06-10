@@ -42,8 +42,8 @@
           <tr-bubble-list v-else :items="activeMessages" :roles="roles"></tr-bubble-list>
           <template #footer>
             <tr-sender
+              class="footer-sender"
               ref="senderRef"
-              mode="multiple"
               v-model="inputContent"
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
@@ -786,6 +786,10 @@ export default {
     svg {
       font-size: 20px;
     }
+  }
+
+  .footer-sender {
+    padding: 10px 15px;
   }
 }
 
