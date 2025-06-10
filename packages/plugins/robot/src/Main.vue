@@ -82,17 +82,9 @@
 
 <script lang="ts">
 import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
-import { Notify, Loading, TinyPopover, TinyDialogBox, TinyButton } from '@opentiny/vue'
+import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
 import { useCanvas, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import {
-  TrContainer,
-  TrWelcome,
-  TrPrompts,
-  TrBubbleList,
-  TrSender,
-  TrFeedback,
-  TrAttachments
-} from '@opentiny/tiny-robot'
+import { TrContainer, TrWelcome, TrBubbleList, TrSender, TrFeedback, TrAttachments } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
@@ -105,19 +97,17 @@ import {
 } from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
+import { chatStream } from './js/utils'
 
 export default {
   components: {
-    TinyPopover,
-    TinyDialogBox,
-    TinyButton,
+    TinyPopover: TinyPopover as unknown,
+    TinyDialogBox: TinyDialogBox as unknown,
     RobotSettingPopover,
     TrContainer,
     TrWelcome,
-    TrPrompts,
     TrBubbleList,
     TrSender,
-    TrFeedback,
     TrAttachments,
     IconNewSession,
     SchemaRenderer
@@ -215,7 +205,7 @@ export default {
       showPreview.value = false
     }
 
-    const fixedJson = (op) => {
+    const _fixedJson = (op) => {
       // 修正 path：替换 ; 和 : 为 /
       if (op.path) {
         op.path = op.path.replace(/[;:]/g, '/').replace(/\/+/g, '/')
@@ -235,6 +225,7 @@ export default {
             op.value = { [key.trim()]: val.trim() }
           }
         } catch (e) {
+          // eslint-disable-next-line no-console
           console.warn('Failed to parse style:', op.value)
         }
       }
@@ -242,48 +233,101 @@ export default {
       return op
     }
 
-    const sendRequest = () => {
-      getMetaApi(META_SERVICE.Http)
-        .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
-        .then((res: any) => {
-          const { choices } = res
-          const chatMessage = choices[0]?.message
-          try {
-            const regex = /```json([\s\S]*?)```/
-            const match = chatMessage?.content.match(regex)
+    // 处理响应
+    const handleResponse = (res: { id: string; chatMessage: any }) => {
+      try {
+        const regex = /```json([\s\S]*?)```/
+        const match = chatMessage?.content.match(regex)
 
-            if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
-              const newValue = JSON.parse(match[1])
-              // 使用 applyPatch 修改 Schema
-              const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+        if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
+          const newValue = JSON.parse(match[1])
+          // 使用 applyPatch 修改 Schema
+          const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
 
-              sessionProcess.messages.push(
-                getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
-              )
-              sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
-              messages.value[messages.value.length - 1].content = MESSAGE_TIP
-              messages.value[messages.value.length - 1].schema = result
-              messages.value[messages.value.length - 1].id = res.id
-            } else {
-              sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
-              sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
-              messages.value[messages.value.length - 1].content = chatMessage?.content
+          sessionProcess.messages.push(
+            getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
+          )
+          sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
+          messages.value[messages.value.length - 1].content = MESSAGE_TIP
+          messages.value[messages.value.length - 1].schema = result
+          messages.value[messages.value.length - 1].id = res.id
+        } else {
+          sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
+          sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
+          messages.value[messages.value.length - 1].content = chatMessage?.content
+        }
+        setContextSession()
+        inProcesing.value = false
+        connectedFailed.value = false
+      } catch (e) {
+        messages.value[messages.value.length - 1].content = '处理响应时出错'
+        inProcesing.value = false
+        connectedFailed.value = false
+      }
+    }
+
+    // 发送流式请求
+    const _sendStreamRequest = async () => {
+      const requestData = getSendSeesionProcess()
+      if (requestData.foundationModel) {
+        requestData.foundationModel.stream = true
+      }
+
+      let streamContent = ''
+      const chatId = Date.now().toString()
+      await chatStream(
+        {
+          requestUrl: '/app-center/api/ai/chat',
+          requestData
+        },
+        {
+          onData: (data) => {
+            const choice = data.choices?.[0]
+            if (choice && choice.delta.content) {
+              if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+              }
+              if (streamContent !== messages.value[messages.value.length - 1].content) {
+                messages.value[messages.value.length - 1].content = ''
+              }
+              streamContent += choice.delta.content
+              messages.value[messages.value.length - 1].content += choice.delta.content
             }
-            setContextSession()
+          },
+          onError: (error) => {
+            messages.value[messages.value.length - 1].content = '连接失败'
+            localStorage.removeItem('aiChat')
             inProcesing.value = false
             connectedFailed.value = false
-          } catch (e) {
-            messages.value[messages.value.length - 1].content = '处理响应时出错'
-            inProcesing.value = false
-            connectedFailed.value = false
+            // eslint-disable-next-line no-console
+            console.error('Stream error:', error)
+          },
+          onDone: () => {
+            handleResponse({
+              id: chatId,
+              chatMessage: {
+                role: 'assistant',
+                content: streamContent || '没有返回内容',
+                name: 'AI'
+              }
+            })
           }
+        }
+      )
+    }
+
+    const sendRequest = async () => {
+      try {
+        const res: any = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/chat', getSendSeesionProcess(), {
+          timeout: 600000
         })
-        .catch(() => {
-          messages.value[messages.value.length - 1].content = '连接失败'
-          localStorage.removeItem('aiChat')
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
+        handleResponse({ id: res.id, chatMessage: res.choices[0].message })
+      } catch (error) {
+        messages.value[messages.value.length - 1].content = '连接失败'
+        localStorage.removeItem('aiChat')
+        inProcesing.value = false
+        connectedFailed.value = false
+      }
     }
 
     const scrollContent = async () => {
@@ -387,7 +431,7 @@ export default {
         await sleep(1000)
         messages.value.push(getAiDisplayMessage('好的，正在执行相关操作，请稍等片刻...'))
         await scrollContent()
-        sendRequest()
+        await sendRequest()
       }
     }
 
@@ -505,6 +549,10 @@ export default {
         placement: 'start',
         avatar: aiAvatar,
         maxWidth: '80%',
+        type: 'markdown',
+        mdConfig: {
+          breaks: true
+        },
         slots: {
           footer: ({ bubbleProps }) => {
             return h(TrFeedback, {
@@ -528,7 +576,15 @@ export default {
           }
         }
       },
-      user: { placement: 'end', avatar: userAvatar, maxWidth: '80%' }
+      user: {
+        placement: 'end',
+        avatar: userAvatar,
+        maxWidth: '80%',
+        type: 'markdown',
+        mdConfig: {
+          breaks: true
+        }
+      }
     })
 
     // 处理文件选择事件
@@ -588,6 +644,7 @@ export default {
             }
           })
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('上传失败', error)
       }
     }
