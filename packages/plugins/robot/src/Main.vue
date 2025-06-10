@@ -73,7 +73,7 @@
           </template>
         </tr-container>
         <tiny-dialog-box v-model:visible="showPreview" title="当前AI渲染效果" width="80%">
-          <schema-renderer :schema="currentSchema"></schema-renderer>
+          <schema-renderer v-if="showPreview" :schema="currentSchema"></schema-renderer>
         </tiny-dialog-box>
       </div>
     </Teleport>
@@ -93,7 +93,6 @@ import {
   TrFeedback,
   TrAttachments
 } from '@opentiny/tiny-robot'
-import type { BubbleRoleConfig } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
@@ -211,7 +210,6 @@ export default {
         ...currentSchema.value,
         componentName: pageState.pageSchema.componentName
       }
-
       importSchema(value)
       setSaved(false)
       showPreview.value = false
@@ -254,26 +252,18 @@ export default {
             const regex = /```json([\s\S]*?)```/
             const match = chatMessage?.content.match(regex)
 
-            if (match && match[1]) {
-              // const jsonContent = match[1].trim().replace(
-              //   /(\s*)([a-zA-Z0-9_]+)(\s*):/g, // 匹配 key:
-              //   '$1"$2"$3:' // 替换成 "key":
-              // )
-              const jsonContent = chatMessage?.content.replace(/^```json|```$/g, '').trim()
-              const newValue = JSON.parse(jsonContent).map((op) => fixedJson(op))
+            if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
+              const newValue = JSON.parse(match[1])
+              // 使用 applyPatch 修改 Schema
+              const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
 
-              if (newValue && isValidFastJsonPatch(newValue)) {
-                // 使用 applyPatch 修改 Schema
-                const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
-
-                sessionProcess.messages.push(
-                  getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
-                )
-                sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
-                messages.value[messages.value.length - 1].content = MESSAGE_TIP
-                messages.value[messages.value.length - 1].schema = result
-                messages.value[messages.value.length - 1].id = res.id
-              }
+              sessionProcess.messages.push(
+                getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
+              )
+              sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
+              messages.value[messages.value.length - 1].content = MESSAGE_TIP
+              messages.value[messages.value.length - 1].schema = result
+              messages.value[messages.value.length - 1].id = res.id
             } else {
               sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
               sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
@@ -523,7 +513,7 @@ export default {
               },
               actions: [
                 { name: 'preview', label: '预览', icon: previewIcon },
-                { name: 'run', label: '运行', icon: saveIcon }
+                { name: 'run', label: '应用', icon: saveIcon }
               ],
               onAction(name) {
                 currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
@@ -542,10 +532,10 @@ export default {
     })
 
     // 处理文件选择事件
-    const handleSingleFilesSelected = (files: FileList | null) => {
-      if (!files.length) return
+    const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
+      if (!files.length && !retry) return
 
-      if (files && files.length > 1) {
+      if (files && files.length > 1 && !retry) {
         Notify({
           type: 'error',
           message: '当前仅支持上传一张图片',
@@ -555,7 +545,7 @@ export default {
         return
       }
 
-      if (files && files.length > 0) {
+      if (files && files.length > 0 && !retry) {
         // 将选中的文件转换为 Attachment 格式并添加到附件列表
         const newAttachments = Array.from(files).map((file, index) => ({
           uid: `${Date.now()}-${index}`,
@@ -567,38 +557,38 @@ export default {
           messageType: 'uploading',
           file: file
         }))
-
         singleAttachmentItems.value.push(...newAttachments)
+      }
 
-        // 开始上传
-        const formData = new FormData()
-        formData.append('modelName', String(sessionProcess.foundationModel.model))
-        formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
-        formData.append('file', files[0])
+      // 开始上传
+      const formData = new FormData()
+      const fileData = retry ? files : files[0]
+      formData.append('modelName', String(sessionProcess.foundationModel.model))
+      formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
+      formData.append('file', fileData)
 
-        try {
-          getMetaApi(META_SERVICE.Http)
-            .post('/app-center/api/ai/uploadFile', formData, {
-              headers: {
-                'Content-Type': 'multipart/form-data'
-              }
-            })
-            .then((res) => {
-              if (res?.url) {
-                imageUrl.value = res.url
-                singleAttachmentItems.value[0].status = 'done'
-                singleAttachmentItems.value[0].isUploading = false
-                singleAttachmentItems.value[0].messageType = 'success'
-              } else {
-                imageUrl.value = ''
-                singleAttachmentItems.value[0].status = 'error'
-                singleAttachmentItems.value[0].isUploading = false
-                singleAttachmentItems.value[0].messageType = 'error'
-              }
-            })
-        } catch (error) {
-          console.error('上传失败', error)
-        }
+      try {
+        getMetaApi(META_SERVICE.Http)
+          .post('/app-center/api/ai/uploadFile', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then((res) => {
+            if (res?.url) {
+              imageUrl.value = res.url
+              singleAttachmentItems.value[0].status = 'done'
+              singleAttachmentItems.value[0].isUploading = false
+              singleAttachmentItems.value[0].messageType = 'success'
+            } else {
+              imageUrl.value = ''
+              singleAttachmentItems.value[0].status = 'error'
+              singleAttachmentItems.value[0].isUploading = false
+              singleAttachmentItems.value[0].messageType = 'error'
+            }
+          })
+      } catch (error) {
+        console.error('上传失败', error)
       }
     }
 
@@ -607,7 +597,7 @@ export default {
     }
 
     const handleSingleFileRetry = (file) => {
-      handleSingleFilesSelected([file])
+      handleSingleFilesSelected(file, true)
     }
 
     return {

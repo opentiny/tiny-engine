@@ -117,17 +117,14 @@ export const isValidOperation = (operation) => {
   if (typeof operation !== 'object' || operation === null) {
       return false;
   }
-
   // 检查操作类型是否有效
   if (!operation.op || !allowedOps.includes(operation.op)) {
       return false;
   }
-
   // 检查path字段是否存在且为字符串
   if (!operation.path || typeof operation.path !== 'string') {
       return false;
   }
-
   // 根据操作类型检查其他必需字段
   switch (operation.op) {
       case 'add':
