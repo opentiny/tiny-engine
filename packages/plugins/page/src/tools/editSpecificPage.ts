@@ -6,9 +6,9 @@ const inputSchema = z.object({
 })
 
 export const editSpecificPage = {
-  name: 'Edit specific page',
+  name: 'Edit page in canvas.',
   order: 9,
-  description: 'Edit a specific page in canvas. Use this tool when you need to edit a specific page in canvas.',
+  description: 'Edit a specific page in canvas. Use this tool when you need to edit some page in canvas.',
   inputSchema,
   handler: async (args: z.infer<typeof inputSchema> & { toolCallId: string }) => {
     const { id } = args
