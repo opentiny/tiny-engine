@@ -467,8 +467,9 @@ const generateNode = ({ type, component }) => {
   const snippet = getSnippet(component) || {}
   const material = getMaterial(component)
   // 判断是否要加基础样式
-  const notUseBaseStyle = material.configure?.notUseBaseStyle
-  const useBaseStyle = getOptions(meta.id).useBaseStyle && !notUseBaseStyle
+  const materialUseBaseStyle = material.configure?.useBaseStyle
+  const globalUseBaseStyle = getOptions(meta.id).useBaseStyle
+  const useBaseStyle = globalUseBaseStyle && materialUseBaseStyle !== false
   const schema = {
     componentName: component,
     ...snippet,
