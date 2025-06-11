@@ -3,9 +3,12 @@
     <tiny-form-item label="事件名" prop="eventName">
       <tiny-input class="event-name" v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
         <template #suffix>
-          <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
+          <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="manual" popperClass="option-popper">
             <template #reference>
-              <tiny-icon-rich-text-link :class="{ 'bind-propertys': isUpdateEvent }" />
+              <tiny-icon-rich-text-link
+                :class="{ 'bind-propertys': isUpdateEvent }"
+                @click="state.showPopover = !state.showPopover"
+              />
             </template>
             <div class="property-list">
               <div class="property-list-title">
@@ -16,7 +19,7 @@
                 <li
                   v-for="(item, index) in state.propertys"
                   :key="index"
-                  :class="{ existed: state.events.hasOwnProperty('onUpdate:' + item.property) }"
+                  :class="{ existed: eventNameList.has(`onUpdate:${item.property}`) }"
                   @click="usePropertysToBeEvent(item)"
                 >
                   <div>{{ item.property }}</div>
@@ -66,6 +69,7 @@ export default {
     })
     const eventNameTip = '事件名为小写字符开头的驼峰形式，例：customEvent'
     const linked = computed(() => (getEditEvent() || {}).linked)
+    const eventNameList = computed(() => new Set(Object.keys(state.events)))
 
     const label = computed({
       get: () => getEditEvent()?.label?.zh_CN || '',
@@ -140,6 +144,7 @@ export default {
       formData,
       description,
       eventNameTip,
+      eventNameList,
       isUpdateEvent,
       changeEventName,
       usePropertysToBeEvent
