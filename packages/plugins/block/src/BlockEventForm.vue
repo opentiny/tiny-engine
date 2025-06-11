@@ -1,7 +1,7 @@
 <template>
   <tiny-form label-position="left" label-width="60px" show-message :model="formData" :rules="rules">
     <tiny-form-item label="事件名" prop="eventName">
-      <tiny-input v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
+      <tiny-input class="event-name" v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
         <template #suffix>
           <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="hover" popperClass="option-popper">
             <template #reference>
@@ -155,8 +155,14 @@ export default {
   border-top: 1px solid var(--te-block-event-link-border-color);
 }
 
-.bind-propertys {
-  fill: var(--te-component-common-block-add-text-color);
+.event-name {
+  :deep(.tiny-input__inner.tiny-input__inner) {
+    padding-right: var(--tv-Input-suffix-padding-right);
+    padding-left: var(--tv-Input-suffix-padding-left);
+  }
+  .bind-propertys {
+    fill: var(--te-component-common-block-add-text-color);
+  }
 }
 
 .property-list {
