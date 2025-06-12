@@ -243,7 +243,7 @@ const generateThirdPartyDeps = (components: Component[]) => {
   const scripts: {
     package: string
     script?: string
-    components: Record<string, { exportName: string; destructuring: boolean }>
+    components: Record<string, { exportName?: string; destructuring: boolean }>
   }[] = []
 
   components.forEach((item) => {
