@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -11,7 +11,7 @@
  */
 
 import fs from 'fs'
-import { transform } from '../transform.js'
+import { transform } from '../../src/transform.js'
 import { fileURLToPath } from 'node:url'
 import * as path from 'path'
 

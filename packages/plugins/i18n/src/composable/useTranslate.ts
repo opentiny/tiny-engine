@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.translate.useTranslate */
 import { reactive, ref } from 'vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'

@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceList */
 import { onMounted, reactive, ref } from 'vue'
 import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { fetchDataSourceList, fetchDataSourceDetail } from './js/http'

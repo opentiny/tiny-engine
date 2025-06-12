@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.BlockProperty */
 import { computed } from 'vue'
 import BlockGuide from './BlockGuide.vue'
 import BlockPropertyList from './BlockPropertyList.vue'

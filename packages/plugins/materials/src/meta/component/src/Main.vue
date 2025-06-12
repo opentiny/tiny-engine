@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.materials.component.Main */
 import { inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty, CanvasDragItem } from '@opentiny/tiny-engine-common'

@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceType */
 import { watch, ref } from 'vue'
 import { Form, FormItem, RadioGroup, Radio } from '@opentiny/vue'
 

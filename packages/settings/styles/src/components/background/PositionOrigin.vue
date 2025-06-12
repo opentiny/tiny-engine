@@ -38,6 +38,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.PositionOrigin */
 import { reactive } from 'vue'
 import InputSelect from '../inputs/InputSelect.vue'
 import { BACKGROUND_PROPERTY } from '../../js/styleProperty'

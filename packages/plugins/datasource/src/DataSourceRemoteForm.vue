@@ -28,6 +28,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceRemoteForm */
 import { reactive, watchEffect, ref } from 'vue'
 import { Form, FormItem, Input, Select } from '@opentiny/vue'
 

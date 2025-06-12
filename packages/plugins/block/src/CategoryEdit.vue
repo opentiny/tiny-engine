@@ -37,6 +37,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.blockmanage.CategoryEdit */
 import { defineProps, defineEmits, ref, reactive, computed, watch } from 'vue'
 import { pinyin } from 'pinyin-pro'
 import {

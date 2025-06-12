@@ -4,6 +4,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.ResetButton */
 import { Button } from '@opentiny/vue'
 
 export default {

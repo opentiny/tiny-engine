@@ -49,6 +49,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.Main */
 import { reactive, watch, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'

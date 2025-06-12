@@ -85,6 +85,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.blockmanage.BlockSetting */
 import { reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { useLayout, useModal, getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'

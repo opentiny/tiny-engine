@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceFieldList */
 import { reactive, watchEffect } from 'vue'
 import fieldTypes from './config'
 import DataSourceFieldForm from './DataSourceFieldForm.vue'

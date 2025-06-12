@@ -427,7 +427,7 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
         })
       }
 
-      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+      attributes.push(isJSX ? `${key}={${iconName}}` : `:${key}="${iconName}"`)
 
       delete props[key]
     }

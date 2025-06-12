@@ -39,6 +39,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.EditorI18nTool */
 import { reactive, ref, computed } from 'vue'
 import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'

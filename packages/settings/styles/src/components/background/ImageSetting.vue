@@ -58,6 +58,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.ImageSetting */
 import { reactive, defineProps, defineEmits, onMounted } from 'vue'
 import { Input as TinyInput } from '@opentiny/vue'
 import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'

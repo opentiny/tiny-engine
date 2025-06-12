@@ -32,6 +32,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceField */
 import { reactive, ref, watchEffect, nextTick } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceFieldList from './DataSourceFieldList.vue'

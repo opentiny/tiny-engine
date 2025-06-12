@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.properties.useProperties */
 import { toRaw, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'

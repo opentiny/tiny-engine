@@ -38,6 +38,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.BindEventsDialogContent */
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Input, Checkbox } from '@opentiny/vue'

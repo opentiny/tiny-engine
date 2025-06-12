@@ -80,6 +80,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.collections.DataSourceRecordList */
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'

@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.blockmanage.js-blockSetting */
 import { ref, reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { remove } from '@opentiny/vue-renderless/common/array'

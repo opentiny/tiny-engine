@@ -128,6 +128,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.GridBox */
 import { reactive, watchEffect } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { MetaListItems, MaskModal } from '@opentiny/tiny-engine-common'

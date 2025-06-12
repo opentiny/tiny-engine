@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.RemoteDataAdapterForm */
 import { ref } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 

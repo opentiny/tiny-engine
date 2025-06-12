@@ -108,6 +108,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.BlockConfig */
 import { reactive, ref, computed, nextTick, watchEffect } from 'vue'
 import { Input, Tag, Button, Form, FormItem, Radio, Select, Option } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'

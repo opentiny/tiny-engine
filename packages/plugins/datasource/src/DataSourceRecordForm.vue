@@ -46,6 +46,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceRecordForm */
 import { computed, reactive, ref, watch } from 'vue'
 import { Button, Input, Numeric, DatePicker, Form, FormItem, Switch, Slider } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'

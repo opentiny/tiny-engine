@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.setting.styles.useLayout */
 export default ({ style, updateStyle }) => {
   // 更新 layout 到 style 对象，并更新 schema
   const updateLayout = (layout) => {

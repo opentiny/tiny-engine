@@ -5,6 +5,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.SelectOption */
 import { Select, Option } from '@opentiny/vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'
 import { computed } from 'vue'

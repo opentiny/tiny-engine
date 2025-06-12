@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.blockmanage.js-http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 区块管理 -- 获取区块列表

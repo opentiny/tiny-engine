@@ -20,6 +20,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.event.Main */
 import { ref, reactive, provide, defineProps, defineEmits } from 'vue'
 import { Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import BindEvents from './components/BindEvents.vue'

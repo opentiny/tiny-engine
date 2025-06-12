@@ -218,6 +218,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.PositionGroup */
 import { reactive, watchEffect } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { SelectConfigurator } from '@opentiny/tiny-engine-configurator'

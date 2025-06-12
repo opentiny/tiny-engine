@@ -79,6 +79,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.Main */
 import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {

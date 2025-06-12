@@ -67,6 +67,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.CreateStore */
 import { getCurrentInstance, reactive, ref, computed, watch } from 'vue'
 import { Form, FormItem, Input, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { MonacoEditor } from '@opentiny/tiny-engine-common'

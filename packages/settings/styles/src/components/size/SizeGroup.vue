@@ -189,6 +189,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.SizeGroup */
 import { reactive, ref, computed } from 'vue'
 import { Tooltip, Popover, Input } from '@opentiny/vue'
 import { MaskModal } from '@opentiny/tiny-engine-common'

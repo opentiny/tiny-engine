@@ -25,6 +25,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.SpacingSetting */
 import { computed } from 'vue'
 import ResetButton from '../inputs/ResetButton.vue'
 import NumericSelect from '../inputs/NumericSelect.vue'

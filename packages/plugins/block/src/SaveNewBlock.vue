@@ -41,6 +41,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.SaveNewBlock */
 import { reactive, computed, ref } from 'vue'
 import { Input, Form, FormItem, Button, DialogBox, Select } from '@opentiny/vue'
 import { useBlock, useLayout, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'

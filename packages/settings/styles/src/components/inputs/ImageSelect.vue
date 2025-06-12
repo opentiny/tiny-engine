@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.ImageSelect */
 import { toRefs, reactive } from 'vue'
 import { Input, FileUpload } from '@opentiny/vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'

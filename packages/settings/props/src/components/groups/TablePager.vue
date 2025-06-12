@@ -10,6 +10,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.TablePager */
 import { reactive } from 'vue'
 import { useModal } from '@opentiny/tiny-engine-common'
 import { MetaModal } from '@opentiny/tiny-engine-common'

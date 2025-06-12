@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.material.useMaterial */
 import { reactive } from 'vue'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin-component'

@@ -1,11 +1,6 @@
+/* metaService: engine.toolbars.themeSwitch.composable-index */
 import { reactive, ref } from 'vue'
-import {
-  defineService,
-  getMetaApi,
-  getMergeMeta,
-  META_SERVICE,
-  getMergeRegistry
-} from '@opentiny/tiny-engine-meta-register'
+import { defineService, getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { setGlobalMonacoEditorTheme } from '@opentiny/tiny-engine-common'
 
 const THEME_DATA = ref<any[]>([])
@@ -42,7 +37,7 @@ export default defineService({
   type: 'MetaService',
   init: () => {
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-    THEME_DATA.value = getMergeRegistry('themes')
+    THEME_DATA.value = getMergeMeta('engine.config')?.themesList || []
     DEFAULT_THEME = THEME_DATA.value[0]
     const theme =
       localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme || DEFAULT_THEME.type

@@ -30,6 +30,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.layout.ToolbarCollapse */
 import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'

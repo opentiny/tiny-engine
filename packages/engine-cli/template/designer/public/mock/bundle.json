@@ -43,7 +43,7 @@
               "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -283,6 +283,473 @@
           "id": 1,
           "version": "2.4.2",
           "name": {
+            "zh_CN": "日期选择器"
+          },
+          "component": "ElDatePicker",
+          "icon": "datepick",
+          "description": "日期选择器",
+          "doc_url": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "dev_mode": "proCode",
+          "npm": {
+            "package": "element-plus",
+            "exportName": "ElDatePicker",
+            "destructuring": true
+          },
+          "group": "表单组件",
+          "category": "element-plus",
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "isPopper": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": ["type", "size"]
+            },
+            "contextMenu": {
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "disable": []
+            },
+            "invalidity": [""],
+            "clickCapture": true,
+            "framework": "Vue"
+          },
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "modelValue",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "绑定值"
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "string",
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "readonly",
+                    "label": {
+                      "text": {
+                        "zh_CN": "只读"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否只读"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "disabled",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "尺寸"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "输入框尺寸"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "string",
+                    "defaultValue": "",
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "allowClear": true,
+                        "options": [
+                          {
+                            "label": "large",
+                            "value": "large"
+                          },
+                          {
+                            "label": "default",
+                            "value": "default"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "editable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否可编辑"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "文本框是否可编辑"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "clearable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否可清除"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示清楚按钮"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "placeholder",
+                    "label": {
+                      "text": {
+                        "zh_CN": "占位文本"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "非范围选择时的占位内容"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "defaultValue": "",
+                    "type": "string",
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "start-placeholder",
+                    "label": {
+                      "text": {
+                        "zh_CN": "起始占位文本"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "范围选择时开始日期的占位内容"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "defaultValue": "",
+                    "type": "string",
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "end-placeholder",
+                    "label": {
+                      "text": {
+                        "zh_CN": "结束占位文本"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "范围选择时结束日期的占位内容"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "defaultValue": "",
+                    "type": "string",
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "type",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "显示类型"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "defaultValue": "date",
+                    "type": "string",
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "year",
+                            "value": "year"
+                          },
+                          {
+                            "label": "years",
+                            "value": "years"
+                          },
+                          {
+                            "label": "month",
+                            "value": "month"
+                          },
+                          {
+                            "label": "months",
+                            "value": "months"
+                          },
+                          {
+                            "label": "date",
+                            "value": "date"
+                          },
+                          {
+                            "label": "dates",
+                            "value": "dates"
+                          },
+                          {
+                            "label": "datetime",
+                            "value": "datetime"
+                          },
+                          {
+                            "label": "week",
+                            "value": "week"
+                          },
+                          {
+                            "label": "datetimerange",
+                            "value": "datetimerange"
+                          },
+                          {
+                            "label": "daterange",
+                            "value": "daterange"
+                          },
+                          {
+                            "label": "monthrange",
+                            "value": "monthrange"
+                          },
+                          {
+                            "label": "yearrange",
+                            "value": "yearrange"
+                          }
+                        ]
+                      }
+                    },
+                    "device": []
+                  },
+                  {
+                    "property": "popper-class",
+                    "label": {
+                      "text": {
+                        "zh_CN": "下拉框类名"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "DatePicker 下拉框的类名"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "defaultValue": "",
+                    "type": "string",
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "device": []
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onUpdate:modelValue": {
+                "label": {
+                  "zh_CN": "双向绑定值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "双向绑定值改变时触发"
+                }
+              },
+              "onChange": {
+                "label": {
+                  "zh_CN": "用户确认选定的值时触发"
+                },
+                "description": {
+                  "zh_CN": "用户确认选定的值时触发"
+                },
+                "type": "event",
+                "defaultValue": ""
+              },
+              "onBlur": {
+                "label": {
+                  "zh_CN": "在组件 Input 失去焦点时触发"
+                },
+                "description": {
+                  "zh_CN": "在组件 Input 失去焦点时触发"
+                },
+                "type": "event",
+                "defaultValue": ""
+              },
+              "onFocus": {
+                "label": {
+                  "zh_CN": "在组件 Input 获得焦点时触发"
+                },
+                "description": {
+                  "zh_CN": "在组件 Input 获得焦点时触发"
+                },
+                "type": "event",
+                "defaultValue": ""
+              },
+              "onCalendarChange": {
+                "label": {
+                  "zh_CN": "在日历所选日期更改时触发"
+                },
+                "description": {
+                  "zh_CN": "在日历所选日期更改时触发"
+                },
+                "type": "event",
+                "defaultValue": ""
+              },
+              "onPanelChange": {
+                "label": {
+                  "zh_CN": "当日期面板改变时触发。"
+                },
+                "description": {
+                  "zh_CN": "当日期面板改变时触发。"
+                },
+                "type": "event",
+                "defaultValue": ""
+              },
+              "onVisibleChange": {
+                "label": {
+                  "zh_CN": "当 DatePicker 的下拉列表出现/消失时触发"
+                },
+                "description": {
+                  "zh_CN": "当 DatePicker 的下拉列表出现/消失时触发"
+                },
+                "type": "event",
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "自定义单元格内容"
+                },
+                "description": {
+                  "zh_CN": "自定义单元格内容"
+                }
+              },
+              "range-separator": {
+                "label": {
+                  "zh_CN": "自定义范围分割符内容"
+                },
+                "description": {
+                  "zh_CN": "自定义范围分割符内容"
+                }
+              }
+            }
+          }
+        },
+        {
+          "id": 1,
+          "version": "2.4.2",
+          "name": {
             "zh_CN": "按钮"
           },
           "component": "ElButton",
@@ -319,7 +786,7 @@
               "properties": ["type", "size"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -636,7 +1103,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -1087,7 +1554,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -1432,7 +1899,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -2665,7 +3132,7 @@
               "properties": ["inline", "label-width"]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
               "disable": []
             },
             "invalidity": [""],
@@ -8439,26 +8906,6 @@
                 },
                 "content": [
                   {
-                    "property": "showEditIcon",
-                    "label": {
-                      "text": {
-                        "zh_CN": "显示编辑图标"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "CheckBoxConfigurator",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "是否显示标题后编辑 ICON"
-                    },
-                    "labelPosition": "left"
-                  },
-                  {
                     "property": "tabs",
                     "label": {
                       "text": {
@@ -11170,35 +11617,6 @@
                 },
                 "content": [
                   {
-                    "property": "horizontal",
-                    "type": "Boolean",
-                    "defaultValue": {
-                      "type": "i18n",
-                      "zh_CN": "布局",
-                      "en_US": "layout",
-                      "key": ""
-                    },
-                    "label": {
-                      "text": {
-                        "zh_CN": "水平布局"
-                      }
-                    },
-                    "cols": 12,
-                    "rules": [],
-                    "hidden": false,
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "widget": {
-                      "component": "CheckBoxConfigurator",
-                      "props": {}
-                    },
-                    "description": {
-                      "zh_CN": "节点和文字横向布局"
-                    },
-                    "labelPosition": "left"
-                  },
-                  {
                     "property": "vertical",
                     "type": "Boolean",
                     "defaultValue": {
@@ -12632,7 +13050,7 @@
                         "zh_CN": "加减按钮位置"
                       }
                     },
-                    "required": true,
+                    "required": false,
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
@@ -13380,7 +13798,7 @@
               "name": {
                 "zh_CN": "互斥按钮组"
               },
-              "icon": "buttons",
+              "icon": "MutexButtons",
               "snippetName": "TinyButtonGroup",
               "screenshot": "",
               "schema": {
@@ -13661,7 +14079,7 @@
                 "props": {
                   "allow-empty": true,
                   "placeholder": "请输入",
-                  "controlsPosition": "right",
+                  "controls-position": "right",
                   "step": 1
                 }
               }
@@ -13922,7 +14340,7 @@
                 "props": {
                   "modelValue": "",
                   "placeholder": "请选择",
-                  "gridOp": {
+                  "grid-op": {
                     "columns": [
                       {
                         "field": "id",
@@ -14245,6 +14663,15 @@
             "zh_CN": "Element Plus组件"
           },
           "children": [
+            {
+              "name": {
+                "zh_CN": "日期选择器"
+              },
+              "icon": "datepick",
+              "screenshot": "",
+              "snippetName": "ElDatePicker",
+              "schema": {}
+            },
             {
               "name": {
                 "zh_CN": "输入框"

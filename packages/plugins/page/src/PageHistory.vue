@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.appmanage.PageHistory */
 import { ref, watchEffect } from 'vue'
 import { BlockHistoryList } from '@opentiny/tiny-engine-common'
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'

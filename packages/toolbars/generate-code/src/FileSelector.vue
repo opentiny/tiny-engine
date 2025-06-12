@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.generate-code.FileSelector */
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
 import { reactive, computed, ref, nextTick } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'

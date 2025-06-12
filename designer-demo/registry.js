@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -9,116 +9,39 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import {
-  Breadcrumb,
-  Fullscreen,
-  Lang,
-  ViewSetting,
-  Logo,
-  Lock,
-  Media,
-  Redoundo,
-  Save,
-  Clean,
-  ThemeSwitch,
-  Preview,
-  GenerateCode,
-  Refresh,
-  Collaboration,
-  Materials,
-  State,
-  Script,
-  Tree,
-  Help,
-  Schema,
-  Page,
-  I18n,
-  Bridge,
-  Block,
-  Datasource,
-  Robot,
-  Props,
-  Events,
-  Styles,
-  Layout,
-  Canvas,
-  GenerateCodeService,
-  GlobalService,
-  ThemeSwitchService
-} from '@opentiny/tiny-engine'
+import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 
 export default {
-  root: {
-    id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
+  [META_SERVICE.Http]: HttpService,
+  'engine.config': {
+    ...engineConfig
   },
-  config: engineConfig,
-  layout: {
-    ...Layout,
+  // 调整插件顺序示例:
+  [META_APP.Layout]: {
     options: {
-      ...Layout.options,
-      isShowLine: true,
-      isShowCollapse: true,
-      toolbars: {
-        left: ['engine.toolbars.breadcrumb', 'engine.toolbars.lock', 'engine.toolbars.logo'],
-        center: ['engine.toolbars.media'],
-        right: [
-          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
-          ['engine.toolbars.preview'],
-          ['engine.toolbars.generate-code', 'engine.toolbars.save']
-        ],
-        collapse: [
-          ['engine.toolbars.collaboration'],
-          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang'],
-          ['engine.toolbars.viewSetting']
-        ]
+      relativeLayoutConfig: {
+        [META_APP.Page]: {
+          insertBefore: META_APP.State
+        },
+        // 调整插件顺序
+        [META_APP.OutlineTree]: {
+          insertAfter: META_APP.Materials
+        },
+        // 调整插件上下位置
+        [META_APP.Schema]: {
+          insertBefore: META_APP.Help
+        },
+        // 调整工具栏顺序
+        [META_APP.Save]: {
+          insertAfter: META_APP.GenerateCode
+        },
+        // 支持切换组
+        [META_APP.Lang]: {
+          insertAfter: META_APP.ViewSetting
+        }
       }
     }
-  },
-  themes: [
-    {
-      id: 'engine.theme.light'
-    },
-    {
-      id: 'engine.theme.dark'
-    }
-  ],
-  toolbars: [
-    ThemeSwitch,
-    Logo,
-    Breadcrumb,
-    Lock,
-    Media,
-    Redoundo,
-    Collaboration,
-    Clean,
-    Preview,
-    Refresh,
-    GenerateCode,
-    Save,
-    Fullscreen,
-    Lang,
-    ViewSetting
-  ],
-  plugins: [
-    Materials,
-    Tree,
-    Page,
-    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
-    Datasource,
-    Bridge,
-    I18n,
-    Script,
-    State,
-    Schema,
-    Help,
-    Robot
-  ],
-  dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [Props, Styles, Events],
-  canvas: Canvas
+  }
 }

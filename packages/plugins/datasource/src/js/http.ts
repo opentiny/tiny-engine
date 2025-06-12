@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.collections.js-http */
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { generateDataSource } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'

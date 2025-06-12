@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.fullscreen.Main */
 import { ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 

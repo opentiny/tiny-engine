@@ -88,6 +88,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.BackgroundGroup */
 import { reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'

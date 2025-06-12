@@ -52,6 +52,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.editorhelp.HelpIcon */
 import { reactive, onMounted, ref } from 'vue'
 import { Guide, Popover } from '@opentiny/vue'
 import { IconFilletExternalLink } from '@opentiny/vue-icon'

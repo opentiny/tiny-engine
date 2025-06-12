@@ -34,6 +34,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.CodeEditor */
 import { reactive, getCurrentInstance, ref, computed } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Collapse, CollapseItem, DialogBox } from '@opentiny/vue'

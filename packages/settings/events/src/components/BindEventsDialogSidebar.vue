@@ -17,6 +17,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.BindEventsDialogSidebar */
 import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Search } from '@opentiny/vue'
 import { inject, ref, watchEffect } from 'vue'

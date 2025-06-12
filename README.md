@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<p align="center">TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.</p>
+<p align="center">TinyEngine enables developers to customize low-code platforms, build low-code platforms online in real time, and support secondary development or integration of low-code platform capabilities.</p>
 
 English | [简体中文](README.zh-CN.md)
 
@@ -15,38 +15,52 @@ English | [简体中文](README.zh-CN.md)
 - Directly generate deployable source code without engine support.
 - Allows access to third-party components and customized extension plug-ins.
 - Supports high-code and low-code, and hybrid development and deployment of applications.
-- The platform accesses AI big model capabilities to help developers build applications.
+- The platform accesses LLM capabilities to help developers build applications.
 
 ## Documentation
 
 - intro：https://opentiny.design/tiny-engine#/home
-- tutorial：https://opentiny.design/tiny-engine#/help-center/course/engine
+- tutorial：https://opentiny.design/tiny-engine#/help-center/index
 - playground：https://opentiny.design/tiny-engine#/tiny-engine-editor
 
-## Development
+## Usage
 
-### Dependencies required for installation
+### Environment Setup
+
+- Install Node.js 18+
+
+- Install pnpm 9+
 
 ```sh
+$ npm install -g pnpm
+```
+
+### Create Low-Code Platform using CLI
+
+```sh
+# Create low-code platform
+$ npx @opentiny/engine-cli create-platform <name>
+# Enter the low-code platform directory
+$ cd <name>
+# Install dependencies
 $ pnpm install
 ```
 
 ### Local development: Start the local mock server and use the mock data of the local mock server.
 
+> The mock server included with the created low-code platform only provides basic backend mock functionality. If you need to experience the complete backend service capabilities, please refer to the Java backend startup instructions below.
+
 ```sh
 $ pnpm dev
 ```
 
-## Local development, directly connected to the local tiny-engine-webservice server
+### Local Development with Java Backend
 
-1. Start <a href="https://github.com/opentiny/tiny-engine-data-center/blob/main/README.md" target="_blank">tiny-engine-data-center</a>
+Java backend repository: https://github.com/opentiny/tiny-engine-backend-java
 
-2. Start <a href="https://github.com/opentiny/tiny-engine-webservice/blob/main/README.md" target="_blank">tiny-engine-webservice</a>
+Start Java backend for frontend-backend integration:
 
-3. Modify the origin value in `vite.config.js` in the `packages/design-core/` directory of the tiny-engine project to be the address port of your local webService project (the webService port defaults to 7011), such as:
-
-<img alt="Modify port" src="https://res.hc-cdn.com/lowcode-portal/1.1.55/img/docimg/backend_deploy_5.png">
-
+[Frontend-Backend Integration Documentation](https://opentiny.design/tiny-engine#/help-center/course/dev/debugging-of-java-backend)
 
 ### Materials Synchronization [Solution](https://opentiny.design/tiny-engine#/help-center/course/dev/material-sync-solution)
 
@@ -58,7 +72,7 @@ $ pnpm splitMaterials
 $ pnpm buildMaterials
 ```
 
-Open a browser: `http://localhost:8080/?type=app&id=1&tenant=1&pageid=NTJ4MjvqoVj8OVsc`
+Open a browser: `http://localhost:8080/?type=app&id=1&tenant=1&pageid=1`
 `url search` Parameters:
 
 - `type=app` Application type
@@ -69,16 +83,8 @@ Open a browser: `http://localhost:8080/?type=app&id=1&tenant=1&pageid=NTJ4MjvqoV
 ## Build
 
 ```sh
-# Build all plug-ins first
-pnpm build:plugin
-
 # Build Designer
-pnpm build:alpha or build:prod
-
-```
-The folder where the product is located after building
-```
- tiny-engine/packages/design-core/dist/
+pnpm run build:alpha or build:prod
 ```
 
 ## Milestones
@@ -91,7 +97,12 @@ axisFormat %Y-%m-%d
 1.0.0-beta.x version : 2023-09-25, 2024-05-20
 1.0.0-rc version(refactor version) : 2024-10-01
 1.0.0 version : 2024-11-01
-
+2.0.0 version : 2024-12-16
+2.1.0 version : 2025-01-02
+2.2.0 version : 2025-02-19
+2.3.0 version : 2025-03-14
+2.4.0 version : 2025-04-07
+2.5.0 version : 2025-05-15
 ```
 
 ## 🤝 Participation and Contribution
@@ -102,6 +113,16 @@ Please read the [Contribution Guide](CONTRIBUTING.md) before participating in th
 
 - Add official assistant WeChat opentiny-official and join the technical exchange group
 - Join the mailing list opentiny@googlegroups.com
+
+## ❤️ Acknowledgments
+
+Thanks to all the developers who have contributed to TinyEngine!
+
+<p align="center">
+  <a href="https://github.com/opentiny/tiny-engine/graphs/contributors" target="_blank">
+    <img alt="Contributors" src="https://contrib.rocks/image?repo=opentiny/tiny-engine">
+  </a>
+</p>
 
 ## License
 

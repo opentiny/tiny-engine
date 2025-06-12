@@ -56,6 +56,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.appmanage.PageTree */
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { Search, Collapse, CollapseItem, Popover } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'

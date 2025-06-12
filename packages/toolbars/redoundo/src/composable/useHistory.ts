@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.history.useHistory */
 import { reactive, isProxy, toRaw, watch } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 

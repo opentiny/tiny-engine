@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceRemoteDataResult */
 import { reactive, watchEffect, ref } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
 import { Button as TinyButton } from '@opentiny/vue'

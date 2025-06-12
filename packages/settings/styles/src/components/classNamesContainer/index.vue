@@ -102,6 +102,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.ClassNamesContainer-index */
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'

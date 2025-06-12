@@ -389,6 +389,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.SpacingGroup */
 import { computed, reactive, watch } from 'vue'
 import SpacingSetting from './SpacingSetting.vue'
 import ModalMask, { useModal } from '../inputs/ModalMask.vue'

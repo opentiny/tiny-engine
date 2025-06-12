@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.appmanage.http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 页面管理 -- 获取页面列表

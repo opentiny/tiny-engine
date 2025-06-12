@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.view-setting.Main */
 import { computed, ref, watch } from 'vue'
 import { useBroadcastChannel } from '@vueuse/core'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

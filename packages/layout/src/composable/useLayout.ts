@@ -10,13 +10,16 @@
  *
  */
 
+/* metaService: engine.service.layout.useLayout */
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import defaultLayout from '../defaultLayout'
+import { utils } from '@opentiny/tiny-engine-utils'
 
 const { PAGE_STATUS, STORAGE_KEY_LEFT_FIXED_PANELS, STORAGE_KEY_RIGHT_FIXED_PANELS, PLUGIN_DEFAULT_WIDTH } = constants
-
+const { deepClone } = utils
 // MetaApi 类型定义
 export interface IMetaApi {
   [key: string]: any
@@ -292,9 +295,10 @@ export default () => {
   }
 
   const getPluginsByPosition = (position: string, pluginList: IPlugin[]): IPlugin[] => {
-    return getPluginsByLayout(position)
+    const res = getPluginsByLayout(position)
       .map((pluginId) => getPluginById(pluginList, pluginId))
       .filter((plugin): plugin is IPlugin => Boolean(plugin))
+    return res
   }
 
   // 修改某个插件的布局
@@ -387,6 +391,124 @@ export default () => {
     pluginStorageReactive.value = pluginList
   }
 
+  const getIsUserCustomLayout = () => {
+    const defaultLayoutString = JSON.stringify(defaultLayout)
+    const userLayoutString = JSON.stringify(getMergeMeta('engine.layout')?.options?.layoutConfig)
+
+    return defaultLayoutString !== userLayoutString
+  }
+
+  const removeUndefineLayoutId = (layout) => {
+    if (Array.isArray(layout)) {
+      layout.forEach((item, index) => {
+        if (Array.isArray(item)) {
+          removeUndefineLayoutId(item)
+        }
+        // 对象类型，则递归遍历
+        else if (Object.prototype.toString.call(item) === '[object Object]') {
+          removeUndefineLayoutId(item)
+        }
+        // 注册表中找不到，则删除
+        else if (typeof item === 'string' && !getMergeMeta(item)) {
+          layout.splice(index, 1)
+        }
+      })
+    }
+
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        removeUndefineLayoutId(value)
+      })
+    }
+  }
+
+  const removeById = (layout, id) => {
+    if (Array.isArray(layout)) {
+      layout.forEach((item, index) => {
+        if (Array.isArray(item)) {
+          removeById(item, id)
+        } else if (Object.prototype.toString.call(item) === '[object Object]') {
+          removeById(item, id)
+        } else if (item === id) {
+          layout.splice(index, 1)
+        }
+      })
+    }
+
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        removeById(value, id)
+      })
+    }
+  }
+
+  const replaceByPosition = (layout, originId, targetId, position) => {
+    if (Array.isArray(layout)) {
+      for (let i = 0; i < layout.length; i++) {
+        const item = layout[i]
+        if (Array.isArray(item)) {
+          replaceByPosition(item, originId, targetId, position)
+        } else if (Object.prototype.toString.call(item) === '[object Object]') {
+          replaceByPosition(item, originId, targetId, position)
+        } else if (item === targetId) {
+          const insertIndex = position === 'before' ? i : i + 1
+          layout.splice(insertIndex, 0, originId)
+          // 完成替换，结束循环，提前 return
+          return
+        }
+      }
+      return
+    }
+
+    if (Object.prototype.toString.call(layout) === '[object Object]') {
+      Object.values(layout).forEach((value) => {
+        replaceByPosition(value, originId, targetId, position)
+      })
+    }
+  }
+
+  const computeFinalLayoutConfig = (layout, relativeLayoutConfig) => {
+    const finalLayoutConfig = deepClone(layout)
+
+    Object.entries(relativeLayoutConfig).forEach(([key, value]) => {
+      if (value.insertBefore) {
+        // 移除原来的 id
+        removeById(finalLayoutConfig, key)
+        // 插入到指定 id 前面
+        replaceByPosition(finalLayoutConfig, key, value.insertBefore, 'before')
+      } else if (value.insertAfter) {
+        // 移除原来的 id
+        removeById(finalLayoutConfig, key)
+        // 插入到指定 id 后面
+        replaceByPosition(finalLayoutConfig, key, value.insertAfter, 'after')
+      }
+    })
+
+    removeUndefineLayoutId(finalLayoutConfig)
+
+    return finalLayoutConfig
+  }
+
+  let finalLayoutConfig = null
+
+  const getFinalLayoutConfig = () => {
+    if (finalLayoutConfig) {
+      return finalLayoutConfig
+    }
+
+    const isUserCustomLayout = getIsUserCustomLayout()
+    // 用户传了自定义配置，则忽略 insertBefore insertAfter 的配置
+    if (isUserCustomLayout) {
+      finalLayoutConfig = getMergeMeta('engine.layout')?.options?.layoutConfig
+      return finalLayoutConfig
+    }
+
+    const relativeLayoutConfig = getMergeMeta('engine.layout')?.options?.relativeLayoutConfig || {}
+    finalLayoutConfig = computeFinalLayoutConfig(deepClone(defaultLayout), relativeLayoutConfig)
+
+    return finalLayoutConfig
+  }
+
   return {
     isPanelWidthResizable,
     getFixedPanelsStatus,
@@ -424,6 +546,7 @@ export default () => {
     changeMenuShown,
     getMoveDragBarState,
     changeMoveDragBarState,
-    getPluginsByPosition
+    getPluginsByPosition,
+    getFinalLayoutConfig
   }
 }

@@ -125,6 +125,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.materials.block.BlockGroup */
 import { inject, reactive, ref, nextTick } from 'vue'
 import {
   Input,

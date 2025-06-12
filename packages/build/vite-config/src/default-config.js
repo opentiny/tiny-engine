@@ -14,6 +14,7 @@ import { getBaseUrlFromCli, copyBundleDeps, importMapLocalPlugin } from './local
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
 import { canvasDevExternal } from './canvas-dev-external.js'
+import { treeShakingPlugin } from './vite-plugins/treeShakingPlugin.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -151,6 +152,7 @@ export function useTinyEngineBaseConfig(engineConfig) {
   const config = getDefaultConfig(engineConfig)
 
   config.plugins.push(
+    treeShakingPlugin(engineConfig.registryPath),
     createSvgIconsPlugin({
       iconDirs: engineConfig.iconDirs || [],
       symbolId: 'icon-[name]',
