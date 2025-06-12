@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceFieldCheck */
 import { computed, inject } from 'vue'
 import DataSourceFieldCheckMultipleLine from './DataSourceFieldCheckMultipleLine.vue'
 import DataSourceFieldCheckRanger from './DataSourceFieldCheckRanger.vue'

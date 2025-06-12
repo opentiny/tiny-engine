@@ -6,6 +6,7 @@
       :fixedPanels="fixedPanels"
       @close="pluginPanelClosed"
       :docsUrl="docsUrl"
+      :docsContent="docsContent"
       :isShowDocsIcon="true"
     >
       <template #header>
@@ -42,6 +43,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.appmanage.Main */
 import { reactive, ref, watchEffect, provide } from 'vue'
 import { useCanvas, usePage, useHelp, useModal, useNotify, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
@@ -62,6 +64,7 @@ export const api = {
   openPageSettingPanel
 }
 
+/* metaComponent: engine.plugins.page */
 export default {
   components: {
     PageSetting,
@@ -96,6 +99,7 @@ export default {
     const pageTreeRef = ref(null)
     const ROOT_ID = pageSettingState.ROOT_ID
     const docsUrl = useHelp().getDocsUrl('page')
+    const docsContent = '在这里新增页面/文件夹，还可以对已有的页面进行生命周期管理。'
 
     const state = reactive({
       isFolder: false
@@ -209,6 +213,7 @@ export default {
       createNewFolder,
       createNewPage,
       docsUrl,
+      docsContent,
       settingHome
     }
   }

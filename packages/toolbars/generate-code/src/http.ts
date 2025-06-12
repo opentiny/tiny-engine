@@ -10,6 +10,8 @@
  *
  */
 
+/* metaService: engine.toolbars.generate-code.http */
+
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const HEADER_LOWCODE_ORG = 'x-lowcode-org'

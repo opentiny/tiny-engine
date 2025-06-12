@@ -94,7 +94,7 @@ variableConfiguratorList 数组项目的格式如下
 
   
 
-  ![bindEvent]( ./imgs/bindEventApi.png)
+  ![bindEvent]( ../imgs/bindEventApi.png)
 
 由于内部逻辑复杂，暂时无法提取细粒度更小的逻辑提供扩展或者替换。建议复制一份组件代码，在原有代码基础上修改后替换
 

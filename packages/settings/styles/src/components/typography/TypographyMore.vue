@@ -76,6 +76,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.TypographyMore */
 import { reactive } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { IconPlus } from '@opentiny/vue-icon'

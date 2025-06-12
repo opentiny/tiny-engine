@@ -76,6 +76,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.BindEvents */
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import {
@@ -86,7 +87,8 @@ import {
   useBlock,
   useMaterial,
   getMetaApi,
-  META_APP
+  META_APP,
+  useMessage
 } from '@opentiny/tiny-engine-meta-register'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
@@ -190,6 +192,8 @@ export default {
 
       if (keys.indexOf(action.eventName) > -1) {
         delete pageState.currentSchema.props[action.eventName]
+
+        useMessage().publish({ topic: 'schemaChange', data: { props: pageState.currentSchema.props } })
       }
     }
 

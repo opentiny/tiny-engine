@@ -10,12 +10,14 @@
  *
  */
 
+/* metaService: engine.plugins.robot.js-robotSetting */
 import { reactive } from 'vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export const AIModelOptions = [
   { label: 'ChatGPT：gpt-3.5-turbo', value: 'gpt-3.5-turbo', manufacturer: 'openai' },
-  { label: '文心一言：ERNIE-4.0-8K', value: 'ERNIE-4.0-8K', manufacturer: 'baiduai' }
+  { label: '文心一言：ERNIE-4.0-8K', value: 'ERNIE-4.0-8K', manufacturer: 'baiduai' },
+  { label: 'DeepSeek：DeepSeek-V3', value: 'deepseek-chat', manufacturer: 'deepseek' }
 ]
 
 // 这里存放的是aichat的响应式数据

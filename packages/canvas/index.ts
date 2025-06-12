@@ -29,3 +29,5 @@ export default {
   layout: CanvasLayout,
   metas: [CanvasContainer]
 }
+
+export * from './DesignCanvas/src/api/types'

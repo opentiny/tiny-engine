@@ -22,6 +22,7 @@ export default defineConfig({
   resolve: {},
   publicDir: false,
   build: {
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
       name: 'plugin-materials',

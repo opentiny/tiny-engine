@@ -18,6 +18,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.ButtonGroup */
 import { Tooltip as TinyTooltip } from '@opentiny/vue'
 import { defineEmits, defineProps, ref, watch } from 'vue'
 

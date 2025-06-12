@@ -76,6 +76,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.appmanage.PageGeneral */
 import { ref, computed, watchEffect, reactive } from 'vue'
 import { Form, FormItem, Input, Select, Radio } from '@opentiny/vue'
 import { iconFile } from '@opentiny/vue-icon'
@@ -262,12 +263,10 @@ export default {
     const generalForm = ref(null)
 
     const validGeneralForm = () => {
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve) => {
         generalForm.value.validate((valid) => {
           if (valid) {
             resolve(valid)
-          } else {
-            reject(valid)
           }
         })
       })
@@ -327,6 +326,9 @@ export default {
     word-wrap: break-word;
     height: auto;
     line-height: 16px;
+    .text {
+      color: var(--te-page-manage-tip-text-color);
+    }
     .tip-text {
       width: 100%;
       color: var(--te-page-manage-tip-text-color);
@@ -339,7 +341,7 @@ export default {
 </style>
 <style lang="less">
 .tiny-select-dropdown.parent-fold-select-dropdown {
-  padding: 8px 0;
+  padding: 8px;
   .tiny-tree {
     .tiny-tree-node {
       .tiny-tree-node__content {

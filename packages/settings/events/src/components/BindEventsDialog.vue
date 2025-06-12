@@ -10,7 +10,12 @@
     @opened="openedDialog"
   >
     <div class="bind-event-dialog-tip">
-      选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。
+      <tiny-alert
+        type="info"
+        description="选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。"
+        class="header-alert"
+        :closable="false"
+      ></tiny-alert>
     </div>
     <div class="bind-event-dialog-content">
       <component :is="BindEventsDialogSidebar" :dialogVisible="dialogVisible" :eventBinding="eventBinding"></component>
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.BindEventsDialog */
 import { ast2String, string2Ast } from '@opentiny/tiny-engine-common/js/ast'
 import {
   getMergeMeta,
@@ -36,7 +42,7 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
-import { Button, DialogBox } from '@opentiny/vue'
+import { Button, DialogBox, TinyAlert } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
 import meta from '../../meta'
 
@@ -53,7 +59,8 @@ export const close = () => {
 export default {
   components: {
     TinyButton: Button,
-    TinyDialogBox: DialogBox
+    TinyDialogBox: DialogBox,
+    TinyAlert
   },
   inheritAttrs: false,
   props: {
@@ -143,6 +150,8 @@ export default {
     const getFunctionBody = () => {
       let method = getMethods()?.[state.bindMethodInfo.name]?.value
       let preBody = '{}'
+      let isAsync = false
+      let isGenerator = false
 
       if (method) {
         let astStr = {}
@@ -156,9 +165,21 @@ export default {
         if (astStr?.program?.body[0]?.body) {
           preBody = ast2String(astStr.program.body[0].body)
         }
+
+        if (astStr?.program?.body[0]?.async) {
+          isAsync = true
+        }
+
+        if (astStr?.program?.body[0]?.generator) {
+          isGenerator = true
+        }
       }
 
-      return preBody || '{\n}'
+      return {
+        preBody: preBody || '{\n}',
+        isAsync,
+        isGenerator
+      }
     }
 
     const activePagePlugin = () => {
@@ -193,13 +214,14 @@ export default {
       bindMethod({ ...state.bindMethodInfo, params, extra: extraParams })
 
       // 需要在bindMethod之后
-      const functionBody = getFunctionBody()
+      const { preBody: functionBody, isAsync, isGenerator } = getFunctionBody()
       const { name } = state.bindMethodInfo
+      const functionName = `${isAsync ? 'async' : ''} function${isGenerator ? '*' : ''} ${name}`
       const method = {
         name,
         content: state.enableExtraParams
-          ? `function ${name}(eventArgs,${formatParams}) ${functionBody}`
-          : `function ${name}(${formatParams})  ${functionBody}`
+          ? `${functionName}(eventArgs,${formatParams}) ${functionBody}`
+          : `${functionName}(${formatParams})  ${functionBody}`
       }
       const { beforeSaveMethod } = getOptions(meta.id)
 
@@ -247,10 +269,9 @@ export default {
 }
 
 .bind-event-dialog-tip {
-  padding: var(--te-common-vertical-item-spacing-normal) 14px;
-  margin-bottom: var(--te-common-vertical-item-spacing-normal);
-  background-color: var(--te-bind-event-dialog-tip-bg-color);
-  color: var(--te-bind-event-dialog-tip-text-color);
+  .tiny-alert.tiny-alert--normal {
+    margin: 12px 0;
+  }
 }
 
 .bind-event-dialog-content {

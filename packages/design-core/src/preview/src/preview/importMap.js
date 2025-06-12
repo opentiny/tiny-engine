@@ -11,28 +11,36 @@
  */
 
 import { useEnv } from '@opentiny/tiny-engine-meta-register'
-import { getSearchParams } from './http'
-import importMapJSON from './importMap.json'
+import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap'
 
 const importMap = {}
 
 const opentinyVueVersion = '~3.20'
 
 function replacePlaceholder(v) {
-  const versionDelimiter = useEnv().VITE_CDN_TYPE === 'npmmirror' ? '/' : '@'
-  const fileDelimiter = useEnv().VITE_CDN_TYPE === 'npmmirror' ? '/files' : ''
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_IMPORT_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_IMPORT_MAPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
 
   return v
-    .replace('${VITE_CDN_DOMAIN}', useEnv().VITE_CDN_DOMAIN)
+    .replace('${VITE_CDN_DOMAIN}', cdnDomain)
     .replace('${opentinyVueVersion}', opentinyVueVersion)
     .replace('${versionDelimiter}', versionDelimiter)
     .replace('${fileDelimiter}', fileDelimiter)
 }
 
-export const getImportMap = () => {
+export const getImportMap = (scripts = {}) => {
   importMap.imports = {
     ...Object.fromEntries(Object.entries(importMapJSON.imports).map(([k, v]) => [k, replacePlaceholder(v)])),
-    ...getSearchParams().scripts
+    ...scripts
   }
 
   return importMap

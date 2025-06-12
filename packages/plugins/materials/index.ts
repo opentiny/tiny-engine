@@ -46,3 +46,4 @@ export default {
 }
 
 export { entry, ResourceService, MaterialService }
+export * from './src/composable/types'

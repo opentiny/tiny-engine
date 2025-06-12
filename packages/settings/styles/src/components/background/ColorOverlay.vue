@@ -6,6 +6,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.ColorOverlay */
 import { ref, defineProps, defineEmits, onMounted } from 'vue'
 import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
 import { BACKGROUND_PROPERTY } from '../../js/styleProperty'

@@ -13,6 +13,7 @@
     }
   ],
   "state": {
+    "a.b": "test",
     "firstName": "Opentiny",
     "lastName": "TinyEngine",
     "nullValue": {

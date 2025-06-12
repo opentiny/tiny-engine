@@ -72,6 +72,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.AdvanceConfig */
 import { ref, computed, reactive, watch } from 'vue'
 import {
   CodeConfigurator,
@@ -288,11 +289,11 @@ export default {
       color: var(--te-events-advanced-binding-state-text-color);
       border: 1px solid var(--te-events-advanced-binding-state-border-color);
       font-size: 12px;
-      height: 30px;
-      line-height: 22px;
+      height: 24px;
+      line-height: 14px;
       padding: 4px 8px;
       --ellipsis-line: 1;
-      border-radius: 6px;
+      border-radius: var(--te-base-border-radius-1);
     }
 
     .advance-config-loop-wrap {

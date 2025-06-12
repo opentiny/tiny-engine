@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@opentiny/tiny-engine": "^2.0.0-alpha.3"
+    "@opentiny/tiny-engine": "^2.5.0"
   }
 }

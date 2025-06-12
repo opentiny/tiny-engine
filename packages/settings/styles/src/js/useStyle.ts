@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.setting.styles.useStyle */
 import { computed, reactive, watch } from 'vue'
 import { useCanvas, useHistory, useProperties as useProps, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'

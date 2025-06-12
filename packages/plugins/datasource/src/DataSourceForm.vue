@@ -21,25 +21,30 @@
         <!-- dataSource name -->
         <data-source-name v-model="state.dataSource.name"></data-source-name>
 
-        <!-- dataSource field -->
-        <data-source-field
-          v-model="state.dataSource.data.columns"
-          :editable="editable"
-          @openRemotePanel="openRemotePanel"
-        ></data-source-field>
+        <!-- dataSource settings -->
       </tiny-form>
+      <data-source-settings
+        v-model="state.dataSource"
+        :editable="editable"
+        ref="settingRef"
+        @renderRemoteData="renderRemoteData"
+        :activeTabName="state.activeTabName"
+        @activeTab="activeTabChange"
+      ></data-source-settings>
     </template>
   </plugin-setting>
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.collections.DataSourceForm */
 import { reactive, ref, watch, computed } from 'vue'
 import { Form, Button } from '@opentiny/vue'
+import { camelize, capitalize } from '@vue/shared'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
-import DataSourceField from './DataSourceField.vue'
-import { close as closeRemotePanel, open as openRemotePanel } from './DataSourceRemotePanel.vue'
+import DataSourceSettings from './DataSourceSettings.vue'
+import { close as closeRemoteResult, open as openRemoteResult } from './DataSourceSettingRemoteResult.vue'
 import {
   requestUpdateDataSource,
   requestAddDataSource,
@@ -53,7 +58,8 @@ import {
   useDataSource,
   useNotify,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useCanvas
 } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
 
@@ -76,7 +82,7 @@ export default {
     PluginSetting,
     DataSourceType,
     DataSourceName,
-    DataSourceField
+    DataSourceSettings
   },
   props: {
     modelValue: {
@@ -86,6 +92,10 @@ export default {
     editable: {
       type: Boolean,
       default: true
+    },
+    activeTabName: {
+      type: String,
+      default: 'remote'
     }
   },
   emits: ['update:modelValue', 'save'],
@@ -93,8 +103,11 @@ export default {
     const { message } = useModal()
     const { dataSourceState } = useDataSource()
 
+    const settingRef = ref(null)
+
     const state = reactive({
-      dataSource: {}
+      dataSource: {},
+      activeTabName: props.activeTabName
     })
 
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
@@ -145,15 +158,23 @@ export default {
           format
         }))
 
-        dataSourceState.dataSourceColumn = { name, type: type || 'array', columns: filterColumns }
+        dataSourceState.dataSourceColumn = { name, type: type || 'remote', columns: filterColumns }
         dataSourceState.dataSourceColumnCopies = extend(true, {}, dataSourceState.dataSourceColumn)
       },
       { immediate: true }
     )
 
+    watch(
+      () => props.activeTabName,
+      (value) => {
+        state.activeTabName = value
+      },
+      { immediate: true, deep: true }
+    )
+
     const closeAllPanel = () => {
       close()
-      closeRemotePanel()
+      closeRemoteResult()
     }
 
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -186,7 +207,7 @@ export default {
       getDataSourceName().validate((valid) => {
         if (valid) {
           close()
-          closeRemotePanel()
+          closeRemoteResult()
 
           const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
             return {
@@ -198,46 +219,63 @@ export default {
             }
           })
 
-          if (props.editable) {
-            requestUpdateDataSource(state.dataSource.id, {
+          settingRef.value.saveRecord().then((record) => {
+            const editRequestData = {
               name: state.dataSource.name,
-              data: Object.assign(state.dataSource.data, { columns, ...dataSourceState.remoteConfig })
-            }).then(() => {
-              requestGenerateDataSource(getAppId())
-              // 修改dataSource成功
-              useNotify({
-                title: '数据源修改成功',
-                type: 'success'
-              })
-              emit('save')
-              dataSourceState.dataSourceColumn = {}
-              dataSourceState.dataSourceColumnCopies = {}
-            })
-          } else {
-            requestAddDataSource({
-              name: state.dataSource.name,
-              app: getAppId(),
-              data: {
+              data: Object.assign(state.dataSource.data, {
                 columns,
-                data: [],
-                type: state.dataSource.data.type ? state.dataSource.data.type : 'array',
-                ...dataSourceState.remoteConfig
-              }
-            })
-              .then(() => {
+                ...dataSourceState.remoteConfig,
+                data: record ? record.requestData.data.data : state.dataSource.data.data
+              })
+            }
+            const addRequestData = {
+              columns,
+              data: record ? record.requestData.data.data : [],
+              type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
+              ...dataSourceState.remoteConfig
+            }
+            if (props.editable) {
+              requestUpdateDataSource(state.dataSource.id, editRequestData).then(() => {
                 requestGenerateDataSource(getAppId())
+                // 修改dataSource成功
+                if (record) {
+                  const { name } = record.requestData
+                  const key = `datasource${capitalize(camelize(name))}`
+                  const pageSchema = useCanvas().getSchema()
+
+                  if (pageSchema.state[key]) {
+                    pageSchema.state[key] = record.data.map(({ _id, ...other }) => other)
+                  }
+                }
                 useNotify({
-                  title: '数据源新增成功',
+                  title: '数据源修改成功',
                   type: 'success'
                 })
                 emit('save')
                 dataSourceState.dataSourceColumn = {}
                 dataSourceState.dataSourceColumnCopies = {}
               })
-              .catch((error) => {
-                message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
+            } else {
+              requestAddDataSource({
+                name: state.dataSource.name,
+                app: getAppId(),
+                data: addRequestData
               })
-          }
+                .then(() => {
+                  requestGenerateDataSource(getAppId())
+                  useNotify({
+                    title: '数据源新增成功',
+                    type: 'success'
+                  })
+                  emit('save')
+                  dataSourceState.dataSourceColumn = {}
+                  dataSourceState.dataSourceColumnCopies = {}
+                })
+                .catch((error) => {
+                  message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
+                })
+            }
+          })
         }
       })
     }
@@ -256,16 +294,34 @@ export default {
       })
     }
 
+    const renderRemoteData = (remoteData) => {
+      emit('renderRemoteData', remoteData)
+    }
+
+    const activeTabChange = (name) => {
+      emit('activeTab', name)
+    }
+
+    watch(
+      () => state.dataSource.data?.type,
+      (value) => {
+        activeTabChange(value)
+      }
+    )
+
     return {
       align,
+      settingRef,
       PLUGIN_NAME,
       state,
       isOpen,
       save,
       closeAllPanel,
-      openRemotePanel,
+      openRemoteResult,
       selectDataSourceTemplate,
-      deleteDataSource
+      deleteDataSource,
+      renderRemoteData,
+      activeTabChange
     }
   }
 }

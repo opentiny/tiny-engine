@@ -38,6 +38,34 @@ export function copyfileToDynamicSrcMapper({ src, dest, transform, rename, folde
   }
 }
 
+function extractPackageInfo(url, originCdnPrefix) {
+  let match = null
+
+  try {
+    const mergedRegex = new RegExp(
+      `^${originCdnPrefix}/?` +
+        // 包名捕获组（支持作用域包 @scope/name 格式）
+        // (?:@[^/]+/)? 匹配 @scope/ 格式
+        // [^/@]+ 匹配包名，不包含 '/' 和 '@'
+        `(?<packageName>(?:@[^/]+/)?[^/@]+)` +
+        // 版本号部分（@或/分隔）
+        // /(?=.*/files) 匹配斜杠的分割的文件路径，但是需满足正向预查，确保后续路径包含 /files
+        `(?:@|/(?=.*/files))` +
+        // 捕获版本号
+        `(?<versionDemand>[^/]+)` +
+        // 路径部分 处理/files前缀（npmmirror）
+        `(?:/files)?` +
+        // 路径部分 匹配文件路径
+        `(?<filePathInPackage>.*?)$`
+    )
+    match = url.match(mergedRegex)
+  } catch (error) {
+    // ignore
+  }
+
+  return match
+}
+
 // 生成复制单个文件所需要的信息
 export function getCdnPathNpmInfoForSingleFile(
   url, // cdn托管的npm文件地址数组
@@ -48,9 +76,13 @@ export function getCdnPathNpmInfoForSingleFile(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-  const { packageName, versionDemand, filePathInPackage } = url.match(
-    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-  ).groups
+  const match = extractPackageInfo(url, originCdnPrefix)
+
+  if (!match) {
+    return null
+  }
+
+  const { packageName, versionDemand, filePathInPackage } = match.groups
   let version = versionDemand
   let isFolder = filePathInPackage.endsWith('/')
   let src = replaceTailSlash(`node_modules/${packageName}${filePathInPackage}`)
@@ -111,9 +143,14 @@ export function getCdnPathNpmInfoForPackage(
   tempDir = 'bundle-deps' // 新安装包的安装目录
 ) {
   const baseSlash = base.endsWith('/') ? '' : '/'
-  const { packageName, versionDemand, filePathInPackage } = url.match(
-    new RegExp(`^${originCdnPrefix}/?(?<packageName>.+?)@(?<versionDemand>[^/]+)(?<filePathInPackage>.*?)$`)
-  ).groups
+  // 使用匹配到的结果
+  const match = extractPackageInfo(url, originCdnPrefix)
+
+  if (!match) {
+    return null
+  }
+
+  const { packageName, versionDemand, filePathInPackage } = match.groups
   let version = versionDemand
   let src = `node_modules/${packageName}`
   const sourceExist = fs.existsSync(path.resolve(src))

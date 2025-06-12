@@ -10,6 +10,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.BindFunction */
 import { reactive, ref } from 'vue'
 import { Button } from '@opentiny/vue'
 import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'

@@ -1,0 +1,77 @@
+{
+  "componentName": "Page",
+  "css": ".page-base-style {\r\n  display: flex;\r\n  margin: 0;\r\n  gap: 12px;\r\n  padding: 24px;\r\n}\r\n",
+  "props": {
+    "className": "page-base-style"
+  },
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyButton",
+      "props": {
+        "text": "按钮文案",
+        "resetTime": 0,
+        "className": "",
+        "icon": {
+          "componentName": "Icon",
+          "props": {
+            "name": "IconEdit"
+          }
+        },
+        "type": "success"
+      },
+      "children": [],
+      "id": "4e666212"
+    },
+    {
+      "componentName": "TinyDropdown",
+      "props": {
+        "className": "",
+        "suffix-icon": {
+          "componentName": "Icon",
+          "props": {
+            "name": "IconMore"
+          }
+        },
+        "menu-options": {
+          "options": [
+            {
+              "name": "老友粉",
+              "disabled": true
+            },
+            {
+              "name": "狮子头",
+              "divided": true
+            },
+            {
+              "name": "黄金糕",
+              "divided": true
+            }
+          ]
+        }
+      },
+      "children": [],
+      "id": "45532625"
+    },
+    {
+      "componentName": "Icon",
+      "props": {
+        "name": "IconCustom",
+        "className": ""
+      },
+      "children": [],
+      "id": "22235426"
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "state": {},
+  "methods": {},
+  "utils": [],
+  "bridge": [],
+  "inputs": [],
+  "outputs": [],
+  "fileName": "TestIcon",
+  "id": "body"
+}

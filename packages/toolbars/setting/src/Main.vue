@@ -9,6 +9,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.toolbars.setting.Main */
 import { useCanvas, useLayout, useBlock, usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

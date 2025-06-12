@@ -20,6 +20,7 @@ export default defineConfig({
   plugins: [vue(), vueJsx()],
   publicDir: false,
   build: {
+    sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       fileName: (_format, entryName) => `${entryName}.js`,

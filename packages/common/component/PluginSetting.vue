@@ -8,7 +8,7 @@
       { 'align-right': align.includes('right') },
       shadowClass
     ]"
-    :style="alignStyle"
+    :style="isSecond ? secondAlignStyle : alignStyle"
     @click="$emit('click')"
   >
     <div class="plugin-setting-header">
@@ -119,7 +119,7 @@ export default {
     const { getPluginWidth } = useLayout()
 
     const firstPanelOffset = computed(() => {
-      return getPluginWidth(props.fixedName) + 1
+      return getPluginWidth(props.fixedName) - 1
     })
 
     const secondPanelAlign = computed(() => {
@@ -128,6 +128,12 @@ export default {
 
     const alignStyle = computed(() => {
       return `${secondPanelAlign.value} : ${firstPanelOffset.value}px`
+    })
+
+    const secondAlignStyle = computed(() => {
+      // 解决三级面板点击与二级面板重叠
+      const secondPanelOffset = document.querySelector('.plugin-setting')?.clientWidth + firstPanelOffset.value
+      return `${secondPanelAlign.value} : ${secondPanelOffset.value}px`
     })
 
     watchEffect(() => {
@@ -159,6 +165,7 @@ export default {
 
     return {
       alignStyle,
+      secondAlignStyle,
       shadowClass,
       firstPanelOffset,
       state,
@@ -214,7 +221,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 40px;
+    height: 48px;
     line-height: 40px;
     font-size: 14px;
     line-height: 18px;

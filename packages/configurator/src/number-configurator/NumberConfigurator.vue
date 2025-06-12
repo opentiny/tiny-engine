@@ -195,10 +195,10 @@ export default {
       width: 100%;
       .tiny-input__inner {
         height: 100%;
-        color: var(--te-configurator-common-text-color-primary);
+        color: var(--te-configurator-common-text-color-weaken);
         padding: 2px;
         border: none;
-        font-size: 14px;
+        font-size: var(--te-base-font-size-base);
         text-align: center;
       }
       .tiny-input__suffix {

@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ref, watch, onUnmounted, onMounted } from 'vue'
+import { ref, watch, onUnmounted, onMounted, computed } from 'vue'
 import {
   useProperties,
   useCanvas,
@@ -32,7 +32,6 @@ import {
   useModal,
   usePage,
   useMessage,
-  getMergeRegistry,
   getMergeMeta,
   getOptions,
   getMetaApi,
@@ -43,6 +42,7 @@ import {
 import { constants } from '@opentiny/tiny-engine-utils'
 import * as ast from '@opentiny/tiny-engine-common/js/ast'
 import { initCanvas } from '../../init-canvas/init-canvas'
+import { useMultiSelect } from '../../container/src/composables/useMultiSelect'
 import { getImportMapData } from './importMap'
 import meta from '../meta'
 
@@ -55,13 +55,12 @@ const componentType = {
 
 export default {
   setup() {
-    const registry = getMergeRegistry('canvas')
+    const registry = getMergeMeta('engine.canvas')
     const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
     const { CanvasRouteBar, CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
     const footData = ref([])
-    const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
     const { canvasSrc = '' } = getOptions(meta.id) || {}
@@ -77,7 +76,7 @@ export default {
           return
         }
 
-        const { importMap, importStyles } = getImportMapData(getMergeMeta('engine.config')?.importMapVersion, deps)
+        const { importMap, importStyles } = getImportMapData(deps)
 
         canvasSrcDoc.value = initCanvas(importMap, importStyles).html
       }
@@ -152,6 +151,9 @@ export default {
       }
     )
 
+    const { multiSelectedStates } = useMultiSelect()
+    const multiStateLength = computed(() => multiSelectedStates.value.length)
+
     const nodeSelected = (node, parent, type, id) => {
       const { leftPanelFixed, rightPanelFixed } = getFixedPanelsStatus()
 
@@ -176,7 +178,9 @@ export default {
 
       // 如果选中的节点是画布，就设置成默认选中最外层schema
       useProperties().getProps(schemaItem || pageSchema, parent)
-      useCanvas().setCurrentSchema(schemaItem || pageSchema)
+      const multiSchemas = multiSelectedStates.value.map(({ schema }) => schema)
+      const currentSchema = multiStateLength.value > 1 ? multiSchemas : schemaItem || pageSchema
+      useCanvas().setCurrentSchema(currentSchema)
       footData.value = getNodePath(schemaItem?.id)
       toolbars.visiblePopover = false
     }
@@ -267,7 +271,6 @@ export default {
       nodeSelected,
       footData,
       materialsPanel,
-      showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法
         getMaterial: useMaterial().getMaterial,

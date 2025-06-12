@@ -2,8 +2,8 @@ export function genImportMapPlugin(importMap, importMapStyles) {
   return {
     name: 'vite-plugin-gen-import-map',
     transformIndexHtml: {
-      enforce: 'pre',
-      transform(html) {
+      order: 'pre',
+      handler(html) {
         return {
           html,
           tags: [

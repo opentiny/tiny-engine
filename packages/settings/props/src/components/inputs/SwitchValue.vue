@@ -3,6 +3,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.SwitchValue */
 import { Switch } from '@opentiny/vue'
 import { ref, watchEffect } from 'vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'

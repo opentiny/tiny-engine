@@ -38,7 +38,7 @@ export default class PageService {
     this.pageModel = {
       name: '',
       id: '',
-      app: '918',
+      app: '1',
       route: '',
       page_content: {},
       tenant: 1,
@@ -62,7 +62,7 @@ export default class PageService {
       parentId: '0',
       route: 'test',
       name: 'test',
-      app: '918',
+      app: '1',
       isPage: false,
       group: 'staticPages'
     }

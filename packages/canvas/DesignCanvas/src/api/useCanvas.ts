@@ -93,12 +93,22 @@ const handleTinyGridColumnsSlots = (node: Node) => {
 
     for (const slotItem of Object.values(columnItem.slots)) {
       if (Array.isArray(slotItem?.value)) {
+        // 这里要给 TinyGrid 的表格列插槽添加一个虚拟 Template 节点
+        // 不然有可能在拖拽的时候，拖拽到插槽的同级节点上，此时由于插槽的父节点是 TinyGrid，导致插入到了TinyGrid 的 children 中。添加一个父节点可以避免该问题
+        const virtualNode = {
+          id: utils.guid(),
+          componentName: 'Template',
+          props: {},
+          children: slotItem.value
+        }
+        nodesMap.value.set(virtualNode.id, { node: virtualNode, parent: node })
+
         slotItem.value.forEach((item: Node) => {
           if (!item.id) {
             item.id = utils.guid()
           }
 
-          nodesMap.value.set(item.id, { node: item, parent: node })
+          nodesMap.value.set(item.id, { node: item, parent: virtualNode })
 
           if (Array.isArray(item.children)) {
             // eslint-disable-next-line @typescript-eslint/no-use-before-define
@@ -221,11 +231,11 @@ const setSaved = (flag = false) => {
 const clearCanvas = () => {
   pageState.properties = null
 
+  const { currentPage: page } = pageState
   const { fileName, componentName } = pageState.pageSchema || {}
-
-  resetCanvasState({
-    pageSchema: { ...deepClone(getDefaultSchema(componentName, fileName)) }
-  })
+  const pageSchema = { ...deepClone(getDefaultSchema(componentName, fileName)) }
+  const currentPage = page ? { ...page, page_content: pageSchema } : null
+  resetCanvasState({ currentPage, pageSchema })
 
   setSaved(false)
 
@@ -344,6 +354,11 @@ const operationTypeMap = {
       case 'out':
         if (childrenNode) {
           newNodeData.children = Array.isArray(childrenNode) ? [...childrenNode] : [childrenNode]
+          parentNode.children.splice(index, 1, newNodeData)
+        }
+        break
+      case 'replace':
+        if (index !== -1) {
           parentNode.children.splice(index, 1, newNodeData)
         }
         break
@@ -584,6 +599,7 @@ const importSchema = (data: any) => {
 
   // JSON 格式校验
   resetCanvasState({
+    ...pageState,
     pageSchema: importData
   })
 }
@@ -606,7 +622,7 @@ const getNodePath = (id: string, nodes: { name: string; node: string }[] = []) =
   if (parent) {
     getNodePath(parent.id, nodes)
   } else {
-    nodes.unshift({ name: 'BODY', node: id })
+    nodes.unshift({ name: 'body', node: id })
   }
 
   return nodes

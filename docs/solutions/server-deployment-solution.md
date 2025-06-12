@@ -283,7 +283,7 @@ export default (app: Application) => {
 
 使用本地开发流程，启动服务成功后访问
 
-`http://localhost:7011/entry?id=918&type=app`
+`http://localhost:7011/entry?id=1&type=app`
 
 验证是否存在问题，如正常则部署服务
 

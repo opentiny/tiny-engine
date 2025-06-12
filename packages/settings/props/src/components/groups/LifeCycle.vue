@@ -71,6 +71,7 @@
 </template>
 
 <script lang="jsx">
+/* metaService: engine.setting.props.LifeCycle */
 import { getCurrentInstance, reactive, toRefs } from 'vue'
 import { Button, DialogBox, Modal, Popover, Search, Tooltip } from '@opentiny/vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'

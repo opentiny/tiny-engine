@@ -18,6 +18,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.LayoutGroup */
 import { ref, computed } from 'vue'
 import { DISPLAY_TYPE, DISPLAY_TEXT } from '../../js/cssType'
 import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'

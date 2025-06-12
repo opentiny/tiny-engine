@@ -1,38 +1,77 @@
-import { VITE_CDN_DOMAIN, VITE_CDN_TYPE } from '@opentiny/tiny-engine-common/js/environments'
+import { useEnv, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { importMapConfig } from '@opentiny/tiny-engine-common/js/importMap'
 
-export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: [], styles: [] }) {
-  const importMapVersions = Object.assign(
-    {
-      vue: '3.4.23',
-      tinyVue: '~3.20',
-      vueI18n: '^9.9.0'
-    },
-    overrideVersions
-  )
+const getImportUrl = (pkgName: string) => {
+  // 自定义的 importMap
+  const customImportMap = getMergeMeta('engine.config')?.importMap
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_IMPORT_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_IMPORT_MAPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
 
-  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' ? '/' : '@'
-  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' ? '/files' : ''
+  if (customImportMap?.imports?.[pkgName]) {
+    return customImportMap.imports[pkgName]
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
+      .replace('${versionDelimiter}', versionDelimiter)
+      .replace('${fileDelimiter}', fileDelimiter)
+  }
 
+  if (importMapConfig.imports[pkgName]) {
+    return importMapConfig.imports[pkgName]
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
+      .replace('${versionDelimiter}', versionDelimiter)
+      .replace('${fileDelimiter}', fileDelimiter)
+  }
+}
+
+// 获取样式文件的URL，后续去除物料内置逻辑之后，需要用户自行引入，相关逻辑也需要同步删除
+const getImportStyleUrl = (pkgName: string) => {
+  const {
+    VITE_CDN_TYPE,
+    VITE_CDN_DOMAIN,
+    VITE_LOCAL_IMPORT_PATH = 'local-cdn-static',
+    BASE_URL,
+    VITE_LOCAL_IMPORT_MAPS
+  } = useEnv()
+  const isLocalBundle = VITE_LOCAL_IMPORT_MAPS === 'true'
+  const versionDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/' : '@'
+  const fileDelimiter = VITE_CDN_TYPE === 'npmmirror' && !isLocalBundle ? '/files' : ''
+  const cdnDomain = isLocalBundle ? BASE_URL + VITE_LOCAL_IMPORT_PATH : VITE_CDN_DOMAIN
+
+  if (importMapConfig.importStyles[pkgName]) {
+    return importMapConfig.importStyles[pkgName]
+      .replace('${VITE_CDN_DOMAIN}', cdnDomain)
+      .replace('${versionDelimiter}', versionDelimiter)
+      .replace('${fileDelimiter}', fileDelimiter)
+  }
+}
+
+export function getImportMapData(canvasDeps = { scripts: [], styles: [] }) {
   // 以下内容由于区块WebComponent加载需要补充
   const blockRequire = {
     imports: {
-      '@opentiny/vue': `${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}${importMapVersions.tinyVue}${fileDelimiter}/dist3/tiny-vue-pc.mjs`,
-      '@opentiny/vue-icon': `${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}${importMapVersions.tinyVue}${fileDelimiter}/dist3/tiny-vue-icon.mjs`,
-      'element-plus': `${VITE_CDN_DOMAIN}/element-plus${versionDelimiter}2.4.2${fileDelimiter}/dist/index.full.mjs`,
-      '@opentiny/tiny-engine-builtin-component': `${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component${versionDelimiter}^2.0.0${fileDelimiter}/dist/index.mjs`
+      // TODO: 后续版本发通知，不再内置物料，需要用户自行引入
+      '@opentiny/vue': getImportUrl('@opentiny/vue'),
+      '@opentiny/vue-icon': getImportUrl('@opentiny/vue-icon'),
+      '@opentiny/tiny-engine-builtin-component': getImportUrl('@opentiny/tiny-engine-builtin-component')
     },
-    importStyles: [
-      `${VITE_CDN_DOMAIN}/@opentiny/vue-theme${versionDelimiter}${importMapVersions.tinyVue}${fileDelimiter}/index.css`,
-      `${VITE_CDN_DOMAIN}/element-plus${versionDelimiter}2.4.2${fileDelimiter}/dist/index.css`
-    ]
+    importStyles: [getImportStyleUrl('@opentiny/vue-theme')]
   }
 
   // 以下内容由于物料协议不支持声明子依赖而@opentiny/vue需要依赖所以需要补充
+  // TODO: 后续版本发通知，不再内置物料，需要用户自行引入
   const tinyVueRequire = {
     imports: {
-      '@opentiny/vue-common': `${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}${importMapVersions.tinyVue}${fileDelimiter}/dist3/tiny-vue-common.mjs`,
-      '@opentiny/vue-locale': `${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}${importMapVersions.tinyVue}${fileDelimiter}/dist3/tiny-vue-locale.mjs`,
-      echarts: `${VITE_CDN_DOMAIN}/echarts${versionDelimiter}5.4.1${fileDelimiter}/dist/echarts.esm.js`
+      '@opentiny/vue-common': getImportUrl('@opentiny/vue-common'),
+      '@opentiny/vue-locale': getImportUrl('@opentiny/vue-locale'),
+      echarts: getImportUrl('echarts')
     }
   }
 
@@ -46,8 +85,8 @@ export function getImportMapData(overrideVersions = {}, canvasDeps = { scripts: 
 
   const importMap = {
     imports: {
-      vue: `${VITE_CDN_DOMAIN}/vue${versionDelimiter}${importMapVersions.vue}${fileDelimiter}/dist/vue.runtime.esm-browser.prod.js`,
-      'vue-i18n': `${VITE_CDN_DOMAIN}/vue-i18n${versionDelimiter}${importMapVersions.vueI18n}${fileDelimiter}/dist/vue-i18n.esm-browser.js`,
+      vue: getImportUrl('vue'),
+      'vue-i18n': getImportUrl('vue-i18n'),
       ...blockRequire.imports,
       ...tinyVueRequire.imports,
       ...materialsAndUtilsRequire

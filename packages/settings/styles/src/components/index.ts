@@ -9,6 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+/* metaService: engine.setting.styles.components-index */
 
 export { default as BackgroundGroup } from './background/BackgroundGroup.vue'
 export { default as BorderGroup } from './border/BorderGroup.vue'

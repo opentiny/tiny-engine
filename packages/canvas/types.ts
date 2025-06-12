@@ -3,6 +3,12 @@ export interface Node {
   componentName: string
   props: Record<string, any> & { columns?: { slots?: Record<string, any> }[] }
   children?: Node[]
+  componentType?: 'Block' | 'PageStart' | 'PageSection'
+  slot?: string | Record<string, any>
+  params?: string[]
+  loop?: Record<string, any>
+  loopArgs?: string[]
+  condition?: boolean | Record<string, any>
 }
 
 export type RootNode = Omit<Node, 'id'> & {

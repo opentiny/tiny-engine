@@ -90,6 +90,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.CreateRemoteAPI */
 import { getCurrentInstance, reactive } from 'vue'
 import { ButtonGroup, Form, FormItem, Input, Popover, Switch, Button } from '@opentiny/vue'
 import { VueMonaco as MonacoEditor, MetaDescription } from '@opentiny/tiny-engine-common'

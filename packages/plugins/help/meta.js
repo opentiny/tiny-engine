@@ -4,6 +4,5 @@ export default {
   id: 'engine.plugins.editorhelp',
   title: '帮助',
   type: 'plugins',
-  icon: HelpIcon,
-  align: 'leftBottom'
+  icon: HelpIcon
 }

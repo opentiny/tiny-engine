@@ -40,7 +40,7 @@
       </template>
       <template #bottom>
         <div class="add" @click="addItem">
-          <svg-icon name="plus"></svg-icon>
+          <svg-icon name="add"></svg-icon>
           <span>新增一列</span>
         </div>
       </template>
@@ -176,13 +176,13 @@ export default {
   display: flex;
   align-items: center;
   color: var(--te-configurator-common-text-color-emphasize);
+  margin-top: 4px;
   &:hover {
     cursor: pointer;
   }
 
-  & .icon-plus {
-    font-size: 14px;
-    margin-right: 5px;
+  & .svg-icon {
+    margin-right: 4px;
   }
 }
 </style>

@@ -11,7 +11,6 @@
  */
 
 import { defineComponent, h, inject, provide, type Ref, Suspense } from 'vue'
-
 import {
   NODE_UID as DESIGN_UIDKEY,
   NODE_TAG as DESIGN_TAGKEY,
@@ -23,8 +22,9 @@ import { parseCondition, parseData, parseLoopArgs } from './data-function'
 import { blockSlotDataMap, getComponent, Mapper, configure } from './material-function'
 import { getPage } from './material-function/page-getter'
 import BlockLoading from './BlockLoading.vue'
+import type { Node } from '../../types'
 
-export const renderDefault = (children, scope, parent) =>
+export const renderDefault = (children: Node[], scope: Record<string, any>, parent: Node) =>
   children.map?.((child) =>
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     h(renderer, {
@@ -34,19 +34,19 @@ export const renderDefault = (children, scope, parent) =>
     })
   )
 
-const stopEvent = (event) => {
+const stopEvent = (event: Event) => {
   event.preventDefault?.()
   event.stopPropagation?.()
   return false
 }
 
-const generateSlotGroup = (children, schema) => {
-  const slotGroup = {}
+const generateSlotGroup = (children: Node[], schema: Node) => {
+  const slotGroup: Record<string, any> = {}
 
   children.forEach((child) => {
     const { componentName, children, params = [], props } = child
     const slot = child.slot || props?.slot?.name || props?.slot || 'default'
-    const isNotEmptyTemplate = componentName === 'Template' && children.length
+    const isNotEmptyTemplate = componentName === 'Template' && children?.length
 
     slotGroup[slot] = slotGroup[slot] || {
       value: [],
@@ -60,36 +60,53 @@ const generateSlotGroup = (children, schema) => {
   return slotGroup
 }
 
-const renderSlot = (children, scope, schema) => {
-  if (children.some((a) => a.componentName === 'Template')) {
-    const slotGroup = generateSlotGroup(children, schema)
-    const slots = {}
+const directChildrenHasTemplate = (children: Node[]) => children.some((child) => child.componentName === 'Template')
 
-    Object.keys(slotGroup).forEach((slotName) => {
-      const currentSlot = slotGroup[slotName]
+const renderSlot = (
+  children: Node[],
+  scope: Record<string, any>,
+  schema: Node,
+  pageContext: Record<string, any>,
+  ancestors: any[],
+  renderComponent: (
+    schema: Node,
+    scope: Record<string, any>,
+    pageContext: Record<string, any>,
+    parent: Node,
+    ancestors: any[]
+  ) => any
+) => {
+  const slotGroup = generateSlotGroup(children, schema)
+  const slots: Record<string, any> = {}
 
-      slots[slotName] = ($scope) => renderDefault(currentSlot.value, { ...scope, ...$scope }, currentSlot.parent)
-    })
+  Object.keys(slotGroup).forEach((slotName) => {
+    const currentSlot = slotGroup[slotName]
 
-    return slots
-  }
+    slots[slotName] = ($scope: Record<string, any>) =>
+      currentSlot.value.map((slotItem: Node) =>
+        renderComponent(slotItem, { ...scope, ...$scope }, pageContext, currentSlot.parent, ancestors)
+      )
+  })
 
-  return { default: () => renderDefault(children, scope, schema) }
+  return slots
 }
 
-const checkGroup = (componentName) => configure[componentName]?.nestingRule?.childWhitelist?.length
+const clickCapture = (componentName: string) => configure[componentName]?.clickCapture !== false
 
-const clickCapture = (componentName) => configure[componentName]?.clickCapture !== false
-
-const getBindProps = (schema, scope, context, pageContext) => {
+const getBindProps = (
+  schema: Node,
+  scope: Record<string, any>,
+  context: Record<string, any>,
+  pageContext: Record<string, any>
+) => {
   const { id, componentName, componentType } = schema
   const invalidity = configure[componentName]?.invalidity || []
 
   if (componentName === 'CanvasPlaceholder') {
     return {}
   }
-  const { active, getCssScopeId } = pageContext
-  const cssScopeId = getCssScopeId()
+  const { active, getCssScopeId } = pageContext || {}
+  const cssScopeId = getCssScopeId?.()
   const bindProps = {
     ...parseData(schema.props, scope, context),
     ...(cssScopeId ? { [cssScopeId]: '' } : {}),
@@ -111,7 +128,7 @@ const getBindProps = (schema, scope, context, pageContext) => {
     bindProps.onClickCapture = stopEvent
   }
 
-  if (Mapper[componentName]) {
+  if (Mapper[componentName as keyof typeof Mapper]) {
     bindProps.schema = schema
   }
 
@@ -120,17 +137,27 @@ const getBindProps = (schema, scope, context, pageContext) => {
   delete bindProps.className
 
   // 使画布中元素可拖拽
-  if (active && !['PageStart', 'PageSection'].includes(componentType)) {
+  if (active && !['PageStart', 'PageSection'].includes(componentType || '')) {
     bindProps.draggable = true
   }
 
   // 过滤在门户网站上配置的画布丢弃的属性
-  invalidity.forEach((prop) => delete bindProps[prop])
+  invalidity.forEach((prop: string) => delete bindProps[prop])
 
   return bindProps
 }
 
-const getLoopScope = ({ scope, index, item, loopArgs }) => {
+const getLoopScope = ({
+  scope,
+  index,
+  item,
+  loopArgs
+}: {
+  scope: Record<string, any>
+  index: number
+  item: any
+  loopArgs: any
+}) => {
   return {
     ...scope,
     ...(parseLoopArgs({
@@ -141,7 +168,7 @@ const getLoopScope = ({ scope, index, item, loopArgs }) => {
   }
 }
 
-const injectPlaceHolder = (componentName, children) => {
+const injectPlaceHolder = (componentName: string, children: Node[]) => {
   const isEmptyArr = Array.isArray(children) && !children.length
 
   if ((configure[componentName]?.isContainer || componentName === 'Template') && (!children || isEmptyArr)) {
@@ -155,45 +182,24 @@ const injectPlaceHolder = (componentName, children) => {
   return children
 }
 
-const renderGroup = (children, scope, pageContext) => {
-  return children.map?.((schema) => {
-    const { componentName, children, loop, loopArgs, condition, id } = schema
-    const loopList = parseData(loop, scope, pageContext.context)
-
-    const renderElement = (item?, index?) => {
-      const mergeScope = getLoopScope({
-        scope,
-        index,
-        item,
-        loopArgs
-      })
-
-      if (pageContext.conditions[id] === false || !parseCondition(condition, mergeScope, pageContext.context)) {
-        return null
-      }
-
-      const renderChildren = pageContext.active ? injectPlaceHolder(componentName, children) : children
-
-      return h(
-        getComponent(componentName),
-        getBindProps(schema, mergeScope, pageContext.context, pageContext),
-        Array.isArray(renderChildren)
-          ? renderSlot(renderChildren, mergeScope, schema)
-          : parseData(renderChildren, mergeScope, pageContext.context)
-      )
-    }
-
-    return loopList?.length ? loopList.map(renderElement) : renderElement()
-  })
-}
-
-const getChildren = (schema, mergeScope, pageContext) => {
+const getChildren = (
+  schema: Node,
+  mergeScope: Record<string, any>,
+  pageContext: Record<string, any>,
+  parent: Node,
+  renderComponent: (
+    schema: Node,
+    scope: Record<string, any>,
+    pageContext: Record<string, any>,
+    parent: Node,
+    ancestors: any[]
+  ) => any,
+  ancestors: any[]
+) => {
   const { componentName, children } = schema
-  const renderChildren = pageContext.active ? injectPlaceHolder(componentName, children) : children
-
-  const component = getComponent(componentName)
-  const isNative = typeof component === 'string'
-  const isGroup = checkGroup(componentName)
+  const renderChildren = (
+    pageContext?.active ? injectPlaceHolder(componentName, children || []) : children || []
+  ) as Node[]
 
   if (Array.isArray(renderChildren)) {
     // children 空的场景，不能返回空数组，因为有部分组件会误以为使用了自定义插槽，从而无法渲染默认插槽内容，比如 TinyTree 组件
@@ -201,21 +207,26 @@ const getChildren = (schema, mergeScope, pageContext) => {
       return null
     }
 
-    if (isNative) {
-      return renderDefault(renderChildren, mergeScope, schema)
+    if (directChildrenHasTemplate(renderChildren)) {
+      return renderSlot(renderChildren, mergeScope, schema, pageContext, ancestors, renderComponent)
     }
-    return isGroup
-      ? renderGroup(renderChildren, mergeScope, pageContext)
-      : renderSlot(renderChildren, mergeScope, schema)
+
+    // 这里 children 需要返回一个默认插槽的函数，避免 vue 告警：
+    // Non-function value encountered for default slot. Prefer function slots for better performance.
+    return {
+      default: () => renderChildren.map((child) => renderComponent(child, mergeScope, pageContext, parent, ancestors))
+    }
   }
-  return parseData(renderChildren, mergeScope, pageContext.context)
+
+  return parseData(renderChildren, mergeScope, pageContext?.context)
 }
-function getRenderPageId(currentPageId, isPageStart) {
+
+function getRenderPageId(currentPageId: string, isPageStart: boolean) {
   const pagePathFromRoot = (inject('page-ancestors') as Ref<any[]>).value
   const pagePreviewFromCurrentPageChild = (inject('page-preview') as Ref<any[]>).value
   const fullPath = [...pagePathFromRoot, ...pagePreviewFromCurrentPageChild]
 
-  function getNextChild(currentPageId) {
+  function getNextChild(currentPageId: string) {
     const index = fullPath.indexOf(currentPageId)
     if (index > -1 && index + 1 < fullPath.length) {
       return fullPath[index + 1]
@@ -223,6 +234,87 @@ function getRenderPageId(currentPageId, isPageStart) {
     return null
   }
   return isPageStart ? pagePathFromRoot[0] : getNextChild(currentPageId)
+}
+
+const renderComponent = (
+  schema: Node,
+  scope: Record<string, any>,
+  pageContext: Record<string, any>,
+  parent: Node,
+  ancestors: any[]
+) => {
+  const { componentName, loop, loopArgs, condition, id } = schema
+
+  if (!componentName) {
+    return parseData(schema, scope, pageContext.context)
+  }
+
+  const isPageStart = schema.componentType === 'PageStart'
+  const isRouterView = componentName === 'RouterView'
+
+  if (ancestors?.length && (isPageStart || isRouterView)) {
+    const renderPageId = getRenderPageId(pageContext.pageId, isPageStart)
+    if (renderPageId) {
+      return h(getPage(renderPageId), {
+        key: ancestors.join('-'),
+        [DESIGN_TAGKEY]: `${componentName}`,
+        'data-te-page-id': pageContext.pageId,
+        ...(pageContext.active && !isPageStart
+          ? {
+              [DESIGN_UIDKEY]: schema.id,
+              draggable: true
+            }
+          : {})
+      })
+    }
+  }
+
+  const loopList = loop ? parseData(loop, scope, pageContext.context) : []
+
+  const renderElement = (item?: Node, index: number = 0) => {
+    let mergeScope = item
+      ? getLoopScope({
+          scope,
+          index,
+          item,
+          loopArgs
+        })
+      : scope
+
+    if (pageContext?.conditions?.[id] === false || !parseCondition(condition, mergeScope, pageContext?.context)) {
+      return null
+    }
+
+    // 如果是区块，并且使用了区块的作用域插槽，则需要将作用域插槽的数据传递下去
+    if (parent?.componentType === 'Block' && componentName === 'Template' && schema.props?.slot?.params?.length) {
+      const slotName = schema.props.slot?.name || schema.props.slot
+      const blockName = parent.componentName
+      const slotData = blockSlotDataMap[blockName]?.[slotName] || {}
+      mergeScope = mergeScope ? { ...mergeScope, ...slotData } : slotData
+    }
+
+    const Ele = h(
+      getComponent(componentName),
+      getBindProps(schema, mergeScope, pageContext?.context, pageContext),
+      getChildren(schema, mergeScope, pageContext, parent, renderComponent, ancestors)
+    )
+
+    // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
+    if (schema.componentType === 'Block') {
+      return h(
+        Suspense,
+        {},
+        {
+          default: () => Ele,
+          fallback: () => h(BlockLoading, { name: componentName })
+        }
+      )
+    }
+
+    return Ele
+  }
+
+  return loopList?.length ? loopList.map(renderElement) : renderElement()
 }
 
 export const renderer = defineComponent({
@@ -244,79 +336,9 @@ export const renderer = defineComponent({
   },
   render() {
     const { scope, schema, parent, ancestors } = this
-    const { componentName, loop, loopArgs, condition } = schema
     const pageContext = this.currentPageContext
 
-    if (!componentName) {
-      return parseData(schema, scope, pageContext.context)
-    }
-
-    const isPageStart = schema.componentType === 'PageStart'
-    const isRouterView = componentName === 'RouterView'
-    if (ancestors.length && (isPageStart || isRouterView)) {
-      const renderPageId = getRenderPageId(pageContext.pageId, isPageStart)
-      if (renderPageId) {
-        return h(getPage(renderPageId), {
-          key: ancestors,
-          [DESIGN_TAGKEY]: `${componentName}`,
-          'data-te-page-id': pageContext.pageId,
-          ...(pageContext.active && !isPageStart
-            ? {
-                [DESIGN_UIDKEY]: schema.id,
-                draggable: true
-              }
-            : {})
-        })
-      }
-    }
-
-    const component = getComponent(componentName)
-
-    const loopList = parseData(loop, scope, pageContext.context)
-
-    const renderElement = (item?, index?) => {
-      let mergeScope = item
-        ? getLoopScope({
-            item,
-            index,
-            loopArgs,
-            scope
-          })
-        : scope
-
-      // 如果是区块，并且使用了区块的作用域插槽，则需要将作用域插槽的数据传递下去
-      if (parent?.componentType === 'Block' && componentName === 'Template' && schema.props?.slot?.params?.length) {
-        const slotName = schema.props.slot?.name || schema.props.slot
-        const blockName = parent.componentName
-        const slotData = blockSlotDataMap[blockName]?.[slotName] || {}
-        mergeScope = mergeScope ? { ...mergeScope, ...slotData } : slotData
-      }
-
-      if (pageContext.conditions[schema.id] === false || !parseCondition(condition, mergeScope, pageContext.context)) {
-        return null
-      }
-
-      const Ele = h(
-        component,
-        getBindProps(schema, mergeScope, pageContext.context, pageContext),
-        getChildren(schema, mergeScope, pageContext)
-      )
-      // 区块加上 suspense 渲染，就可以在网络延时的时候显示加载中的字样或者动画，优化体验
-      if (schema.componentType === 'Block') {
-        return h(
-          Suspense,
-          {},
-          {
-            default: () => Ele,
-            fallback: () => h(BlockLoading, { name: componentName })
-          }
-        )
-      }
-
-      return Ele
-    }
-
-    return loopList?.length ? loopList.map(renderElement) : renderElement()
+    return renderComponent(schema, scope, pageContext, parent, ancestors)
   }
 })
 export { getController } from './canvas-function'

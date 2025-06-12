@@ -2,7 +2,7 @@
   <div class="className-container">
     <h6 class="title">
       <span>全局样式</span>
-      <link-button :href="docsUrl" class="help-link"></link-button>
+      <link-button :href="docsUrl" :tips="docsContent" class="help-link"></link-button>
     </h6>
     <div class="selector-container">
       <code-configurator
@@ -102,6 +102,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.ClassNamesContainer-index */
 import { computed, reactive, ref, nextTick, watch, watchEffect } from 'vue'
 import { Select as TinySelect } from '@opentiny/vue'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'
@@ -132,6 +133,8 @@ const OPTION_TYPE = {
 }
 
 const docsUrl = useHelp().getDocsUrl('stylePanel')
+
+const docsContent = '声明多条CSS样式或其他媒体查询的样式，然后通过组件的 class 或者 id 进行绑定'
 
 const classNameState = reactive({
   curSelector: '',
@@ -531,7 +534,7 @@ const handleDeleteCurSelector = () => {
     row-gap: 2px;
     align-items: center;
     max-width: 180px;
-    min-width: 0;
+    min-width: 144px;
     padding: 1px 10px;
     border: 1px solid var(--te-styles-common-border-color);
     border-radius: var(--te-base-border-radius-1);

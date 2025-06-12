@@ -13,22 +13,36 @@ import {
 const { readJsonSync } = fs
 
 export function extraBundleCdnLink(filename, originCdnPrefix) {
-  const result = []
+  const result = new Set()
   const bundle = readJsonSync(filename)
+  // 兼容旧版的 npm 协议
   bundle.data?.materials?.components?.forEach((component) => {
     if (component.npm) {
       const possibleUrl = [component.npm.script, component.npm.css]
       possibleUrl.forEach((url) => {
-        if (url?.startsWith(originCdnPrefix) && !result.includes(url)) {
-          result.push(url)
+        if (url?.startsWith(originCdnPrefix) && !result.has(url)) {
+          result.add(url)
         }
       })
     }
   })
-  return result
+
+  bundle.data?.materials?.packages?.forEach((packageItem) => {
+    if (packageItem) {
+      const possibleUrl = [packageItem.script, packageItem.css]
+      possibleUrl.forEach((url) => {
+        if (url?.startsWith(originCdnPrefix)) {
+          result.add(url)
+        }
+      })
+    }
+  })
+
+  return [...result]
 }
 
 export function replaceBundleCdnLink(bundle, fileMap) {
+  // 兼容旧版的 npm 协议
   bundle.data?.materials?.components?.forEach((component) => {
     if (component.npm) {
       const possibleUrl = ['script', 'css']
@@ -36,6 +50,18 @@ export function replaceBundleCdnLink(bundle, fileMap) {
         const matchRule = fileMap.find((rule) => component.npm[key] === rule.originUrl)
         if (matchRule) {
           component.npm[key] = matchRule.newUrl
+        }
+      })
+    }
+  })
+
+  bundle.data?.materials?.packages?.forEach((packageItem) => {
+    if (packageItem) {
+      const possibleUrl = ['script', 'css']
+      possibleUrl.forEach((key) => {
+        const matchRule = fileMap.find((rule) => packageItem[key] === rule.originUrl)
+        if (matchRule) {
+          packageItem[key] = matchRule.newUrl
         }
       })
     }
@@ -50,9 +76,12 @@ export function copyBundleDeps({
   dir = 'material-static',
   bundleTempDir = 'bundle-deps/material-static'
 }) {
-  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix).map((url) =>
-    getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir)
-  )
+  const cdnFiles = extraBundleCdnLink(bundleFile, originCdnPrefix)
+    .map((url) => getCdnPathNpmInfoForSingleFile(url, originCdnPrefix, base, dir, false, bundleTempDir))
+    // 比如 url 前缀跟 originCdnPrefix 不匹配，或者 url 格式不正确 的场景有可能会导致匹配失败
+    // 匹配失败时，会返回 null，需要过滤掉
+    .filter(Boolean)
+
   const { packages: packageNeedToInstall, files } = getPackageNeedToInstallAndFilesUsingSameVersion(cdnFiles)
 
   const plugin = (isDev) => {

@@ -29,8 +29,8 @@ const importmapPlugin = (importmap, importMapStyles = []) => {
       }
     },
     transformIndexHtml: {
-      enforce: 'pre',
-      transform(html) {
+      order: 'pre',
+      handler(html) {
         return {
           html,
           tags: [

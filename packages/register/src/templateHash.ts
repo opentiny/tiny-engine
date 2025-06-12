@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -9,9 +9,8 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
 import { compile } from 'vue/dist/vue.esm-bundler.js'
-import { templateHashMap } from './common'
+import { templateHashMap } from './entryHash'
 
 const generateTemplate = (template: string) => {
   const templateString = template.trim()
@@ -26,7 +25,9 @@ export const useCompile = ({ component, metaData }: any) => {
   const customTem = templateHashMap[metaData.id]
   if (customTem) {
     const template = generateTemplate(customTem)
-    component.render = compile(template)
+    const render = compile(template)
+
+    component.render = render
   }
 
   return component

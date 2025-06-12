@@ -35,10 +35,7 @@ export function useDataSourceMap() {
         msg: 'success',
         data: {}
       }
-      result.data =
-        dataSource.config.type === 'array'
-          ? { items: dataSource?.config?.data ?? [], total: dataSource?.config?.data?.length }
-          : dataSource?.config?.data
+      result.data = { items: dataSource?.config?.data ?? [], total: dataSource?.config?.data?.length }
 
       dataSource.load = () => Promise.resolve(result)
       dMap[config.name] = dataSource

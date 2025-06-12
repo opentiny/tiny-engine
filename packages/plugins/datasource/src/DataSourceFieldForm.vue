@@ -34,6 +34,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceFieldForm */
 import { reactive, watchEffect, ref, provide, computed } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
 import { ButtonGroup, I18nInput } from '@opentiny/tiny-engine-common'
@@ -215,6 +216,11 @@ export default {
   }
   svg {
     color: var(--te-datasource-toolbar-icon-color);
+  }
+  .title-content {
+    :deep(.tiny-input__inner) {
+      padding-right: 30px;
+    }
   }
 }
 #default-item {

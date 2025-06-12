@@ -20,6 +20,7 @@ export default (config) => {
 
   if (typeof MockAdapter.prototype.proxy === 'undefined') {
     MockAdapter.prototype.proxy = function ({ url, config = {}, proxy, response, handleData } = {}) {
+      // eslint-disable-next-line @typescript-eslint/no-this-alias
       let stream = this
       const request = (proxy, any) => {
         return (setting) => {
@@ -28,8 +29,9 @@ export default (config) => {
             axios
               .get(any ? proxy + setting.url + '.json' : proxy, config)
               .then(({ data }) => {
-                /* eslint-disable  no-useless-call */
-                typeof handleData === 'function' && (data = handleData.call(null, data, setting))
+                if (typeof handleData === 'function') {
+                  data = handleData.call(null, data, setting)
+                }
                 resolve([200, data])
               })
               .catch((error) => {
@@ -127,7 +129,9 @@ export default (config) => {
       return mock
     },
     disableMock() {
-      mock && mock.restore()
+      if (mock) {
+        mock.restore()
+      }
       mock = undefined
     },
     isMock() {

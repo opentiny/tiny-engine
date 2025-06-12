@@ -12,7 +12,7 @@ import { Form as TinyForm, FormItem as TinyFormItem } from '@opentiny/vue'
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
-import StateAccessor from '../components/StateAccessor.vue'
+import StateAccessor from '@/components/StateAccessor.vue'
 
 const props = defineProps({})
 

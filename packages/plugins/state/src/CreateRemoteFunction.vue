@@ -7,6 +7,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.CreateRemoteFunction */
 import { getCurrentInstance, reactive } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { iconDel } from '@opentiny/vue-icon'

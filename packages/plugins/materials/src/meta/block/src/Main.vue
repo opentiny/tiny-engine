@@ -3,6 +3,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.materials.block.Main */
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import BlockPanel from './BlockPanel.vue'
 

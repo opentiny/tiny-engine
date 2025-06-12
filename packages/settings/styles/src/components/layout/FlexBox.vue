@@ -21,6 +21,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.FlexBox */
 import { ref, watchEffect } from 'vue'
 import { RadioConfigurator } from '@opentiny/tiny-engine-configurator'
 import { utils } from '@opentiny/tiny-engine-utils'

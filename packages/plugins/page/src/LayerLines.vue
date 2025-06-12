@@ -9,6 +9,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.appmanage.LayerLines */
 import { defineProps } from 'vue'
 
 defineProps({
@@ -27,5 +28,6 @@ defineProps({
 .gap {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
 }
 </style>

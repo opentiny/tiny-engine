@@ -17,6 +17,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceType */
 import { watch, ref } from 'vue'
 import { Form, FormItem, RadioGroup, Radio } from '@opentiny/vue'
 
@@ -30,7 +31,7 @@ export default {
   props: {
     modelValue: {
       type: String,
-      default: 'array'
+      default: 'remote'
     },
     editable: {
       type: Boolean,
@@ -41,12 +42,8 @@ export default {
   setup(props, { emit }) {
     const RADIO_GROUP = [
       {
-        name: '对象数组',
-        value: 'array'
-      },
-      {
-        name: '树结构',
-        value: 'tree'
+        name: '远程数据源',
+        value: 'remote'
       }
     ]
 

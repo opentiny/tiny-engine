@@ -41,9 +41,10 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.SaveNewBlock */
 import { reactive, computed, ref } from 'vue'
 import { Input, Form, FormItem, Button, DialogBox, Select } from '@opentiny/vue'
-import { useBlock, useLayout, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
+import { useBlock, useLayout, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { REGEXP_BLOCK_NAME } from '@opentiny/tiny-engine-common/js/verification'
 
 export default {
@@ -88,13 +89,13 @@ export default {
     }
 
     const handleAddBlock = () => {
-      if (props.fromCanvas) {
-        createBlock(formData)
-      } else {
-        createEmptyBlock(formData)
-      }
-      activePlugin(PLUGIN_NAME.Materials) // ?? 疑问：新建区块后，这里为啥要激活物料
-      cancel()
+      const promise = props.fromCanvas ? createBlock(formData) : createEmptyBlock(formData)
+
+      promise.then((block) => {
+        getMetaApi(META_SERVICE.GlobalService).updateBlockId(block.id)
+        activePlugin(PLUGIN_NAME.Materials)
+        cancel()
+      })
     }
     const addBlock = () => {
       formRef.value.validate((valid) => {

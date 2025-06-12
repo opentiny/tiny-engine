@@ -36,12 +36,13 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.materials.block.BlockDetail */
 import { Button } from '@opentiny/vue'
 import { IconDel, iconDoubleRight } from '@opentiny/vue-icon'
 import { inject } from 'vue'
 import { useBlock, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { requestUpdateGroup, fetchGroupBlocksById } from './http'
-import { setHistoryPanelVisible } from './js/usePanel'
+import { setBlockVersionPanelVisible } from './js/usePanel'
 
 export default {
   components: {
@@ -95,7 +96,7 @@ export default {
       confirm({ title, status, message: messageRender, exec })
     }
 
-    const openHistory = () => setHistoryPanelVisible(true)
+    const openHistory = () => setBlockVersionPanelVisible(true)
 
     return {
       isDefaultGroupId,
@@ -160,6 +161,7 @@ export default {
       padding: 8px 12px;
       color: var(--te-materials-block-detail-text-color);
       font-size: 12px;
+
       span {
         margin-right: 4px;
       }
@@ -177,6 +179,7 @@ export default {
 
     .block-delete {
       padding: 12px 10px 10px;
+
       .tiny-button {
         padding: 0 8px;
       }
@@ -188,6 +191,7 @@ export default {
       &:not(:last-child) {
         border: none;
       }
+
       &:last-child {
         .block-detail-item:not(.block-detail-show-more) {
           display: none;

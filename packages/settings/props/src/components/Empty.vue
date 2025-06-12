@@ -3,6 +3,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.Empty */
 import { ref, watch } from 'vue'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 

@@ -34,6 +34,7 @@
   </plugin-setting>
 </template>
 <script lang="ts">
+/* metaService: engine.plugins.materials.block.BlockGroupPanel */
 import { reactive, watch, provide, inject, ref, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'

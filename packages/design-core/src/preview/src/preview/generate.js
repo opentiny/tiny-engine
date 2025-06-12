@@ -151,7 +151,19 @@ const compatibleI18n = (i18n) => {
  * @returns
  */
 export const processAppJsCode = (code, cssList) => {
-  return `${code}${cssList.map((css) => `addCss('${css}')`).join('\n')}`
+  if (!Array.isArray(cssList) || !cssList.length) {
+    return code
+  }
+
+  let res = `${code}\n`
+
+  cssList.forEach((css) => {
+    if (!code.includes(`addCss('${css}')`)) {
+      res += `addCss('${css}')\n`
+    }
+  })
+
+  return res
 }
 
 export default (data) => {

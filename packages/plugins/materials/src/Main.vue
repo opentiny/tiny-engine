@@ -3,11 +3,12 @@
 </template>
 
 <script lang="ts">
-import { getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+/* metaService: engine.plugins.materials.Main */
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'
 export default {
   setup() {
-    const registry = getMergeRegistry(meta.type, meta.id)
+    const registry = getMergeMeta(meta.id)
     const { layout, ...restRegistry } = registry
     return {
       registryData: restRegistry,

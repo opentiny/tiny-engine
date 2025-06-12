@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.state.js-common */
 /**
  * 校验monaco编辑器必填与是否有语法错误
  * @param {Object} editor 编辑器实例

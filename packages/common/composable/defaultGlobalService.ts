@@ -150,9 +150,11 @@ const updatePreviewId = (previewId: string, replace = false) => {
 export default defineService({
   id: META_SERVICE.GlobalService,
   type: 'MetaService',
-  options: {},
+  options: {
+    enableTitleUpdate: true
+  },
   initialState,
-  init: ({ state }) => {
+  init: ({ state, options }) => {
     watch(
       () => state.appInfo,
       (appInfo) => {
@@ -179,8 +181,11 @@ export default defineService({
 
         fetchAppInfo(appId).then((app: any) => {
           state.appInfo = app
-          // 监听应用 ID 变化，根据应用名称设置网页 title
-          document.title = `${app.name} —— TinyEditor 前端可视化设计器`
+
+          if (options.enableTitleUpdate) {
+            // 监听应用 ID 变化，根据应用名称设置网页 title
+            document.title = `${app.name} —— TinyEngine 前端可视化设计器`
+          }
         })
       }
     })

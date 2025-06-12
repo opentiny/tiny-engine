@@ -40,6 +40,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.schema.Main */
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
@@ -187,6 +188,7 @@ export default {
 
 <style lang="less" scoped>
 #source-code {
+  border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
 

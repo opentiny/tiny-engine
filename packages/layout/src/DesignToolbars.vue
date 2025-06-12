@@ -2,23 +2,23 @@
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
       <component
-        :is="getMergeMeta(comp).entry"
-        v-for="comp in state.leftBar"
+        :is="getMergeMeta(comp)?.entry"
+        v-for="comp in toolbars.left"
         :key="comp"
-        :options="getMergeMeta(comp).options"
+        :options="getMergeMeta(comp)?.options"
       ></component>
     </div>
     <div class="toolbar-center">
       <component
-        :is="getMergeMeta(comp).entry"
-        v-for="comp in state.centerBar"
+        :is="getMergeMeta(comp)?.entry"
+        v-for="comp in toolbars.center"
         :key="comp"
-        :options="getMergeMeta(comp).options"
+        :options="getMergeMeta(comp)?.options"
       ></component>
     </div>
     <div class="toolbar-right">
       <div class="toolbar-right-content">
-        <div class="toolbar-right-item" v-for="(item, idx) in state.rightBar" :key="idx">
+        <div class="toolbar-right-item" v-for="(item, idx) in toolbars.right" :key="idx">
           <div v-if="typeof item === 'string'">
             <component
               :is="getMergeMeta(item)?.entry"
@@ -39,7 +39,7 @@
         </div>
       </div>
       <toolbar-collapse
-        :collapseBar="state.collapseBar"
+        :collapseBar="toolbars.collapse"
         v-if="layoutRegistry.options?.isShowCollapse"
       ></toolbar-collapse>
     </div>
@@ -47,8 +47,9 @@
 </template>
 
 <script lang="ts">
-import { reactive } from 'vue'
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+/* metaService: engine.layout.DesignToolbars */
+import { computed } from 'vue'
+import { getMergeMeta, useLayout } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 
 export default {
@@ -58,20 +59,21 @@ export default {
   props: {
     layoutRegistry: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
-  setup(props) {
-    const state = reactive({
-      leftBar: props.layoutRegistry?.options?.toolbars?.left,
-      rightBar: props.layoutRegistry?.options?.toolbars?.right,
-      centerBar: props.layoutRegistry?.options?.toolbars?.center,
-      collapseBar: props.layoutRegistry?.options?.toolbars?.collapse
+  setup() {
+    const { getFinalLayoutConfig } = useLayout()
+
+    const toolbars = computed(() => {
+      const layoutConfig = getFinalLayoutConfig()
+
+      return layoutConfig.toolbars
     })
 
     return {
       getMergeMeta,
-      state
+      toolbars
     }
   }
 }

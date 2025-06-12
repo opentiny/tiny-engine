@@ -102,6 +102,7 @@
 </template>
 
 <script setup lang="ts">
+/* metaService: engine.toolbars.logo.Main */
 import { computed, reactive, ref, nextTick, onUnmounted, defineProps } from 'vue'
 import {
   DialogBox as TinyDialogBox,

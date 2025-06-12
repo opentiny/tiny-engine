@@ -21,7 +21,8 @@ import {
   handleObjBindAttrHook,
   handleEventAttrHook,
   handleTinyIconPropsHook,
-  handleJsxModelValueUpdate
+  handleJsxModelValueUpdate,
+  handleJSFunctionAttrHook
 } from './generateAttribute'
 import {
   GEN_SCRIPT_HOOKS,
@@ -42,7 +43,7 @@ import {
 
 const parseConfig = (config = {}) => {
   const {
-    blockRelativePath = '../components/',
+    blockRelativePath = '@/components/',
     blockSuffix = '.vue',
     scriptConfig = {},
     styleConfig = {}
@@ -227,6 +228,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
     handleAttrKeyHook,
     handlePrimitiveAttributeHook,
     handleExpressionAttrHook,
+    handleJSFunctionAttrHook,
     handleI18nAttrHook,
     handleTinyIconPropsHook,
     handleObjBindAttrHook,

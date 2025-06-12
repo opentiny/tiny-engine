@@ -10,22 +10,9 @@
  *
  */
 
-import { atou } from '@opentiny/tiny-engine-common/js/preview'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const HEADER_LOWCODE_ORG = 'x-lowcode-org'
-
-export const getSearchParams = () => {
-  let params
-
-  try {
-    params = JSON.parse(atou(location.hash.slice(1)))
-  } catch (error) {
-    params = {}
-  }
-
-  return params
-}
 
 export const fetchCode = async ({ platform, app, type, id, history, pageInfo, tenant } = {}) =>
   pageInfo
@@ -49,11 +36,11 @@ export const fetchMetaData = async ({ platform, app, type, id, history, tenant }
       })
     : {}
 
-export const fetchImportMap = async () => {
-  const baseUrl = new URL(import.meta.env.BASE_URL, location.href)
-  return fetch(new URL('./preview-import-map-static/preview-importmap.json', baseUrl).href).then((res) => res.json())
-}
-
 export const fetchAppSchema = async (id) => getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${id}`)
 export const fetchBlockSchema = async (blockName) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
+
+export const getPageById = async (id) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/detail/${id}`)
+export const getBlockById = async (id) => getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/detail/${id}`)
+export const fetchPageHistory = (pageId) =>
+  getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/histories?page=${pageId}`)

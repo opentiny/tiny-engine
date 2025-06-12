@@ -50,6 +50,7 @@
 </template>
 
 <script lang="ts" setup>
+/* metaService: engine.plugins.outlinetree.DraggableTree */
 import { computed, defineEmits, defineProps, reactive, ref } from 'vue'
 
 const props = defineProps({

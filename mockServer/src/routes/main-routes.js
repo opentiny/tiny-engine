@@ -104,8 +104,8 @@ router.get('/material-center/api/blocks', async (ctx) => {
 })
 
 router.post('/material-center/api/block/create', async (ctx) => {
-  const result = mockService.blockService.create(ctx.request.body)
-  const categoriesId = ctx.request.body.categories[0]
+  const result = await mockService.blockService.create(ctx.request.body)
+  const categoriesId = ctx.request.body.categories?.[0] || ctx.request.body.groups?.[0]
   const _id = result.id
   await mockService.blockCategoryService.update(categoriesId, { _id })
   ctx.body = getResponseData(result)

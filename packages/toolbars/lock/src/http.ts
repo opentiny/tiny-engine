@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.toolbars.lock.http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 锁定页面

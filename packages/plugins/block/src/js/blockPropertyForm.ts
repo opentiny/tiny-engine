@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.blockmanage.js-blockPropertyForm */
 import { ref, computed, watch } from 'vue'
 import { utils, constants } from '@opentiny/tiny-engine-utils'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'

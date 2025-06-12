@@ -8,10 +8,18 @@
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
+      :isMultiDragging="isMultiDragging"
       @select-slot="selectSlot"
       @setting="settingModel"
     ></canvas-action>
   </div>
+  <canvas-multi-drag-indicator
+    :lineState="lineState"
+    :multiDragState="multiDragState"
+    :multiStateLength="multiStateLength"
+    :isMultiDragging="isMultiDragging"
+    :getMultiDragPositionText="getMultiDragPositionText"
+  ></canvas-multi-drag-indicator>
   <canvas-router-jumper :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-router-jumper>
   <canvas-viewer-switcher :hoverState="hoverState" :inactiveHoverState="inactiveHoverState"></canvas-viewer-switcher>
   <canvas-divider :selectState="computedSelectState"></canvas-divider>
@@ -62,7 +70,9 @@ import CanvasViewerSwitcher from './components/CanvasViewerSwitcher.vue'
 import CanvasResize from './components/CanvasResize.vue'
 import CanvasDivider from './components/CanvasDivider.vue'
 import CanvasResizeBorder from './components/CanvasResizeBorder.vue'
+import CanvasMultiDragIndicator from './components/CanvasMultiDragIndicator.vue'
 import { useMultiSelect } from './composables/useMultiSelect'
+import { useMultiDrag } from './composables/useMultiDrag'
 import {
   canvasState,
   onMouseUp,
@@ -92,7 +102,8 @@ export default {
     CanvasDivider,
     CanvasResizeBorder,
     CanvasRouterJumper,
-    CanvasViewerSwitcher
+    CanvasViewerSwitcher,
+    CanvasMultiDragIndicator
   },
   props: {
     controller: Object,
@@ -113,9 +124,30 @@ export default {
     const containerPanel = ref(null)
     const insertContainer = ref(false)
 
-    const { multiSelectedStates } = useMultiSelect()
+    const DRAG_TYPE = {
+      // 无拖拽
+      NONE: 'none',
+      // 单选拖拽
+      SINGLE: 'single',
+      // 多选拖拽
+      MULTI: 'multi'
+    }
+
+    // 当前拖拽类型状态
+    const currentDragType = ref(DRAG_TYPE.NONE)
+
+    const { multiSelectedStates, isMouseDown } = useMultiSelect()
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
+    const {
+      startMultiDrag,
+      moveMultiDrag,
+      endMultiDrag,
+      isMultiDragging,
+      getMultiDragPositionText,
+      multiDragState,
+      cleanupDragState
+    } = useMultiDrag()
 
     const computedSelectState = computed(() => {
       if (multiSelectedStates.value.length === 1) {
@@ -125,14 +157,44 @@ export default {
       return initialRectState
     })
 
+    // 强制清除所有拖拽指示状态
+    const clearAllDragStates = () => {
+      clearLineState()
+      cleanupDragState()
+      currentDragType.value = DRAG_TYPE.NONE
+    }
+
     const setCurrentNode = async (event) => {
       const { clientX, clientY } = event
       const element = getElement(event.target)
       closeMenu()
+
+      if (!element) return
+
+      // 优先处理右键菜单
+      if (event.button === 2) {
+        openMenu(event)
+        return
+      }
+
       let node = getCurrent().schema
 
       if (element) {
+        // 首先尝试处理多选拖拽开始
+        if (startMultiDrag(event, element)) {
+          // 设置为多选拖拽状态
+          currentDragType.value = DRAG_TYPE.MULTI
+          return
+        }
+
+        // 只有当不是多选拖拽的情况下，才进行选择操作
         const currentElement = querySelectById(getCurrent().schema?.id)
+
+        // 如果是点击右键则打开右键菜单
+        if (event.button === 2) {
+          openMenu(event)
+          return
+        }
 
         if (!currentElement?.contains(element) || event.button === 0) {
           const isCtrlKey = event.ctrlKey || event.metaKey
@@ -144,15 +206,14 @@ export default {
           }
         }
 
+        // 处理单节点拖拽开始
         if (event.button === 0 && element !== element.ownerDocument.body) {
           const { x, y } = element.getBoundingClientRect()
-
-          dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
-        }
-
-        // 如果是点击右键则打开右键菜单
-        if (event.button === 2) {
-          openMenu(event)
+          if (multiStateLength.value === 1) {
+            dragStart(node, element, { offsetX: clientX - x, offsetY: clientY - y })
+            // 设置为单选拖拽状态
+            currentDragType.value = DRAG_TYPE.SINGLE
+          }
         }
       }
     }
@@ -206,9 +267,10 @@ export default {
         const doc = iframe.value.contentDocument
         const win = iframe.value.contentWindow
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let isScrolling = false
 
-        // 以下是内部iframe监听的事件
+        // 监听鼠标按下事件
         win.addEventListener('mousedown', (event) => {
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
@@ -221,6 +283,10 @@ export default {
             if (!element) {
               return
             }
+
+            isMouseDown.value = true
+            // 重置拖拽状态
+            currentDragType.value = DRAG_TYPE.NONE
 
             insertPosition.value = false
             insertContainer.value = false
@@ -235,32 +301,92 @@ export default {
           isScrolling = true
         })
 
-        win.addEventListener('mouseup', (event) => {
-          if (event.target !== doc.documentElement || isScrolling) {
-            return
-          }
-
-          insertPosition.value = false
-          insertContainer.value = false
-          setCurrentNode(event)
-          target.value = event.target
+        // 监听鼠标移动事件
+        win.addEventListener('mousemove', (ev) => {
+          handleCanvasEvent(() => {
+            // 根据当前拖拽类型执行相应操作
+            switch (currentDragType.value) {
+              case DRAG_TYPE.MULTI:
+                moveMultiDrag(ev)
+                break
+              case DRAG_TYPE.SINGLE:
+                dragMove(ev, true)
+                break
+              case DRAG_TYPE.NONE:
+                // 如果尚未确定拖拽类型，尝试确定
+                if (isMouseDown.value) {
+                  if (multiDragState.keydown) {
+                    currentDragType.value = DRAG_TYPE.MULTI
+                    moveMultiDrag(ev)
+                  } else if (dragState.element) {
+                    currentDragType.value = DRAG_TYPE.SINGLE
+                    dragMove(ev, true)
+                  }
+                }
+                break
+            }
+          })
         })
 
+        // 监听拖拽结束事件
+        win.addEventListener('mouseup', (ev) => {
+          handleCanvasEvent(() => {
+            if (ev.button === 0 && isMouseDown.value) {
+              isMouseDown.value = false
+
+              // 判断是否需要切换到单选状态
+              // 只有当点击多选节点但没有拖动时，才需要切换到单选状态
+              if (multiDragState.keydown && !multiDragState.dragStarted && multiStateLength.value > 1) {
+                const element = getElement(ev.target)
+                if (element) {
+                  const clickedNodeId = element?.getAttribute(NODE_UID)
+                  // 只有点击的是多选节点中的一个时才切换到单选
+                  if (clickedNodeId && multiSelectedStates.value.some((state) => state.id === clickedNodeId)) {
+                    selectNode(clickedNodeId)
+                  }
+                }
+              }
+            }
+
+            // 根据当前拖拽类型执行相应的结束操作
+            switch (currentDragType.value) {
+              case DRAG_TYPE.MULTI:
+                endMultiDrag()
+                break
+              case DRAG_TYPE.SINGLE:
+                onMouseUp(ev)
+                break
+            }
+
+            clearAllDragStates()
+          })
+        })
+
+        // 监听拖拽过程事件
         win.addEventListener('dragover', (ev) => {
           ev.dataTransfer.dropEffect = 'move'
           ev.preventDefault()
-          dragMove(ev)
+
+          // 根据当前拖拽类型执行相应操作
+          if (currentDragType.value === DRAG_TYPE.MULTI) {
+            moveMultiDrag(ev)
+          } else {
+            dragMove(ev)
+          }
         })
 
+        // 监听放置事件
         win.addEventListener('drop', (ev) => {
           ev.preventDefault()
-          onMouseUp(ev)
-        })
 
-        win.addEventListener('mousemove', (ev) => {
-          handleCanvasEvent(() => {
-            dragMove(ev, true)
-          })
+          // 根据当前拖拽类型执行相应的结束操作
+          if (currentDragType.value === DRAG_TYPE.MULTI) {
+            endMultiDrag()
+          } else {
+            onMouseUp(ev)
+          }
+
+          clearAllDragStates()
         })
 
         // 阻止浏览器默认的右键菜单功能
@@ -327,6 +453,7 @@ export default {
     document.addEventListener('canvasReady', canvasReady)
 
     return {
+      isMouseDown,
       iframe,
       dragState,
       hoverState,
@@ -347,7 +474,10 @@ export default {
       insertPosition,
       insertContainer,
       loading,
-      srcAttrName
+      srcAttrName,
+      isMultiDragging,
+      multiDragState,
+      getMultiDragPositionText
     }
   }
 }
