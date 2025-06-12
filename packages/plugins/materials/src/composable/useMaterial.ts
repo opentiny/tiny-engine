@@ -240,25 +240,35 @@ const clearBlockResources = () => blockResource.clear()
  */
 const generateThirdPartyDeps = (components: Component[]) => {
   const styles: string[] = []
-  const scripts: { package: string; script?: string; components: Record<string, string> }[] = []
+  const scripts: {
+    package: string
+    script?: string
+    components: Record<string, { exportName: string; destructuring: boolean }>
+  }[] = []
 
   components.forEach((item) => {
     const { npm, component } = item
 
     if (!npm || !Object.keys(npm).length) return
 
-    const { package: pkg, script, exportName, css } = npm
+    const { package: pkg, script, exportName, css, destructuring = true } = npm
     const currentPkg = scripts.find((item) => item.package === pkg)
 
     if (currentPkg) {
       // 保存组件id和导出组件名的对应关系 TinyButton： Button
-      currentPkg.components[component] = exportName
+      currentPkg.components[component] = {
+        exportName,
+        destructuring
+      }
     } else {
       scripts.push({
         package: pkg,
         script,
         components: {
-          [component]: exportName
+          [component]: {
+            destructuring,
+            exportName
+          }
         }
       })
     }
