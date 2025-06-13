@@ -129,9 +129,6 @@ const material = useMaterial().getMaterial('ComponentName')
 // 生成组件节点
 const node = useMaterial().generateNode({ type: 'component', component: 'Button' })
 
-// 注册新区块
-await useMaterial().registerBlock('blockName')
-
 // 刷新物料
 await useMaterial().refreshMaterial()
 ```
