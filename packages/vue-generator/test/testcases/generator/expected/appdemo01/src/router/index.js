@@ -3,7 +3,7 @@ const routes = [
   {
     path: '/',
     redirect: {
-      name: 'NTJ4MjvqoVj8OVsc'
+      name: '1'
     },
     children: [
       {
@@ -13,7 +13,7 @@ const routes = [
         children: []
       },
       {
-        name: 'NTJ4MjvqoVj8OVsc',
+        name: '1',
         path: 'createVm',
         component: () => import('@/views/createVm.vue'),
         children: [

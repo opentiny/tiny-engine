@@ -5,7 +5,6 @@
     "email": "developer@lowcode.com",
     "provider": null,
     "password": null,
-    "resetPasswordToken": "developer",
     "confirmationToken": "uuid~dfafasdfasdfa",
     "confirmed": true,
     "blocked": null,

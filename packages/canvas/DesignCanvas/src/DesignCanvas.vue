@@ -106,7 +106,9 @@ export default {
           empty: () => '应用下暂无页面，需新建页面后体验画布功能',
           release: (type) => `当前${componentType[type]}未锁定，点击右上角 “锁定” 图标后编辑${componentType[type]}`,
           lock: (type) =>
-            `当前${componentType[type]}被 ${pageInfo?.username} ${pageInfo?.resetPasswordToken} 锁定，如需编辑请先联系他解锁文件，然后再锁定该${componentType[type]}后编辑！`
+            `当前${componentType[type]}被 ${pageInfo?.username || ''} 锁定，如需编辑请先联系他解锁文件，然后再锁定该${
+              componentType[type]
+            }后编辑！`
         }
 
         const renderMsg = message[pageStatus.state](pageSchema.componentName)
