@@ -323,7 +323,18 @@ export default {
     }
 
     const downloadFile = () => {
-      window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
+      const { batchImportTempDownloadUrl } = getMergeMeta('engine.plugins.i18n').options || {}
+      const defaultDownloadUrl = `${
+        BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL
+      }/i18n-template-for-batch-import.zip`
+      const linkElement = document.createElement('a')
+
+      linkElement.href = batchImportTempDownloadUrl || defaultDownloadUrl
+      linkElement.download = 'i18n-template-for-batch-import.zip'
+      linkElement.target = '_blank'
+      document.body.appendChild(linkElement)
+      linkElement.click()
+      document.body.removeChild(linkElement)
     }
 
     const openDeletePopover = (row) => {
