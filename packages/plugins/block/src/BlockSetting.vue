@@ -85,7 +85,7 @@
 </template>
 
 <script lang="tsx">
-import { reactive, ref, watch, watchEffect, computed } from 'vue'
+import { reactive, ref, watch, watchEffect, computed, provide } from 'vue'
 import { Button as TinyButton, Collapse as TinyCollapse, CollapseItem as TinyCollapseItem } from '@opentiny/vue'
 import { useLayout, useModal, getMergeMeta, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { BlockHistoryList, PluginSetting, CloseIcon, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
@@ -165,6 +165,11 @@ export default {
       showAttributeGuide: false,
       showEventGuide: false
     })
+
+    provide(
+      'block-collapse',
+      computed(() => state.activeName)
+    )
 
     watchEffect(() => {
       state.bindLifeCycles = getEditBlock()?.content?.lifeCycles || {}

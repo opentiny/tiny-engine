@@ -3,7 +3,7 @@
     <tiny-form-item label="事件名" prop="eventName">
       <tiny-input class="event-name" v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
         <template #suffix>
-          <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="manual" popperClass="option-popper">
+          <tiny-popover v-model="state.showPopover" placement="bottom-end" trigger="manual">
             <template #reference>
               <tiny-icon-rich-text-link
                 :class="{ 'bind-propertys': isUpdateEvent }"
@@ -41,7 +41,7 @@
 </template>
 
 <script lang="ts">
-import { computed, reactive, watch } from 'vue'
+import { computed, reactive, watch, inject } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, TinyPopover } from '@opentiny/vue'
 import { REGEXP_EVENT_NAME, verifyEventName } from '@opentiny/tiny-engine-common/js/verification'
 import {
@@ -67,6 +67,20 @@ export default {
       propertys: getEditBlockPropertyList(),
       events: getEditBlockEvents()
     })
+
+    const collapseState = inject(
+      'block-collapse',
+      computed(() => [])
+    )
+
+    watch(
+      () => collapseState.value,
+      (newVal) => {
+        if (!newVal.includes('event')) {
+          state.showPopover = false
+        }
+      }
+    )
     const eventNameTip = '事件名为小写字符开头的驼峰形式，例：customEvent'
     const linked = computed(() => (getEditEvent() || {}).linked)
     const eventNameList = computed(() => new Set(Object.keys(state.events)))
