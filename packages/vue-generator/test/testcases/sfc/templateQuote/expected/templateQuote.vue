@@ -5,7 +5,13 @@
       type="primary"
       text="test"
       subStr="pri'ma'ry'subStr'"
-      :customExpressionTest="state.customExpressionTest_vBHN"
+      :customExpressionTest="{
+        value: [
+          {
+            defaultValue: '{\'class\': \'test-class\', \'id\': \'test-id\'}'
+          }
+        ]
+      }"
       :customAttrTest="{
         value: [
           {
@@ -52,13 +58,6 @@ const state = vue.reactive({
       type: 'danger'
     }
   ],
-  customExpressionTest_vBHN: {
-    value: [
-      {
-        defaultValue: '{"class": "test-class", "id": "test-id"}'
-      }
-    ]
-  },
   customAttrTest: { value: [{ defaultValue: "{'class': 'test-class', 'id': 'test-id'}" }] }
 })
 wrap({ state })

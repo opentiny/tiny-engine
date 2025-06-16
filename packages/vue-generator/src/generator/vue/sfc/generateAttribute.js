@@ -85,7 +85,7 @@ const handleJSExpressionBinding = (key, value, isJSX, globalHooks) => {
   }
 
   // expression 使用 v-bind 绑定
-  if (expressValue.includes('"')) {
+  if (expressValue.includes('"') && expressValue.includes("'")) {
     let stateKey = `${key}_${randomString()}`
     let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${expressValue}`)
 
@@ -96,7 +96,7 @@ const handleJSExpressionBinding = (key, value, isJSX, globalHooks) => {
 
     return `:${key}="state.${stateKey}"`
   } else {
-    return `:${key}="${expressValue}"`
+    return `:${key}="${expressValue.replaceAll(/"/g, "'")}"`
   }
 }
 
@@ -188,13 +188,13 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
   if (loop?.value && loop?.type) {
     source = loop.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
   } else {
-    source = JSON.stringify(loop).replaceAll("'", "\\'").replaceAll(/"/g, "'")
+    source = JSON.stringify(loop)
   }
 
   const iterVar = [...loopArgs]
 
   if (!isJSX) {
-    if (source.includes('"')) {
+    if (source.includes('"') && source.includes("'")) {
       let stateKey = `loop_${randomString()}`
       let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${source}`)
 
@@ -205,7 +205,7 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
 
       attributes.push(`v-for="(${iterVar.join(',')}) in state.${stateKey}"`)
     } else {
-      attributes.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+      attributes.push(`v-for="(${iterVar.join(',')}) in ${source.replaceAll(/"/g, "'")}"`)
     }
 
     return
