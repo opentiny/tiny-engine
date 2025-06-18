@@ -161,10 +161,14 @@ const getAncestorIds = (nodeId: string | number): (string | number)[] => {
 
 const filteredNodes = ref<TreeNode[]>([])
 
+// 下面两个 watch 对应的两个重新计算 filteredNodes 的场景。场景2比场景1多了展开匹配到的节点的操作
+
+// 场景1. 页面树的结构发生变化，或者有节点收起或者展开，重新计算 filteredNodes
 watch(nodes, (nodes) => {
   filteredNodes.value = nodes.filter((node) => node.label.toLowerCase().includes(props.filterValue.toLowerCase()))
 })
 
+// 场景2. 过滤条件发生变化，重新计算 filteredNodes，并且展开匹配到的节点
 watch(
   () => props.filterValue,
   (filterValue) => {
