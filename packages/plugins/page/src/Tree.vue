@@ -25,9 +25,9 @@
       @drop="handleDrop($event, node)"
       @dragend="handleDragEnd"
     >
-      <div class="content" @click="handleClickRow(node)">
+      <div class="content" @click="handleClickRow($event, node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
-        <div class="prefix-icon" @click.stop="handleSwitchCollapse(node)">
+        <div class="prefix-icon" @click="handleSwitchCollapse(node)">
           <svg-icon v-if="node.rawData.isPage" :name="collapseMap[node.id] ? 'page-collection' : 'page'"></svg-icon>
           <svg-icon v-else :name="collapseMap[node.id] ? 'folder' : 'folder-wold'"></svg-icon>
         </div>
@@ -236,7 +236,13 @@ const layerLine = computed(() => {
   return result
 })
 
-const handleClickRow = (node: TreeNode) => {
+const handleClickRow = (event: MouseEvent, node: TreeNode) => {
+  // 点击事件来自折叠图标，不触发 clickRow 事件。点击事件仍然可以冒泡
+  const currentTarget = event.currentTarget as HTMLElement
+  if (currentTarget.querySelector('div.prefix-icon')?.contains(event.target as Node)) {
+    return
+  }
+
   emit('clickRow', node)
 }
 
