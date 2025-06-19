@@ -5,13 +5,26 @@
     </div>
     <Teleport to="body">
       <div class="robot-chat-container">
-        <tr-container v-if="robotVisible" v-model:fullscreen="fullscreen" v-model:show="robotVisible"
-          class="tiny-container">
+        <tr-container
+          v-if="robotVisible"
+          v-model:fullscreen="fullscreen"
+          v-model:show="robotVisible"
+          class="tiny-container"
+        >
           <template #operations>
-            <tiny-popover width="290" trigger="manual" v-model="showPopover" :visible-arrow="false"
-              popper-class="chat-popover">
-              <robot-setting-popover v-if="showPopover" :typeValue="selectedModel" @changeType="changeModel"
-                @close="closePanel"></robot-setting-popover>
+            <tiny-popover
+              width="290"
+              trigger="manual"
+              v-model="showPopover"
+              :visible-arrow="false"
+              popper-class="chat-popover"
+            >
+              <robot-setting-popover
+                v-if="showPopover"
+                :typeValue="selectedModel"
+                @changeType="changeModel"
+                @close="closePanel"
+              ></robot-setting-popover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
                   <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
@@ -28,15 +41,27 @@
           </template>
           <tr-bubble-list v-else :items="activeMessages" :roles="roles" :auto-scroll="true"></tr-bubble-list>
           <template #footer>
-            <tr-sender class="footer-sender" ref="senderRef" v-model="inputContent" placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-              :clearable="true" :showWordLimit="true"
+            <tr-sender
+              class="footer-sender"
+              ref="senderRef"
+              v-model="inputContent"
+              placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
+              :clearable="true"
+              :showWordLimit="true"
               :allowFiles="singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model)"
-              uploadTooltip="支持上传1张图片" @submit="sendContent(inputContent, false)"
-              @files-selected="handleSingleFilesSelected">
+              uploadTooltip="支持上传1张图片"
+              @submit="sendContent(inputContent, false)"
+              @files-selected="handleSingleFilesSelected"
+            >
               <template #header v-if="singleAttachmentItems.length > 0">
                 <div>
-                  <tr-attachments ref="singleAttachmentRef" v-model:items="singleAttachmentItems" status-type="message"
-                    @file-remove="handleSingleFileRemove" @file-retry="handleSingleFileRetry">
+                  <tr-attachments
+                    ref="singleAttachmentRef"
+                    v-model:items="singleAttachmentItems"
+                    status-type="message"
+                    @file-remove="handleSingleFileRemove"
+                    @file-retry="handleSingleFileRetry"
+                  >
                   </tr-attachments>
                 </div>
               </template>
@@ -118,12 +143,12 @@ export default {
         sessionProcess
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
-            foundationModel: {
-              ...selectedModel.value
-            },
-            messages: [],
-            displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
-          })
+              foundationModel: {
+                ...selectedModel.value
+              },
+              messages: [],
+              displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+            })
       )
     }
 
@@ -135,7 +160,9 @@ export default {
       const firstMessage = sendProcess.messages[0]
       const firstContent = firstMessage.content.map((item) => {
         if (item.type === 'text') {
-          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(pageState.pageSchema)}`
+          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
+            pageState.pageSchema
+          )}`
         }
         return item
       })
@@ -201,6 +228,7 @@ export default {
         inProcesing.value = false
         connectedFailed.value = false
       } catch (e) {
+        console.error('e', e)
         messages.value[messages.value.length - 1].content = '处理响应时出错'
         inProcesing.value = false
         connectedFailed.value = false
@@ -512,9 +540,7 @@ export default {
               style: {
                 display: getItemSchema(bubbleProps)?.schema ? 'block' : 'none'
               },
-              actions: [
-                { name: 'run', label: '应用', icon: saveIcon }
-              ],
+              actions: [{ name: 'run', label: '应用', icon: saveIcon }],
               onAction(name) {
                 currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
                 if (name === 'preview') {
@@ -672,9 +698,11 @@ export default {
 
 .tiny-container {
   top: var(--base-top-panel-height) !important;
-  background-image: linear-gradient(var(--te-chat-bg-top-color),
-      var(--te-chat-bg-mid-color),
-      var(--te-chat-bg-bottom-color));
+  background-image: linear-gradient(
+    var(--te-chat-bg-top-color),
+    var(--te-chat-bg-mid-color),
+    var(--te-chat-bg-bottom-color)
+  );
   container-type: inline-size;
 
   :deep(button.icon-btn) {
@@ -685,7 +713,7 @@ export default {
     margin-left: 10px;
   }
 
-  .robot-welcome>div {
+  .robot-welcome > div {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -751,5 +779,15 @@ export default {
 
 .tiny-sender__header-slot .tr-attachments .tr-attachments__file-list .tr-attachments__add-button {
   display: none;
+}
+
+.tiny-sender .tiny-sender__upload-popup {
+  .upload-options {
+    height: 42px;
+
+    .upload-option:first-child {
+      display: none;
+    }
+  }
 }
 </style>

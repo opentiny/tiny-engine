@@ -7,10 +7,10 @@ export const PROMPTS = `
 [
   {
     "op": "add",
-    "path": "/children/0",
+    "path": "/children/-", // 根据当前schema去生成路径,新生成的模块从尾部添加。
     "value": {
       "componentName": "CanvasFlexBox",
-      "id": /* 随机生成8位乱序数字字符串 */,
+      "id": "/* 随机生成8位数字符串（字母+数字） */",
       "props": {
         "className": "header-style",
         "justifyContent": "space-between",
@@ -19,7 +19,7 @@ export const PROMPTS = `
       "children": [
         {
           "componentName": "img",
-          "id": "logoImage",
+          "id": "/* 随机生成8位数字符串（字母+数字） */",
           "props": {
             "src": "https://res-static.hc-cdn.cn/cloudbu-site/intl/zh-cn/yunying/header-new/logo.png",
             "alt": "华为云Logo"
@@ -90,20 +90,24 @@ export const PROMPTS = `
 # IPageSchema规范：
 ## 1. 页面结构要求
 - 每个组件必须包含componentName，componentName: "Page" | "div" | "Text" | "TinyInput" | "TinyButton" | "img" | "video" | "a";可参考知识生成
-- 每个组件必须包含唯一id，id是一个8位数随机数字字符串，每次生成都必须随机，不可重复使用固定值
+- 每个组件必须包含唯一ID：ID必须是8位随机字符串（示例："k8jD3fG2"）;字符集：a-z, A-Z, 0-9;必须包含至少1个字母和1个数字;禁止连续模式（错误示例："abc12345"）;使用强随机性组合（如"x7Y2pQ9r"）;同一JSON中所有组件的ID必须绝对唯一
 - 层级关系通过children数组嵌套，"children"的值不允许生成纯字符串数组、"children"的值不允许生成数组中混合对象和字符串的数据格式
 - 动态数据使用 this.state.xxx 绑定
 - 事件处理使用 this.methods.xxx 绑定
 - 样式通过每个组件的props.style字段定义(字符串格式,与行内样式格式相同)，注意背景颜色、文字颜色、字体大小、字体系列、填充、边距、边框、布局等，严格按照图片样式还原，准确匹配颜色和尺寸。建议多用弹性布局。
 
+### 错误示例修正
+❌ 排序ID: "id": "12345678"  
+✅ 乱序ID: "id": "8264a1c3"
+
 ## 2. 组件转换规则
-├─ 容器元素 → { componentName: "div", id: "uniqueId" }
-├─ 表单元素 → { componentName: "TinyInput/TinySelect/TinyRadio", id: "formField1" }
-├─ 按钮元素 → { componentName: "TinyButton", id: "btnSubmit" }
-└─ 文本内容 → { componentName: "Text", id: "text1", props: { "text": "/** 文本内容 */" }}
-└─ 图片/图像元素 → { componentName: "img", id: "img1", props: { "src": "/** 图片链接 */", "alt": "/** 图片名称 */" }}
-└─ 视频元素 → { componentName: "video", id: "video1", props: { "src": "/** 视频链接 */", "autoPlay": true, "loop": true, "muted": true}}
-└─ 链接跳转元素 → { componentName: "a", id: "a1", props: {"href":  "/** 跳转链接 */", "target": "_self"}}
+├─ 容器元素 → { componentName: "div", id: "1aw73542" }
+├─ 表单元素 → { componentName: "TinyInput/TinySelect/TinyRadio", id: "162ee548" }
+├─ 按钮元素 → { componentName: "TinyButton", id: "16qw3541" }
+└─ 文本内容 → { componentName: "Text", id: "162731e8", props: { "text": "/** 文本内容 */" }}
+└─ 图片/图像元素 → { componentName: "img", id: "1qwe3548", props: { "src": "/** 图片链接 */", "alt": "/** 图片名称 */" }}
+└─ 视频元素 → { componentName: "video", id: "16173eq", props: { "src": "/** 视频链接 */", "autoPlay": true, "loop": true, "muted": true}}
+└─ 链接跳转元素 → { componentName: "a", id: "16273op9", props: {"href":  "/** 跳转链接 */", "target": "_self"}}
 
 ## 3. 特殊属性处理
 条件渲染: {
@@ -185,7 +189,10 @@ export const PROMPTS = `
 
 ## 构筑开放共赢的全球生态
 [
-  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/1683712494111569410.jpg"
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/1683712494111569410.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/icon-developer01.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/kaifazhe.svg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/icon-developer03.png"
 ]
 
 ## 全球用户
@@ -216,8 +223,10 @@ export const PROMPTS = `
   "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/record.svg",
   "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/vip.svg",
   "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/unsub.svg",
-  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/feedback.svg"
-
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/feedback.svg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/intl/zh-cn/yunying/header-new/logo.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/%E7%BB%84%E4%BB%B6%E9%AA%8C%E8%AF%81/pep-common-footer/1619165229378039259.svg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/组件验证/pep-common-footer/1619165229391072287.svg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-header/app.svg"
 ]
 `
-

@@ -10,12 +10,21 @@ export default defineConfig((configEnv) => {
     useSourceAlias: true,
     envDir: './env'
   })
+  const baseConfigProxy = baseConfig.server?.proxy || {}
+  delete baseConfig.server.proxy
 
   const customConfig = {
     envDir: './env',
     publicDir: path.resolve(__dirname, './public'),
     server: {
-      port: 8090
+      port: 8090,
+      proxy: {
+        '/app-center/api/ai': {
+          target: 'http://127.0.0.1:7011',
+          changeOrigin: true
+        },
+        ...baseConfigProxy
+      }
     }
   }
 
