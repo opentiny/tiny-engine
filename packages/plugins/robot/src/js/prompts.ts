@@ -10,7 +10,7 @@ export const PROMPTS = `
     "path": "/children/0",
     "value": {
       "componentName": "CanvasFlexBox",
-      "id": "headerContainer",
+      "id": /* 随机生成8位乱序数字字符串 */,
       "props": {
         "className": "header-style",
         "justifyContent": "space-between",
@@ -89,7 +89,8 @@ export const PROMPTS = `
 
 # IPageSchema规范：
 ## 1. 页面结构要求
-- 每个组件必须包含componentName和唯一id，componentName: "Page" | "div" | "Text" | "TinyInput" | "TinyButton" | "img" | "video" | "a";可参考知识生成
+- 每个组件必须包含componentName，componentName: "Page" | "div" | "Text" | "TinyInput" | "TinyButton" | "img" | "video" | "a";可参考知识生成
+- 每个组件必须包含唯一id，id是一个8位数随机数字字符串，每次生成都必须随机，不可重复使用固定值
 - 层级关系通过children数组嵌套，"children"的值不允许生成纯字符串数组、"children"的值不允许生成数组中混合对象和字符串的数据格式
 - 动态数据使用 this.state.xxx 绑定
 - 事件处理使用 this.methods.xxx 绑定
@@ -130,5 +131,93 @@ export const PROMPTS = `
    - 注释（如<!-- -->）
    - 未实现的占位符（如...其他项目...）
    - 任何非JSON文本
+
+# 图片资源
+## 华为云logo
+"https://res-static.hc-cdn.cn/cloudbu-site/intl/zh-cn/yunying/header-new/logo.png"
+
+## banner
+[
+  {
+    "title": "华为云Flexus云服务",
+    "背景图": "https://res-static.hc-cdn.cn/cloudbu-site/intl/zh-cn/banner/Flexus-pc.jpg",
+    "视频": "https://res-video.hc-cdn.com/cloudbu-site/china/zh-cn/advertisement/Fixed/banner/1725874833932726721.mp4"
+  },
+  {
+    "title": "HDC.2025",
+    "背景图": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/advertisement/Fixed/banner/HDC_H5.jpg",
+    "视频": "https://res-video.hc-cdn.com/cloudbu-site/china/zh-cn/advertisement/Fixed/banner/HDC.mp4"
+  },
+  {
+    "title": "华为云618",
+    "背景图": "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/advertisement/Fixed/banner/618_H5_1.jpg",
+    "视频": "https://res-video.hc-cdn.com/cloudbu-site/china/zh-cn/shenzhihui/618_video.mp4"
+  }
+]
+
+## 技术即服务，让创新触手可及
+[
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/AI/MaaS.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/Compute/FECSX.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/Compute/FECSL.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/Compute/ECS.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/Storage/OBS.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/AI/ModelArts.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/ContentDeliveryEdgeComputing/CDN.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/BusinessApplications/Domains.png"
+]
+
+## 降本增效，加速企业数字化转型
+[
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/BusinessApplications/Domains.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/BusinessApplications/mail0918.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/public/new-product-icon/BusinessApplications/Cloudsite.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/markplace/home_icon_14.svg"
+]
+
+## 释放数字生产力，使能千行百业创新
+[
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/solution/1697093500915755615.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/solution/1697450201152426596.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/solution/1697450201418992815.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/solution/1697450201792293044.jpg"
+]
+
+## 构筑开放共赢的全球生态
+[
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/1683712494111569410.jpg"
+]
+
+## 全球用户
+[
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/case/1683534499530736835.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/case/1683534492076815143.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/case/1683712664660174037.jpg",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/case/1683712664481365793.jpg"
+]
+
+## 全球基础设施
+[
+  "https://portal.hc-cdn.com/cpage-pep-home-page/2.0.30/components/global-site-3d/images/earth_bg.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/ISO_22301_2012.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/ISO_27001_2013.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/SOC_1_Type_II_Report.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/PCI_DSS.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/djcp.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/wangxue/shouye/csa.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/banner/1683636999047309548.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/banner/1683636999311536020.png",
+  "https://res-static.hc-cdn.cn/cloudbu-site/china/zh-cn/yunying/new-home/333333.png"
+]
+
+## footer
+[
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/support.svg",
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/record.svg",
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/vip.svg",
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/unsub.svg",
+  "https://portal.hc-cdn.com/cnpm-header-and-footer/1.1.0/base/footer-china/components/service/images/feedback.svg"
+
+]
 `
 

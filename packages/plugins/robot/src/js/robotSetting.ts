@@ -19,14 +19,6 @@ export const VISUAL_MODEL = ['qwen-vl-max','qwen-vl-plus']
 
 export const AIModelOptions = [
   {
-    label: 'DeepSeek',
-    value: 'https://api.deepseek.com/v1',
-    model: [
-      { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
-      { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
-    ]
-  },
-  {
     label: '阿里云百炼',
     value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     model: [
@@ -38,6 +30,14 @@ export const AIModelOptions = [
       { label: 'qwen-long', value: 'qwen-long', maxTokens: 1000000 },
       { label: 'deepseek-r1', value: 'deepseek-r1', maxTokens: 65792 },
       { label: 'deepseek-v3', value: 'deepseek-v3', maxTokens: 65792 }
+    ]
+  },
+  {
+    label: 'DeepSeek',
+    value: 'https://api.deepseek.com/v1',
+    model: [
+      { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
+      { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
     ]
   },
   {

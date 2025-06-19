@@ -5,26 +5,13 @@
     </div>
     <Teleport to="body">
       <div class="robot-chat-container">
-        <tr-container
-          v-if="robotVisible"
-          v-model:fullscreen="fullscreen"
-          v-model:show="robotVisible"
-          class="tiny-container"
-        >
+        <tr-container v-if="robotVisible" v-model:fullscreen="fullscreen" v-model:show="robotVisible"
+          class="tiny-container">
           <template #operations>
-            <tiny-popover
-              width="290"
-              trigger="manual"
-              v-model="showPopover"
-              :visible-arrow="false"
-              popper-class="chat-popover"
-            >
-              <robot-setting-popover
-                v-if="showPopover"
-                :typeValue="selectedModel"
-                @changeType="changeModel"
-                @close="closePanel"
-              ></robot-setting-popover>
+            <tiny-popover width="290" trigger="manual" v-model="showPopover" :visible-arrow="false"
+              popper-class="chat-popover">
+              <robot-setting-popover v-if="showPopover" :typeValue="selectedModel" @changeType="changeModel"
+                @close="closePanel"></robot-setting-popover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
                   <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
@@ -39,34 +26,18 @@
             <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
             </tr-welcome>
           </template>
-          <tr-bubble-list v-else :items="activeMessages" :roles="roles"></tr-bubble-list>
+          <tr-bubble-list v-else :items="activeMessages" :roles="roles" :auto-scroll="true"></tr-bubble-list>
           <template #footer>
-            <tr-sender
-              class="footer-sender"
-              ref="senderRef"
-              v-model="inputContent"
-              placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-              :clearable="true"
-              :showWordLimit="true"
+            <tr-sender class="footer-sender" ref="senderRef" v-model="inputContent" placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
+              :clearable="true" :showWordLimit="true"
               :allowFiles="singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model)"
-              uploadTooltip="支持上传1张图片"
-              @submit="sendContent(inputContent, false)"
-              @files-selected="handleSingleFilesSelected"
-            >
+              uploadTooltip="支持上传1张图片" @submit="sendContent(inputContent, false)"
+              @files-selected="handleSingleFilesSelected">
               <template #header v-if="singleAttachmentItems.length > 0">
                 <div>
-                  <tr-attachments
-                    ref="singleAttachmentRef"
-                    v-model:items="singleAttachmentItems"
-                    status-type="message"
-                    @file-remove="handleSingleFileRemove"
-                    @file-retry="handleSingleFileRetry"
-                  >
+                  <tr-attachments ref="singleAttachmentRef" v-model:items="singleAttachmentItems" status-type="message"
+                    @file-remove="handleSingleFileRemove" @file-retry="handleSingleFileRetry">
                   </tr-attachments>
-                  <!-- <div style="width: 100px; height: 100px" v-show="showPreview">
-                    <schema-renderer :schema="currentSchema"></schema-renderer>
-                    <tiny-button @click="showPreview = false">关闭</tiny-button>
-                  </div> -->
                 </div>
               </template>
             </tr-sender>
@@ -133,7 +104,7 @@ export default {
     const showPreview = ref(false)
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
-    const MESSAGE_TIP = '已生成新的页面效果，请点击下方预览按钮确认是否更新schema'
+    const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
 
     const { pageSettingState } = usePage()
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
@@ -147,12 +118,12 @@ export default {
         sessionProcess
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
-              foundationModel: {
-                ...selectedModel.value
-              },
-              messages: [],
-              displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
-            })
+            foundationModel: {
+              ...selectedModel.value
+            },
+            messages: [],
+            displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+          })
       )
     }
 
@@ -164,7 +135,7 @@ export default {
       const firstMessage = sendProcess.messages[0]
       const firstContent = firstMessage.content.map((item) => {
         if (item.type === 'text') {
-          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[提问] ${item.text}`
+          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(pageState.pageSchema)}`
         }
         return item
       })
@@ -205,36 +176,8 @@ export default {
       showPreview.value = false
     }
 
-    const _fixedJson = (op) => {
-      // 修正 path：替换 ; 和 : 为 /
-      if (op.path) {
-        op.path = op.path.replace(/[;:]/g, '/').replace(/\/+/g, '/')
-      }
-
-      // 修正 value：如果是字符串且包含 %20，解码 URL 编码
-      if (typeof op.value === 'string') {
-        op.value = op.value.replace(/%20/g, ' ')
-      }
-
-      // 如果 path 包含 style，尝试解析成对象
-      if (op.path.includes('style') && typeof op.value === 'string') {
-        try {
-          // 示例：将 "margin:10px 0 0 30px" 转为 { margin: "10px 0 0 30px" }
-          const [key, val] = op.value.split(':')
-          if (key && val) {
-            op.value = { [key.trim()]: val.trim() }
-          }
-        } catch (e) {
-          // eslint-disable-next-line no-console
-          console.warn('Failed to parse style:', op.value)
-        }
-      }
-
-      return op
-    }
-
     // 处理响应
-    const handleResponse = (res: { id: string; chatMessage: any }) => {
+    const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }) => {
       try {
         const regex = /```json([\s\S]*?)```/
         const match = chatMessage?.content.match(regex)
@@ -244,13 +187,11 @@ export default {
           // 使用 applyPatch 修改 Schema
           const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
 
-          sessionProcess.messages.push(
-            getAiRespMessage(JSON.stringify(pageState.pageSchema, null, 2), chatMessage.role)
-          )
-          sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, res.id))
+          sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
+          sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
           messages.value[messages.value.length - 1].content = MESSAGE_TIP
           messages.value[messages.value.length - 1].schema = result
-          messages.value[messages.value.length - 1].id = res.id
+          messages.value[messages.value.length - 1].id = id
         } else {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
@@ -413,6 +354,17 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
+        if (!sessionProcess?.messages?.length) {
+          sessionProcess?.messages.push({
+            role: 'system',
+            content: [
+              {
+                type: 'text',
+                text: ''
+              }
+            ]
+          })
+        }
         const message = getMessage(realContent)
         inProcesing.value = true
         messages.value.push(message)
@@ -431,7 +383,8 @@ export default {
         await sleep(1000)
         messages.value.push(getAiDisplayMessage('好的，正在执行相关操作，请稍等片刻...'))
         await scrollContent()
-        await sendRequest()
+        // await sendRequest()
+        await _sendStreamRequest()
       }
     }
 
@@ -560,7 +513,6 @@ export default {
                 display: getItemSchema(bubbleProps)?.schema ? 'block' : 'none'
               },
               actions: [
-                { name: 'preview', label: '预览', icon: previewIcon },
                 { name: 'run', label: '应用', icon: saveIcon }
               ],
               onAction(name) {
@@ -589,31 +541,37 @@ export default {
 
     // 处理文件选择事件
     const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
-      if (!files.length && !retry) return
+      if (retry) {
+        singleAttachmentItems.value[0].status = 'uploading'
+        singleAttachmentItems.value[0].isUploading = true
+        singleAttachmentItems.value[0].messageType = 'uploading'
+      } else {
+        if (!files.length) return
 
-      if (files && files.length > 1 && !retry) {
-        Notify({
-          type: 'error',
-          message: '当前仅支持上传一张图片',
-          position: 'top-right',
-          duration: 5000
-        })
-        return
-      }
+        if (files && files.length > 1) {
+          Notify({
+            type: 'error',
+            message: '当前仅支持上传一张图片',
+            position: 'top-right',
+            duration: 5000
+          })
+          return
+        }
 
-      if (files && files.length > 0 && !retry) {
-        // 将选中的文件转换为 Attachment 格式并添加到附件列表
-        const newAttachments = Array.from(files).map((file, index) => ({
-          uid: `${Date.now()}-${index}`,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          status: 'uploading',
-          isUploading: true,
-          messageType: 'uploading',
-          file: file
-        }))
-        singleAttachmentItems.value.push(...newAttachments)
+        if (files && files.length > 0) {
+          // 将选中的文件转换为 Attachment 格式并添加到附件列表
+          const newAttachments = Array.from(files).map((file, index) => ({
+            uid: `${Date.now()}-${index}`,
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            status: 'uploading',
+            isUploading: true,
+            messageType: 'uploading',
+            file: file
+          }))
+          singleAttachmentItems.value.push(...newAttachments)
+        }
       }
 
       // 开始上传
@@ -653,8 +611,8 @@ export default {
       imageUrl.value = ''
     }
 
-    const handleSingleFileRetry = (file) => {
-      handleSingleFilesSelected(file, true)
+    const handleSingleFileRetry = (file: any) => {
+      handleSingleFilesSelected(file.file, true)
     }
 
     return {
@@ -714,11 +672,9 @@ export default {
 
 .tiny-container {
   top: var(--base-top-panel-height) !important;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
+  background-image: linear-gradient(var(--te-chat-bg-top-color),
+      var(--te-chat-bg-mid-color),
+      var(--te-chat-bg-bottom-color));
   container-type: inline-size;
 
   :deep(button.icon-btn) {
@@ -729,7 +685,7 @@ export default {
     margin-left: 10px;
   }
 
-  .robot-welcome > div {
+  .robot-welcome>div {
     display: flex;
     align-items: center;
     justify-content: center;

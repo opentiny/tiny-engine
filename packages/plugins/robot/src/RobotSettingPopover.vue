@@ -57,7 +57,7 @@
     </tiny-tabs>
 
     <div class="bottom-buttons">
-      <tiny-button @click="closePanel">取消</tiny-button>
+      <tiny-button @click="closePanel" class="close">取消</tiny-button>
       <tiny-button type="primary" @click="confirm">确定</tiny-button>
     </div>
   </div>
@@ -238,6 +238,10 @@ export default {
     .tiny-button {
       min-width: 40px;
     }
+  }
+
+  .close {
+    margin-right: 8px;
   }
 
   :deep(.tiny-alert.tiny-alert--normal) {
