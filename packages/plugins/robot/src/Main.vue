@@ -228,7 +228,6 @@ export default {
         inProcesing.value = false
         connectedFailed.value = false
       } catch (e) {
-        console.error('e', e)
         messages.value[messages.value.length - 1].content = '处理响应时出错'
         inProcesing.value = false
         connectedFailed.value = false
@@ -283,20 +282,6 @@ export default {
           }
         }
       )
-    }
-
-    const sendRequest = async () => {
-      try {
-        const res: any = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/chat', getSendSeesionProcess(), {
-          timeout: 600000
-        })
-        handleResponse({ id: res.id, chatMessage: res.choices[0].message })
-      } catch (error) {
-        messages.value[messages.value.length - 1].content = '连接失败'
-        localStorage.removeItem('aiChat')
-        inProcesing.value = false
-        connectedFailed.value = false
-      }
     }
 
     const scrollContent = async () => {
@@ -521,7 +506,6 @@ export default {
     const aiAvatar = getSvgIcon('AI')
     const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
     const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
-    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
     const saveIcon = getSvgIcon('save', { fontSize: '20px' })
 
     // 对话角色配置
