@@ -11,14 +11,16 @@
  */
 
 import { PAGE_STATUS } from './constants'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export const getCanvasStatus = (data) => {
   const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
-
+  const isDemo = useResource().appSchemaState.isDemo
   let state = ''
 
-  if (!data) {
+  if (isDemo) {
+    state = PAGE_STATUS.Guest
+  } else if (!data) {
     state = PAGE_STATUS.Release
   } else {
     state = globalState.userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
