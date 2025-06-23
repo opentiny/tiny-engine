@@ -28,7 +28,8 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*"
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "magic-string": "^0.30.17"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
@@ -39,7 +40,6 @@
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",
     "@opentiny/vue-icon": "^3.20.0",
-    "magic-string": "^0.30.17",
     "vue": "^3.4.15"
   }
 }
