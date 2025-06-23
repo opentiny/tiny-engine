@@ -15,6 +15,7 @@ import { initPreview } from '@opentiny/tiny-engine'
 import 'virtual:svg-icons-register'
 import { HttpService } from './composable'
 import { initIndexDB } from './db'
+import engineConfig from '../engine.config'
 
 async function initDemo() {
   await initIndexDB()
@@ -29,7 +30,7 @@ async function initDemo() {
         id: 'engine.root',
         metas: [HttpService, GenerateCodeService]
       },
-      config: { id: 'engine.config', theme: 'light' },
+      config: engineConfig,
       toolbars: [Breadcrumb, Media, Lang]
     },
     lifeCycles: {
