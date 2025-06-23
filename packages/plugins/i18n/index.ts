@@ -18,7 +18,8 @@ export default {
   ...metaData,
   entry,
   options: {
-    batchImportTempDownloadUrl: ''
+    batchImportTempDownloadUrl: '',
+    batchImportTempDownMethod: ''
   },
   metas: [TranslateService]
 }

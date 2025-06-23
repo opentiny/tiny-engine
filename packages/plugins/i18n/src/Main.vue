@@ -322,7 +322,15 @@ export default {
     }
 
     const downloadFile = () => {
-      const { batchImportTempDownloadUrl } = getMergeMeta('engine.plugins.i18n').options || {}
+      const { batchImportTempDownloadUrl, batchImportTempDownMethod } =
+        getMergeMeta('engine.plugins.i18n').options || {}
+
+      // 自定义了下载方法，只使用自定义的下载方法
+      if (batchImportTempDownMethod && typeof batchImportTempDownMethod === 'function') {
+        batchImportTempDownMethod()
+        return
+      }
+
       const defaultDownloadUrl = `${
         BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL
       }/i18n-template-for-batch-import.zip`
