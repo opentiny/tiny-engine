@@ -159,8 +159,8 @@ export const getValidBingdinngs = ({ path, state, functionName }) => {
   return validBindings
 }
 
-// 辅助函数：获取当前作用域 body 和变量名
-function getCurrentScopeBodyAndVarId(path, functionName) {
+// 获取当前作用域 body 和变量名
+function getCurrentScopeBodyAndVarId(path) {
   // 处理变量声明的函数表达式 (例如: const foo = () => {} 或 const foo = function() {})
   if (
     path.parentPath &&
@@ -170,17 +170,10 @@ function getCurrentScopeBodyAndVarId(path, functionName) {
     path.parentPath.parentPath.parent &&
     Array.isArray(path.parentPath.parentPath.parent.body) // 确保父节点有函数体数组
   ) {
-    return {
-      body: path.parentPath.parentPath.parent.body, // 返回包含该变量声明的作用域的函数体
-      varId: functionName // 返回变量名
-    }
+    return path.parentPath.parentPath.parent.body
   }
 
-  // 处理其他情况的兜底方案
-  return {
-    body: null,
-    varId: functionName
-  }
+  return null
 }
 
 /**
@@ -193,18 +186,17 @@ function getCurrentScopeBodyAndVarId(path, functionName) {
  */
 export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) => {
   const asyncVars = getOuterBindings(path)
-  // 优化后的作用域和变量名获取
-  const { body, varId } = getCurrentScopeBodyAndVarId(path, functionName)
+  const body = getCurrentScopeBodyAndVarId(path, functionName)
 
   // 判断是否为"直接调用"
   let isDirectlyCalled = false
-  if (body && varId) {
+  if (body) {
     isDirectlyCalled = body.some(
       (node) =>
         node.type === 'ExpressionStatement' &&
         node.expression.type === 'CallExpression' &&
         node.expression.callee.type === 'Identifier' &&
-        node.expression.callee.name === varId
+        node.expression.callee.name === functionName
     )
   }
 
