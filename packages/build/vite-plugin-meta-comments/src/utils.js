@@ -127,7 +127,7 @@ export const getModuleBindings = (path) => {
 }
 
 // 获取当前上下文已经可以使用的scope变量
-export const getValidBingdinngs = ({ path, state, functionName }) => {
+export const getValidBindings = ({ path, state, functionName }) => {
   const validBindings = {}
   const { varDeclartion } = state
   let varArr = []
@@ -203,7 +203,7 @@ export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) =
   // 根据是否为直接调用，选择用 syncVars 还是 asyncVars 组装 ctx
   const entryParam = getEntryParam({
     functionName,
-    asyncVars: isDirectlyCalled ? getValidBingdinngs({ path, state, functionName }) : asyncVars, // 直接调用用 syncVars，否则用 asyncVars
+    asyncVars: isDirectlyCalled ? getValidBindings({ path, state, functionName }) : asyncVars, // 直接调用用 syncVars，否则用 asyncVars
     varName,
     state
   })
