@@ -1,0 +1,47 @@
+{
+  "state": {
+    "personData": {
+      "name": "李华",
+      "age": "20",
+      "address": "china"
+    }
+  },
+  "methods": {},
+  "componentName": "Block",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "Text",
+      "id": "52535213",
+      "props": {
+        "text": "请开启插槽"
+      }
+    },
+    {
+      "id": "42562b66",
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "Slot",
+          "id": "6153675d",
+          "props": {
+            "name": "test",
+            "params": [
+              {
+                "name": "testData",
+                "value": {
+                  "type": "JSExpression",
+                  "value": "this.state.personData"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "fileName": "BlockSlotParams"
+}

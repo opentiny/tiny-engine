@@ -1,0 +1,37 @@
+{
+  "componentName": "Page",
+  "fileName": "testJsx",
+  "css": "",
+  "props": {},
+  "state": {
+    "firstName": "",
+    "lastName": ""
+  },
+  "methods": {
+    "onClickNew": {
+      "type": "JSFunction",
+      "value": "function onClickNew(event) {\n  this.utils.Moddal.alert({\n    message: () => <div style=\"color: #f09841\">testtest</div>\n  })\n}"
+    }
+  },
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "3d443c65",
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": "TinyEngine 前端可视化设计器，为设计器开发者提供定制服务，在线构建出自己专属的设计器。",
+            "onClick": {
+              "type": "JSExpression",
+              "value": "this.onClickNew"
+            }
+          },
+          "id": "34253314"
+        }
+      ]
+    }
+  ]
+}

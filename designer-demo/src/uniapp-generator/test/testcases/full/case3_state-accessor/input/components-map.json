@@ -1,0 +1,10 @@
+[
+  {
+    "componentName": "UseStateAccessor",
+    "main": "./views"
+  },
+  {
+    "componentName": "StateAccessor",
+    "main": "./components"
+  }
+]
