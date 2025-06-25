@@ -42,7 +42,7 @@ export default {
       default: () => ({})
     }
   },
-  setup() {
+  setup(props) {
     const { isBlock, getCurrentPage } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
@@ -87,7 +87,7 @@ export default {
       }
     }
 
-    const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
+    const { getAllNestedBlocksSchema } = getMetaApi('engine.service.generateCode')
 
     const getAllPageDetails = async (pageList) => {
       const detailPromise = pageList.map(({ id }) => getMetaApi(META_APP.AppManage).getPageById(id))
@@ -164,7 +164,7 @@ export default {
         }
       }
 
-      const res = await generateAppCode(appSchema)
+      const res = await props.options?.generateAppCode(appSchema)
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
