@@ -16680,6 +16680,1484 @@
     "description": "2023.3.9",
     "components": [
       {
+        "name": {
+          "zh_CN": "视图"
+        },
+        "component": "view",
+        "icon": "input",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "view"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "hoverClass",
+                  "label": {
+                    "text": {
+                      "zh_CN": "指定按下去的样式类"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "指定按下去的样式类"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": []
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "可滚动视图"
+        },
+        "component": "scrollView",
+        "icon": "input",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "scrollView"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "scroll-x",
+                  "label": {
+                    "text": {
+                      "zh_CN": "是否横向滚动"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否允许横向滚动"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "scroll-y",
+                  "label": {
+                    "text": {
+                      "zh_CN": "是否纵向滚动"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否允许纵向滚动"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": []
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "区块"
+        },
+        "component": "Block",
+        "icon": "input",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "Block"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": []
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "按钮"
+        },
+        "component": "Button",
+        "icon": "button",
+        "description": "常用的操作按钮，提供包括默认按钮、图标按钮、图片按钮、下拉按钮等类型",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "Button"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 2,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "text",
+                  "type": "string",
+                  "defaultValue": "按钮文案",
+                  "label": {
+                    "text": {
+                      "zh_CN": "按钮文字"
+                    }
+                  },
+                  "cols": 12,
+                  "hidden": false,
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "按钮文字"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "size",
+                  "type": "select",
+                  "label": {
+                    "text": {
+                      "zh_CN": "大小"
+                    }
+                  },
+                  "cols": 12,
+                  "rules": [],
+                  "hidden": false,
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "widget": {
+                    "component": "SelectConfigurator",
+                    "props": {
+                      "options": [
+                        {
+                          "label": "large",
+                          "value": "large"
+                        },
+                        {
+                          "label": "medium",
+                          "value": "medium"
+                        },
+                        {
+                          "label": "small",
+                          "value": "small"
+                        },
+                        {
+                          "label": "mini",
+                          "value": "mini"
+                        }
+                      ]
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "按钮大小"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "disabled",
+                  "label": {
+                    "text": {
+                      "zh_CN": "禁用"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否被禁用"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "type",
+                  "label": {
+                    "text": {
+                      "zh_CN": "类型"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "SelectConfigurator",
+                    "props": {
+                      "options": [
+                        {
+                          "label": "primary",
+                          "value": "primary"
+                        },
+                        {
+                          "label": "success",
+                          "value": "success"
+                        },
+                        {
+                          "label": "info",
+                          "value": "info"
+                        },
+                        {
+                          "label": "warning",
+                          "value": "warning"
+                        },
+                        {
+                          "label": "danger",
+                          "value": "danger"
+                        },
+                        {
+                          "label": "text",
+                          "value": "text"
+                        }
+                      ]
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "设置不同的主题样式"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": [
+                {
+                  "property": "round",
+                  "label": {
+                    "text": {
+                      "zh_CN": "圆角"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否圆角按钮"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "plain",
+                  "label": {
+                    "text": {
+                      "zh_CN": "朴素按钮"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否为朴素按钮"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "autofocus",
+                  "label": {
+                    "text": {
+                      "zh_CN": "自动聚焦"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否默认聚焦"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "loading",
+                  "label": {
+                    "text": {
+                      "zh_CN": "加载中样式"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否展示位加载中样式"
+                  },
+                  "labelPosition": "left"
+                }
+              ],
+              "description": {
+                "zh_CN": ""
+              }
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["text", "size"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "输入框"
+        },
+        "component": "Input",
+        "icon": "input",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "Input"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "modelValue",
+                  "label": {
+                    "text": {
+                      "zh_CN": "绑定值"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "双向绑定值"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "type",
+                  "label": {
+                    "text": {
+                      "zh_CN": "类型"
+                    }
+                  },
+                  "widget": {
+                    "component": "SelectConfigurator",
+                    "props": {
+                      "options": [
+                        {
+                          "label": "textarea",
+                          "value": "textarea"
+                        },
+                        {
+                          "label": "text",
+                          "value": "text"
+                        },
+                        {
+                          "label": "password",
+                          "value": "password"
+                        }
+                      ]
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "设置input框的type属性"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "rows",
+                  "label": {
+                    "text": {
+                      "zh_CN": "行数"
+                    }
+                  },
+                  "widget": {
+                    "component": "NumberConfigurator"
+                  },
+                  "description": {
+                    "zh_CN": "输入框行数，只对 type='textarea' 有效"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "placeholder",
+                  "label": {
+                    "text": {
+                      "zh_CN": "占位文本"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "输入框占位文本"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "clearable",
+                  "label": {
+                    "text": {
+                      "zh_CN": "清除按钮"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否显示清除按钮"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "disabled",
+                  "label": {
+                    "text": {
+                      "zh_CN": "禁用"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否禁用"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "size",
+                  "label": {
+                    "text": {
+                      "zh_CN": "尺寸"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "SelectConfigurator",
+                    "props": {
+                      "options": [
+                        {
+                          "label": "medium",
+                          "value": "medium"
+                        },
+                        {
+                          "label": "small",
+                          "value": "small"
+                        },
+                        {
+                          "label": "mini",
+                          "value": "mini"
+                        }
+                      ]
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": [
+                {
+                  "property": "maxlength",
+                  "label": {
+                    "text": {
+                      "zh_CN": "最大输入长度"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "NumberConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "设置 input 框的maxLength"
+                  }
+                }
+              ],
+              "description": {
+                "zh_CN": ""
+              }
+            }
+          ],
+          "events": {
+            "onChange": {
+              "label": {
+                "zh_CN": "值改变时触发"
+              },
+              "description": {
+                "zh_CN": "在 Input 值改变时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [
+                  {
+                    "name": "value",
+                    "type": "string",
+                    "defaultValue": "",
+                    "description": {
+                      "zh_CN": "输入框改变后的值"
+                    }
+                  }
+                ],
+                "returns": {}
+              },
+              "defaultValue": ""
+            },
+            "onInput": {
+              "label": {
+                "zh_CN": "输入值改变时触发"
+              },
+              "description": {
+                "zh_CN": "在 Input 输入值改变时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [
+                  {
+                    "name": "value",
+                    "type": "string",
+                    "defaultValue": "",
+                    "description": {
+                      "zh_CN": "输入框输入的值"
+                    }
+                  }
+                ],
+                "returns": {}
+              },
+              "defaultValue": ""
+            },
+            "onUpdate:modelValue": {
+              "label": {
+                "zh_CN": "双向绑定的值改变时触发"
+              },
+              "description": {
+                "zh_CN": "在 Input 输入值改变时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [
+                  {
+                    "name": "value",
+                    "type": "string",
+                    "defaultValue": "",
+                    "description": {
+                      "zh_CN": "双向绑定的值"
+                    }
+                  }
+                ],
+                "returns": {}
+              },
+              "defaultValue": ""
+            },
+            "onBlur": {
+              "label": {
+                "zh_CN": "失去焦点时触发"
+              },
+              "description": {
+                "zh_CN": "在 Input 失去焦点时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [
+                  {
+                    "name": "event",
+                    "type": "Object",
+                    "defaultValue": "",
+                    "description": {
+                      "zh_CN": "原生 event"
+                    }
+                  }
+                ],
+                "returns": {}
+              },
+              "defaultValue": ""
+            },
+            "onFocus": {
+              "label": {
+                "zh_CN": "获取焦点时触发"
+              },
+              "description": {
+                "zh_CN": "在 Input 获取焦点时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [
+                  {
+                    "name": "event",
+                    "type": "Object",
+                    "defaultValue": "",
+                    "description": {
+                      "zh_CN": "原生 event"
+                    }
+                  }
+                ],
+                "returns": {}
+              },
+              "defaultValue": ""
+            },
+            "onClear": {
+              "label": {
+                "zh_CN": "点击清空按钮时触发"
+              },
+              "description": {
+                "zh_CN": "点击清空按钮时触发"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "文本"
+        },
+        "component": "text",
+        "icon": "input",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "text"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "text",
+                  "label": {
+                    "text": {
+                      "zh_CN": "文本内容"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {
+                      "type": "textarea",
+                      "autosize": true
+                    }
+                  },
+                  "description": {
+                    "zh_CN": "文本内容"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": []
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          },
+          "shortcuts": {
+            "properties": ["text"]
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "图片"
+        },
+        "component": "image",
+        "icon": "Image",
+        "description": "通过鼠标或键盘输入字符",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "image"
+        },
+        "group": "基础组件",
+        "category": "harmony-component",
+        "priority": 1,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "src",
+                  "label": {
+                    "text": {
+                      "zh_CN": "src路径"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "src路径"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "mode",
+                  "label": {
+                    "text": {
+                      "zh_CN": "模式"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "图片裁剪、缩放的模式"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "draggable",
+                  "label": {
+                    "text": {
+                      "zh_CN": "是否能拖动图片"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否能拖动图片"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            },
+            {
+              "name": "1",
+              "label": {
+                "zh_CN": "其他"
+              },
+              "content": []
+            }
+          ],
+          "events": {
+            "onClick": {
+              "label": {
+                "zh_CN": "点击事件"
+              },
+              "description": {
+                "zh_CN": "按钮被点击时触发的回调函数"
+              },
+              "type": "event",
+              "functionInfo": {
+                "params": [],
+                "returns": {}
+              },
+              "defaultValue": ""
+            }
+          }
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": "",
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["value", "disabled"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "滑块视图子项"
+        },
+        "component": "swiperItem",
+        "icon": "carouselitem",
+        "description": "常用于一组图片或卡片轮播，当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现。",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "swiperItem"
+        },
+        "group": "component",
+        "category": "容器组件",
+        "priority": 2,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "name",
+                  "label": {
+                    "text": {
+                      "zh_CN": "名称"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "幻灯片的名字，可用作 setActiveItem 的参数"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "title",
+                  "label": {
+                    "text": {
+                      "zh_CN": "标题"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "InputConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "幻灯片的标题"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            }
+          ],
+          "events": {}
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": [],
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["disabled", "size"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
+        "name": {
+          "zh_CN": "滑块视图"
+        },
+        "component": "swiper",
+        "icon": "carousel",
+        "description": "常用于一组图片或卡片轮播，当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现。",
+        "docUrl": "",
+        "screenshot": "",
+        "tags": "",
+        "keywords": "",
+        "devMode": "proCode",
+        "npm": {
+          "package": "harmony-component",
+          "exportName": "swiper"
+        },
+        "group": "component",
+        "category": "容器组件",
+        "priority": 2,
+        "schema": {
+          "properties": [
+            {
+              "label": {
+                "zh_CN": "基础信息"
+              },
+              "description": {
+                "zh_CN": "基础信息"
+              },
+              "content": [
+                {
+                  "property": "autoplay",
+                  "label": {
+                    "text": {
+                      "zh_CN": "自动切换"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否自动切换"
+                  },
+                  "labelPosition": "left"
+                },
+                {
+                  "property": "tabs",
+                  "label": {
+                    "text": {
+                      "zh_CN": "选项卡"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "defaultValue": "",
+                  "cols": 12,
+                  "bindState": false,
+                  "widget": {
+                    "component": "ContainerConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "tabs 选项卡"
+                  },
+                  "labelPosition": "none"
+                },
+                {
+                  "property": "current",
+                  "label": {
+                    "text": {
+                      "zh_CN": "初始索引"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "NumberConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "初始状态激活的幻灯片的索引，从 0 开始 "
+                  }
+                },
+                {
+                  "property": "interval",
+                  "label": {
+                    "text": {
+                      "zh_CN": "自动切换间隔"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "NumberConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "自动切换的时间间隔，单位为毫秒"
+                  }
+                },
+                {
+                  "property": "circular",
+                  "label": {
+                    "text": {
+                      "zh_CN": "循环显示"
+                    }
+                  },
+                  "required": true,
+                  "readOnly": false,
+                  "disabled": false,
+                  "cols": 12,
+                  "widget": {
+                    "component": "CheckBoxConfigurator",
+                    "props": {}
+                  },
+                  "description": {
+                    "zh_CN": "是否循环显示"
+                  },
+                  "labelPosition": "left"
+                }
+              ]
+            }
+          ],
+          "events": {}
+        },
+        "configure": {
+          "loop": true,
+          "condition": true,
+          "styles": true,
+          "isContainer": true,
+          "clickCapture": false,
+          "isModal": false,
+          "nestingRule": {
+            "childWhitelist": ["swiperItem"],
+            "parentWhitelist": "",
+            "descendantBlacklist": "",
+            "ancestorWhitelist": ""
+          },
+          "isNullNode": false,
+          "isLayout": false,
+          "rootSelector": "",
+          "shortcuts": {
+            "properties": ["disabled", "size"]
+          },
+          "contextMenu": {
+            "actions": ["create symbol"],
+            "disable": ["copy", "remove"]
+          }
+        }
+      },
+      {
         "id": 1,
         "version": "2.4.2",
         "name": {
