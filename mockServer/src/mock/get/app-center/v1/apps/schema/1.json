@@ -2086,6 +2086,76 @@
         "main": "",
         "destructuring": false,
         "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyTabBar",
+        "package": "harmony-component",
+        "exportName": "HarmonyTabBar",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyView",
+        "package": "harmony-component",
+        "exportName": "HarmonyView",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyScrollView",
+        "package": "harmony-component",
+        "exportName": "HarmonyScrollView",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyBlock",
+        "package": "harmony-component",
+        "exportName": "HarmonyBlock",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyButton",
+        "package": "harmony-component",
+        "exportName": "HarmonyButton",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyInput",
+        "package": "harmony-component",
+        "exportName": "HarmonyInput",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyText",
+        "package": "harmony-component",
+        "exportName": "HarmonyText",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonyImage",
+        "package": "harmony-component",
+        "exportName": "HarmonyImage",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonySwiper",
+        "package": "harmony-component",
+        "exportName": "HarmonySwiper",
+        "destructuring": true,
+        "version": "1.0.0"
+      },
+      {
+        "componentName": "HarmonySwiperItem",
+        "package": "harmony-component",
+        "exportName": "HarmonySwiperItem",
+        "destructuring": true,
+        "version": "1.0.0"
       }
     ],
     "bridge": [],

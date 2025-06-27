@@ -84,8 +84,9 @@
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
-import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useCanvas, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import meta from '../meta'
 
 export default {
   components: {
@@ -121,6 +122,8 @@ export default {
 
     const dimension = computed(() => useLayout().getDimension())
     const scale = computed(() => dimension.value.scale * 100)
+
+    const { deviceType } = getOptions(meta.id)
 
     const state = reactive({
       activeIndex: 0,
@@ -391,7 +394,7 @@ export default {
     })
 
     // 初始化 viewpoint
-    const mode = dimension.value.deviceType || 'desktop'
+    const mode = deviceType || dimension.value.deviceType || 'desktop'
     setViewPort(mediaMap[mode])
 
     return {
