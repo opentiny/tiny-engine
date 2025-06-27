@@ -7,7 +7,9 @@ import {
   handleTinyIcon,
   handleExpressionChildren,
   validEmptyTemplateHook,
-  handleSlotParams
+  handleSlotParams,
+  handleHarmonyTextComponentHook,
+  handleHarmonyTabBarHook
 } from './generateTemplate'
 import { generateStyleTag } from './generateStyle'
 import {
@@ -204,6 +206,7 @@ const generateSFCFile = (schema, componentsMap, config = {}, nextPage) => {
     { ...parsedConfig, componentsMap: componentsMap },
     nextPage
   )
+  // debugger
 
   // 生成 script
   const scriptStr = genScriptByHook(schema, globalHooks, { ...parsedConfig, componentsMap: componentsMap }, nextPage)
@@ -216,7 +219,7 @@ const generateSFCFile = (schema, componentsMap, config = {}, nextPage) => {
 
 export const genUniappSFCWithDefaultPlugin = (schema, componentsMap, config = {}, nextPage) => {
   const { templateItemValidate = [], genTemplate = [], parseScript = [], genScript = {} } = config.hooks || {}
-  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon, handleTinyGrid]
+  const defaultComponentHooks = [handleComponentNameHook, handleTinyIcon, handleTinyGrid, handleHarmonyTextComponentHook, handleHarmonyTabBarHook]
 
   const defaultAttributeHook = [
     handleSlotParams,

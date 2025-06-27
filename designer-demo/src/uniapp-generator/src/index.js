@@ -13,9 +13,6 @@
 import './index.d.ts'
 
 export {
-  generateCode,
-  generateBlocksCode,
-  generatePageCode,
   generateAppCode,
   generateUniappApp, // generateApp
   CodeGenerator,

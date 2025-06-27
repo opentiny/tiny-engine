@@ -1,143 +1,132 @@
 import { mergeOptions } from '../utils/mergeOptions'
+import { pagesConfig } from '../config'
 
 const defaultOption = {
-  fileName: 'index.js',
-  path: './src/router'
+  fileName: 'pages.json',
+  path: './src'
 }
 
-const setDefaultRoute = (routes) => {
-  return routes.reduce((acc, route) => {
-    const newRoute = {
-      name: route.name,
-      path: route.path,
-      component: route.component,
-      children: setDefaultRoute(route.children)
-    }
-    if (route?.children?.length) {
-      const redirectChild = route.children.find((item) => item.isDefault)
-      if (redirectChild) {
-        newRoute.redirect = { name: `${redirectChild.name}` }
+const convertToUniappPages = (schema) => {
+  const pageSchema = schema.pageSchema || []
+  const pages = []
+  // 从全局状态中获取 tabBar 配置，并添加默认值
+  let tabBar = pagesConfig.tabList ? {
+    color: '#7A7E83',
+    selectedColor: '#3cc51f',
+    borderStyle: 'black',
+    backgroundColor: '#ffffff',
+    height: '50px',
+    fontSize: '10px',
+    iconWidth: '24px',
+    spacing: '3px',
+    ...(pagesConfig.tabList || {})
+  } : null
+  
+  // 验证和规范化 tabBar 配置
+  if (tabBar) {
+    if (!Array.isArray(tabBar.list) || tabBar.list.length === 0) {
+      tabBar = null
+    } else {
+      tabBar.list = tabBar.list.filter((item, index) => {
+        if (!item.pagePath || !item.text) {
+          return false
+        }
+        // 确保 pagePath 格式正确
+        if (!item.pagePath.startsWith('pages/')) {
+          item.pagePath = `pages/${item.pagePath}`
+        }
+        return true
+      })
+
+      // 如果过滤后列表为空，将 tabBar 设置为 null
+      if (tabBar.list.length === 0) {
+        tabBar = null
       }
     }
-    acc.push(newRoute)
-
-    return acc
-  }, [])
-}
-
-const flattenRoutes = (routes, parentPath = '') => {
-  return routes.reduce((acc, route) => {
-    const fullPath = `${parentPath}${route.path}`
-
-    if (route.component) {
-      // 如果存在 component，则直接添加路由
-      const newRoute = {
-        name: `${route.name}`,
-        path: fullPath,
-        component: route.component,
-        children: flattenRoutes(route.children),
-        isDefault: route.isDefault
-      }
-      acc.push(newRoute)
-    } else if (route?.children?.length) {
-      // 如果不存在 component 但有 children，则递归处理 children
-      const children = flattenRoutes(route.children, fullPath + '/')
-      // 将处理后的 children 合并到上一层存在 component 的路由中
-      acc.push(...children)
-    }
-    // 如果既没有 component 也没有 children，则不做任何处理
-
-    return acc
-  }, [])
-}
-
-const convertToNestedRoutes = (schema) => {
-  const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
-  const result = []
-  let home = {
-    path: '/'
   }
-  let isGetHome = false
-
+  
   pageSchema.forEach((item) => {
-    if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
-      home.redirect = { name: `${item.meta.id}` }
-      isGetHome = true
+    if (!item.meta?.router) return
+
+    // 移除开头的斜杠，因为uniapp不需要
+    const path = item.meta.router.startsWith('/') 
+      ? item.meta.router.slice(1) 
+      : item.meta.router
+
+    // 构建页面配置
+    const page = {
+      path: `pages/${path}`,
+      style: {
+        navigationBarTitleText: item.meta.title || ''
+      }
     }
 
-    const parts = item.meta?.router?.split('/').filter(Boolean)
-    let currentLevel = result
+    // 如果页面有特殊配置，添加到style中
+    if (item.meta.style) {
+      Object.assign(page.style, item.meta.style)
+    }
 
-    parts.forEach((part, index) => {
-      let found = false
-
-      for (let i = 0; i < currentLevel.length; i++) {
-        if (currentLevel[i].path === part) {
-          // 如果已经存在该路径部分，则进入下一层级
-          currentLevel = currentLevel[i].children
-          found = true
-          break
-        }
-      }
-
-      if (!found) {
-        // 如果不存在该路径部分，创建一个新节点
-        const newNode = {
-          path: part,
-          children: []
-        }
-        // 如果路径是最后一步，则设置组件和属性
-        if (index === parts.length - 1) {
-          newNode.component = `() => import('@/views${item.path ? `/${item.path}` : ''}/${item.fileName}.vue')`
-          newNode.isDefault = item.meta.isDefault
-          newNode.name = item.meta.id
-        }
-
-        currentLevel.push(newNode)
-        currentLevel = newNode.children
-      }
-    })
+    pages.push(page)
   })
 
-  home.children = setDefaultRoute(flattenRoutes(result))
-  return [home]
+  // 确保首页在第一位
+  const homePageIndex = pages.findIndex(page => 
+    pageSchema.find(schema => 
+      `pages/${schema.meta?.router?.replace(/^\//, '')}/${schema.fileName}` === page.path && 
+      (schema.meta?.isHome || schema.meta?.isDefault)
+    )
+  )
+
+  if (homePageIndex > 0) {
+    const homePage = pages.splice(homePageIndex, 1)[0]
+    pages.unshift(homePage)
+  }
+
+  return { pages, tabBar }
 }
 
-// 示例路由数组
+// 生成uniapp的pages.json配置
 function genRouterPlugin(options = {}) {
   const realOptions = mergeOptions(defaultOption, options)
   const { path, fileName } = realOptions
 
   return {
-    name: 'tinyEngine-generateCode-plugin-router',
-    description: 'transform router schema to router code plugin',
+    name: 'tinyEngine-generateCode-plugin-uniapp-pages',
+    description: 'transform schema to uniapp pages.json plugin',
     /**
-     * 根据页面生成路由配置
+     * 根据页面生成uniapp的pages.json配置
      * @param {import('@opentiny/tiny-engine-dsl-uniapp').IAppSchema} schema
      * @returns
      */
     run(schema) {
-      const routesList = convertToNestedRoutes(schema)
-      const resultStr = JSON.stringify(routesList, null, 2).replace(
-        /("component":\s*)"(.*?)"/g,
-        (match, p1, p2) => p1 + p2
-      )
-
-      // TODO: 支持 hash 模式、history 模式
-      const importSnippet = "import { createRouter, createWebHashHistory } from 'vue-router'"
-      const exportSnippet = `
-      export default createRouter({
-        history: createWebHashHistory(),
-        routes
-      })`
-
-      const routeSnippets = `const routes = ${resultStr}`
+      const { pages, tabBar } = convertToUniappPages(schema)
+      
+      // 构建pages.json对象
+      const pagesConfig = {
+        pages,
+        globalStyle: {
+          navigationBarTextStyle: 'black',
+          navigationBarTitleText: schema.name || 'uni-app',
+          navigationBarBackgroundColor: '#F8F8F8',
+          backgroundColor: '#F8F8F8'
+        }
+      }
+      
+      // 如果有tabBar配置，添加到pages.json中
+      if (tabBar && tabBar.list && tabBar.list.length >= 2) {
+        pagesConfig.tabBar = tabBar
+      }
+      
+      // 如果schema中有全局样式配置，覆盖默认配置
+      if (schema.globalStyle) {
+        Object.assign(pagesConfig.globalStyle, schema.globalStyle)
+      }
 
       const res = {
-        fileType: 'js',
+        fileType: 'json',
         fileName,
         path,
-        fileContent: `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
+        fileContent: JSON.stringify(pagesConfig, null, 2)
       }
 
       return res

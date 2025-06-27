@@ -10,7 +10,6 @@
  *
  */
 
-export { generateCode, generateBlocksCode, generatePageCode } from './page'
 export { genUniappSFCWithDefaultPlugin, generateSFCFile } from './vue/sfc'
 export { generateUniappApp, generateAppCode } from './generateApp'
 export { default as CodeGenerator } from './codeGenerator'

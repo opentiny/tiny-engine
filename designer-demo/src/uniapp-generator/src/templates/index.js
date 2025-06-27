@@ -1,4 +1,4 @@
-import { generateTemplate as genDefaultStaticTemplate } from './vue-template'
+import { generateTemplate as genDefaultStaticTemplate } from './uniapp-template'
 
 export const templateMap = {
   default: genDefaultStaticTemplate

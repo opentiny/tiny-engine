@@ -3,7 +3,7 @@ import { generateImportStatement } from '../utils/generateImportStatement'
 
 const defaultOption = {
   fileName: 'utils.js',
-  path: './src'
+  path: './src/utils'
 }
 
 function genUtilsPlugin(options = {}) {

@@ -1,6 +1,7 @@
 import { BUILTIN_COMPONENT_NAME } from '../../../constant'
 import { generateImportByPkgName } from '../../../utils/generateImportStatement'
 
+// 递归解析组件树，收集所有组件名称和区块名称
 export const parseImport = (children) => {
   let components = []
   let blocks = []
@@ -26,10 +27,13 @@ export const parseImport = (children) => {
   }
 }
 
+// 根据组件名称和组件映射表，生成包导入映射
 export const getImportMap = (schema, componentsMap, config) => {
   const { components, blocks } = parseImport(schema.children)
   const pkgMap = {}
-  const importComps = componentsMap.filter(({ componentName }) => components.includes(componentName))
+  const importComps = componentsMap.filter(
+    ({ componentName }) => components.includes(componentName) && !componentName.includes('Harmony')
+  )
 
   importComps.forEach((item) => {
     const key = item.package || item.main
@@ -64,6 +68,7 @@ export const getImportMap = (schema, componentsMap, config) => {
   }
 }
 
+// 生成组件导入语句
 export const genCompImport = (schema, componentsMap, config = {}) => {
   const { components, blocks } = parseImport(schema.children)
   const pkgMap = {}

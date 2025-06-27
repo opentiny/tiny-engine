@@ -2,7 +2,7 @@ import { mergeOptions } from '../utils/mergeOptions'
 import { genUniappSFCWithDefaultPlugin } from '../generator'
 
 const defaultOption = {
-  pageBasePath: './src/views'
+  pageBasePath: './src/pages'
 }
 
 function genPagePlugin(options = {}) {

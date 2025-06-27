@@ -5,13 +5,17 @@ import {
   INSERT_POSITION,
   JS_EXPRESSION,
   JS_I18N,
-  JS_RESOURCE
+  JS_RESOURCE,
+  HARMONY,
+  HARMONY_TAB_BAR
 } from '../../../constant'
 import { generateTag, HTML_DEFAULT_VOID_ELEMENTS } from './generateTag'
 import { specialTypeHandler } from './generateAttribute'
 import { thisPropsBindRe, thisRegexp } from '../../../utils'
 import { getImportMap } from './parseImport'
+import { pagesConfig } from '../../../config'
 
+// 处理内置组件名称映射
 export const handleComponentNameHook = (optionData) => {
   const { componentName, schema } = optionData
 
@@ -240,6 +244,67 @@ export const validEmptyTemplateHook = (schema = {}) => {
   return true
 }
 
+// 处理 text 组件，将 text 属性的值包裹在双大括号中
+export const handleHarmonyTextComponentHook = (optionData) => {
+  const { componentName, schema } = optionData
+
+  if (!componentName.includes(HARMONY)) {
+    return
+  }
+
+  // 如果有 text 属性，将其值包裹在双大括号中作为子元素
+  if (schema.props && schema.props.text) {
+    const textValue = schema.props.text
+    if (textValue && typeof textValue === 'object' && textValue.type === JS_EXPRESSION) {
+      optionData.children.push(`{{ ${textValue.value.replace(thisPropsBindRe, '')} }}`)
+    } else {
+      optionData.children.push(`${JSON.stringify(textValue).slice(1, -1)}`)
+    }
+
+    delete schema.props.text
+  }
+}
+
+// 处理 HarmonyTabBar 组件，将 props.list 提取出来用于 pages.json
+export const handleHarmonyTabBarHook = (optionData, globalHooks) => {
+  const { componentName, schema } = optionData
+
+  if (componentName !== HARMONY_TAB_BAR) {
+    return
+  }
+
+  if (schema.props) {
+    const tabBarConfig = {}
+
+    if (schema.props.list) {
+      tabBarConfig.list = schema.props.list
+      delete schema.props.list
+    }
+
+    // 提取其他 tabBar 配置属性
+    const tabBarProps = [
+      'color',
+      'selectedColor',
+      'borderStyle',
+      'backgroundColor',
+      'height',
+      'fontSize',
+      'iconWidth',
+      'spacing',
+      'midButton'
+    ]
+
+    tabBarProps.forEach((prop) => {
+      if (schema.props[prop] !== undefined) {
+        tabBarConfig[prop] = schema.props[prop]
+        delete schema.props[prop]
+      }
+    })
+
+    pagesConfig.tabList = tabBarConfig
+  }
+}
+
 // TODO: 支持物料中自定义出码关联片段
 
 export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = {}, nextPage) => {
@@ -282,6 +347,14 @@ export const recursiveGenTemplateByHook = (schemaWithRes, globalHooks, config = 
 
     for (const hookItem of [...genTemplateHooks, recursiveGenTemplateByHook]) {
       hookItem(optionData, globalHooks, config, nextPage)
+    }
+
+    if (componentName === HARMONY_TAB_BAR) {
+      return ''
+    }
+
+    if (optionData.componentName.includes(HARMONY)) {
+      optionData.componentName = optionData.componentName.replace(/^Harmony\s*/i, '').toLowerCase()
     }
 
     const startTag = generateTag(optionData.componentName, {
