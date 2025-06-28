@@ -1,0 +1,546 @@
+{
+    "componentName": "Page",
+    "css": ".menu-container {\n  display: flex;\n  flex-direction: column;\n  height: 100vh;\n}\n.search-box {\n  padding: 12.8px 19.2px;\n  background-color: #f07373;\n}\n.search-input {\n  display: flex;\n  align-items: center;\n  background-color: #fff;\n  border-radius: 19.2px;\n  padding: 6.4px 12.8px;\n}\n.search-icon {\n  width: 23.04px;\n  height: 23.04px;\n  margin-right: 6.4px;\n}\n.search-input input {\n  flex: 1;\n  font-size: 17.92px;\n}\n.menu-content {\n  display: flex;\n  flex: 1;\n  overflow: hidden;\n}\n\n/*左侧分类列表*/\n.category-list {\n  width: 115.2px;\n  height: 100%;\n  background-color: #f5f5f5;\n}\n.category-item {\n  height: 64px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  font-size: 16.64px;\n  color: #333;\n  position: relative;\n  text-align: center;\n  padding: 0 6.4px;\n}\n.active {\n  color: #f07373;\n  background-color: #fff;\n  font-weight: bold;\n}\n.category-item.active::before {\n  content: '';\n  position: absolute;\n  left: 0;\n  top: 50%;\n  transform: translateY(-50%);\n  width: 3.84px;\n  height: 25.6px;\n  background-color: #f07373;\n}\n\n/*右侧菜品列表*/\n.food-list {\n  flex: 1;\n  height: 100%;\n  padding: 0 12.8px;\n}\n.category-title {\n  height: 51.2px;\n  line-height: 51.2px;\n  font-size: 17.92px;\n  color: #333;\n  font-weight: bold;\n  border-bottom: 1px solid #f5f5f5;\n}\n.food-item {\n  display: flex;\n  padding: 15.36px 0;\n  border-bottom: 1px solid #f5f5f5;\n}\n.food-image {\n  width: 96px;\n  height: 96px;\n  margin-right: 12.8px;\n  border-radius: 5.12px;\n}\n.food-info {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  justify-content: space-between;\n}\n.food-name {\n  font-size: 19.2px;\n  font-weight: bold;\n  color: #333;\n}\n.food-desc {\n  font-size: 15.36px;\n  color: #999;\n  margin: 6.4px 0;\n  white-space: nowrap;\n  overflow: hidden;\n  text-overflow: ellipsis;\n}\n.food-sales {\n  font-size: 14.08px;\n  color: #999;\n  margin-bottom: 6.4px;\n}\n.food-price-box {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n}\n.food-price {\n  font-size: 19.2px;\n  color: #f07373;\n  font-weight: bold;\n}\n.food-actions {\n  display: flex;\n  align-items: center;\n}\n.minus,\n.add {\n  width: 32px;\n  height: 32px;\n  background-color: #f5f5f5;\n  border-radius: 50%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.add {\n  background-color: #f07373;\n}\n.btn-icon {\n  width: 20.48px;\n  height: 20.48px;\n}\n.count {\n  margin: 0 10.24px;\n  font-size: 17.92px;\n  min-width: 19.2px;\n  text-align: center;\n}\n\n/*购物车悬浮按钮*/\n.cart-float-box {\n  position: fixed;\n  left: 0;\n  right: 0;\n  bottom: 60px;\n  height: 64px;\n  margin: 0 19.2px;\n  background-color: #333;\n  border-radius: 32px;\n  display: flex;\n  align-items: center;\n  z-index: 999;\n}\n.cart-icon-box {\n  position: relative;\n  width: 64px;\n  height: 64px;\n}\n.cart-icon {\n  position: absolute;\n  top: -12.8px;\n  left: 0px;\n  width: 40px;\n  height: 40px;\n  background-color: #333;\n  border-radius: 50%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  border: 6.4px solid #333;\n  padding: 12.8px;\n}\n.badge {\n  position: absolute;\n  top: 0;\n  right: 12.8px;\n  min-width: 19.2px;\n  height: 19.2px;\n  padding: 0 3.84px;\n  background-color: #ff0000;\n  color: #fff;\n  font-size: 12.8px;\n  border-radius: 9.6px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n.cart-info {\n  flex: 1;\n  padding-left: 12.8px;\n}\n.cart-price {\n  color: #fff;\n  font-size: 20.48px;\n  font-weight: bold;\n}\n.checkout-btn {\n  width: 128px;\n  height: 100%;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  color: #fff;\n  font-size: 20.48px;\n  background-color: #f07373;\n  border-radius: 0 32px 32px 0;\n}\n",
+    "props": {
+      "style": "padding-bottom: 60px;width:100%;"
+    },
+    "lifeCycles": {},
+    "children": [
+      {
+        "componentName": "HarmonyView",
+        "props": {
+          "className": " menu-container"
+        },
+        "children": [
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " search-box"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " search-input"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyImage",
+                    "props": {
+                      "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/extra/search.svg",
+                      "className": " search-icon"
+                    },
+                    "children": [],
+                    "id": "3d8214a3"
+                  },
+                  {
+                    "componentName": "HarmonyInput",
+                    "props": {
+                      "placeholder": "请输入",
+                      "modelValue": "",
+                      "className": " input"
+                    },
+                    "children": [],
+                    "id": "4b881442"
+                  }
+                ],
+                "id": "3f552351"
+              }
+            ],
+            "id": "4a6155c1"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " menu-content"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyScrollView",
+                "props": {
+                  "className": " category-list"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " category-item",
+                      "key": {
+                        "type": "JSExpression",
+                        "value": "index"
+                      }
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": {
+                            "type": "JSExpression",
+                            "value": "item.name"
+                          },
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "12b46ab3"
+                      }
+                    ],
+                    "id": "42442143",
+                    "loop": {
+                      "type": "JSExpression",
+                      "value": "this.state.categories"
+                    },
+                    "loopArgs": [
+                      "item",
+                      "index"
+                    ]
+                  }
+                ],
+                "id": "23435535"
+              },
+              {
+                "componentName": "HarmonyScrollView",
+                "props": {
+                  "className": " food-list",
+                  "scroll-y": true
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyBlock",
+                    "props": {},
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " category-title"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "category.name"
+                              },
+                              "className": "component-base-style"
+                            },
+                            "children": [],
+                            "id": "3452133e"
+                          }
+                        ],
+                        "id": "e4a33323"
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " food-item",
+                          "key": {
+                            "type": "JSExpression",
+                            "value": "foodIndex"
+                          }
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyImage",
+                            "props": {
+                              "src": {
+                                "type": "JSExpression",
+                                "value": "food.image"
+                              },
+                              "className": " food-image",
+                              "mode": "aspectFill"
+                            },
+                            "children": [],
+                            "id": "1b432a42"
+                          },
+                          {
+                            "componentName": "HarmonyView",
+                            "props": {
+                              "className": " food-info"
+                            },
+                            "children": [
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-name"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "food.name"
+                                      },
+                                      "className": "component-base-style"
+                                    },
+                                    "children": [],
+                                    "id": "1124323c"
+                                  }
+                                ],
+                                "id": "67461519"
+                              },
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-desc"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "food.description"
+                                      },
+                                      "className": "component-base-style"
+                                    },
+                                    "children": [],
+                                    "id": "65522625"
+                                  }
+                                ],
+                                "id": "15253651"
+                              },
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-sales"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "`月售 ${food.monthlySales}`"
+                                      },
+                                      "className": "component-base-style"
+                                    },
+                                    "children": [],
+                                    "id": "43283533"
+                                  }
+                                ],
+                                "id": "42622135"
+                              },
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-price-box"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "`¥${food.price}`"
+                                      },
+                                      "className": " food-price"
+                                    },
+                                    "children": [],
+                                    "id": "33542455"
+                                  },
+                                  {
+                                    "componentName": "HarmonyView",
+                                    "props": {
+                                      "className": " food-actions"
+                                    },
+                                    "children": [
+                                      {
+                                        "componentName": "HarmonyView",
+                                        "props": {
+                                          "className": " minus"
+                                        },
+                                        "children": [
+                                          {
+                                            "componentName": "HarmonyImage",
+                                            "props": {
+                                              "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/extra/minus.svg",
+                                              "className": "component-base-style"
+                                            },
+                                            "children": [],
+                                            "id": "2233f5c7"
+                                          }
+                                        ],
+                                        "id": "45565284"
+                                      },
+                                      {
+                                        "componentName": "HarmonyText",
+                                        "props": {
+                                          "style": "display: inline-block;",
+                                          "text": "查看更多",
+                                          "className": " count"
+                                        },
+                                        "children": [],
+                                        "id": "41455468"
+                                      },
+                                      {
+                                        "componentName": "HarmonyView",
+                                        "props": {
+                                          "className": " add"
+                                        },
+                                        "children": [
+                                          {
+                                            "componentName": "HarmonyImage",
+                                            "props": {
+                                              "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/extra/plus.svg",
+                                              "className": " btn-icon"
+                                            },
+                                            "children": [],
+                                            "id": "35555567"
+                                          }
+                                        ],
+                                        "id": "1b625612"
+                                      }
+                                    ],
+                                    "id": "43154356"
+                                  }
+                                ],
+                                "id": "62234544"
+                              }
+                            ],
+                            "id": "c2655326"
+                          }
+                        ],
+                        "id": "66624683",
+                        "loop": {
+                          "type": "JSExpression",
+                          "value": "category.foods"
+                        },
+                        "loopArgs": [
+                          "food",
+                          "foodIndex"
+                        ]
+                      }
+                    ],
+                    "id": "22b5d1e5",
+                    "loop": {
+                      "type": "JSExpression",
+                      "value": "this.state.categories"
+                    },
+                    "loopArgs": [
+                      "category",
+                      "index"
+                    ]
+                  }
+                ],
+                "id": "4f646a1e"
+              }
+            ],
+            "id": "343e9176"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " cart-float-box"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " cart-icon-box"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyImage",
+                    "props": {
+                      "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/extra/cart.svg",
+                      "className": " cart-icon"
+                    },
+                    "children": [],
+                    "id": "d2284626"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " badge"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "1",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "63321514"
+                      }
+                    ],
+                    "id": "2b516531"
+                  }
+                ],
+                "id": "51291442"
+              },
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " cart-info"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " cart-price"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "68.90",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "32636263"
+                      }
+                    ],
+                    "id": "51645856"
+                  }
+                ],
+                "id": "11269352"
+              },
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " checkout-btn"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyText",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "查看更多",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "33622636"
+                  }
+                ],
+                "id": "433f4526"
+              }
+            ],
+            "id": "543633d4"
+          }
+        ],
+        "id": "24d64365"
+      }
+    ],
+    "dataSource": {
+      "list": []
+    },
+    "state": {
+      "categories": [
+        {
+          "name": "热销套餐",
+          "foods": [
+            {
+              "id": 1,
+              "name": "香辣鸡腿堡套餐",
+              "description": "香辣鸡腿堡 + 中薯条 + 中可乐",
+              "price": 28.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/burger-combo.jpg",
+              "monthlySales": 328
+            },
+            {
+              "id": 2,
+              "name": "双层牛肉堡套餐",
+              "description": "双层牛肉堡 + 中薯条 + 中可乐",
+              "price": 32.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/beef-burger.jpg",
+              "monthlySales": 218
+            }
+          ]
+        },
+        {
+          "name": "单人套餐",
+          "foods": [
+            {
+              "id": 3,
+              "name": "美式炸鸡套餐",
+              "description": "2块炸鸡 + 中薯条 + 中可乐",
+              "price": 36.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/chicken-combo.jpg",
+              "monthlySales": 196
+            },
+            {
+              "id": 4,
+              "name": "鸡肉卷套餐",
+              "description": "鸡肉卷 + 中薯条 + 中可乐",
+              "price": 27.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/roll-combo.jpg",
+              "monthlySales": 176
+            }
+          ]
+        },
+        {
+          "name": "家庭套餐",
+          "foods": [
+            {
+              "id": 5,
+              "name": "欢乐家庭桶",
+              "description": "3块炸鸡 + 2个汉堡 + 2份薯条 + 2杯可乐",
+              "price": 88.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/family-combo.jpg",
+              "monthlySales": 95
+            }
+          ]
+        },
+        {
+          "name": "小食",
+          "foods": [
+            {
+              "id": 6,
+              "name": "薯条",
+              "description": "香脆可口的薯条",
+              "price": 8.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/fries.jpg",
+              "monthlySales": 355
+            },
+            {
+              "id": 7,
+              "name": "洋葱圈",
+              "description": "香脆可口的洋葱圈",
+              "price": 9.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/onion-rings.jpg",
+              "monthlySales": 135
+            }
+          ]
+        },
+        {
+          "name": "饮料",
+          "foods": [
+            {
+              "id": 8,
+              "name": "可乐",
+              "description": "百事可乐",
+              "price": 6.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/cola.jpg",
+              "monthlySales": 499
+            },
+            {
+              "id": 9,
+              "name": "雪碧",
+              "description": "清爽雪碧",
+              "price": 6.9,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/sprite.jpg",
+              "monthlySales": 287
+            }
+          ]
+        }
+      ],
+      "cartItems": []
+    },
+    "methods": {},
+    "utils": [],
+    "bridge": [],
+    "inputs": [],
+    "outputs": [],
+    "fileName": "Menu",
+    "id": "body"
+  }

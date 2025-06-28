@@ -1,0 +1,61 @@
+{
+    "componentName": "Page",
+    "css": ".page-base-style {\nbackground: #ffffff;\nposition: relative;\n}\n.block-base-style {\nmargin: 16px;\n}\n.component-base-style {\nmargin: 8px;\n}\n",
+    "props": {
+      "className": "page-base-style"
+    },
+    "lifeCycles": {},
+    "children": [
+      {
+        "componentName": "RouterView",
+        "props": {},
+        "children": [],
+        "id": "3423322b"
+      },
+      {
+        "componentName": "HarmonyTabBar",
+        "props": {
+          "list": [
+            {
+              "pagePath": "pages/Home/Index",
+              "iconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/home.svg",
+              "selectedIconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/home-active.svg",
+              "text": "首页"
+            },
+            {
+              "pagePath": "pages/Home/Menu",
+              "iconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/menu.svg",
+              "selectedIconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/menu-active.svg",
+              "text": "菜单"
+            },
+            {
+              "pagePath": "pages/Home/Cart",
+              "iconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/cart.svg",
+              "selectedIconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/cart-active.svg",
+              "text": "购物车"
+            },
+            {
+              "pagePath": "pages/Home/MyPage",
+              "iconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/my.svg",
+              "selectedIconPath": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/tabbar/my-active.svg",
+              "text": "我的"
+            }
+          ],
+          "style": "position: fixed; bottom: 0; width: calc(100% - 24px); border-top: 1px solid rgba(0, 0, 0, 0.33);"
+        },
+        "children": [],
+        "id": "65447244"
+      }
+    ],
+    "dataSource": {
+      "list": []
+    },
+    "state": {},
+    "methods": {},
+    "utils": [],
+    "bridge": [],
+    "inputs": [],
+    "outputs": [],
+    "fileName": "Home",
+    "id": "body"
+  }

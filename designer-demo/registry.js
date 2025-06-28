@@ -12,6 +12,8 @@
 import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
+import { generateAppCode } from './src/uniapp-generator/src'
+import Build from './src/build-plugin'
 
 export default {
   [META_SERVICE.Http]: HttpService,
@@ -34,7 +36,7 @@ export default {
           insertBefore: META_APP.Help
         },
         // 调整工具栏顺序
-        [META_APP.Save]: {
+        [Build.id]: {
           insertAfter: META_APP.GenerateCode
         },
         // 支持切换组
@@ -43,5 +45,11 @@ export default {
         }
       }
     }
-  }
+  },
+  [META_APP.GenerateCode]: {
+    options: {
+      generateAppCode
+    }
+  },
+  [Build.id]: Build
 }

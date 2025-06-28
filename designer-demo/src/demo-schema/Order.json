@@ -1,0 +1,434 @@
+{
+    "componentName": "Page",
+    "css": ".order-container {\n  min-height: 100vh;\n  background-color: #f5f5f5;\n  padding-bottom: 12.8px;\n}\n\n.empty-order {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  justify-content: center;\n  padding-top: 128px;\n}\n\n.empty-image {\n  width: 128px;\n  height: 128px;\n  margin-bottom: 19.2px;\n}\n\n.empty-text {\n  color: #999;\n  font-size: 17.92px;\n  margin-bottom: 50rpx;\n}\n\n.go-shopping-btn {\n  width: 192px;\n  height: 51.2px;\n  line-height: 51.2px;\n  text-align: center;\n  background-color: #f07373;\n  color: #fff;\n  border-radius: 25.6px;\n  font-size: 17.92px;\n}\n\n.order-list {\n  padding: 12.8px;\n}\n\n.order-item {\n  background-color: #fff;\n  border-radius: 6.4px;\n  margin-bottom: 12.8px;\n  overflow: hidden;\n}\n\n.order-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12.8px 19.2px;\n  border-bottom: 1px solid #f5f5f5;\n}\n\n.store-name {\n  font-size: 17.92px;\n  font-weight: bold;\n}\n\n.order-status {\n  font-size: 16.64px;\n}\n\n.status-wait {\n  color: #ff9900;\n}\n\n.status-active {\n  color: #f07373;\n}\n\n.status-completed {\n  color: #999;\n}\n\n.status-canceled {\n  color: #999;\n}\n\n.order-content {\n  padding: 12.8px 19.2px;\n  border-bottom: 1px solid #f5f5f5;\n}\n\n.food-info {\n  display: flex;\n  margin-bottom: 12.8px;\n}\n\n.food-image {\n  width: 76.8px;\n  height: 76.8px;\n  border-radius: 5.12px;\n  margin-right: 12.8px;\n}\n\n.food-desc {\n  flex: 1;\n}\n\n.food-summary {\n  font-size: 17.92px;\n  margin-bottom: 6.4px;\n}\n\n.food-count {\n  font-size: 15.36px;\n  color: #999;\n}\n\n.order-price-info {\n  display: flex;\n  justify-content: flex-end;\n}\n\n.amount {\n  font-size: 16.64px;\n  color: #333;\n}\n\n.price {\n  font-size: 19.2px;\n  color: #f07373;\n  font-weight: bold;\n  margin-left: 6.4px;\n}\n\n.order-footer {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12.8px 19.2px;\n}\n\n.order-time {\n  font-size: 15.36px;\n  color: #999;\n}\n\n.order-actions {\n  display: flex;\n}\n\n.action-btn {\n  margin-left: 12.8px;\n  font-size: 15.36px;\n  min-width: 102.4px;\n  height: 38.4px;\n  line-height: 38.4px;\n  border-radius: 19.2px;\n  padding: 0 19.2px;\n}\n\n.action-btn.plain {\n  color: #333;\n  border: 1px solid #ddd;\n  background-color: #fff;\n}\n\n.action-btn.primary {\n  color: #fff;\n  background-color: #f07373;\n  border: 1px solid #f07373;\n}\n",
+    "props": {
+      "style": "padding-bottom: 60px;width:100%;"
+    },
+    "lifeCycles": {},
+    "children": [
+      {
+        "componentName": "HarmonyView",
+        "props": {
+          "className": " order-container"
+        },
+        "children": [
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " empty-order"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyImage",
+                "props": {
+                  "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/empty-order.png",
+                  "className": " empty-image"
+                },
+                "children": [],
+                "id": "44319224"
+              },
+              {
+                "componentName": "HarmonyText",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "查看更多",
+                  "className": " empty-text"
+                },
+                "children": [],
+                "id": "64565292"
+              },
+              {
+                "componentName": "HarmonyButton",
+                "props": {
+                  "className": " go-shopping-btn",
+                  "text": "去下单"
+                },
+                "children": [],
+                "id": "53465421",
+                "show": true,
+                "showEye": false
+              }
+            ],
+            "id": "162325b2",
+            "condition": {
+              "type": "JSExpression",
+              "value": "this.state.orders.length === 0"
+            }
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " order-list"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " order-item"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " order-header"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " store-name"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": "点餐小程序门店",
+                              "className": "component-base-style"
+                            },
+                            "children": [],
+                            "id": "6c3b6664"
+                          }
+                        ],
+                        "id": "43a51a34"
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " order-status"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "getStatusText(order.status)"
+                              },
+                              "className": "component-base-style"
+                            },
+                            "children": [],
+                            "id": "4222533f"
+                          }
+                        ],
+                        "id": "66265965"
+                      }
+                    ],
+                    "id": "41a25365"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " order-content"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " food-info"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyImage",
+                            "props": {
+                              "src": {
+                                "type": "JSExpression",
+                                "value": "order.foods[0].image"
+                              },
+                              "className": " food-image",
+                              "mode": "aspectFill"
+                            },
+                            "children": [],
+                            "id": "64434265"
+                          },
+                          {
+                            "componentName": "HarmonyView",
+                            "props": {
+                              "className": " food-desc"
+                            },
+                            "children": [
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-summary"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "getFoodSummary(order)"
+                                      }
+                                    },
+                                    "children": [],
+                                    "id": "3e355626"
+                                  }
+                                ],
+                                "id": "1a643155"
+                              },
+                              {
+                                "componentName": "HarmonyView",
+                                "props": {
+                                  "className": " food-count"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "HarmonyText",
+                                    "props": {
+                                      "style": "display: inline-block;",
+                                      "text": {
+                                        "type": "JSExpression",
+                                        "value": "`共${getTotalCount(order)}件商品`"
+                                      },
+                                      "className": "component-base-style"
+                                    },
+                                    "children": [],
+                                    "id": "22655242"
+                                  }
+                                ],
+                                "id": "55526984"
+                              }
+                            ],
+                            "id": "32355466"
+                          }
+                        ],
+                        "id": "4251233c"
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " order-price-info"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyView",
+                            "props": {
+                              "className": " amount"
+                            },
+                            "children": [
+                              {
+                                "componentName": "HarmonyText",
+                                "props": {
+                                  "style": "display: inline-block;",
+                                  "className": "component-base-style",
+                                  "text": "实付"
+                                },
+                                "children": [],
+                                "id": "32222639"
+                              },
+                              {
+                                "componentName": "HarmonyText",
+                                "props": {
+                                  "style": "display: inline-block;",
+                                  "text": {
+                                    "type": "JSExpression",
+                                    "value": "`¥${order.amount.toFixed(2)}`"
+                                  },
+                                  "className": " price"
+                                },
+                                "children": [],
+                                "id": "92646441"
+                              }
+                            ],
+                            "id": "93421b32"
+                          }
+                        ],
+                        "id": "25b56933"
+                      }
+                    ],
+                    "id": "5463466a"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " order-footer"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " order-time"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "formatOrderTime(order.createTime)"
+                              }
+                            },
+                            "children": [],
+                            "id": "25223256"
+                          }
+                        ],
+                        "id": "26236f22"
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " order-actions"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyButton",
+                            "props": {
+                              "text": "再来一单",
+                              "className": " action-btn plain"
+                            },
+                            "children": [],
+                            "id": "253d4541",
+                            "condition": {
+                              "type": "JSExpression",
+                              "value": "order.status === 'COMPLETED'"
+                            }
+                          },
+                          {
+                            "componentName": "HarmonyButton",
+                            "props": {
+                              "text": "去支付",
+                              "className": " action-btn primary"
+                            },
+                            "children": [],
+                            "id": "65362455",
+                            "condition": {
+                              "type": "JSExpression",
+                              "value": "order.status === 'WAIT_PAY'"
+                            }
+                          },
+                          {
+                            "componentName": "HarmonyButton",
+                            "props": {
+                              "className": " action-btn plain",
+                              "text": "查看详情"
+                            },
+                            "children": [],
+                            "id": "362c6f5d",
+                            "condition": {
+                              "type": "JSExpression",
+                              "value": "order.status === 'WAIT_DELIVERY' || order.status === 'DELIVERING'"
+                            }
+                          }
+                        ],
+                        "id": "65336a53"
+                      }
+                    ],
+                    "id": "1434f13c"
+                  }
+                ],
+                "id": "59143652",
+                "loop": {
+                  "type": "JSExpression",
+                  "value": "this.state.orders"
+                },
+                "loopArgs": [
+                  "order",
+                  "index"
+                ]
+              }
+            ],
+            "id": "33552554",
+            "condition": {
+              "type": "JSExpression",
+              "value": "this.state.orders.length > 0"
+            }
+          }
+        ],
+        "id": "3c212263"
+      }
+    ],
+    "dataSource": {
+      "list": []
+    },
+    "state": {
+      "orders": [
+        {
+          "id": 10001,
+          "status": "COMPLETED",
+          "amount": 46.8,
+          "foods": [
+            {
+              "id": 1,
+              "name": "香辣鸡腿堡套餐",
+              "price": 28.9,
+              "count": 1,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/burger-combo.jpg"
+            },
+            {
+              "id": 6,
+              "name": "薯条",
+              "price": 8.9,
+              "count": 2,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/fries.jpg"
+            }
+          ],
+          "createTime": "2025-06-24T08:37:32.703Z"
+        },
+        {
+          "id": 10002,
+          "status": "DELIVERING",
+          "amount": 37.9,
+          "foods": [
+            {
+              "id": 2,
+              "name": "双层牛肉堡套餐",
+              "price": 32.9,
+              "count": 1,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/beef-burger.jpg"
+            },
+            {
+              "id": 9,
+              "name": "雪碧",
+              "price": 6.9,
+              "count": 1,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/sprite.jpg"
+            }
+          ],
+          "createTime": "2025-06-25T08:37:32.703Z"
+        },
+        {
+          "id": 10003,
+          "status": "WAIT_PAY",
+          "amount": 88.9,
+          "foods": [
+            {
+              "id": 5,
+              "name": "欢乐家庭桶",
+              "price": 88.9,
+              "count": 1,
+              "image": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/food/family-combo.jpg"
+            }
+          ],
+          "createTime": "2025-06-25T09:08:00.283Z"
+        }
+      ]
+    },
+    "methods": {
+      "getStatusText": {
+        "type": "JSFunction",
+        "value": "function getStatusText(status) {\n  const statusMap = {\n    WAIT_PAY: '待支付',\n    WAIT_DELIVERY: '待配送',\n    DELIVERING: '配送中',\n    COMPLETED: '已完成',\n    CANCELED: '已取消'\n  }\n  return statusMap[status]\n}\n"
+      },
+      "getFoodSummary": {
+        "type": "JSFunction",
+        "value": "function getFoodSummary(order) {\n  const foods = order.foods\n  if (foods.length === 0) return ''\n\n  const firstFood = foods[0]\n  if (foods.length === 1) {\n    return firstFood.name\n  } else {\n    return `${firstFood.name} 等 ${foods.length} 件商品`\n  }\n}\n"
+      },
+      "getTotalCount": {
+        "type": "JSFunction",
+        "value": "function getTotalCount(order) {\n  return order.foods.reduce((total, food) => total + food.count, 0)\n}\n"
+      },
+      "formatOrderTime": {
+        "type": "JSFunction",
+        "value": "function formatOrderTime(intime) {\n  // 简单格式化，实际项目中可以使用日期格式化库\n  const time = new Date(intime)\n  const now = new Date()\n  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()\n  const yesterday = today - 24 * 60 * 60 * 1000\n\n  const orderTime = time.getTime()\n  if (orderTime >= today) {\n    return `今天 ${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`\n  } else if (orderTime >= yesterday) {\n    return `昨天 ${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`\n  } else {\n    return `${time.getFullYear()}-${(time.getMonth() + 1).toString().padStart(2, '0')}-${time\n      .getDate()\n      .toString()\n      .padStart(2, '0')}`\n  }\n}\n"
+      }
+    },
+    "utils": [],
+    "bridge": [],
+    "inputs": [],
+    "outputs": [],
+    "fileName": "Order",
+    "id": "body"
+  }
