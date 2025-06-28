@@ -12,7 +12,6 @@
 import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
-import { generateAppCode } from './src/uniapp-generator/src'
 
 export default {
   [META_SERVICE.Http]: HttpService,
@@ -43,11 +42,6 @@ export default {
           insertAfter: META_APP.ViewSetting
         }
       }
-    }
-  },
-  [META_APP.GenerateCode]: {
-    options: {
-      generateAppCode
     }
   }
 }
