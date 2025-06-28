@@ -76,7 +76,7 @@ export default defineConfig({
       exclude: ['node_modules/*monaco-editor*/**', 'node_modules/lodash-es/**', 'node_modules/@types/lodash-es/**']
     },
     minify: true,
-    sourcemap: true,
+    sourcemap: false,
     lib: {
       entry: {
         index: path.resolve(__dirname, 'index.js')

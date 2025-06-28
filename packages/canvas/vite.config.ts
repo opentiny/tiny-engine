@@ -31,7 +31,7 @@ export default defineConfig({
   ],
   publicDir: false,
   build: {
-    sourcemap: true,
+    sourcemap: false,
     cssCodeSplit: true,
     lib: {
       entry: {

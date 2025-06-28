@@ -42,7 +42,7 @@ export default defineConfig({
       entry: path.resolve(__dirname, './src/index.js'),
       formats: ['cjs', 'es']
     },
-    sourcemap: true,
+    sourcemap: false,
     rollupOptions: {
       external: ['@babel/parser', '@babel/traverse', '@babel/generator']
     }

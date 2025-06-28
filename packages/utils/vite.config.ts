@@ -18,7 +18,7 @@ export default defineConfig({
   publicDir: false,
   resolve: {},
   build: {
-    sourcemap: true,
+    sourcemap: false,
     lib: {
       entry: path.resolve(__dirname, './src/index.ts'),
       name: 'utils',

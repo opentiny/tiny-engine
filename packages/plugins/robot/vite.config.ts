@@ -22,7 +22,7 @@ export default defineConfig({
   resolve: {},
   publicDir: false,
   build: {
-    sourcemap: true,
+    sourcemap: false,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
       name: 'plugin-robot',

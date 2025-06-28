@@ -19,7 +19,7 @@ export default defineConfig({
   plugins: [vue()],
   define: {},
   build: {
-    sourcemap: true,
+    sourcemap: false,
     minify: false,
     emptyOutDir: true,
     lib: {
