@@ -30,6 +30,8 @@ type Service<T, K> = Pick<ServiceOptions<T, K>, 'id' | 'type' | 'options'> & {
  */
 const servicesMap = new Map()
 
+const _servicesMap = new Map()
+
 export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Service<T, K> => {
   const { id, type, initialState, options, init, apis } = serviceOptions
 
@@ -39,6 +41,10 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
 
   if (type !== 'MetaService') {
     throw new Error('Invalid service type. Expected: MetaService')
+  }
+
+  if (_servicesMap.has(id)) {
+    return _servicesMap.get(id)
   }
 
   /**
@@ -72,6 +78,8 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
     state,
     init: typeof init === 'function' ? init : () => {}
   })
+
+  _servicesMap.set(id, resultService)
 
   return resultService
 }
