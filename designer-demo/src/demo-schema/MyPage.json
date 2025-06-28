@@ -1,0 +1,478 @@
+{
+    "componentName": "Page",
+    "css": ".my-container {\n  min-height: 100vh;\n  background-color: #f5f5f5;\n  padding-bottom: 25.6px;\n}\n\n.user-info-box {\n  display: flex;\n  align-items: center;\n  justify-content: space-between;\n  padding: 25.6px 19.2px;\n  background-color: #f07373;\n}\n\n.user-info {\n  display: flex;\n  align-items: center;\n}\n\n.avatar {\n  width: 76.8px;\n  height: 76.8px;\n  border-radius: 50%;\n  border: 4rpx solid rgba(255, 255, 255, 0.4);\n}\n\n.user-detail {\n  margin-left: 12.8px;\n  color: #fff;\n}\n\n.username {\n  font-size: 21.76px;\n  font-weight: bold;\n  margin-bottom: 6.4px;\n}\n\n.user-id {\n  font-size: 15.36px;\n  opacity: 0.8;\n}\n\n.setting-icon {\n  width: 38.4px;\n  height: 38.4px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.icon-setting {\n  color: #fff;\n  font-size: 25.6px;\n}\n.icon-setting:before {\n  content: '\\e60d';\n}\n\n.card-box {\n  margin: 12.8px 19.2px;\n  height: 102.4px;\n  border-radius: 10.24px;\n  overflow: hidden;\n  position: relative;\n}\n\n.card-bg {\n  position: absolute;\n  width: 100%;\n  height: 100%;\n  z-index: 1;\n}\n\n.card-info {\n  position: relative;\n  z-index: 2;\n  padding: 19.2px;\n  color: #fff;\n}\n\n.card-title {\n  font-size: 20.48px;\n  font-weight: bold;\n  margin-bottom: 6.4px;\n}\n\n.card-desc {\n  font-size: 15.36px;\n  opacity: 0.8;\n}\n\n.order-section {\n  background-color: #fff;\n  margin-bottom: 12.8px;\n}\n.menu-section {\n  background-color: #fff;\n  margin-bottom: 12.8px;\n}\n\n.section-header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 19.2px;\n  border-bottom: 1px solid #f5f5f5;\n  font-size: 19.2px;\n  font-weight: bold;\n}\n\n.more {\n  display: flex;\n  align-items: center;\n  font-size: 15.36px;\n  font-weight: normal;\n  color: #999;\n}\n\n.icon-arrow-right {\n  font-size: 15.36px;\n  margin-left: 6.4px;\n}\n\n.icon-arrow-right:before {\n  content: '\\e644';\n}\n\n.order-types {\n  display: flex;\n  align-items: center;\n  padding: 19.2px 0;\n}\n\n.order-type-item {\n  flex: 1;\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n}\n\n.order-icon-wrapper {\n  width: 51.2px;\n  height: 51.2px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  position: relative;\n}\n\n.order-icon {\n  width: 30.72px;\n  height: 30.72px;\n}\n\n.badge {\n  position: absolute;\n  top: -6.4px;\n  right: -6.4px;\n  background-color: #ff0000;\n  color: #fff;\n  font-size: 12.8px;\n  min-width: 19.2px;\n  height: 19.2px;\n  padding: 0 3.84px;\n  border-radius: 9.6px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n}\n\n.order-type-text {\n  font-size: 16.64px;\n  color: #333;\n  margin-top: 6.4px;\n}\n\n.menu-item {\n  display: flex;\n  align-items: center;\n  padding: 19.2px;\n  border-bottom: 1px solid #f5f5f5;\n}\n\n.menu-item:last-child {\n  border-bottom: none;\n}\n\n.menu-icon {\n  width: 25.6px;\n  height: 25.6px;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  margin-right: 12.8px;\n}\n\n.menu-icon .iconfont {\n  font-size: 23.04px;\n  color: #f07373;\n}\n\n.menu-text {\n  flex: 1;\n  font-size: 17.92px;\n  color: #333;\n}\n\n.menu-item .icon-arrow-right {\n  color: #ccc;\n}\n\n.logout-btn {\n  margin: 25.6px 19.2px;\n  height: 57.6px;\n  line-height: 57.6px;\n  text-align: center;\n  background-color: #fff;\n  border-radius: 28.8px;\n  font-size: 19.2px;\n  color: #f07373;\n}\n",
+    "props": {
+      "style": "padding-bottom: 60px;width:100%;"
+    },
+    "lifeCycles": {},
+    "children": [
+      {
+        "componentName": "HarmonyView",
+        "props": {
+          "className": " my-container"
+        },
+        "children": [
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " user-info-box"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " user-info"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyImage",
+                    "props": {
+                      "src": {
+                        "type": "JSExpression",
+                        "value": "this.state.userInfo.avatar || 'http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/default-avatar.png'"
+                      },
+                      "className": " avatar"
+                    },
+                    "children": [],
+                    "id": "1a284429"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " user-detail"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " username"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "this.state.userInfo.nickname"
+                              }
+                            },
+                            "children": [],
+                            "id": "22663c32",
+                            "condition": {
+                              "type": "JSExpression",
+                              "value": "this.state.userInfo.isLogin"
+                            }
+                          }
+                        ],
+                        "id": "533651f2"
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " username"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": "点击登录"
+                            },
+                            "children": [],
+                            "id": "d55f2424"
+                          }
+                        ],
+                        "id": "34565326",
+                        "condition": {
+                          "type": "JSExpression",
+                          "value": "!this.state.userInfo.isLogin"
+                        }
+                      },
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " user-id"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "`会员ID: ${this.state.userInfo.userId}`"
+                              }
+                            },
+                            "children": [],
+                            "id": "466d9353"
+                          }
+                        ],
+                        "id": "35633596"
+                      }
+                    ],
+                    "id": "64344335"
+                  }
+                ],
+                "id": "56843244"
+              },
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " setting-icon"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyText",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": " ",
+                      "className": " icon-setting"
+                    },
+                    "children": [],
+                    "id": "44424465"
+                  }
+                ],
+                "id": "54b95943"
+              }
+            ],
+            "id": "45564313"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " card-box"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyImage",
+                "props": {
+                  "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/member-card.png",
+                  "className": " card-bg"
+                },
+                "children": [],
+                "id": "7366f45f"
+              },
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " card-info"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " card-title"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "会员卡",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "44ee5535"
+                      }
+                    ],
+                    "id": "25633215"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " card-desc"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "会员专享优惠，折扣多多",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "55516425"
+                      }
+                    ],
+                    "id": "312e3362"
+                  }
+                ],
+                "id": "22662664"
+              }
+            ],
+            "id": "53f22ee2"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " order-section"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " section-header"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyText",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "我的订单"
+                    },
+                    "children": [],
+                    "id": "46264226"
+                  },
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " more"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "全部订单",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "43564364"
+                      },
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "className": " icon-arrow-right"
+                        },
+                        "children": [],
+                        "id": "27242456"
+                      }
+                    ],
+                    "id": "26435365"
+                  }
+                ],
+                "id": "123f5353"
+              },
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " order-types"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyView",
+                    "props": {
+                      "className": " order-type-item"
+                    },
+                    "children": [
+                      {
+                        "componentName": "HarmonyView",
+                        "props": {
+                          "className": " order-icon-wrapper"
+                        },
+                        "children": [
+                          {
+                            "componentName": "HarmonyImage",
+                            "props": {
+                              "src": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/extra/order.svg",
+                              "className": " order-icon"
+                            },
+                            "children": [],
+                            "id": "49654225"
+                          },
+                          {
+                            "componentName": "HarmonyText",
+                            "props": {
+                              "style": "display: inline-block;",
+                              "text": {
+                                "type": "JSExpression",
+                                "value": "item.count"
+                              },
+                              "className": " badge"
+                            },
+                            "children": [],
+                            "id": "639d6431",
+                            "condition": {
+                              "type": "JSExpression",
+                              "value": "item.count > 0"
+                            }
+                          }
+                        ],
+                        "id": "53541364"
+                      },
+                      {
+                        "componentName": "HarmonyText",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": {
+                            "type": "JSExpression",
+                            "value": "item.name"
+                          },
+                          "className": " order-type-text"
+                        },
+                        "children": [],
+                        "id": "35be361a"
+                      }
+                    ],
+                    "id": "26564551",
+                    "loop": {
+                      "type": "JSExpression",
+                      "value": "this.state.orderTypes"
+                    },
+                    "loopArgs": [
+                      "item",
+                      "index"
+                    ]
+                  }
+                ],
+                "id": "63366464"
+              }
+            ],
+            "id": "54333175"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " menu-section"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyView",
+                "props": {
+                  "className": " menu-item"
+                },
+                "children": [
+                  {
+                    "componentName": "HarmonyText",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "item.name"
+                      },
+                      "className": " menu-text"
+                    },
+                    "children": [],
+                    "id": "34541d63"
+                  },
+                  {
+                    "componentName": "HarmonyText",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": " icon-arrow-right"
+                    },
+                    "children": [],
+                    "id": "366c5646"
+                  }
+                ],
+                "id": "3425f652",
+                "loop": {
+                  "type": "JSExpression",
+                  "value": "this.state.menuItems"
+                },
+                "loopArgs": [
+                  "item",
+                  "index"
+                ]
+              }
+            ],
+            "id": "54222612"
+          },
+          {
+            "componentName": "HarmonyView",
+            "props": {
+              "className": " logout-btn"
+            },
+            "children": [
+              {
+                "componentName": "HarmonyText",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": "退出登录"
+                },
+                "children": [],
+                "id": "3314c324"
+              }
+            ],
+            "id": "33236453"
+          }
+        ],
+        "id": "61264243"
+      }
+    ],
+    "dataSource": {
+      "list": []
+    },
+    "state": {
+      "userInfo": {
+        "isLogin": true,
+        "userId": "88888888",
+        "nickname": "张三",
+        "avatar": "http://127.0.0.1:5500/packages/uniapp-demo/src/static/images/avatar.png",
+        "phone": "138****8888"
+      },
+      "orderTypes": [
+        {
+          "name": "待支付",
+          "icon": "icon-wallet",
+          "type": "WAIT_PAY",
+          "count": 1
+        },
+        {
+          "name": "待配送",
+          "icon": "icon-box",
+          "type": "WAIT_DELIVERY",
+          "count": 0
+        },
+        {
+          "name": "配送中",
+          "icon": "icon-delivery",
+          "type": "DELIVERING",
+          "count": 1
+        },
+        {
+          "name": "已完成",
+          "icon": "icon-check",
+          "type": "COMPLETED",
+          "count": 0
+        }
+      ],
+      "menuItems": [
+        {
+          "id": "address",
+          "name": "收货地址",
+          "icon": "icon-location"
+        },
+        {
+          "id": "coupon",
+          "name": "我的优惠券",
+          "icon": "icon-coupon"
+        },
+        {
+          "id": "favorite",
+          "name": "我的收藏",
+          "icon": "icon-star"
+        },
+        {
+          "id": "customer-service",
+          "name": "客服中心",
+          "icon": "icon-service"
+        },
+        {
+          "id": "about",
+          "name": "关于我们",
+          "icon": "icon-info"
+        }
+      ]
+    },
+    "methods": {},
+    "utils": [],
+    "bridge": [],
+    "inputs": [],
+    "outputs": [],
+    "fileName": "MyPage",
+    "id": "body"
+  }

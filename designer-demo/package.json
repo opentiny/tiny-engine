@@ -11,6 +11,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
+    "@designer-demo/build-plugin": "file:build-plugin",
     "@opentiny/tiny-engine": "workspace:^",
     "@opentiny/tiny-engine-meta-register": "workspace:^",
     "@opentiny/tiny-engine-utils": "workspace:*",
