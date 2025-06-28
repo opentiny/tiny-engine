@@ -1,14 +1,11 @@
 {
   "extends": "@vue/tsconfig/tsconfig.dom.json",
   "compilerOptions": {
-    "composite": false,
+    "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
 
     /* Linting */
-    "strict": false,
-    "skipLibCheck": true,
-    "noImplicitAny": false,
-    "strictNullChecks": false,
+    "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
@@ -57,9 +54,6 @@
       "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
       "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"]
     }
-  },
-  "vueCompilerOptions": {
-    "strictTemplates": false
   },
   "include": ["packages/**/*"],
   "exclude": ["node_modules", "**/node_modules", "dist", "**/dist"]
