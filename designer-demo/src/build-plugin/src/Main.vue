@@ -25,7 +25,7 @@ import { ToolbarBase, useBlock, useCanvas, useNotify, getMetaApi, META_APP, getM
 import { TinyDialogBox, TinyProgress, TinyButton } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
 import {generateAppCode} from '../../uniapp-generator/src'
-import { fetchMetaData, fetchPageList, fetchBlockSchema, fetchTaskData } from './composable/http'
+import { fetchMetaData, fetchPageList, fetchBlockSchema, fetchTaskData, fetchUpload } from './composable/http'
 import JSZip from 'jszip'
 
 export default {
@@ -242,10 +242,7 @@ export default {
         // state.percentage = 80
 
         // 发送到后端
-        const response = await fetch(state.uploadUrl, {
-          method: 'POST',
-          body: formData
-        })
+        const response = await fetchUpload(formData)
 
         if (!response.data) {
           const errorText = await response.text().catch(() => '');
