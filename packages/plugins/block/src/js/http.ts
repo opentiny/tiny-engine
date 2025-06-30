@@ -26,7 +26,7 @@ export const requestUpdateBlock = (blockId, params, config = {}) =>
 
 // 区块管理 -- 发布区块
 export const requestDeployBlock = (params) =>
-  getMetaApi(META_SERVICE.Http).post('/material-center/api/block/deploy/', params)
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block/deploy', params)
 
 // 区块管理 -- 根据关键字搜索区块
 export const requestSearchBlock = (searchKey) =>
@@ -38,7 +38,7 @@ export const fetchBackupList = (blockId) =>
 
 // 区块管理 -- 新建区块
 export const requestCreateBlock = (params) =>
-  getMetaApi(META_SERVICE.Http).post('/material-center/api/block/create/', params)
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block/create', params)
 
 // 初始化区块
 export const requestInitBlocks = (params) => getMetaApi(META_SERVICE.Http).post('/generate/api/initBlocks', params)
