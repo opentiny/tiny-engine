@@ -43,7 +43,7 @@ export const fetchBlockSchema = async (blockName: string) =>
 
 
 // 获取进度
-export const fetchTaskData = (taskId: string) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/tasks/status/${taskId}`)
+export const fetchTaskData = async (taskId: string) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/tasks/status/${taskId}`)
 
 // 上传文件
 export const fetchUpload = async (formData) =>

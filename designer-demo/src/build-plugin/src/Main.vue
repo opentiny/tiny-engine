@@ -194,8 +194,8 @@ export default {
     }
 
     const getBuildProcess = async(data) => {
-      process.value = setInterval(() => {
-        const res = fetchTaskData(data.id)
+      process.value = setInterval(async() => {
+        const res = await fetchTaskData(data.id)
         state.percentage = res.progress_percent
         if (state.percentage === 100) {
           useNotify({
@@ -206,7 +206,7 @@ export default {
           clearTimeout(process.value)
           state.fileUrl = res.progress
         }
-      }, 1000)
+      }, 5000)
     }
     
     const build = async () => {
