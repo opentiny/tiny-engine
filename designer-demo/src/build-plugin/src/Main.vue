@@ -2,15 +2,17 @@
   <div class="toolbar-build">
     <toolbar-base content="构建" :icon="options.icon.default || options.icon" :options="options" @click-api="build">
       <template #default>
-        <tiny-dialog-box :visible="state.showDialogbox" width="400" top="30%" :show-header="false" :append-to-body="true">
+        <tiny-dialog-box :visible="state.showDialogbox" width="400" top="30%" :show-header="false" :append-to-body="true" destroy-on-close>
           <div class="build-dialog">
-            <tiny-progress :percentage="state.percentage" :stroke-width="8" type="line"></tiny-progress>
-            <div class="build-options" v-if="state.percentage === 0">
-              <label class="save-option">
-                <input type="checkbox" v-model="state.saveToLocal"> 同时保存到本地
-              </label>
+            <tiny-progress v-if="state.percentage !== 100" :percentage="state.percentage" :stroke-width="8" type="line"></tiny-progress>
+            <div class="build-options" v-else>
+              项目构建完成，请点击下载
             </div>
           </div>
+          <template #footer v-if="state.percentage === 100">
+            <tiny-button type="primary" @click="download">下载</tiny-button>
+            <tiny-button @click="handleCancel">取消</tiny-button>
+          </template>
         </tiny-dialog-box>
       </template>
     </toolbar-base>
@@ -19,29 +21,19 @@
 
 <script lang="ts">
 import { reactive, ref } from 'vue'
-import {
-  useBlock,
-  useCanvas,
-  useNotify,
-  useLayout,
-  getMetaApi,
-  META_APP,
-  getMergeMeta,
-  META_SERVICE
-} from '@opentiny/tiny-engine-meta-register'
-import { ToolbarBase } from '@opentiny/tiny-engine'
-import { TinyDialogBox, TinyProgress } from '@opentiny/vue'
+import { ToolbarBase, useBlock, useCanvas, useNotify, getMetaApi, META_APP, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine'
+import { TinyDialogBox, TinyProgress, TinyButton } from '@opentiny/vue'
 import { fs } from '@opentiny/tiny-engine-utils'
 import {generateAppCode} from '../../uniapp-generator/src'
-import { fetchMetaData, fetchPageList, fetchBlockSchema } from './composable/http'
+import { fetchMetaData, fetchPageList, fetchBlockSchema, fetchTaskData } from './composable/http'
 import JSZip from 'jszip'
-import { saveAs } from 'file-saver'
 
 export default {
   components: {
     ToolbarBase,
     TinyDialogBox,
-    TinyProgress
+    TinyProgress,
+    TinyButton
   },
   props: {
     options: {
@@ -57,9 +49,21 @@ export default {
     const state = reactive({
       showDialogbox: false,
       percentage: 0,
-      saveToLocal: false,
-      uploadUrl: '/api/upload'
+      fileUrl: '',
+      uploadUrl: '/app-center/api/apps/harmonyCode'
     })
+
+    const handleCancel = () => {
+      state.percentage = 0
+      state.showDialogbox = false
+    }
+
+    const download = () => {
+      if (state.fileUrl) {
+        handleCancel()
+        window.open(state.fileUrl, '_blank')
+      }
+    }
 
     const getParams = () => {
       const { getSchema } = useCanvas()
@@ -189,31 +193,32 @@ export default {
       return [fileRes]
     }
 
-
-    const getBuildProcess = () => {
-      state.percentage += 5
-    }
-
-    const getTimer = async() => {
+    const getBuildProcess = async(data) => {
       process.value = setInterval(() => {
-        getBuildProcess()
+        const res = fetchTaskData(data.id)
+        state.percentage = res.taskStatus
         if (state.percentage === 100) {
+          useNotify({
+            type: 'success',
+            title: '构建成功',
+            message: '项目已成功构建并上传'
+          })
           clearTimeout(process.value)
-          state.showDialogbox = false;
+          state.fileUrl = data.progress
         }
-      }, 300)
+      }, 1000)
     }
     
     const build = async () => {
       try {
         state.showDialogbox = true
-        state.percentage = 10
+        // state.percentage = 10
 
         // 获取文件列表
         const [fileRes] = await getPreGenerateInfo()
         console.log('fileRes', fileRes)
         
-        state.percentage = 30
+        // state.percentage = 30
 
         // 创建zip实例
         const zip = new JSZip()
@@ -223,47 +228,31 @@ export default {
           zip.file(file.filePath, file.fileContent)
         })
 
-        state.percentage = 60
+        // state.percentage = 60
 
         // 生成zip文件
         const zipBlob = await zip.generateAsync({ type: 'blob' })
+
+        console.log(zipBlob)
 
         // 创建FormData
         const formData = new FormData()
         formData.append('file', zipBlob, 'project.zip')
 
-        state.percentage = 80
+        // state.percentage = 80
 
         // 发送到后端
-        // const response = await fetch(state.uploadUrl, {
-        //   method: 'POST',
-        //   body: formData
-        // })
-
-        // if (!response.ok) {
-        //   const errorText = await response.text().catch(() => '');
-        //   throw new Error(`上传失败: ${response.status} ${response.statusText}${errorText ? ' - ' + errorText : ''}`);
-        // }
-
-        // const result = await response.json()
-        // console.log('Upload success:', result)
-
-        // 如果用户选择了保存到本地，则保存文件
-        // if (state.saveToLocal) {
-        //   saveAs(zipBlob, 'project.zip')
-        // }
-
-        state.percentage = 100
-        useNotify({
-          type: 'success',
-          title: '构建成功',
-          message: '项目已成功构建并上传'
+        const response = await fetch(state.uploadUrl, {
+          method: 'POST',
+          body: formData
         })
 
-        setTimeout(() => {
-          state.showDialogbox = false
-          state.percentage = 0
-        }, 1000)
+        if (!response.data) {
+          const errorText = await response.text().catch(() => '');
+          throw new Error(`上传失败: ${response.status} ${response.statusText}${errorText ? ' - ' + errorText : ''}`);
+        }
+
+        getBuildProcess(response.data)
 
       } catch (error) {
         console.error('Build failed:', error)
@@ -281,6 +270,8 @@ export default {
     return {
       state,
       build,
+      handleCancel,
+      download
     }
   }
 }
@@ -291,9 +282,6 @@ export default {
 }
 
 .build-options {
-  margin-top: 15px;
-  display: flex;
-  justify-content: flex-end;
 }
 
 .save-option {

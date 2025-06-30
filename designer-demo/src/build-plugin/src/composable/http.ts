@@ -40,3 +40,7 @@ export const fetchPageList = (appId: string) => getMetaApi(META_SERVICE.Http).ge
 
 export const fetchBlockSchema = async (blockName: string) =>
   getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`)
+
+
+// 获取进度
+export const fetchTaskData = (taskId: string) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/tasks/status/${taskId}`)
