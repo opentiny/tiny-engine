@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@opentiny/tiny-engine": "^2.6.0",
+    "@opentiny/tiny-engine": "workspace:*",
     "jszip": "3.7.1",
     "file-saver": "2.0.5"
   }

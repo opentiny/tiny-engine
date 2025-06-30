@@ -1,7 +1,7 @@
 packages:
   - 'packages/**'
   - 'mockServer'
-  - 'designer-demo'
+  - 'designer-demo/**'
   # 忽略测试文件夹中的 project、脚手架模板
   - '!packages/**/test/**'
   - '!packages/**/template/**'
