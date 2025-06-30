@@ -212,13 +212,10 @@ export default {
     const build = async () => {
       try {
         state.showDialogbox = true
-        // state.percentage = 10
 
         // 获取文件列表
         const [fileRes] = await getPreGenerateInfo()
         console.log('fileRes', fileRes)
-        
-        // state.percentage = 30
 
         // 创建zip实例
         const zip = new JSZip()
@@ -228,8 +225,6 @@ export default {
           zip.file(file.filePath, file.fileContent)
         })
 
-        // state.percentage = 60
-
         // 生成zip文件
         const zipBlob = await zip.generateAsync({ type: 'blob' })
 
@@ -238,8 +233,6 @@ export default {
         // 创建FormData
         const formData = new FormData()
         formData.append('file', zipBlob, 'project.zip')
-
-        // state.percentage = 80
 
         // 发送到后端
         const response = await fetchUpload(formData)
