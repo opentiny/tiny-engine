@@ -244,12 +244,12 @@ export default {
         // 发送到后端
         const response = await fetchUpload(formData)
 
-        if (!response.data) {
+        if (!response) {
           const errorText = await response.text().catch(() => '');
           throw new Error(`上传失败: ${response.status} ${response.statusText}${errorText ? ' - ' + errorText : ''}`);
         }
 
-        getBuildProcess(response.data)
+        getBuildProcess(response)
 
       } catch (error) {
         console.error('Build failed:', error)

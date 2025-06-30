@@ -47,9 +47,4 @@ export const fetchTaskData = (taskId: string) => getMetaApi(META_SERVICE.Http).g
 
 // 上传文件
 export const fetchUpload = async (formData) =>
-  getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/harmonyCode', {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    },
-    params: formData
-  })
+  getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/harmonyCode', formData)
