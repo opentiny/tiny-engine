@@ -196,7 +196,7 @@ export default {
     const getBuildProcess = async(data) => {
       process.value = setInterval(() => {
         const res = fetchTaskData(data.id)
-        state.percentage = res.taskStatus
+        state.percentage = res.progress_percent
         if (state.percentage === 100) {
           useNotify({
             type: 'success',
@@ -204,7 +204,7 @@ export default {
             message: '项目已成功构建并上传'
           })
           clearTimeout(process.value)
-          state.fileUrl = data.progress
+          state.fileUrl = res.progress
         }
       }, 1000)
     }
