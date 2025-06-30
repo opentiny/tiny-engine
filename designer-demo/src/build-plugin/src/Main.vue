@@ -49,8 +49,7 @@ export default {
     const state = reactive({
       showDialogbox: false,
       percentage: 0,
-      fileUrl: '',
-      uploadUrl: '/app-center/api/apps/harmonyCode'
+      fileUrl: ''
     })
 
     const handleCancel = () => {
