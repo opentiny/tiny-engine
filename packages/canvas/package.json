@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-canvas",
-  "version": "2.7.0-alpha.1",
+  "version": "2.7.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },
