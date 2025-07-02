@@ -39,7 +39,7 @@ export interface IPluginState {
 }
 
 export interface IDimension {
-  deviceType: 'desktop' | 'tablet' | 'mobile'
+  deviceType: 'desktop' | 'tablet' | 'mobile' | null
   width: string
   maxWidth: string
   minWidth: string
@@ -109,7 +109,7 @@ const pluginState = reactive<IPluginState>({
 const layoutState = reactive<ILayoutState>({
   isMoveDragBar: false,
   dimension: {
-    deviceType: 'desktop',
+    deviceType: 'mobile',
     width: '',
     maxWidth: '',
     minWidth: '',

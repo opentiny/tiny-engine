@@ -84,8 +84,9 @@
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
-import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useCanvas, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import meta from '../meta'
 
 export default {
   components: {
@@ -172,7 +173,7 @@ export default {
           label: 'Filled guide(960px)'
         }
       ],
-      media: [
+      media: getOptions(meta.id).mediaDeviceTypes || [
         {
           idx: 0,
           view: 'mdx',
@@ -391,7 +392,7 @@ export default {
     })
 
     // 初始化 viewpoint
-    const mode = dimension.value.deviceType || 'desktop'
+    const mode = getOptions(meta.id).defaultDeviceType || dimension.value.deviceType || 'mobile'
     setViewPort(mediaMap[mode])
 
     return {
