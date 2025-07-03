@@ -10,14 +10,13 @@
  *
  */
 
-import path from 'path'
 import DateStore from '@seald-io/nedb'
-import { getResponseData } from '../tool/Common'
+import { getDatabasePath, getResponseData } from '../tool/Common'
 
 export default class PageService {
   constructor() {
     this.db = new DateStore({
-      filename: path.resolve(__dirname, '../database/pages.db'),
+      filename: getDatabasePath('pages.db'),
       autoload: true
     })
 

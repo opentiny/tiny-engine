@@ -9,13 +9,13 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import path from 'path'
 import DateStore from '@seald-io/nedb'
-import { getResponseData } from '../tool/Common'
+import { getDatabasePath, getResponseData } from '../tool/Common'
+
 export default class BlockService {
   constructor() {
     this.db = new DateStore({
-      filename: path.resolve(__dirname, '../database/blocks.db'),
+      filename: getDatabasePath('blocks.db'),
       autoload: true
     })
 
