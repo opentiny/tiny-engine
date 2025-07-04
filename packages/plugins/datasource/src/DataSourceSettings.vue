@@ -20,6 +20,7 @@
           :data="state.currentData"
           ref="recordRef"
           @refresh="refresh()"
+          @edit="changeTab()"
         ></data-source-setting-record-list>
       </tiny-tab-item>
     </tiny-tabs>
@@ -93,6 +94,10 @@ export default {
       closeGlobalDataHandler()
     }
 
+    const changeTab = () => {
+      state.activeTabName = 'field'
+    }
+
     const tabClick = (e) => {
       state.activeTabName = e.name
       emit('activeTab', e.name)
@@ -144,6 +149,7 @@ export default {
       tabClick,
       renderRemoteData,
       refresh,
+      changeTab,
       saveRecord
     }
   }

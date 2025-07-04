@@ -73,6 +73,12 @@ import { fetchDataSourceDetail } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
+const grid = ref(null)
+
+export const getRecordGrid = () => {
+  return grid.value
+}
+
 export default {
   components: {
     TinyGrid: Grid,
@@ -90,7 +96,6 @@ export default {
   },
   emits: ['edit'],
   setup(props, { emit }) {
-    const grid = ref(null)
     const { confirm } = useModal()
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
