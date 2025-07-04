@@ -298,8 +298,6 @@ export default {
           })
           close()
           closeRemoteResult()
-        } else {
-          activeTabChange('field')
         }
       })
     }
