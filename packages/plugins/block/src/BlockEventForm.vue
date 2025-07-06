@@ -3,11 +3,11 @@
     <tiny-form-item label="事件名" prop="eventName">
       <tiny-input class="event-name" v-model="formData.eventName" :placeholder="eventNameTip" @blur="changeEventName">
         <template #suffix>
-          <tiny-popover placement="bottom-end" trigger="hover">
+          <tiny-popover placement="bottom-end" trigger="hover" :close-delay="0" @show="state.showPopover = true">
             <template #reference>
               <tiny-icon-rich-text-link :class="{ 'bind-propertys': isUpdateEvent }" />
             </template>
-            <div class="property-list">
+            <div class="property-list" v-show="state.showPopover">
               <div class="property-list-title">
                 <tiny-icon-rich-text-link />
                 双向绑定属性
@@ -60,6 +60,7 @@ export default {
   },
   setup() {
     const state = reactive({
+      showPopover: false,
       propertys: getEditBlockPropertyList(),
       events: getEditBlockEvents()
     })
@@ -98,6 +99,7 @@ export default {
     const usePropertysToBeEvent = (item: any) => {
       if (item.label?.text?.zh_CN) label.value = item.label.text.zh_CN
       renameBlockEventName(`onUpdate:${item.property}`, getEditEventName())
+      state.showPopover = false
     }
 
     const rules = {
