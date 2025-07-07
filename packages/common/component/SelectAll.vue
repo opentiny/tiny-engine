@@ -25,9 +25,11 @@ const props = defineProps({
 
 const emit = defineEmits(['selectAll'])
 
+const filterList = computed(() => props.allItems.filter((item) => props.selected.some((i) => item.id === i.id)))
+
 const selectedAll = computed({
   get() {
-    return props.allItems.length > 0 && props.allItems.length === props.selected.length
+    return props.allItems.length > 0 && props.allItems.length === filterList.value.length
   },
   set(value) {
     if (value) {
@@ -38,5 +40,5 @@ const selectedAll = computed({
   }
 })
 
-const isIndeterminate = computed(() => props.selected.length > 0 && props.selected.length !== props.allItems.length)
+const isIndeterminate = computed(() => filterList.value.length > 0 && filterList.value.length !== props.allItems.length)
 </script>
