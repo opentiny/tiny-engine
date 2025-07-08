@@ -1,0 +1,23 @@
+{
+  "name": "multi-person-collaboration",
+  "version": "1.0.0",
+  "description": "用于低代码引擎实现多人协作能力的子包",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine.git"
+  },
+  "keywords": [
+    "Multi-person",
+    "collaboration"
+  ],
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "homepage": "https://opentiny.design/tiny-engine"
+}
