@@ -1,23 +1,48 @@
 {
-  "name": "multi-person-collaboration",
+  "name": "@opentiny/tiny-engine-multi-person-collaboration",
   "version": "1.0.0",
-  "description": "用于低代码引擎实现多人协作能力的子包",
-  "main": "index.js",
+  "private": true,
+  "type": "module",
+  "description": "TinyEngine plugin: provides multi-person real-time collaboration editing capability based on Yjs",
+  "keywords": [
+    "tiny-engine",
+    "collaboration",
+    "multi-person",
+    "realtime",
+    "yjs",
+    "vue"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/opentiny/tiny-engine.git"
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/plugins/multi-person-collaboration"
   },
-  "keywords": [
-    "Multi-person",
-    "collaboration"
-  ],
-  "author": "OpenTiny Team",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"
   },
-  "homepage": "https://opentiny.design/tiny-engine"
+  "homepage": "https://opentiny.design/tiny-engine",
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "devDependencies": {
+    "vite": "^7.0.0",
+    "@vitejs/plugin-vue": "^5.0.0",
+    "@vitejs/plugin-vue-jsx": "^3.0.0",
+    "glob": "^10.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.2.0",
+    "yjs": "^13.0.0",
+    "y-websocket": "^1.4.0"
+  }
 }
