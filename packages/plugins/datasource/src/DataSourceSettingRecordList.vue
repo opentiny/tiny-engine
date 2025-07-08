@@ -130,7 +130,7 @@ export default {
         }
 
         if ((type === 'string' || item.type === 'number') && max !== 0 && max >= min) {
-          rules.push({ min, max, message: `${type === 'string' ? '长度' : '大小'} 在 ${min} - ${max} 之间` })
+          rules.push({ type, min, max, message: `${type === 'string' ? '长度' : '大小'} 在 ${min} - ${max} 之间` })
         }
 
         res[name] = rules
@@ -307,6 +307,7 @@ export default {
         })
       }
       state.columns = newColumns
+      state.validRules = genValidateRules(newColumns || [])
     })
 
     watch(
@@ -529,7 +530,7 @@ export default {
 }
 
 .datasource-record-list {
-  width: 642px;
+  max-width: 642px;
   :deep(.option-container) {
     display: flex;
     align-items: center;
