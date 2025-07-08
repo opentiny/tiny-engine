@@ -43,6 +43,6 @@
   "peerDependencies": {
     "vue": "^3.2.0",
     "yjs": "^13.0.0",
-    "y-websocket": "^1.4.0"
+    "y-websocket": "^3.0.0"
   }
 }
