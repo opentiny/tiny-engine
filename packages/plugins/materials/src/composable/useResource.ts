@@ -80,7 +80,7 @@ interface PageInfo {
 
 const initPage = (pageInfo: PageInfo) => {
   try {
-    if (pageInfo?.occupier) {
+    if (pageInfo?.occupier !== undefined) {
       useLayout().layoutState.pageStatus = getCanvasStatus(pageInfo.occupier)
       goPage(pageInfo.id)
     } else {
