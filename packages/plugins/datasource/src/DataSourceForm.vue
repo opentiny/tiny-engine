@@ -215,7 +215,7 @@ export default {
         await getServiceForm().validate()
       } catch (error) {
         activeTabChange('remote')
-        throw error
+        return
       }
       getDataSourceName().validate(async (valid) => {
         if (valid) {
@@ -234,7 +234,7 @@ export default {
             await getRecordGrid().fullValidate()
           } catch (error) {
             activeTabChange('record')
-            throw error
+            return
           }
 
           settingRef.value.saveRecord().then((record) => {
