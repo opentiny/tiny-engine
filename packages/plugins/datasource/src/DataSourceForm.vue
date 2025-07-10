@@ -215,7 +215,7 @@ export default {
         await getServiceForm().validate()
       } catch (error) {
         activeTabChange('remote')
-        throw new Error(`请先完成表单验证: ${error?.message || ''}`)
+        throw error
       }
       getDataSourceName().validate(async (valid) => {
         if (valid) {
@@ -234,7 +234,7 @@ export default {
             await getRecordGrid().fullValidate()
           } catch (error) {
             activeTabChange('record')
-            throw new Error(`请先完成表格验证: ${error?.message || ''}`)
+            throw error
           }
 
           settingRef.value.saveRecord().then((record) => {
