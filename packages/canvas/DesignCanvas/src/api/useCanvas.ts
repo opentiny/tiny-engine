@@ -444,6 +444,8 @@ const operationTypeMap = {
       Object.assign(node.props, value?.props || {})
     }
 
+    handleNodesInProps(node)
+
     return {
       current: node,
       previous
