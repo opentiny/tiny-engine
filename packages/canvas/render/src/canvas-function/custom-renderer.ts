@@ -22,7 +22,7 @@ function defaultRenderer(schema, refreshKey, entry, active, isPage = true) {
   const PageStartSchema = {
     componentName: 'div',
     componentType: 'PageStart',
-    props: { 'data-id': 'root-container', className: 'design-page' }
+    props: { 'data-id': 'root-container' }
   }
 
   return isPage
