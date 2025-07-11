@@ -20,7 +20,8 @@
     "setup": "node ./scripts/setup.js",
     "splitMaterials": "node ./scripts/splitMaterials.mjs",
     "buildMaterials": "node ./scripts/buildMaterials.mjs",
-    "updateTemplate": "node ./scripts/updateTemplate.mjs"
+    "updateTemplate": "node ./scripts/updateTemplate.mjs",
+    "uploadMaterials": "node scripts/uploadMaterials.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.1",
