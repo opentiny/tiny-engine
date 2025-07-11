@@ -17,6 +17,10 @@ import './src/styles/vars.less'
 export default {
   ...metaData,
   entry,
+  options: {
+    batchImportTempDownloadUrl: '',
+    batchImportTempDownMethod: ''
+  },
   metas: [TranslateService]
 }
 

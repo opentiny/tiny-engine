@@ -898,7 +898,6 @@ export const appSchemaDemo01 = {
           id: 86,
           username: '开发者',
           email: 'developer@lowcode.com',
-          resetPasswordToken: 'developer',
           confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
           is_admin: true
         },
@@ -1854,7 +1853,7 @@ export const appSchemaDemo01 = {
       fileName: 'createVm',
       meta: {
         name: 'createVm',
-        id: 'NTJ4MjvqoVj8OVsc',
+        id: '1',
         app: '918',
         router: 'createVm',
         tenant: 1,
@@ -1868,12 +1867,11 @@ export const appSchemaDemo01 = {
           id: 86,
           username: '开发者',
           email: 'developer@lowcode.com',
-          resetPasswordToken: 'developer',
           confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
           is_admin: true
         },
         isHome: true,
-        _id: 'NTJ4MjvqoVj8OVsc'
+        _id: '1'
       }
     },
     {
@@ -2082,7 +2080,6 @@ export const appSchemaDemo01 = {
           id: 86,
           username: '开发者',
           email: 'developer@lowcode.com',
-          resetPasswordToken: 'developer',
           confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
           is_admin: true
         },

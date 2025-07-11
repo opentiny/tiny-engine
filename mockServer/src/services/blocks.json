@@ -408,8 +408,7 @@
     },
     "createdBy": {
       "id": 86,
-      "username": "开发者",
-      "resetPasswordToken": "developer"
+      "username": "开发者"
     },
     "description": null,
     "tags": null,
@@ -418,8 +417,7 @@
     "path": "portal",
     "occupier": {
       "id": 86,
-      "username": "开发者",
-      "resetPasswordToken": "developer"
+      "username": "开发者"
     },
     "isOfficial": null,
     "public": 1,

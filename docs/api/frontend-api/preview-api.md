@@ -1,5 +1,64 @@
 # 页面预览相关配置项
 
+## 在页面预览入口添加物料配置
+
+> **⚠️ Breaking Change (v2.6)**  
+> 在 v2.6 版本中，我们对页面预览配置进行了破坏性调整，现在需要在物料入口 `preview.js` 中直接配置物料信息，不再通过 URL 参数传递物料相关的 script 和 css 资源。
+
+### 基本配置
+
+在 `preview.js` 文件中，需要在注册表的 `engine.config` 配置中添加 `material` 属性：
+
+```javascript
+import { initPreview, META_SERVICE, HttpService } from '@opentiny/tiny-engine'
+
+// 其他配置...
+
+const registry = {
+  [META_SERVICE.Http]: HttpService,
+  'engine.config': {
+    id: 'engine.config',
+    theme: 'light',
+    // 新增：物料配置
+    material: ['/mock/bundle.json']
+  }
+}
+
+initPreview({
+  registry
+})
+```
+
+### 配置说明
+
+- `material`：物料包配置数组，支持配置多个物料包
+- 每个物料包可以是一个 JSON 文件路径，包含物料的元数据、组件定义、样式等信息
+- 物料包的资源（script、css）会根据配置自动加载，无需在 URL 中传递
+
+### 多物料包配置示例
+
+```javascript
+const registry = {
+  [META_SERVICE.Http]: HttpService,
+  'engine.config': {
+    id: 'engine.config',
+    theme: 'light',
+    // 配置多个物料包
+    material: [
+      '/mock/bundle.json',           // 基础物料包
+      '/custom/business-bundle.json', // 业务物料包
+      '/third-party/ui-bundle.json'   // 第三方物料包
+    ]
+  }
+}
+```
+
+### 迁移指南
+
+如果您从 v2.5 或更早版本升级到 v2.6，请按以下步骤进行迁移：
+
+1. 在 `preview.js` 的 `engine.config` 中添加 `material` 配置
+2. 确保物料包 JSON 文件路径正确且可访问
 
 ## 配置预览页面的跳转 url
 

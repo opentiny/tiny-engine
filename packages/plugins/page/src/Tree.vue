@@ -25,9 +25,9 @@
       @drop="handleDrop($event, node)"
       @dragend="handleDragEnd"
     >
-      <div class="content" @click="handleClickRow(node)">
+      <div class="content" @click="handleClickRow($event, node)">
         <layer-lines :line-data="layerLine[rowIndex]" :level="node.level"></layer-lines>
-        <div class="prefix-icon" @click.stop="handleSwitchCollapse(node)">
+        <div class="prefix-icon" @click="handleSwitchCollapse(node)">
           <svg-icon v-if="node.rawData.isPage" :name="collapseMap[node.id] ? 'page-collection' : 'page'"></svg-icon>
           <svg-icon v-else :name="collapseMap[node.id] ? 'folder' : 'folder-wold'"></svg-icon>
         </div>
@@ -40,7 +40,7 @@
 
 <script lang="ts" setup>
 /* metaService: engine.plugins.appmanage.Tree */
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, defineEmits, defineProps, ref, watch } from 'vue'
 import LayerLines from './LayerLines.vue'
 
 const props = defineProps({
@@ -82,27 +82,36 @@ const emit = defineEmits(['clickRow', 'moveNode'])
 const useCollapseMap = () => {
   const collapseMap = ref<Record<string, boolean>>({})
 
-  const setCollapse = (id: string, value: boolean) => {
+  const setCollapse = (id: string | number, value: boolean) => {
     collapseMap.value[id] = value
   }
 
-  const switchCollapse = (id: string) => {
+  const switchCollapse = (id: string | number) => {
     collapseMap.value[id] = !collapseMap.value[id]
   }
 
   return { collapseMap, setCollapse, switchCollapse }
 }
 
-const { collapseMap, switchCollapse } = useCollapseMap()
+const { collapseMap, setCollapse, switchCollapse } = useCollapseMap()
 
-const handleSwitchCollapse = (node) => {
+interface TreeNode {
+  id: string | number
+  label: string
+  parentId?: string | number
+  level: number
+  collapsed?: boolean
+  rawData?: any
+}
+
+const handleSwitchCollapse = (node: TreeNode) => {
   const children = node.rawData[props.childrenKey]
   if (Array.isArray(children) && children.length > 0) {
     switchCollapse(node.id)
   }
 }
 
-const flattenTreeData = (node, parentId, level = 0, collapsed = false) => {
+const flattenTreeData = (node: any, parentId?: string | number, level = 0, collapsed = false): TreeNode[] => {
   const { idKey, labelKey, childrenKey } = props
 
   const currentNode = {
@@ -113,7 +122,7 @@ const flattenTreeData = (node, parentId, level = 0, collapsed = false) => {
     collapsed,
     rawData: node
   }
-  const result = [currentNode]
+  const result: TreeNode[] = [currentNode]
 
   const children = node[childrenKey]
 
@@ -130,18 +139,14 @@ const nodes = computed(() => {
   return flattenTreeData({ [props.idKey]: props.rootId, [props.childrenKey]: props.data }).slice(1)
 })
 
-const nodesMap = computed(() => {
+const nodesMap = computed<Record<string | number, TreeNode>>(() => {
   return nodes.value.reduce((result, node) => {
     result[node.id] = node
     return result
-  }, {})
+  }, {} as Record<string | number, TreeNode>)
 })
 
-const filteredNodes = computed(() => {
-  return nodes.value.filter((node) => node.label.toLowerCase().includes(props.filterValue.toLowerCase()))
-})
-
-const getAncestorIds = (nodeId) => {
+const getAncestorIds = (nodeId: string | number): (string | number)[] => {
   const currentNode = nodesMap.value[nodeId]
 
   if (!currentNode || !currentNode.parentId) {
@@ -154,6 +159,43 @@ const getAncestorIds = (nodeId) => {
 
   return ancestors
 }
+
+const filteredNodes = ref<TreeNode[]>([])
+
+// 下面两个 watch 对应的两个重新计算 filteredNodes 的场景。场景2比场景1多了展开匹配到的节点的操作
+
+// 场景1. 页面树的结构发生变化，或者有节点收起或者展开，重新计算 filteredNodes
+watch(nodes, (nodes) => {
+  filteredNodes.value = nodes.filter((node) => node.label.toLowerCase().includes(props.filterValue.toLowerCase()))
+})
+
+// 场景2. 过滤条件发生变化，重新计算 filteredNodes，并且展开匹配到的节点
+watch(
+  () => props.filterValue,
+  (filterValue) => {
+    const filtered = nodes.value.filter((node) => node.label.toLowerCase().includes(filterValue.toLowerCase()))
+
+    let collapseMapChanged = false
+
+    filtered.forEach((node) => {
+      // 每个节点的祖先节点中，如果存在折叠的节点，则展开
+      for (const id of getAncestorIds(node.id)) {
+        if (collapseMap.value[id]) {
+          setCollapse(id, false)
+          collapseMapChanged = true
+        }
+      }
+    })
+
+    // - 如果 collapseMap 有变化，会自动重新计算 nodes，更新路径：
+    //   props.filterValue -> collapseMap -> nodes -> filteredNodes -> filteredNodesWithAncestors
+    // - 如果 collapseMap 没有变化，则重新设置 filteredNodes，更新路径：
+    //   props.filterValue -> filteredNodes -> filteredNodesWithAncestors
+    if (!collapseMapChanged) {
+      filteredNodes.value = filtered
+    }
+  }
+)
 
 const filteredNodesWithAncestors = computed(() => {
   const idSet = new Set()
@@ -175,7 +217,7 @@ const lines = {
 }
 
 const layerLine = computed(() => {
-  const result = {}
+  const result: Record<number, Record<number, number>> = {}
 
   const nodes = filteredNodesWithAncestors.value
 
@@ -194,14 +236,20 @@ const layerLine = computed(() => {
   return result
 })
 
-const handleClickRow = (node) => {
+const handleClickRow = (event: MouseEvent, node: TreeNode) => {
+  // 点击事件来自折叠图标，不触发 clickRow 事件。点击事件仍然可以冒泡
+  const currentTarget = event.currentTarget as HTMLElement
+  if (currentTarget.querySelector('div.prefix-icon')?.contains(event.target as Node)) {
+    return
+  }
+
   emit('clickRow', node)
 }
 
-const draggedNode = ref(null)
-const hoveringNodeId = ref(null)
+const draggedNode = ref<TreeNode | null>(null)
+const hoveringNodeId = ref<string | number | null>(null)
 
-const handleDragStart = (event, node) => {
+const handleDragStart = (_event: DragEvent, node: TreeNode) => {
   if (!props.draggable) {
     return
   }
@@ -210,12 +258,12 @@ const handleDragStart = (event, node) => {
 }
 
 // dragover和dragenter事件回调函数都为handleDragOver。跨行拖动时，禁止拖拽图标可能会闪一下，所以将dragenter事件也加上回调函数
-const handleDragOver = (event, node) => {
+const handleDragOver = (event: DragEvent, node: TreeNode) => {
   if (!props.draggable) {
     return
   }
 
-  const isDescendant = getAncestorIds(node.id).includes(draggedNode.value.id)
+  const isDescendant = getAncestorIds(node.id).includes(draggedNode.value!.id)
 
   if (!isDescendant) {
     // 阻止默认行为以允许放置
@@ -226,7 +274,7 @@ const handleDragOver = (event, node) => {
   }
 }
 
-const handleDrop = (event, node) => {
+const handleDrop = (event: DragEvent, node: Pick<TreeNode, 'id'>) => {
   event.preventDefault()
 
   const dragged = draggedNode.value
@@ -247,7 +295,7 @@ const handleDragEnd = () => {
   hoveringNodeId.value = null
 }
 
-const handleContainerDragOver = (event) => {
+const handleContainerDragOver = (event: DragEvent) => {
   if (!props.draggable) {
     return
   }
@@ -260,7 +308,7 @@ const handleContainerDragOver = (event) => {
   hoveringNodeId.value = props.rootId
 }
 
-const handleContainerDragLeave = (event) => {
+const handleContainerDragLeave = (event: DragEvent) => {
   if (!props.draggable) {
     return
   }

@@ -138,7 +138,9 @@ export const openCommon = async () => {
     [PAGE_STATUS.Release]: '当前页面未锁定，请先锁定再保存',
     [PAGE_STATUS.Empty]: '当前应用无页面，请先新建页面再保存',
     [PAGE_STATUS.Guest]: '官网演示应用不能保存页面，如需体验请切换应用',
-    [PAGE_STATUS.Lock]: `当前页面被 ${pageInfo?.username} ${pageInfo?.resetPasswordToken} 锁定，如需编辑请先联系他解锁文件，然后再锁定该页面后编辑！`
+    [PAGE_STATUS.Lock]: `当前页面被 ${
+      pageInfo?.username || ''
+    } 锁定，如需编辑请先联系他解锁文件，然后再锁定该页面后编辑！`
   }
 
   if ([PAGE_STATUS.Release, PAGE_STATUS.Empty, PAGE_STATUS.Guest, PAGE_STATUS.Lock].includes(curPageState)) {

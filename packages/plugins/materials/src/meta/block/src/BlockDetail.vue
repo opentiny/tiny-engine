@@ -16,13 +16,19 @@
         <div>{{ detail?.current_history?.message }}</div>
         <div class="block-item-history">{{ detail?.current_history?.updated_at }}</div>
       </div>
-      <div v-if="!isSettingPanel && !isShortcutPanel" class="block-detail-item block-detail-show-more"
-        @click="openHistory">
+      <div
+        v-if="!isSettingPanel && !isShortcutPanel"
+        class="block-detail-item block-detail-show-more"
+        @click="openHistory"
+      >
         <span>查看历史备份</span>
         <icon-double-right></icon-double-right>
       </div>
-      <div v-if="!isDefaultGroupId(selectedGroup.groupId) && !isSettingPanel && !isShortcutPanel"
-        class="block-delete" @click="deleteBlock(selectedBlock || detail?.id)">
+      <div
+        v-if="!isDefaultGroupId(selectedGroup.groupId) && !isSettingPanel && !isShortcutPanel"
+        class="block-delete"
+        @click="deleteBlock(selectedBlock || detail?.id)"
+      >
         <tiny-button :icon="IconDel">Delete</tiny-button>
       </div>
     </div>
@@ -47,7 +53,7 @@ export default {
   props: {
     detail: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
     isSettingPanel: {
       type: Boolean,

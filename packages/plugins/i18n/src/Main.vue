@@ -323,7 +323,26 @@ export default {
     }
 
     const downloadFile = () => {
-      window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
+      const { batchImportTempDownloadUrl, batchImportTempDownMethod } =
+        getMergeMeta('engine.plugins.i18n').options || {}
+
+      // 自定义了下载方法，只使用自定义的下载方法
+      if (batchImportTempDownMethod && typeof batchImportTempDownMethod === 'function') {
+        batchImportTempDownMethod()
+        return
+      }
+
+      const defaultDownloadUrl = `${
+        BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL
+      }/i18n-template-for-batch-import.zip`
+      const linkElement = document.createElement('a')
+
+      linkElement.href = batchImportTempDownloadUrl || defaultDownloadUrl
+      linkElement.download = 'i18n-template-for-batch-import.zip'
+      linkElement.target = '_blank'
+      document.body.appendChild(linkElement)
+      linkElement.click()
+      document.body.removeChild(linkElement)
     }
 
     const openDeletePopover = (row) => {

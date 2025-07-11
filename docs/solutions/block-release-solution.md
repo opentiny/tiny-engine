@@ -1,5 +1,9 @@
 # 区块发布方案
 
+> !WARNING ⚠️
+>
+> 从 TinyEngine v2.1 起，该区块发布方案已不再推荐。请参考 [全新区块构建方案](./block-construction-solution.md)
+
 ## 介绍
 
 ### 背景
