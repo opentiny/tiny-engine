@@ -1,7 +1,8 @@
 packages:
-  - 'packages/**'
-  - 'mockServer'
-  - 'designer-demo'
-  # 忽略测试文件夹中的 project、脚手架模板
+  - packages/**
+  - mockServer
+  - designer-demo
   - '!packages/**/test/**'
   - '!packages/**/template/**'
+patchedDependencies:
+  '@vue/repl@4.6.1': patches/@vue__repl@4.6.1.patch
