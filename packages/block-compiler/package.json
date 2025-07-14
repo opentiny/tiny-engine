@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-block-compiler",
-  "version": "2.8.0-alpha.1",
+  "version": "2.8.0-alpha.2",
   "publishConfig": {
     "access": "public"
   },

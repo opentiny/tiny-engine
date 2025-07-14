@@ -56,6 +56,9 @@
   "pnpm": {
     "overrides": {
       "rollup": "~4.44.0"
+    },
+    "patchedDependencies": {
+      "@vue/repl@4.6.1": "patches/@vue__repl@4.6.1.patch"
     }
   }
 }
