@@ -52,5 +52,10 @@
   "engines": {
     "node": ">=16",
     "pnpm": ">=8"
+  },
+  "pnpm": {
+    "overrides": {
+      "rollup": "~4.44.0"
+    }
   }
 }
