@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-meta-register",
-  "version": "2.7.0-rc.2",
+  "version": "2.7.0",
   "description": "",
   "type": "module",
   "main": "dist/index.js",
