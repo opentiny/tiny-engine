@@ -176,16 +176,17 @@ watch(
     const filtered = nodes.value.filter((node) => node.label.toLowerCase().includes(filterValue.toLowerCase()))
 
     let collapseMapChanged = false
-
-    filtered.forEach((node) => {
-      // 每个节点的祖先节点中，如果存在折叠的节点，则展开
-      for (const id of getAncestorIds(node.id)) {
-        if (collapseMap.value[id]) {
-          setCollapse(id, false)
-          collapseMapChanged = true
+    if (filterValue) {
+      filtered.forEach((node) => {
+        // 每个节点的祖先节点中，如果存在折叠的节点，则展开
+        for (const id of getAncestorIds(node.id)) {
+          if (collapseMap.value[id]) {
+            setCollapse(id, false)
+            collapseMapChanged = true
+          }
         }
-      }
-    })
+      })
+    }
 
     // - 如果 collapseMap 有变化，会自动重新计算 nodes，更新路径：
     //   props.filterValue -> collapseMap -> nodes -> filteredNodes -> filteredNodesWithAncestors
