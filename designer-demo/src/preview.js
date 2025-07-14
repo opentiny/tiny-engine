@@ -12,7 +12,7 @@
 import { defineEntry } from '@opentiny/tiny-engine-meta-register'
 import 'virtual:svg-icons-register'
 
-async function startApp () {
+async function startApp() {
   const { initHook, HOOK_NAME, META_SERVICE, initPreview } = await import('@opentiny/tiny-engine')
   const { HttpService } = await import('./composable')
 

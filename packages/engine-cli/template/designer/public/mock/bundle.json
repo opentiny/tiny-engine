@@ -19,7 +19,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElInput"
+            "exportName": "ElInput",
+            "destructuring": true
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -762,7 +763,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElButton"
+            "exportName": "ElButton",
+            "destructuring": true
           },
           "group": "基础组件",
           "category": "element-plus",
@@ -1079,7 +1081,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElForm"
+            "exportName": "ElForm",
+            "destructuring": true
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -1530,7 +1533,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElFormItem"
+            "exportName": "ElFormItem",
+            "destructuring": true
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -1875,7 +1879,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElTable"
+            "exportName": "ElTable",
+            "destructuring": true
           },
           "group": "数据展示",
           "category": "element-plus",
@@ -3108,7 +3113,8 @@
           "dev_mode": "proCode",
           "npm": {
             "package": "element-plus",
-            "exportName": "ElTableColumn"
+            "exportName": "ElTableColumn",
+            "destructuring": true
           },
           "group": "表单组件",
           "category": "element-plus",
@@ -3157,6 +3163,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "走马灯子项"
           },
@@ -3170,7 +3177,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CarouselItem"
+            "exportName": "CarouselItem",
+            "destructuring": true
           },
           "group": "component",
           "category": "容器组件",
@@ -3286,6 +3294,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "走马灯"
           },
@@ -3299,7 +3308,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Carousel"
+            "exportName": "Carousel",
+            "destructuring": true
           },
           "group": "component",
           "category": "容器组件",
@@ -3612,6 +3622,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "link",
           "name": {
             "zh_CN": "提示框"
@@ -3756,6 +3767,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "name": {
             "zh_CN": "标题"
           },
@@ -3853,6 +3865,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "name": {
             "zh_CN": "段落"
           },
@@ -3948,6 +3961,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "name": {
             "zh_CN": "输入框"
           },
@@ -4214,6 +4228,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "name": {
             "zh_CN": "视频"
           },
@@ -4386,6 +4401,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "Image",
           "name": {
             "zh_CN": "Img"
@@ -4463,6 +4479,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "button",
           "name": {
             "zh_CN": "Button"
@@ -4538,6 +4555,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "table",
           "name": {
             "zh_CN": "表格"
@@ -4648,6 +4666,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "td",
           "name": {
             "zh_CN": "表格单元格"
@@ -4758,6 +4777,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "form",
           "name": {
             "zh_CN": "表单"
@@ -4881,6 +4901,7 @@
           }
         },
         {
+          "version": "1.0.0",
           "icon": "label",
           "name": {
             "zh_CN": "表单标签"
@@ -4956,6 +4977,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "按钮组"
           },
@@ -4969,7 +4991,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "ButtonGroup"
+            "exportName": "ButtonGroup",
+            "destructuring": true
           },
           "group": "component",
           "category": "general",
@@ -5110,6 +5133,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "row",
           "name": {
             "zh_CN": "row"
@@ -5123,7 +5147,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Row"
+            "exportName": "Row",
+            "destructuring": true
           },
           "group": "component",
           "priority": 5,
@@ -5256,6 +5281,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "row",
           "name": {
             "zh_CN": "row"
@@ -5361,6 +5387,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "form",
           "name": {
             "zh_CN": "表单"
@@ -5374,7 +5401,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Form"
+            "exportName": "Form",
+            "destructuring": true
           },
           "group": "component",
           "priority": 5,
@@ -5711,6 +5739,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "formitem",
           "name": {
             "zh_CN": "表单项"
@@ -5724,7 +5753,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "FormItem"
+            "exportName": "FormItem",
+            "destructuring": true
           },
           "group": "component",
           "priority": 12,
@@ -5839,6 +5869,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "col",
           "name": {
             "zh_CN": "col"
@@ -5852,7 +5883,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Col"
+            "exportName": "Col",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -6113,6 +6145,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "按钮"
           },
@@ -6126,7 +6159,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Button"
+            "exportName": "Button",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -6448,6 +6482,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "输入框"
           },
@@ -6461,7 +6496,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Input"
+            "exportName": "Input",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -6858,6 +6894,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "radio",
           "name": {
             "zh_CN": "单选"
@@ -6871,7 +6908,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Radio"
+            "exportName": "Radio",
+            "destructuring": true
           },
           "group": "component",
           "priority": 3,
@@ -7091,6 +7129,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "select",
           "name": {
             "zh_CN": "下拉框"
@@ -7104,7 +7143,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Select"
+            "exportName": "Select",
+            "destructuring": true
           },
           "group": "component",
           "priority": 8,
@@ -7492,6 +7532,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "switch",
           "name": {
             "zh_CN": "开关"
@@ -7505,7 +7546,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Switch"
+            "exportName": "Switch",
+            "destructuring": true
           },
           "group": "component",
           "priority": 9,
@@ -7687,6 +7729,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "search",
           "name": {
             "zh_CN": "搜索框"
@@ -7700,7 +7743,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Search"
+            "exportName": "Search",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -7958,6 +8002,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "checkbox",
           "name": {
             "zh_CN": "复选框"
@@ -7971,7 +8016,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Checkbox"
+            "exportName": "Checkbox",
+            "destructuring": true
           },
           "group": "component",
           "priority": 4,
@@ -8213,6 +8259,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "checkboxbutton",
           "name": {
             "zh_CN": "复选按钮"
@@ -8226,7 +8273,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxButton"
+            "exportName": "CheckboxButton",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -8397,6 +8445,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "checkboxgroup",
           "name": {
             "zh_CN": "复选按钮组"
@@ -8410,7 +8459,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CheckboxGroup"
+            "exportName": "CheckboxGroup",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -8604,6 +8654,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "dialogbox",
           "name": {
             "zh_CN": "对话框"
@@ -8617,7 +8668,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DialogBox"
+            "exportName": "DialogBox",
+            "destructuring": true
           },
           "group": "component",
           "priority": 4,
@@ -8878,6 +8930,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "tabs",
           "name": {
             "zh_CN": "标签页"
@@ -8891,7 +8944,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tabs"
+            "exportName": "Tabs",
+            "destructuring": true
           },
           "group": "component",
           "priority": 10,
@@ -9135,6 +9189,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "tabitem",
           "name": {
             "zh_CN": "tab页签"
@@ -9148,7 +9203,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TabItem"
+            "exportName": "TabItem",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -9240,6 +9296,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "breadcrumb",
           "name": {
             "zh_CN": "面包屑"
@@ -9253,7 +9310,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Breadcrumb"
+            "exportName": "Breadcrumb",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -9375,6 +9433,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "breadcrumb",
           "name": {
             "zh_CN": "面包屑项"
@@ -9388,7 +9447,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "BreadcrumbItem"
+            "exportName": "BreadcrumbItem",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -9460,6 +9520,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "collapse",
           "name": {
             "zh_CN": "折叠面板"
@@ -9473,7 +9534,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Collapse"
+            "exportName": "Collapse",
+            "destructuring": true
           },
           "group": "component",
           "priority": 3,
@@ -9583,6 +9645,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "collapseitem",
           "name": {
             "zh_CN": "折叠面板项"
@@ -9596,7 +9659,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "CollapseItem"
+            "exportName": "CollapseItem",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -9703,7 +9767,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Grid"
+            "exportName": "Grid",
+            "destructuring": true
           },
           "group": "component",
           "priority": 2,
@@ -10600,6 +10665,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "grid",
           "name": {
             "zh_CN": "表格行"
@@ -10649,6 +10715,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "分页"
           },
@@ -10662,7 +10729,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Pager"
+            "exportName": "Pager",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -10878,6 +10946,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "弹出编辑"
           },
@@ -10891,7 +10960,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Popeditor"
+            "exportName": "Popeditor",
+            "destructuring": true
           },
           "group": "component",
           "priority": 6,
@@ -11258,6 +11328,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "tree",
           "name": {
             "zh_CN": "树"
@@ -11271,7 +11342,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tree"
+            "exportName": "Tree",
+            "destructuring": true
           },
           "group": "component",
           "priority": 12,
@@ -11589,6 +11661,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "timeline",
           "name": {
             "zh_CN": "时间线"
@@ -11602,7 +11675,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TimeLine"
+            "exportName": "TimeLine",
+            "destructuring": true
           },
           "group": "component",
           "priority": 3,
@@ -11763,6 +11837,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "tooltip",
           "name": {
             "zh_CN": "文字提示框"
@@ -11776,7 +11851,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Tooltip"
+            "exportName": "Tooltip",
+            "destructuring": true
           },
           "group": "component",
           "priority": 11,
@@ -11980,6 +12056,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "icon": "popover",
           "name": {
             "zh_CN": "提示框"
@@ -11993,7 +12070,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Popover"
+            "exportName": "Popover",
+            "destructuring": true
           },
           "group": "component",
           "priority": 7,
@@ -12471,6 +12549,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "日期选择"
           },
@@ -12484,7 +12563,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "DatePicker"
+            "exportName": "DatePicker",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -12882,6 +12962,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "数字输入框"
           },
@@ -12895,7 +12976,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "Numeric"
+            "exportName": "Numeric",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -13321,6 +13403,7 @@
           }
         },
         {
+          "version": "3.20.0",
           "name": {
             "zh_CN": "穿梭框"
           },
@@ -13334,7 +13417,8 @@
           "devMode": "proCode",
           "npm": {
             "package": "@opentiny/vue",
-            "exportName": "TinyTransfer"
+            "exportName": "TinyTransfer",
+            "destructuring": true
           },
           "group": "component",
           "priority": 1,
@@ -14846,6 +14930,7 @@
           "name": "element-plus组件库",
           "package": "element-plus",
           "version": "2.4.2",
+          "destructuring": true,
           "script": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.full.mjs",
           "css": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.css"
         }
