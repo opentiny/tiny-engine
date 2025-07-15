@@ -28,7 +28,8 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "vue-clipboard3": "^2.0.0"
+    "vue-clipboard3": "^2.0.0",
+    "zod": "^3.25.67"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
