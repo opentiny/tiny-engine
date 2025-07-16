@@ -16,11 +16,26 @@ export interface UpdateToolConfig {
 }
 
 export const getToolList = (state: IState) => {
-  return state.toolList
+  return state.toolList.map((toolItem) => {
+    const toolInstance = state.toolInstanceMap.get(toolItem.name)
+
+    return {
+      ...toolItem,
+      status: toolInstance ? (toolInstance.enabled ? 'enabled' : 'disabled') : 'not_registered'
+    }
+  })
 }
 
 export const getToolByName = (state: IState, name: string) => {
-  return state.toolList.find((tool) => tool.name === name)
+  const toolItem = state.toolList.find((tool) => tool.name === name)
+
+  if (!toolItem) {
+    return null
+  }
+
+  const toolInstance = state.toolInstanceMap.get(name)
+
+  return { ...toolItem, status: toolInstance ? (toolInstance.enabled ? 'enabled' : 'disabled') : 'not_registered' }
 }
 
 export const getToolInstance = (state: IState, name: string) => {
@@ -61,6 +76,7 @@ export const removeTool = (state: IState, name: string) => {
 
   if (toolInstance) {
     toolInstance.remove()
+    state.toolInstanceMap.delete(name)
   }
 }
 

@@ -223,7 +223,7 @@ export default defineService({
   options: {
     proxyUrl: null,
     token: null,
-    connectToAgentServer: false
+    connectToAgentServer: true
   },
   initialState,
   init: async ({ state, options }) => {

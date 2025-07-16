@@ -2,55 +2,38 @@
 
 ## 概述
 
-MCP (Model Context Protocol) 服务是 tiny-engine 的核心扩展能力之一，它基于 [Model Context Protocol](https://modelcontextprotocol.io/introduction) 标准协议，提供了工具（Tools）的管理和执行能力。
+MCP (Model Context Protocol) 服务是 tiny-engine 智能化的核心扩展能力之一，它基于 [Model Context Protocol](https://modelcontextprotocol.io/introduction) 标准协议，提供了工具（Tools）的管理和执行能力。
 
 关于 MCP 协议的详细介绍，请参考官方文档：[https://modelcontextprotocol.io/introduction](https://modelcontextprotocol.io/introduction)
-
-### 主要特性
-
-- 🔧 **工具管理系统**：支持工具的动态注册、启用、禁用和移除
-- 🌐 **双模式连接**：支持本地模式和远程 Agent 服务器连接模式
-- 🔄 **自动重连机制**：提供可配置的重连策略和连接状态监控
-- 📡 **量子纠缠传输**：使用创新的传输对技术实现高效通信
-- 🛡️ **类型安全**：完整的 TypeScript 支持和 Zod schema 验证
-- 📊 **状态管理**：完善的状态管理和事件发布机制
-
-## 核心组件
-
-### 1. 传输层 (Transport Layer)
-负责客户端和服务器之间的通信，支持两种模式：
-- **MessageChannel 传输**：用于本地量子纠缠通信
-- **StreamableHTTP 传输**：用于远程服务器连接
-
-### 2. 工具系统 (Tool System)
-提供完整的工具生命周期管理：
-- 工具注册和发现
-- 输入/输出 schema 验证
-- 工具执行和回调
-- 动态启用/禁用
-
-### 3. 连接管理 (Connection Management)
-处理服务器连接和状态管理：
-- 连接状态监控
-- 自动重连机制
-- 会话持久化
 
 ## 快速开始
 
 ### 基本使用
 
 ```typescript
-import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { ToolItem } from '@opentiny/tiny-engine-common'
 
 // 获取 MCP 服务实例
-const mcpService = getMetaApi('engine.service.mcp')
+const mcpService = getMetaApi(META_SERVICE.McpService)
 
 // 注册一个简单的工具
 const helloTool: ToolItem = {
   name: 'hello_world',
   title: 'Hello World 工具',
   description: '一个简单的问候工具',
+  inputSchema: {
+    name: z.string().optional()
+  },
+  outputSchema: {
+    content: z.string()
+  },
+  annotations: {
+    readOnlyHint: true,
+    destructiveHint: false,
+    idempotentHint: true,
+    openWorldHint: false
+  },
   callback: async (params) => {
     return { content: `Hello, ${params.name || 'World'}!` }
   }
@@ -78,34 +61,6 @@ const mcpOptions = {
 // 通过 setOptions 设置自定义配置
 const mcpService = getMetaApi('engine.service.mcp')
 mcpService.setOptions(mcpOptions)
-```
-
-## 架构设计
-
-```mermaid
-graph TB
-    subgraph "Tiny Engine"
-        A[MCP Service] --> B[工具注册表]
-        A --> C[连接管理器]
-        A --> D[状态管理器]
-    end
-    
-    subgraph "传输层"
-        E[MessageChannel Transport] --> F[本地客户端]
-        G[StreamableHTTP Transport] --> H[远程 Agent 服务器]
-    end
-    
-    subgraph "工具系统"
-        I[工具注册] --> J[Schema 验证]
-        J --> K[工具执行]
-        K --> L[结果返回]
-    end
-    
-    A --> E
-    A --> G
-    B --> I
-    C --> E
-    C --> G
 ```
 
 ## API 参考
@@ -187,16 +142,16 @@ getServerConnectionStatus(): ServerConnectionStatus
 #### 连接管理
 
 ```typescript
-// 连接到远程服务器
+// 连接到远程服务器（遥控端）
 connectToRemoteServer(): Promise<void>
 
-// 重新连接到远程服务器
+// 重新连接到远程服务器（遥控端）
 reconnectToRemoteServer(): Promise<void>
 
-// 关闭远程服务器连接
+// 关闭远程服务器连接（遥控端）
 closeRemoteServer(): Promise<void>
 
-// 关闭传输连接
+// 关闭传输连接（遥控端）
 closeTransport(): Promise<void>
 ```
 
@@ -728,267 +683,12 @@ const debugTool: ToolItem = {
 }
 ```
 
-#### 4. 内存泄漏
-
-**问题**：长时间运行后出现内存泄漏
-
-**解决方案**：
-```typescript
-import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
-
-const mcpService = getMetaApi('engine.service.mcp')
-
-// 定期清理不用的工具
-const cleanupUnusedTools = () => {
-  const allTools = mcpService.getToolList()
-  
-  allTools.forEach(tool => {
-    // 根据某些条件判断是否需要清理
-    if (shouldCleanup(tool)) {
-      mcpService.removeTool(tool.name)
-    }
-  })
-}
-
-// 每隔一段时间执行清理
-setInterval(cleanupUnusedTools, 5 * 60 * 1000) // 5分钟
-```
-
-### 调试技巧
-
-#### 1. 启用详细日志
-
-```typescript
-import { getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
-
-// 在开发环境启用详细日志
-if (process.env.NODE_ENV === 'development') {
-  const { subscribe } = useMessage()
-  
-  // 监听所有 MCP 相关事件
-  subscribe({
-    topic: 'mcpServerCreated',
-    callback: (server) => {
-      console.log('MCP 服务器创建成功:', server)
-    }
-  })
-  
-  // 记录工具执行情况
-  const mcpService = getMetaApi('engine.service.mcp')
-  const originalRegisterTool = mcpService.registerTool
-  mcpService.registerTool = (tool) => {
-    console.log('注册工具:', tool.name)
-    return originalRegisterTool(tool)
-  }
-}
-```
-
-#### 2. 性能监控
-
-```typescript
-// 监控工具执行性能
-const performanceMonitorTool = (originalTool: ToolItem): ToolItem => {
-  return {
-    ...originalTool,
-    callback: async (params) => {
-      const startTime = performance.now()
-      
-      try {
-        const result = await originalTool.callback(params)
-        const endTime = performance.now()
-        
-        console.log(`工具 ${originalTool.name} 执行耗时: ${endTime - startTime}ms`)
-        
-        return result
-      } catch (error) {
-        const endTime = performance.now()
-        console.error(`工具 ${originalTool.name} 执行失败，耗时: ${endTime - startTime}ms`, error)
-        throw error
-      }
-    }
-  }
-}
-
-// 应用性能监控
-const mcpService = getMetaApi('engine.service.mcp')
-const monitoredTool = performanceMonitorTool(myTool)
-mcpService.registerTool(monitoredTool)
-```
-
 ## 完整示例
 
-### 综合示例：文档管理系统
+### 综合示例
 
-```typescript
-import { getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
-import { z } from 'zod'
-import type { ToolItem } from '@opentiny/tiny-engine-common'
-
-// 初始化 MCP 服务
-const mcpService = getMetaApi('engine.service.mcp')
-
-// 配置服务选项
-mcpService.setOptions({
-  proxyUrl: 'https://api.docs.com/mcp',
-  connectToAgentServer: true,
-  reconnectAttempts: 3,
-  reconnectInterval: 2000
-})
-
-// 文档搜索工具
-const searchDocsTool: ToolItem = {
-  name: 'search_documents',
-  title: '文档搜索',
-  description: '在文档库中搜索相关内容',
-  inputSchema: {
-    query: z.string().min(1, '搜索关键词不能为空'),
-    limit: z.number().int().min(1).max(100).default(10)
-  },
-  outputSchema: {
-    results: z.array(z.object({
-      id: z.string(),
-      title: z.string(),
-      excerpt: z.string(),
-      score: z.number()
-    })),
-    total: z.number()
-  },
-  callback: async ({ query, limit = 10 }) => {
-    try {
-      const response = await fetch(`/api/search?q=${encodeURIComponent(query)}&limit=${limit}`)
-      const data = await response.json()
-      
-      return {
-        results: data.results || [],
-        total: data.total || 0
-      }
-    } catch (error) {
-      throw new Error(`搜索失败: ${error.message}`)
-    }
-  }
-}
-
-// 文档创建工具
-const createDocTool: ToolItem = {
-  name: 'create_document',
-  title: '创建文档',
-  description: '创建新的文档',
-  inputSchema: {
-    title: z.string().min(1, '标题不能为空'),
-    content: z.string().min(1, '内容不能为空'),
-    category: z.enum(['tutorial', 'api', 'guide', 'faq'])
-  },
-  outputSchema: {
-    id: z.string(),
-    title: z.string(),
-    createdAt: z.string()
-  },
-  callback: async ({ title, content, category }) => {
-    try {
-      const response = await fetch('/api/documents', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ title, content, category })
-      })
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-      
-      const doc = await response.json()
-      
-      return {
-        id: doc.id,
-        title: doc.title,
-        createdAt: doc.createdAt
-      }
-    } catch (error) {
-      throw new Error(`创建文档失败: ${error.message}`)
-    }
-  }
-}
-
-// 注册所有工具
-const registerDocumentTools = async () => {
-  const tools = [searchDocsTool, createDocTool]
-  
-  tools.forEach(tool => {
-    try {
-      mcpService.registerTool(tool)
-      console.log(`工具 ${tool.name} 注册成功`)
-    } catch (error) {
-      console.error(`工具 ${tool.name} 注册失败:`, error)
-    }
-  })
-  
-  console.log('文档管理工具注册完成')
-  console.log('可用工具:', mcpService.getToolList().map(t => t.name))
-}
-
-// 监控连接状态
-const monitorConnection = () => {
-  const { subscribe } = useMessage()
-  
-  subscribe({
-    topic: 'serverConnectionStatusChanged',
-    callback: ({ status, error }) => {
-      switch (status) {
-        case 'connected':
-          console.log('✅ 已连接到文档服务器')
-          registerDocumentTools()
-          break
-        case 'disconnected':
-          console.log('⚠️ 与文档服务器断开连接')
-          break
-        case 'error':
-          console.error('❌ 连接错误:', error)
-          break
-      }
-    }
-  })
-}
-
-// 启动文档管理系统
-const initDocumentSystem = async () => {
-  console.log('初始化文档管理系统...')
-  
-  // 开始监控连接
-  monitorConnection()
-  
-  // 如果配置了远程服务器，尝试连接
-  if (mcpService.getServerConnectionStatus() === 'disconnected') {
-    try {
-      await mcpService.connectToRemoteServer()
-    } catch (error) {
-      console.error('初始连接失败:', error)
-    }
-  } else {
-    // 本地模式直接注册工具
-    await registerDocumentTools()
-  }
-}
-
-// 导出系统接口
-export {
-  mcpService,
-  initDocumentSystem,
-  searchDocsTool,
-  createDocTool
-}
-
-// 在应用启动时调用
-initDocumentSystem()
-```
+TODO
 
 ## 总结
 
-MCP 服务为 tiny-engine 提供了强大而灵活的工具管理能力。通过合理的架构设计和完善的 API，它能够：
-
-1. **简化工具开发**：标准化的工具接口和自动化的注册机制
-2. **提升系统可扩展性**：动态工具管理和插件化架构
-3. **保证通信可靠性**：自动重连机制和连接状态监控
-4. **确保类型安全**：完整的 TypeScript 支持和运行时验证
-
-通过遵循本文档的指导和最佳实践，你可以充分利用 MCP 服务的能力，构建出功能强大、稳定可靠的应用扩展。
+MCP 服务为 tiny-engine 智能化提供了强大的驱动。通过合理的增加工具、prompts 等 mcp 能力，它能够让 AI 理解TinyEngine，以及我们自定义的插件扩展，让 AI 为我们提供更加智能化的服务。
