@@ -1,0 +1,15 @@
+{
+  "name": "@opentiny/tiny-engine-plugin-model-manager",
+  "version": "0.0.1",
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "index.js",
+    "src"
+  ],
+  "keywords": [
+    "tiny-engine-plugin",
+    "model-manager"
+  ],
+  "license": "MIT"
+} 

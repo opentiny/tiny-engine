@@ -51,6 +51,8 @@ import {
   HttpService
 } from './re-export'
 
+import ModelManager from '../plugins/model-manager'
+
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
 export default {
@@ -159,7 +161,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
+    ModelManager // 新增模型管理插件
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,
