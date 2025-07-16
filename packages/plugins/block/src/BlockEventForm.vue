@@ -14,7 +14,7 @@
               </div>
               <ul>
                 <li
-                  v-for="(item, index) in state.propertys"
+                  v-for="(item, index) in propertys"
                   :key="index"
                   :class="{ existed: eventNameList.has(`onUpdate:${item.property}`) }"
                   @click="usePropertysToBeEvent(item)"
@@ -59,14 +59,14 @@ export default {
     TinyIconRichTextLink: IconRichTextLink()
   },
   setup() {
+    const propertys = computed(() => getEditBlockPropertyList())
+    const events = computed(() => getEditBlockEvents())
     const state = reactive({
-      showPopover: false,
-      propertys: getEditBlockPropertyList(),
-      events: getEditBlockEvents()
+      showPopover: false
     })
-    const eventNameTip = '事件名为小写字符开头的驼峰形式，例：customEvent'
+    const eventNameTip = '事件名为小写字符或onUpdate:开头的驼峰形式，例：customEvent, onUpdate:propsName'
     const linked = computed(() => (getEditEvent() || {}).linked)
-    const eventNameList = computed(() => new Set(Object.keys(state.events)))
+    const eventNameList = computed(() => new Set(Object.keys(events.value)))
 
     const label = computed({
       get: () => getEditEvent()?.label?.zh_CN || '',
@@ -106,11 +106,16 @@ export default {
       eventName: [
         {
           pattern: REGEXP_EVENT_NAME,
-          message: eventNameTip,
           validator: (rule: any /* IFormInnerRule */, value: string, callback: (e?: Error) => void) => {
-            if (isUpdateEvent.value) return callback()
+            if (isUpdateEvent.value) {
+              const matched = /^onUpdate:[a-zA-Z_$][\w$]*$/.test(value)
+              const propertyMatched = propertys.value.some((item) => item.property === value.replace('onUpdate:', ''))
+              return matched && propertyMatched
+                ? callback()
+                : callback(new Error('无效的 onUpdate 事件名, onUpdate 事件需在属性设置中定义'))
+            }
             if (!rule.pattern.test(value)) {
-              callback(new Error(rule.message))
+              callback(new Error(eventNameTip))
             } else {
               callback()
             }
@@ -135,6 +140,8 @@ export default {
 
     return {
       state,
+      propertys,
+      events,
       rules,
       label,
       linked,
