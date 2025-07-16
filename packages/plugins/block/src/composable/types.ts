@@ -34,7 +34,6 @@ export interface BlockContent {
 export interface BlockOccupier {
   id: number
   username: string
-  resetPasswordToken: string
 }
 
 export interface Block {

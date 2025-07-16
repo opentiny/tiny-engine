@@ -17,7 +17,6 @@ import { meta as BuiltinComponentMaterials } from '@opentiny/tiny-engine-builtin
 import {
   getMergeMeta,
   getOptions,
-  useNotify,
   useCanvas,
   useBlock,
   useMessage,
@@ -31,7 +30,6 @@ import type {
   Block,
   BlockResource,
   Component,
-  ComponentMap,
   Dependency,
   InitMaterialOptions,
   Material,
@@ -58,9 +56,6 @@ const materialState = reactive<MaterialState>({
   packages: [] // 物料依赖的包
 })
 
-const componentState = reactive<{ componentsMap: Record<string, ComponentMap> }>({
-  componentsMap: {}
-})
 const getSnippet = (component: string) => {
   let schema: Schema = {}
   materialState.components.some(({ children }) => {
@@ -71,26 +66,6 @@ const getSnippet = (component: string) => {
     }
     return false
   })
-
-  return schema
-}
-
-const generateNode = ({ type, component }: { type: string; component: string }) => {
-  const snippet = getSnippet(component) || {}
-
-  const schema: Schema & Required<Pick<Schema, 'props'>> = {
-    componentName: component,
-    ...snippet,
-    props: {
-      ...snippet.props,
-      className: getOptions(meta.id).useBaseStyle ? getOptions(meta.id).componentBaseStyle.className : ''
-    }
-  }
-
-  if (type === 'block') {
-    schema.componentType = 'Block'
-    schema.props.className = getOptions(meta.id).useBaseStyle ? getOptions(meta.id).blockBaseStyle.className : ''
-  }
 
   return schema
 }
@@ -163,69 +138,6 @@ const registerComponentToResource = (data: Component) => {
   }
 }
 
-export const fetchBlockDetail = async (blockName: string) => {
-  const { getBlockAssetsByVersion } = useBlock()
-  const currentVersion = componentState.componentsMap?.[blockName]?.version
-  const block: Block = (await getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${blockName}`))?.[0]
-
-  if (!block) {
-    throw new Error(`区块${blockName}不存在！`)
-  }
-
-  block.assets = getBlockAssetsByVersion(block, currentVersion)
-  block.assets = history?.assets || block.assets
-
-  return block
-}
-
-/**
- * registerBlock 注册区块
- * @deprecated
- * @param data 当为字符串时请求详细信息
- * @param notFetchResouce 是否添加js css资源到页面
- * @returns
- */
-const registerBlock = async (data: string | any, notFetchResouce?: boolean) => {
-  let block = data
-
-  if (typeof block === 'string') {
-    try {
-      block = await fetchBlockDetail(block)
-    } catch (error: any) {
-      useNotify({
-        type: 'warning',
-        title: '区块读取错误',
-        message: error?.message || error
-      })
-
-      return false
-    }
-  }
-
-  if (!block) {
-    return false
-  }
-
-  block.type = MATERIAL_TYPE.Block
-  block.component = block.component || block.blockName || block.label || block.fileName
-  // 区块还原备份时, 后台改变current_history, 所以assets优先从current_history里取
-  const assets = block.assets
-  const label = block.component
-  const { scripts = [], styles = [] } = assets || {}
-
-  if (!notFetchResouce && !blockResource.get(label)) {
-    const { addScript, addStyle } = useCanvas().canvasApi.value
-    const promises = scripts
-      .filter((item: string) => item.includes('umd.js'))
-      .map(addScript)
-      .concat(styles.map(addStyle))
-    // 此处删除await，提前放行区块数据，在区块渲染前找到区块数据源映射关系
-    Promise.allSettled(promises)
-    blockResource.set(label, block.content)
-  }
-  return block
-}
-
 const clearMaterials = () => {
   materialState.components = []
   materialState.blocks = []
@@ -240,25 +152,35 @@ const clearBlockResources = () => blockResource.clear()
  */
 const generateThirdPartyDeps = (components: Component[]) => {
   const styles: string[] = []
-  const scripts: { package: string; script?: string; components: Record<string, string> }[] = []
+  const scripts: {
+    package: string
+    script?: string
+    components: Record<string, { exportName?: string; destructuring: boolean }>
+  }[] = []
 
   components.forEach((item) => {
     const { npm, component } = item
 
     if (!npm || !Object.keys(npm).length) return
 
-    const { package: pkg, script, exportName, css } = npm
+    const { package: pkg, script, exportName, css, destructuring = true } = npm
     const currentPkg = scripts.find((item) => item.package === pkg)
 
     if (currentPkg) {
       // 保存组件id和导出组件名的对应关系 TinyButton： Button
-      currentPkg.components[component] = exportName
+      currentPkg.components[component] = {
+        exportName,
+        destructuring
+      }
     } else {
       scripts.push({
         package: pkg,
         script,
         components: {
-          [component]: exportName
+          [component]: {
+            destructuring,
+            exportName
+          }
         }
       })
     }
@@ -493,16 +415,36 @@ const initBuiltinMaterial = () => {
 const initMaterial = ({ isInit = true, appData = {} }: InitMaterialOptions = {}) => {
   initBuiltinMaterial()
   if (isInit) {
-    componentState.componentsMap = {}
     appData.componentsMap?.forEach((component) => {
       if (component.dependencies) {
         getBlockDeps(component.dependencies)
       }
-      componentState.componentsMap[component.componentName] = component
     })
   }
 }
+const generateNode = ({ type, component }) => {
+  const snippet = getSnippet(component) || {}
+  const material = getMaterial(component)
+  // 判断是否要加基础样式
+  const materialUseBaseStyle = material.configure?.useBaseStyle
+  const globalUseBaseStyle = getOptions(meta.id).useBaseStyle
+  const useBaseStyle = globalUseBaseStyle && materialUseBaseStyle !== false
+  const schema = {
+    componentName: component,
+    ...snippet,
+    props: {
+      ...snippet.props,
+      className: useBaseStyle ? getOptions(meta.id).componentBaseStyle.className : ''
+    }
+  }
 
+  if (type === 'block') {
+    schema.componentType = 'Block'
+    schema.props.className = getOptions(meta.id).useBaseStyle ? getOptions(meta.id).blockBaseStyle.className : ''
+  }
+
+  return schema
+}
 const refreshMaterial = async () => {
   clearMaterials()
   initMaterial()
@@ -541,7 +483,6 @@ export default function () {
     getMaterial, // 获取单个物料，(property) getMaterial: (name: string) => Material
     setMaterial, // 设置单个物料 (property) setMaterial: (name: string, data: Material) => void
     addMaterials, // 添加多个物料
-    registerBlock, // 注册新的区块
     getCanvasDeps, // 组装画布依赖，包含物料和工具类的依赖。
     updateCanvasDeps, // 通知画布更新依赖
     getConfigureMap, // 获取物料组件的配置信息

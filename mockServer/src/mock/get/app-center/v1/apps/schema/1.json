@@ -1690,7 +1690,7 @@
         ],
         "fileName": "createVm",
         "meta": {
-          "id": "NTJ4MjvqoVj8OVsc",
+          "id": "1",
           "parentId": "0",
           "group": "staticPages",
           "occupier": {
@@ -1699,7 +1699,6 @@
             "email": "developer@lowcode.com",
             "provider": null,
             "password": null,
-            "resetPasswordToken": "developer",
             "confirmationToken": "dfb2c162-351f-4f44-ad5f-899831311129",
             "confirmed": true,
             "blocked": null,

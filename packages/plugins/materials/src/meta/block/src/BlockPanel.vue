@@ -46,7 +46,8 @@ export default {
     rightPanelRef: Object
   },
   setup(props) {
-    const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup } = useBlock()
+    const { addDefaultGroup, isDefaultGroupId, isAllGroupId, isRefresh, selectedGroup, getGroupList, setGroupList } =
+      useBlock()
     const { materialState } = useMaterial()
     const { message } = useModal()
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
@@ -111,6 +112,13 @@ export default {
         fetchGroupBlocksById({ groupId, value })
           .then((data) => {
             state.groupData = data
+            const list = getGroupList()?.map((item) => {
+              if (item.id === groupId) {
+                item.blocks = data
+              }
+              return item
+            })
+            setGroupList(list)
           })
           .catch((error) => {
             state.groupData = []

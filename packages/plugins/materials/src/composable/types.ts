@@ -99,7 +99,6 @@ export interface Linked {
 export interface CreatedBy {
   id: number
   username: string
-  resetPasswordToken: string
 }
 
 export interface History {

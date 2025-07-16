@@ -73,6 +73,12 @@ import { fetchDataSourceDetail } from './js/http'
 import { downloadFn, handleImportedData, overrideOrMergeData, getDataAfterPage } from './js/datasource'
 import DataSourceRecordUpload from './DataSourceRecordUpload.vue'
 
+const grid = ref(null)
+
+export const getRecordGrid = () => {
+  return grid.value
+}
+
 export default {
   components: {
     TinyGrid: Grid,
@@ -90,7 +96,6 @@ export default {
   },
   emits: ['edit'],
   setup(props, { emit }) {
-    const grid = ref(null)
     const { confirm } = useModal()
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.Collections))
@@ -130,7 +135,7 @@ export default {
         }
 
         if ((type === 'string' || item.type === 'number') && max !== 0 && max >= min) {
-          rules.push({ min, max, message: `${type === 'string' ? '长度' : '大小'} 在 ${min} - ${max} 之间` })
+          rules.push({ type, min, max, message: `${type === 'string' ? '长度' : '大小'} 在 ${min} - ${max} 之间` })
         }
 
         res[name] = rules
@@ -307,6 +312,7 @@ export default {
         })
       }
       state.columns = newColumns
+      state.validRules = genValidateRules(newColumns || [])
     })
 
     watch(
@@ -529,7 +535,7 @@ export default {
 }
 
 .datasource-record-list {
-  width: 642px;
+  max-width: 642px;
   :deep(.option-container) {
     display: flex;
     align-items: center;

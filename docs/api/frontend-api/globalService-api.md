@@ -17,7 +17,7 @@
 
 默认值：true
 
-描述：defaultGlobalService 会读取 app 信息，根据 app 的信息配置网页的标题为：`${app.name}-TinyEditor设计器`
+描述：defaultGlobalService 会读取 app 信息，根据 app 的信息配置网页的标题为：`${app.name} —— TinyEngine 前端可视化设计器`
 
 如果需要自定义标题，可以设置为 false。然后通过 document.title 来设置标题
 

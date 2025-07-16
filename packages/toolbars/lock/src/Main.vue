@@ -88,7 +88,7 @@ export default {
             const pageInfo = layoutState.pageStatus?.data
             useNotify({
               type: 'warning',
-              message: `当前页面被 ${pageInfo?.username || ''} ${pageInfo?.resetPasswordToken || ''} 锁定，请联系解锁`
+              message: `当前页面被 ${pageInfo?.username || ''} 锁定，请联系解锁`
             })
           }
         })

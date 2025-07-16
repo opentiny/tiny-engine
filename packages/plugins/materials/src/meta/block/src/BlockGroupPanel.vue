@@ -204,10 +204,7 @@ export default {
     const selectedBlockFilter = (blocks) => {
       const isInBlockGroup = (block) => includesBlockInGroups(block.id)
 
-      const isSelectedBlock = (block) =>
-        selectedBlockArray?.value?.some((selectedBlock) => block.id === selectedBlock.id)
-
-      return blocks.filter((block) => !isInBlockGroup(block) && !isSelectedBlock(block))
+      return blocks.filter((block) => !isInBlockGroup(block))
     }
 
     const searchBlocks = (filters) => {

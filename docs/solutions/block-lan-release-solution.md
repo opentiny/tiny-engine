@@ -1,5 +1,9 @@
 # 区块局域网发布方案
 
+> !WARNING ⚠️
+>
+> 从 TinyEngine v2.1 起，该区块发布方案已不再推荐。请参考 [全新区块构建方案](./block-construction-solution.md)
+
 在TinyEngine开源后，对私有化部署存在诉求的用户越来越多，而当前TinyEngine多项内容都依托在公网中，当前官网提供的[区块发布方案](./block-release-solution.md)，为公网环境下的发布，不能完全满足部分用户的需求。因此需要提供用户能够在内网环境下，也能够正常使用TinyEngine全部功能的方案。
 
 现在提出区块发布私有化的两种解决方案给用户自行选择：

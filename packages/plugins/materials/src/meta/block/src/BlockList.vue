@@ -77,8 +77,7 @@ export default {
   emits: ['check', 'close', 'checkAll', 'cancelCheckAll'],
   setup(props, { emit }) {
     const { generateNode, getBlockByName } = useMaterial()
-    const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh, getBlockAssetsByVersion } =
-      useBlock()
+    const { isDefaultGroupId, isAllGroupId, selectedBlock, selectedGroup, isRefresh } = useBlock()
     const blockRef = ref(null)
     const panelState = inject('panelState', {})
     const displayType = inject('displayType')
@@ -113,8 +112,6 @@ export default {
         return
       }
       const { isShortcutPanel, emitEvent } = panelState
-
-      block.assets = getBlockAssetsByVersion(block, block.current_version)
 
       // 获取 区块、子区块详情，并编译
       getBlockByName(block.label)

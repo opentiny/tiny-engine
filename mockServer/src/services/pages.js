@@ -10,14 +10,13 @@
  *
  */
 
-import path from 'path'
 import DateStore from '@seald-io/nedb'
-import { getResponseData } from '../tool/Common'
+import { getDatabasePath, getResponseData } from '../tool/Common'
 
 export default class PageService {
   constructor() {
     this.db = new DateStore({
-      filename: path.resolve(__dirname, '../database/pages.db'),
+      filename: getDatabasePath('pages.db'),
       autoload: true
     })
 
@@ -30,7 +29,6 @@ export default class PageService {
       id: 86,
       username: '开发者',
       email: 'developer@lowcode.com',
-      resetPasswordToken: 'developer',
       confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
       is_admin: true
     }
@@ -52,7 +50,6 @@ export default class PageService {
         id: 86,
         username: '开发者',
         email: 'developer@lowcode.com',
-        resetPasswordToken: 'developer',
         confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
         is_admin: true
       }
