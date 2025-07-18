@@ -94,7 +94,7 @@ import {
 import { iconClose } from "@opentiny/vue-icon";
 import { HttpService, useCanvas } from "@opentiny/tiny-engine";
 import ModelSelect from "../common/ModelSelect.vue";
-import ParamsBindGrid from "./ParamsBindGrid.vue";
+import ParamsBindGrid from "../model-api-configurator/ParamsBindGrid.vue";
 import { transformNode } from "../common/utils";
 
 const props = defineProps({
@@ -150,62 +150,9 @@ const closePopover = () => {
   isShow.value = false;
 };
 
-const getModelFunctions = () => {
-  HttpService.apis
-    .get(
-      `http://10.159.227.31:9090/baseUiEngine/basic/xdm/module/queryDataApiServLog?applicationId=${selectedModel.value.appId}&modelType=${selectedModel.value.modelData.modelType}&entityNameEn=${selectedModel.value.modelData.nameEn}&version=${selectedModel.value.modelData.modelVersion}`
-    )
-    .then((res) => {
-      if (res) {
-        modelFunctions.value = res.map((category) => category?.children || []);
-        modelFunctions.value = modelFunctions.value.flatMap((item) => item);
-      }
-      gridLoading.value = false;
-    })
-    .catch(() => (gridLoading.value = false));
-};
-
-const getFunctionsField = () => {
-  let params = {};
-  if (selectedFunction.value.masterId) {
-    params = {
-      id: selectedFunction.value.id,
-      apiId: selectedFunction.value.apiId,
-      masterId: selectedFunction.value.masterId,
-    };
-  } else {
-    params = {
-      apiNameEn: selectedFunction.value.apiNameEn,
-      requestMode: selectedFunction.value.requestMode,
-      type: selectedFunction.value.type,
-      uri: selectedFunction.value.uri,
-    };
-  }
-  HttpService.apis
-    .post(
-      `http://10.159.227.31:9090/baseUiEngine/basic/xdm/module/queryApiInfoById?modelType=${selectedModel.value.modelData.modelType}&applicationId=${selectedModel.value.appId}&version=${selectedModel.value.modelData.modelVersion}`,
-      params
-    )
-    .then((res) => {
-      if (res) {
-        selectedFunction.value.url = res.requestUrl;
-        selectedFunction.value.method = res.requestMethod;
-        selectedFunction.value.fields = {
-          request: JSON.parse(res.requestParameters).map((item) =>
-            transformNode(item)
-          ),
-          response: JSON.parse(res.responseParameters).map((item) =>
-            transformNode(item)
-          ),
-        };
-      }
-    });
-};
-
 const getModel = (data) => {
   gridLoading.value = true;
   selectedModel.value = data;
-  getModelFunctions();
 };
 
 const modelDataToSchema = (modelData, resultValue) => {
@@ -305,7 +252,6 @@ const setModelFunction = async () => {
 
 const selectModelFunction = (data) => {
   selectedFunction.value = data.row;
-  getFunctionsField();
 };
 </script>
 

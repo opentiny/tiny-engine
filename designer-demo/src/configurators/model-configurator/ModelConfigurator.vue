@@ -40,12 +40,6 @@
               <tiny-grid-column title="字段名" width="180">
                 <template #default="data">
                   <div class="field-prop">
-                    <tiny-tag
-                      v-if="data.row.category"
-                      type="info"
-                      effect="plain"
-                      >扩展</tiny-tag
-                    >
                     <span>{{ data.row.prop }}</span>
                   </div>
                 </template>
@@ -246,8 +240,7 @@ import {
   Popover as TinyPopover,
   Grid as TinyGrid,
   GridColumn as TinyGridColumn,
-  Checkbox as TinyCheckbox,
-  Tag as TinyTag,
+  Checkbox as TinyCheckbox
 } from "@opentiny/vue";
 import {
   iconUpWard,
@@ -301,71 +294,6 @@ const gridLoading = ref(false);
 const selectedModel = ref();
 const searchUnused = ref("");
 const searchValue = ref("");
-const handleFormItemRules = (rules) => {
-  if (!rules) {
-    return [];
-  }
-  return rules.map((item) => {
-    if (item.type === "enum") {
-      item.enum = item.value.map((valueField) => valueField.alias);
-      delete item.value;
-    }
-    return item;
-  });
-};
-const getModelParams = (checkLastVersion) => {
-  if (!appId.value) {
-    return;
-  }
-  HttpService.apis
-    .get(
-      `basic/xdm/module/getAllAttribute/${
-        appId.value
-      }/${selectedModel.value.nameEn}?version=${
-        checkLastVersion ? "" : selectedModel.value.modelVersion
-      }`
-    )
-    .then((res) => {
-      if (res) {
-        selectedModel.value.value =
-          res.map((item) => {
-            item.originType = item.type;
-            delete item.type;
-            if (item?.enumValueList) {
-              item.options = item.enumValueList;
-              delete item.enumValueList;
-            }
-            return {
-              ...item,
-              prop: item.runTimeName,
-              rules: handleFormItemRules(item?.rules),
-              isVisible: false,
-              itemVisible: true,
-              componentName:
-                typeComponentsMap?.[item.originType]?.component || "TinyInput",
-              ...typeComponentsMap?.[item.originType]?.props,
-            };
-          }) || [];
-        selectedModel.value.unused = [];
-      }
-      gridLoading.value = false;
-    })
-    .catch(() => (gridLoading.value = false));
-};
-
-const checkModelVersion = async () => {
-  if (!appId.value) {
-    return null;
-  }
-  return await HttpService.apis.post(
-    `basic/xdm/module/checkModelVersion`,
-    {
-      applicationId: appId.value,
-      name: selectedModel.value.nameEn,
-      version: selectedModel.value.modelVersion,
-    }
-  );
-};
 
 const setModelExpose = () => {
   const currentSchema = getCurrentSchema();
@@ -441,25 +369,7 @@ const setModel = async () => {
     });
     closePopover();
   };
-  // 判断是否有版本更新
-  const isLastVersion = await checkModelVersion();
-  if (!isLastVersion) {
-    updateModel();
-  } else {
-    confirm({
-      title: "提示",
-      status: "custom",
-      message: "当前模型有新版本发布，是否使用最新版本？",
-      async exec() {
-        // 直接使用新版本的字段
-        await getModelParams(true);
-        updateModel();
-      },
-      cancel() {
-        updateModel();
-      },
-    });
-  }
+  updateModel();
 };
 
 const getModel = (data) => {
@@ -474,7 +384,6 @@ const getModel = (data) => {
     selectedModel.value = modelDetail.value;
   } else {
     gridLoading.value = true;
-    getModelParams();
   }
 };
 
@@ -644,7 +553,6 @@ watch(
   }
   .model-name-warp {
     border: 1px solid var(--ti-lowcode-component-input-border-color);
-    padding-bottom: 10px;
   }
   .meta-model-title {
     color: #808080;
