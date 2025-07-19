@@ -4,18 +4,8 @@ import { createTransportPair, createStreamProxy } from '@opentiny/next'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.d.ts'
 import type { ZodRawShape } from 'zod'
-import type { IState, ToolItem, ServerConnectionStatus } from './common'
-import {
-  registerTool,
-  getToolList,
-  getToolByName,
-  getToolInstance,
-  enableTool,
-  disableTool,
-  removeTool,
-  updateTool,
-  type UpdateToolConfig
-} from './toolUtils'
+import type { IState, ToolItem, ServerConnectionStatus } from './type'
+import { registerTools, getToolList, getToolByName, removeTool, updateTool, type UpdateToolConfig } from './toolUtils'
 import { toRaw } from 'vue'
 
 const logger = console
@@ -23,11 +13,13 @@ const logger = console
 export type { IState, ToolItem, UpdateToolConfig }
 
 interface IOptions {
-  proxyUrl: string | null
-  token: string | null
-  connectToAgentServer: boolean
-  reconnectAttempts?: number
-  reconnectInterval?: number
+  agentServer: {
+    url: string | null
+    token: string | null
+    connectToAgentServer: boolean
+    reconnectAttempts?: number
+    reconnectInterval?: number
+  }
 }
 
 // 定义 MCP Server 的能力
@@ -80,21 +72,34 @@ const closeTransport = async (state: IState) => {
 }
 
 const connectToRemoteServer = async (state: IState, options: IOptions, client: Client, attempts: number = 0) => {
-  if (['connected', 'connecting'].includes(state.serverConnectionStatus)) {
+  const {
+    reconnectAttempts = 3,
+    reconnectInterval = 1000,
+    url = '',
+    token = '',
+    connectToAgentServer = false
+  } = options.agentServer || {}
+
+  if (['connected', 'connecting'].includes(state.serverConnectionStatus) || !connectToAgentServer) {
     return
   }
 
-  const { reconnectAttempts = 3, reconnectInterval = 1000 } = options
+  if (!url) {
+    throw new Error('agent server url is required')
+  }
+
+  const handleClose = () => closeTransport(state)
 
   try {
+    window.removeEventListener('beforeunload', handleClose)
     updateServerConnectionStatus(state, 'connecting')
     const exitSessionId = sessionStorage.getItem('mcp-session-id') || ''
 
     // 把量子纠缠的 client 客户端通过 StreamableHTTP 代理传递给后端服务，创建孪生 client
     const { transport: streamTransport, sessionId } = await createStreamProxy({
       client,
-      url: options.proxyUrl || location + '/../agent/mcp',
-      token: options.token || '',
+      url,
+      token: token || '',
       sessionId: exitSessionId
     })
 
@@ -104,6 +109,7 @@ const connectToRemoteServer = async (state: IState, options: IOptions, client: C
 
     state.sessionID = sessionId
     state.remoteTransport = streamTransport
+    window.addEventListener('beforeunload', handleClose)
   } catch (error) {
     if (attempts < reconnectAttempts) {
       await new Promise((resolve) => setTimeout(resolve, reconnectInterval))
@@ -134,11 +140,6 @@ const createStreamServerTransport = async (state: IState, options: IOptions) => 
   await client.connect(clientTransport)
 
   state.mcpClient = client
-
-  // 不连接到 agent server
-  if (!options.connectToAgentServer) {
-    return
-  }
 
   await connectToRemoteServer(state, options, client)
 }
@@ -217,18 +218,20 @@ const collectTools = (state: IState) => {
 }
 
 // 移除未使用的 @ts-expect-error 注释
-export default defineService({
+export default defineService<IState, IOptions>({
   id: META_SERVICE.McpService,
   type: 'MetaService',
   options: {
-    proxyUrl: null,
-    token: null,
-    connectToAgentServer: true
+    agentServer: {
+      url: null,
+      token: null,
+      connectToAgentServer: false
+    }
   },
   initialState,
   init: async ({ state, options }) => {
     await createStreamServerTransport(state, options)
-    window.addEventListener('beforeunload', () => closeTransport(state))
+
     // 收集所有注册表中的 tools
     collectTools(state)
     // TODO: 支持 prompts
@@ -247,12 +250,9 @@ export default defineService({
     closeRemoteServer: () => closeTransport(state),
     getServerConnectionStatus: () => state.serverConnectionStatus,
     closeTransport: () => closeTransport(state),
-    registerTool: (tool: ToolItem) => registerTool(state, tool),
+    registerTools: (tools: ToolItem[]) => registerTools(state, tools),
     getToolList: () => getToolList(state),
     getToolByName: (name: string) => getToolByName(state, name),
-    getToolInstance: (name: string) => getToolInstance(state, name),
-    enableTool: (name: string) => enableTool(state, name),
-    disableTool: (name: string) => disableTool(state, name),
     removeTool: (name: string) => removeTool(state, name),
     updateTool: (name: string, config?: UpdateToolConfig) => updateTool(state, name, config)
   })

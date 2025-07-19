@@ -1,4 +1,4 @@
-import type { IState, ToolItem } from './common'
+import type { IState, ToolItem } from './type'
 import type { ZodRawShape } from 'zod'
 import type { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.d.ts'
 import type { ToolAnnotations } from '@modelcontextprotocol/sdk/types.d.ts'
@@ -9,10 +9,11 @@ const logger = console
 export interface UpdateToolConfig {
   title?: string | undefined
   description?: string | undefined
-  inputSchema?: ZodRawShape | undefined
+  paramsSchema?: ZodRawShape | undefined
   outputSchema?: ZodRawShape | undefined
   annotations?: ToolAnnotations | undefined
   callback?: ToolCallback<ZodRawShape>
+  enabled?: boolean
 }
 
 export const getToolList = (state: IState) => {
@@ -42,17 +43,29 @@ export const getToolInstance = (state: IState, name: string) => {
   return state.toolInstanceMap.get(name)
 }
 
-export const registerTool = (state: IState, tool: ToolItem) => {
+export const registerTools = (state: IState, tools: ToolItem[]) => {
+  if (!Array.isArray(tools) || !tools.length) {
+    return
+  }
+
   if (!state.server) {
     logger.error('mcp server is not created')
     return
   }
 
-  const { name, callback, ...restConfig } = tool
+  const toolInstances = tools.map((tool) => {
+    const { name, callback, ...restConfig } = tool
 
-  const toolInstance = state.server?.registerTool(name, restConfig, callback as ToolCallback<ZodRawShape>)
+    const toolInstance = state.server?.registerTool(name, restConfig, callback as ToolCallback<ZodRawShape>)
 
-  state.toolInstanceMap.set(name, toolInstance)
+    if (toolInstance) {
+      state.toolInstanceMap.set(name, toolInstance)
+    }
+
+    return toolInstance
+  })
+
+  return toolInstances
 }
 
 export const enableTool = (state: IState, name: string) => {

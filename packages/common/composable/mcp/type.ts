@@ -1,9 +1,9 @@
-import { Client } from '@modelcontextprotocol/sdk/client/index.js'
-import { MessageChannelTransport, MessageChannelServerTransport } from '@opentiny/next'
-import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import type { Client } from '@modelcontextprotocol/sdk/client/index.js'
+import type { MessageChannelTransport, MessageChannelServerTransport } from '@opentiny/next'
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { ToolCallback, RegisteredTool } from '@modelcontextprotocol/sdk/server/mcp.d.ts'
 import type { ToolAnnotations } from '@modelcontextprotocol/sdk/types.d.ts'
-import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
+import type { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js'
 import type { ZodRawShape } from 'zod'
 
 export interface McpServerInstance {

@@ -104,6 +104,7 @@ export function createErrorResponse(message: string, error: string) {
 
   // 按照 MCP 协议要求，text 字段应包含与 structuredContent 功能等效的序列化内容
   return {
+    isError: true,
     content: [
       {
         type: 'text' as const,
