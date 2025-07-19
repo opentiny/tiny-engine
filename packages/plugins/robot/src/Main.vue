@@ -36,7 +36,7 @@
               <icon-new-session />
             </button>
           </template>
-          <template v-if="activeMessages.length === 0">
+          <div v-if="activeMessages.length === 0">
             <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
             </tr-welcome>
             <tr-prompts
@@ -46,19 +46,23 @@
               class="tiny-prompts"
               @item-click="handlePromptItemClick"
             ></tr-prompts>
-          </template>
-          <tr-bubble-list v-else :items="activeMessages" :roles="roles"></tr-bubble-list>
+          </div>
+          <tr-bubble-provider :message-renderers="{ markdown: MarkdownRenderer }" v-else>
+            <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
+          </tr-bubble-provider>
           <template #footer>
             <tr-sender
-              ref="senderRef"
+              :maxlength="4000"
               mode="multiple"
               v-model="inputContent"
-              placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-              :clearable="true"
-              :showWordLimit="true"
-              :maxLength="1000"
+              :autoSize="{ minRows: 1, maxRows: 5 }"
+              placeholder="请输入您的问题..."
               @submit="sendContent(inputContent, false)"
-            ></tr-sender>
+            >
+              <template #footer-left>
+                <mcp-server></mcp-server>
+              </template>
+            </tr-sender>
           </template>
         </tr-container>
       </div>
@@ -72,11 +76,15 @@ import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } 
 import { Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
-import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender } from '@opentiny/tiny-robot'
+import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender, TrBubbleProvider } from '@opentiny/tiny-robot'
 import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotSettingPopover from './RobotSettingPopover.vue'
 import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import McpServer from './mcp/McpServer.vue'
+import useMcpServer from './mcp/useMcp'
+import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
+import { sendMcpRequest } from './mcp/utils'
 
 export default {
   components: {
@@ -87,7 +95,9 @@ export default {
     TrPrompts,
     TrBubbleList,
     TrSender,
-    IconNewSession
+    IconNewSession,
+    McpServer,
+    TrBubbleProvider
   },
   emits: ['close-chat'],
   setup() {
@@ -179,7 +189,22 @@ export default {
       content,
       name: 'AI'
     })
+
     const sendRequest = () => {
+      if (useMcpServer().isToolsEnabled) {
+        try {
+          sendMcpRequest(messages.value, {
+            model: selectedModel.value.value,
+            headers: {
+              Authorization: `Bearer ${tokenValue.value || import.meta.env.VITE_API_TOKEN}`
+            }
+          })
+        } catch (error) {
+          messages.value[messages.value.length - 1].content = '连接失败'
+          inProcesing.value = false
+        }
+        return
+      }
       getMetaApi(META_SERVICE.Http)
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
@@ -203,6 +228,7 @@ export default {
           connectedFailed.value = false
         })
     }
+
     const scrollContent = async () => {
       await sleep(100)
       const scrollElement = document.getElementById('chatgpt-window')
@@ -305,6 +331,7 @@ export default {
     const endContent = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
+      inProcesing.value = false
       initChat()
     }
 
@@ -346,6 +373,12 @@ export default {
     // 欢迎界面提示
     const promptItems: PromptProps[] = [
       {
+        label: 'MCP工具',
+        description: '帮我查询当前的页面列表',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🔧'),
+        badge: 'NEW'
+      },
+      {
         label: '页面搭建场景',
         description: '如何生成表单嵌进我的网站？',
         icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨'),
@@ -378,8 +411,8 @@ export default {
 
     // 对话角色配置
     const roles: Record<string, BubbleRoleConfig> = {
-      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '80%' },
-      user: { placement: 'end', avatar: userAvatar, maxWidth: '80%' }
+      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '90%' },
+      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%' }
     }
 
     return {
@@ -404,7 +437,8 @@ export default {
       promptItems,
       handlePromptItemClick,
       welcomeIcon,
-      roles
+      roles,
+      MarkdownRenderer
     }
   }
 }
@@ -417,6 +451,7 @@ export default {
   align-items: center;
   width: 26px;
   height: 26px;
+
   .chatgpt-icon {
     width: 18px;
     height: 18px;
@@ -431,11 +466,6 @@ export default {
 
 .tiny-container {
   top: var(--base-top-panel-height) !important;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
   container-type: inline-size;
 
   :deep(button.icon-btn) {
@@ -444,6 +474,21 @@ export default {
 
   :deep(.robot-setting button) {
     margin-left: 10px;
+  }
+
+  .tr-bubble__content-messages {
+    font-size: 14px;
+    .tr-bubble__step-tool {
+      word-break: break-all !important;
+    }
+  }
+
+  .tiny-sender__container .tiny-textarea__inner {
+    font-size: 16px;
+  }
+
+  .tr-bubble-list {
+    flex: 1;
   }
 
   .robot-welcome > div {
@@ -457,12 +502,13 @@ export default {
     padding: 4px;
   }
 
-  .tiny-prompts {
+  .tiny-prompts > div {
     padding: 16px 24px;
 
     .prompt-item {
       width: 100%;
       box-sizing: border-box;
+
       @container (width >=64rem) {
         width: calc(50% - 8px);
       }
@@ -471,8 +517,9 @@ export default {
         font-size: 14px;
         line-height: 24px;
       }
+
       &:hover {
-        background-color: #c3d3f6;
+        background-color: #f8f8f8;
       }
     }
   }
@@ -500,6 +547,14 @@ export default {
 
     svg {
       font-size: 20px;
+    }
+  }
+
+  .tiny-sender {
+    margin: 20px;
+
+    .tiny-sender__footer-slot.tiny-sender__bottom-row {
+      justify-content: space-between !important;
     }
   }
 }
