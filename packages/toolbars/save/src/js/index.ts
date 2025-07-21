@@ -173,7 +173,7 @@ export const openCommon = async () => {
         }
    */
 
-  saveCommon(state.code).finally(() => {
+  return saveCommon(state.code).finally(() => {
     state.disabled = false
 
     if (typeof saved === 'function') {
