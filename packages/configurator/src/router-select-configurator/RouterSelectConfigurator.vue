@@ -94,8 +94,21 @@ const treeFolderOp = computed(() => {
   return options
 })
 
+const treeToArray = (treeData) => {
+  let res = []
+  for (const item of treeData) {
+    const { children, ...i } = item
+    if (children && children.length) {
+      res = res.concat(treeToArray(children))
+    }
+    res.push(i)
+  }
+  return res
+}
+
 const handleChange = () => {
-  const selectedData = treeFolderOp?.value?.data?.find((item) => item.id === state.selected) || {}
+  const treeData = treeFolderOp?.value?.data
+  const selectedData = treeToArray(treeData)?.find((item) => item.id === state.selected) || {}
   emit('update:modelValue', { name: state.selected, path: selectedData.route })
 }
 </script>
