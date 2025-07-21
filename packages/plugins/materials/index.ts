@@ -36,7 +36,8 @@ export default {
     componentBaseStyle: {
       className: 'component-base-style',
       style: 'margin: 8px;'
-    }
+    },
+    hiddenBuiltinMaterials: []
   },
   components: {
     header: MaterialHeader
