@@ -12,7 +12,6 @@
 
     "allowJs": true,
     "baseUrl": "./",
-    "jsx": "react-jsx",
     "paths": {
       "@/*": ["packages/*"],
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],
