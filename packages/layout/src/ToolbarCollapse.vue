@@ -6,7 +6,7 @@
       </span>
     </template>
     <div class="collapse-content">
-      <div class="empty-bar" v-for="(item, idx) in collapseBar" :key="idx">
+      <div class="empty-bar" v-for="(item, idx) in renderCollapseBar" :key="idx">
         <div class="toolbar-list-button" v-if="typeof item === 'string'">
           <component
             :is="getMergeMeta(item)?.entry"
@@ -18,7 +18,7 @@
           <div class="toolbar-list-button" v-for="comp in item" :key="comp">
             <component
               :is="getMergeMeta(comp)?.entry"
-              :options="getMergeMeta(comp).options"
+              :options="getMergeMeta(comp)?.options"
               position="collapse"
             ></component>
           </div>
@@ -35,6 +35,8 @@ import { Popover } from '@opentiny/vue'
 import { IconPopup } from '@opentiny/vue-icon'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { computed } from 'vue'
+
 const { OPEN_DELAY } = constants
 
 export default {
@@ -48,10 +50,29 @@ export default {
       default: () => []
     }
   },
-  setup() {
+  setup(props) {
+    const renderCollapseBar = computed(() => {
+      const result = props.collapseBar.map((item) => {
+        if (typeof item === 'string') {
+          return item
+        }
+
+        if (Array.isArray(item)) {
+          const subItem = item.filter((itemComp) => getMergeMeta(itemComp)?.entry)
+
+          return subItem.length > 0 ? subItem : null
+        }
+
+        return item
+      })
+
+      return result.filter((item) => Boolean(item))
+    })
+
     return {
       getMergeMeta,
-      OPEN_DELAY
+      OPEN_DELAY,
+      renderCollapseBar
     }
   }
 }
