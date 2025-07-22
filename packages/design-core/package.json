@@ -86,8 +86,7 @@
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
-    "@vue/babel-plugin-jsx": "^1.2.5",
-    "@vue/repl": "^2.9.0",
+    "@vue/repl": "4.6.1",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
     "eslint-linter-browserify": "8.57.0",
@@ -101,7 +100,6 @@
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
-    "@types/babel__core": "^7.20.5",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",

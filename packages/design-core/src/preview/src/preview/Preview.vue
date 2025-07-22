@@ -3,7 +3,6 @@
     <Repl
       :editor="editorComponent"
       :store="store"
-      :sfcOptions="sfcOptions"
       :showCompileOutput="false"
       :showTsConfig="false"
       :showImportMap="true"
@@ -14,8 +13,8 @@
 </template>
 
 <script>
-import { defineComponent, computed, defineAsyncComponent, onMounted, onBeforeUnmount } from 'vue'
-import { Repl, ReplStore } from '@vue/repl'
+import { defineComponent, computed, defineAsyncComponent, onMounted, onBeforeUnmount, ref } from 'vue'
+import { Repl, useStore, useVueImportMap } from '@vue/repl'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { injectDebugSwitch } from './debugSwitch'
 import { usePreviewCommunication } from './usePreviewCommunication'
@@ -37,26 +36,39 @@ export default {
   setup() {
     const debugSwitch = injectDebugSwitch()
     const editorComponent = computed(() => (debugSwitch?.value ? Monaco : EmptyEditor))
-    const store = new ReplStore()
-    const sfcOptions = {
+    const sfcOptions = ref({
       script: {
         // scirpt setup 编译后注入 import { * } from "vue"
         inlineTemplate: false
       }
-    }
+    })
+    const { importMap: builtinImportMap } = useVueImportMap()
 
-    // 相比store.setFiles，只要少了state.activeFile = state.files[filename]，因为改变activeFile会触发多余的文件解析
+    const currentImportMap = ref({
+      imports: {
+        ...builtinImportMap.value.imports
+      }
+    })
+
+    const store = useStore({
+      builtinImportMap: currentImportMap,
+      showOutput: false,
+      outputMode: 'preview',
+      sfcOptions
+    })
+
     const setFiles = async (newFiles, mainFileName) => {
       await store.setFiles(newFiles, mainFileName)
-      // 强制更新 codeSandbox
-      store.state.resetFlip = !store.state.resetFlip
-      store['initTsConfig']() // 触发获取组件d.ts方便调试
+    }
+
+    const setImportMap = (newImportMap) => {
+      currentImportMap.value = newImportMap
     }
 
     const queryParams = new URLSearchParams(location.search)
     document.documentElement?.setAttribute?.('data-theme', queryParams.get('theme') || 'light')
 
-    const { loadInitialData, updateUrl, updatePreview } = usePreviewData({ setFiles, store })
+    const { loadInitialData, updateUrl, updatePreview } = usePreviewData({ setFiles, store, setImportMap })
 
     let cleanupCommunicationAction = null
     const onSchemaReceivedAction = async (data) => {
