@@ -102,6 +102,21 @@ export default {
         .filter((item) => Boolean(item))
     }
 
+    const validateDirHandle = async () => {
+      if (!state.dirHandle) {
+        return false
+      }
+
+      try {
+        for await (const _entry of state.dirHandle.values()) {
+          break
+        }
+        return true
+      } catch (error) {
+        return false
+      }
+    }
+
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
@@ -111,7 +126,9 @@ export default {
         fetchPageList(params.app)
       ]
 
-      if (!state.dirHandle) {
+      const isDirHandleValid = await validateDirHandle()
+
+      if (!isDirHandleValid) {
         promises.push(fs.getUserBaseDirHandle())
       }
 
@@ -242,7 +259,11 @@ export default {
         // 生成代码到本地
         await saveCodeToLocal(saveData)
 
-        useNotify({ type: 'success', title: '代码文件保存成功', message: `已保存${saveData.length}个文件` })
+        useNotify({
+          type: 'success',
+          title: '代码文件保存成功',
+          message: `已保存${saveData.length}个文件到 ${state?.dirHandle?.name || ''}`
+        })
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
