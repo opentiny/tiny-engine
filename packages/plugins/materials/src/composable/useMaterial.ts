@@ -404,12 +404,34 @@ const getBlockDeps = (dependencies: { scripts?: Dependency[]; styles?: any[] } =
   }
 }
 
+/**
+ * 过滤内置物料，用户配置隐藏的内置物料，不显示在物料面板
+ * @param materials 物料
+ * @returns 过滤后的物料
+ */
+const filterBuiltinMaterials = (materials: Material) => {
+  const hiddenBuiltinMaterials = getOptions(meta.id).hiddenBuiltinMaterials || []
+
+  return {
+    ...materials,
+    snippets: materials.snippets?.map((item) => {
+      return {
+        ...item,
+        children: item.children?.filter((child) => !hiddenBuiltinMaterials.includes(child.snippetName))
+      }
+    })
+  }
+}
+
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
+  const builtinMaterials = filterBuiltinMaterials(Builtin!.data.materials)
+  const builtinComponentMaterials = filterBuiltinMaterials(BuiltinComponentMaterials)
+
   // 添加画布物料
-  addMaterials(Builtin!.data.materials)
+  addMaterials(builtinMaterials)
   // 添加builtin-component NPM包物料
-  addMaterials(BuiltinComponentMaterials)
+  addMaterials(builtinComponentMaterials)
 }
 
 const initMaterial = ({ isInit = true, appData = {} }: InitMaterialOptions = {}) => {
