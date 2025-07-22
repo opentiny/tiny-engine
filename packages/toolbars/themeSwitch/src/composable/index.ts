@@ -35,6 +35,8 @@ const themeChange = (theme: string) => {
 export default defineService({
   id: META_SERVICE.ThemeSwitch,
   type: 'MetaService',
+  initialState: {},
+  options: {},
   init: () => {
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     THEME_DATA.value = getMergeMeta('engine.config')?.themesList || []

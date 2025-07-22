@@ -29,6 +29,15 @@ function setCacheValue(value: string) {
   localStorage.setItem(CANVAS_ROUTER_VIEW_SETTING_VIEW_MODE_KEY, value)
 }
 
+export enum ViewMode {
+  EMBEDDED = 'embedded',
+  STANDALONE = 'standalone'
+}
+
+export interface IRouterViewSetting {
+  viewMode: ViewMode
+}
+
 export default {
   components: {
     ToolbarBase
@@ -41,9 +50,12 @@ export default {
   },
   setup() {
     const viewMode = ref(getCacheValue())
-    const { post, data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.CanvasRouterViewSetting })
+    const { post, data } = useBroadcastChannel<IRouterViewSetting, IRouterViewSetting>({
+      name: BROADCAST_CHANNEL.CanvasRouterViewSetting
+    })
+
     watch(data, () => {
-      viewMode.value = data.value
+      viewMode.value = data.value.viewMode
     })
 
     const viewModeOptions = [
@@ -64,7 +76,7 @@ export default {
     const changeViewMode = () => {
       viewMode.value = viewMode.value === viewModeOptions[0].value ? viewModeOptions[1].value : viewModeOptions[0].value
       setCacheValue(viewMode.value)
-      post({ viewMode: viewMode.value })
+      post({ viewMode: viewMode.value as ViewMode })
     }
     return {
       viewModeOptions,
