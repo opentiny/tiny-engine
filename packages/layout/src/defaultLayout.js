@@ -8,11 +8,12 @@ export default {
         META_APP.OutlineTree,
         META_APP.AppManage,
         META_APP.BlockManage,
+        META_APP.State,
+        META_APP.ModelManager,
         META_APP.Collections,
         META_APP.Bridge,
         META_APP.I18n,
         META_APP.Page,
-        META_APP.State
       ],
       bottom: [META_APP.Schema, META_APP.Help, META_APP.Robot]
     },
