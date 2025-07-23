@@ -49,3 +49,17 @@ index 5132a3752a80f6bbeb67e7e8d1aff65cdc97ae02..9e67e62c44419aeb752966de75afe11b
              {
          type: "module",
          name: options?.name
+diff --git a/dist/vue-repl.js b/dist/vue-repl.js
+index cfb74a062a5661ba5a8105825714c8eb464cbf70..91b4747b22b96899c96612b909dc662d87b890e6 100644
+--- a/dist/vue-repl.js
++++ b/dist/vue-repl.js
+@@ -551,7 +551,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+           "allow-popups",
+           "allow-same-origin",
+           "allow-scripts",
+-          "allow-top-navigation-by-user-activation"
++          "allow-top-navigation-by-user-activation",
++          "allow-downloads"
+         ].join(" ")
+       );
+       const importMap = store.value.getImportMap();
