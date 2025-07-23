@@ -125,11 +125,7 @@ export default {
 
     const { subscribe, unsubscribe } = useMessage()
 
-    const refreshPageList = async (appId) => {
-      const pages = await getPageList(appId)
-
-      return pages
-    }
+    const refreshPageList = (appId: string) => getPageList(appId)
 
     let subscriber = null
 
