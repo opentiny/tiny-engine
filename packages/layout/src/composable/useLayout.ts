@@ -391,13 +391,6 @@ export default () => {
     pluginStorageReactive.value = pluginList
   }
 
-  const getIsUserCustomLayout = () => {
-    const defaultLayoutString = JSON.stringify(defaultLayout)
-    const userLayoutString = JSON.stringify(getMergeMeta('engine.layout')?.options?.layoutConfig)
-
-    return defaultLayoutString !== userLayoutString
-  }
-
   const removeUndefineLayoutId = (layout) => {
     if (Array.isArray(layout)) {
       layout.forEach((item, index) => {
@@ -496,11 +489,10 @@ export default () => {
       return finalLayoutConfig
     }
 
-    const isUserCustomLayout = getIsUserCustomLayout()
+    const userCustomLayout = getMergeMeta('engine.layout')?.options?.layoutConfig
     // 用户传了自定义配置，则忽略 insertBefore insertAfter 的配置
-    if (isUserCustomLayout) {
-      finalLayoutConfig = getMergeMeta('engine.layout')?.options?.layoutConfig
-      return finalLayoutConfig
+    if (userCustomLayout) {
+      return userCustomLayout
     }
 
     const relativeLayoutConfig = getMergeMeta('engine.layout')?.options?.relativeLayoutConfig || {}
