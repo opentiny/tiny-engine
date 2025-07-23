@@ -190,7 +190,7 @@ export default {
       [STATE]: { validator: validateState, required: true }
     }
     const editorCode = computed(() => {
-      const { state: storeState } = state.storeData.variable || {}
+      const { state: storeState = {} } = state.storeData.variable || {}
       if (storeState) {
         return JSON.stringify(storeState, null, 2)
       }
