@@ -12,7 +12,7 @@
                 <tiny-icon-rich-text-link />
                 双向绑定属性
               </div>
-              <ul>
+              <ul class="property-list-content">
                 <li
                   v-for="(item, index) in propertys"
                   :key="index"
@@ -112,7 +112,7 @@ export default {
               const propertyMatched = propertys.value.some((item) => item.property === value.replace('onUpdate:', ''))
               return matched && propertyMatched
                 ? callback()
-                : callback(new Error('无效的 onUpdate 事件名, onUpdate 事件需在属性设置中定义'))
+                : callback(new Error(`${value} 需要有对应的 ${value.replace('onUpdate:', '')} 在属性中定义`))
             }
             if (!rule.pattern.test(value)) {
               callback(new Error(eventNameTip))
@@ -182,6 +182,13 @@ export default {
     text-align: left;
     gap: 6px;
     margin-bottom: 6px;
+  }
+  .property-list-content {
+    max-height: 200px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    padding-inline-start: 10px;
+    padding-inline-end: 10px;
   }
   li {
     padding: 0 12px;
