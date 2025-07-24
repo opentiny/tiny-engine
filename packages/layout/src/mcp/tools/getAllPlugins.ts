@@ -6,7 +6,7 @@ const inputSchema = z.object({})
 export const getAllPlugins = {
   name: 'get_all_plugins',
   description: 'Get all plugins',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (_args: z.infer<typeof inputSchema>) => {
     const { getAllPlugins } = useLayout()
     const plugins = await getAllPlugins()
@@ -21,7 +21,7 @@ export const getAllPlugins = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

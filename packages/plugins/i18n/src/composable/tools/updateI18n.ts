@@ -1,40 +1,33 @@
 import { z } from 'zod'
 import useTranslate from '../useTranslate'
-import { validateParams, validateCustom, commonValidationRules } from './validateParams'
+import { validateParams, commonValidationRules } from './validateParams'
 import { createOutputSchema, createSuccessResponse, createErrorResponse } from './commonSchema'
 
 // 定义为普通对象，用于传递给 inputSchema 字段
-const inputSchema = {
-  key: z.string().describe('The unique key for the i18n entry to update, e.g. lowcode.36223242'),
-  zh_CN: z.string().optional().describe('The updated Chinese translation text'),
-  en_US: z.string().optional().describe('The updated English translation text')
-}
-
-// 输出schema定义 - 使用通用的schema基础结构
-const outputSchema = createOutputSchema({
-  type: 'object',
-  properties: {
-    key: { type: 'string' },
-    zh_CN: { type: 'string' },
-    en_US: { type: 'string' },
-    type: { type: 'string' },
-    originalEntry: {
-      type: 'object',
-      description: 'The original i18n entry before update'
-    }
-  },
-  description: 'The updated i18n entry data'
+const inputSchema = z.object({
+  key: z.string().describe('The unique key for the i18n entry to update'),
+  zh_CN: z.string().optional().describe('The Chinese translation text (optional, only update if provided)'),
+  en_US: z.string().optional().describe('The English translation text (optional, only update if provided)')
 })
 
-// 用于类型推断的 z.object 包装版本
-const _inputSchemaObject = z.object(inputSchema)
+// 定义 data 部分的 Schema（用于更新的 i18n 条目数据）
+const updateI18nDataSchema = z.object({
+  key: z.string().describe('The unique key of the updated entry'),
+  zh_CN: z.string().describe('The updated Chinese translation text'),
+  en_US: z.string().describe('The updated English translation text'),
+  type: z.string().describe('The type of the entry'),
+  originalEntry: z.record(z.any()).describe('The original i18n entry before update')
+})
+
+// 输出schema定义 - 使用 Zod 版本的统一输出结构
+const outputSchema = createOutputSchema(updateI18nDataSchema)
 
 export const updateI18n = {
   name: 'update_i18n',
   description:
     'Update an existing i18n entry in the current TinyEngine low-code application. Use this when you need to modify internationalization translations.',
-  inputSchema,
-  outputSchema, // 新增：定义输出结构
+  inputSchema: inputSchema.shape,
+  outputSchema: outputSchema.shape,
   annotations: {
     title: 'Update I18n Entry',
     readOnlyHint: false,
@@ -42,7 +35,7 @@ export const updateI18n = {
     idempotentHint: true,
     openWorldHint: false
   },
-  callback: async (args: z.infer<typeof _inputSchemaObject> & { toolCallId: string }) => {
+  callback: async (args: z.infer<typeof inputSchema>) => {
     const { key, zh_CN, en_US } = args
 
     // 使用通用验证方法进行参数验证
@@ -56,15 +49,19 @@ export const updateI18n = {
     }
 
     // 验证至少有一个翻译字段
-    const translationValidation = validateCustom(
-      args,
-      (params) => Boolean(params.zh_CN || params.en_US),
-      'At least one translation (zh_CN or en_US) must be provided'
-    )
+    const translationValidation = z
+      .object({
+        zh_CN: z.string().optional(),
+        en_US: z.string().optional()
+      })
+      .safeParse(args)
 
-    if (!translationValidation.isValid) {
+    if (!translationValidation.success) {
       // 直接返回验证错误，已经符合新的结构化格式
-      return translationValidation.error!
+      return createErrorResponse(
+        'Invalid translation fields',
+        'At least one translation (zh_CN or en_US) must be provided'
+      )
     }
 
     const { getLangs, ensureI18n } = useTranslate()

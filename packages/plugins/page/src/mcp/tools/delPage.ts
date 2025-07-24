@@ -14,7 +14,7 @@ export const delPage = {
   order: 7,
   description:
     'Delete a page from the current TinyEngine low-code application. Use this when you need to delete a page from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
 
@@ -46,7 +46,7 @@ export const delPage = {
           {
             isError: true,
             type: 'text',
-            value: JSON.stringify(res)
+            text: JSON.stringify(res)
           }
         ]
       }
@@ -65,7 +65,7 @@ export const delPage = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

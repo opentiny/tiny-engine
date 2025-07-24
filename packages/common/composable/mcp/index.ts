@@ -164,7 +164,7 @@ const createMcpServer = async (state: IState) => {
   // server._setupTimeout = () => {}
 
   state.toolList.forEach((tool) => {
-    const { name, callback, ...restConfig } = tool
+    const { name, callback, inputSchema, outputSchema, ...restConfig } = tool
 
     try {
       if (state.toolInstanceMap.has(name)) {
@@ -185,7 +185,11 @@ const createMcpServer = async (state: IState) => {
       const toolInstance = server.registerTool(
         name,
         // 需要序列化一次，否则 list tool 会超时，因为有 proxy 之后，内部会报错
-        JSON.parse(JSON.stringify(restConfig)),
+        {
+          ...JSON.parse(JSON.stringify(restConfig)),
+          inputSchema,
+          outputSchema
+        },
         callback as ToolCallback<ZodRawShape>
       )
 

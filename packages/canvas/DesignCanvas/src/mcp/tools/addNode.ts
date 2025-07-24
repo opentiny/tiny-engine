@@ -19,7 +19,7 @@ const nodeSchema: NodeSchema = z.object({
   children: z.array(z.lazy(() => nodeArraySchema)).describe('The children of the component')
 })
 
-const inputSchema = {
+const inputSchema = z.object({
   parentId: z
     .string()
     .optional()
@@ -39,16 +39,14 @@ const inputSchema = {
     .describe(
       'The id of the reference target node. If not provided, the new node will be added to the end of the parent node. if you don\'t know the referTargetNodeId, you can use the tool "get_page_schema" to get the page schema. if you dont want to refer to any node, just don\'t provide the referTargetNodeId.'
     )
-}
-
-const _inputSchema = z.object(inputSchema)
+})
 
 export const addNode = {
   name: 'add_node',
   title: '添加节点',
   description:
     'Add a new node to the current TinyEngine low-code application. Use this when you need to add new node to your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   annotations: {
     title: '添加节点',
     readOnlyHint: false,
@@ -56,7 +54,7 @@ export const addNode = {
     idempotentHint: false,
     openWorldHint: false
   },
-  callback: async (args: z.infer<typeof _inputSchema>) => {
+  callback: async (args: z.infer<typeof inputSchema>) => {
     const { parentId, newNodeData, position, referTargetNodeId } = args
     const componentName = newNodeData.componentName
     const { props = {}, children = [] } = newNodeData
@@ -116,7 +114,7 @@ export const addNode = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

@@ -19,7 +19,7 @@ export const changePageBasicInfo = {
   order: 8,
   description:
     'Change a page basic info from the current TinyEngine low-code application. Use this when you need to change a page from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id, name, route, parentId } = args
 
@@ -42,11 +42,11 @@ export const changePageBasicInfo = {
       return {
         content: [
           {
-            type: 'json',
-            value: {
+            type: 'text',
+            text: JSON.stringify({
               status: 'error',
               message: error
-            }
+            })
           }
         ]
       }
@@ -67,7 +67,7 @@ export const changePageBasicInfo = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

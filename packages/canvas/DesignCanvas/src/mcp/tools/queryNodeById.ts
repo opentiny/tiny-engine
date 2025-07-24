@@ -4,24 +4,22 @@ import { utils } from '@opentiny/tiny-engine-utils'
 
 const { validateParams } = utils
 
-const inputSchema = {
+const inputSchema = z.object({
   id: z.string().describe('The id of the node to query.')
-}
-
-const _inputSchema = z.object(inputSchema)
+})
 
 export const queryNodeById = {
   name: 'query_node_by_id',
   description:
     'Query a node by id from the current TinyEngine low-code application. Use this when you need to query a node by id from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   // 添加 annotations 配置
   annotations: {
     title: '根据ID查询节点', // 人性化标题
     readOnlyHint: true, // 只读操作，不会修改任何状态
     openWorldHint: false // 不与外部世界交互，只在 TinyEngine 内部操作
   },
-  callback: async (args: z.infer<typeof _inputSchema>) => {
+  callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
 
     const validateResult = validateParams(args, {
@@ -42,11 +40,12 @@ export const queryNodeById = {
       return {
         content: [
           {
-            type: 'json',
-            value: {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
               status: 'error',
               message: 'Node not found, please check the id is correct.'
-            }
+            })
           }
         ]
       }
@@ -67,7 +66,7 @@ export const queryNodeById = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

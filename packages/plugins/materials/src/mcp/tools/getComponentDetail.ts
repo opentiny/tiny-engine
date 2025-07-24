@@ -11,7 +11,7 @@ const inputSchema = z.object({
 export const getComponentDetail = {
   name: 'get_component_detail',
   description: 'Get the detail of a component.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { name } = args
 
@@ -40,7 +40,7 @@ export const getComponentDetail = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

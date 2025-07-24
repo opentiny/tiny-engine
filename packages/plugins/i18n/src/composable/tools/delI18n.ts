@@ -4,32 +4,25 @@ import { validateParams, commonValidationRules } from './validateParams'
 import { createOutputSchema, createSuccessResponse, createErrorResponse } from './commonSchema'
 
 // 定义为普通对象，用于传递给 inputSchema 字段
-const inputSchema = {
-  key: z.string().describe('The unique key for the i18n entry to delete, e.g. lowcode.36223242')
-}
-
-// 输出schema定义 - 使用通用的schema基础结构
-const outputSchema = createOutputSchema({
-  type: 'object',
-  properties: {
-    key: { type: 'string' },
-    deletedEntry: {
-      type: 'object',
-      description: 'The deleted i18n entry data'
-    }
-  },
-  description: 'The deleted i18n entry information'
+const inputSchema = z.object({
+  key: z.string().describe('The unique key for the i18n entry to delete')
 })
 
-// 用于类型推断的 z.object 包装版本
-const _inputSchemaObject = z.object(inputSchema)
+// 定义 data 部分的 Schema（用于删除的 i18n 条目数据）
+const delI18nDataSchema = z.object({
+  key: z.string().describe('The unique key of the deleted entry'),
+  deletedEntry: z.record(z.any()).describe('The deleted i18n entry data')
+})
+
+// 输出schema定义 - 使用 Zod 版本的统一输出结构
+const outputSchema = createOutputSchema(delI18nDataSchema)
 
 export const delI18n = {
   name: 'delete_i18n',
   description:
-    'Delete an i18n entry from the current TinyEngine low-code application by its key. Use this when you need to remove internationalization translations.',
-  inputSchema,
-  outputSchema, // 新增：定义输出结构
+    'Delete an existing i18n entry from the current TinyEngine low-code application. Use this when you need to remove internationalization translations.',
+  inputSchema: inputSchema.shape,
+  outputSchema: outputSchema.shape,
   annotations: {
     title: 'Delete I18n Entry',
     readOnlyHint: false,
@@ -37,7 +30,7 @@ export const delI18n = {
     idempotentHint: true,
     openWorldHint: false
   },
-  callback: async (args: z.infer<typeof _inputSchemaObject> & { toolCallId: string }) => {
+  callback: async (args: z.infer<typeof inputSchema>) => {
     const { key } = args
 
     // 使用通用验证方法进行参数验证

@@ -14,7 +14,7 @@ export const getPageDetail = {
   order: 8,
   description:
     'Get a page detail from the current TinyEngine low-code application. Use this when you need to get a page detail from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
 
@@ -41,7 +41,7 @@ export const getPageDetail = {
         content: [
           {
             type: 'text',
-            value: JSON.stringify(res)
+            text: JSON.stringify(res)
           }
         ]
       }
@@ -59,7 +59,7 @@ export const getPageDetail = {
           {
             isError: true,
             type: 'text',
-            value: JSON.stringify(res)
+            text: JSON.stringify(res)
           }
         ]
       }

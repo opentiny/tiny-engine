@@ -12,7 +12,7 @@ export const editSpecificPage = {
   name: 'Edit page in canvas.',
   order: 9,
   description: 'Edit a specific page in canvas. Use this tool when you need to edit some page in canvas.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
 
@@ -41,7 +41,7 @@ export const editSpecificPage = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

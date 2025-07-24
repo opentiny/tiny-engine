@@ -9,7 +9,7 @@ export const getPageList = {
   order: 8,
   description:
     'Get a page list from the current TinyEngine low-code application. Use this when you need to get a page list from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (_args: z.infer<typeof inputSchema>) => {
     const { getPageList } = usePage()
     const [firstGroup, secondGroup] = await getPageList()
@@ -41,7 +41,7 @@ export const getPageList = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

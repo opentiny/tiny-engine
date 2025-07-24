@@ -4,17 +4,15 @@ import { utils } from '@opentiny/tiny-engine-utils'
 
 const { validateParams } = utils
 
-const inputSchema = {
+const inputSchema = z.object({
   id: z.string().describe('The id of the node to select.')
-}
-
-const _inputSchema = z.object(inputSchema)
+})
 
 export const selectSpecificNode = {
   name: 'select_specific_node',
   description:
     'Select a specific node from the current TinyEngine low-code application. Use this when you need to select a specific node from your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   // 添加 annotations 配置
   annotations: {
     title: '选择特定节点', // 人性化标题
@@ -23,7 +21,7 @@ export const selectSpecificNode = {
     idempotentHint: false, // 非幂等操作，重复选择可能触发不同的 UI 效果
     openWorldHint: false // 不与外部世界交互，只在 TinyEngine 内部操作
   },
-  callback: async (args: z.infer<typeof _inputSchema>) => {
+  callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
 
     const validateResult = validateParams(args, {
@@ -51,7 +49,7 @@ export const selectSpecificNode = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }

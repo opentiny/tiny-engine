@@ -21,7 +21,7 @@ export const addPage = {
   order: 6,
   description:
     'Add a new page to the current TinyEngine low-code application. Use this when you need to add new page to your application.',
-  inputSchema,
+  inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { name, route, parentId } = args
 
@@ -57,7 +57,7 @@ export const addPage = {
           {
             isError: true,
             type: 'text',
-            value: JSON.stringify(res)
+            text: JSON.stringify(res)
           }
         ]
       }
@@ -78,7 +78,7 @@ export const addPage = {
       content: [
         {
           type: 'text',
-          value: JSON.stringify(res)
+          text: JSON.stringify(res)
         }
       ]
     }
