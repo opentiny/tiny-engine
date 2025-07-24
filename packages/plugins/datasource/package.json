@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-datasource",
-  "version": "2.7.1-rc.2",
+  "version": "2.7.1",
   "publishConfig": {
     "access": "public"
   },
