@@ -95,7 +95,7 @@ const useCollapseMap = () => {
 
 const { collapseMap, setCollapse, switchCollapse } = useCollapseMap()
 
-interface TreeNode {
+export interface TreeNode {
   id: string | number
   label: string
   parentId?: string | number
