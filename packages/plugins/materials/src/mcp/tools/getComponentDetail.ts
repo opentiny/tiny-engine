@@ -1,0 +1,48 @@
+import { z } from 'zod'
+import { useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { validateParams } = utils
+
+const inputSchema = z.object({
+  name: z.string()
+})
+
+export const getComponentDetail = {
+  name: 'get_component_detail',
+  description: 'Get the detail of a component.',
+  inputSchema,
+  callback: async (args: z.infer<typeof inputSchema>) => {
+    const { name } = args
+
+    const validateResult = validateParams(args, {
+      name: {
+        required: true,
+        message: 'Name is required'
+      }
+    })
+
+    if (!validateResult.isValid) {
+      return validateResult.error
+    }
+
+    const { getComponentDetail } = useMaterial()
+
+    const detail = await getComponentDetail(name)
+
+    const res = {
+      status: 'success',
+      message: `Component detail retrieved successfully`,
+      data: detail || {}
+    }
+
+    return {
+      content: [
+        {
+          type: 'text',
+          value: JSON.stringify(res)
+        }
+      ]
+    }
+  }
+}

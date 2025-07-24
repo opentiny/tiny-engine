@@ -493,6 +493,57 @@ export const addBlockResources = (id: string, resource: BlockResource) => {
   blockResource.set(id, resource)
 }
 
+const getComponentList = () => {
+  return Array.from(resource.values())
+    .filter((item) => item.type === MATERIAL_TYPE.Component)
+    .map((dataItem) => {
+      return {
+        component: dataItem.component,
+        name: dataItem.name
+      }
+    })
+}
+
+const getComponentDetail = (name) => {
+  const data = resource.get(name)
+
+  const props = data.schema.properties
+    .map((item) => {
+      return item.content.map((content) => {
+        return {
+          property: content.property,
+          description: content.description,
+          type: content.type,
+          defaultValue: content.defaultValue
+        }
+      })
+    })
+    .flat()
+
+  const events = Object.entries(data.schema.events || {}).map(([key, value]) => {
+    return {
+      name: key,
+      description: value?.description || ''
+    }
+  })
+
+  const slots = Object.entries(data.schema.slots || {}).map(([key, value]) => {
+    return {
+      name: key,
+      description: value?.description || ''
+    }
+  })
+
+  return {
+    component: data.component,
+    name: data.name,
+    configure: data.configure,
+    props,
+    events,
+    slots
+  }
+}
+
 export default function () {
   return {
     materialState, // 存放着组件、物料侧区块、第三方依赖信息
@@ -513,6 +564,8 @@ export default function () {
     addBlockResources,
     updateBlockCompileCache,
     getComponentsByGroup,
-    refreshMaterial
+    refreshMaterial,
+    getComponentList,
+    getComponentDetail
   }
 }

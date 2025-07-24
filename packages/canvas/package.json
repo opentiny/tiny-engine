@@ -48,7 +48,8 @@
     "diff-match-patch": "^1.0.5",
     "jsondiffpatch": "^0.6.0",
     "postcss": "^8.4.31",
-    "postcss-selector-parser": "^7.0.0"
+    "postcss-selector-parser": "^7.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

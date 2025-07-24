@@ -29,7 +29,8 @@
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*"
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

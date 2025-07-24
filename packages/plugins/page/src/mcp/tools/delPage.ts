@@ -1,0 +1,73 @@
+import { z } from 'zod'
+import { usePage } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { validateParams } = utils
+
+const inputSchema = z.object({
+  id: z.string().describe('The id of the page')
+})
+
+export const delPage = {
+  name: 'del_page',
+  label: 'Delete Page',
+  order: 7,
+  description:
+    'Delete a page from the current TinyEngine low-code application. Use this when you need to delete a page from your application.',
+  inputSchema,
+  callback: async (args: z.infer<typeof inputSchema>) => {
+    const { id } = args
+
+    const validateResult = validateParams(args, {
+      id: {
+        required: true,
+        message: 'Id is required'
+      }
+    })
+
+    if (!validateResult.isValid) {
+      return validateResult.error
+    }
+
+    const { deletePage } = usePage()
+    const { success } = await deletePage(id)
+
+    if (!success) {
+      const res = {
+        status: 'error',
+        message: 'Failed to delete page',
+        data: {
+          error: 'Failed to delete page'
+        }
+      }
+
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            value: JSON.stringify(res)
+          }
+        ]
+      }
+    }
+
+    const res = {
+      status: 'success',
+      message: `Page deleted successfully`,
+      data: {
+        id,
+        type: 'page'
+      }
+    }
+
+    return {
+      content: [
+        {
+          type: 'text',
+          value: JSON.stringify(res)
+        }
+      ]
+    }
+  }
+}

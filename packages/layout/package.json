@@ -27,7 +27,8 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vueuse/core": "^9.6.0",
-    "vue-draggable-next": "2.2.1"
+    "vue-draggable-next": "2.2.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

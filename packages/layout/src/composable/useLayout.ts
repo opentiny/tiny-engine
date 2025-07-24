@@ -14,7 +14,7 @@
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta, getAllMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import defaultLayout from '../defaultLayout'
 import { utils } from '@opentiny/tiny-engine-utils'
 
@@ -501,6 +501,18 @@ export default () => {
     return finalLayoutConfig
   }
 
+  const getAllPlugins = () => {
+    return getAllMergeMeta()
+      .filter((item) => item.type === 'plugin')
+      .map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          type: item.type
+        }
+      })
+  }
+
   return {
     isPanelWidthResizable,
     getFixedPanelsStatus,
@@ -539,6 +551,7 @@ export default () => {
     getMoveDragBarState,
     changeMoveDragBarState,
     getPluginsByPosition,
-    getFinalLayoutConfig
+    getFinalLayoutConfig,
+    getAllPlugins
   }
 }
