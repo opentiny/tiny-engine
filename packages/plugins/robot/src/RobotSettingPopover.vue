@@ -30,7 +30,7 @@
 /* metaService: engine.plugins.robot.RobotSettingPopover */
 import { ref, reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinySelect, TinyTooltip } from '@opentiny/vue'
-import { AIModelOptions } from './js/robotSetting'
+import { getAIModelOptions } from './js/robotSetting'
 
 export default {
   components: {
@@ -52,6 +52,7 @@ export default {
     }
   },
   setup(props, { emit }) {
+    const AIModelOptions = getAIModelOptions()
     const robotSettingForm = ref(null)
 
     const formData = reactive({

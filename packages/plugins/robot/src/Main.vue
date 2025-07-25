@@ -80,7 +80,7 @@ import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender, TrBubbleProv
 import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import { getBlockContent, initBlockList, getAIModelOptions } from './js/robotSetting'
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
@@ -102,6 +102,7 @@ export default {
   emits: ['close-chat'],
   setup() {
     const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
