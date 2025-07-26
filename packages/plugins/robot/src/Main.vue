@@ -507,6 +507,7 @@ export default {
     const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
     const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
     const saveIcon = getSvgIcon('save', { fontSize: '20px' })
+    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
 
     // 对话角色配置
     const roles = ref({
@@ -524,7 +525,10 @@ export default {
               style: {
                 display: getItemSchema(bubbleProps)?.schema ? 'block' : 'none'
               },
-              actions: [{ name: 'run', label: '应用', icon: saveIcon }],
+              actions: [
+                { name: 'run', label: '应用', icon: saveIcon },
+                { name: 'preview', label: '预览', icon: previewIcon }
+              ],
               onAction(name) {
                 currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
                 if (name === 'preview') {
