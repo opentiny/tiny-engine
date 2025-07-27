@@ -55,6 +55,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRemotePanel */
 import { reactive, watch, ref, computed } from 'vue'
+import type { Component } from 'vue'
 import { Collapse, CollapseItem, Tabs, TabItem, Button } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import DataSourceRemoteForm, { getServiceForm } from './DataSourceRemoteForm.vue'
@@ -83,7 +84,7 @@ export const close = () => {
 export default {
   components: {
     TinyCollapse: Collapse,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyCollapseItem: CollapseItem,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,

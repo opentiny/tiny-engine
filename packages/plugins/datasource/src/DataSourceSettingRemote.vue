@@ -24,6 +24,7 @@
 
 <script lang="ts">
 import { reactive, watch, ref } from 'vue'
+import type { Component } from 'vue'
 import { TinyTabs, TinyTabItem, TinyButton } from '@opentiny/vue'
 import DataSourceRemoteForm, { getServiceForm } from './DataSourceRemoteForm.vue'
 import DataSourceRemoteParameter from './DataSourceRemoteParameter.vue'
@@ -37,7 +38,7 @@ const { reactiveObj2String: obj2String, string2Obj } = utils
 
 export default {
   components: {
-    TinyButton,
+    TinyButton: TinyButton as Component,
     TinyTabs,
     TinyTabItem,
     DataSourceRemoteForm,

@@ -59,9 +59,10 @@
   </plugin-setting>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 /* metaService: engine.plugins.appmanage.PageSetting */
 import { reactive, ref, computed, onActivated, onDeactivated } from 'vue'
+import type { Component } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
 import {
@@ -109,7 +110,7 @@ const PAGE_SETTING_SESSION = {
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     PageInputOutput,

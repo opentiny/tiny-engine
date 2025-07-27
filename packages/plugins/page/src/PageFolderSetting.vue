@@ -35,6 +35,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.appmanage.PageFolderSetting */
 import { reactive, ref, computed } from 'vue'
+import type { Component } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
 import {
@@ -66,7 +67,7 @@ export const closeFolderSettingPanel = () => {
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     PluginSetting,

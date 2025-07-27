@@ -33,6 +33,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.pagecontroller.Main */
 import { onBeforeUnmount, reactive, provide } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
@@ -50,7 +51,7 @@ export const api = {
 export default {
   components: {
     MonacoEditor: VueMonaco,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     PluginPanel
   },
   props: {

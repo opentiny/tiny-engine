@@ -110,6 +110,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.blockmanage.BlockConfig */
 import { reactive, ref, computed, nextTick, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Input, Tag, Button, Form, FormItem, Radio, Select, Option } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { remove } from '@opentiny/vue-renderless/common/array'
@@ -123,7 +124,7 @@ export default {
   components: {
     TinyTag: Tag,
     TinyInput: Input,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyRadio: Radio,

@@ -66,6 +66,7 @@
 
 <script lang="tsx">
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
+import type { Component } from 'vue'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useModal, useLayout } from '@opentiny/tiny-engine-meta-register'
@@ -85,7 +86,7 @@ export default {
     TinyPager: Pager,
     DataSourceRecordUpload,
     TinyLink: Link,
-    TinyButton: Button
+    TinyButton: Button as Component
   },
   props: {
     // 数据源对象

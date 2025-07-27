@@ -48,6 +48,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRecordForm */
 import { computed, reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 import { Button, Input, Numeric, DatePicker, Form, FormItem, Switch, Slider } from '@opentiny/vue'
 import { PluginSetting } from '@opentiny/tiny-engine-common'
 import { isEmptyObject } from '@opentiny/vue-renderless/common/type'
@@ -101,7 +102,7 @@ export const init = (data) => {
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyForm: Form,
     TinyFormItem: FormItem,
     PluginSetting

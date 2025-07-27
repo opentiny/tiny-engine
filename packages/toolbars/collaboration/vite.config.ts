@@ -15,9 +15,18 @@ import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-  plugins: [generateComment(), vue(), vueJsx()],
+  plugins: [
+    generateComment(),
+    vue(),
+    vueJsx(),
+    dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.json'),
+      rollupTypes: true
+    })
+  ],
   publicDir: false,
   resolve: {},
   build: {

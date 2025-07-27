@@ -18,6 +18,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.blockmanage.BlockEventList */
 import { computed } from 'vue'
+import type { Component } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
 import {
@@ -31,7 +32,7 @@ import {
 
 export default {
   components: {
-    TinyButton,
+    TinyButton: TinyButton as Component,
     MetaListItems,
     SvgButton
   },

@@ -36,6 +36,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceFieldForm */
 import { reactive, watchEffect, ref, provide, computed } from 'vue'
+import type { Component } from 'vue'
 import { Button, Input, FormItem, Form } from '@opentiny/vue'
 import { ButtonGroup, I18nInput } from '@opentiny/tiny-engine-common'
 import DataSourceFieldCheck from './DataSourceFieldCheck.vue'
@@ -45,7 +46,7 @@ export const formDataInjectionSymbols = Symbol('DataSourceFieldFormData')
 export default {
   components: {
     ButtonGroup,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyInput: Input,
     TinyForm: Form,
     TinyFormItem: FormItem,

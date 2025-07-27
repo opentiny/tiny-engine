@@ -36,6 +36,7 @@
 <script lang="ts">
 /* metaService: engine.toolbars.redoundo.Main */
 import { Popover } from '@opentiny/vue'
+import type { Component } from 'vue'
 import { useHistory } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import type { Component } from 'vue'

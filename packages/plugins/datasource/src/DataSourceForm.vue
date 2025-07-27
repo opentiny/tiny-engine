@@ -38,6 +38,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.collections.DataSourceForm */
 import { reactive, ref, watch, computed } from 'vue'
+import type { Component } from 'vue'
 import { Form, Button } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
@@ -80,7 +81,7 @@ export default {
     ButtonGroup,
     SvgButton,
     TinyForm: Form,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     PluginSetting,
     DataSourceType,
     DataSourceName,

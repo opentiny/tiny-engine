@@ -43,6 +43,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.blockmanage.SaveNewBlock */
 import { reactive, computed, ref } from 'vue'
+import type { Component } from 'vue'
 import { Input, Form, FormItem, Button, DialogBox, Select } from '@opentiny/vue'
 import { useBlock, useLayout, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { REGEXP_BLOCK_NAME } from '@opentiny/tiny-engine-common/js/verification'
@@ -53,7 +54,7 @@ export default {
     TinyInput: Input,
     TinyFormItem: FormItem,
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinySelect: Select
   },
   props: {

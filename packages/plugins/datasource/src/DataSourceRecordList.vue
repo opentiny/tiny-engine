@@ -82,6 +82,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.collections.DataSourceRecordList */
 import { reactive, ref, watchEffect, watch, computed } from 'vue'
+import type { Component } from 'vue'
 import { camelize, capitalize } from '@vue/shared'
 import { Grid, Pager, Input, Numeric, DatePicker, Switch, Slider, Link, Button } from '@opentiny/vue'
 import { iconUpload } from '@opentiny/vue-icon'
@@ -110,7 +111,7 @@ export default {
     TinyPager: Pager,
     DataSourceRecordUpload,
     TinyLink: Link,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     IconUpload: iconUpload()
   },
   props: {

@@ -132,7 +132,7 @@ export default {
   components: {
     TinyForm,
     TinyInput,
-    TinyButton,
+    TinyButton: TinyButton as Component,
     TinyFormItem,
     TinyCheckbox: TinyCheckbox as Component,
     PluginSetting,

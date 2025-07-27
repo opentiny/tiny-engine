@@ -36,13 +36,14 @@
 <script lang="ts">
 /* metaService: engine.toolbars.generate-code.FileSelector */
 import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
+import type { Component } from 'vue'
 import { reactive, computed, ref, nextTick } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyGrid: Grid,
     TinyGridColumn: GridColumn
   },

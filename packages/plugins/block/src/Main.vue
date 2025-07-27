@@ -125,6 +125,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.blockmanage.Main */
 import { ref, reactive, computed, watch, provide } from 'vue'
+import type { Component } from 'vue'
 import {
   Search as TinySearch,
   Select as TinySelect,
@@ -215,7 +216,7 @@ export default {
     CategoryEdit,
     PluginBlockList,
     TinyPopover,
-    TinyButton,
+    TinyButton: TinyButton as Component,
     TinyIconSearch: IconSearch()
   },
   props: {

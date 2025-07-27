@@ -21,6 +21,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.blockmanage.BlockPropertyList */
 import { computed } from 'vue'
+import type { Component } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
 import { remove } from '@opentiny/vue-renderless/common/array'
 import { MetaListItems, SvgButton } from '@opentiny/tiny-engine-common'
@@ -34,7 +35,7 @@ import {
 
 export default {
   components: {
-    TinyButton,
+    TinyButton: TinyButton as Component,
     SvgButton,
     MetaListItems
   },

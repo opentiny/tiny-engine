@@ -65,6 +65,7 @@ import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading, setAutoSaveStatus, getAutoSaveStatus } from './js/index'
 import { constants } from '@opentiny/tiny-engine-utils'
+
 const { OPEN_DELAY } = constants
 
 export const api = {

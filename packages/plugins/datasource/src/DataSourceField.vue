@@ -34,6 +34,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceField */
 import { reactive, ref, watchEffect, nextTick } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceFieldList from './DataSourceFieldList.vue'
 import DataSourceFieldType, { open as openFieldType } from './DataSourceFieldType.vue'
@@ -41,7 +42,7 @@ import DataSourceFieldForm from './DataSourceFieldForm.vue'
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     DataSourceFieldList,
     DataSourceFieldType,
     DataSourceFieldForm

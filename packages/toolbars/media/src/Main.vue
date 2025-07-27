@@ -82,6 +82,7 @@
 <script lang="ts">
 /* metaService: engine.toolbars.media.Main */
 import { ref, reactive, computed, toRaw, watchEffect, onMounted, onUnmounted, watch } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'

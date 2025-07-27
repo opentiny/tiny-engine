@@ -71,6 +71,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRecordUpload */
 import { reactive, watch } from 'vue'
+import type { Component } from 'vue'
 import { Button, Modal, FileUpload } from '@opentiny/vue'
 import { getDataFromFile } from './js/datasource'
 import { IconHelp } from '@opentiny/vue-icon'
@@ -80,7 +81,7 @@ const FILE_SIZE_MAX = 4
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyModal: Modal,
     TinyFileUpload: FileUpload
   },

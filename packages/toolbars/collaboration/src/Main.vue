@@ -49,6 +49,7 @@
 <script lang="ts">
 /* metaService: engine.toolbars.collaboration.Main */
 import { reactive, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'

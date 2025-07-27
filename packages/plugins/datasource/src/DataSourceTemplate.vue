@@ -18,13 +18,14 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceTemplate */
 import { reactive, onMounted } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { fetchTemplates } from './js/http'
 
 export default {
   components: {
-    TinyButton: Button
+    TinyButton: Button as Component
   },
   emits: ['select'],
   setup(props, { emit }) {

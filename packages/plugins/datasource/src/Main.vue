@@ -51,6 +51,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.Main */
 import { reactive, watch, provide } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import DataSourceList, { refresh as refreshDataSourceList, clearActive } from './DataSourceList.vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
@@ -70,7 +71,7 @@ import DataSourceGlobalDataHandler, {
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     DataSourceList,
     DataSourceGlobalDataHandler,
     PluginPanel,

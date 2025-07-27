@@ -18,6 +18,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRemoteDataResult */
 import { reactive, watchEffect, ref } from 'vue'
+import type { Component } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
 import { Button as TinyButton } from '@opentiny/vue'
 
@@ -30,7 +31,7 @@ export const getResponseData = () => editor.value.getEditor().getValue()
 export default {
   components: {
     MonacoEditor,
-    TinyButton
+    TinyButton: TinyButton as Component
   },
   props: {
     modelValue: {

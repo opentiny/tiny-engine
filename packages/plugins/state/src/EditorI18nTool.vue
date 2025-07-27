@@ -51,7 +51,7 @@ const { OPEN_DELAY } = constants
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyTooltip: Tooltip as Component,
     TinyPopover: Popover as Component,
     IconClose: iconClose(),
