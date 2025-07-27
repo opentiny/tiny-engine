@@ -82,6 +82,16 @@ onMounted(() => {
   }
 }
 
+:deep(.mcp-server-picker__content) {
+  .tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav {
+    background-color: unset;
+  }
+  .tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__item {
+    border: none;
+    background-color: unset;
+  }
+}
+
 :deep(.tiny-tabs__content) {
   .plugin-card__add-button {
     display: flex;

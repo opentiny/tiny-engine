@@ -56,6 +56,7 @@
               mode="multiple"
               v-model="inputContent"
               :autoSize="{ minRows: 1, maxRows: 5 }"
+              :loading="requestLoading"
               placeholder="请输入您的问题..."
               @submit="sendContent(inputContent, false)"
             >
@@ -191,10 +192,13 @@ export default {
       name: 'AI'
     })
 
-    const sendRequest = () => {
+    const requestLoading = ref(false)
+
+    const sendRequest = async () => {
       if (useMcpServer().isToolsEnabled) {
         try {
-          sendMcpRequest(messages.value, {
+          requestLoading.value = true
+          await sendMcpRequest(messages.value, {
             model: selectedModel.value.value,
             headers: {
               Authorization: `Bearer ${tokenValue.value || import.meta.env.VITE_API_TOKEN}`
@@ -202,7 +206,9 @@ export default {
           })
         } catch (error) {
           messages.value[messages.value.length - 1].content = '连接失败'
+        } finally {
           inProcesing.value = false
+          requestLoading.value = false
         }
         return
       }
@@ -299,7 +305,7 @@ export default {
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue) || AIModelOptions[0]
       tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
     }
 
@@ -412,8 +418,8 @@ export default {
 
     // 对话角色配置
     const roles: Record<string, BubbleRoleConfig> = {
-      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '90%' },
-      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%' }
+      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer },
+      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer }
     }
 
     return {
@@ -439,7 +445,8 @@ export default {
       handlePromptItemClick,
       welcomeIcon,
       roles,
-      MarkdownRenderer
+      MarkdownRenderer,
+      requestLoading
     }
   }
 }
@@ -468,6 +475,7 @@ export default {
 .tiny-container {
   top: var(--base-top-panel-height) !important;
   container-type: inline-size;
+  font-size: 14px;
 
   :deep(button.icon-btn) {
     background-color: rgba(0, 0, 0, 0);
@@ -485,11 +493,14 @@ export default {
   }
 
   .tiny-sender__container .tiny-textarea__inner {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .tr-bubble-list {
     flex: 1;
+    .tr-bubble {
+      word-break: break-word;
+    }
   }
 
   .robot-welcome > div {

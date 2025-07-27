@@ -1,17 +1,13 @@
 import { toRaw } from 'vue'
 import useMcpServer from './useMcp'
-import type { BubbleMessageProps } from '@opentiny/tiny-robot'
+import type { LLMMessage, RobotMessage } from './types'
 import type { LLMRequestBody, LLMResponse, ReponseToolCall, RequestOptions, RequestTool } from './types'
 
 let requestOptions: RequestOptions = {}
 
-const fetchLLM = async (
-  messages: BubbleMessageProps[],
-  tools: RequestTool[],
-  options: RequestOptions = requestOptions
-) => {
+const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {
   const bodyObj: LLMRequestBody = {
-    model: options?.model || 'deepseek-ai/DeepSeek-V3',
+    model: options?.model || 'deepseek-chat',
     stream: false,
     messages: toRaw(messages)
   }
@@ -25,7 +21,7 @@ const fetchLLM = async (
       ...options?.headers
     },
     body: JSON.stringify(bodyObj)
-  }).then((res) => res.json())
+  })
 }
 
 const parseArgs = (args: string) => {
@@ -39,18 +35,18 @@ const parseArgs = (args: string) => {
 const handleToolCall = async (
   res: LLMResponse,
   tools: RequestTool[],
-  messages: BubbleMessageProps[],
-  contextMessages?: BubbleMessageProps[]
+  messages: RobotMessage[],
+  contextMessages?: RobotMessage[]
 ) => {
   if (messages.length < 1) {
     return
   }
   const currentMessage = messages.at(-1)!
-  if (!currentMessage.messages) {
-    currentMessage.messages = []
+  if (typeof currentMessage.content === 'string' || !currentMessage.content) {
+    currentMessage.content = []
   }
   if (res.choices[0].message.content) {
-    currentMessage.messages.push({
+    currentMessage.content.push({
       type: 'markdown',
       content: res.choices[0].message.content
     })
@@ -58,7 +54,7 @@ const handleToolCall = async (
   const tool_calls: ReponseToolCall[] | undefined = res.choices[0].message.tool_calls
   if (tool_calls && tool_calls.length) {
     const historyMessages = contextMessages?.length ? contextMessages : toRaw(messages.slice(0, -1))
-    const toolMessages = [...historyMessages, res.choices[0].message] as BubbleMessageProps[]
+    const toolMessages: LLMMessage[] = [...historyMessages, res.choices[0].message] as LLMMessage[]
     for (const tool of tool_calls) {
       const { name, arguments: args } = tool.function
       const parsedArgs = parseArgs(args)
@@ -66,12 +62,12 @@ const handleToolCall = async (
         type: 'tool',
         name,
         status: 'running',
-        params: {
+        content: {
           params: parsedArgs
         },
         formatPretty: true
       }
-      currentMessage.messages.push(currentToolMessage)
+      currentMessage.content.push(currentToolMessage)
       const toolCallResult = await useMcpServer().callTool(name, parsedArgs)
       toolMessages.push({
         type: 'text',
@@ -80,19 +76,19 @@ const handleToolCall = async (
         tool_call_id: tool.id
       })
 
-      currentMessage.messages.at(-1).status = 'success'
-      currentMessage.messages.at(-1).params = {
+      currentMessage.content.at(-1)!.status = 'success'
+      currentMessage.content.at(-1)!.content = {
         params: parsedArgs,
         result: toolCallResult.content
       }
     }
-    const newResp = await fetchLLM(toolMessages, tools)
+    const newResp = await fetchLLM(toolMessages, tools).then((res) => res.json())
     const hasToolCall = newResp.choices[0].message.tool_calls?.length > 0
     if (hasToolCall) {
       await handleToolCall(newResp, tools, messages, toolMessages)
     } else {
       if (newResp.choices[0].message.content) {
-        currentMessage.messages.push({
+        currentMessage.content.push({
           type: 'markdown',
           content: newResp.choices[0].message.content
         })
@@ -101,13 +97,13 @@ const handleToolCall = async (
   }
 }
 
-export const sendMcpRequest = async (messages: BubbleMessageProps[], options: RequestOptions = {}) => {
+export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOptions = {}) => {
   if (messages.length < 1) {
     return
   }
   const tools = await useMcpServer().getLLMTools()
   requestOptions = options
-  const res = await fetchLLM(messages.slice(0, -1), tools, options)
+  const res = await fetchLLM(messages.slice(0, -1), tools, options).then((res) => res.json())
   const hasToolCall = res.choices[0].message.tool_calls?.length > 0
   if (hasToolCall) {
     await handleToolCall(res, tools, messages)

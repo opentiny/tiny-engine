@@ -1,4 +1,4 @@
-import type { BubbleMessageProps } from '@opentiny/tiny-robot'
+import type { BubbleContentItem } from '@opentiny/tiny-robot'
 
 export interface RequestOptions {
   url?: string
@@ -26,10 +26,22 @@ export interface RequestTool {
   }
 }
 
+export interface LLMMessage {
+  role: string
+  content: string
+  [prop: string]: unknown
+}
+
+export interface RobotMessage {
+  role: string
+  content: string | BubbleContentItem[]
+  [prop: string]: unknown
+}
+
 export interface LLMRequestBody {
   model?: string
   stream: boolean
-  messages: BubbleMessageProps[]
+  messages: LLMMessage[]
   tools?: RequestTool[]
 }
 
