@@ -14,17 +14,19 @@ import { defineConfig } from 'vite'
 import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
   resolve: {},
   build: {
+    sourcemap: true,
     lib: {
-      entry: path.resolve(__dirname, './index.js'),
-      name: 'plugin-page',
-      fileName: () => 'index.js',
+      entry: path.resolve(__dirname, './index.ts'),
+      name: 'plugin-version-control',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {
