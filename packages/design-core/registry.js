@@ -40,6 +40,7 @@ import {
   Block,
   Datasource,
   Robot,
+  VersionControl,
   Props,
   Events,
   Styles,
@@ -159,7 +160,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.versioncontrol'] === false ? null : VersionControl
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,

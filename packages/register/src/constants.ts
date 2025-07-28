@@ -76,5 +76,7 @@ export const META_APP = {
   Container: 'engine.canvas.container',
   // 画布
   Canvas: 'engine.canvas',
-  Tutorial: 'engine.plugins.tutorial'
+  Tutorial: 'engine.plugins.tutorial',
+  // 版本管理
+  VersionControl: 'engine.plugins.versioncontrol'
 }
