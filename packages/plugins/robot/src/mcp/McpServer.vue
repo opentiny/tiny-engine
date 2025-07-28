@@ -1,11 +1,9 @@
 <template>
-  <div>
-    <div :class="['button-wrapper', activeCount > 0 ? 'active' : '']" @click="handleVisibleToggle">
-      <div class="button">
-        <icon-plugin class="plugin-common_icon" />
-        <span class="plugin-common_text">MCP</span>
-        <span class="plugin-active_count" v-if="activeCount">{{ activeCount }}</span>
-      </div>
+  <div :class="['button-wrapper', activeCount > 0 ? 'active' : '']" @click="handleVisibleToggle">
+    <div class="button">
+      <icon-plugin class="plugin-common_icon" />
+      <span class="plugin-common_text">MCP</span>
+      <span class="plugin-active_count" v-if="activeCount">{{ activeCount }}</span>
     </div>
   </div>
   <mcp-server-picker
@@ -104,8 +102,8 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 32px;
+  width: 80px;
+  height: 28px;
   border: 1px solid rgb(194, 194, 194);
   border-radius: 999px;
   cursor: pointer;

@@ -388,18 +388,12 @@ export default {
       {
         label: '页面搭建场景',
         description: '如何生成表单嵌进我的网站？',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨'),
-        badge: 'NEW'
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨')
       },
       {
         label: '学习/知识型场景',
-        description: '有什么想了解的吗？可以是“Vue3 和 React 的区别”！',
+        description: 'Vue3 和 React 有什么区别？',
         icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🤔')
-      },
-      {
-        label: '创意生成场景',
-        description: '想写段文案、起个名字，还是来点灵感？',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '💡')
       }
     ]
 
@@ -473,9 +467,12 @@ export default {
 }
 
 .tiny-container {
-  top: var(--base-top-panel-height) !important;
   container-type: inline-size;
-  font-size: 14px;
+
+  &.tr-container.tr-container {
+    top: var(--base-top-panel-height);
+    --tr-container-width: 400px;
+  }
 
   :deep(button.icon-btn) {
     background-color: rgba(0, 0, 0, 0);
@@ -483,17 +480,6 @@ export default {
 
   :deep(.robot-setting button) {
     margin-left: 10px;
-  }
-
-  .tr-bubble__content-messages {
-    font-size: 14px;
-    .tr-bubble__step-tool {
-      word-break: break-all !important;
-    }
-  }
-
-  .tiny-sender__container .tiny-textarea__inner {
-    font-size: 14px;
   }
 
   .tr-bubble-list {
