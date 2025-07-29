@@ -14,6 +14,7 @@ interface IPage {
   id: number
   name: string
   parentId: number | string
+  isPage: boolean
   page_content: {
     [key: string]: any
     componentName: string
@@ -76,7 +77,7 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   const history = searchParams.get('history')
 
   if (pageId) {
-    let ancestors = (await getPageRecursively(pageId)).reverse()
+    let ancestors = (await getPageRecursively(pageId)).reverse().filter((item) => item.isPage)
     let currentPage = await getPageById(pageId)
     if (history) {
       const historyList: IPage[] = await fetchPageHistory(pageId)
