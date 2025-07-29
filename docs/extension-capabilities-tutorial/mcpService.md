@@ -13,6 +13,7 @@ MCP (Model Context Protocol) 服务是 tiny-engine 智能化的核心扩展能�
 ```typescript
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { ToolItem } from '@opentiny/tiny-engine-common'
+import { z } from 'zod'
 
 // 获取 MCP 服务实例
 const mcpService = getMetaApi(META_SERVICE.McpService)

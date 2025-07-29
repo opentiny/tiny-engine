@@ -1,8 +1,5 @@
 import { z } from 'zod'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
-import { utils } from '@opentiny/tiny-engine-utils'
-
-const { validateParams } = utils
 
 const inputSchema = z.object({
   name: z.string().describe('The name of the page. The name must be unique and Capitalize the first letter.'),
@@ -24,22 +21,6 @@ export const addPage = {
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { name, route, parentId } = args
-
-    const validateResult = validateParams(args, {
-      name: {
-        required: true,
-        message: 'Name is required'
-      },
-      route: {
-        required: true,
-        message: 'Route is required'
-      }
-    })
-
-    if (!validateResult.isValid) {
-      return validateResult.error
-    }
-
     const { createNewPage } = usePage()
     const { success, data } = await createNewPage({ name, route, parentId })
 

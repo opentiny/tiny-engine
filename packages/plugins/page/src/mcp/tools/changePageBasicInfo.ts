@@ -23,18 +23,6 @@ export const changePageBasicInfo = {
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id, name, route, parentId } = args
 
-    if (!id) {
-      throw new Error('Id is required')
-    }
-
-    if (!name) {
-      throw new Error('Name is required')
-    }
-
-    if (!route) {
-      throw new Error('Route is required')
-    }
-
     const { updatePageById } = usePage()
     const { success, error } = await updatePageById(id, { id, name, route, parentId })
 

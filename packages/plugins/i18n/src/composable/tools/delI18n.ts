@@ -1,6 +1,5 @@
 import { z } from 'zod'
 import useTranslate from '../useTranslate'
-import { validateParams, commonValidationRules } from './validateParams'
 import { createOutputSchema, createSuccessResponse, createErrorResponse } from './commonSchema'
 
 // 定义为普通对象，用于传递给 inputSchema 字段
@@ -32,17 +31,6 @@ export const delI18n = {
   },
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { key } = args
-
-    // 使用通用验证方法进行参数验证
-    const validationResult = validateParams(args, {
-      key: commonValidationRules.requiredKey
-    })
-
-    if (!validationResult.isValid) {
-      // 直接返回验证错误，已经符合新的结构化格式
-      return validationResult.error!
-    }
-
     const { getLangs, removeI18n } = useTranslate()
     const langs = getLangs() as Record<string, any>
 

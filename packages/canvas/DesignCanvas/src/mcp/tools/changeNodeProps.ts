@@ -1,8 +1,5 @@
 import { z } from 'zod'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { utils } from '@opentiny/tiny-engine-utils'
-
-const { validateParams } = utils
 
 const inputSchema = z.object({
   id: z.string().describe('The id of the node to change the props of.'),
@@ -30,17 +27,6 @@ export const changeNodeProps = {
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id, overwrite = false } = args
     let props = args.props
-
-    const validateResult = validateParams(args, {
-      id: {
-        required: true,
-        message: 'Id is required'
-      }
-    })
-
-    if (!validateResult.isValid) {
-      return validateResult.error
-    }
 
     if (!props || typeof props !== 'object') {
       props = {}

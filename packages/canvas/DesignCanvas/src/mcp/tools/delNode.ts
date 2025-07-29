@@ -1,8 +1,5 @@
 import { z } from 'zod'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { utils } from '@opentiny/tiny-engine-utils'
-
-const { validateParams } = utils
 
 const inputSchema = z.object({
   id: z.string().describe('The id of the node to delete.')
@@ -23,18 +20,6 @@ export const delNode = {
   },
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
-
-    const validateResult = validateParams(args, {
-      id: {
-        required: true,
-        message: 'Id is required'
-      }
-    })
-
-    if (!validateResult.isValid) {
-      return validateResult.error
-    }
-
     const node = useCanvas().getNodeById(id)
 
     if (!node) {

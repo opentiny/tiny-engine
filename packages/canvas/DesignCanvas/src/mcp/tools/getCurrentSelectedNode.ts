@@ -22,11 +22,12 @@ export const getCurrentSelectedNode = {
       return {
         content: [
           {
-            type: 'json',
-            value: {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
               status: 'error',
               message: 'No node is currently selected'
-            }
+            })
           }
         ]
       }
