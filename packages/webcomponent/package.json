@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-webcomponent-core",
-  "version": "2.7.1",
+  "version": "2.7.2",
   "publishConfig": {
     "access": "public"
   },
