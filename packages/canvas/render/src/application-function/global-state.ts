@@ -22,7 +22,7 @@ export function useGlobalState() {
           Object.entries(getters).forEach(([key, getterDef]: [string, any]) => {
             try {
               if (getterDef?.type === 'JSFunction' && getterDef.value) {
-                const getterFn = new Function(`return (${getterDef.value})`)() as Function
+                const getterFn = new Function(`return (${getterDef.value})`)()
                 const computedGetter = computed(() => {
                   try {
                     return getterFn.call(store, reactiveState)
