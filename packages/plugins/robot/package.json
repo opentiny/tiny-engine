@@ -29,7 +29,7 @@
     "@opentiny/tiny-robot": "0.3.0-alpha.0",
     "@opentiny/tiny-robot-kit": "0.3.0-alpha.0",
     "@opentiny/tiny-robot-svgs": "0.3.0-alpha.0",
-    "@opentiny/tiny-schema-renderer": "1.0.0-beta.5",
+    "@opentiny/tiny-schema-renderer": "1.0.0-beta.6",
     "fast-json-patch": "~3.1.1"
   },
   "devDependencies": {
