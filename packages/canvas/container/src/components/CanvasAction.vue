@@ -423,26 +423,41 @@ export default {
       // 标签宽度和工具操作条宽度之和加上间距
       const fullRectWidth = labelWidth + optionWidth + OPTION_SPACE
 
+      // 底部是否有足够的距离防止标签
+      const isBottomHasSpaceToLabel = canvasHeight - top - height >= LABEL_HEIGHT
+      const isTopHasSpaceToLabel = top >= LABEL_HEIGHT
       // 是否 将label 标签放置到底部，判断 top 距离
-      const isLabelAtBottom = top < LABEL_HEIGHT
+      const isLabelAtBottom = top < LABEL_HEIGHT && isBottomHasSpaceToLabel
       const labelAlign = new Align({
         alignLeft: true,
         horizontalValue: 0,
         alignTop: !isLabelAtBottom,
-        verticalValue: -LABEL_HEIGHT
+        // 1. 如果放置在底部，说明底部有足够的距离放置标签
+        // 2. 如果放置在顶部，且 top >= LABEL_HEIGHT，则顶部距离为 -LABEL_HEIGHT
+        // 3. 如果放置在顶部，且 top < LABEL_HEIGHT，则顶部距离为 0
+        verticalValue: isLabelAtBottom ? -LABEL_HEIGHT : isTopHasSpaceToLabel ? -LABEL_HEIGHT : 0
       })
 
       if (!doc) {
         return {}
       }
 
+      // 顶部是否有足够的距离放置操作栏
+      const isTopHasSpaceToOption = top >= OPTION_BAR_HEIGHT
+      // 底部是否有足够的距离放置操作栏
+      const isBottomHasSpaceToOption = canvasHeight - top - height >= OPTION_BAR_HEIGHT
       // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
-      const isOptionAtBottom = canvasHeight - top - height >= OPTION_BAR_HEIGHT
+      const isOptionAtBottom = isBottomHasSpaceToOption || !isTopHasSpaceToOption
+
       const optionAlign = new Align({
         alignLeft: false,
         horizontalValue: 0,
         alignTop: !isOptionAtBottom,
-        verticalValue: -OPTION_BAR_HEIGHT
+        // 1. 放置在底部
+        // 1.1 底部是如果有足够的空间放置操作栏，则顶部距离为 -OPTION_BAR_HEIGHT
+        // 1.2 底部没有足够的空间放置操作栏，则顶部距离为 0
+        // 2. 放置在顶部，顶部距离为 -OPTION_BAR_HEIGHT
+        verticalValue: isOptionAtBottom ? (isBottomHasSpaceToOption ? -OPTION_BAR_HEIGHT : 0) : -OPTION_BAR_HEIGHT
       })
 
       const scrollBarWidth = doc.documentElement.scrollHeight > doc.documentElement.clientHeight ? SCROLL_BAR_WIDTH : 0
