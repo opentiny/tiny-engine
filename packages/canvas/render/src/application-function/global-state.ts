@@ -12,12 +12,12 @@ export function useGlobalState() {
 
   watchEffect(() => {
     reset(stores)
-    
+
     globalState.value.forEach(({ id, state = {}, getters = {} }) => {
       try {
         const reactiveState = reactive({ ...state })
         const store = reactive({ ...reactiveState })
-        
+
         if (getters && typeof getters === 'object') {
           Object.entries(getters).forEach(([key, getterDef]: [string, any]) => {
             try {
@@ -27,24 +27,25 @@ export function useGlobalState() {
                   try {
                     return getterFn.call(store, reactiveState)
                   } catch (error) {
-                    console.error(`[useGlobalState] Error in getter "${key}" (store ${id}):`, error)
                     return null
                   }
                 })
 
                 Object.defineProperty(store, key, {
                   get: () => computedGetter.value,
-                  enumerable: true,
+                  enumerable: true
                 })
               }
             } catch (parseError) {
+              // eslint-disable-next-line no-console
               console.error(`[useGlobalState] Invalid getter "${key}" in store ${id}:`, parseError)
             }
           })
         }
-        
+
         stores[id] = store
       } catch (storeError) {
+        // eslint-disable-next-line no-console
         console.error(`[useGlobalState] Failed to create store "${id}":`, storeError)
       }
     })
