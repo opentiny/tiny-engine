@@ -447,7 +447,7 @@ export default {
         return hasBottomSpace || !hasTopSpace
       } else {
         // Label策略：顶部没空间且底部有空间才放底部
-        return top < elementHeight && hasBottomSpace
+        return !hasTopSpace && hasBottomSpace
       }
     }
 
