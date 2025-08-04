@@ -471,11 +471,11 @@ export default {
 
       let verticalValue
       if (bottomFirst) {
-        // Option策略：底部优先，根据空间决定偏移
-        verticalValue = isAtBottom ? (hasBottomSpace ? -elementHeight : 0) : -elementHeight
+        // Option策略：不在底部 OR 底部有空间时偏移
+        verticalValue = !isAtBottom || hasBottomSpace ? -elementHeight : 0
       } else {
-        // Label策略：顶部优先，底部时直接偏移
-        verticalValue = isAtBottom ? -elementHeight : hasTopSpace ? -elementHeight : 0
+        // Label策略：在底部 OR 顶部有空间时偏移
+        verticalValue = isAtBottom || hasTopSpace ? -elementHeight : 0
       }
 
       return { alignTop, verticalValue }
