@@ -417,47 +417,134 @@ export default {
       }
     }
 
+    /**
+     * 检查元素在画布中的可用空间
+     * @param {number} top - 选中元素顶部位置
+     * @param {number} selectedHeight - 选中元素高度
+     * @param {number} canvasHeight - 画布高度
+     * @param {number} elementHeight - 要放置元素的高度
+     * @returns {{hasTopSpace: boolean, hasBottomSpace: boolean}}
+     */
+    const checkElementSpace = (top, selectedHeight, canvasHeight, elementHeight) => {
+      return {
+        hasTopSpace: top >= elementHeight,
+        hasBottomSpace: canvasHeight - top - selectedHeight >= elementHeight
+      }
+    }
+
+    /**
+     * 根据策略决定元素应该放置在顶部还是底部
+     * @param {number} top - 选中元素顶部位置
+     * @param {number} elementHeight - 要放置元素的高度
+     * @param {boolean} hasTopSpace - 顶部是否有足够空间
+     * @param {boolean} hasBottomSpace - 底部是否有足够空间
+     * @param {string} strategy - 放置策略 ('topFirst' | 'bottomFirst')
+     * @returns {boolean} 是否放置在底部
+     */
+    const determineElementPosition = (top, elementHeight, hasTopSpace, hasBottomSpace, strategy = 'topFirst') => {
+      if (strategy === 'bottomFirst') {
+        // Option策略：优先底部，或顶部没空间时放底部
+        return hasBottomSpace || !hasTopSpace
+      } else {
+        // Label策略：顶部没空间且底部有空间才放底部
+        return top < elementHeight && hasBottomSpace
+      }
+    }
+
+    /**
+     * 通用的垂直对齐计算函数
+     * @param {boolean} isAtBottom - 是否放置在底部
+     * @param {number} elementHeight - 元素高度
+     * @param {boolean} hasTopSpace - 顶部是否有足够空间
+     * @param {boolean} hasBottomSpace - 底部是否有足够空间
+     * @param {boolean} bottomFirst - 是否底部优先策略（true: Option策略, false: Label策略）
+     * @returns {{alignTop: boolean, verticalValue: number}}
+     */
+    const calculateVerticalAlignment = (
+      isAtBottom,
+      elementHeight,
+      hasTopSpace,
+      hasBottomSpace,
+      bottomFirst = false
+    ) => {
+      const alignTop = !isAtBottom
+
+      let verticalValue
+      if (bottomFirst) {
+        // Option策略：底部优先，根据空间决定偏移
+        verticalValue = isAtBottom ? (hasBottomSpace ? -elementHeight : 0) : -elementHeight
+      } else {
+        // Label策略：顶部优先，底部时直接偏移
+        verticalValue = isAtBottom ? -elementHeight : hasTopSpace ? -elementHeight : 0
+      }
+
+      return { alignTop, verticalValue }
+    }
+
+    /**
+     * 一站式元素对齐计算函数（组合了空间检查、位置决策、对齐计算）
+     * @param {number} top - 选中元素顶部位置
+     * @param {number} selectedHeight - 选中元素高度
+     * @param {number} canvasHeight - 画布高度
+     * @param {number} elementHeight - 要放置元素的高度
+     * @param {string} strategy - 放置策略 ('topFirst' | 'bottomFirst')
+     * @returns {{alignTop: boolean, verticalValue: number}}
+     */
+    const calculateElementAlignment = (top, selectedHeight, canvasHeight, elementHeight, strategy = 'topFirst') => {
+      const spaceInfo = checkElementSpace(top, selectedHeight, canvasHeight, elementHeight)
+      const isAtBottom = determineElementPosition(
+        top,
+        elementHeight,
+        spaceInfo.hasTopSpace,
+        spaceInfo.hasBottomSpace,
+        strategy
+      )
+      return calculateVerticalAlignment(
+        isAtBottom,
+        elementHeight,
+        spaceInfo.hasTopSpace,
+        spaceInfo.hasBottomSpace,
+        strategy === 'bottomFirst'
+      )
+    }
+
     const getStyleValues = (selectState, canvasSize, labelWidth, optionWidth) => {
       const { left, top, width, height, doc } = selectState
       const { width: canvasWidth, height: canvasHeight } = canvasSize
       // 标签宽度和工具操作条宽度之和加上间距
       const fullRectWidth = labelWidth + optionWidth + OPTION_SPACE
+      const labelAlignment = calculateElementAlignment(
+        top,
+        height,
+        canvasHeight,
+        LABEL_HEIGHT,
+        'topFirst' // Label策略：顶部优先
+      )
 
-      // 底部是否有足够的距离防止标签
-      const isBottomHasSpaceToLabel = canvasHeight - top - height >= LABEL_HEIGHT
-      const isTopHasSpaceToLabel = top >= LABEL_HEIGHT
-      // 是否 将label 标签放置到底部，判断 top 距离
-      const isLabelAtBottom = top < LABEL_HEIGHT && isBottomHasSpaceToLabel
       const labelAlign = new Align({
         alignLeft: true,
         horizontalValue: 0,
-        alignTop: !isLabelAtBottom,
-        // 1. 如果放置在底部，说明底部有足够的距离放置标签
-        // 2. 如果放置在顶部，且 top >= LABEL_HEIGHT，则顶部距离为 -LABEL_HEIGHT
-        // 3. 如果放置在顶部，且 top < LABEL_HEIGHT，则顶部距离为 0
-        verticalValue: isLabelAtBottom ? -LABEL_HEIGHT : isTopHasSpaceToLabel ? -LABEL_HEIGHT : 0
+        alignTop: labelAlignment.alignTop,
+        verticalValue: labelAlignment.verticalValue
       })
 
       if (!doc) {
         return {}
       }
 
-      // 顶部是否有足够的距离放置操作栏
-      const isTopHasSpaceToOption = top >= OPTION_BAR_HEIGHT
-      // 底部是否有足够的距离放置操作栏
-      const isBottomHasSpaceToOption = canvasHeight - top - height >= OPTION_BAR_HEIGHT
-      // 是否将操作栏放置到底部，判断当前选中组件底部与页面底部的距离。
-      const isOptionAtBottom = isBottomHasSpaceToOption || !isTopHasSpaceToOption
+      const optionAlignment = calculateElementAlignment(
+        top,
+        height,
+        canvasHeight,
+        OPTION_BAR_HEIGHT,
+        'bottomFirst' // Option策略：底部优先
+      )
 
       const optionAlign = new Align({
         alignLeft: false,
         horizontalValue: 0,
-        alignTop: !isOptionAtBottom,
-        // 1. 放置在底部
-        // 1.1 底部是如果有足够的空间放置操作栏，则顶部距离为 -OPTION_BAR_HEIGHT
-        // 1.2 底部没有足够的空间放置操作栏，则顶部距离为 0
-        // 2. 放置在顶部，顶部距离为 -OPTION_BAR_HEIGHT
-        verticalValue: isOptionAtBottom ? (isBottomHasSpaceToOption ? -OPTION_BAR_HEIGHT : 0) : -OPTION_BAR_HEIGHT
+        alignTop: optionAlignment.alignTop,
+        verticalValue: optionAlignment.verticalValue
       })
 
       const scrollBarWidth = doc.documentElement.scrollHeight > doc.documentElement.clientHeight ? SCROLL_BAR_WIDTH : 0
@@ -477,7 +564,7 @@ export default {
           optionAlign.align(positions.LEFT)
         }
 
-        if (isLabelAtBottom === isOptionAtBottom) {
+        if (labelAlignment.alignTop === optionAlignment.alignTop) {
           // 标签框和工具操作框都在顶部或者都在底部
 
           if (left + fullRectWidth < canvasWidth) {
