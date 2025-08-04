@@ -441,7 +441,7 @@ export default {
      * @param {string} strategy - 放置策略 ('topFirst' | 'bottomFirst')
      * @returns {boolean} 是否放置在底部
      */
-    const determineElementPosition = (top, elementHeight, hasTopSpace, hasBottomSpace, strategy = 'topFirst') => {
+    const determineElementPosition = (hasTopSpace, hasBottomSpace, strategy = 'topFirst') => {
       if (strategy === 'bottomFirst') {
         // Option策略：优先底部，或顶部没空间时放底部
         return hasBottomSpace || !hasTopSpace
@@ -492,13 +492,7 @@ export default {
      */
     const calculateElementAlignment = (top, selectedHeight, canvasHeight, elementHeight, strategy = 'topFirst') => {
       const spaceInfo = checkElementSpace(top, selectedHeight, canvasHeight, elementHeight)
-      const isAtBottom = determineElementPosition(
-        top,
-        elementHeight,
-        spaceInfo.hasTopSpace,
-        spaceInfo.hasBottomSpace,
-        strategy
-      )
+      const isAtBottom = determineElementPosition(spaceInfo.hasTopSpace, spaceInfo.hasBottomSpace, strategy)
       return calculateVerticalAlignment(
         isAtBottom,
         elementHeight,
