@@ -46,7 +46,7 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-configurator": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
-    "@opentiny/tiny-engine-layout": "workspace:~",
+    "@opentiny/tiny-engine-layout": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-plugin-block": "workspace:*",
     "@opentiny/tiny-engine-plugin-bridge": "workspace:*",
