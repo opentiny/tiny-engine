@@ -1,11 +1,8 @@
 import { reactive } from 'vue'
-import { transformSync } from '@babel/core'
-import vueJsx from '@vue/babel-plugin-jsx'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
-import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { fetchMetaData, fetchAppSchema, fetchBlockSchema, getPageById, getBlockById, fetchPageHistory } from './http'
-import { PanelType } from '../constant'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import srcFiles from './srcFiles'
 
@@ -17,6 +14,7 @@ interface IPage {
   id: number
   name: string
   parentId: number | string
+  isPage: boolean
   page_content: {
     [key: string]: any
     componentName: string
@@ -27,41 +25,24 @@ export const previewState: {
   currentPage: IPage | null
   ancestors: IPage[]
   importMap: Record<string, string>
+  appData: Record<string, any> | null
 } = reactive({
   currentPage: null,
   ancestors: [],
-  importMap: {}
+  importMap: {},
+  appData: null
 })
 
-interface IDeps {
-  scripts: Record<string, string>
-  styles: string[]
-}
-
-const updateUrl = (params: IPage, deps: IDeps) => {
+const updateUrl = (params: IPage) => {
   const searchParams = new URLSearchParams(location.search)
   const pageId = searchParams.get('pageid')
   const blockId = searchParams.get('blockid')
-  const scripts = searchParams.get('scripts')
-  const styles = searchParams.get('styles')
-  let shouldUpdate = false
-
-  if (deps.scripts && JSON.stringify(deps.scripts) !== scripts) {
-    searchParams.set('scripts', JSON.stringify(deps.scripts))
-    shouldUpdate = true
-  }
-
-  if (deps.styles && JSON.stringify(deps.styles) !== styles) {
-    searchParams.set('styles', JSON.stringify(deps.styles))
-    shouldUpdate = true
-  }
 
   if (
-    !shouldUpdate &&
     // 如果当前页面是区块，且没有pageid，且blockid与当前区块id相同，则不更新url
-    ((params.page_content.componentName === COMPONENT_NAME.Block && !pageId && Number(blockId) === params.id) ||
-      // 如果当前页面是页面，且没有blockid，且pageid与当前页面id相同，则不更新url
-      (params.page_content.componentName === COMPONENT_NAME.Page && !blockId && Number(pageId) === params.id))
+    (params.page_content.componentName === COMPONENT_NAME.Block && !pageId && Number(blockId) === params.id) ||
+    // 如果当前页面是页面，且没有blockid，且pageid与当前页面id相同，则不更新url
+    (params.page_content.componentName === COMPONENT_NAME.Page && !blockId && Number(pageId) === params.id)
   ) {
     return
   }
@@ -96,7 +77,12 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   const history = searchParams.get('history')
 
   if (pageId) {
-    let ancestors = (await getPageRecursively(pageId)).reverse()
+    let ancestors = (await getPageRecursively(pageId)).reverse().filter((item) => item.isPage)
+    // 避免祖先页面第一个为文件夹，导致没有 ROOT_ID，导致设置 Main.vue 失败
+    if (ancestors.length && ancestors[0]?.parentId !== ROOT_ID) {
+      ancestors[0].parentId = ROOT_ID
+    }
+
     let currentPage = await getPageById(pageId)
     if (history) {
       const historyList: IPage[] = await fetchPageHistory(pageId)
@@ -219,10 +205,92 @@ const getPageAncestryFiles = (
     }
   }
 
+  const hasMainPage = familyPages.some((item) => item.panelName === 'Main.vue' && item.index)
+
+  if (!hasMainPage && familyPages.length) {
+    familyPages[0].index = true
+    familyPages[0].panelName = 'Main.vue'
+  }
+
   return familyPages
 }
 
-const getBasicData = async (basicFilesPromise: Promise<any>) => {
+const getAppData = async () => {
+  if (previewState.appData) {
+    return previewState.appData
+  }
+
+  const searchParams = new URLSearchParams(location.search)
+  const appData = await fetchAppSchema(searchParams.get('id'))
+  previewState.appData = appData
+
+  return appData
+}
+
+const addScriptAndStyle = (scripts: Map<string, string>, styles: Set<string>, pkg: Record<string, string>) => {
+  if (pkg.package && pkg.script) {
+    scripts.set(pkg.package, pkg.script)
+  }
+
+  if (Array.isArray(pkg.css)) {
+    pkg.css.forEach((style: string) => {
+      if (style) {
+        styles.add(style)
+      }
+    })
+  } else if (pkg.css) {
+    styles.add(pkg.css)
+  }
+}
+
+const getMaterialDeps = async () => {
+  const bundleUrls = getMergeMeta('engine.config')?.material || []
+  const materials = await Promise.allSettled(
+    bundleUrls.map((url: any) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
+  )
+
+  const scripts = new Map<string, string>()
+  const styles = new Set<string>()
+  const appData = await getAppData()
+
+  if (Array.isArray(appData.utils)) {
+    appData.utils
+      .filter((item: Record<string, any>) => item.type === 'npm')
+      .forEach((item: Record<string, any>) => {
+        addScriptAndStyle(scripts, styles, {
+          package: item.content.package,
+          script: item.content.cdnLink,
+          css: item.content.cdnLink
+        })
+      })
+  }
+
+  materials
+    .filter((item) => item.status === 'fulfilled' && item.value.materials)
+    .map((item: any) => item.value.materials)
+    .forEach((item) => {
+      const { packages, components } = item
+
+      if (Array.isArray(packages)) {
+        packages.forEach((pkg) => {
+          addScriptAndStyle(scripts, styles, pkg)
+        })
+      }
+
+      if (Array.isArray(components)) {
+        components.forEach((component) => {
+          addScriptAndStyle(scripts, styles, component.npm)
+        })
+      }
+    })
+
+  return {
+    scripts: Object.fromEntries(scripts),
+    styles: Array.from(styles)
+  }
+}
+
+const getBasicData = async (basicFilesPromise: Promise<any>, scripts: Record<string, string>) => {
   const searchParams = new URLSearchParams(location.search)
   const pageId = searchParams.get('pageid')
   const blockId = searchParams.get('blockid')
@@ -239,27 +307,14 @@ const getBasicData = async (basicFilesPromise: Promise<any>) => {
     metaDataParams.history = searchParams.get('history') || ''
   }
 
-  const promises = [
-    fetchAppSchema(searchParams.get('id')),
-    fetchMetaData(metaDataParams),
-    getImportMap(JSON.parse(searchParams.get('scripts') || '{}')),
-    basicFilesPromise
-  ]
+  const promises = [getAppData(), fetchMetaData(metaDataParams), getImportMap(scripts), basicFilesPromise]
   const [appData, metaData, importMapData] = await Promise.all(promises)
 
-  return { appData, metaData, importMapData }
-}
-
-// [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
-const langReg = /lang="jsx"/
-const fixScriptLang = (generatedCode: IPanelType) => {
-  const fixedCode = { ...generatedCode }
-
-  if (generatedCode.panelType === PanelType.VUE) {
-    fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
+  return {
+    appData,
+    metaData,
+    importMapData
   }
-
-  return fixedCode
 }
 
 interface IMetaDataParams {
@@ -274,9 +329,10 @@ interface IMetaDataParams {
 interface IUsePreviewData {
   setFiles: (files: Record<string, string>, mainFileName?: string) => Promise<void>
   store: any
+  setImportMap: (importMap: Record<string, string>) => void
 }
 
-export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
+export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewData) => {
   const basicFiles = setFiles(srcFiles, 'src/Main.vue')
 
   const assignFiles = ({ panelName, panelValue, index }: IPanelType, newFiles: Record<string, string>) => {
@@ -284,39 +340,24 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
       panelName = 'Main.vue'
     }
 
-    const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-      if (!p1) {
-        // eslint-disable-next-line no-useless-escape
-        return '<script setup></script>'
-      }
-
-      const transformedScript = transformSync(p1, {
-        babelrc: false,
-        plugins: [[vueJsx, { pragma: 'h' }]],
-        sourceMaps: false,
-        configFile: false
-      })
-
-      const res = `<script setup>${transformedScript?.code || ''}`
-      // eslint-disable-next-line no-useless-escape
-      const endTag = '</script>'
-
-      return `${res}${endTag}`
-    })
-
-    newFiles[panelName] = newPanelValue
+    newFiles[panelName] = panelValue
   }
 
   // 根据新的参数更新预览
-  const updatePreview = async (params: { currentPage: IPage; ancestors: IPage[] }) => {
-    const { appData, metaData, importMapData } = await getBasicData(basicFiles)
+  const updatePreview = async (params: {
+    currentPage: IPage
+    ancestors: IPage[]
+    scripts: Record<string, string>
+    styles: string[]
+  }) => {
+    const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
 
     previewState.currentPage = params.currentPage
     previewState.ancestors = params.ancestors
 
     // importMap 发生变化才更新 importMap
     if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
-      store.setImportMap(importMapData)
+      setImportMap(importMapData)
       previewState.importMap = importMapData
     }
 
@@ -351,17 +392,16 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     ]
 
     const newFiles = store.getFiles()
-    const searchParams = new URLSearchParams(location.search)
-    const appJsCode = processAppJsCode(newFiles['app.js'], JSON.parse(searchParams.get('styles') || '[]'))
+    const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
 
     newFiles['app.js'] = appJsCode
 
-    pageCode.map(fixScriptLang).forEach((item) => assignFiles(item, newFiles))
+    pageCode.forEach((item) => assignFiles(item, newFiles))
 
     const metaFiles = generateMetaFiles(metaData)
     Object.assign(newFiles, metaFiles)
 
-    setFiles(newFiles)
+    setFiles(newFiles, 'App.vue')
   }
 
   const loadInitialData = async () => {
@@ -369,8 +409,10 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     previewState.currentPage = currentPage
     previewState.ancestors = ancestors
 
+    const { scripts, styles } = await getMaterialDeps()
+
     if (currentPage) {
-      updatePreview({ currentPage, ancestors })
+      updatePreview({ currentPage, ancestors, scripts, styles })
     }
   }
 

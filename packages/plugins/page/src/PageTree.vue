@@ -56,6 +56,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.appmanage.PageTree */
 import { reactive, onMounted, onUnmounted } from 'vue'
 import { Search, Collapse, CollapseItem, Popover } from '@opentiny/vue'
 import { IconFolderOpened, IconFolderClosed, IconSearch } from '@opentiny/vue-icon'
@@ -66,6 +67,7 @@ import {
   useNotify,
   useMessage,
   getMetaApi,
+  getOptions,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { isEqual } from '@opentiny/vue-renderless/common/object'
@@ -77,6 +79,7 @@ import { closeFolderSettingPanel } from './PageFolderSetting.vue'
 import http from './http'
 import DraggableTree from './Tree.vue'
 import { SvgButton } from '@opentiny/tiny-engine-common'
+import meta from '../meta'
 
 const { PAGE_STATUS } = constants
 
@@ -112,6 +115,7 @@ export default {
     } = usePage()
     const { fetchPageDetail, requestUpdatePage } = http
     const getAppId = () => getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    const { customPageOperations = [] } = getOptions(meta.id)
 
     const state = reactive({
       pageSearchValue: '',
@@ -121,9 +125,12 @@ export default {
 
     const { subscribe, unsubscribe } = useMessage()
 
+    const refreshPageList = (appId: string) => getPageList(appId)
+
     let subscriber = null
 
     onMounted(() => {
+      refreshPageList(getAppId())
       subscriber = subscribe({
         topic: 'locationHistoryChanged',
         callback: (data) => {
@@ -142,12 +149,6 @@ export default {
         unsubscribe(subscriber)
       }
     })
-
-    const refreshPageList = async (appId) => {
-      const pages = await getPageList(appId)
-
-      return pages
-    }
 
     pageSettingState.updateTreeData = async () => {
       const pageList = await refreshPageList(getAppId())
@@ -250,7 +251,8 @@ export default {
       { type: 'divider' },
       { type: 'createPage', label: '新建子页面', action: createPage },
       { type: 'createFolder', label: '新建子文件夹', action: createFolder },
-      { type: 'settingHome', label: '设置为主页', action: settingHome }
+      { type: 'settingHome', label: '设置为主页', action: settingHome },
+      ...customPageOperations
       // TODO 复制和删除的逻辑耦合在其他组件内，暂时屏蔽
       // { type: 'divider' },
       // { type: 'copy', label: '复制页面', action: copyPage },
@@ -258,7 +260,7 @@ export default {
     ].map((item) => ({
       ...item,
       action: (node) => {
-        item.action?.(node)
+        item.action?.(node, emit)
         // 点击 action 后，关闭 popover 弹窗
         popoverRefs[node.id]?.doClose?.()
       }
@@ -451,11 +453,11 @@ export default {
       outline: none;
     }
     .auto-hidden {
-      display: none;
+      visibility: hidden;
     }
   }
   .row:hover .actions .auto-hidden {
-    display: unset;
+    visibility: visible;
   }
 }
 </style>

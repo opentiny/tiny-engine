@@ -8,20 +8,19 @@
             <design-plugins
               v-if="leftMenuShownStorage"
               ref="left"
-              :plugins="registry.plugins"
+              :plugins="pluginRegistry"
               :plugin-list="pluginList"
               :render-panel="plugins.render"
               @changeLeftAlign="changeLeftAlign"
               @click="toggleNav"
             ></design-plugins>
-            <component :is="registry.canvas.entry"></component>
+            <component :is="canvasEntry"></component>
           </div>
         </div>
         <div class="tiny-engine-right-wrap">
           <design-settings
             v-if="rightMenuShownStorage"
             ref="right"
-            :settings="registry.settings"
             :render-panel="settings.render"
             :plugin-list="pluginList"
             @changeRightAlign="changeRightAlign"
@@ -33,13 +32,14 @@
 </template>
 
 <script lang="ts">
-import { useLayout, getMergeRegistry } from '@opentiny/tiny-engine-meta-register'
+/* metaService: engine.layout.Main */
+import { ref } from 'vue'
+import { useLayout, getMergeMeta, getMergeMetaByType } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
 import meta from '../meta'
-import { ref } from 'vue'
 
 export default {
   name: 'TinyLowCode',
@@ -53,19 +53,16 @@ export default {
       editor: this
     }
   },
-  props: {
-    registry: {
-      type: Object,
-      default: () => ({})
-    }
-  },
-  setup(props) {
-    const layoutRegistry = getMergeRegistry(meta.type)
+  setup() {
+    const layoutRegistry = getMergeMeta(meta.id)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
-
     const { layoutState, leftMenuShownStorage, rightMenuShownStorage, initPluginStorageReactive } = useLayout()
     const { plugins, settings } = layoutState
+    const canvasEntry = getMergeMeta('engine.canvas')?.entry
+    const pluginRegistry = getMergeMetaByType('plugins')
+    // @legacy 旧版本兼容，后续废弃 type: 'setting' 的 plugin，全部改为 type: 'plugins'
+    const settingRegistry = getMergeMetaByType('setting')
 
     const toggleNav = ({ item }) => {
       if (!item.id) return
@@ -83,34 +80,17 @@ export default {
     }
 
     // 合并插件和设置列表
-    const pluginList = [...props.registry.plugins, ...props.registry.settings]
-
-    // 收集插件的 align 信息
-    const alignGroups = {}
+    const pluginList = [...pluginRegistry, ...settingRegistry]
     const plugin = {}
 
     const { PLUGIN_DEFAULT_WIDTH } = constants
 
     pluginList.forEach((item) => {
       if (item.id) {
-        const align = item?.align || 'leftTop'
-
-        // 初始化 alignGroups[align]
-        if (!alignGroups[align]) {
-          alignGroups[align] = []
-        }
-
-        // 将 item.id 推入对应的 alignGroups
-        alignGroups[align].push(item.id)
-
-        // 为每个插件分配 index 和相关属性
-        const index = alignGroups[align].indexOf(item.id)
         const widthResizable = item?.widthResizable ?? false
 
         plugin[item.id] = {
           width: item?.width || PLUGIN_DEFAULT_WIDTH,
-          align: align,
-          index: index,
           isShow: true,
           entry: item.entry,
           id: item.id,
@@ -136,7 +116,9 @@ export default {
       plugins,
       settings,
       toggleNav,
-      layoutState
+      layoutState,
+      canvasEntry,
+      pluginRegistry
     }
   }
 }

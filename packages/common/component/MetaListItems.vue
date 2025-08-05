@@ -1,6 +1,6 @@
 <template>
   <template v-if="draggable">
-    <vue-draggable-next class="dragArea list-group w-full" :list="optionsList" @change="dragEnd">
+    <vue-draggable-next class="dragArea list-group w-full" :list="optionsList" handle=".icon-more" @change="dragEnd">
       <div v-for="(item, index) in optionsList" :key="index" class="option-item">
         <meta-list-item
           :item="item"

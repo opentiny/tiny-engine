@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.Main */
 import { computed, watchEffect, ref, reactive, provide } from 'vue'
 import { ConfigRender, BlockDescription, BlockLinkField, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useProperty, useLayout } from '@opentiny/tiny-engine-meta-register'

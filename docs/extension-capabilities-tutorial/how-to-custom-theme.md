@@ -10,7 +10,7 @@
 
 用户在注册表配置自定义主题，主题切换展示为列表切换
 
-• 创建设计器可参考官网文档：https://opentiny.design/tiny-engine#/help-center/course/dev/91
+• 创建设计器可参考官网文档：https://opentiny.design/tiny-engine#/help-center/course/dev/dev-quick-start
 
 • 在已经创建的设计器根目录执行engine-cli create，选择theme以创建一个新的主题
 

@@ -1,5 +1,7 @@
 # 全新区块构建方案
 
+> TinyEngine v2.1 起支持
+
 原来的区块构建发布方案中，区块发布构建需要经过：
 
 a. 后端得到区块 schema，调用 DSL 进行出码。
@@ -35,3 +37,8 @@ c. 画布使用异步组件加载得到的模块代码。
 ![新区块构建方案示意图](./imgs/new-block-construction.png)
 
 于是，经过新方案的改造之后，我们区块的构建速度从分钟级提升到了秒级，大幅提高开发效率。
+
+## 后端发布接口支持：
+
+- Java 版本：已经支持
+- Node.js 后端：如果是 fork Node.js 后端的用户需要使用 TinyEngine v2.1.0 新特性 ，更多细节请查看 PR [https://github.com/opentiny/tiny-engine-webservice/pull/25](https://github.com/opentiny/tiny-engine-webservice/pull/25)

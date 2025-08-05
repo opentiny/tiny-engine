@@ -19,6 +19,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.BlockPropertyList */
 import { computed } from 'vue'
 import { Button as TinyButton } from '@opentiny/vue'
 import { remove } from '@opentiny/vue-renderless/common/array'

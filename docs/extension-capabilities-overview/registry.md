@@ -1,5 +1,7 @@
 # 注册表
 
+⚠️注意：TinyEngine v2.7 版本之后，注册表的方式有所变化，请参考 [新注册表](./new-registry.md) 了解新的注册表配置方式。
+
 ## 什么是注册表
 
 在 新架构介绍中，我们引入了注册表的概念，二次低代码平台开发用户通过注册表配置元服务元应用，TinyEngine底层引擎读取注册表的配置，完成元应用元服务的定制，然后加载对应的元应用元服务，完成低代码平台的启动。
@@ -149,7 +151,11 @@ material 配置用于指定物料资源的来源，它接受一个数组，每�
 import bundle from './bundle.json'
 // engine.config.js 示例
 export default {
-  // ...
+  // 可以传入 url 路径
+  material: ['/mock/bundle.json'],
+  // 也可以传入 JSON 对象
+  material: [bundle],
+  // 也可以传入多个物料源
   material: ['/mock/bundle.json', bundle],
   // ...
 }

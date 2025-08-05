@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.appmanage.PageFolderSetting */
 import { reactive, ref, computed } from 'vue'
 import { Button, Collapse, CollapseItem } from '@opentiny/vue'
 import { PluginSetting, SvgButton, ButtonGroup } from '@opentiny/tiny-engine-common'
@@ -41,7 +42,7 @@ import {
   useLayout,
   useModal,
   useNotify,
-  getMergeRegistry,
+  getMergeMeta,
   getMetaApi,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
@@ -86,7 +87,7 @@ export default {
     const { requestCreatePage, requestUpdatePage, requestDeletePage } = http
     const { pageSettingState, changeTreeData } = usePage()
     const { confirm } = useModal()
-    const registry = getMergeRegistry(meta.type, meta.id)
+    const registry = getMergeMeta(meta.id)
     const pageGeneral = registry.components.PageGeneral
     const folderGeneralRef = ref(null)
 

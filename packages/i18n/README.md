@@ -1,2 +1,2 @@
-# lowcode-webcomponent
+# TinyEngine i18n host
 

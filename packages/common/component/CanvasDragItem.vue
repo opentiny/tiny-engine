@@ -1,5 +1,5 @@
 <template>
-  <div draggable="true" class="drag-item" @dragstart="dragstart" @click="handleClick">
+  <div draggable="true" class="drag-item" @dragstart="dragstart" @dragend="dragend" @click="handleClick">
     <slot></slot>
   </div>
 </template>
@@ -30,6 +30,13 @@ export default {
       }
     }
 
+    const dragend = (e) => {
+      // 拖拽结束，但是此时的 dropEffect 为 none ，说明此时没有完成拖拽，需要清理一下拖拽状态
+      if (e.dataTransfer?.dropEffect === 'none') {
+        canvasApi.value?.dragEnd?.()
+      }
+    }
+
     const handleClick = () => {
       if (props.data) {
         const data = deepClone(props.data)
@@ -40,6 +47,7 @@ export default {
 
     return {
       dragstart,
+      dragend,
       handleClick
     }
   }

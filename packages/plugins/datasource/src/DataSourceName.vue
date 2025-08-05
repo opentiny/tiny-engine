@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceName */
 import { reactive, watchEffect, ref } from 'vue'
 import { Form, FormItem, Input } from '@opentiny/vue'
 

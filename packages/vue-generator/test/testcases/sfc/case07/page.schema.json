@@ -1,0 +1,40 @@
+{
+  "componentName": "Page",
+  "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+  "props": {
+    "className": "page-base-style"
+  },
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "Text",
+      "props": {
+        "style": "display: inline-block;",
+        "className": "component-base-style",
+        "text": "测试二级页面使用区块"
+      },
+      "children": [],
+      "id": "66c62533"
+    },
+    {
+      "componentName": "BlockTest1a",
+      "props": {
+        "className": "block-base-style"
+      },
+      "componentType": "Block",
+      "children": [],
+      "id": "75e25225"
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "state": {},
+  "methods": {},
+  "utils": [],
+  "bridge": [],
+  "inputs": [],
+  "outputs": [],
+  "fileName": "BlockPath",
+  "id": "body"
+}

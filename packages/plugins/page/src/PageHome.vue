@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.appmanage.PageHome */
 import { computed, reactive, watchEffect, inject } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'

@@ -38,8 +38,17 @@
           <template v-if="activeMessages.length === 0">
             <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
             </tr-welcome>
+            <tr-prompts
+              :items="promptItems"
+              :wrap="true"
+              item-class="prompt-item"
+              class="tiny-prompts"
+              @item-click="handlePromptItemClick"
+            ></tr-prompts>
           </template>
-          <tr-bubble-list v-else :items="activeMessages" :roles="roles" :auto-scroll="true"></tr-bubble-list>
+          <tr-bubble-provider :message-renderers="{ markdown: MarkdownRenderer }" v-else>
+            <tr-bubble-list :items="activeMessages" :roles="roles" :auto-scroll="true"></tr-bubble-list>
+          </tr-bubble-provider>
           <template #footer>
             <tr-sender
               class="footer-sender"
@@ -53,6 +62,9 @@
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
             >
+              <template #footer-left>
+                <mcp-server></mcp-server>
+              </template>
               <template #header v-if="singleAttachmentItems.length > 0">
                 <div>
                   <tr-attachments
@@ -77,16 +89,29 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.robot.Main */
 import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { TrContainer, TrWelcome, TrBubbleList, TrSender, TrFeedback, TrAttachments } from '@opentiny/tiny-robot'
+import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { extend } from '@opentiny/vue-renderless/common/object'
+import {
+  TrContainer,
+  TrWelcome,
+  TrPrompts,
+  TrBubbleList,
+  TrSender,
+  TrFeedback,
+  TrAttachments,
+  TrBubbleProvider
+} from '@opentiny/tiny-robot'
+import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
 import {
+  getBlockContent,
   initBlockList,
-  AIModelOptions,
+  getAIModelOptions,
   defaultSelectedModel,
   isValidFastJsonPatch,
   VISUAL_MODEL
@@ -94,6 +119,10 @@ import {
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
 import { chatStream } from './js/utils'
+import McpServer from './mcp/McpServer.vue'
+import useMcpServer from './mcp/useMcp'
+import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
+import { sendMcpRequest } from './mcp/utils'
 
 export default {
   components: {
@@ -102,15 +131,19 @@ export default {
     RobotSettingPopover,
     TrContainer,
     TrWelcome,
+    TrPrompts,
     TrBubbleList,
     TrSender,
     TrAttachments,
     IconNewSession,
-    SchemaRenderer
+    SchemaRenderer,
+    McpServer,
+    TrBubbleProvider
   },
   emits: ['close-chat'],
   setup() {
-    const { isBlock, isSaved, pageState, importSchema, setSaved } = useCanvas()
+    const { initData, isBlock, isSaved, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
+    const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -234,8 +267,27 @@ export default {
       }
     }
 
+    const requestLoading = ref(false)
     // 发送流式请求
-    const _sendStreamRequest = async () => {
+    const sendStreamRequest = async () => {
+      if (useMcpServer().isToolsEnabled) {
+        try {
+          requestLoading.value = true
+          await sendMcpRequest(messages.value, {
+            model: selectedModel.value.value,
+            headers: {
+              Authorization: `Bearer ${tokenValue.value || import.meta.env.VITE_API_TOKEN}`
+            }
+          })
+        } catch (error) {
+          messages.value[messages.value.length - 1].content = '连接失败'
+        } finally {
+          inProcesing.value = false
+          requestLoading.value = false
+        }
+        return
+      }
+
       const requestData = getSendSeesionProcess()
       if (requestData.foundationModel) {
         requestData.foundationModel.stream = true
@@ -396,8 +448,7 @@ export default {
         await sleep(1000)
         messages.value.push(getAiDisplayMessage('好的，正在执行相关操作，请稍等片刻...'))
         await scrollContent()
-        // await sendRequest()
-        await _sendStreamRequest()
+        await sendStreamRequest()
       }
     }
 
@@ -437,6 +488,7 @@ export default {
     const endContent = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
+      inProcesing.value = false
       initChat()
     }
 
@@ -488,6 +540,26 @@ export default {
     // 控制全屏切换
     const fullscreen = ref(false)
 
+    // 欢迎界面提示
+    const promptItems: PromptProps[] = [
+      {
+        label: 'MCP工具',
+        description: '帮我查询当前的页面列表',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🔧'),
+        badge: 'NEW'
+      },
+      {
+        label: '页面搭建场景',
+        description: '如何生成表单嵌进我的网站？',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨')
+      },
+      {
+        label: '学习/知识型场景',
+        description: 'Vue3 和 React 有什么区别？',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🤔')
+      }
+    ]
+
     // 处理提示项点击事件
     const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       sendContent(item.description, true)
@@ -519,6 +591,7 @@ export default {
         mdConfig: {
           breaks: true
         },
+        contentRenderer: MarkdownRenderer,
         slots: {
           footer: ({ bubbleProps }) => {
             return h(TrFeedback, {
@@ -547,6 +620,7 @@ export default {
         avatar: userAvatar,
         maxWidth: '80%',
         type: 'markdown',
+        contentRenderer: MarkdownRenderer,
         mdConfig: {
           breaks: true
         }
@@ -647,6 +721,9 @@ export default {
       showPreview,
       singleAttachmentItems,
       VISUAL_MODEL,
+      promptItems,
+      MarkdownRenderer,
+      requestLoading,
       sendContent,
       endContent,
       changeApiKey,
@@ -693,12 +770,24 @@ export default {
   );
   container-type: inline-size;
 
+  &.tr-container.tr-container {
+    top: var(--base-top-panel-height);
+    --tr-container-width: 400px;
+  }
+
   :deep(button.icon-btn) {
     background-color: rgba(0, 0, 0, 0);
   }
 
   :deep(.robot-setting button) {
     margin-left: 10px;
+  }
+
+  .tr-bubble-list {
+    flex: 1;
+    .tr-bubble {
+      word-break: break-word;
+    }
   }
 
   .robot-welcome > div {
@@ -712,7 +801,7 @@ export default {
     padding: 4px;
   }
 
-  .tiny-prompts {
+  .tiny-prompts > div {
     padding: 16px 24px;
 
     .prompt-item {
@@ -729,7 +818,7 @@ export default {
       }
 
       &:hover {
-        background-color: #c3d3f6;
+        background-color: #f8f8f8;
       }
     }
   }
@@ -769,12 +858,18 @@ export default {
   display: none;
 }
 
-.tiny-sender .tiny-sender__upload-popup {
-  .upload-options {
-    height: 42px;
+.tiny-sender {
+  margin: 20px;
+  .tiny-sender__footer-slot.tiny-sender__bottom-row {
+    justify-content: space-between !important;
+  }
+  .tiny-sender__upload-popup {
+    .upload-options {
+      height: 42px;
 
-    .upload-option:first-child {
-      display: none;
+      .upload-option:first-child {
+        display: none;
+      }
     }
   }
 }

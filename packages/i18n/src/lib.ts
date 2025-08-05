@@ -10,16 +10,19 @@
  *
  */
 
-import { defineCustomElement } from '@opentiny/tiny-engine-webcomponent-core'
-import I18nHost from './I18nHost.vue'
-import i18n, { defineCustomI18n } from './i18n'
+import { createI18n } from 'vue-i18n'
 
-const name = 'tiny-i18n-host'
-
-if (!customElements.get(name)) {
-  customElements.define(name, defineCustomElement(I18nHost))
+// 这里需要展开才能再下面进行合并操作，要不然会报错
+const i18n = {
+  ...createI18n({
+    locale: 'zh_CN',
+    messages: {},
+    legacy: false
+  })
 }
 
-export { defineCustomI18n }
+export const defineCustomI18n = (customI18n: any) => {
+  Object.assign(i18n, customI18n)
+}
 
 export default i18n

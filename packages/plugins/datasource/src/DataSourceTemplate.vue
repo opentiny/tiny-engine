@@ -16,6 +16,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceTemplate */
 import { reactive, onMounted } from 'vue'
 import { Button } from '@opentiny/vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'

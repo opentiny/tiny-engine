@@ -1041,7 +1041,8 @@ export const canvasApi = {
   },
   updateCanvas: (...args: any[]) => {
     return canvasState.renderer.updateCanvas(...args)
-  }
+  },
+  dragEnd
 }
 
 export const initCanvas = ({ renderer, iframe, emit, controller }: any) => {

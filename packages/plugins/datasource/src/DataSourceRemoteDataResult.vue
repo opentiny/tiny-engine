@@ -10,18 +10,13 @@
         <tiny-button plain @click="check">查看已获取的字段</tiny-button>
         <tiny-button plain @click="copyData">复制代码</tiny-button>
       </div>
-      <monaco-editor
-        ref="editor"
-        :value="state.value"
-        class="monaco-editor"
-        :options="state.options"
-        @change="handleChange"
-      />
+      <monaco-editor ref="editor" :value="state.value" class="editor" :options="state.options" @change="handleChange" />
     </div>
   </div>
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceRemoteDataResult */
 import { reactive, watchEffect, ref } from 'vue'
 import { VueMonaco as MonacoEditor } from '@opentiny/tiny-engine-common'
 import { Button as TinyButton } from '@opentiny/vue'
@@ -69,7 +64,7 @@ export default {
       emit('copy', state.value)
     }
     const check = () => {
-      emit('check')
+      emit('change', state.value)
     }
     const handleChange = (val) => {
       state.value = val
@@ -116,17 +111,17 @@ export default {
     z-index: 9999;
     .tiny-button {
       border-radius: 4px;
-      border-color: var(--te-datasource-common-btn-border-color);
+      border-color: var(--te-datasource-editor-btn-border-color);
       & + .tiny-button {
         margin-left: 4px;
       }
     }
   }
 
-  .monaco-editor {
-    height: 120px;
+  .editor {
+    height: 250px;
     margin-top: 8px;
-    border: 1px solid var(--te-datasource-common-border-color-divider);
+    border: 1px solid var(--te-datasource-editor-border-color-divider);
     border-radius: 4px;
   }
 }

@@ -41,7 +41,7 @@
               <svg-icon v-if="item.invisible" name="eye-invisible"></svg-icon>
               <svg-icon v-else name="eye"></svg-icon>
             </span>
-            <span @click.stop="deleteItem(index)"><svg-icon name="trash"></svg-icon></span>
+            <span @click.stop="deleteItem(index)"><svg-icon name="delete"></svg-icon></span>
           </div>
           <div v-show="item.draging" class="draging-bg"></div>
         </div>
@@ -88,6 +88,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.BackgroundGroup */
 import { reactive, watch } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import { ColorConfigurator, SelectConfigurator } from '@opentiny/tiny-engine-configurator'
@@ -512,6 +513,7 @@ export default {
       display: flex;
       opacity: 0;
       transition: 0.3s;
+      gap: 8px;
       span {
         display: flex;
         justify-content: center;

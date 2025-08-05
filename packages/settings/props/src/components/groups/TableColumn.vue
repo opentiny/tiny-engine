@@ -29,6 +29,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.props.TableColumn */
 import { reactive, computed, ref } from 'vue'
 import { IconDel, IconEdit, IconPlus, IconCode, IconWriting } from '@opentiny/vue-icon'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'

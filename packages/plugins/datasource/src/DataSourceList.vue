@@ -15,14 +15,6 @@
             <svg-button
               class="set-page"
               :hoverBgColor="false"
-              tips="编辑静态数据"
-              name="data-edit"
-              @mousedown.stop.prevent="openRecordListPanel(item, index)"
-            >
-            </svg-button>
-            <svg-button
-              class="set-page"
-              :hoverBgColor="false"
               tips="设置数据源"
               name="setting"
               @mousedown.stop.prevent="openDataSourceForm(item, index)"
@@ -33,23 +25,15 @@
       </div>
     </div>
   </div>
-  <data-source-record-list
-    :data="state.currentData"
-    @edit="openDataSourceForm(dataSourceList[activeIndex], activeIndex)"
-    @refresh="refresh()"
-  ></data-source-record-list>
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceList */
 import { onMounted, reactive, ref } from 'vue'
-import { useDataSource, useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { close as closeRemotePanel } from './DataSourceRemotePanel.vue'
-import { close as closeDataSourceForm } from './DataSourceForm.vue'
-import DataSourceRecordList, { open as openRecordList } from './DataSourceRecordList.vue'
-import { close as closeRecordForm } from './DataSourceRecordForm.vue'
-import { fetchDataSourceList, fetchDataSourceDetail, requestUpdateDataSource } from './js/http'
-import { close as closeGlobalDataHandler } from './DataSourceGlobalDataHandler.vue'
+import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { fetchDataSourceList, fetchDataSourceDetail } from './js/http'
 import { SvgButton } from '@opentiny/tiny-engine-common'
+import { getServiceForm } from './DataSourceRemoteForm.vue'
 
 const dataSourceList = ref([])
 const activeIndex = ref(-1)
@@ -70,8 +54,7 @@ export const clearActive = () => {
 
 export default {
   components: {
-    SvgButton,
-    DataSourceRecordList
+    SvgButton
   },
   emits: ['edit'],
   setup(props, { emit }) {
@@ -79,39 +62,25 @@ export default {
       currentData: { name: '', columns: [], data: [] }
     })
 
-    const { dataSourceState, saveDataSource } = useDataSource()
-
     onMounted(() => {
       dataSourceList.value = useResource().appSchemaState.dataSource
     })
-
-    // 打开新增数据面板
-    const openRecordListPanel = (item, index) => {
-      saveDataSource(requestUpdateDataSource).then(() => {
-        fetchDataSourceDetail(item.id).then((data) => {
-          dataSourceState.dataSource = data
-          state.currentData = data
-          activeIndex.value = index
-          closeRemotePanel()
-          closeDataSourceForm()
-          closeRecordForm()
-          openRecordList()
-          closeGlobalDataHandler()
-        })
-      })
-    }
 
     // 打开数据源新增和修改面板
     const openDataSourceForm = (item, index) => {
       activeIndex.value = index
       fetchDataSourceDetail(item.id).then((data) => {
-        emit('edit', data || item)
+        const editData = { ...data, data: { ...data.data, type: 'remote' } } || {
+          ...item,
+          data: { ...item.data, type: 'remote' }
+        }
+        emit('edit', editData)
+        getServiceForm()?.clearValidate()
       })
     }
 
     return {
       state,
-      openRecordListPanel,
       openDataSourceForm,
       dataSourceList,
       activeIndex,

@@ -19,6 +19,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.NumericSelect */
 import { computed, ref, watch } from 'vue'
 import { Numeric } from '@opentiny/vue'
 import useEvent from '../../js/useEvent'

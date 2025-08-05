@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.setting.props.components-index */
 import CheckValue from './inputs/CheckValue.vue'
 import SelectOption from './inputs/SelectOption.vue'
 import CodeEditor from './inputs/CodeEditor.vue'

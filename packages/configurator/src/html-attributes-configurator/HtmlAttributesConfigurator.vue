@@ -27,7 +27,7 @@
 
       <template #reference>
         <tiny-tooltip class="item" effect="light" content="新增原生属性" placement="top">
-          <span class="icon-wrap"><IconPlus @click="addAttr"></IconPlus></span>
+          <span class="icon-wrap"><svg-icon name="add" @click="addAttr"></svg-icon></span>
         </tiny-tooltip>
       </template>
     </tiny-popover>
@@ -49,7 +49,7 @@
 <script>
 import { reactive, ref, watchEffect } from 'vue'
 import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { IconDel, IconEdit, IconClose, IconPlus } from '@opentiny/vue-icon'
+import { IconDel, IconEdit, IconClose } from '@opentiny/vue-icon'
 import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
 import { utils } from '@opentiny/tiny-engine-utils'
 
@@ -64,7 +64,6 @@ export default {
     IconDel: IconDel(),
     TinyPopover: Popover,
     IconClose: IconClose(),
-    IconPlus: IconPlus(),
     TinyTooltip: Tooltip
   },
   props: {

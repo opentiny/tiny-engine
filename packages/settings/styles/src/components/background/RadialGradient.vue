@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+/* metaService: engine.setting.styles.RadialGradient */
 import { reactive, defineProps, defineEmits, onMounted } from 'vue'
 import { TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import PositionOrigin from './PositionOrigin.vue'

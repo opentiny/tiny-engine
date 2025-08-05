@@ -201,9 +201,12 @@ export default {
         !props.onlyEdit &&
         propLabel.value &&
         (isBindingState.value ||
-          !['GroupItemConfigurator', 'ArrayItemConfigurator', 'RelatedColumnsConfigurator'].includes(
-            widget.value.component
-          )) &&
+          ![
+            'GroupItemConfigurator',
+            'ArrayItemConfigurator',
+            'RelatedColumnsConfigurator',
+            'TableColumnsConfigurator'
+          ].includes(widget.value.component)) &&
         !multiType.value
     )
     const propDescription = computed(
@@ -292,10 +295,7 @@ export default {
           return
         }
 
-        if (
-          property !== 'name' &&
-          ['SelectIconConfigurator', 'SelectIconConfigurator'].includes(props.property.widget.component)
-        ) {
+        if (property !== 'name' && ['SelectIconConfigurator'].includes(props.property.widget.component)) {
           // icon以组件形式传入，实现类似:icon="IconPlus"的图标配置（排除Icon组件本身）
           value = {
             componentName: 'Icon',

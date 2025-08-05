@@ -63,6 +63,7 @@
   </div>
 </template>
 <script lang="ts">
+/* metaService: engine.plugins.robot.RobotSettingPopover */
 import { ref, reactive } from 'vue'
 import {
   TinyForm,
@@ -75,7 +76,7 @@ import {
   TinyTabItem,
   TinyAlert
 } from '@opentiny/vue'
-import { EXISTING_MODELS, CUSTOMIZE, AIModelOptions } from './js/robotSetting'
+import { EXISTING_MODELS, CUSTOMIZE, getAIModelOptions } from './js/robotSetting'
 
 export default {
   components: {
@@ -102,6 +103,7 @@ export default {
       'API Key 是用于身份验证和权限控制的密钥，允许开发者通过API访问云服务商提供的大模型（如通义千问、deepseek等）。'
     const maxTokensTip =
       '上下文长度表示模型单次响应中最多生成的token数量（包括输入和输出的总和）。若该项不设置，默认为64K。'
+    const AIModelOptions = getAIModelOptions()
 
     const state = reactive({
       activeName: EXISTING_MODELS,

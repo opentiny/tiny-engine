@@ -569,6 +569,7 @@ export default {
     margin-top: 0;
     margin-bottom: 12px;
   }
+
   .bind-dialog-content {
     display: flex;
     align-items: center;

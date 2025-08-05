@@ -10,6 +10,8 @@
  *
  */
 
+import path from 'path'
+
 // 截取字符串，多余的部分用...代替
 export const setString = (str, len) => {
   let StrLen = 0
@@ -71,4 +73,10 @@ export const getResponseData = (data, error) => {
     }
   }
   return res
+}
+
+// 获取数据库路径
+export const getDatabasePath = (fileName) => {
+  const databasePath = process.env.DATABASE_PATH || path.resolve(__dirname, '../database')
+  return path.resolve(databasePath, fileName)
 }

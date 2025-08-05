@@ -10,8 +10,10 @@
  *
  */
 
+/* metaService: engine.plugins.robot.js-robotSetting */
 import { reactive } from 'vue'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getOptions, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import meta from '../../meta'
 
 export const EXISTING_MODELS = 'existingModels'
 export const CUSTOMIZE = 'customize'
@@ -50,6 +52,11 @@ export const AIModelOptions = [
     ]
   }
 ]
+
+export const getAIModelOptions = () => {
+  const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
+  return [...AIModelOptions, ...aiRobotOptions]
+}
 
 export const defaultSelectedModel = {
   label: AIModelOptions[0].label,

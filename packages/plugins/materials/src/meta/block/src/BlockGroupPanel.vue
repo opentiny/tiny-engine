@@ -34,6 +34,7 @@
   </plugin-setting>
 </template>
 <script lang="ts">
+/* metaService: engine.plugins.materials.block.BlockGroupPanel */
 import { reactive, watch, provide, inject, ref, computed } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
@@ -203,10 +204,7 @@ export default {
     const selectedBlockFilter = (blocks) => {
       const isInBlockGroup = (block) => includesBlockInGroups(block.id)
 
-      const isSelectedBlock = (block) =>
-        selectedBlockArray?.value?.some((selectedBlock) => block.id === selectedBlock.id)
-
-      return blocks.filter((block) => !isInBlockGroup(block) && !isSelectedBlock(block))
+      return blocks.filter((block) => !isInBlockGroup(block))
     }
 
     const searchBlocks = (filters) => {

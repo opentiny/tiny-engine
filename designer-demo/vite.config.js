@@ -8,7 +8,8 @@ export default defineConfig((configEnv) => {
     root: __dirname,
     iconDirs: [path.resolve(__dirname, './node_modules/@opentiny/tiny-engine/assets/')],
     useSourceAlias: true,
-    envDir: './env'
+    envDir: './env',
+    registryPath: './registry.js'
   })
   const baseConfigProxy = baseConfig.server?.proxy || {}
   delete baseConfig.server.proxy

@@ -3,7 +3,7 @@
     <div :class="['plugin-panel-header', headerBottomLine]">
       <div class="plugin-panel-title">
         <span class="title"
-          >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :href="docsUrl"></link-button
+          >{{ title }}<link-button class="link" v-if="isShowDocsIcon" :tips="docsContent" :href="docsUrl"></link-button
         ></span>
         <close-icon v-if="isCloseLeft" :name="name" @close="closePanel"></close-icon>
       </div>
@@ -77,6 +77,10 @@ export default {
       default: 'cross'
     },
     docsUrl: {
+      type: String,
+      default: ''
+    },
+    docsContent: {
       type: String,
       default: ''
     },
@@ -279,6 +283,7 @@ export default {
   width: 100%;
   height: 100%;
   background: var(--te-component-common-bg-color);
+  border-right: 1px solid var(--te-component-common-border-color-divider);
   display: flex;
   flex-direction: column;
   position: relative;

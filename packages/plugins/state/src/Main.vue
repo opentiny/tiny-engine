@@ -6,6 +6,7 @@
     :fixed-name="PLUGIN_NAME.State"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
     @close="closePanel"
   >
@@ -78,6 +79,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.state.Main */
 import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
@@ -133,6 +135,7 @@ export default {
     const { setSaved } = useCanvas()
     const { openCommon } = getMetaApi(META_APP.Save)
     const docsUrl = useHelp().getDocsUrl('data')
+    const docsContent = '对 state 的响应式变量进行系统管理，包含添加、删除、搜索、编辑 state。'
     const state = reactive({
       dataSource: {},
       createData: {
@@ -227,7 +230,7 @@ export default {
 
       if (activeName.value === STATE.CURRENT_STATE) {
         // 校验
-        variableRef.value.validateForm().then(() => {
+        variableRef.value.validateForm().then(async () => {
           // 获取数据
           const variable = variableRef.value.getFormData()
 
@@ -240,7 +243,17 @@ export default {
           updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
 
           useHistory().addHistory()
-          openCommon()
+
+          const isFixed = props.fixedPanels.includes(PLUGIN_NAME.State)
+          // 如果面板没有固定，临时固定，避免因保存时清空选中状态导致的面板关闭
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
+          await openCommon()
+          // 恢复原来固定的状态
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
         })
       } else {
         storeRef.value.validateForm().then(() => {
@@ -273,6 +286,7 @@ export default {
           updateGlobalState(id, { global_state: storeList }).then((res) => {
             isPanelShow.value = false
             useResource().appSchemaState.globalState = res.global_state || []
+            useNotify({ message: '保存成功!', type: 'success' })
           })
           openCommon()
         })
@@ -414,6 +428,7 @@ export default {
       OPTION_TYPE,
       open,
       docsUrl,
+      docsContent,
       onMouseLeaveVariable,
       onMouseLeaveStore
     }

@@ -76,6 +76,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.event.BindEvents */
 import { computed, reactive, watchEffect } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import {

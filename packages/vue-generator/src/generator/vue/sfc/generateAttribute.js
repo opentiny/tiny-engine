@@ -1,3 +1,4 @@
+import { parse } from '@babel/parser'
 import {
   JS_EXPRESSION,
   JS_FUNCTION,
@@ -358,6 +359,38 @@ export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
   })
 }
 
+export const handleJSFunctionAttrHook = (schemaData, globalHooks, config) => {
+  const { attributes, schema: { props = {} } = {} } = schemaData || {}
+  const isJSX = config.isJSX
+  Object.entries(props).forEach(([key, value]) => {
+    if (value?.type === JS_FUNCTION && !isOn(key)) {
+      let functionName = `${key}Fun`
+
+      try {
+        const ast = parse(value.value, { sourceType: 'module', plugins: ['typescript', 'jsx'] })
+        // 这里可能会存在命名冲突的场景，应该在设计态阻止命名冲突
+        functionName = ast.program.body[0].id.name
+
+        globalHooks.addStatement({
+          position: INSERT_POSITION.AFTER_METHODS,
+          value: `const ${functionName} = wrap(${value.value})`,
+          key: functionName
+        })
+      } catch (error) {
+        const logger = console
+        logger.warn(`解析失败属性 ${key} 失败: ${error.message || error}`)
+
+        // 解析失败，不处理，原样绑定到属性上
+        functionName = value.value
+      }
+
+      attributes.push(handleJSExpressionBinding(key, { value: functionName }, isJSX))
+
+      delete props[key]
+    }
+  })
+}
+
 export const handleI18nAttrHook = (schemaData, globalHooks, config) => {
   const { attributes, schema: { props = {} } = {} } = schemaData || {}
   const isJSX = config.isJSX
@@ -394,7 +427,7 @@ export const handleTinyIconPropsHook = (schemaData, globalHooks, config) => {
         })
       }
 
-      attributes.push(isJSX ? `icon={${iconName}}` : `:icon="${iconName}"`)
+      attributes.push(isJSX ? `${key}={${iconName}}` : `:${key}="${iconName}"`)
 
       delete props[key]
     }

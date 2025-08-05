@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.logo.AppList */
 import { useMessage, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { Select, Option } from '@opentiny/vue'
 

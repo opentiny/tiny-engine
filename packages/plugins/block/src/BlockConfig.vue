@@ -108,6 +108,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.blockmanage.BlockConfig */
 import { reactive, ref, computed, nextTick, watchEffect } from 'vue'
 import { Input, Tag, Button, Form, FormItem, Radio, Select, Option } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -363,11 +364,22 @@ export default {
   }
   &-tenants {
     display: inline-block;
+    height: 24px;
+    .tiny-select {
+      :deep(.tiny-tag) {
+        height: 17px;
+      }
+    }
   }
 }
 .tag-item-text {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100px;
+}
+</style>
+<style>
+.block-openness .block-openness-tenants .tiny-input__inner {
+  height: 24px !important;
 }
 </style>

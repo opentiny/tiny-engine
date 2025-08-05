@@ -5,6 +5,7 @@
     :fixed-name="PLUGIN_NAME.I18n"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
   >
     <template #content>
@@ -34,7 +35,7 @@
           @change="handleChange"
         >
           <template #trigger>
-            <tiny-button><icon-upload class="btn-icon"></icon-upload>批量上传</tiny-button>
+            <tiny-button><svg-icon class="btn-icon" name="upload"></svg-icon>批量上传</tiny-button>
           </template>
         </tiny-file-upload>
         <a class="download-btn" @click="downloadFile"> 下载导入模板 </a>
@@ -55,12 +56,21 @@
         >
           <tiny-grid-column type="selection" width="42"></tiny-grid-column>
           <tiny-grid-column
+            v-if="isEditMode"
             width="120"
             field="key"
             title="key"
             show-overflow
             :show-icon="false"
-            :editor="{ component: 'input', autoselect: true, attrs: { disabled: isEditMode } }"
+          ></tiny-grid-column>
+          <tiny-grid-column
+            v-else
+            width="120"
+            field="key"
+            title="key"
+            show-overflow
+            :show-icon="false"
+            :editor="{ component: 'input', autoselect: true }"
           ></tiny-grid-column>
           <tiny-grid-column
             width="160"
@@ -120,10 +130,11 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.i18n.Main */
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch, provide } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
-import { iconLoadingShadow, iconUpload } from '@opentiny/vue-icon'
+import { iconLoadingShadow } from '@opentiny/vue-icon'
 import { PluginPanel, SearchEmpty } from '@opentiny/tiny-engine-common'
 import {
   useTranslate,
@@ -149,8 +160,7 @@ export default {
     PluginPanel,
     TinySelect: Select,
     TinyFileUpload: FileUpload,
-    SearchEmpty,
-    IconUpload: iconUpload()
+    SearchEmpty
   },
   props: {
     fixedPanels: {
@@ -198,6 +208,8 @@ export default {
       }
     ]
     const docsUrl = useHelp().getDocsUrl('i18n')
+    const docsContent =
+      '针对画布中的项目，可能需要同时支持多个语言，设计器提供了中英文切换，可一键切换语言，国际化资源是应用级别的，在任何一个页面都可以访问。'
     const currentSearchType = ref('')
     const copyTipContent = ref('')
     const searchKey = ref('')
@@ -209,7 +221,7 @@ export default {
     const upload = ref('upload')
     const i18nTable = ref(null)
     const selectedRowLength = computed(() => {
-      return i18nTable.value?.getAllSelection().length
+      return i18nTable.value?.getAllSelection?.().length || 0
     })
     const notEmpty = computed(() => langList.value.length > 0)
     const current = ref({
@@ -311,7 +323,26 @@ export default {
     }
 
     const downloadFile = () => {
-      window.open(`${BASE_URL}src/app/public/i18n-mock/i18n-template-for-batch-import.zip`)
+      const { batchImportTempDownloadUrl, batchImportTempDownMethod } =
+        getMergeMeta('engine.plugins.i18n').options || {}
+
+      // 自定义了下载方法，只使用自定义的下载方法
+      if (batchImportTempDownMethod && typeof batchImportTempDownMethod === 'function') {
+        batchImportTempDownMethod()
+        return
+      }
+
+      const defaultDownloadUrl = `${
+        BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL
+      }/i18n-template-for-batch-import.zip`
+      const linkElement = document.createElement('a')
+
+      linkElement.href = batchImportTempDownloadUrl || defaultDownloadUrl
+      linkElement.download = 'i18n-template-for-batch-import.zip'
+      linkElement.target = '_blank'
+      document.body.appendChild(linkElement)
+      linkElement.click()
+      document.body.removeChild(linkElement)
     }
 
     const openDeletePopover = (row) => {
@@ -449,6 +480,7 @@ export default {
       editingRow,
       batchDelete,
       docsUrl,
+      docsContent,
       OPEN_DELAY
     }
   }
@@ -457,6 +489,7 @@ export default {
 
 <style lang="less" scoped>
 .plugin-i18n {
+  border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-i18n-panel-shadow-color);
 }
 .stripe-tiny-grid {

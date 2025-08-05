@@ -10,6 +10,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.lock.Main */
 import { computed, reactive } from 'vue'
 import { useCanvas, useLayout, useBlock, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -87,7 +88,7 @@ export default {
             const pageInfo = layoutState.pageStatus?.data
             useNotify({
               type: 'warning',
-              message: `当前页面被 ${pageInfo?.username || ''} ${pageInfo?.resetPasswordToken || ''} 锁定，请联系解锁`
+              message: `当前页面被 ${pageInfo?.username || ''} 锁定，请联系解锁`
             })
           }
         })

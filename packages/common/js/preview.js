@@ -35,7 +35,7 @@ const getScriptAndStyleDeps = () => {
   const utilsDeps = useResource().getUtilsDeps()
 
   const scriptsDeps = [...scripts, ...utilsDeps].reduce((res, item) => {
-    res[item.package] = item.script
+    res[item.package] = res[item.package] || item.script
 
     return res
   }, {})
@@ -216,7 +216,7 @@ const handleHistoryPreview = (params, url) => {
               styles
             })
           },
-          previewWindow.origin || window.location.origin
+          historyPreviewWindow?.origin || window.location.origin
         )
 
         // 历史页面不需要实时更新预览，发送完消息后移除监听
@@ -238,11 +238,10 @@ const getQueryParams = (params = {}, isHistory = false) => {
   const theme = getMetaApi(META_SERVICE.ThemeSwitch)?.getThemeState()?.theme
   const framework = getMergeMeta('engine.config')?.dslMode
   const platform = getMergeMeta('engine.config')?.platformId
-  const { scripts, styles } = getScriptAndStyleDeps()
 
   let query = `tenant=${tenant}&id=${paramsMap.get('id')}&theme=${theme}&framework=${framework}`
 
-  query += `&platform=${platform}&scripts=${JSON.stringify(scripts)}&styles=${JSON.stringify(styles)}`
+  query += `&platform=${platform}`
 
   if (pageId) {
     query += `&pageid=${pageId}`

@@ -69,6 +69,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.plugins.collections.DataSourceRecordUpload */
 import { reactive, watch } from 'vue'
 import { Button, Modal, FileUpload } from '@opentiny/vue'
 import { getDataFromFile } from './js/datasource'

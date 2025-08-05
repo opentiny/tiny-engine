@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-canvas",
-  "version": "2.5.0",
+  "version": "2.7.0",
   "publishConfig": {
     "access": "public"
   },
@@ -42,14 +42,14 @@
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/tiny-engine-webcomponent-core": "workspace:*",
     "@vue/babel-plugin-jsx": "^1.2.5",
     "@vue/shared": "^3.3.4",
     "@vueuse/core": "^9.6.0",
     "diff-match-patch": "^1.0.5",
     "jsondiffpatch": "^0.6.0",
     "postcss": "^8.4.31",
-    "postcss-selector-parser": "^7.0.0"
+    "postcss-selector-parser": "^7.0.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-vite-config",
-  "version": "2.5.0",
+  "version": "2.7.0",
   "description": "",
   "type": "module",
   "main": "./index.js",
@@ -16,10 +16,12 @@
   "dependencies": {
     "@babel/core": "~7.23.2",
     "@babel/generator": "~7.23.2",
+    "@babel/parser": "^7.27.2",
     "@babel/traverse": "~7.23.2",
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:^",
+    "@rollup/plugin-replace": "^6.0.2",
     "@types/node": "^18.0.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",

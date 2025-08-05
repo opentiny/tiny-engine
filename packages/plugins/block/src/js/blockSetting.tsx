@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.plugins.blockmanage.js-blockSetting */
 import { ref, reactive, readonly, onMounted } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { remove } from '@opentiny/vue-renderless/common/array'
@@ -383,7 +384,7 @@ export const initEditBlock = (block) => {
 export const getBlockBase64 = () => {
   const iframe = document.querySelector('#canvas')
   const subDocument = iframe.contentWindow.document
-  const container = subDocument.querySelector('.design-page')
+  const container = subDocument.querySelector('#app')
 
   return html2canvas(container, { useCORS: true })
     .then((canvas) => canvas.toDataURL('image/webp'))

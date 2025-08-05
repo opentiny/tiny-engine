@@ -10,7 +10,12 @@
     @opened="openedDialog"
   >
     <div class="bind-event-dialog-tip">
-      选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。
+      <tiny-alert
+        type="info"
+        description="选择已有方法或者添加新方法（点击 确定 之后将在JS面板中创建一个该名称的新方法）。"
+        class="header-alert"
+        :closable="false"
+      ></tiny-alert>
     </div>
     <div class="bind-event-dialog-content">
       <component :is="BindEventsDialogSidebar" :dialogVisible="dialogVisible" :eventBinding="eventBinding"></component>
@@ -26,7 +31,8 @@
 </template>
 
 <script>
-import { ast2String, string2Ast } from '@opentiny/tiny-engine-common/js/ast'
+/* metaService: engine.setting.event.BindEventsDialog */
+import { string2Ast } from '@opentiny/tiny-engine-common/js/ast'
 import {
   getMergeMeta,
   useCanvas,
@@ -36,8 +42,9 @@ import {
   getMetaApi,
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
-import { Button, DialogBox } from '@opentiny/vue'
+import { Button, DialogBox, TinyAlert } from '@opentiny/vue'
 import { nextTick, provide, reactive, ref } from 'vue'
+import MagicString from 'magic-string'
 import meta from '../../meta'
 
 const dialogVisible = ref(false)
@@ -53,7 +60,8 @@ export const close = () => {
 export default {
   components: {
     TinyButton: Button,
-    TinyDialogBox: DialogBox
+    TinyDialogBox: DialogBox,
+    TinyAlert
   },
   inheritAttrs: false,
   props: {
@@ -140,38 +148,39 @@ export default {
 
     const getFormatParams = (extraParams) => Array.from({ length: extraParams.length }, (v, i) => `args${i}`).join(',')
 
-    const getFunctionBody = () => {
-      let method = getMethods()?.[state.bindMethodInfo.name]?.value
-      let preBody = '{}'
-      let isAsync = false
-      let isGenerator = false
+    const rewriteMethodParams = (method, name, formatParams, extraParams, enableExtraParams) => {
+      const finalParams = enableExtraParams && extraParams.length ? `event,${formatParams}` : formatParams
+      const defaultMethod = `function ${name} (${finalParams}) {\n}\n`
 
-      if (method) {
-        let astStr = {}
-        try {
-          astStr = string2Ast(method)
-        } catch (e) {
-          method = method.replace('function', `function ${state.bindMethodInfo.name}`)
-          astStr = string2Ast(method)
-        }
-
-        if (astStr?.program?.body[0]?.body) {
-          preBody = ast2String(astStr.program.body[0].body)
-        }
-
-        if (astStr?.program?.body[0]?.async) {
-          isAsync = true
-        }
-
-        if (astStr?.program?.body[0]?.generator) {
-          isGenerator = true
-        }
+      // 没有现存方法，直接拼接一个新的
+      if (!method) {
+        return defaultMethod
       }
 
-      return {
-        preBody: preBody || '{\n}',
-        isAsync,
-        isGenerator
+      try {
+        const magicStr = new MagicString(method)
+        const astStr = string2Ast(method)
+
+        // 解析出来不是函数声明，直接返回默认拼接的函数
+        if (astStr?.program?.body[0]?.type !== 'FunctionDeclaration') {
+          return defaultMethod
+        }
+
+        // 参数数量一致，不需要改写参数，直接返回
+        // extraParams.length 是传入的参数数量，+1 是 event 参数
+        if (astStr?.program?.body[0].params.length === extraParams.length + 1) {
+          return method
+        }
+
+        // 参数数量不一致，需要改写参数
+        const start = astStr?.program?.body[0].id.end
+        const end = astStr?.program?.body[0].body.start
+        magicStr.remove(start, end)
+        magicStr.appendLeft(start, `(${finalParams})`)
+        return magicStr.toString()
+      } catch (e) {
+        // 尝试改写失败了，直接返回拼接的
+        return defaultMethod
       }
     }
 
@@ -207,14 +216,12 @@ export default {
       bindMethod({ ...state.bindMethodInfo, params, extra: extraParams })
 
       // 需要在bindMethod之后
-      const { preBody: functionBody, isAsync, isGenerator } = getFunctionBody()
       const { name } = state.bindMethodInfo
-      const functionName = `${isAsync ? 'async' : ''} function${isGenerator ? '*' : ''} ${name}`
+      const methodValue = getMethods()?.[state.bindMethodInfo.name]?.value
+      const functionStr = rewriteMethodParams(methodValue, name, formatParams, extraParams, state.enableExtraParams)
       const method = {
         name,
-        content: state.enableExtraParams
-          ? `${functionName}(eventArgs,${formatParams}) ${functionBody}`
-          : `${functionName}(${formatParams})  ${functionBody}`
+        content: functionStr
       }
       const { beforeSaveMethod } = getOptions(meta.id)
 
@@ -262,10 +269,9 @@ export default {
 }
 
 .bind-event-dialog-tip {
-  padding: var(--te-common-vertical-item-spacing-normal) 14px;
-  margin-bottom: var(--te-common-vertical-item-spacing-normal);
-  background-color: var(--te-bind-event-dialog-tip-bg-color);
-  color: var(--te-bind-event-dialog-tip-text-color);
+  .tiny-alert.tiny-alert--normal {
+    margin: 12px 0;
+  }
 }
 
 .bind-event-dialog-content {

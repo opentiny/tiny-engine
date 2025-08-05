@@ -60,6 +60,7 @@
 </template>
 
 <script lang="jsx">
+/* metaService: engine.plugins.appmanage.PageSetting */
 import { reactive, ref, computed, onActivated, onDeactivated } from 'vue'
 import { Button, Collapse, CollapseItem, Input } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton, LifeCycles } from '@opentiny/tiny-engine-common'
@@ -69,7 +70,7 @@ import {
   useCanvas,
   useModal,
   useNotify,
-  getMergeRegistry,
+  getMergeMeta,
   getMetaApi,
   META_SERVICE,
   useMessage
@@ -139,7 +140,7 @@ export default {
     } = usePage()
     const { pageState, initData } = useCanvas()
     const { confirm } = useModal()
-    const registry = getMergeRegistry(meta.type, meta.id)
+    const registry = getMergeMeta(meta.id)
     const pageGeneral = registry.components.PageGeneral
     const beforeCreatePage = registry?.options?.beforeCreatePage
     const pageGeneralRef = ref(null)

@@ -10,6 +10,7 @@
  *
  */
 
+/* metaService: engine.service.block.useBlock */
 import { ref, reactive, readonly, type DeepReadonly, toRaw } from 'vue'
 import { hyphenate } from '@vue/shared'
 import { extend, copyArray } from '@opentiny/vue-renderless/common/object'
@@ -763,22 +764,6 @@ const cancelCheckAll = () => {
   selectedBlockArray.value = []
 }
 
-const getBlockAssetsByVersion = (block: Block, version?: string) => {
-  let assets = block.assets
-
-  if (version) {
-    const replaceUri = (uri: string) => uri.replace(/@\d{1,3}(\.\d{1,3}){0,2}\//, `@${version}/`)
-
-    assets = {
-      ...block.assets,
-      scripts: (block.assets?.scripts || []).map(replaceUri),
-      styles: (block.assets?.styles || []).map(replaceUri)
-    }
-  }
-
-  return assets
-}
-
 const shouldReplaceCategoryWithGroup = () => {
   const { mergeCategoriesAndGroups } = getOptions(meta.id)
   return mergeCategoriesAndGroups
@@ -796,7 +781,6 @@ export default function () {
     addBlock,
     delBlock,
     createBlock,
-    getBlockAssetsByVersion,
     createEmptyBlock,
     groupChange,
     addDefaultGroup,

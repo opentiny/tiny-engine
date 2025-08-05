@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 26.0.2, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="图层_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 132 132" style="enable-background:new 0 0 132 132;" xml:space="preserve">
+	 viewBox="0 0 48 48" style="enable-background:new 0 0 48 48;" xml:space="preserve">
 <style type="text/css">
-	.st0{fill:none;}
-	.st1{fill-rule:evenodd;clip-rule:evenodd;fill:#808080;}
+	.st0{fill-rule:evenodd;clip-rule:evenodd;fill:currentColor;}
 </style>
-<rect id="size" class="st0" width="132" height="132"/>
-<path id="矢量_8" class="st1" d="M66,25.2H24.8c-2.4,0-4.4,1.9-4.4,4.3c0,2.4,1.9,4.3,4.4,4.3h36.9v74.2c0,2.4,1.9,4.3,4.4,4.3
-	c2.4,0,4.3-1.9,4.3-4.3V33.7h37c2.4,0,4.3-1.8,4.3-4.3c0-2.4-1.9-4.3-4.3-4.3H66z"/>
+<desc>Created with Pixso.</desc>
+<path id="矢量_151" class="st0" d="M32.6,9H5v3.6h12V40h3.6V12.6h12V9z M42,26H30v2h5v12h2V28h5V26z"/>
 </svg>

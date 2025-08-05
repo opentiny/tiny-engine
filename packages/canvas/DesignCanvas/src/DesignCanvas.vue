@@ -32,7 +32,6 @@ import {
   useModal,
   usePage,
   useMessage,
-  getMergeRegistry,
   getMergeMeta,
   getOptions,
   getMetaApi,
@@ -56,13 +55,12 @@ const componentType = {
 
 export default {
   setup() {
-    const registry = getMergeRegistry('canvas')
+    const registry = getMergeMeta('engine.canvas')
     const materialsPanel = getMergeMeta('engine.plugins.materials')?.entry
     const { CanvasRouteBar, CanvasBreadcrumb } = registry.components
     const CanvasLayout = registry.layout.entry
     const [CanvasContainer] = registry.metas
     const footData = ref([])
-    const showMask = ref(true)
     const canvasRef = ref(null)
     let showModal = false // 弹窗标识
     const { canvasSrc = '' } = getOptions(meta.id) || {}
@@ -108,7 +106,9 @@ export default {
           empty: () => '应用下暂无页面，需新建页面后体验画布功能',
           release: (type) => `当前${componentType[type]}未锁定，点击右上角 “锁定” 图标后编辑${componentType[type]}`,
           lock: (type) =>
-            `当前${componentType[type]}被 ${pageInfo?.username} ${pageInfo?.resetPasswordToken} 锁定，如需编辑请先联系他解锁文件，然后再锁定该${componentType[type]}后编辑！`
+            `当前${componentType[type]}被 ${pageInfo?.username || ''} 锁定，如需编辑请先联系他解锁文件，然后再锁定该${
+              componentType[type]
+            }后编辑！`
         }
 
         const renderMsg = message[pageStatus.state](pageSchema.componentName)
@@ -273,7 +273,6 @@ export default {
       nodeSelected,
       footData,
       materialsPanel,
-      showMask,
       controller: {
         // 需要在canvas/render或内置组件里使用的方法
         getMaterial: useMaterial().getMaterial,

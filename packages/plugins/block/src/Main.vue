@@ -5,6 +5,7 @@
     :fixed-name="PLUGIN_NAME.BlockManage"
     :fixedPanels="fixedPanels"
     :docsUrl="docsUrl"
+    :docsContent="docsContent"
     :isShowDocsIcon="true"
     @close="close"
   >
@@ -107,7 +108,7 @@
           </span>
           <template #dropdown>
             <tiny-dropdown-menu
-              popper-class="my-class"
+              popper-class="block-footer-dropdown"
               placement="top"
               :options="state.sortOptions"
             ></tiny-dropdown-menu>
@@ -122,6 +123,7 @@
 </template>
 
 <script lang="tsx">
+/* metaService: engine.plugins.blockmanage.Main */
 import { ref, reactive, computed, watch, provide } from 'vue'
 import {
   Search as TinySearch,
@@ -224,6 +226,8 @@ export default {
   emits: ['close'],
   setup(props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('block')
+    const docsContent =
+      '区块类似于前端开发中的 Component，我们可以将页面中一样的结构（比如Header），构建到区块中，发布后直接拖入页面使用。'
     const { getBlockList, sort } = useBlock()
     const { isSaved } = useCanvas()
     const { confirm } = useModal()
@@ -457,6 +461,7 @@ export default {
       handleSelectVisibleChange,
       externalBlock,
       docsUrl,
+      docsContent,
       groupLabels
     }
   }
@@ -526,6 +531,12 @@ export default {
     .tiny-dropdown__suffix-inner {
       color: var(--te-block-panel-footer-icon-color);
       height: 10px;
+      .tiny-svg {
+        fill: currentcolor;
+      }
+    }
+    .tiny-dropdown__title {
+      font-size: var(--te-base-font-size-base);
     }
   }
   :deep(.tiny-dropdown-menu) {
@@ -552,6 +563,7 @@ export default {
   line-height: 24px;
 }
 :deep(.tiny-dropdown-item) {
+  font-size: var(--te-base-font-size-base);
   &:not(.is-disabled):active,
   &:not(.is-disabled):hover,
   &:focus {

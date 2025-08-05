@@ -9,6 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
+/* metaService: engine.service.breadcrumb.useBreadcrumb */
 
 import { ref } from 'vue'
 

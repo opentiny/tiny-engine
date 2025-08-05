@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -10,10 +10,9 @@
  *
  */
 
-export { getMergeMeta, getMetaApi, getOptions } from './common'
+export { getMergeMeta, getMetaApi, getOptions, getMergeMetaByType, getAllMergeMeta, mergeRegistry } from './common'
 export { useCompile } from './templateHash'
-export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, mergeRegistry, getMergeRegistry } from './entryHash'
-export { getLayoutComponent } from './layoutHash'
+export { defineEntry, callEntry, beforeCallEntry, afterCallEntry, initHotfixRegistry } from './entryHash'
 export { default as useMessage } from './useMessage'
 export { getConfigurator, addConfigurator } from './configurators'
 export * from './hooks'

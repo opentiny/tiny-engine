@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2024 - present TinyEngine Authors.
- * Copyright (c) 2024 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -11,15 +11,13 @@
  */
 
 import { parse } from '@babel/parser'
-import generate from '@babel/generator'
-import traverse from '@babel/traverse'
+import generateLib from '@babel/generator'
+import traverseLib from '@babel/traverse'
 import template from '@babel/template'
 import {
   wrapEntryFuncNode,
   COMMON_PACKAGE_NAME,
   CALLENTRY,
-  BEFORE_CALLENTRY,
-  AFTER_CALLENTRY,
   USE_COMPILE,
   METADATANAME,
   isCallEntryFile,
@@ -31,7 +29,9 @@ import {
   getModuleId
 } from './utils.js'
 
-const generateTraverse = traverse.default
+// 在ESM模式中，traverse默认是以命名导出的形式提供
+const traverse = traverseLib.default || traverseLib
+const generate = generateLib.default || generateLib
 
 function handleFunctionExpression(state) {
   return function (path) {
@@ -40,6 +40,7 @@ function handleFunctionExpression(state) {
 
     // 只有拿到函数的名称才可以被复写
     if (functionName) {
+      state.ArrowOrFunctionExpression.push(functionName)
       wrapEntryFuncNode({
         path,
         functionName,
@@ -74,15 +75,26 @@ function handleImportDeclaration(state) {
   }
 }
 
+/**
+ * 处理变量声明节点
+ * @param {Object} state - 状态对象,用于存储变量声明信息
+ * @returns {Function} 返回处理变量声明的函数
+ */
 function handleVariableDeclaration(state) {
   return function (path) {
+    // 遍历所有变量声明
     path.node.declarations?.forEach((val) => {
+      // 获取变量名
       const name = val.id.name
+      // 获取变量所在的作用域块
       const block = path.scope.block
+
+      // 如果该作用域块还没有记录过变量,则创建新数组
       if (!state.varDeclartion.has(block)) {
         const arr = [name]
         state.varDeclartion.set(block, arr)
       } else {
+        // 如果该作用域块已存在,则将变量名添加到数组中
         const arr = state.varDeclartion.get(block)
         arr.push(name)
       }
@@ -127,19 +139,13 @@ function handleProgram(state, metaPath) {
     path.node.body.unshift(template.statement(`import ${metaData} from '${metaPath}'`)())
 
     const callEntry = path.scope.generateUid(CALLENTRY)
-    const beforeCallEntry = path.scope.generateUid(BEFORE_CALLENTRY)
-    const afterCallEntry = path.scope.generateUid(AFTER_CALLENTRY)
     const useCompile = path.scope.generateUid(USE_COMPILE)
     state.varName[CALLENTRY] = callEntry
-    state.varName[BEFORE_CALLENTRY] = beforeCallEntry
-    state.varName[AFTER_CALLENTRY] = afterCallEntry
     state.varName[USE_COMPILE] = useCompile
     path.node.body.unshift(
       template.statement(
         `import { 
           ${CALLENTRY} as ${callEntry},
-          ${BEFORE_CALLENTRY} as ${beforeCallEntry},
-          ${AFTER_CALLENTRY} as ${afterCallEntry},
           ${USE_COMPILE} as ${useCompile} 
         } from '${COMMON_PACKAGE_NAME}'`
       )()
@@ -156,8 +162,7 @@ function handleExportDefaultDeclaration(state) {
     const lastComment = comment[comment.length - 1].value
     // 只判断最接近export default的注释节点
     if (lastComment.includes('metaComponent')) {
-      wrapExportComp({ path, varName: state.varName })
-      path.skip()
+      wrapExportComp({ path, varName: state.varName, lastComment })
     }
   }
 }
@@ -177,14 +182,16 @@ export const transform = (code, id) => {
     hooksIndex: {},
     varDeclartion: new Map(),
     moduleId: '', // 自定义的模块ID，用于区分元服务中不同文件,
-    noUseVars: []
+    noUseVars: [],
+    fileId: id,
+    ArrowOrFunctionExpression: []
   }
 
   // 找不到meta.js告警并返回
   const metaPath = getMeataPath(id)
   if (!metaPath) {
     // eslint-disable-next-line no-console
-    console.log('找不到对应的meta.js')
+    console.log(`${id}: 找不到对应的meta.js`)
     return
   }
 
@@ -194,7 +201,7 @@ export const transform = (code, id) => {
     plugins: ['typescript', 'jsx']
   })
 
-  generateTraverse(resultAst, {
+  traverse(resultAst, {
     // 使用特定的类型回调处理、函数表达式、箭头函数、带导出的函数
     'ArrowFunctionExpression|FunctionExpression': handleFunctionExpression(state),
     ImportDeclaration: handleImportDeclaration(state),
@@ -204,5 +211,5 @@ export const transform = (code, id) => {
     ExportDefaultDeclaration: handleExportDefaultDeclaration(state)
   })
 
-  return generate.default(resultAst).code || ''
+  return generate(resultAst).code || ''
 }

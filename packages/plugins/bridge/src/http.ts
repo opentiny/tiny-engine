@@ -9,7 +9,7 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
+/* metaService: engine.plugins.bridge.http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { generateBridge, generateUtil } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 

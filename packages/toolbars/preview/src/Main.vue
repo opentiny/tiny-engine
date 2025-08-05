@@ -1,5 +1,5 @@
 <template>
-  <div class="toolbar-save">
+  <div class="toolbar-save toolbar-helpGuid">
     <toolbar-base
       content="预览页面"
       :icon="options.icon?.default || options?.icon"
@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+/* metaService: engine.toolbars.preview.Main */
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../meta'

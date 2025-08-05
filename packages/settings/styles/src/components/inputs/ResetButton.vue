@@ -4,6 +4,7 @@
 </template>
 
 <script>
+/* metaService: engine.setting.styles.ResetButton */
 import { Button } from '@opentiny/vue'
 
 export default {
@@ -40,7 +41,6 @@ export default {
 .reset-desc {
   display: block;
   padding: 8px 4px;
-  text-align: center;
   color: var(--te-styles-common-text-color-secondary);
 }
 </style>

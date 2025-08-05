@@ -18,8 +18,6 @@
   }
   .tiny-select__tags {
     .tiny-tag {
-      color: var(--te-common-text-weaken);
-      background-color: var(--te-common-bg-tag); // 选择框
       border-radius: var(--te-base-border-radius-normal);
 
       .tiny-tag__close {
@@ -28,6 +26,14 @@
         &:hover {
           color: var(--te-common-text-primary);
         }
+      }
+    }
+  }
+  &.tiny-select__multiple {
+    .tiny-select__tags {
+      .tiny-tag {
+        height: 17px;
+        padding: 2px 4px;
       }
     }
   }
@@ -64,7 +70,9 @@
     font-size: var(--te-base-font-size-base);
     // 选中状态
     &.selected {
-      color: var(--te-common-text-emphasize);
+      .tiny-svg {
+        color: var(--te-common-text-emphasize);
+      }
       background-color: var(--te-common-bg-popover);
       &:hover {
         background-color: var(--te-common-bg-container);
@@ -298,6 +306,7 @@
 .tiny-dialog-box.tiny-dialog-box.tiny-dialog-box {
   padding: 20px;
   background-color: var(--te-common-bg-popover);
+  border-radius: var(--te-base-border-radius-1);
   .tiny-dialog-box__header {
     height: auto;
     font-size: var(--te-base-font-size-1);
@@ -319,6 +328,7 @@
     color: var(--te-common-text-secondary);
     padding: 0;
     margin-top: 16px;
+    font-size: var(--te-base-font-size-base);
     .tiny-form-item.is-text.is-no-asterisk.tiny-form-item--default {
       margin-bottom: 12px;
       &:last-of-type {
@@ -464,7 +474,7 @@
     padding: 20px;
     border-radius: var(--te-base-border-radius-1);
     box-shadow: 0 0 10px 0 var(--te-base-box-shadow-rgba-1);
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-common-bg-default);
     .tiny-modal__header {
       padding: 0;
       font-size: var(--te-base-font-size-1);
@@ -474,6 +484,7 @@
       .tiny-modal__title {
         font-weight: var(--te-base-font-weight-bold);
         color: var(--te-common-text-primary);
+        font-size: var(--te-base-font-size-1);
       }
       .tiny-modal__close-btn {
         top: -4px;
@@ -536,7 +547,7 @@
 }
 
 // 11、numeric 组件
-.tiny-numeric.tiny-numeric {
+.tiny-numeric.tiny-numeric.tiny-numeric {
   .tiny-numeric__input-inner {
     height: 24px;
     border-radius: var(--te-base-border-radius-1);
@@ -544,6 +555,7 @@
     border-color: var(--te-common-border-default);
     text-align: left;
     background-color: var(--te-common-bg-default);
+    font-size: var(--te-base-font-size-base);
   }
   &.is-controls-right {
     .tiny-numeric__input-inner {
@@ -584,6 +596,7 @@
     width: 14px;
     margin-right: 4px;
     height: auto;
+    line-height: 18px;
   }
 }
 
@@ -595,6 +608,7 @@
   background-color: var(--te-common-bg-popover);
   border: 0;
   box-shadow: 0 -2px 12px 0 var(--te-base-box-shadow-rgba-2);
+  border-radius: var(--te-base-border-radius-1);
 
   height: auto;
   .popper__arrow {
@@ -605,8 +619,6 @@
 // 13、tag标签
 .tiny-tag.tiny-tag {
   font-size: var(--te-base-font-size-base);
-  color: var(--te-common-text-secondary);
-  background: var(--te-common-bg-disabled);
   border-radius: var(--te-base-border-radius-1);
   .tiny-tag__close {
     margin: 0 0 0 4px;
@@ -617,9 +629,6 @@
 // 14、radio 单选
 .tiny-radio.tiny-radio {
   margin-right: 20px;
-  .tiny-radio__inner {
-    border: 1px solid var(--te-common-border-hover);
-  }
   .tiny-radio__label {
     font-size: var(--te-base-font-size-base);
     color: var(--te-common-text-primary);
@@ -950,9 +959,6 @@
       color: var(--te-common-border-hover);
       border-radius: var(--te-base-border-radius-1);
     }
-    .row__selected .tiny-grid-checkbox {
-      color: var(--te-common-color-info);
-    }
   }
 }
 
@@ -1009,6 +1015,7 @@
     border-color: var(--te-common-border-default);
     color: var(--te-common-text-primary);
     background-color: transparent;
+    font-size: var(--te-base-font-size-base);
     &:hover {
       border-color: var(--te-common-border-active);
     }
@@ -1051,10 +1058,19 @@
   }
 }
 
-.tiny-alert {
+.tiny-alert.tiny-alert {
+  font-size: var(--te-base-font-size-base);
   &.tiny-alert--info {
     background: var(--te-common-bg-info);
     border-color: transparent;
     color: var(--te-common-text-primary);
+  }
+  .tiny-alert__content {
+    .tiny-alert__description {
+      font-size: var(--te-base-font-size-base);
+    }
+  }
+  .tiny-alert__icon {
+    margin-top: 1px;
   }
 }
