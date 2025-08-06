@@ -1,3 +1,4 @@
+import * as jsonDiffPatch from 'jsondiffpatch'
 // ==================== 基础类型定义 ====================
 
 /**
@@ -51,7 +52,7 @@ export interface DiffResult {
   // deletedNodes: Node[];
   // changedProps: { nodeId: string; oldProps: Record<string, any>; newProps: Record<string, any> }[];
   // simplified for now, could be a diff object representing schema changes
-  diff: Record<string, any> // 简化的差异表示
+  diff: jsonDiffPatch.Delta // 差异对象，如果无差异则为 undefined
 }
 
 /**
@@ -183,7 +184,7 @@ export interface DestroyBranchResponse {
 /**
  * 合并策略
  */
-export type MergeStrategy = 'fast-forward' | 'three-way'
+export type MergeStrategy = 'fast-forward' | 'three-way' | 'rebase'
 
 /**
  * 合并分支请求参数
@@ -279,7 +280,12 @@ export interface BranchOperationHistoryResponse {
 /**
  * 冲突类型
  */
-type ConflictType = 'content' | 'file_added_by_both' | 'file_deleted_by_one' | 'file_renamed_by_both'
+type ConflictType =
+  | 'content'
+  | 'file_added_by_both'
+  | 'file_deleted_by_one'
+  | 'file_renamed_by_both'
+  | 'property_conflict'
 
 /**
  * 冲突报告接口
@@ -293,6 +299,7 @@ export interface ConflictReport {
   readonly currentContent?: string // 当前分支内容
   readonly incomingContent?: string // 传入分支内容
   readonly suggestedResolution?: ConflictResolutionStrategy // 建议的解决方案
+  readonly message?: string
 }
 
 /**
