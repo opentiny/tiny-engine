@@ -26,7 +26,7 @@ const defaultMarkdownItOptions = {
 }
 
 const props = defineProps<{
-  type: 'markdown' | 'text'
+  type?: 'markdown' | 'text'
   content: string
   options?: MarkdownItOptions
 }>()

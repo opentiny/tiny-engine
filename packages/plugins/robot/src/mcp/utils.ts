@@ -2,6 +2,7 @@ import { toRaw } from 'vue'
 import useMcpServer from './useMcp'
 import type { LLMMessage, RobotMessage } from './types'
 import type { LLMRequestBody, LLMResponse, ReponseToolCall, RequestOptions, RequestTool } from './types'
+import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 let requestOptions: RequestOptions = {}
 
@@ -14,13 +15,11 @@ const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: R
   if (tools.length > 0) {
     bodyObj.tools = toRaw(tools)
   }
-  return fetch(options?.url || '/app-center/api/chat/completions', {
-    method: 'POST',
+  return getMetaApi(META_SERVICE.Http).post(options?.url || '/app-center/api/chat/completions', bodyObj, {
     headers: {
       'Content-Type': 'application/json',
       ...options?.headers
-    },
-    body: JSON.stringify(bodyObj)
+    }
   })
 }
 
@@ -82,7 +81,7 @@ const handleToolCall = async (
         result: toolCallResult.content
       }
     }
-    const newResp = await fetchLLM(toolMessages, tools).then((res) => res.json())
+    const newResp = await fetchLLM(toolMessages, tools)
     const hasToolCall = newResp.choices[0].message.tool_calls?.length > 0
     if (hasToolCall) {
       await handleToolCall(newResp, tools, messages, toolMessages)
@@ -103,7 +102,7 @@ export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOpt
   }
   const tools = await useMcpServer().getLLMTools()
   requestOptions = options
-  const res = await fetchLLM(messages.slice(0, -1), tools, options).then((res) => res.json())
+  const res = await fetchLLM(messages.slice(0, -1), tools, options)
   const hasToolCall = res.choices[0].message.tool_calls?.length > 0
   if (hasToolCall) {
     await handleToolCall(res, tools, messages)
