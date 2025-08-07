@@ -19,7 +19,7 @@ const DEFAULT_MODELS = [{ label: 'DeepSeek：DeepSeek-V3', value: 'deepseek-chat
 
 export const getAIModelOptions = () => {
   const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
-  return [...DEFAULT_MODELS, ...aiRobotOptions]
+  return aiRobotOptions.length ? aiRobotOptions : DEFAULT_MODELS
 }
 
 // 这里存放的是aichat的响应式数据
