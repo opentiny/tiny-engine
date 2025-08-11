@@ -1,0 +1,323 @@
+{
+  "url": "https://element-plus.org/zh-CN/component/form.html",
+  "name": "Form 表单 ​",
+  "description": "表单包含 输入框, 单选框, 下拉选择, 多选框 等用户输入的组件。 使用表单，您可以收集、验证和提交数据。",
+  "properties": [],
+  "events": [],
+  "slots": [],
+  "methods": [],
+  "others": [
+    {
+      "category": "Form Attributes ​",
+      "name": "model",
+      "description": "表单数据对象",
+      "type": "object",
+      "default": "—"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "rules",
+      "description": "表单验证规则",
+      "type": "object",
+      "default": "—"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "inline",
+      "description": "行内表单模式",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "label-position",
+      "description": "表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性",
+      "type": "enum",
+      "default": "right"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "label-width",
+      "description": "标签的长度，例如 '50px'。 作为 Form 直接子元素的 form-item 会继承该值。 可以使用 auto。",
+      "type": "string / number",
+      "default": "''"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "label-suffix",
+      "description": "表单域标签的后缀",
+      "type": "string",
+      "default": "''"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "hide-required-asterisk",
+      "description": "是否隐藏必填字段标签旁边的红色星号。",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "require-asterisk-position",
+      "description": "星号的位置。",
+      "type": "enum",
+      "default": "left"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "show-message",
+      "description": "是否显示校验错误信息",
+      "type": "boolean",
+      "default": "true"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "inline-message",
+      "description": "是否以行内形式展示校验信息",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "status-icon",
+      "description": "是否在输入框中显示校验结果反馈图标",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "validate-on-rule-change",
+      "description": "是否在 rules 属性改变后立即触发一次验证",
+      "type": "boolean",
+      "default": "true"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "size",
+      "description": "用于控制该表单内组件的尺寸",
+      "type": "enum",
+      "default": "—"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "disabled",
+      "description": "是否禁用该表单内的所有组件。 如果设置为 true, 它将覆盖内部组件的 disabled 属性",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "scroll-to-error",
+      "description": "当校验失败时，滚动到第一个错误表单项",
+      "type": "boolean",
+      "default": "false"
+    },
+    {
+      "category": "Form Attributes ​",
+      "name": "scroll-into-view-options 2.3.2",
+      "description": "当校验有失败结果时，滚动到第一个失败的表单项目 可通过 scrollIntoView 配置",
+      "type": "object / boolean",
+      "default": "true"
+    },
+    {
+      "category": "Form Events ​",
+      "名称": "validate",
+      "description": "任一表单项被校验后触发",
+      "type": "Function"
+    },
+    {
+      "category": "Form Slots ​",
+      "事件名": "default",
+      "description": "自定义默认内容",
+      "子标签": "FormItem"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "validate",
+      "description": "对整个表单的内容进行验证。 接收一个回调函数，或返回 Promise。",
+      "type": "Function"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "validateField",
+      "description": "验证具体的某个字段。",
+      "type": "Function"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "resetFields",
+      "description": "重置该表单项，将其值重置为初始值，并移除校验结果",
+      "type": "Function"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "scrollToField",
+      "description": "滚动到指定的字段",
+      "type": "Function"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "clearValidate",
+      "description": "清理某个字段的表单验证信息。",
+      "type": "Function"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "fields 2.7.3",
+      "description": "获取所有字段的 context",
+      "type": "array"
+    },
+    {
+      "category": "Form Exposes ​",
+      "名称": "getField 2.10.2",
+      "description": "获取字段的 context",
+      "type": "Function"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "prop",
+      "description": "model 的键名。 它可以是一个属性的值(如 a.b.0 或 ['a', 'b', '0'])。 在使用了 validate、resetFields 的方法时，该属性是必填的。",
+      "type": "string / string[]",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "label",
+      "description": "标签文本",
+      "type": "string",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "label-position 2.7.7",
+      "description": "表单域标签的位置， 当设置为 left 或 right 时，则也需要设置 label-width 属性 默认会继承 Form的label-position",
+      "type": "enum",
+      "default": "''"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "label-width",
+      "description": "标签宽度，例如 '50px'。 可以使用 auto。",
+      "type": "string / number",
+      "default": "''"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "required",
+      "description": "是否为必填项，如不设置，则会根据校验规则确认",
+      "type": "boolean",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "rules",
+      "description": "表单验证规则, 具体配置见下表, 更多内容可以参考async-validator",
+      "type": "object",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "error",
+      "description": "表单域验证错误时的提示信息。设置该值会导致表单验证状态变为 error，并显示该错误信息。",
+      "type": "string",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "show-message",
+      "description": "是否显示校验错误信息",
+      "type": "boolean",
+      "default": "true"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "inline-message",
+      "description": "是否在行内显示校验信息",
+      "type": "string / boolean",
+      "default": "''"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "size",
+      "description": "用于控制该表单域下组件的默认尺寸",
+      "type": "enum",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "for",
+      "description": "和原生标签相同能力",
+      "type": "string",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Attributes ​",
+      "name": "validate-status",
+      "description": "formitem 校验的状态",
+      "type": "enum",
+      "default": "—"
+    },
+    {
+      "category": "FormItemRule ​",
+      "名称": "trigger",
+      "description": "验证逻辑的触发方式",
+      "type": "enum",
+      "default": "—"
+    },
+    {
+      "category": "FormItem Slots ​",
+      "插槽名": "default",
+      "description": "表单的内容。",
+      "type": "—"
+    },
+    {
+      "category": "FormItem Slots ​",
+      "插槽名": "label",
+      "description": "标签位置显示的内容",
+      "type": "object"
+    },
+    {
+      "category": "FormItem Slots ​",
+      "插槽名": "error",
+      "description": "验证错误信息的显示内容",
+      "type": "object"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "size",
+      "description": "表单项大小",
+      "type": "object"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "validateMessage",
+      "description": "校验消息",
+      "type": "object"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "validateState",
+      "description": "校验状态",
+      "type": "object"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "validate",
+      "description": "验证表单项",
+      "type": "Function"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "resetField",
+      "description": "对该表单项进行重置，将其值重置为初始值并移除校验结果",
+      "type": "Function"
+    },
+    {
+      "category": "FormItem Exposes ​",
+      "名称": "clearValidate",
+      "description": "移除该表单项的校验结果",
+      "type": "Function"
+    }
+  ],
+  "crawledAt": "2025-08-11T10:21:36.576Z"
+}

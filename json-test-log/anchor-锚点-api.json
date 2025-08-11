@@ -1,0 +1,118 @@
+{
+  "url": "https://element-plus.org/zh-CN/component/anchor.html",
+  "name": "Anchor 锚点",
+  "description": "通过锚点，您可以很快找到当前页面上信息内容的位置。",
+  "components": {
+    "Anchor": {
+      "properties": [
+        {
+          "属性": "container",
+          "description": "滚动的容器",
+          "type": "string | HTMLElement | Window",
+          "default": "—"
+        },
+        {
+          "属性": "offset",
+          "description": "设置锚点滚动的偏移量",
+          "type": "number",
+          "default": "0"
+        },
+        {
+          "属性": "bound",
+          "description": "触发锚点的元素的位置偏移量",
+          "type": "number",
+          "default": "15"
+        },
+        {
+          "属性": "duration",
+          "description": "设置容器滚动持续时间，单位为毫秒。",
+          "type": "number",
+          "default": "300"
+        },
+        {
+          "属性": "marker",
+          "description": "是否显示标记",
+          "type": "boolean",
+          "default": "true"
+        },
+        {
+          "属性": "type",
+          "description": "设置锚点类型",
+          "type": "enum",
+          "default": "default"
+        },
+        {
+          "属性": "direction",
+          "description": "设置锚点方向",
+          "type": "enum",
+          "default": "vertical"
+        },
+        {
+          "属性": "select-scroll-top 2.9.2",
+          "description": "滚动时，链接是否选中位于顶部",
+          "type": "boolean",
+          "default": "false"
+        }
+      ],
+      "events": [
+        {
+          "事件名": "change",
+          "description": "step 改变时的回调",
+          "type": "Function"
+        },
+        {
+          "事件名": "click",
+          "description": "当用户点击链接时触发",
+          "type": "Function"
+        }
+      ],
+      "slots": [
+        {
+          "名称": "default",
+          "description": "AnchorLink 组件列表"
+        }
+      ],
+      "methods": [
+        {
+          "名称": "scrollTo",
+          "description": "手动滚动到特定位置。",
+          "type": "Function"
+        }
+      ],
+      "exposes": [],
+      "others": []
+    },
+    "AnchorLink": {
+      "properties": [
+        {
+          "属性": "title",
+          "description": "链接的文本内容。",
+          "type": "string",
+          "default": "—"
+        },
+        {
+          "属性": "href",
+          "description": "链接的地址。",
+          "type": "string",
+          "default": "—"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "名称": "default",
+          "description": "链接的内容"
+        },
+        {
+          "名称": "sub-link",
+          "description": "子链接的槽位。"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    }
+  },
+  "others": [],
+  "crawledAt": "2025-08-11T11:32:17.003Z"
+}

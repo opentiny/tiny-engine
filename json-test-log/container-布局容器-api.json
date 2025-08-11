@@ -1,0 +1,103 @@
+{
+  "url": "https://element-plus.org/zh-CN/component/container.html",
+  "name": "Container 布局容器",
+  "description": "用于布局的容器组件，方便快速搭建页面的基本结构：",
+  "components": {
+    "Container": {
+      "properties": [
+        {
+          "name": "direction",
+          "description": "子元素的排列方向",
+          "type": "enum",
+          "default": "子元素中有 el-header 或 el-footer 时为 vertical，否则为 horizontal"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "自定义默认内容",
+          "子标签": "Container / Header / Aside / Main / Footer"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    },
+    "Header": {
+      "properties": [
+        {
+          "name": "height",
+          "description": "顶栏高度",
+          "type": "string",
+          "default": "60px"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "自定义默认内容"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    },
+    "Aside": {
+      "properties": [
+        {
+          "name": "width",
+          "description": "侧边栏宽度",
+          "type": "string",
+          "default": "300px"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "自定义默认内容"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    },
+    "Main": {
+      "properties": [],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "自定义默认内容"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    },
+    "Footer": {
+      "properties": [
+        {
+          "name": "height",
+          "description": "底栏高度",
+          "type": "string",
+          "default": "60px"
+        }
+      ],
+      "events": [],
+      "slots": [
+        {
+          "name": "default",
+          "description": "自定义默认内容"
+        }
+      ],
+      "methods": [],
+      "exposes": [],
+      "others": []
+    }
+  },
+  "others": [],
+  "crawledAt": "2025-08-11T11:36:33.796Z"
+}
