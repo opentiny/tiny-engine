@@ -105,8 +105,8 @@ export class CommitApiImpl implements CommitApi {
 export class CommitRepositoryImpl implements CommitRepository {
   private readonly commitApi: CommitApi
 
-  constructor(commitApi: CommitApi) {
-    this.commitApi = commitApi
+  constructor() {
+    this.commitApi = new CommitApiImpl()
   }
 
   async save(commit: Commit): Promise<void> {

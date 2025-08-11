@@ -1,7 +1,7 @@
 import type { Branch } from '../../domain/models/Branch'
 import type { BranchService } from '../../domain/services/BranchService'
-import type { CommitRepository } from '../../domain/services/CommitService'
 import type { BranchRepository } from '../../infrastructure/repositories/BranchRepository'
+import type { CommitRepository } from '../../infrastructure/repositories/CommitRepository'
 import type {
   BranchOperationHistory,
   BranchOperationHistoryResponse,

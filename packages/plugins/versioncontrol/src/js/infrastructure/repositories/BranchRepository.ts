@@ -68,7 +68,7 @@ export class BranchApiImpl implements BranchApi {
 
   async saveBranch(branch: Branch): Promise<void> {
     try {
-      await api.post(`${BASE_URL}/create`, branch)
+      await api.post(`${BASE_URL}/create`, branch.toData())
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to save branch:', error)
@@ -100,8 +100,8 @@ export class BranchApiImpl implements BranchApi {
 export class BranchRepositoryImpl implements BranchRepository {
   private readonly branchApi: BranchApi
 
-  constructor(branchApi: BranchApi) {
-    this.branchApi = branchApi
+  constructor() {
+    this.branchApi = new BranchApiImpl()
   }
 
   async save(branch: Branch): Promise<void> {

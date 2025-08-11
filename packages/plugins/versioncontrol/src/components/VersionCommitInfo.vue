@@ -80,7 +80,7 @@
             </svg>
             与当前版本比较
           </button>
-          <button @click="createBranchFromCommit" class="action-btn">
+          <button @click="createBranchFromCommit(selectedCommit)" class="action-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <line x1="6" y1="3" x2="6" y2="15"></line>
               <circle cx="18" cy="6" r="3"></circle>
@@ -149,8 +149,8 @@ export default {
       emit('compare-with-current')
     }
 
-    const createBranchFromCommit = () => {
-      emit('create-branch-from-commit')
+    const createBranchFromCommit = (commit) => {
+      emit('create-branch-from-commit', commit)
     }
 
     const revertToCommit = (commit) => {

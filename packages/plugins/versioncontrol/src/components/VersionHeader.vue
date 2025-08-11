@@ -54,6 +54,7 @@
 </template>
 
 <script>
+/// <reference types="@opentiny/vue-renderless/types/tooltip.type" />
 import { LinkButton, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-meta-register'
 import { computed } from 'vue'
