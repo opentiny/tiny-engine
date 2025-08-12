@@ -32,12 +32,10 @@ const props = defineProps({
   model: { type: Object, required: true }
 })
 
-const emit = defineEmits(['update:model'])
-
-// 创建本地副本，避免直接修改 props
+// 创建本地副本，直接编辑本地数据
 const localValue = ref({ ...props.model })
 
-// 监听 props 变化，同步到本地
+// 监听 props 变化，同步到本地（当选择不同模型时）
 watch(
   () => props.model,
   (newModel) => {
@@ -46,14 +44,10 @@ watch(
   { deep: true }
 )
 
-// 监听本地值变化，同步到父组件
-watch(
-  localValue,
-  (newValue) => {
-    emit('update:model', { ...newValue })
-  },
-  { deep: true }
-)
+// 暴露本地数据给父组件访问
+defineExpose({
+  getLocalValue: () => localValue.value
+})
 </script>
 
 <style scoped>

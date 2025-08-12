@@ -33,7 +33,7 @@
 
         <div class="detail-content">
           <!-- 基本设置（组件化） -->
-          <ModelBasicForm v-model:model="selectedModel" @update:model="selectedModel = $event" />
+          <ModelBasicForm ref="modelBasicFormRef" :model="selectedModel" />
 
           <!-- 字段管理（组件化） -->
           <FieldManager
@@ -110,11 +110,12 @@ import ModelBasicForm from './components/ModelBasicForm.vue'
 import FieldManager from './components/FieldManager.vue'
 import { IconEdit, IconClose } from '@opentiny/vue-icon'
 import { TinyInput, TinyButton, TinyGridColumn, TinySelect, TinyOption, TinyCheckbox, Modal } from '@opentiny/vue'
-import { _getModelLists as getModelList, createModel, updateModel, deleteModel } from './composable/useModelManager'
+import { getModelList, createModel, updateModel, deleteModel } from './composable/useModelManager'
 
 const searchKeyword = ref('') // 搜索关键字
 const selectedModel = ref(null) // 当前选中的模型
 const fieldManagerRef = ref(null)
+const modelBasicFormRef = ref(null)
 // 模型数据列表，包含模型及其字段
 const models = ref([
   {
@@ -180,7 +181,7 @@ const expandConfig = ref({
 // 搜索输入由子组件处理
 // 选中模型
 const selectModel = (model) => {
-  selectedModel.value = model
+  selectedModel.value = { ...model }
 }
 // 添加新模型
 const handleAddModel = () => {
@@ -223,9 +224,12 @@ const getModelLists = async () => {
 
 // 保存模型时一并保存version字段
 const saveModel = async () => {
-  if (!selectedModel.value || !selectedModel.value.nameCn?.trim()) return
-  const newModel = { ...selectedModel.value }
-  if (selectedModel.value.id === null) {
+  // 从子组件获取最新的数据
+  const latestModelData = modelBasicFormRef.value?.getLocalValue()
+  if (!latestModelData || !latestModelData.nameCn?.trim()) return
+
+  const newModel = { ...latestModelData }
+  if (latestModelData.id === null) {
     await createModel(newModel)
     getModelLists()
   } else {
