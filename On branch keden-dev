@@ -1,0 +1,1 @@
+[33mabc9800d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mkeden-dev[m[33m)[m feat(model-manager): 组件化拆分(ModelList/ModelBasicForm/FieldManager)，移除对象类型，字段改为 prop/type/required/description，枚举下拉使用 defaultValue，空态提示及编辑完善

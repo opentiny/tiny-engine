@@ -1,21 +1,19 @@
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import axios from 'axios'
-// 示例API路径，请根据实际后端接口调整
-const modelApi = '/api/model-manager/models'
+// 统一的模型后端接口前缀（相对路径，便于代理）
+const modelApiBase = '/material-center/api/model'
 
-export function getModelList(params = {}) {
-    console.log('=======================',axios.get)
-  return axios.get('http://10.234.151.79:9090/material-center/api/model/list', { params })
+export function _getModelLists(params = {}) {
+  return getMetaApi(META_SERVICE.Http).get(`${modelApiBase}/list`, { params })
 }
 
 export function createModel(data) {
-  return getMetaApi(META_SERVICE.Http).post('http://10.234.151.79:9090/material-center/api/model/list', data)
+  return getMetaApi(META_SERVICE.Http).post(`${modelApiBase}/save`, data)
 }
 
-export function updateModel(id, data) {
-  return getMetaApi(META_SERVICE.Http).put(`${modelApi}/${id}`, data)
+export function updateModel(data) {
+  return getMetaApi(META_SERVICE.Http).put(`${modelApiBase}/update`, data)
 }
 
 export function deleteModel(id) {
-  return getMetaApi(META_SERVICE.Http).delete(`${modelApi}/${id}`)
-} 
+  return getMetaApi(META_SERVICE.Http).delete(`${modelApiBase}/delete/${id}`)
+}

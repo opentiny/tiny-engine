@@ -16,21 +16,13 @@
         <div class="panel-header">
           <h3>模型设置</h3>
           <div class="header-actions">
-            <tiny-button 
-              type="primary" 
-              @click="saveModel"
-              class="save-btn"
-            >
+            <tiny-button type="primary" @click="saveModel" class="save-btn">
               <template #icon>
                 <icon-edit />
               </template>
               保存
             </tiny-button>
-            <tiny-button 
-              type="text" 
-              @click="cancelEdit"
-              class="close-btn"
-            >
+            <tiny-button type="text" @click="cancelEdit" class="close-btn">
               <template #icon>
                 <icon-close />
               </template>
@@ -38,10 +30,10 @@
             </tiny-button>
           </div>
         </div>
-        
+
         <div class="detail-content">
           <!-- 基本设置（组件化） -->
-          <ModelBasicForm :model="selectedModel" />
+          <ModelBasicForm v-model:model="selectedModel" @update:model="selectedModel = $event" />
 
           <!-- 字段管理（组件化） -->
           <FieldManager
@@ -64,11 +56,11 @@
               <template #default="{ row }">
                 <div v-if="row.isEditing" class="editing-cell">
                   <tiny-select v-model="row.type" size="small" @change="handleTypeChange(row)">
-                    <tiny-option value="string" label="字符串" />
-                    <tiny-option value="number" label="数字" />
-                    <tiny-option value="boolean" label="布尔值" />
-                    <tiny-option value="date" label="日期" />
-                    <tiny-option value="enum" label="枚举值" />
+                    <tiny-option value="String" label="字符串" />
+                    <tiny-option value="Number" label="数字" />
+                    <tiny-option value="Boolean" label="布尔值" />
+                    <tiny-option value="Date" label="日期" />
+                    <tiny-option value="Enum" label="枚举值" />
                   </tiny-select>
                 </div>
                 <div v-else class="readonly-cell">{{ getFieldTypeLabel(row.type) }}</div>
@@ -112,28 +104,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick, reactive } from 'vue'
-import { MonacoEditor } from '@opentiny/tiny-engine-common'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import ModelList from './components/ModelList.vue'
 import ModelBasicForm from './components/ModelBasicForm.vue'
 import FieldManager from './components/FieldManager.vue'
-import {
-  iconSearch,
-  IconPlus,
-  IconEdit,
-  IconDelete,
-  IconClose
-} from '@opentiny/vue-icon'
-import {
-  TinyInput,
-  TinyButton,
-  TinyGrid,
-  TinyGridColumn,
-  TinySelect,
-  TinyOption,
-  TinyCheckbox
-} from '@opentiny/vue'
-import { getModelList, createModel, updateModel, deleteModel } from './composable/useModelManager'
+import { IconEdit, IconClose } from '@opentiny/vue-icon'
+import { TinyInput, TinyButton, TinyGridColumn, TinySelect, TinyOption, TinyCheckbox, Modal } from '@opentiny/vue'
+import { _getModelLists as getModelList, createModel, updateModel, deleteModel } from './composable/useModelManager'
 
 const searchKeyword = ref('') // 搜索关键字
 const selectedModel = ref(null) // 当前选中的模型
@@ -142,38 +119,38 @@ const fieldManagerRef = ref(null)
 const models = ref([
   {
     id: 1,
-    name: '用户模型',
-    englishName: 'UserModel',
+    nameCn: '用户模型',
+    nameEn: 'UserModel',
     description: '用户基本信息模型',
     modelUrl: '',
-    fields: []
+    parameters: []
   },
   {
     id: 2,
-    name: '产品模型',
-    englishName: 'ProductModel',
+    nameCn: '产品模型',
+    nameEn: 'ProductModel',
     description: '产品信息模型',
     modelUrl: '',
-    fields: [
-      { id: 5, name: 'id', type: 'number', required: true, description: '产品ID' },
-      { id: 6, name: 'name', type: 'string', required: true, description: '产品名称' },
-      { id: 7, name: 'price', type: 'number', required: true, description: '产品价格' },
-      { id: 8, name: 'category', type: 'string', required: false, description: '产品分类' }
+    parameters: [
+      { id: 5, prop: 'id', type: 'Number', required: true, description: '产品ID' },
+      { id: 6, prop: 'name', type: 'String', required: true, description: '产品名称' },
+      { id: 7, prop: 'price', type: 'Number', required: true, description: '产品价格' },
+      { id: 8, prop: 'category', type: 'String', required: false, description: '产品分类' }
     ]
   },
   {
     id: 3,
-    name: '订单模型',
-    englishName: 'OrderModel',
+    nameCn: '订单模型',
+    nameEn: 'OrderModel',
     description: '订单信息模型',
     modelUrl: '',
-    fields: [
-      { id: 9, name: 'id', type: 'number', required: true, description: '订单ID' },
-      { id: 10, name: 'orderNo', type: 'string', required: true, description: '订单号' },
-      { id: 11, name: 'userId', type: 'number', required: true, description: '用户ID' },
-      { id: 12, name: 'totalAmount', type: 'number', required: true, description: '订单总金额' },
-      { id: 13, name: 'status', type: 'string', required: true, description: '订单状态' },
-      { id: 14, name: 'createTime', type: 'date', required: true, description: '创建时间' }
+    parameters: [
+      { id: 9, prop: 'id', type: 'Number', required: true, description: '订单ID' },
+      { id: 10, prop: 'orderNo', type: 'String', required: true, description: '订单号' },
+      { id: 11, prop: 'userId', type: 'Number', required: true, description: '用户ID' },
+      { id: 12, prop: 'totalAmount', type: 'Number', required: true, description: '订单总金额' },
+      { id: 13, prop: 'status', type: 'String', required: true, description: '订单状态' },
+      { id: 14, prop: 'createTime', type: 'Date', required: true, description: '创建时间' }
     ]
   }
 ])
@@ -181,9 +158,10 @@ const models = ref([
 // 根据搜索关键字过滤模型列表
 const filteredModels = computed(() => {
   if (!searchKeyword.value) return models.value
-  return models.value.filter(model => 
-    model.name.toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
-    model.description?.toLowerCase().includes(searchKeyword.value.toLowerCase())
+  return models.value.filter(
+    (model) =>
+      (model.nameCn || '').toLowerCase().includes(searchKeyword.value.toLowerCase()) ||
+      (model.description || '').toLowerCase().includes(searchKeyword.value.toLowerCase())
   )
 })
 
@@ -193,71 +171,86 @@ const expandConfig = ref({
   trigger: 'row',
   expandRowKeys: [],
   accordion: false,
-  activeMethod: (row) => row.isEditing && (row.type === 'object' || row.type === 'enum'),
-  showIcon: (row) => row.isEditing && (row.type === 'object' || row.type === 'enum')
+  activeMethod: (row) => row.isEditing && row.type === 'Enum',
+  showIcon: (row) => row.isEditing && row.type === 'Enum'
 })
 
 // 对象编辑器与 grid 的内部细节下沉到 FieldManager，通过暴露的方法访问
 
-// 搜索输入处理（实际过滤逻辑在filteredModels中）
-const handleSearch = () => {}
+// 搜索输入由子组件处理
 // 选中模型
-const selectModel = (model) => { selectedModel.value = model }
+const selectModel = (model) => {
+  selectedModel.value = model
+}
 // 添加新模型
 const handleAddModel = () => {
   selectedModel.value = {
     id: null,
-    name: '',
-    englishName: '',
+    nameCn: '',
+    nameEn: '',
     version: '',
     modelUrl: '',
     description: '',
-    fields: []
-  };
-};
+    parameters: []
+  }
+}
 
-// 删除模型
+// 删除模型（TinyVue 二次确认）
 const handleDeleteModel = async (model) => {
+  const name = model.nameCn || model.nameEn || model.id
   try {
+    const result = await Modal.confirm({
+      title: '提示',
+      message: `确认删除模型「${name}」吗？该操作不可恢复。`
+    })
+    const confirmed = result === 'confirm' || result?.action === 'confirm' || result === true || result === undefined
+    if (!confirmed) return
     await deleteModel(model.id)
-    const index = models.value.findIndex(m => m.id === model.id)
+    const index = models.value.findIndex((m) => m.id === model.id)
     if (index > -1) {
       models.value.splice(index, 1)
       if (selectedModel.value?.id === model.id) selectedModel.value = null
     }
-  } catch (error) {}
+  } catch (error) {
+    // 用户取消或弹窗异常，不做处理
+  }
 }
+
+const getModelLists = async () => {
+  const data = await getModelList()
+  if (data && data.records.length > 0) models.value = data.records
+}
+
 // 保存模型时一并保存version字段
 const saveModel = async () => {
-  if (!selectedModel.value || !selectedModel.value.name.trim()) return;
-  console.log('selectedModel.value',selectedModel.value)
-  
+  if (!selectedModel.value || !selectedModel.value.nameCn?.trim()) return
+  const newModel = { ...selectedModel.value }
   if (selectedModel.value.id === null) {
-    const newModel = { ...selectedModel.value};
-    models.value.push(newModel);
+    await createModel(newModel)
+    getModelLists()
   } else {
-    const index = models.value.findIndex(m => m.id === selectedModel.value.id);
-    if (index > -1) {
-      models.value.splice(index, 1, selectedModel.value);
-    }
+    await updateModel(newModel)
+    getModelLists()
   }
-  selectedModel.value = null;
-};
+  selectedModel.value = null
+}
 // 取消编辑
-const cancelEdit = () => { selectedModel.value = null }
+const cancelEdit = () => {
+  selectedModel.value = null
+}
 // 添加字段，自动进入编辑状态
 const handleAddField = () => {
   if (!selectedModel.value) return
   const newField = {
     id: Date.now(),
-    name: '',
-    type: 'string',
+    prop: '',
+    type: 'String',
     required: false,
     description: '',
     isEditing: true,
     isNew: true // 新增字段标记
   }
-  selectedModel.value.fields.push(newField)
+  selectedModel.value.parameters.push(newField)
   nextTick(() => {
     const nameInputs = document.querySelectorAll('.editing-cell .tiny-input')
     if (nameInputs.length > 0) nameInputs[nameInputs.length - 1].focus()
@@ -267,17 +260,15 @@ const handleAddField = () => {
 const startFieldEdit = (field) => {
   field._editCache = { ...field } // 缓存原始数据
   field.isEditing = true
-  // 如果字段类型是对象或枚举值，自动展开
-  if (field.type === 'object' || field.type === 'enum') {
-    field.isExpanded = true;
+  // 如果字段类型是枚举值，自动展开
+  if (field.type === 'Enum') {
+    field.isExpanded = true
     // 枚举类型：至少保证一条空数据
-    if (field.type === 'enum') {
-      if (!Array.isArray(field.enumValues) || field.enumValues.length === 0) {
-        field.enumValues = [{ value: '', label: '' }]
-      }
+    if (!Array.isArray(field.defaultValue) || field.defaultValue.length === 0) {
+      field.defaultValue = [{ value: '', label: '' }]
     }
     // 添加到展开行keys（使用 _RID），并避免重复
-    const gridData = fieldGrid.value.getData()
+    const gridData = fieldManagerRef.value?.getGridData() || []
     gridData.forEach((item) => {
       if (item.id === field.id && !expandConfig.value.expandRowKeys.includes(item._RID)) {
         expandConfig.value.expandRowKeys.push(item._RID)
@@ -288,21 +279,6 @@ const startFieldEdit = (field) => {
 
 // 字段保存编辑
 const saveFieldEdit = (field) => {
-  // 对象类型：保存前同步编辑器内容回行数据
-  if (field.type === 'object') {
-    let code = '{}'
-    try {
-      code = fieldManagerRef.value?.getObjectCodeByFieldId?.(field.id) || '{}'
-    } catch (e) {
-      code = '{}'
-    }
-    field.objectJson = code
-    try {
-      field.objectValue = JSON.parse(code)
-    } catch (e) {
-      // 解析失败保持字符串，交由后续校验
-    }
-  }
   field.isEditing = false
   field.isExpanded = false // 保存时收起展开行
   // 从展开行keys中移除（使用 _RID）
@@ -340,29 +316,29 @@ const cancelFieldEdit = (field) => {
   }
   // 如果字段是新增的，则直接删除
   if (field.isNew) {
-    const index = selectedModel.value.fields.findIndex((f) => f.id === field.id)
-    if (index > -1) selectedModel.value.fields.splice(index, 1)
+    const index = selectedModel.value.parameters.findIndex((f) => f.id === field.id)
+    if (index > -1) selectedModel.value.parameters.splice(index, 1)
   }
 }
 // 删除字段
 const handleDeleteField = (field) => {
-  const index = selectedModel.value.fields.findIndex(f => f.id === field.id)
-  if (index > -1) selectedModel.value.fields.splice(index, 1)
+  const index = selectedModel.value.parameters.findIndex((f) => f.id === field.id)
+  if (index > -1) selectedModel.value.parameters.splice(index, 1)
 }
 // 字段类型label转换
 const getFieldTypeLabel = (type) => {
   const typeMap = {
-    string: '字符串',
-    number: '数字',
-    boolean: '布尔值',
-    date: '日期',
-    enum: '枚举值'
+    String: '字符串',
+    Number: '数字',
+    Boolean: '布尔值',
+    Date: '日期',
+    Enum: '枚举值'
   }
   return typeMap[type] || type
 }
 // 字段类型变化处理
 const handleTypeChange = (field) => {
-  if (field.type === 'enum') {
+  if (field.type === 'Enum') {
     field.isExpanded = true
     // 初始化相应的数据结构
     if (!Array.isArray(field.defaultValue) || field.defaultValue.length === 0) {
@@ -389,23 +365,10 @@ const handleTypeChange = (field) => {
   }
   // 强制更新视图
   nextTick(() => {
-    if (selectedModel.value && selectedModel.value.fields) {
-      selectedModel.value.fields = [...selectedModel.value.fields]
+    if (selectedModel.value && selectedModel.value.parameters) {
+      selectedModel.value.parameters = [...selectedModel.value.parameters]
     }
   })
-}
-
-// 已去除对象类型，相关操作移除
-
-// 添加枚举值
-const addEnumValue = (field) => {
-  if (!field.enumValues) {
-    field.enumValues = [];
-  }
-  field.enumValues.push({
-    value: '',
-    label: ''
-  });
 }
 
 // 删除枚举值
@@ -416,7 +379,7 @@ const removeEnumValue = (field, index) => {
     field.defaultValue[0] = { value: '', label: '' }
     return
   }
-  field.defaultValue.splice(index, 1);
+  field.defaultValue.splice(index, 1)
 }
 
 // 在当前行后插入一条枚举值
@@ -429,14 +392,7 @@ const insertEnumValueAfter = (field, index) => {
 
 // 生命周期：页面加载时拉取模型列表
 onMounted(async () => {
-  try {
-    console.log(123)
-    const data = await getModelList({
-        currentPage:1,
-        pageSize:50
-    })
-    if (data && data.length > 0) models.value = data
-  } catch (error) {}
+  await getModelLists()
 })
 </script>
 
@@ -593,7 +549,7 @@ onMounted(async () => {
   flex: 1;
   padding: 16px;
   overflow-y: auto;
-  display: flex;           /* 让内部卡片可按列铺满 */
+  display: flex; /* 让内部卡片可按列铺满 */
   flex-direction: column;
 }
 .section {
@@ -631,16 +587,16 @@ onMounted(async () => {
 .field-table {
   overflow: hidden;
   width: 100%;
-  flex: 1;                 /* 让表格区域在卡片内自适应高度 */
+  flex: 1; /* 让表格区域在卡片内自适应高度 */
   display: flex;
   flex-direction: column;
 }
 .field-table :deep(.tiny-grid) {
   flex: 1;
 }
-.field-table :deep(.tiny-grid .tiny-grid-header__column){
-    position: sticky;
-    background: #ffffff;
+.field-table :deep(.tiny-grid .tiny-grid-header__column) {
+  position: sticky;
+  background: #ffffff;
 }
 .form-item {
   margin-bottom: 20px;
@@ -660,11 +616,11 @@ onMounted(async () => {
   justify-content: left;
 }
 
-.editing-cell :deep(.tiny-input), .editing-cell :deep(.tiny-select) {
+.editing-cell :deep(.tiny-input),
+.editing-cell :deep(.tiny-select) {
   width: 100%;
 }
 .readonly-cell {
- 
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.2s ease;
@@ -672,16 +628,19 @@ onMounted(async () => {
 .readonly-cell:hover {
   background-color: #f5f5f5;
 }
-.add-model-btn, .add-field-btn {
+.add-model-btn,
+.add-field-btn {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border-radius: 6px;
   font-weight: 500;
 }
-.add-model-btn:hover, .add-field-btn:hover {
+.add-model-btn:hover,
+.add-field-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 6px 20px rgba(24, 144, 255, 0.25);
 }
-.add-model-btn:active, .add-field-btn:active {
+.add-model-btn:active,
+.add-field-btn:active {
   transform: translateY(0);
   box-shadow: 0 3px 10px rgba(24, 144, 255, 0.2);
 }
@@ -730,11 +689,11 @@ onMounted(async () => {
 .enum-values .tiny-button {
   margin-top: 8px;
 }
-:deep(.tiny-grid__body){
+:deep(.tiny-grid__body) {
   width: 98% !important;
 }
-.tiny-grid :deep(.tiny-grid-body__expanded-cell){
-  padding: 0 10px ;
+.tiny-grid :deep(.tiny-grid-body__expanded-cell) {
+  padding: 0 10px;
 }
 /* 行展开中的 JSON 编辑器尺寸与提示样式 */
 .variable-editor {
@@ -743,4 +702,4 @@ onMounted(async () => {
   border: 1px solid #e4e7ed;
   border-radius: 4px;
 }
-</style> 
+</style>
