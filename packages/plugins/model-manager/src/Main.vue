@@ -156,11 +156,7 @@ const models = ref([
         prop: 'createTime',
         type: 'Enum',
         required: true,
-        description: '创建时间',
-        options: [
-          { value: 'pending', label: '待处理' },
-          { value: 'completed', label: '已完成' }
-        ]
+        description: '创建时间'
       }
     ]
   }
@@ -229,7 +225,7 @@ const handleDeleteModel = async (model) => {
 
 const getModelLists = async () => {
   const data = await getModelList({
-    currPage: 1,
+    currentPage: 1,
     pageSize: 500
   })
   if (data && data.records.length > 0) models.value = data.records
