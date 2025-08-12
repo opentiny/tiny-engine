@@ -151,7 +151,17 @@ const models = ref([
       { id: 11, prop: 'userId', type: 'Number', required: true, description: '用户ID' },
       { id: 12, prop: 'totalAmount', type: 'Number', required: true, description: '订单总金额' },
       { id: 13, prop: 'status', type: 'String', required: true, description: '订单状态' },
-      { id: 14, prop: 'createTime', type: 'Date', required: true, description: '创建时间' }
+      {
+        id: 14,
+        prop: 'createTime',
+        type: 'Enum',
+        required: true,
+        description: '创建时间',
+        options: [
+          { value: 'pending', label: '待处理' },
+          { value: 'completed', label: '已完成' }
+        ]
+      }
     ]
   }
 ])
@@ -172,8 +182,8 @@ const expandConfig = ref({
   trigger: 'row',
   expandRowKeys: [],
   accordion: false,
-  activeMethod: (row) => row.isEditing && row.type === 'Enum',
-  showIcon: (row) => row.isEditing && row.type === 'Enum'
+  activeMethod: (row) => row.type === 'Enum', // 所有枚举类型都显示展开箭头
+  showIcon: (row) => row.type === 'Enum' // 所有枚举类型都显示展开箭头
 })
 
 // 对象编辑器与 grid 的内部细节下沉到 FieldManager，通过暴露的方法访问
@@ -218,7 +228,10 @@ const handleDeleteModel = async (model) => {
 }
 
 const getModelLists = async () => {
-  const data = await getModelList()
+  const data = await getModelList({
+    currPage: 1,
+    pageSize: 500
+  })
   if (data && data.records.length > 0) models.value = data.records
 }
 
@@ -228,12 +241,26 @@ const saveModel = async () => {
   const latestModelData = modelBasicFormRef.value?.getLocalValue()
   if (!latestModelData || !latestModelData.nameCn?.trim()) return
 
-  const newModel = { ...latestModelData }
+  const newModel = {
+    description: latestModelData.description,
+    modelUrl: latestModelData.modelUrl,
+    nameCn: latestModelData.nameCn,
+    nameEn: latestModelData.nameEn,
+    version: latestModelData.version,
+    id: latestModelData.id,
+    parameters: latestModelData.parameters
+  }
+  if (newModel.parameters?.length > 0) {
+    newModel.parameters.forEach((item) => {
+      item.options = JSON.stringify(item.options)
+    })
+  }
   if (latestModelData.id === null) {
+    delete newModel.id
     await createModel(newModel)
     getModelLists()
   } else {
-    await updateModel(newModel)
+    await updateModel(newModel.id, newModel)
     getModelLists()
   }
   selectedModel.value = null
@@ -246,7 +273,6 @@ const cancelEdit = () => {
 const handleAddField = () => {
   if (!selectedModel.value) return
   const newField = {
-    id: Date.now(),
     prop: '',
     type: 'String',
     required: false,
@@ -268,8 +294,8 @@ const startFieldEdit = (field) => {
   if (field.type === 'Enum') {
     field.isExpanded = true
     // 枚举类型：至少保证一条空数据
-    if (!Array.isArray(field.defaultValue) || field.defaultValue.length === 0) {
-      field.defaultValue = [{ value: '', label: '' }]
+    if (!Array.isArray(field.options) || field.options.length === 0) {
+      field.options = [{ value: '', label: '' }]
     }
     // 添加到展开行keys（使用 _RID），并避免重复
     const gridData = fieldManagerRef.value?.getGridData() || []
@@ -285,17 +311,7 @@ const startFieldEdit = (field) => {
 const saveFieldEdit = (field) => {
   field.isEditing = false
   field.isExpanded = false // 保存时收起展开行
-  // 从展开行keys中移除（使用 _RID）
-  const gridData = fieldManagerRef.value?.getGridData?.() || []
-  const current = gridData.find((item) => item.id === field.id)
-  if (current) {
-    const idx = expandConfig.value.expandRowKeys.indexOf(current._RID)
-    if (idx > -1) expandConfig.value.expandRowKeys.splice(idx, 1)
-  }
   if (field._editCache && JSON.stringify(field._editCache) !== JSON.stringify(field)) {
-    // 模拟后端保存逻辑
-    // 例如：updateModel(field.id, field)
-    // 实际应用中，这里需要调用后端API
     field._editCache = null
   }
   // 保存后移除 isNew 标记
@@ -345,8 +361,8 @@ const handleTypeChange = (field) => {
   if (field.type === 'Enum') {
     field.isExpanded = true
     // 初始化相应的数据结构
-    if (!Array.isArray(field.defaultValue) || field.defaultValue.length === 0) {
-      field.defaultValue = [{ value: '', label: '' }]
+    if (!Array.isArray(field.options) || field.options.length === 0) {
+      field.options = [{ value: '', label: '' }]
     }
     // 将对应 _RID 推入展开 keys（去重）
     nextTick(() => {
@@ -377,21 +393,21 @@ const handleTypeChange = (field) => {
 
 // 删除枚举值
 const removeEnumValue = (field, index) => {
-  if (!Array.isArray(field.defaultValue)) return
-  if (field.defaultValue.length <= 1) {
+  if (!Array.isArray(field.options)) return
+  if (field.options.length <= 1) {
     // 只剩一条时，不删除，清空内容
-    field.defaultValue[0] = { value: '', label: '' }
+    field.options[0] = { value: '', label: '' }
     return
   }
-  field.defaultValue.splice(index, 1)
+  field.options.splice(index, 1)
 }
 
 // 在当前行后插入一条枚举值
 const insertEnumValueAfter = (field, index) => {
-  if (!field.defaultValue) {
-    field.defaultValue = []
+  if (!field.options) {
+    field.options = []
   }
-  field.defaultValue.splice(index + 1, 0, { value: '', label: '' })
+  field.options.splice(index + 1, 0, { value: '', label: '' })
 }
 
 // 生命周期：页面加载时拉取模型列表
