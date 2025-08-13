@@ -1,0 +1,41 @@
+{
+  "state": {},
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "BlockSlotParams",
+      "props": {},
+      "id": "63623253",
+      "componentType": "Block",
+      "children": [
+        {
+          "id": "54396632",
+          "componentName": "Template",
+          "props": {
+            "slot": {
+              "name": "test",
+              "params": ["testData"]
+            }
+          },
+          "children": [
+            {
+              "id": "5242615f",
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "testData.name"
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "fileName": "slotParamsTest"
+}

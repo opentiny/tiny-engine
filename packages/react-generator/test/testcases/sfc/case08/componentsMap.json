@@ -1,0 +1,23 @@
+[
+  {
+    "componentName": "TinyButton",
+    "exportName": "Button",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyIcon",
+    "exportName": "Icon",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyDropdown",
+    "exportName": "Dropdown",
+    "package": "@opentiny/vue",
+    "version": "^3.10.0",
+    "destructuring": true
+  }
+]

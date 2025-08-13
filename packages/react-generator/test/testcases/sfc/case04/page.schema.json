@@ -1,0 +1,65 @@
+{
+  "componentName": "Page",
+  "fileName": "UseUtils",
+  "css": "",
+  "props": {},
+  "state": {
+    "firstName": "",
+    "lastName": ""
+  },
+  "methods": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "id": "45237635",
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": {
+              "type": "JSExpression",
+              "value": "this.utils.test()"
+            }
+          },
+          "id": "3223a366"
+        }
+      ]
+    },
+    {
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": {
+              "type": "JSExpression",
+              "value": "`aaaa${this.utils.test()}`"
+            }
+          },
+          "id": "22665633"
+        }
+      ],
+      "id": "24114e53"
+    },
+    {
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": {
+              "type": "JSExpression",
+              "value": "this.utils.test()"
+            }
+          },
+          "id": "62336681"
+        }
+      ],
+      "id": "4492e386"
+    }
+  ]
+}
