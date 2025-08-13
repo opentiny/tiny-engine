@@ -16,7 +16,6 @@
     :loading="loading"
     :market-loading="marketLoading"
     :show-market-tab="false"
-    @search="handleSearch"
     @plugin-expand="handlePluginExpand"
     @plugin-add="updateMcpServerStatus"
     @plugin-toggle="handlePluginToggle"
@@ -69,12 +68,6 @@ const handleVisibleToggle = () => {
   visible.value = !visible.value
   if (visible.value) {
     refreshMcpServerTools()
-  }
-}
-
-const handleSearch = (query: string, tab: string) => {
-  if (tab === 'installed') {
-    installQuery.value = query
   }
 }
 
