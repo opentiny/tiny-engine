@@ -275,7 +275,7 @@ function parseOptionsObject(objectExpression, result) {
  * 解析导入语句
  */
 function parseImports(ast, result) {
-  traverse.default(ast, {
+  traverse(ast, {
     ImportDeclaration(path) {
       result.imports.push({
         source: path.node.source.value,
@@ -292,15 +292,33 @@ function parseImports(ast, result) {
  * 解析<script setup>脚本
  */
 function parseSetupScript(ast, result) {
-  traverse.default(ast, {
+  traverse(ast, {
     VariableDeclaration(path) {
       path.node.declarations.forEach((declaration) => {
         if (t.isIdentifier(declaration.id) && declaration.init) {
           const name = declaration.id.name
           const initCode = getNodeValue(declaration.init)
 
+          // 方法：箭头函数 / 函数表达式
+          if (t.isArrowFunctionExpression(declaration.init) || t.isFunctionExpression(declaration.init)) {
+            result.methods[name] = { type: 'function', value: `function ${name}() { /* function body */ }` }
+            return
+          }
+
           if (isVueReactiveCall(declaration.init, 'reactive')) {
-            result.state[name] = { type: 'reactive', value: initCode }
+            // 展开 reactive 对象的属性
+            const firstArg = declaration.init.arguments && declaration.init.arguments[0]
+            if (t.isObjectExpression(firstArg)) {
+              firstArg.properties.forEach((prop) => {
+                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+                  const propName = prop.key.name
+                  const propValue = prop.value ? getNodeValue(prop.value) : 'undefined'
+                  result.state[propName] = { type: 'reactive', value: propValue }
+                }
+              })
+            } else {
+              result.state[name] = { type: 'reactive', value: initCode }
+            }
           } else if (isVueReactiveCall(declaration.init, 'ref')) {
             result.state[name] = { type: 'ref', value: initCode }
           } else if (isVueReactiveCall(declaration.init, 'computed')) {
@@ -338,7 +356,7 @@ function parseSetupScript(ast, result) {
  * 解析Options API脚本
  */
 function parseOptionsAPI(ast, result) {
-  traverse.default(ast, {
+  traverse(ast, {
     ExportDefaultDeclaration(path) {
       if (t.isObjectExpression(path.node.declaration)) {
         parseOptionsObject(path.node.declaration, result)
@@ -374,7 +392,7 @@ export function parseScript(script, options = {}) {
     parseImports(ast, result)
 
     // 尝试解析<script setup>
-    if (options.isSetupScript) {
+    if (options.isSetup) {
       parseSetupScript(ast, result)
     } else {
       // 解析Options API

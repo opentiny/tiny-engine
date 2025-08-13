@@ -11,6 +11,36 @@
  */
 
 /**
+ * 将 JSExpression 字符串里的简单字面量提取为原始值
+ * 仅处理数字/字符串/布尔/null，其它保持原样（返回原字符串）
+ */
+function convertToPlainValue(expr) {
+  if (typeof expr !== 'string') return expr
+  const trimmed = expr.trim()
+  if (/^['"].*['"]$/.test(trimmed)) {
+    return trimmed.slice(1, -1)
+  }
+  if (/^-?\d+(\.\d+)?$/.test(trimmed)) {
+    return Number(trimmed)
+  }
+  if (trimmed === 'true') return true
+  if (trimmed === 'false') return false
+  if (trimmed === 'null') return null
+  return trimmed
+}
+
+/**
+ * 从 ref(x) / ref("str") / ref('str') 中抽取原始值
+ */
+function extractRefPrimitive(expr) {
+  if (typeof expr !== 'string') return expr
+  const m = expr.match(/^ref\((.*)\)$/)
+  if (!m) return expr
+  const inner = m[1].trim()
+  return convertToPlainValue(inner)
+}
+
+/**
  * 转换状态
  * @param {Object} state - 原始状态
  * @returns {Object} 转换后的状态
@@ -24,16 +54,10 @@ function transformState(state) {
     if (typeof stateItem === 'object' && stateItem.type) {
       switch (stateItem.type) {
         case 'reactive':
-          result[key] = {
-            type: 'JSExpression',
-            value: stateItem.value
-          }
+          result[key] = convertToPlainValue(stateItem.value)
           break
         case 'ref':
-          result[key] = {
-            type: 'JSExpression',
-            value: stateItem.value
-          }
+          result[key] = extractRefPrimitive(stateItem.value)
           break
         default:
           result[key] = stateItem.value || stateItem
