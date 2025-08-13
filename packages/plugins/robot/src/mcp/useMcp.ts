@@ -114,6 +114,8 @@ const connectMcpServer = (_server: PluginInfo) => {}
 const disconnectMcpServer = (_server: PluginInfo) => {}
 
 const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
+  // 市场添加状态修改
+  server.added = added
   if (added) {
     const newServer: PluginInfo = {
       ...server,
