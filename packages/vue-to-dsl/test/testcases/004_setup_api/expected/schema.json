@@ -1,0 +1,147 @@
+{
+  "componentName": "Page",
+  "fileName": "UnnamedPage",
+  "path": "",
+  "meta": {
+    "title": "Generated Page",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-08-13T07:54:26.024Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {
+    "title": "Dashboard",
+    "count": 2,
+    "threshold": 10
+  },
+  "methods": {
+    "inc": {
+      "type": "JSFunction",
+      "value": "function() { /* function body */ }"
+    },
+    "reset": {
+      "type": "JSFunction",
+      "value": "function reset() { /* function body */ }"
+    }
+  },
+  "computed": {
+    "count": {
+      "type": "JSFunction",
+      "value": "computed(undefined)"
+    },
+    "doubleCount": {
+      "type": "JSFunction",
+      "value": "computed(undefined)"
+    },
+    "canReset": {
+      "type": "JSFunction",
+      "value": "computed(undefined)"
+    }
+  },
+  "lifecycle": {
+    "onMounted": {
+      "type": "JSFunction",
+      "value": "function() { /* lifecycle hook */ }"
+    },
+    "onUnmounted": {
+      "type": "JSFunction",
+      "value": "function() { /* lifecycle hook */ }"
+    }
+  },
+  "css": ".dashboard { padding: 12px; }\nbutton { margin-right: 4px; }",
+  "children": [
+    {
+      "componentName": "section",
+      "props": {
+        "class": "dashboard"
+      },
+      "children": [
+        {
+          "componentName": "h1",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "title"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "p",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "Count:"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "count"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "p",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "Double:"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "doubleCount"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "inc"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "Add"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "reset",
+            ":disabled": "!canReset"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "Reset"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

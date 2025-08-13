@@ -79,20 +79,28 @@ export default {
     expect(result.schema.lifecycle).toBeDefined()
   })
 
-  it('should handle conversion errors gracefully', async () => {
-    const invalidVueCode = `
+  it('should parse <script setup> reactive/computed/lifecycle', async () => {
+    const vueCode = `
 <template>
-  <div>Invalid template</
+  <div>{{ state.count }} - {{ doubled }}</div>
 </template>
 
-<script>
-  invalid javascript code here
+<script setup>
+import { reactive, computed, onMounted } from 'vue'
+const state = reactive({ count: 1 })
+const doubled = computed(() => state.count * 2)
+function inc() { state.count++ }
+onMounted(() => { /* mounted */ })
 </script>
     `
 
-    const result = await converter.convertFromString(invalidVueCode)
+    const result = await converter.convertFromString(vueCode)
 
-    expect(result.errors.length).toBeGreaterThan(0)
-    expect(result.schema).toBeNull()
+    expect(result.errors).toHaveLength(0)
+    expect(result.schema.state.count).toBeDefined()
+    expect(result.schema.computed.doubled).toBeDefined()
+    // lifecycle hook stored with key 'onMounted'
+    expect(result.schema.lifecycle.onMounted).toBeDefined()
+    expect(result.schema.methods.inc).toBeDefined()
   })
 })
