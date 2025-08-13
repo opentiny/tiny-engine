@@ -1,0 +1,268 @@
+{
+  "componentName": "Page",
+  "fileName": "UnnamedPage",
+  "path": "",
+  "meta": {
+    "title": "Generated Page",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-08-12T15:30:05.458Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {},
+  "methods": {},
+  "computed": {},
+  "lifecycle": {},
+  "css": ".user-card { padding: 20px; }",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "class": "user-card"
+      },
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "class": "header"
+          },
+          "children": [
+            {
+              "componentName": "h2",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": {
+                      "type": "JSExpression",
+                      "value": "userInfo.name"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "span",
+              "props": {
+                "class": "status",
+                ":class": "{ active: userInfo.isActive }"
+              },
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": {
+                      "type": "JSExpression",
+                      "value": "userInfo.isActive ? '在线' : '离线'"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "class": "content"
+          },
+          "children": [
+            {
+              "componentName": "p",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "邮箱:"
+                  }
+                },
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": {
+                      "type": "JSExpression",
+                      "value": "userInfo.email"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "p",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "年龄:"
+                  }
+                },
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": {
+                      "type": "JSExpression",
+                      "value": "userInfo.age"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "p",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "注册时间:"
+                  }
+                },
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": {
+                      "type": "JSExpression",
+                      "value": "formatDate(userInfo.createTime)"
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "class": "actions"
+          },
+          "children": [
+            {
+              "componentName": "button",
+              "props": {
+                "class": "btn btn-primary",
+                "@click": "editUser",
+                ":disabled": "!canEdit"
+              },
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "编辑用户"
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "button",
+              "props": {
+                "class": "btn btn-danger",
+                "@click": "deleteUser"
+              },
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "删除用户"
+                  }
+                }
+              ],
+              "condition": "userInfo.canDelete"
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "class": "statistics"
+          },
+          "children": [
+            {
+              "componentName": "h3",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "用户统计"
+                  }
+                }
+              ]
+            },
+            {
+              "componentName": "ul",
+              "props": {},
+              "children": [
+                {
+                  "componentName": "li",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": "总登录次数:"
+                      }
+                    },
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": {
+                          "type": "JSExpression",
+                          "value": "userStats.loginCount"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "componentName": "li",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": "最后登录:"
+                      }
+                    },
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": {
+                          "type": "JSExpression",
+                          "value": "formatDate(userStats.lastLogin)"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "componentName": "li",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": "账户等级:"
+                      }
+                    },
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": {
+                          "type": "JSExpression",
+                          "value": "userLevel"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "condition": "showStats"
+        }
+      ]
+    }
+  ]
+}

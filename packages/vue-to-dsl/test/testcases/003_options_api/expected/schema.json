@@ -1,0 +1,53 @@
+{
+  "componentName": "Page",
+  "fileName": "UnnamedPage",
+  "path": "",
+  "meta": {
+    "title": "Generated Page",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-08-12T15:30:05.459Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {},
+  "methods": {},
+  "computed": {},
+  "lifecycle": {},
+  "css": "div { padding: 10px; }",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "p",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "message"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "updateMessage"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "更新"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

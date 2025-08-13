@@ -1,0 +1,89 @@
+{
+  "componentName": "Page",
+  "fileName": "UnnamedPage",
+  "path": "",
+  "meta": {
+    "title": "Generated Page",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-08-12T15:30:05.444Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {},
+  "methods": {},
+  "computed": {},
+  "lifecycle": {},
+  "css": ".simple-counter {\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\nbutton {\r\n  margin: 0 5px;\r\n  padding: 10px 15px;\r\n  background: #42b883;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 4px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background: #369870;\r\n}",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "class": "simple-counter"
+      },
+      "children": [
+        {
+          "componentName": "h1",
+          "props": {},
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "计数器:"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": {
+                  "type": "JSExpression",
+                  "value": "count"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "increment"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "增加"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "decrement"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "减少"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "button",
+          "props": {
+            "@click": "reset"
+          },
+          "children": [
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "重置"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
