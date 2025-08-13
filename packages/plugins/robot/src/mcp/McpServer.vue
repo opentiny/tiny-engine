@@ -10,7 +10,7 @@
     :popup-config="drawerConfig"
     v-model:visible="visible"
     v-model:activeCount="activeCount"
-    :installed-plugins="showInstalledPlugins"
+    :installed-plugins="installedPlugins"
     :market-plugins="marketPlugins"
     :market-category-options="[]"
     :loading="loading"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { McpServerPicker, type PluginInfo, type PopupConfig } from '@opentiny/tiny-robot'
 import { IconPlugin } from '@opentiny/tiny-robot-svgs'
 import useMcpServer from './useMcp'
@@ -33,8 +33,6 @@ const loading = ref(false)
 const marketLoading = ref(false)
 
 const activeCount = ref(0)
-
-const installQuery = ref('')
 
 const drawerConfig: PopupConfig = {
   type: 'fixed',
@@ -70,10 +68,6 @@ const handleVisibleToggle = () => {
     refreshMcpServerTools()
   }
 }
-
-const showInstalledPlugins = computed(() =>
-  installedPlugins.value.filter((plugin) => plugin.name.includes(installQuery.value))
-)
 
 onMounted(() => {
   refreshMcpServerTools()
