@@ -1,5 +1,5 @@
 const { OpenAI } = require("openai");
-const { extractApiContent } = require('./api-content-extractor');
+const { crawlElementPlusAPI } = require('./element-api-crawler');
 require('dotenv').config();
 
 // 初始化OpenAI客户端
@@ -8,13 +8,17 @@ const client = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"
 });
 
+
 /**
  * 将提取的API内容转换为符合tinyEngine组件协议的schema
- * @param {object} apiContent - 从API提取器获取的内容
- * @param {string} url - 原始URL
- * @returns {Promise<string>} 符合tinyEngine协议的schema原始文本
+ * @param {object} apiContent - 从API提取器获取的内容，必须包含：
+ *   - component: 组件名称（如"Button"）
+ *   - version: 组件版本（如"2.3.4"）
+ *   - description: 组件描述
+ *   - apis: 子组件集合（含attributes/slots等）
+ * @returns {Promise<string>} 符合tinyEngine协议的schema原始文本（或错误信息）
  */
-async function convertToTinyEngineSchema(apiContent, url) {
+async function convertToTinyEngineSchema(apiContent, model = process.env.MODEL_NAME || "Qwen/Qwen3-32B") {
   try {
     // 构建提示信息
     // const messages = [
@@ -230,14 +234,14 @@ async function convertToTinyEngineSchema(apiContent, url) {
 ### 输出要求
 严格按上述规则转换，确保所有字段完整映射，格式符合 JSON 规范。未明确提及的字段按默认值填充（如空字符串、空数组、\`false\`）。若输入含多个子组件，输出对应数量的 schema JSON 对象。
 
-原始API来源: ${url}
+
 组件API内容: ${JSON.stringify(apiContent, null, 2)}`
       }
   ]
 
     // 调用OpenAI API进行转换
     const completion = await client.chat.completions.create({
-      model: "Qwen/Qwen3-32B",
+      model: model,
       messages,
       temperature: 0.2, // 适当提高温度以增加灵活性，但保持结果稳定性
     });
@@ -271,12 +275,12 @@ async function main() {
     
     // 1. 提取API内容
     console.log(`开始处理URL: ${url}`);
-    const apiContent = await extractApiContent(url);
+    const apiContent = await crawlElementPlusAPI(url);
     console.log('成功提取API内容');
     
     // 2. 转换为tinyEngine组件协议
     console.log('开始转换为tinyEngine组件协议...');
-    const tinyEngineSchema = await convertToTinyEngineSchema(apiContent, url);
+    const tinyEngineSchema = await convertToTinyEngineSchema(apiContent);
     
     // 3. 输出最终结果
     console.log('\n--- 符合tinyEngine组件协议的schema ---');
@@ -285,10 +289,15 @@ async function main() {
     console.log('\n--- 处理完成 ---');
     
   } catch (error) {
-    console.error('程序执行出错:', error.message);
-    process.exit(1);
+    console.error(`转换为tinyEngine schema失败: ${error.message}`);
+    // 返回标准化错误信息，而非抛出错误（避免调用者需额外捕获）
+    return `转换失败：${error.message}`;
   }
 }
 
-// 执行主程序
-main().catch(console.error);
+// 保持 main 函数仅在直接运行时执行，不影响模块导出
+if (require.main === module) {
+  main().catch(console.error);
+}
+
+module.exports = { convertToTinyEngineSchema };
