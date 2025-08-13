@@ -10,11 +10,13 @@
     :popup-config="drawerConfig"
     v-model:visible="visible"
     v-model:activeCount="activeCount"
-    :installed-plugins="installedPlugins"
+    :installed-plugins="showInstalledPlugins"
     :market-plugins="marketPlugins"
     :market-category-options="[]"
     :loading="loading"
     :market-loading="marketLoading"
+    :show-market-tab="false"
+    @search="handleSearch"
     @plugin-expand="handlePluginExpand"
     @plugin-add="updateMcpServerStatus"
     @plugin-toggle="handlePluginToggle"
@@ -23,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { McpServerPicker, type PluginInfo, type PopupConfig } from '@opentiny/tiny-robot'
 import { IconPlugin } from '@opentiny/tiny-robot-svgs'
 import useMcpServer from './useMcp'
@@ -32,6 +34,8 @@ const loading = ref(false)
 const marketLoading = ref(false)
 
 const activeCount = ref(0)
+
+const installQuery = ref('')
 
 const drawerConfig: PopupConfig = {
   type: 'fixed',
@@ -68,6 +72,16 @@ const handleVisibleToggle = () => {
   }
 }
 
+const handleSearch = (query: string, tab: string) => {
+  if (tab === 'installed') {
+    installQuery.value = query
+  }
+}
+
+const showInstalledPlugins = computed(() =>
+  installedPlugins.value.filter((plugin) => plugin.name.includes(installQuery.value))
+)
+
 onMounted(() => {
   refreshMcpServerTools()
 })
@@ -77,6 +91,13 @@ onMounted(() => {
 :deep(.mcp-server-picker__header) {
   .mcp-server-picker__header-right-item {
     display: none !important;
+  }
+}
+:deep(.mcp-server-picker__content-item) {
+  .plugin-card__operations {
+    .tiny-popconfirm {
+      display: none !important;
+    }
   }
 }
 

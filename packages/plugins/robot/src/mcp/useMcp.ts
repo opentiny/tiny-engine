@@ -50,7 +50,7 @@ const MOCK_SERVERS: PluginInfo[] = [
 const mcpServers = ref<PluginInfo[]>([ENGINE_MCP_SERVER, ...MOCK_SERVERS])
 
 const inUseMcpServers = ref<PluginInfo[]>([
-  { ...ENGINE_MCP_SERVER, enabled: true, expanded: false, tools: [], toolCount: 0 }
+  { ...ENGINE_MCP_SERVER, enabled: true, expanded: true, tools: [], toolCount: 0 }
 ])
 
 const updateServerTools = (serverId: string, tools: PluginTool[]) => {

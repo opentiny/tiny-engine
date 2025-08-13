@@ -472,6 +472,9 @@ export default {
   &.tr-container.tr-container {
     top: var(--base-top-panel-height);
     --tr-container-width: 400px;
+    .tr-container__dragging-bar {
+      display: none;
+    }
   }
 
   :deep(button.icon-btn) {
