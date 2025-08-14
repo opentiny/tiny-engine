@@ -52,3 +52,5 @@ log/
 extracted-html/
 dataset/
 json-test-log/
+api-log/
+schema-log/

@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "dotenv": "^17.2.0",
+    "dotenv": "^17.2.1",
     "langchain": "^0.3.30",
     "openai": "^5.10.1",
     "puppeteer": "^24.14.0"

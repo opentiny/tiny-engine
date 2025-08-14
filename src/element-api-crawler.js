@@ -1,5 +1,39 @@
 const puppeteer = require('puppeteer');
 const fs = require('fs');
+const path = require('path'); 
+
+/**
+ * 将爬取到的API结果保存到根目录的api-log文件夹
+ * @param {object} result 爬取到的完整API结果对象
+ */
+function saveApiResult(result) {
+    try {
+        // 1. 定义目标文件夹路径（根目录下的api-log）
+        const targetDir = path.join(__dirname, '../api-log');
+        
+        // 2. 若文件夹不存在则创建（支持多级目录）
+        if (!fs.existsSync(targetDir)) {
+            fs.mkdirSync(targetDir, { recursive: true });
+        }
+        
+        // 3. 生成唯一文件名（组件名 + 时间戳，避免重复）
+        const componentName = result.name || 'unknown-component';
+        const timestamp = new Date().getTime();
+        const fileName = `${componentName.replace(/\s+/g, '-').replace(/[​]/g, '').toLowerCase()}-${timestamp}.json`;
+        const filePath = path.join(targetDir, fileName);
+        
+        // 4. 写入文件（格式化JSON，缩进2空格）
+        fs.writeFileSync(
+            filePath,
+            JSON.stringify(result, null, 2),
+            'utf8'
+        );
+        
+        console.log(`API结果已保存至: ${filePath}`);
+    } catch (error) {
+        console.error(`保存API结果失败: ${error.message}`);
+    }
+}
 
 /**
  * 从组件名称中提取主组件标识（如“Anchor 锚点”→“Anchor”）
@@ -33,7 +67,8 @@ function normalizeHeader(header) {
     const lowerHeader = header.toLowerCase().trim();
     // 检查是否包含关键词，返回相应的标准化名称
     // if (lowerHeader.includes('属性名') || lowerHeader.includes('参数名') || lowerHeader.includes('名称')) {
-    if (lowerHeader.includes('属性名') || lowerHeader.includes('参数名') || lowerHeader.includes('名称') || lowerHeader.includes('属性') || lowerHeader.includes('事件名')) {
+    if (lowerHeader.includes('属性名') || lowerHeader.includes('名称') || lowerHeader.includes('属性') 
+        || lowerHeader.includes('事件名') || lowerHeader.includes('插槽名') || lowerHeader.includes('暴露')) {
         return 'name';
     }
     if (lowerHeader.includes('说明') || lowerHeader.includes('描述')) {
@@ -48,12 +83,8 @@ function normalizeHeader(header) {
     if (lowerHeader.includes('可选值')) {
         return 'options';
     }
-    // 对于插槽和暴露的表格，表头可能不统一，需要额外处理
-    if (lowerHeader.includes('slot') || lowerHeader.includes('插槽名')) {
-        return 'name';
-    }
-    if (lowerHeader.includes('expose') || lowerHeader.includes('暴露')) {
-        return 'name';
+    if (lowerHeader.includes('子标签')) {
+        return 'subtag';
     }
     return lowerHeader;
 }
@@ -250,7 +281,19 @@ async function crawlElementPlusAPI(url, retries = 3) {
                     break;
                 }
             }
-            const componentInfo = { name, description };
+            // const componentInfo = { name, description };
+
+            // 新增提取版本号的逻辑
+            let version = 'unknown';
+            // 定位版本号所在的 el-tag__content 元素
+            const versionEl = document.querySelector('span.el-tag__content');
+            if (versionEl) {
+                // 提取元素内的文本内容，过滤注释语法，拿到版本号
+                const text = versionEl.textContent.replace(/<!--|-->/g, '').trim();
+                version = text;
+            }
+
+            const componentInfo = { name, description, version };
 
             // 查找所有可能的表格元素
             // const tableElements = Array.from(document.querySelectorAll('.vp-table, table, .table'));
@@ -364,6 +407,11 @@ async function crawlElementPlusAPI(url, retries = 3) {
         };
 
         console.log(`成功提取 ${componentInfo.name} 的API信息`);
+        
+        // 新增：保存结果到api-log文件夹
+        saveApiResult(result);
+
+        // return JSON.stringify(result, null, 2);
         return result;
 
     } catch (error) {
@@ -388,19 +436,12 @@ if (require.main === module) {
     // 从命令行参数中获取URL
     const url = process.argv[2];
     if (!url) {
-        console.error('请提供组件URL，示例：node script.js "https://element-plus.org/zh-CN/component/button.html"');
+        console.error('请提供组件URL，示例：node element-api-crawler.js "https://element-plus.org/zh-CN/component/button.html"');
         process.exit(1);
     }
 
     // 调用主函数并处理结果
     crawlElementPlusAPI(url)
-        .then(result => {
-            // 生成文件名
-            const fileName = `${result.name.replace(/\s+/g, '-').replace(/[​]/g, '').toLowerCase()}-api-new.json`;
-            // 将结果写入JSON文件
-            fs.writeFileSync(fileName, JSON.stringify(result, null, 2), 'utf8');
-            console.log(`结果已保存到 ${fileName}`);
-        })
         .catch(err => {
             console.error('爬取失败:', err.message);
             process.exit(1);

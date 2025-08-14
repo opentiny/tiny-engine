@@ -1,7 +1,15 @@
+// require('dotenv').config();
+require('dotenv').config({ path: '../.env' });
 const { ChatOpenAI } = require("@langchain/openai");
 const { initializeAgentExecutorWithOptions } = require("langchain/agents");
 const { ElementApiCrawlerTool, TinyEngineConverterTool } = require("./tools");
-require('dotenv').config();
+
+
+// 新增调试输出
+console.log("环境变量加载测试：");
+console.log("OPENAI_API_KEY是否存在：", !!process.env.OPENAI_API_KEY);
+console.log("OPENAI_BASE_URL：", process.env.OPENAI_BASE_URL);
+console.log("OPENAI_MODEL：", process.env.OPENAI_MODEL);
 
 // 初始化模型
 const model = new ChatOpenAI({
