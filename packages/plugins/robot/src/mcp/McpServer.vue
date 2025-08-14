@@ -96,6 +96,9 @@ onMounted(() => {
     border: none;
     background-color: unset;
   }
+  .tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav {
+    width: 160px;
+  }
 }
 
 :deep(.tiny-tabs__content) {

@@ -466,7 +466,7 @@ export default {
   }
 }
 
-.tiny-container {
+:deep(.tiny-container) {
   container-type: inline-size;
 
   &.tr-container.tr-container {
