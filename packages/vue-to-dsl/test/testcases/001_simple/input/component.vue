@@ -8,23 +8,25 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 
 export default {
   name: 'SimpleCounter',
   setup() {
-    const count = ref(0)
+    const state = reactive({
+      count: 0
+    })
 
     const increment = () => {
-      count.value++
+      state.count.value++
     }
 
-    const decrement = () => {
-      count.value--
+    function decrement() {
+      state.count.value--
     }
 
     const reset = () => {
-      count.value = 0
+      state.count.value = 0
     }
 
     return {
