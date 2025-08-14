@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { VueToDslConverter } from '../../src/converter.js'
+import { VueToDslConverter } from '../../src/converter'
 
 describe('VueToDslConverter', () => {
   const converter = new VueToDslConverter()
