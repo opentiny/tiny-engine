@@ -54,7 +54,6 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
     '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.ts'),
     '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.ts'),
-    '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.ts'),
     '@opentiny/tiny-engine-builtin-component': path.resolve(basePath, 'packages/builtinComponent/index.ts'),
     '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.ts'),

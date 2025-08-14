@@ -51,8 +51,7 @@
       "@opentiny/tiny-engine-toolbar-save": ["packages/toolbars/save/index"],
       "@opentiny/tiny-engine-toolbar-theme-switch": ["packages/toolbars/themeSwitch/index"],
       "@opentiny/tiny-engine-toolbar-view-setting": ["packages/toolbars/view-setting/index"],
-      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
-      "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"]
+      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"]
     }
   },
   "include": ["packages/**/*"],
