@@ -182,11 +182,13 @@ const expandConfig = ref({
   showIcon: (row) => row.type === 'Enum' // 所有枚举类型都显示展开箭头
 })
 
-// 对象编辑器与 grid 的内部细节下沉到 FieldManager，通过暴露的方法访问
-
-// 搜索输入由子组件处理
 // 选中模型
 const selectModel = (model) => {
+  if (model.parameters?.length > 0) {
+    model.parameters.forEach((item) => {
+      item.options = item.options ? JSON.parse(item.options) : []
+    })
+  }
   selectedModel.value = { ...model }
 }
 // 添加新模型
@@ -248,7 +250,9 @@ const saveModel = async () => {
   }
   if (newModel.parameters?.length > 0) {
     newModel.parameters.forEach((item) => {
-      item.options = JSON.stringify(item.options)
+      if (item.type === 'Enum') {
+        item.options = JSON.stringify(item.options)
+      }
     })
   }
   if (latestModelData.id === null) {
@@ -338,7 +342,7 @@ const cancelFieldEdit = (field) => {
 }
 // 删除字段
 const handleDeleteField = (field) => {
-  const index = selectedModel.value.parameters.findIndex((f) => f.id === field.id)
+  const index = selectedModel.value.parameters.findIndex((f) => f.prop === field.prop)
   if (index > -1) selectedModel.value.parameters.splice(index, 1)
 }
 // 字段类型label转换

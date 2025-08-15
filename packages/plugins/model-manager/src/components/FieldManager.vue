@@ -24,7 +24,7 @@
               <div class="expand-section">
                 <h4>默认选项（下拉框）</h4>
                 <div class="enum-values">
-                  <div v-for="(opt, index) in row.options || [{ value: '', label: '' }]" :key="index" class="enum-item">
+                  <div v-for="(opt, index) in row.options || []" :key="index" class="enum-item">
                     <tiny-input
                       v-model="opt.value"
                       placeholder="值"
