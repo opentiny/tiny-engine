@@ -22,7 +22,8 @@ class ElementApiCrawlerTool extends Tool {
       }
       
       const result = await crawlElementPlusAPI(input);
-      return JSON.stringify(result, null, 2);
+      return result;
+      // return JSON.stringify(result, null, 2);
     } catch (error) {
       return `爬取失败：${error.message}`;
     }
@@ -45,9 +46,9 @@ class TinyEngineConverterTool extends Tool {
   async _call(input) {
     try {
       // 解析爬虫返回的JSON数据
-      const apiContent = JSON.parse(input);
+      // const apiContent = JSON.parse(input);
       // 调用转换函数
-      const result = await convertToTinyEngineSchema(apiContent);
+      const result = await convertToTinyEngineSchema(input);
       return result;
     } catch (error) {
       return `转换失败：${error.message}，请检查输入是否为有效的API JSON数据`;

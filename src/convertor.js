@@ -4,7 +4,7 @@ const { OpenAI } = require("openai");
 // const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
 const { crawlElementPlusAPI } = require('./element-api-crawler');
 // require('dotenv').config();
-const fs = require('fs'); 
+const fs = require('fs');
 const path = require('path');
 // const { console } = require('inspector');
 
@@ -14,88 +14,63 @@ const client = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"
 });
 
-// /**
-//  * 将生成的schema保存到项目根目录的schema-log文件夹
-//  * @param {string} schema - 大模型返回的schema字符串
-//  * @param {string} componentName - 组件名称（用于生成文件名）
-//  */
-// function saveSchemaToFile(schema, componentName) {
-//   try {
-//     // 1. 定义保存目录路径（项目根目录下的schema-log）
-//     // 若当前文件在src目录，根目录为上级目录，故路径为../schema-log
-//     const schemaDir = path.join(__dirname, '../schema-log');
-
-//     // 2. 若目录不存在则创建（recursive确保多级目录可创建）
-//     if (!fs.existsSync(schemaDir)) {
-//       fs.mkdirSync(schemaDir, { recursive: true });
-//       console.log(`已创建schema保存目录：${schemaDir}`);
-//     }
-
-//     // 3. 生成唯一文件名（组件名 + 时间戳，避免重复）
-//     const timestamp = new Date().getTime(); // 时间戳确保唯一性
-//     // 处理组件名中的特殊字符，替换为短横线
-//     const safeComponentName = componentName.replace(/[^a-zA-Z0-9]/g, '-');
-//     const fileName = `${safeComponentName}-${timestamp}.json`;
-//     const filePath = path.join(schemaDir, fileName);
-
-//     // 4. 写入文件（若schema是JSON对象则格式化，否则直接写入字符串）
-//     let content = schema;
-//     try {
-//       // 尝试解析为JSON，若成功则格式化输出（便于阅读）
-//       const parsedSchema = JSON.parse(schema);
-//       content = JSON.stringify(parsedSchema, null, 2); // 缩进2空格
-//     } catch (e) {
-//       // 若解析失败（非JSON格式），直接保存原始字符串
-//       console.warn(`schema不是标准JSON格式，将以原始文本保存：${e.message}`);
-//     }
-
-//     // 5. 写入文件
-//     fs.writeFileSync(filePath, content, 'utf8');
-//     console.log(`schema已成功保存至：${filePath}`);
-//   } catch (error) {
-//     console.error(`保存schema失败：${error.message}`);
-//   }
-// }
-
 /**
  * 将生成的schema保存到项目根目录的schema-log文件夹
  * @param {string} schema - 大模型返回的schema字符串（可能包含```json标识）
  */
 function saveSchemaToFile(schema) {
   try {
-    // 1. 移除首尾的```json标识
-    const cleanedSchema = schema.replace(/^```json\s*|\s*```$/g, '').trim();
+    // 1. 移除代码标识（支持多种格式的代码块标识）
+    let cleanedSchema = schema.trim();
+
+    // 处理常见的代码块标识（包括带语言名和不带语言名的情况）
+    const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
+    const match = cleanedSchema.match(codeBlockRegex);
+
+    if (match && match[2]) {
+      // 如果匹配到代码块标识，提取内部内容
+      cleanedSchema = match[2].trim();
+      console.log('已移除代码块标识，提取内部JSON内容');
+    } else {
+      // 未匹配到代码块标识，直接使用原始内容（可能本身就是纯JSON）
+      console.log('未检测到代码块标识，使用原始内容');
+    }
+
+    // 2. 验证清理后的内容是否为空
     if (!cleanedSchema) {
       throw new Error("清理后schema为空");
     }
-    console.log('cleanedSchema:', cleanedSchema)
+    console.log('cleanedSchema:', cleanedSchema);
 
-    // 2. 解析schema为JSON
+    // 3. 解析schema为JSON
     let parsedSchema;
     try {
       parsedSchema = JSON.parse(cleanedSchema);
-      console.log('parsedSchema:', parsedSchema)
+      console.log('parsedSchema:', parsedSchema);
     } catch (parseError) {
-      throw new Error(`schema解析失败: ${parseError.message}`);
+      // 解析失败时保留原始内容用于调试
+      const errorLogPath = path.join(__dirname, '../schema-log/parse-error-debug.json');
+      fs.writeFileSync(errorLogPath, cleanedSchema, 'utf8');
+      throw new Error(`schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
     }
 
-    // 3. 定义保存目录
+    // 4. 定义保存目录
     const schemaDir = path.join(__dirname, '../schema-log');
     if (!fs.existsSync(schemaDir)) {
       fs.mkdirSync(schemaDir, { recursive: true });
       console.log(`已创建schema保存目录：${schemaDir}`);
     }
 
-    // 4. 统一生成时间戳（确保同批次文件时间戳一致）
+    // 5. 统一生成时间戳（确保同批次文件时间戳一致）
     const timestamp = new Date().getTime();
 
-    // 5. 处理单组件（对象）或多组件（数组）
+    // 6. 处理单组件（对象）或多组件（数组）
     const components = Array.isArray(parsedSchema) ? parsedSchema : [parsedSchema];
 
-    // 6. 逐个保存组件
+    // 7. 逐个保存组件
     components.forEach((componentSchema, index) => {
       // 获取组件名（优先用component字段，无则用索引+默认名）
-      const componentName = componentSchema.component 
+      const componentName = componentSchema.component
         ? componentSchema.component.replace(/[^a-zA-Z0-9]/g, '-')
         : `unknown-component-${index}`;
 
@@ -114,13 +89,14 @@ function saveSchemaToFile(schema) {
   }
 }
 
+
 /**
  * 将提取的API内容转换为符合tinyEngine组件协议的schema
- * @param {object} apiContent - 从API提取器获取的内容，必须包含：
+ * @param {object} apiContent - 从API提取器获取的内容（crawlElementPlusAPI函数的返回结果），必须包含：
  *   - component: 组件名称（如"Button"）
  *   - version: 组件版本（如"2.3.4"）
  *   - description: 组件描述
- *   - apis: 子组件集合（含attributes/slots等）
+ *   - components: 子组件集合（含properties/slots等）
  * @param {string} model - 大模型名称
  * @param {boolean} save - 是否保存到文件（默认true）
  * @returns {Promise<string>} 符合tinyEngine协议的schema原始文本（或错误信息）
@@ -129,7 +105,7 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
   console.log("环境变量加载测试：");
   console.log("OPENAI_API_KEY是否存在：", !!process.env.OPENAI_API_KEY);
   console.log("OPENAI_BASE_URL：", process.env.OPENAI_BASE_URL);
-  console.log("OPENAI_MODEL：", process.env.OPENAI_MODEL);
+  console.log("model：", model);
 
   const messages = [
     {
@@ -147,14 +123,14 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
 - \`component\`：组件名称（如 "Button"）
 - \`version\`：组件版本（如 "2.3.4"）
 - \`description\`：组件描述
-- \`apis\`：子组件集合（如主组件、Group 组件），每个子组件包含：
+- \`components\`：子组件集合（如主组件、Group 组件），每个子组件包含：
   - \`properties\`：属性数组（含 name、description、type、default、enumOptions 等）
   - （可选）\`slots\`：插槽数组（含 name、description 等）
   - （可选）\`exposes\`：暴露的方法/属性数组（含 name、description、type 等）
   - （可选）\`events\`：事件数组（含 name、description、parameters 等）
 - （可选）\`notes\`：组件备注（含废弃说明、使用提示等）
 
-**若必需字段缺失，输出需明确提示缺失内容（如 "缺少 apis.Button.attributes 字段，请补充"）。**
+**若必需字段缺失，输出需明确提示缺失内容（如 "缺少 components.Button.properties 字段，请补充"）。**
 
 ### 转换规则
 
@@ -165,13 +141,13 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
 - \`name\`：i18n 格式，\`{"zh_CN": 组件中文名称}\`。规则：
   - 若 \`description\` 含中文名称，优先提取（如 "常用的操作按钮"→"按钮"）
   - 否则按组件名语义翻译（如 "Input"→"输入框"，"Select"→"选择器"）
-- \`icon\`：默认使用 \`component\` 值（如 "Button"），若 \`notes\` 有图标提示则替换
-- \`group\`：根据组件库识别，如 element - plus 组件填 "element - plus"，tinyVue 填 "tinyVue" 等
-- \`category\`：固定为 "UI 组件"（可根据实际调整）
+- \`icon\`：默认使用 \`component\` 值（如 "Button"）；若 \`notes\` 有图标提示则替换
+- \`group\`：根据组件库识别，如 element - plus 组件填 "element - plus"
+- \`category\`：固定为 "element-plus"（可根据实际调整）
 - \`description\`：直接使用输入的 \`description\` 值
 - \`tags\`：从 \`description\` 提取核心关键词（如 "按钮"→["操作","交互"]）
 - \`keywords\`：同 \`tags\`，补充组件名英文（如 ["Button","按钮","操作"]）
-- \`doc_url\`：默认空，若 \`notes\` 有文档链接则填充
+- \`doc_url\`：直接使用输入的 \`url\` 值，否则默认为空
 - \`version\`：直接使用输入的 \`version\` 值
 - \`devMode\`：固定为 "proCode"
 
@@ -188,68 +164,93 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
   - \`styles\`：固定为 \`true\`（组件支持样式配置）
 
 - **组件类型标识**：
-  - \`isContainer\`：若子组件 \`slots\` 数组长度 > 0 则为 \`true\`（含插槽即为容器），否则 \`false\`
-  - \`isModal\`：组件名含 "Modal" 则为 \`true\`，否则 \`false\`
-  - \`isPopper\`：组件名含 "Dropdown"|"Tooltip" 则为 \`true\`，否则 \`false\`
+  - \`isContainer\`： 根据组件分析决定：
+    - 若子组件 \`slots\` 数组长度 > 0 则为 \`true\`（含插槽即为容器）
+    - 如果组件名称暗示容器用途（如 Layout、Container、Wrapper），设置为 \`true\`
+    - 否则设置为 \`false\`
+  - \`isModal\`：若组件明确是模态框，则为 \`true\`，否则 \`false\`
+  - \`isPopper\`：若组件明确是弹出框，则为 \`true\`，否则 \`false\`
   - \`isNullNode\`：固定为 \`false\`
-  - \`isLayout\`：组件名含 "Layout"|"Row"|"Col" 则为 \`true\`，否则 \`false\`
+  - \`isLayout\`：根据组件用途判断，Layout 类组件设置为为 \`true\`，否则 \`false\`
 
 - **嵌套规则**：
   - \`nestingRule\`：\`{"childWhitelist": "","parentWhitelist": "","descendantBlacklist": "","ancestorWhitelist": ""}\`
 
 - **编辑器配置**：
   - \`rootSelector\`：固定为 ""
-  - \`shortcuts.properties\`：从 \`attributes\` 中选 1 - 3 个核心属性（如 Button 的 "type"|"size"|"disabled"）
+  - \`shortcuts.properties\`：从 \`properties\` 中选 1 - 3 个核心属性（如 Button 的 "type"|"size"|"disabled"）
   - \`contextMenu\`：\`{"actions": ["copy", "remove", "insert", "updateAttr", "bindEvent"],"disable": []}\`
 
 - **交互行为**：
-  - \`clickCapture\`：组件名含 "Button"|"Switch" 则为 \`true\`，否则 \`false\`
+  - \`clickCapture\`：对于按钮类、交互类组件设置为 \`true\`，其他组件可省略或设置为 \`false\`
   - \`framework\`：根据组件库识别，如 Vue 生态组件填 "Vue"
 
 #### 4. \`schema\` 对象构建
-##### 4.1 \`schema.properties\`（Props 分组）
-将 \`attributes\` 按功能分组为数组，每组包含：
-- \`name\`：分组标识（"0"|"1"|"2"|"3"）
-- \`label.zh_CN\`：分组中文名称（"基础属性"|"样式属性"|"行为属性"|"高级属性"）
-- \`description.zh_CN\`：分组描述（如 "组件核心功能配置"）
-- \`content\`：属性配置数组（每个元素对应一个 \`attribute\`）
+##### 4.1 \`schema.properties\`（Properties 分组）
+必须严格按功能将 \`properties\` 划分为不同分组，每组包含：
+- \`name\`：分组标识（"0"|"1"|"2"|"3"，按分组顺序递增）
+- \`label.zh_CN\`：分组中文名称（必须从以下选项中选择："基础属性"|"样式属性"|"行为属性"|"高级属性"|"其他属性"）
+- \`description.zh_CN\`：分组描述（需精准说明该组属性的共同功能，具体为：
+  "基础属性"："组件核心功能相关的配置，包括 name、size、type 等核心属性"
+  "样式属性"："组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+  "行为属性"："组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+  "高级属性"："组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+  "其他属性"："无法归属到 “基础/样式/行为/高级属性” 的特殊配置项，这类属性通常不具备前四类分组的明确功能共性"
+  ）
+- \`content\`：属性配置数组，必须覆盖输入中对应子组件的所有 'property'（无遗漏、无额外新增），每个数组元素与一个完整 'property' 严格一一对应，且每个 'property' 必须且只能归属到一个分组（分组逻辑需基于属性功能的关联性，同一分组内的属性应具有明确的功能共性）
 
 **\`content\` 属性映射规则**：
-- \`property\`：\`attribute.name\`（如 "size"）
-- \`label.text.zh_CN\`：\`attribute.name\` 的中文释义（如 "尺寸"）
-- \`description\`：\`attribute.description\`
-- \`required\`：若 \`attribute.default\` 为 "—" 且无默认值则 \`true\`，否则 \`false\`
+- \`property\`：\`property.name\`（如 "size"）
+- \`label.text.zh_CN\`：\`property.name\` 的中文释义（如 "尺寸"）
+- \`description\`：\`property.description\`
+- \`required\`：若 \`property.default\` 为 "—" 且无默认值则 \`true\`，否则 \`false\`
 - \`readOnly\`：固定为 \`false\`
 - \`disabled\`：固定为 \`false\`
 - \`cols\`：固定为 \`12\`
 - \`labelPosition\`：固定为 "left"
-- \`type\`：\`attribute.type\`（转为小写，如 "enum"|"boolean"）
-- \`defaultValue\`：\`attribute.default\`（"—" 转为 \`null\`）
+- \`type\`：\`property.type\`（转为小写，如 "enum"|"boolean"）
+- \`defaultValue\`：\`property.default\`（"—" 转为 \`null\`）
 - \`widget\`：按以下优先级推断：
-  1. 若 \`type\` 为 "enum"：\`{"component": "SelectConfigurator","props": {"options": attribute.enum.map(v => ({label: v, value: v}))}}\`
+  1. 若 \`type\` 为 "enum"：\`{"component": "SelectConfigurator","props": {"options": property.enumOptions.map(v => ({label: v, value: v}))}}\`
   2. 若 \`type\` 为 "boolean"：
-     - 名称含 "show"|"enable"：\`{"component": "SwitchConfigurator","props": {}}\`
-     - 其他（如 "disabled"|"loading"）：\`{"component": "CheckBoxConfigurator","props": {}}\`
+     - 名称含 "show"|"enable"|"is"：\`{"component": "SwitchConfigurator","props": {}}\`
+     - 其他（如 "disabled"|"loading"|"plain"|"round"|"circle"）：\`{"component": "CheckBoxConfigurator","props": {}}\`
   3. 若 \`type\` 为 "number"：\`{"component": "NumberConfigurator","props": {"step": 1}}\`
-  4. 若名称含 "color"：\`{"component": "ColorConfigurator","props": {}}\`
-  5. 默认：\`{"component": "InputConfigurator","props": {"placeholder": "请输入" + label.text.zh_CN}}\`
-
+  4. 若 \`type\` 为 "string"：\`{"component": "InputConfigurator","props": {"placeholder": "请输入..."}}\`
+  5. 若 \`type\` 为 "Object"或"Array"：\`{"component": "CodeConfigurator","props": { "language": "json", "height": 150 }}\`
+  6. 若名称含 "color" 或 默认值以 \`#\` 开头：\`{"component": "ColorConfigurator","props": {}}\`
+  7. 若名称含 "icon"：\`{"component": "InputConfigurator","props": { "placeholder": "请输入图标名称" }}\`
+  
 ##### 4.2 \`schema.events\`（事件映射）
-- 从 \`apis.[子组件].events\` 提取事件（若存在），无则基于组件类型推断（如 Button 默认 "click"）
-- 每个事件转换为：\`"on[首字母大写事件名]": {"description": 事件描述,"params": 事件参数数组}\`
-  - 示例：事件 "click"→\`"onClick": {"description": "点击按钮时触发","params": []}\`
+- 从 \`components.[子组件].events\` 提取事件（若存在）
+- 每个事件转换为：\`"on[首字母大写驼峰式(CamelCase)的事件名]": {"description": 事件描述, "type": "event", "defaultValue": "", "functionInfo": {"params": [{"name": "","type": "","defaultValue": "","description": {"zh_CN": "事件参数的描述文字"}}],"returns": {"type": "","defaultValue": "","description": {"zh_CN": "事件返回值的描述文字"}}}}\`
+  - 示例：事件 "validate"→\`"onValidate":{
+    "label": {
+      "zh_CN": "任一表单项被校验后触发"
+    },
+    "description": {
+      "zh_CN": "任一表单项被校验后触发"
+    },
+    "type": "event",
+    "functionInfo": {
+      "params": [],
+      "returns": {}
+    },
+    "defaultValue": ""
+  }\`
+
 
 ##### 4.3 \`schema.slots\`（插槽映射）
-- 遍历 \`apis.[子组件].slots\`，每个插槽映射为：
+- 遍历 \`components.[子组件].slots\`，每个插槽映射为：
   - \`[slot.name]\`: \`{"label.zh_CN": slot.name 的中文（如 "default"→"默认内容"）,"description.zh_CN": slot.description}\`
   - 示例：\`"default": {"label.zh_CN": "默认内容","description.zh_CN": "自定义默认内容"}\`
 
 ##### 4.4 \`schema.exposes\`（暴露方法/属性）
-- 从 \`apis.[子组件].exposes\` 提取，每个映射为：
+- 从 \`components.[子组件].exposes\` 提取，每个映射为：
   - \`[expose.name]\`: \`{"type": expose.type,"description": expose.description}\`
 
 #### 5. 多组件处理
-若输入 \`apis\` 包含多个子组件（如主组件、Group 组件），需按以下规则处理：
+若输入 \`components\` 包含多个子组件（如主组件、Group 组件），需按以下规则处理：
 - **输出格式**：生成一个**子组件对象数组**，数组中的每个元素对应一个子组件的完整 schema
 - **字段对应**：每个子组件的 schema 需包含独立的 \`component\`、\`name\`、\`schema\` 等字段，与该子组件的信息严格对应
 - **关联性**：若子组件间存在依赖关系（如 ButtonGroup 包含 Button），无需在 schema 中额外标注，保持各自独立的完整结构即可
@@ -260,11 +261,44 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
   ]
 
 #### 6. \`snippets\`（代码片段）
-- 生成默认片段数组：\`[{"name.zh_CN": name.zh_CN,"icon": icon,"snippetName": component,"schema.props": 核心属性示例值}]\`
-- 示例（Button）：\`{"schema.props": {"type": "primary","size": "large","disabled": false}}\`
+- 任务：为组件生成一个有代表性、有意义的代码片段数组（snippets），用于在组件面板中展示。
+- 生成规则：
+  - snippets 数组应包含一个默认代码片段。
+  - 每个代码片段对象必须包含以下字段：
+    - name.zh_CN：组件的中文名称，例如："按钮"。
+    - icon：组件对应的图标。
+    - snippetName：组件的名称，例如："ElButton"。
+    - category：组件库名称，例如："element-plus"。
+    - schema.children：此数组是生成的核心。它应包含一个组件对象，其 props 字段应根据组件的核心功能，为最关键的属性设置有意义的示例值。
+  - 请确保示例值是能清晰展示组件基本功能的，而不是留空或使用通用占位符。
+- 示例参考（以 ElButton 为例）：
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "按钮"
+      },
+      "icon": "button",
+      "screenshot": "",
+      "snippetName": "ElButton",
+      "schema": {
+        "children": [
+          {
+            "componentName": "Text",
+            "props": {
+              "text": "按钮文本"
+            }
+          }
+        ]
+      },
+      "category": "element-plus"
+    }
+  ]
 
 ### 输出要求
-严格按上述规则转换，确保所有字段完整映射，格式符合 JSON 规范。未明确提及的字段按默认值填充（如空字符串、空数组、\`false\`）。若输入含多个子组件，输出对应数量的 schema JSON 对象。
+严格遵循上述上述规则执行转换，需确保确保字段与输入信息完整映射、格式完全符合 JSON 规范。
+- 若输出为单组件,则输出单个 schema JSON 对象；
+- 若输出为多组件,则输出 JSON 数组，数组元素数量与子组件数量严格一致（每个元素对应一个子组件的 schema）。
+注意:生成的 JSON 必须保证语法完整闭合,生成后需自查 "未闭合的字段名、缺失的引号、未结束的对象 / 数组"，严禁出现 JSON 截断、语法不完整的情况，确保可直接通过 JSON.parse 解析。
 
 
 ### 示例参考
@@ -1091,15 +1125,13 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
     model: model,
     messages,
     temperature: 0.2, // 适当提高温度以增加灵活性，但保持结果稳定性
+    max_tokens: 16384, // 设置生成内容的最大token数，需在1-16384范围内
   });
 
   const result = completion.choices[0].message.content;
 
   // 若需要保存，则调用保存函数
   if (save) {
-    // 从apiContent中获取组件名，若不存在则用默认名
-    // const componentName = apiContent.name || 'unknown-component';
-    // saveSchemaToFile(result, componentName);
     saveSchemaToFile(result);
   }
 

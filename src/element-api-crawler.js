@@ -68,7 +68,7 @@ function normalizeHeader(header) {
     // 检查是否包含关键词，返回相应的标准化名称
     // if (lowerHeader.includes('属性名') || lowerHeader.includes('参数名') || lowerHeader.includes('名称')) {
     if (lowerHeader.includes('属性名') || lowerHeader.includes('名称') || lowerHeader.includes('属性') 
-        || lowerHeader.includes('事件名') || lowerHeader.includes('插槽名') || lowerHeader.includes('暴露')) {
+        || lowerHeader.includes('事件名') || lowerHeader.includes('插槽名')  || lowerHeader.includes('方法名') || lowerHeader.includes('暴露')) {
         return 'name';
     }
     if (lowerHeader.includes('说明') || lowerHeader.includes('描述')) {
@@ -96,13 +96,27 @@ function normalizeHeader(header) {
  * @returns {string} 提取到的组件标识，如果未找到则返回主组件标识
  */
 function getComponentKey(title, mainComponentKey) {
+    // 1. 清理标题：移除异常空白字符、统一修剪空格
     const cleanTitle = title.replace(/[​\s]+/g, ' ').trim();
-    // 匹配标题开头的字母、数字或连字符组成的单词
-    const componentMatch = cleanTitle.match(/^([A-Za-z0-9-]+)\s+/);
-    // 如果匹配到则返回匹配结果，否则返回 'main'
-    const key = componentMatch ? componentMatch[1] : 'main';
-    // 将 'main' 映射到主组件标识，否则返回提取到的子组件标识
-    return key === 'main' ? mainComponentKey : key;
+    if (!cleanTitle) return mainComponentKey; // 极端情况：标题为空，返回主组件标识
+
+    // 2. 定义“功能关键词列表”：这些词是标题的后缀描述，需排除在组件名之外
+    const functionKeywords = [
+        'api', 'attributes', 'events', 'slots', 'methods', 'exposes',
+        'attribute', 'event', 'slot', 'method', 'expose',
+        '属性', '事件', '插槽', '方法', '暴露' // 兼容中文描述
+    ];
+    // 生成正则：匹配“开头到功能关键词前”的所有内容（支持含空格的组件名）
+    const keywordRegex = new RegExp(`^(.*?)\\s+(?=${functionKeywords.join('|')})`, 'i');
+    const componentMatch = cleanTitle.match(keywordRegex);
+
+    // 3. 提取组件标识：
+    const key = componentMatch 
+        ? componentMatch[1].trim() 
+        : mainComponentKey;
+
+    // 4. 最终校验：确保标识不为空，兜底返回主组件标识
+    return key || mainComponentKey;
 }
 
 /**
