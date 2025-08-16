@@ -28,25 +28,62 @@ const LIFECYCLE_HOOKS = [
 ]
 
 function isVueReactiveCall(node: any, apiName: string) {
-  return t.isCallExpression(node) && t.isIdentifier(node.callee) && node.callee.name === apiName
+  if (!t.isCallExpression(node)) return false
+  // direct call: reactive()/ref()/computed()
+  if (t.isIdentifier(node.callee) && node.callee.name === apiName) return true
+  // member call: vue.reactive()/Vue.ref()/anything.ref()
+  if (t.isMemberExpression(node.callee)) {
+    const callee = node.callee
+    const prop = callee.property
+    if (t.isIdentifier(prop) && prop.name === apiName) return true
+  }
+  return false
 }
 
 function isLifecycleHook(name: string) {
   return LIFECYCLE_HOOKS.includes(name)
 }
 
-function getNodeValue(node: any): string {
-  if (t.isStringLiteral(node)) return `"${node.value}"`
-  if (t.isNumericLiteral(node)) return node.value.toString()
-  if (t.isBooleanLiteral(node)) return node.value.toString()
-  if (t.isNullLiteral(node)) return 'null'
-  if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
-    const funcName = node.callee.name
-    const args = node.arguments.map((arg: any) => getNodeValue(arg)).join(', ')
-    return `${funcName}(${args})`
+function getNodeValue(node: any): any {
+  if (t.isStringLiteral(node)) return node.value
+  if (t.isNumericLiteral(node)) return node.value
+  if (t.isBooleanLiteral(node)) return node.value
+  if (t.isNullLiteral(node)) return null
+  if (t.isUnaryExpression(node) && node.operator === '-' && t.isNumericLiteral(node.argument)) {
+    return -node.argument.value
   }
-  if (t.isObjectExpression(node)) return '{}'
-  if (t.isArrayExpression(node)) return '[]'
+  if (t.isCallExpression(node)) {
+    let calleeStr = ''
+    if (t.isIdentifier(node.callee)) {
+      calleeStr = node.callee.name
+    } else if (t.isMemberExpression(node.callee)) {
+      const obj = node.callee.object as any
+      const prop = node.callee.property as any
+      const objStr = t.isIdentifier(obj) ? obj.name : ''
+      const propStr = t.isIdentifier(prop) ? prop.name : ''
+      if (objStr && propStr) calleeStr = `${objStr}.${propStr}`
+    }
+    const args = node.arguments.map((arg: any) => getNodeValue(arg))
+    if (calleeStr)
+      return `${calleeStr}(${args.map((a: any) => (typeof a === 'string' ? `'${a}'` : String(a))).join(', ')})`
+    return 'undefined'
+  }
+  if (t.isObjectExpression(node)) {
+    const obj: Record<string, any> = {}
+    node.properties.forEach((prop: any) => {
+      if (t.isObjectProperty(prop)) {
+        let keyName: string | null = null
+        if (t.isIdentifier(prop.key)) keyName = prop.key.name
+        else if (t.isStringLiteral(prop.key)) keyName = prop.key.value
+        else if (t.isNumericLiteral(prop.key)) keyName = String(prop.key.value)
+        if (keyName) obj[keyName] = getNodeValue(prop.value as any)
+      }
+    })
+    return obj
+  }
+  if (t.isArrayExpression(node)) {
+    return node.elements.map((el: any) => (el ? getNodeValue(el) : null))
+  }
   return 'undefined'
 }
 
