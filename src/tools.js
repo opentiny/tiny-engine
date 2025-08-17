@@ -1,6 +1,6 @@
 const { Tool } = require("@langchain/core/tools");
 const { crawlElementPlusAPI } = require("./element-api-crawler");
-const { convertToTinyEngineSchema } = require("./convertor"); // 假设转换函数在该文件中
+const { convertToTinyEngineSchema } = require("./convertor-backup"); // 假设转换函数在该文件中
 
 /**
  * Element Plus API爬虫工具
@@ -38,7 +38,7 @@ class TinyEngineConverterTool extends Tool {
 
   description = `
   用于将组件API信息转换为符合tinyEngine组件协议的schema。
-  输入：由element_api_crawler工具返回的JSON字符串
+  输入：由element_api_crawler工具返回的object，包含组件名称、描述、属性、事件、插槽等信息
   输出：符合tinyEngine协议的完整JSON schema
   必须先使用element_api_crawler获取API数据后，才能使用此工具进行转换。
   `;

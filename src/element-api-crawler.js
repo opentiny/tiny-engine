@@ -3,35 +3,31 @@ const fs = require('fs');
 const path = require('path'); 
 
 /**
- * 将爬取到的API结果保存到根目录的api-log文件夹
- * @param {object} result 爬取到的完整API结果对象
+ * 将单个子组件的API结果保存到根目录的api-log文件夹
+ * @param {object} result 单个子组件的API结果对象
+ * @param {string} subComponentName 子组件名（如Button、ButtonGroup）
  */
-function saveApiResult(result) {
+function saveApiResult(result, subComponentName) {
     try {
-        // 1. 定义目标文件夹路径（根目录下的api-log）
         const targetDir = path.join(__dirname, '../api-log');
-        
-        // 2. 若文件夹不存在则创建（支持多级目录）
         if (!fs.existsSync(targetDir)) {
             fs.mkdirSync(targetDir, { recursive: true });
         }
-        
-        // 3. 生成唯一文件名（组件名 + 时间戳，避免重复）
-        const componentName = result.name || 'unknown-component';
+        // 文件名包含主组件名+子组件名+时间戳，避免重复
+        const mainComponentName = result.name || 'unknown-component';
         const timestamp = new Date().getTime();
-        const fileName = `${componentName.replace(/\s+/g, '-').replace(/[​]/g, '').toLowerCase()}-${timestamp}.json`;
+        const fileName = `${mainComponentName.replace(/\s+/g, '-').replace(/[​]/g, '').toLowerCase()}-${subComponentName.toLowerCase()}-${timestamp}.json`;
         const filePath = path.join(targetDir, fileName);
         
-        // 4. 写入文件（格式化JSON，缩进2空格）
         fs.writeFileSync(
             filePath,
             JSON.stringify(result, null, 2),
             'utf8'
         );
         
-        console.log(`API结果已保存至: ${filePath}`);
+        console.log(`子组件[${subComponentName}] API结果已保存至: ${filePath}`);
     } catch (error) {
-        console.error(`保存API结果失败: ${error.message}`);
+        console.error(`保存子组件[${subComponentName}] API结果失败: ${error.message}`);
     }
 }
 
@@ -41,9 +37,7 @@ function saveApiResult(result) {
  * @returns {string} 主组件的英文标识，例如 "Button"
  */
 function extractMainComponentKey(componentName) {
-    // 使用正则表达式匹配开头的英文字母序列
     const match = componentName.match(/^[A-Za-z]+/);
-    // 如果匹配到，返回匹配结果，否则移除中文和空格，返回纯英文部分
     return match ? match[0] : componentName.replace(/\s+.*/, '');
 }
 
@@ -53,8 +47,6 @@ function extractMainComponentKey(componentName) {
  * @returns {string} 清理后的属性名称
  */
 function cleanNameWithVersion(name) {
-    // 匹配末尾的版本号格式（数字.数字.数字 或 数字.数字）
-    // 并将其替换为空字符串，然后去除首尾空格
     return name.replace(/\s+\d+\.\d+(\.\d+)?$/, '').trim();
 }
 
@@ -65,8 +57,6 @@ function cleanNameWithVersion(name) {
  */
 function normalizeHeader(header) {
     const lowerHeader = header.toLowerCase().trim();
-    // 检查是否包含关键词，返回相应的标准化名称
-    // if (lowerHeader.includes('属性名') || lowerHeader.includes('参数名') || lowerHeader.includes('名称')) {
     if (lowerHeader.includes('属性名') || lowerHeader.includes('名称') || lowerHeader.includes('属性') 
         || lowerHeader.includes('事件名') || lowerHeader.includes('插槽名')  || lowerHeader.includes('方法名') || lowerHeader.includes('暴露')) {
         return 'name';
@@ -96,26 +86,18 @@ function normalizeHeader(header) {
  * @returns {string} 提取到的组件标识，如果未找到则返回主组件标识
  */
 function getComponentKey(title, mainComponentKey) {
-    // 1. 清理标题：移除异常空白字符、统一修剪空格
     const cleanTitle = title.replace(/[​\s]+/g, ' ').trim();
-    if (!cleanTitle) return mainComponentKey; // 极端情况：标题为空，返回主组件标识
+    if (!cleanTitle) return mainComponentKey;
 
-    // 2. 定义“功能关键词列表”：这些词是标题的后缀描述，需排除在组件名之外
     const functionKeywords = [
         'api', 'attributes', 'events', 'slots', 'methods', 'exposes',
         'attribute', 'event', 'slot', 'method', 'expose',
-        '属性', '事件', '插槽', '方法', '暴露' // 兼容中文描述
+        '属性', '事件', '插槽', '方法', '暴露'
     ];
-    // 生成正则：匹配“开头到功能关键词前”的所有内容（支持含空格的组件名）
     const keywordRegex = new RegExp(`^(.*?)\\s+(?=${functionKeywords.join('|')})`, 'i');
     const componentMatch = cleanTitle.match(keywordRegex);
 
-    // 3. 提取组件标识：
-    const key = componentMatch 
-        ? componentMatch[1].trim() 
-        : mainComponentKey;
-
-    // 4. 最终校验：确保标识不为空，兜底返回主组件标识
+    const key = componentMatch ? componentMatch[1].trim() : mainComponentKey;
     return key || mainComponentKey;
 }
 
@@ -126,7 +108,6 @@ function getComponentKey(title, mainComponentKey) {
  */
 function getApiType(title) {
     const lowerTitle = title.toLowerCase().trim();
-    // 根据标题关键词判断API类型
     if (lowerTitle.includes('attribute') || lowerTitle.includes('属性')) return 'properties';
     if (lowerTitle.includes('event') || lowerTitle.includes('事件')) return 'events';
     if (lowerTitle.includes('slot') || lowerTitle.includes('插槽')) return 'slots';
@@ -139,7 +120,7 @@ function getApiType(title) {
  * 处理爬取到的原始表格数据，将其结构化为所需的JSON格式
  * @param {Array} tables 爬取到的表格原始数据数组
  * @param {string} mainComponentKey 主组件标识
- * @returns {object} 结构化的API信息对象
+ * @returns {object} 结构化的API信息对象（components字段含所有子组件）
  */
 function processTables(tables, mainComponentKey) {
     const result = {
@@ -148,11 +129,9 @@ function processTables(tables, mainComponentKey) {
     };
 
     tables.forEach(table => {
-        // 1. 提取组件标识和API类型
         const componentKey = getComponentKey(table.title, mainComponentKey);
         const apiType = getApiType(table.title);
 
-        // 2. 初始化组件API结构（如果不存在）
         if (!result.components[componentKey]) {
             result.components[componentKey] = {
                 properties: [],
@@ -165,22 +144,17 @@ function processTables(tables, mainComponentKey) {
         }
         const componentApi = result.components[componentKey];
 
-        // 3. 标准化表头并处理行数据
-        const headers = table.headers.map(header => normalizeHeader(header));
-
-        // 确保apiType是有效的，否则整个表格数据放入others
         if (!componentApi.hasOwnProperty(apiType)) {
-            // 将整个表格对象作为others数据保存
             componentApi.others.push({ category: table.title, ...table.rows });
             return;
         }
 
+        const headers = table.headers.map(header => normalizeHeader(header));
         table.rows.forEach((row, rowIndex) => {
             const item = {};
             headers.forEach((header, index) => {
                 if (row[index]) {
                     let value = row[index].trim();
-                    // 清理属性名称中的版本号
                     if (header === 'name') {
                         value = cleanNameWithVersion(value);
                     }
@@ -188,12 +162,10 @@ function processTables(tables, mainComponentKey) {
                 }
             });
 
-            // 如果是enum类型且有枚举值，将提取到的枚举值数组添加到item中
             if (item.type && item.type.includes('enum') && table.enumValues && table.enumValues[rowIndex]) {
                 item.enumOptions = table.enumValues[rowIndex];
             }
 
-            // 将处理后的行数据推入正确的API类型数组
             componentApi[apiType].push(item);
         });
     });
@@ -202,47 +174,40 @@ function processTables(tables, mainComponentKey) {
 }
 
 /**
- * 爬取Element Plus组件API信息的主函数
+ * 爬取Element Plus组件API信息的主函数（返回子组件API对象数组）
  * @param {string} url 组件文档页面URL
  * @param {number} retries 重试次数，默认为3次
+ * @returns {Promise<Array>} 子组件API对象数组
  */
 async function crawlElementPlusAPI(url, retries = 3) {
-    // 启动一个无头浏览器实例
     const browser = await puppeteer.launch({
-        headless: 'new', // 使用新的无头模式
+        headless: 'new',
         defaultViewport: { width: 1280, height: 720 },
-        args: ['--no-sandbox', '--disable-setuid-sandbox'], // 必要的安全参数
-        slowMo: 50 // 减慢操作速度，便于观察和调试
+        args: ['--no-sandbox', '--disable-setuid-sandbox'],
+        slowMo: 50
     });
 
     try {
         const page = await browser.newPage();
 
-        // 监听 page.evaluate 中的 console.log 输出，并将其打印到外部控制台
         page.on('console', msg => {
             console.log('PAGE LOG:', msg.text());
         });
 
-        // 拦截不必要的网络请求，加速页面加载
         await page.setRequestInterception(true);
         page.on('request', (request) => {
             const resourceType = request.resourceType();
-            // 只允许加载文档、脚本、样式、XHR和fetch请求
             if (['document', 'script', 'stylesheet', 'xhr', 'fetch'].includes(resourceType)) {
                 request.continue();
             } else {
-                // 阻止其他请求，如图片、字体等
                 request.abort();
             }
         });
 
         console.log(`正在加载页面: ${url}`);
-        // 访问目标URL，等待网络空闲
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
-        // 在浏览器环境中执行脚本，获取页面数据
         const { componentInfo, tables } = await page.evaluate(async () => {
-            // 在 evaluate 内部重新定义必要的辅助函数，因为它们无法从外部作用域访问
             function normalizeHeader(header) {
                 const lowerHeader = header.toLowerCase().trim();
                 if (lowerHeader.includes('属性名') || lowerHeader.includes('参数名') || lowerHeader.includes('名称') || lowerHeader.includes('属性') || lowerHeader.includes('事件名')) {
@@ -269,7 +234,6 @@ async function crawlElementPlusAPI(url, retries = 3) {
                 return lowerHeader;
             }
 
-            // 增加一个通用的延时函数
             function delay(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             }
@@ -295,29 +259,22 @@ async function crawlElementPlusAPI(url, retries = 3) {
                     break;
                 }
             }
-            // const componentInfo = { name, description };
 
-            // 新增提取版本号的逻辑
+            // 提取版本号
             let version = 'unknown';
-            // 定位版本号所在的 el-tag__content 元素
             const versionEl = document.querySelector('span.el-tag__content');
             if (versionEl) {
-                // 提取元素内的文本内容，过滤注释语法，拿到版本号
                 const text = versionEl.textContent.replace(/<!--|-->/g, '').trim();
                 version = text;
             }
 
             const componentInfo = { name, description, version };
 
-            // 查找所有可能的表格元素
-            // const tableElements = Array.from(document.querySelectorAll('.vp-table, table, .table'));
+            // 提取表格数据
             const tableElements = Array.from(document.querySelectorAll('.vp-table'));
-
-            // 遍历所有表格并提取数据
             const tables = await Promise.all(tableElements.map(async (table, tableIndex) => {
                 let title = '未知表格';
                 let prevEl = table.previousElementSibling;
-                // 向上查找最近的标题（H2-H5）作为表格标题
                 while (prevEl) {
                     if (['H2', 'H3', 'H4', 'H5'].includes(prevEl.tagName)) {
                         title = prevEl.textContent.replace(/[​]/g, '').trim();
@@ -326,41 +283,33 @@ async function crawlElementPlusAPI(url, retries = 3) {
                     prevEl = prevEl.previousElementSibling;
                 }
 
-                // 提取表头和数据行
                 const headers = Array.from(table.querySelectorAll('thead th, tr:first-child th'))
                     .map(th => th.textContent.trim());
                 const rows = Array.from(table.querySelectorAll('tbody tr, tr:not(:first-child)'))
                     .map(tr => Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim()))
                     .filter(row => row.length > 0);
 
-                // 找到“类型”列的索引
                 const typeColumnIndex = headers.findIndex(header => normalizeHeader(header) === 'type');
-
                 const enumValues = {};
-                // 如果存在“类型”列
+
                 if (typeColumnIndex !== -1) {
                     const tableRows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
                     for (let rowIndex = 0; rowIndex < tableRows.length; rowIndex++) {
                         const tableRow = tableRows[rowIndex];
                         const row = rows[rowIndex];
 
-                        // 如果该行类型包含“enum”，则尝试提取枚举值
                         if (row && row[typeColumnIndex]?.toLowerCase().includes('enum')) {
                             console.log(`尝试提取枚举值：表格 ${tableIndex}, 行 ${rowIndex}`);
-
                             const typeCell = tableRow.querySelector(`td:nth-child(${typeColumnIndex + 1})`);
                             if (typeCell) {
-                                // 查找并点击枚举值的 tooltip 按钮
                                 const iconButton = typeCell.querySelector('button.el-button.el-tooltip__trigger');
                                 if (iconButton) {
                                     iconButton.click();
-                                    await delay(500); // 增加延时以确保 tooltip 完全弹出
+                                    await delay(500);
 
-                                    // 查找可见的 tooltip 元素
                                     const tooltips = document.querySelectorAll('.el-popper');
                                     let codeEl;
                                     for(const tooltip of tooltips) {
-                                        // 检查 tooltip 是否可见（非隐藏，有高度）
                                         if (tooltip.offsetParent !== null && tooltip.getBoundingClientRect().height > 0) {
                                             codeEl = tooltip.querySelector('.m-1 > code');
                                             if(codeEl) break;
@@ -368,25 +317,21 @@ async function crawlElementPlusAPI(url, retries = 3) {
                                     }
 
                                     if (codeEl) {
-                                        // 提取并解析枚举值
                                         const enumText = codeEl.textContent.trim();
                                         const parts = enumText.split(' | ');
                                         const parsedValues = parts.map(part => {
                                             let value = part.replace(/'/g, '').trim();
-                                            // 移除 (deprecated) 标记
                                             if (value.includes('(deprecated)')) {
                                                 value = value.replace(/\(deprecated\)/, '').trim();
                                             }
                                             return value;
                                         });
-                                        // 将解析结果保存
                                         enumValues[rowIndex] = parsedValues;
                                         console.log(`提取成功: ${parsedValues}`);
                                     } else {
                                         console.log('未找到code元素');
                                     }
 
-                                    // 模拟点击页面其他地方来关闭 tooltip
                                     document.body.click();
                                     await delay(200);
                                 } else {
@@ -402,35 +347,40 @@ async function crawlElementPlusAPI(url, retries = 3) {
                 return { title, headers, rows, enumValues };
             }));
 
-            // 返回提取到的组件信息和所有表格数据
             return { componentInfo, tables };
         });
 
-        // 提取主组件标识
+        // 处理表格数据，得到含所有子组件的API对象
         const mainComponentKey = extractMainComponentKey(componentInfo.name);
         console.log(`识别到主组件标识: ${mainComponentKey}`);
-
-        // 使用自定义函数处理和结构化表格数据
         const apiData = processTables(tables, mainComponentKey);
 
-        // 组合最终结果
-        const result = {
-            url,
-            ...componentInfo,
-            ...apiData
-        };
+        // 核心修改：将单个对象拆分为子组件API对象数组
+        const subComponentKeys = Object.keys(apiData.components);
+        const subComponentApiArray = subComponentKeys.map(subKey => {
+            // 每个子组件对象仅保留当前子组件的信息，继承公共字段
+            return {
+                url, // 公共字段：原URL
+                ...componentInfo, // 公共字段：name/description/version
+                components: {
+                    [subKey]: apiData.components[subKey] // 仅保留当前子组件
+                },
+                others: apiData.others // 公共字段：其他信息
+            };
+        });
 
-        console.log(`成功提取 ${componentInfo.name} 的API信息`);
+        console.log(`成功提取 ${componentInfo.name} 的API信息，共${subComponentApiArray.length}个子组件`);
         
-        // 新增：保存结果到api-log文件夹
-        saveApiResult(result);
+        // 保存每个子组件的API结果
+        subComponentApiArray.forEach(apiObj => {
+            const subKey = Object.keys(apiObj.components)[0]; // 子组件名（如Button、ButtonGroup）
+            saveApiResult(apiObj, subKey);
+        });
 
-        // return JSON.stringify(result, null, 2);
-        return result;
+        return subComponentApiArray; // 返回子组件数组
 
     } catch (error) {
         console.error(`爬取出错: ${error.message}`);
-        // 捕获异常，如果还有重试次数，则重试
         if (retries > 0) {
             console.log(`剩余重试次数: ${retries}，正在重试...`);
             await browser.close();
@@ -438,7 +388,6 @@ async function crawlElementPlusAPI(url, retries = 3) {
         }
         throw error;
     } finally {
-        // 无论成功失败，最后都关闭浏览器
         if (browser) {
             await browser.close();
         }
@@ -447,20 +396,20 @@ async function crawlElementPlusAPI(url, retries = 3) {
 
 // 命令行入口
 if (require.main === module) {
-    // 从命令行参数中获取URL
     const url = process.argv[2];
     if (!url) {
         console.error('请提供组件URL，示例：node element-api-crawler.js "https://element-plus.org/zh-CN/component/button.html"');
         process.exit(1);
     }
 
-    // 调用主函数并处理结果
     crawlElementPlusAPI(url)
+        .then(apiArray => {
+            console.log(`爬取完成，子组件API数组长度: ${apiArray.length}`);
+        })
         .catch(err => {
             console.error('爬取失败:', err.message);
             process.exit(1);
         });
 }
 
-// 导出主函数，以便在其他模块中调用
 module.exports = { crawlElementPlusAPI };

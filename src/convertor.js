@@ -1,12 +1,7 @@
 require('dotenv').config({ path: '../.env' });
 const { OpenAI } = require("openai");
-// const { ChatOpenAI } = require("@langchain/openai");
-// const { SystemMessage, HumanMessage } = require("@langchain/core/messages");
-const { crawlElementPlusAPI } = require('./element-api-crawler');
-// require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
-// const { console } = require('inspector');
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -17,95 +12,74 @@ const client = new OpenAI({
 /**
  * 将生成的schema保存到项目根目录的schema-log文件夹
  * @param {string} schema - 大模型返回的schema字符串（可能包含```json标识）
+ * @param {string} subComponentName - 子组件名（用于文件名区分）
  */
-function saveSchemaToFile(schema) {
+function saveSchemaToFile(schema, subComponentName) {
   try {
-    // 1. 移除代码标识（支持多种格式的代码块标识）
     let cleanedSchema = schema.trim();
-
-    // 处理常见的代码块标识（包括带语言名和不带语言名的情况）
     const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
     const match = cleanedSchema.match(codeBlockRegex);
 
     if (match && match[2]) {
-      // 如果匹配到代码块标识，提取内部内容
       cleanedSchema = match[2].trim();
-      console.log('已移除代码块标识，提取内部JSON内容');
+      console.log(`子组件[${subComponentName}]：已移除代码块标识`);
     } else {
-      // 未匹配到代码块标识，直接使用原始内容（可能本身就是纯JSON）
-      console.log('未检测到代码块标识，使用原始内容');
+      console.log(`子组件[${subComponentName}]：未检测到代码块标识`);
     }
 
-    // 2. 验证清理后的内容是否为空
     if (!cleanedSchema) {
-      throw new Error("清理后schema为空");
+      throw new Error(`子组件[${subComponentName}]：清理后schema为空`);
     }
-    console.log('cleanedSchema:', cleanedSchema);
 
-    // 3. 解析schema为JSON
+    // 解析schema为JSON
     let parsedSchema;
     try {
       parsedSchema = JSON.parse(cleanedSchema);
-      console.log('parsedSchema:', parsedSchema);
+      console.log(`子组件[${subComponentName}]：schema解析成功`);
     } catch (parseError) {
-      // 解析失败时保留原始内容用于调试
-      const errorLogPath = path.join(__dirname, '../schema-log/parse-error-debug.json');
+      const errorLogPath = path.join(__dirname, `../schema-log/parse-error-${subComponentName}-${new Date().getTime()}.json`);
       fs.writeFileSync(errorLogPath, cleanedSchema, 'utf8');
-      throw new Error(`schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
+      throw new Error(`子组件[${subComponentName}]：schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
     }
 
-    // 4. 定义保存目录
+    // 定义保存目录
     const schemaDir = path.join(__dirname, '../schema-log');
     if (!fs.existsSync(schemaDir)) {
       fs.mkdirSync(schemaDir, { recursive: true });
       console.log(`已创建schema保存目录：${schemaDir}`);
     }
 
-    // 5. 统一生成时间戳（确保同批次文件时间戳一致）
+    // 生成文件名（含子组件名）
     const timestamp = new Date().getTime();
-
-    // 6. 处理单组件（对象）或多组件（数组）
     const components = Array.isArray(parsedSchema) ? parsedSchema : [parsedSchema];
 
-    // 7. 逐个保存组件
     components.forEach((componentSchema, index) => {
-      // 获取组件名（优先用component字段，无则用索引+默认名）
       const componentName = componentSchema.component
         ? componentSchema.component.replace(/[^a-zA-Z0-9]/g, '-')
-        : `unknown-component-${index}`;
+        : `${subComponentName}-unknown-${index}`;
 
-      // 生成文件名
       const fileName = `${componentName}-${timestamp}.json`;
       const filePath = path.join(schemaDir, fileName);
-
-      // 格式化并写入文件
       const content = JSON.stringify(componentSchema, null, 2);
       fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`已保存组件schema至：${filePath}`);
+      console.log(`子组件[${subComponentName}]：schema已保存至：${filePath}`);
     });
 
   } catch (error) {
-    console.error(`保存schema失败：${error.message}`);
+    console.error(`保存子组件[${subComponentName}] schema失败：${error.message}`);
   }
 }
 
-
 /**
- * 将提取的API内容转换为符合tinyEngine组件协议的schema
- * @param {object} apiContent - 从API提取器获取的内容（crawlElementPlusAPI函数的返回结果），必须包含：
- *   - component: 组件名称（如"Button"）
- *   - version: 组件版本（如"2.3.4"）
- *   - description: 组件描述
- *   - components: 子组件集合（含properties/slots等）
+ * 单个子组件API转tinyEngine schema（内部函数，不直接导出）
+ * @param {object} apiObj - 单个子组件的API对象
  * @param {string} model - 大模型名称
- * @param {boolean} save - 是否保存到文件（默认true）
- * @returns {Promise<string>} 符合tinyEngine协议的schema原始文本（或错误信息）
+ * @param {boolean} save - 是否保存到文件
+ * @returns {Promise<object>} 包含子组件名和schema的对象
  */
-async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
-  console.log("环境变量加载测试：");
-  console.log("OPENAI_API_KEY是否存在：", !!process.env.OPENAI_API_KEY);
-  console.log("OPENAI_BASE_URL：", process.env.OPENAI_BASE_URL);
-  console.log("model：", model);
+async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
+  const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
+  console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
 
   const messages = [
     {
@@ -1117,72 +1091,127 @@ async function convertToTinyEngineSchema(apiContent, model = process.env.OPENAI_
 通过此示例可直观参考**输入原始 API 结构**与**输出 tinyEngine schema 结构**的映射关系，转换时请严格遵循规则对齐。
 
 ### 待转换的组件 API 内容
-组件API内容: ${JSON.stringify(apiContent, null, 2)}`
+组件API内容: ${JSON.stringify(apiObj, null, 2)}`
     }
-  ]
-  // 调用OpenAI API进行转换
+  ];
+
+  // 调用OpenAI API
   const completion = await client.chat.completions.create({
     model: model,
     messages,
-    temperature: 0.2, // 适当提高温度以增加灵活性，但保持结果稳定性
-    max_tokens: 16384, // 设置生成内容的最大token数，需在1-16384范围内
+    temperature: 0.2,
+    max_tokens: 16384,
   });
 
-  const result = completion.choices[0].message.content;
+  const schemaText = completion.choices[0].message.content;
+  let parsedSchema = null;
 
-  // 若需要保存，则调用保存函数
-  if (save) {
-    saveSchemaToFile(result);
+  // 清理并解析schema（确保返回JSON对象）
+  try {
+    let cleanedSchema = schemaText.trim();
+    const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
+    const match = cleanedSchema.match(codeBlockRegex);
+    if (match && match[2]) cleanedSchema = match[2].trim();
+    
+    parsedSchema = JSON.parse(cleanedSchema);
+  } catch (parseError) {
+    console.warn(`子组件[${subComponentName}]：schema文本解析为JSON失败，返回原始文本`, parseError.message);
+    parsedSchema = schemaText; // 解析失败时返回原始文本，便于后续调试
   }
 
-  console.log(`成功获取tinyEngine schema，长度: ${result.length} 字符`);
-  return result;
+  // 保存文件
+  if (save) {
+    saveSchemaToFile(schemaText, subComponentName);
+  }
+
+  console.log(`子组件[${subComponentName}]：转换完成`);
+  return {
+    subComponentName,
+    schema: parsedSchema, // 返回解析后的JSON对象（或原始文本）
+    rawSchemaText: schemaText // 额外返回原始文本，便于追溯
+  };
 }
 
 /**
- * 主函数：提取API内容并转换为tinyEngine schema
+ * 批量转换API数组为tinyEngine schema数组（对外导出的核心函数）
+ * @param {Array} apiArray - crawlElementPlusAPI返回的子组件API对象数组
+ * @param {string} model - 大模型名称（可选，默认用环境变量）
+ * @param {boolean} save - 是否保存到文件（可选，默认true）
+ * @returns {Promise<Array>} 子组件schema结果数组（每个元素含子组件名、schema对象、原始文本）
+ */
+async function batchConvertToTinyEngineSchema(apiArray, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
+  if (!Array.isArray(apiArray) || apiArray.length === 0) {
+    throw new Error("输入必须是非空的API对象数组（来自crawlElementPlusAPI）");
+  }
+
+  console.log(`\n开始批量转换：共${apiArray.length}个子组件`);
+  const conversionResults = [];
+
+  // 逐个转换（串行执行，避免并发调用API导致限流）
+  for (const apiObj of apiArray) {
+    try {
+      const result = await convertSingleSubComponent(apiObj, model, save);
+      conversionResults.push(result);
+    } catch (error) {
+      const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
+      console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error.message);
+      // 失败时仍记录，便于后续排查
+      conversionResults.push({
+        subComponentName,
+        success: false,
+        error: error.message,
+        schema: null
+      });
+    }
+  }
+
+  console.log(`\n批量转换完成：成功${conversionResults.filter(r => r.success !== false).length}个，失败${conversionResults.filter(r => r.success === false).length}个`);
+  return conversionResults;
+}
+
+/**
+ * 主函数：命令行入口（调用批量转换函数）
  */
 async function main() {
   try {
-    // 从命令行参数获取URL
     const url = process.argv[2];
-
     if (!url) {
       console.error('请提供URL作为参数');
-      console.log('使用示例: node convertor.js https://cn.element-plus.org/zh-CN/component/form.html');
+      console.log('使用示例: node convertor.js https://cn.element-plus.org/zh-CN/component/button.html');
       return;
     }
 
-    // 1. 提取API内容
-    console.log(`开始处理URL: ${url}`);
-    const apiContent = await crawlElementPlusAPI(url);
-    // console.log('成功提取API内容:\n', apiContent);
-    console.log('成功提取API内容:\n', JSON.stringify(apiContent, null, 2));
-    console.log('apiContent.name:', apiContent.name); // 检查字段是否存在
+    // 1. 先爬取API数组（依赖element-api-crawler.js）
+    const { crawlElementPlusAPI } = require('./element-api-crawler');
+    console.log(`开始爬取URL: ${url}`);
+    const apiArray = await crawlElementPlusAPI(url);
+    console.log(`爬取完成：共${apiArray.length}个子组件`);
 
-    // 2. 转换为tinyEngine组件协议
-    console.log('开始转换为tinyEngine组件协议...');
-    // const tinyEngineSchema = await convertToTinyEngineSchema(apiContent);
-    const tinyEngineSchema = await convertToTinyEngineSchema(apiContent);
+    // 2. 调用批量转换函数
+    const results = await batchConvertToTinyEngineSchema(apiArray);
 
-    // // 3. 输出最终结果
-    console.log('\n--- 符合tinyEngine组件协议的schema ---');
-    // console.log(tinyEngineSchema);  // 直接输出原始文本，无需JSON.stringify
-
-    console.log('\n--- 处理完成 ---');
+    // 3. 输出汇总结果
+    console.log('\n--- 批量转换汇总 ---');
+    results.forEach((item, index) => {
+      if (item.success === false) {
+        console.log(`[${index + 1}] 子组件[${item.subComponentName}]：失败 - ${item.error}`);
+      } else {
+        console.log(`[${index + 1}] 子组件[${item.subComponentName}]：成功`);
+      }
+    });
 
   } catch (error) {
-    console.error(`转换失败: ${error.message}`);
-    // 返回标准化错误信息，而非抛出错误（避免调用者需额外捕获）
-    return `转换失败：${error.message}`;
+    console.error(`整体流程失败: ${error.message}`);
   }
 }
 
-// 保持 main 函数仅在直接运行时执行，不影响模块导出
+// 命令行直接运行时执行主函数
 if (require.main === module) {
-  // main().catch(console.error);
   main();
-  // saveSchemaToFile(schema)
 }
 
-module.exports = { convertToTinyEngineSchema };
+// 对外导出批量转换函数（原单个转换函数可按需导出，此处优先暴露核心批量函数）
+module.exports = {
+  batchConvertToTinyEngineSchema,
+  convertSingleSubComponent // 可选导出，供调试单个子组件转换
+};
