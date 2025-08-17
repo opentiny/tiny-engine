@@ -98,6 +98,29 @@ function transformProps(props: any[]) {
   })
 }
 
+// Collapse newlines and excessive spaces in strings
+function collapseString(value: string) {
+  return value
+    .replace(/\s*\n+\s*/g, ' ')
+    .replace(/\s{2,}/g, ' ')
+    .trim()
+}
+
+// Deeply sanitize all string values in the schema
+function sanitizeSchemaStrings(obj: any): any {
+  if (obj === null || obj === undefined) return obj
+  if (typeof obj === 'string') return collapseString(obj)
+  if (Array.isArray(obj)) return obj.map((v) => sanitizeSchemaStrings(v))
+  if (typeof obj === 'object') {
+    const out: any = Array.isArray(obj) ? [] : {}
+    Object.keys(obj).forEach((k) => {
+      out[k] = sanitizeSchemaStrings(obj[k])
+    })
+    return out
+  }
+  return obj
+}
+
 export async function generateSchema(templateSchema: any[], scriptSchema: any, styleSchema: any, options: any = {}) {
   const schema: any = {
     componentName: 'Page',
@@ -119,7 +142,8 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   }
   if (styleSchema && styleSchema.css) schema.css = styleSchema.css
   if (templateSchema && templateSchema.length > 0) schema.children = templateSchema
-  return schema
+  // sanitize all strings to remove newlines in the final output
+  return sanitizeSchemaStrings(schema)
 }
 
 export function generateAppSchema(pageSchemas: any[], options: any = {}) {
