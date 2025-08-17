@@ -1,4 +1,5 @@
 import { parse } from '@vue/compiler-dom'
+import { parse as babelParse } from '@babel/parser'
 
 function getComponentName(tag: string, options: any) {
   if (options.componentMap && options.componentMap[tag]) return options.componentMap[tag]
@@ -48,6 +49,72 @@ function parseNodeProps(props: any[], _options: any) {
   return result
 }
 
+function astToValue(node: any): any {
+  const unsupported = { __UNSUPPORTED__: true }
+  if (!node) return unsupported
+  switch (node.type) {
+    case 'StringLiteral':
+    case 'NumericLiteral':
+    case 'BooleanLiteral':
+      return node.value
+    case 'NullLiteral':
+      return null
+    case 'TemplateLiteral':
+      return (node.expressions?.length ?? 0) === 0 ? node.quasis.map((q: any) => q.value.cooked).join('') : unsupported
+    case 'ArrayExpression': {
+      const out: any[] = []
+      for (const el of node.elements) {
+        if (!el) return unsupported
+        const v = astToValue(el)
+        if ((v as any)?.__UNSUPPORTED__) return unsupported
+        out.push(v)
+      }
+      return out
+    }
+    case 'ObjectExpression': {
+      const obj: Record<string, any> = {}
+      for (const p of node.properties) {
+        if (p.type !== 'ObjectProperty' || p.computed) return unsupported
+        const k =
+          p.key.type === 'Identifier'
+            ? p.key.name
+            : p.key.type === 'StringLiteral'
+            ? p.key.value
+            : p.key.type === 'NumericLiteral'
+            ? String(p.key.value)
+            : null
+        if (k === null) return unsupported
+        const v = astToValue(p.value)
+        if ((v as any)?.__UNSUPPORTED__) return unsupported
+        obj[k] = v
+      }
+      return obj
+    }
+    default:
+      return unsupported
+  }
+}
+
+// Convert simple JS literal expressions to native values; otherwise fallback later to JSExpression
+function parseLiteralExpression(exp: string): { ok: true; value: any } | { ok: false } {
+  const trimmed = (exp || '').trim()
+  if (trimmed === 'true') return { ok: true, value: true }
+  if (trimmed === 'false') return { ok: true, value: false }
+  if (/^-?\d+(?:\.\d+)?$/.test(trimmed)) return { ok: true, value: Number(trimmed) }
+  const looksLikeLiteral =
+    (trimmed.startsWith('[') && trimmed.endsWith(']')) || (trimmed.startsWith('{') && trimmed.endsWith('}'))
+  if (!looksLikeLiteral) return { ok: false }
+  try {
+    const ast: any = babelParse(`(${trimmed})`, { sourceType: 'module', plugins: ['typescript', 'jsx'] })
+    const expr = ast.program?.body?.[0]?.expression
+    const value = astToValue(expr)
+    if (value && (value as any).__UNSUPPORTED__) return { ok: false }
+    return { ok: true, value }
+  } catch (_e) {
+    return { ok: false }
+  }
+}
+
 function parseDirectives(node: any, schema: any, _options: any) {
   if (!node.props) return
   node.props.forEach((prop: any) => {
@@ -82,7 +149,17 @@ function parseDirectives(node: any, schema: any, _options: any) {
       }
       case 'bind': {
         const attrName = prop.arg ? prop.arg.content : 'value'
-        schema.props[`:${attrName}`] = prop.exp ? prop.exp.content : ''
+        if (prop.exp && prop.exp.content !== null) {
+          const raw = String(prop.exp.content)
+          const parsed = parseLiteralExpression(raw)
+          if (parsed.ok) {
+            schema.props[`${attrName}`] = parsed.value
+          } else {
+            schema.props[`${attrName}`] = { type: 'JSExpression', value: raw }
+          }
+        } else {
+          schema.props[`${attrName}`] = ''
+        }
         break
       }
       case 'slot': {
