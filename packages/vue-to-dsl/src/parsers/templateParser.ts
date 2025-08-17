@@ -58,7 +58,16 @@ function parseDirectives(node: any, schema: any, _options: any) {
         schema.condition = prop.exp ? prop.exp.content : 'true'
         break
       case 'for':
-        if (prop.exp) schema.loop = prop.exp.content
+        if (prop.exp) {
+          const exp = prop.exp.content || ''
+          // Extract the iterable expression in `v-for="(item, i) in/of list"`
+          // Prefer the part after the last occurrence of ` in ` or ` of `.
+          const match =
+            exp.match(/^[^]*?(?:\)|\S)\s+(?:in|of)\s+([^]+)$/) || exp.match(/^(?:[^]+?)\s+(?:in|of)\s+([^]+)$/)
+          const src = (match ? match[1] : exp).trim()
+          const ensureThis = (s: string) => (s.startsWith('this.') ? s : `this.${s}`)
+          schema.loop = { type: 'JSExpression', value: ensureThis(src) }
+        }
         break
       case 'show':
         schema.props['v-show'] = prop.exp ? prop.exp.content : 'true'
