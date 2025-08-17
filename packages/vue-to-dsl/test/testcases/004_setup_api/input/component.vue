@@ -25,10 +25,10 @@ const reset = () => {
 }
 
 onMounted(() => {
-  /* mounted */
+  console.log('Component mounted')
 })
 onUnmounted(() => {
-  /* unmounted */
+  console.log('Component unmounted')
 })
 </script>
 

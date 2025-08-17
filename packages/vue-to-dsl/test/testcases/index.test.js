@@ -5,7 +5,22 @@ import path from 'path'
 
 describe('VueToDslConverter testcases', () => {
   const baseDir = path.resolve(__dirname, '.')
-  const converter = new VueToDslConverter()
+  const converter = new VueToDslConverter({
+    // 组件映射配置
+    componentMap: {
+      'tiny-form': 'TinyForm',
+      'tiny-form-item': 'TinyFormItem',
+      'tiny-button': 'TinyButton',
+      'tiny-button-group': 'TinyButtonGroup',
+      'tiny-select': 'TinySelect',
+      'tiny-search': 'TinySearch',
+      'tiny-input': 'TinyInput',
+      'tiny-grid': 'TinyGrid',
+      'tiny-grid-item': 'TinyGridItem',
+      'tiny-col': 'TinyCol',
+      'tiny-row': 'TinyRow'
+    }
+  })
 
   const cases = fs.readdirSync(baseDir).filter((name) => /\d+_/.test(name))
 
