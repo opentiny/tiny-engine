@@ -5,7 +5,7 @@
   "meta": {
     "title": "Generated Page",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-12T15:30:05.459Z",
+    "generatedAt": "2025-08-17T07:51:25.638Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -14,17 +14,17 @@
   "methods": {
     "updateMessage": {
       "type": "JSFunction",
-      "value": "updateMessage() {\n      this.message = 'Updated!'\n    }"
+      "value": "updateMessage() { this.message = 'Updated!' }"
     }
   },
   "computed": {},
   "lifecycle": {
     "mounted": {
       "type": "JSFunction",
-      "value": "function mounted() {\n    // lifecycle demo\n  }"
+      "value": "function mounted() { // lifecycle demo }"
     }
   },
-  "css": "div {\n  padding: 10px;\n}",
+  "css": "div { padding: 10px; }",
   "children": [
     {
       "componentName": "div",
@@ -41,9 +41,11 @@
                   "type": "JSExpression",
                   "value": "message"
                 }
-              }
+              },
+              "id": "bp9b7hl0"
             }
-          ]
+          ],
+          "id": "cg7ba1fy"
         },
         {
           "componentName": "button",
@@ -55,11 +57,15 @@
               "componentName": "Text",
               "props": {
                 "text": "更新"
-              }
+              },
+              "id": "ps91m3ch"
             }
-          ]
+          ],
+          "id": "64jplt17"
         }
-      ]
+      ],
+      "id": "8nzyf2bp"
     }
-  ]
+  ],
+  "id": "rwmrkbsi"
 }

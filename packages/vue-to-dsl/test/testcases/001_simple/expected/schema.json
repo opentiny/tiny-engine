@@ -5,7 +5,7 @@
   "meta": {
     "title": "Generated Page",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-12T15:30:05.444Z",
+    "generatedAt": "2025-08-17T07:51:25.597Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -14,20 +14,20 @@
   "methods": {
     "increment": {
       "type": "JSFunction",
-      "value": "function increment() {\n      state.count.value++\n    }"
+      "value": "function increment() { state.count.value++ }"
     },
     "decrement": {
       "type": "JSFunction",
-      "value": "function decrement() {\n      state.count.value--\n    }"
+      "value": "function decrement() { state.count.value-- }"
     },
     "reset": {
       "type": "JSFunction",
-      "value": "function reset() {\n      state.count.value = 0\n    }"
+      "value": "function reset() { state.count.value = 0 }"
     }
   },
   "computed": {},
   "lifecycle": {},
-  "css": ".simple-counter {\n  text-align: center;\n  padding: 20px;\n}\n\nbutton {\n  margin: 0 5px;\n  padding: 10px 15px;\n  background: #42b883;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #369870;\n}",
+  "css": ".simple-counter { text-align: center; padding: 20px; } button { margin: 0 5px; padding: 10px 15px; background: #42b883; color: white; border: none; border-radius: 4px; cursor: pointer; } button:hover { background: #369870; }",
   "children": [
     {
       "componentName": "div",
@@ -43,7 +43,8 @@
               "componentName": "Text",
               "props": {
                 "text": "计数器:"
-              }
+              },
+              "id": "1j9buof0"
             },
             {
               "componentName": "Text",
@@ -52,9 +53,11 @@
                   "type": "JSExpression",
                   "value": "count"
                 }
-              }
+              },
+              "id": "jyn7mn5w"
             }
-          ]
+          ],
+          "id": "bx4utyiw"
         },
         {
           "componentName": "button",
@@ -66,9 +69,11 @@
               "componentName": "Text",
               "props": {
                 "text": "增加"
-              }
+              },
+              "id": "ts6aqruy"
             }
-          ]
+          ],
+          "id": "svn5xmz3"
         },
         {
           "componentName": "button",
@@ -80,9 +85,11 @@
               "componentName": "Text",
               "props": {
                 "text": "减少"
-              }
+              },
+              "id": "2mzta0xq"
             }
-          ]
+          ],
+          "id": "v2zllzff"
         },
         {
           "componentName": "button",
@@ -94,11 +101,15 @@
               "componentName": "Text",
               "props": {
                 "text": "重置"
-              }
+              },
+              "id": "mz9i76xj"
             }
-          ]
+          ],
+          "id": "e1evwtmm"
         }
-      ]
+      ],
+      "id": "86045n9t"
     }
-  ]
+  ],
+  "id": "nybnmt8o"
 }

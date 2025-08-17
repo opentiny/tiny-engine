@@ -18,7 +18,8 @@ describe('VueToDslConverter testcases', () => {
       'tiny-grid': 'TinyGrid',
       'tiny-grid-item': 'TinyGridItem',
       'tiny-col': 'TinyCol',
-      'tiny-row': 'TinyRow'
+      'tiny-row': 'TinyRow',
+      'tiny-time-line': 'TinyTimeLine'
     }
   })
 

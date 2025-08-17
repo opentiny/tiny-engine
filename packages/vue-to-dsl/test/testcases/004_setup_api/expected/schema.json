@@ -5,7 +5,7 @@
   "meta": {
     "title": "Generated Page",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-13T07:54:26.024Z",
+    "generatedAt": "2025-08-17T07:51:25.647Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -15,11 +15,11 @@
   "methods": {
     "inc": {
       "type": "JSFunction",
-      "value": "function inc() {\n  state.count++\n}"
+      "value": "function inc() { state.count++ }"
     },
     "reset": {
       "type": "JSFunction",
-      "value": "function reset() {\n  state.count = 0\n}"
+      "value": "function reset() { state.count = 0 }"
     }
   },
   "computed": {
@@ -39,14 +39,14 @@
   "lifecycle": {
     "onMounted": {
       "type": "JSFunction",
-      "value": "function onMounted() {\n  /* mounted */\n}"
+      "value": "function onMounted() { console.log('Component mounted') }"
     },
     "onUnmounted": {
       "type": "JSFunction",
-      "value": "function onUnmounted() {\n  /* unmounted */\n}"
+      "value": "function onUnmounted() { console.log('Component unmounted') }"
     }
   },
-  "css": ".dashboard {\n  padding: 12px;\n}\nbutton {\n  margin-right: 4px;\n}",
+  "css": ".dashboard { padding: 12px; } button { margin-right: 4px; }",
   "children": [
     {
       "componentName": "section",
@@ -65,9 +65,11 @@
                   "type": "JSExpression",
                   "value": "title"
                 }
-              }
+              },
+              "id": "6rf3felv"
             }
-          ]
+          ],
+          "id": "ywix5xao"
         },
         {
           "componentName": "p",
@@ -77,7 +79,8 @@
               "componentName": "Text",
               "props": {
                 "text": "Count:"
-              }
+              },
+              "id": "9r4y019q"
             },
             {
               "componentName": "Text",
@@ -86,9 +89,11 @@
                   "type": "JSExpression",
                   "value": "count"
                 }
-              }
+              },
+              "id": "ufpkhdo5"
             }
-          ]
+          ],
+          "id": "vglarcph"
         },
         {
           "componentName": "p",
@@ -98,7 +103,8 @@
               "componentName": "Text",
               "props": {
                 "text": "Double:"
-              }
+              },
+              "id": "54d7kpbo"
             },
             {
               "componentName": "Text",
@@ -107,9 +113,11 @@
                   "type": "JSExpression",
                   "value": "doubleCount"
                 }
-              }
+              },
+              "id": "bsd2369y"
             }
-          ]
+          ],
+          "id": "ltzaht8v"
         },
         {
           "componentName": "button",
@@ -121,26 +129,35 @@
               "componentName": "Text",
               "props": {
                 "text": "Add"
-              }
+              },
+              "id": "iiv8wikn"
             }
-          ]
+          ],
+          "id": "awlcwro5"
         },
         {
           "componentName": "button",
           "props": {
             "@click": "reset",
-            ":disabled": "!canReset"
+            "disabled": {
+              "type": "JSExpression",
+              "value": "!canReset"
+            }
           },
           "children": [
             {
               "componentName": "Text",
               "props": {
                 "text": "Reset"
-              }
+              },
+              "id": "19m4lxst"
             }
-          ]
+          ],
+          "id": "4lzjexqq"
         }
-      ]
+      ],
+      "id": "utbejiqm"
     }
-  ]
+  ],
+  "id": "fvmk5b0x"
 }

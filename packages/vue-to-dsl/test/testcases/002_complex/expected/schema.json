@@ -5,7 +5,7 @@
   "meta": {
     "title": "Generated Page",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-12T15:30:05.458Z",
+    "generatedAt": "2025-08-17T07:51:25.629Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -25,7 +25,7 @@
   "methods": {
     "fetchUserData": {
       "type": "JSFunction",
-      "value": "async function fetchUserData() {\n      loading.value = true\n      error.value = null\n      try {\n        const response = await fetch(`/api/users/${props.userId}`)\n        const data = await response.json()\n        Object.assign(userInfo, data.user)\n        Object.assign(userStats, data.stats)\n      } catch (err) {\n        error.value = err.message\n      } finally {\n        loading.value = false\n      }\n    }"
+      "value": "async function fetchUserData() { loading.value = true error.value = null try { const response = await fetch(`/api/users/${props.userId}`) const data = await response.json() Object.assign(userInfo, data.user) Object.assign(userStats, data.stats) } catch (err) { error.value = err.message } finally { loading.value = false } }"
     },
     "formatDate": {
       "type": "JSFunction",
@@ -33,11 +33,11 @@
     },
     "editUser": {
       "type": "JSFunction",
-      "value": "function editUser() {\n      if (!canEdit.value) return\n      emit('user-updated', { userId: props.userId, action: 'edit' })\n    }"
+      "value": "function editUser() { if (!canEdit.value) return emit('user-updated', { userId: props.userId, action: 'edit' }) }"
     },
     "deleteUser": {
       "type": "JSFunction",
-      "value": "function deleteUser() {\n      if (!userInfo.canDelete) return\n      emit('user-deleted', { userId: props.userId, userName: userInfo.name })\n    }"
+      "value": "function deleteUser() { if (!userInfo.canDelete) return emit('user-deleted', { userId: props.userId, userName: userInfo.name }) }"
     },
     "loading": {
       "type": "JSFunction",
@@ -55,20 +55,20 @@
     },
     "userLevel": {
       "type": "JSFunction",
-      "value": "function userLevel() {\n      const count = userStats.loginCount\n      if (count > 100) return 'VIP'\n      if (count > 50) return '高级用户'\n      if (count > 10) return '普通用户'\n      return '新用户'\n    }"
+      "value": "function userLevel() { const count = userStats.loginCount if (count > 100) return 'VIP' if (count > 50) return '高级用户' if (count > 10) return '普通用户' return '新用户' }"
     }
   },
   "lifecycle": {
     "onMounted": {
       "type": "JSFunction",
-      "value": "function onMounted() {\n      fetchUserData()\n    }"
+      "value": "function onMounted() { fetchUserData() }"
     },
     "onUnmounted": {
       "type": "JSFunction",
       "value": "function onUnmounted() {}"
     }
   },
-  "css": ".user-card {\n  padding: 20px;\n}",
+  "css": ".user-card { padding: 20px; }",
   "children": [
     {
       "componentName": "div",
@@ -93,15 +93,19 @@
                       "type": "JSExpression",
                       "value": "state.userInfo.name"
                     }
-                  }
+                  },
+                  "id": "ul6679n1"
                 }
-              ]
+              ],
+              "id": "88l8ebzd"
             },
             {
               "componentName": "span",
               "props": {
-                "class": "status",
-                ":class": "{ active: state.userInfo.isActive }"
+                "class": {
+                  "type": "JSExpression",
+                  "value": "{ active: state.userInfo.isActive }"
+                }
               },
               "children": [
                 {
@@ -111,11 +115,14 @@
                       "type": "JSExpression",
                       "value": "state.userInfo.isActive ? '在线' : '离线'"
                     }
-                  }
+                  },
+                  "id": "637bit02"
                 }
-              ]
+              ],
+              "id": "h9437wd4"
             }
-          ]
+          ],
+          "id": "2jgpice4"
         },
         {
           "componentName": "div",
@@ -131,7 +138,8 @@
                   "componentName": "Text",
                   "props": {
                     "text": "邮箱:"
-                  }
+                  },
+                  "id": "ahq5tc4d"
                 },
                 {
                   "componentName": "Text",
@@ -140,9 +148,11 @@
                       "type": "JSExpression",
                       "value": "state.userInfo.email"
                     }
-                  }
+                  },
+                  "id": "mjs04qdk"
                 }
-              ]
+              ],
+              "id": "9fkxs4c5"
             },
             {
               "componentName": "p",
@@ -152,7 +162,8 @@
                   "componentName": "Text",
                   "props": {
                     "text": "年龄:"
-                  }
+                  },
+                  "id": "1mue1u1z"
                 },
                 {
                   "componentName": "Text",
@@ -161,9 +172,11 @@
                       "type": "JSExpression",
                       "value": "state.userInfo.age"
                     }
-                  }
+                  },
+                  "id": "qp5ldycy"
                 }
-              ]
+              ],
+              "id": "io8iww1s"
             },
             {
               "componentName": "p",
@@ -173,7 +186,8 @@
                   "componentName": "Text",
                   "props": {
                     "text": "注册时间:"
-                  }
+                  },
+                  "id": "wbkam44e"
                 },
                 {
                   "componentName": "Text",
@@ -182,11 +196,14 @@
                       "type": "JSExpression",
                       "value": "formatDate(state.userInfo.createTime)"
                     }
-                  }
+                  },
+                  "id": "usxt1qh2"
                 }
-              ]
+              ],
+              "id": "ce7s8e6i"
             }
-          ]
+          ],
+          "id": "fhtz1s9u"
         },
         {
           "componentName": "div",
@@ -199,16 +216,21 @@
               "props": {
                 "class": "btn btn-primary",
                 "@click": "editUser",
-                ":disabled": "!canEdit"
+                "disabled": {
+                  "type": "JSExpression",
+                  "value": "!canEdit"
+                }
               },
               "children": [
                 {
                   "componentName": "Text",
                   "props": {
                     "text": "编辑用户"
-                  }
+                  },
+                  "id": "vqe911wo"
                 }
-              ]
+              ],
+              "id": "uhvz04d0"
             },
             {
               "componentName": "button",
@@ -221,12 +243,15 @@
                   "componentName": "Text",
                   "props": {
                     "text": "删除用户"
-                  }
+                  },
+                  "id": "8ohjxioy"
                 }
               ],
-              "condition": "state.userInfo.canDelete"
+              "condition": "state.userInfo.canDelete",
+              "id": "3bzu8jqj"
             }
-          ]
+          ],
+          "id": "xzz52yx4"
         },
         {
           "componentName": "div",
@@ -242,9 +267,11 @@
                   "componentName": "Text",
                   "props": {
                     "text": "用户统计"
-                  }
+                  },
+                  "id": "x2ln8gjp"
                 }
-              ]
+              ],
+              "id": "ayl3id8g"
             },
             {
               "componentName": "ul",
@@ -258,7 +285,8 @@
                       "componentName": "Text",
                       "props": {
                         "text": "总登录次数:"
-                      }
+                      },
+                      "id": "po0niawx"
                     },
                     {
                       "componentName": "Text",
@@ -267,9 +295,11 @@
                           "type": "JSExpression",
                           "value": "state.userStats.loginCount"
                         }
-                      }
+                      },
+                      "id": "ssqmsu33"
                     }
-                  ]
+                  ],
+                  "id": "msc86xgw"
                 },
                 {
                   "componentName": "li",
@@ -279,7 +309,8 @@
                       "componentName": "Text",
                       "props": {
                         "text": "最后登录:"
-                      }
+                      },
+                      "id": "zotpc32t"
                     },
                     {
                       "componentName": "Text",
@@ -288,9 +319,11 @@
                           "type": "JSExpression",
                           "value": "formatDate(state.userStats.lastLogin)"
                         }
-                      }
+                      },
+                      "id": "hoalo929"
                     }
-                  ]
+                  ],
+                  "id": "f20ghlog"
                 },
                 {
                   "componentName": "li",
@@ -300,7 +333,8 @@
                       "componentName": "Text",
                       "props": {
                         "text": "账户等级:"
-                      }
+                      },
+                      "id": "ce3zqskx"
                     },
                     {
                       "componentName": "Text",
@@ -309,16 +343,22 @@
                           "type": "JSExpression",
                           "value": "userLevel"
                         }
-                      }
+                      },
+                      "id": "c8sytj36"
                     }
-                  ]
+                  ],
+                  "id": "e2habc5h"
                 }
-              ]
+              ],
+              "id": "6g8tsdi9"
             }
           ],
-          "condition": "showStats"
+          "condition": "showStats",
+          "id": "unmgl7ci"
         }
-      ]
+      ],
+      "id": "haakr04e"
     }
-  ]
+  ],
+  "id": "h1ywegts"
 }
