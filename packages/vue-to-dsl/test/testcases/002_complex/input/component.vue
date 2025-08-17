@@ -1,28 +1,28 @@
 <template>
   <div class="user-card">
     <div class="header">
-      <h2>{{ userInfo.name }}</h2>
-      <span class="status" :class="{ active: userInfo.isActive }">
-        {{ userInfo.isActive ? '在线' : '离线' }}
+      <h2>{{ state.userInfo.name }}</h2>
+      <span class="status" :class="{ active: state.userInfo.isActive }">
+        {{ state.userInfo.isActive ? '在线' : '离线' }}
       </span>
     </div>
 
     <div class="content">
-      <p>邮箱: {{ userInfo.email }}</p>
-      <p>年龄: {{ userInfo.age }}</p>
-      <p>注册时间: {{ formatDate(userInfo.createTime) }}</p>
+      <p>邮箱: {{ state.userInfo.email }}</p>
+      <p>年龄: {{ state.userInfo.age }}</p>
+      <p>注册时间: {{ formatDate(state.userInfo.createTime) }}</p>
     </div>
 
     <div class="actions">
       <button @click="editUser" :disabled="!canEdit" class="btn btn-primary">编辑用户</button>
-      <button @click="deleteUser" class="btn btn-danger" v-if="userInfo.canDelete">删除用户</button>
+      <button @click="deleteUser" class="btn btn-danger" v-if="state.userInfo.canDelete">删除用户</button>
     </div>
 
     <div class="statistics" v-if="showStats">
       <h3>用户统计</h3>
       <ul>
-        <li>总登录次数: {{ userStats.loginCount }}</li>
-        <li>最后登录: {{ formatDate(userStats.lastLogin) }}</li>
+        <li>总登录次数: {{ state.userStats.loginCount }}</li>
+        <li>最后登录: {{ formatDate(state.userStats.lastLogin) }}</li>
         <li>账户等级: {{ userLevel }}</li>
       </ul>
     </div>
@@ -40,12 +40,24 @@ export default {
   },
   emits: ['user-updated', 'user-deleted'],
   setup(props, { emit }) {
-    const userInfo = reactive({ name: '', email: '', age: 0, isActive: false, canDelete: true, createTime: null })
-    const userStats = reactive({ loginCount: 0, lastLogin: null })
+    const state = reactive({
+      userInfo: {
+        name: '',
+        email: '',
+        age: 0,
+        isActive: false,
+        canDelete: true,
+        createTime: null
+      },
+      userStats: {
+        loginCount: 0,
+        lastLogin: null
+      }
+    })
     const loading = ref(false)
     const error = ref(null)
 
-    const canEdit = computed(() => userInfo.isActive && !loading.value)
+    const canEdit = computed(() => state.userInfo.isActive && !loading.value)
     const userLevel = computed(() => {
       const count = userStats.loginCount
       if (count > 100) return 'VIP'

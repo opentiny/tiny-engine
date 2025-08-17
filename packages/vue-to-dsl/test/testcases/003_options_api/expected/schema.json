@@ -8,11 +8,23 @@
     "generatedAt": "2025-08-12T15:30:05.459Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
-  "state": {},
-  "methods": {},
+  "state": {
+    "count": 123
+  },
+  "methods": {
+    "updateMessage": {
+      "type": "JSFunction",
+      "value": "updateMessage() {\n      this.message = 'Updated!'\n    }"
+    }
+  },
   "computed": {},
-  "lifecycle": {},
-  "css": "div { padding: 10px; }",
+  "lifecycle": {
+    "mounted": {
+      "type": "JSFunction",
+      "value": "function mounted() {\n    // lifecycle demo\n  }"
+    }
+  },
+  "css": "div {\n  padding: 10px;\n}",
   "children": [
     {
       "componentName": "div",

@@ -13,6 +13,14 @@ export default {
       message: 'Hello from Options API'
     }
   },
+  setup() {
+    const state = reactive({
+      count: 123
+    })
+    return {
+      state
+    }
+  },
   methods: {
     updateMessage() {
       this.message = 'Updated!'

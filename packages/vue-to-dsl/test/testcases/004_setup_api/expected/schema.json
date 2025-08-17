@@ -9,45 +9,44 @@
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
-    "title": "Dashboard",
     "count": 2,
     "threshold": 10
   },
   "methods": {
     "inc": {
       "type": "JSFunction",
-      "value": "function() { /* function body */ }"
+      "value": "function inc() {\n  state.count++\n}"
     },
     "reset": {
       "type": "JSFunction",
-      "value": "function reset() { /* function body */ }"
+      "value": "function reset() {\n  state.count = 0\n}"
     }
   },
   "computed": {
     "count": {
       "type": "JSFunction",
-      "value": "computed(undefined)"
+      "value": "function count() { return state.count; }"
     },
     "doubleCount": {
       "type": "JSFunction",
-      "value": "computed(undefined)"
+      "value": "function doubleCount() { return state.count * 2; }"
     },
     "canReset": {
       "type": "JSFunction",
-      "value": "computed(undefined)"
+      "value": "function canReset() { return state.count > 0; }"
     }
   },
   "lifecycle": {
     "onMounted": {
       "type": "JSFunction",
-      "value": "function() { /* lifecycle hook */ }"
+      "value": "function onMounted() {\n  /* mounted */\n}"
     },
     "onUnmounted": {
       "type": "JSFunction",
-      "value": "function() { /* lifecycle hook */ }"
+      "value": "function onUnmounted() {\n  /* unmounted */\n}"
     }
   },
-  "css": ".dashboard { padding: 12px; }\nbutton { margin-right: 4px; }",
+  "css": ".dashboard {\n  padding: 12px;\n}\nbutton {\n  margin-right: 4px;\n}",
   "children": [
     {
       "componentName": "section",

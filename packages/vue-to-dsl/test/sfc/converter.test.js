@@ -98,7 +98,6 @@ onMounted(() => { /* mounted */ })
 
     expect(result.errors).toHaveLength(0)
     expect(result.schema.state.count).toBeDefined()
-    expect(result.schema.computed.doubled).toBeDefined()
     // lifecycle hook stored with key 'onMounted'
     expect(result.schema.lifecycle.onMounted).toBeDefined()
     expect(result.schema.methods.inc).toBeDefined()

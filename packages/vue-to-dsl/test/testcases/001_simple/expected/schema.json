@@ -8,11 +8,26 @@
     "generatedAt": "2025-08-12T15:30:05.444Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
-  "state": {},
-  "methods": {},
+  "state": {
+    "count": 0
+  },
+  "methods": {
+    "increment": {
+      "type": "JSFunction",
+      "value": "function increment() {\n      state.count.value++\n    }"
+    },
+    "decrement": {
+      "type": "JSFunction",
+      "value": "function decrement() {\n      state.count.value--\n    }"
+    },
+    "reset": {
+      "type": "JSFunction",
+      "value": "function reset() {\n      state.count.value = 0\n    }"
+    }
+  },
   "computed": {},
   "lifecycle": {},
-  "css": ".simple-counter {\r\n  text-align: center;\r\n  padding: 20px;\r\n}\r\n\r\nbutton {\r\n  margin: 0 5px;\r\n  padding: 10px 15px;\r\n  background: #42b883;\r\n  color: white;\r\n  border: none;\r\n  border-radius: 4px;\r\n  cursor: pointer;\r\n}\r\n\r\nbutton:hover {\r\n  background: #369870;\r\n}",
+  "css": ".simple-counter {\n  text-align: center;\n  padding: 20px;\n}\n\nbutton {\n  margin: 0 5px;\n  padding: 10px 15px;\n  background: #42b883;\n  color: white;\n  border: none;\n  border-radius: 4px;\n  cursor: pointer;\n}\n\nbutton:hover {\n  background: #369870;\n}",
   "children": [
     {
       "componentName": "div",

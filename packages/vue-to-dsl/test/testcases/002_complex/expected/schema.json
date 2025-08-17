@@ -8,11 +8,67 @@
     "generatedAt": "2025-08-12T15:30:05.458Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
-  "state": {},
-  "methods": {},
-  "computed": {},
-  "lifecycle": {},
-  "css": ".user-card { padding: 20px; }",
+  "state": {
+    "userInfo": {
+      "name": "",
+      "email": "",
+      "age": 0,
+      "isActive": false,
+      "canDelete": true,
+      "createTime": null
+    },
+    "userStats": {
+      "loginCount": 0,
+      "lastLogin": null
+    }
+  },
+  "methods": {
+    "fetchUserData": {
+      "type": "JSFunction",
+      "value": "async function fetchUserData() {\n      loading.value = true\n      error.value = null\n      try {\n        const response = await fetch(`/api/users/${props.userId}`)\n        const data = await response.json()\n        Object.assign(userInfo, data.user)\n        Object.assign(userStats, data.stats)\n      } catch (err) {\n        error.value = err.message\n      } finally {\n        loading.value = false\n      }\n    }"
+    },
+    "formatDate": {
+      "type": "JSFunction",
+      "value": "function formatDate(timestamp) { return timestamp ? new Date(timestamp).toLocaleDateString('zh-CN') : '未知'; }"
+    },
+    "editUser": {
+      "type": "JSFunction",
+      "value": "function editUser() {\n      if (!canEdit.value) return\n      emit('user-updated', { userId: props.userId, action: 'edit' })\n    }"
+    },
+    "deleteUser": {
+      "type": "JSFunction",
+      "value": "function deleteUser() {\n      if (!userInfo.canDelete) return\n      emit('user-deleted', { userId: props.userId, userName: userInfo.name })\n    }"
+    },
+    "loading": {
+      "type": "JSFunction",
+      "value": "function loading(){}"
+    },
+    "error": {
+      "type": "JSFunction",
+      "value": "function error(){}"
+    }
+  },
+  "computed": {
+    "canEdit": {
+      "type": "JSFunction",
+      "value": "function canEdit() { return state.userInfo.isActive && !loading.value; }"
+    },
+    "userLevel": {
+      "type": "JSFunction",
+      "value": "function userLevel() {\n      const count = userStats.loginCount\n      if (count > 100) return 'VIP'\n      if (count > 50) return '高级用户'\n      if (count > 10) return '普通用户'\n      return '新用户'\n    }"
+    }
+  },
+  "lifecycle": {
+    "onMounted": {
+      "type": "JSFunction",
+      "value": "function onMounted() {\n      fetchUserData()\n    }"
+    },
+    "onUnmounted": {
+      "type": "JSFunction",
+      "value": "function onUnmounted() {}"
+    }
+  },
+  "css": ".user-card {\n  padding: 20px;\n}",
   "children": [
     {
       "componentName": "div",
@@ -35,7 +91,7 @@
                   "props": {
                     "text": {
                       "type": "JSExpression",
-                      "value": "userInfo.name"
+                      "value": "state.userInfo.name"
                     }
                   }
                 }
@@ -45,7 +101,7 @@
               "componentName": "span",
               "props": {
                 "class": "status",
-                ":class": "{ active: userInfo.isActive }"
+                ":class": "{ active: state.userInfo.isActive }"
               },
               "children": [
                 {
@@ -53,7 +109,7 @@
                   "props": {
                     "text": {
                       "type": "JSExpression",
-                      "value": "userInfo.isActive ? '在线' : '离线'"
+                      "value": "state.userInfo.isActive ? '在线' : '离线'"
                     }
                   }
                 }
@@ -82,7 +138,7 @@
                   "props": {
                     "text": {
                       "type": "JSExpression",
-                      "value": "userInfo.email"
+                      "value": "state.userInfo.email"
                     }
                   }
                 }
@@ -103,7 +159,7 @@
                   "props": {
                     "text": {
                       "type": "JSExpression",
-                      "value": "userInfo.age"
+                      "value": "state.userInfo.age"
                     }
                   }
                 }
@@ -124,7 +180,7 @@
                   "props": {
                     "text": {
                       "type": "JSExpression",
-                      "value": "formatDate(userInfo.createTime)"
+                      "value": "formatDate(state.userInfo.createTime)"
                     }
                   }
                 }
@@ -168,7 +224,7 @@
                   }
                 }
               ],
-              "condition": "userInfo.canDelete"
+              "condition": "state.userInfo.canDelete"
             }
           ]
         },
@@ -209,7 +265,7 @@
                       "props": {
                         "text": {
                           "type": "JSExpression",
-                          "value": "userStats.loginCount"
+                          "value": "state.userStats.loginCount"
                         }
                       }
                     }
@@ -230,7 +286,7 @@
                       "props": {
                         "text": {
                           "type": "JSExpression",
-                          "value": "formatDate(userStats.lastLogin)"
+                          "value": "formatDate(state.userStats.lastLogin)"
                         }
                       }
                     }
