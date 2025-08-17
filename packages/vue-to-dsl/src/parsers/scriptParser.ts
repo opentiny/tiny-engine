@@ -117,6 +117,71 @@ function functionExpressionToNamedFunctionString(
   return `${asyncStr}function ${name}(${params}) ${body}`
 }
 
+// Helpers to reduce duplication when handling variable declarators in <script setup>
+function addMethodFromFunctionLike(name: string, init: any, result: any, source: string): boolean {
+  if (t.isArrowFunctionExpression(init)) {
+    const code = arrowToFunctionString(name, init, source)
+    result.methods[name] = { type: 'function', value: code }
+    return true
+  }
+  if (t.isFunctionExpression(init)) {
+    const code = getSource(init, source)
+    result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
+    return true
+  }
+  return false
+}
+
+function assignStateIfNamedState(name: string, init: any, result: any): boolean {
+  if (name !== 'state') return false
+  const initCode = getNodeValue(init)
+  if (isVueReactiveCall(init, 'reactive')) {
+    const firstArg = init.arguments && init.arguments[0]
+    if (t.isObjectExpression(firstArg)) {
+      firstArg.properties.forEach((prop: any) => {
+        if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+          const propName = prop.key.name
+          const propValue = prop.value ? getNodeValue(prop.value) : undefined
+          result.state[propName] = { type: 'reactive', value: propValue }
+        }
+      })
+    } else {
+      result.state[name] = { type: 'reactive', value: initCode }
+    }
+    return true
+  }
+  if (isVueReactiveCall(init, 'ref')) {
+    result.state[name] = { type: 'ref', value: initCode }
+    return true
+  }
+  // normal non-reactive assignment to state
+  result.state[name] = { type: 'normal', value: initCode }
+  return true
+}
+
+function assignComputedIfComputed(name: string, init: any, result: any, source: string): boolean {
+  if (!isVueReactiveCall(init, 'computed')) return false
+  const firstArg = (init.arguments && init.arguments[0]) as any
+  let compCode = firstArg ? getSource(firstArg, source) : getNodeValue(init)
+  if (firstArg) {
+    if (t.isArrowFunctionExpression(firstArg)) compCode = arrowToFunctionString(name, firstArg, source)
+    else if (t.isFunctionExpression(firstArg))
+      compCode = functionExpressionToNamedFunctionString(name, firstArg, source)
+  }
+  result.computed[name] = { type: 'computed', value: compCode }
+  return true
+}
+
+function handleVariableDeclarator(name: string, init: any, result: any, source: string) {
+  // 1) function-like assignments become methods
+  if (addMethodFromFunctionLike(name, init, result, source)) return
+  // 2) state-only extraction
+  if (assignStateIfNamedState(name, init, result)) return
+  // 3) computed regardless of name
+  if (assignComputedIfComputed(name, init, result, source)) return
+  // 4) otherwise ignored for state (per requirement), no-op
+}
+
 function parseSetupFunctionBody(body: any, result: any, source: string) {
   if (!t.isBlockStatement(body)) return
   const declaredFunctions = new Set<string>()
@@ -131,44 +196,7 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
       statement.declarations.forEach((declaration: any) => {
         if (t.isIdentifier(declaration.id) && declaration.init) {
           const name = declaration.id.name
-          if (t.isArrowFunctionExpression(declaration.init)) {
-            const code = arrowToFunctionString(name, declaration.init, source)
-            result.methods[name] = { type: 'function', value: code }
-            return
-          }
-          if (t.isFunctionExpression(declaration.init)) {
-            const code = getSource(declaration.init, source)
-            result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
-            return
-          }
-          const initCode = getNodeValue(declaration.init)
-          if (isVueReactiveCall(declaration.init, 'reactive')) {
-            const firstArg = declaration.init.arguments && declaration.init.arguments[0]
-            if (t.isObjectExpression(firstArg)) {
-              firstArg.properties.forEach((prop: any) => {
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-                  const propName = prop.key.name
-                  const propValue = prop.value ? getNodeValue(prop.value) : 'undefined'
-                  result.state[propName] = { type: 'reactive', value: propValue }
-                }
-              })
-            } else {
-              result.state[name] = { type: 'reactive', value: initCode }
-            }
-          } else if (isVueReactiveCall(declaration.init, 'ref')) {
-            result.state[name] = { type: 'ref', value: initCode }
-          } else if (isVueReactiveCall(declaration.init, 'computed')) {
-            const firstArg = (declaration.init.arguments && declaration.init.arguments[0]) as any
-            let compCode = firstArg ? getSource(firstArg, source) : initCode
-            if (firstArg) {
-              if (t.isArrowFunctionExpression(firstArg)) compCode = arrowToFunctionString(name, firstArg, source)
-              else if (t.isFunctionExpression(firstArg))
-                compCode = functionExpressionToNamedFunctionString(name, firstArg, source)
-            }
-            result.computed[name] = { type: 'computed', value: compCode }
-          } else {
-            result.state[name] = { type: 'normal', value: initCode }
-          }
+          handleVariableDeclarator(name, declaration.init, result, source)
         }
       })
     } else if (t.isFunctionDeclaration(statement)) {
@@ -334,44 +362,7 @@ function parseSetupScript(ast: any, result: any, source: string) {
       path.node.declarations.forEach((declaration: any) => {
         if (t.isIdentifier(declaration.id) && declaration.init) {
           const name = declaration.id.name
-          if (t.isArrowFunctionExpression(declaration.init)) {
-            const code = arrowToFunctionString(name, declaration.init, source)
-            result.methods[name] = { type: 'function', value: code }
-            return
-          }
-          if (t.isFunctionExpression(declaration.init)) {
-            const code = getSource(declaration.init, source)
-            result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
-            return
-          }
-          const initCode = getNodeValue(declaration.init)
-          if (isVueReactiveCall(declaration.init, 'reactive')) {
-            const firstArg = declaration.init.arguments && declaration.init.arguments[0]
-            if (t.isObjectExpression(firstArg)) {
-              firstArg.properties.forEach((prop: any) => {
-                if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-                  const propName = prop.key.name
-                  const propValue = prop.value ? getNodeValue(prop.value) : 'undefined'
-                  result.state[propName] = { type: 'reactive', value: propValue }
-                }
-              })
-            } else {
-              result.state[name] = { type: 'reactive', value: initCode }
-            }
-          } else if (isVueReactiveCall(declaration.init, 'ref')) {
-            result.state[name] = { type: 'ref', value: initCode }
-          } else if (isVueReactiveCall(declaration.init, 'computed')) {
-            const firstArg = (declaration.init.arguments && declaration.init.arguments[0]) as any
-            let compCode = firstArg ? getSource(firstArg, source) : initCode
-            if (firstArg) {
-              if (t.isArrowFunctionExpression(firstArg)) compCode = arrowToFunctionString(name, firstArg, source)
-              else if (t.isFunctionExpression(firstArg))
-                compCode = functionExpressionToNamedFunctionString(name, firstArg, source)
-            }
-            result.computed[name] = { type: 'computed', value: compCode }
-          } else {
-            result.state[name] = { type: 'normal', value: initCode }
-          }
+          handleVariableDeclarator(name, declaration.init, result, source)
         }
       })
     },
