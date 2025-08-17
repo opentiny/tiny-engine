@@ -98,6 +98,22 @@ function transformProps(props: any[]) {
   })
 }
 
+// Generate an 8-char id with lowercase letters and digits
+function generateId(): string {
+  let s = ''
+  while (s.length < 8) s += Math.random().toString(36).slice(2)
+  return s.slice(0, 8)
+}
+
+// Recursively assign id to nodes with componentName
+function assignComponentIds(node: any): void {
+  if (!node || typeof node !== 'object') return
+  if (typeof node.componentName === 'string') {
+    if (!node.id) node.id = generateId()
+  }
+  if (Array.isArray(node.children)) node.children.forEach(assignComponentIds)
+}
+
 // Collapse newlines and excessive spaces in strings
 function collapseString(value: string) {
   return value
@@ -143,7 +159,10 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   if (styleSchema && styleSchema.css) schema.css = styleSchema.css
   if (templateSchema && templateSchema.length > 0) schema.children = templateSchema
   // sanitize all strings to remove newlines in the final output
-  return sanitizeSchemaStrings(schema)
+  const sanitized = sanitizeSchemaStrings(schema)
+  // assign 8-char ids to all component nodes (including Page root)
+  assignComponentIds(sanitized)
+  return sanitized
 }
 
 export function generateAppSchema(pageSchemas: any[], options: any = {}) {
