@@ -18,6 +18,7 @@ const outputSchema = createOutputSchema(delI18nDataSchema)
 
 export const delI18n = {
   name: 'delete_i18n',
+  title: '删除 I18n 词条',
   description:
     'Delete an existing i18n entry from the current TinyEngine low-code application. Use this when you need to remove internationalization translations.',
   inputSchema: inputSchema.shape,

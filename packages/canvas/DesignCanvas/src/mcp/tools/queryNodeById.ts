@@ -7,6 +7,7 @@ const inputSchema = z.object({
 
 export const queryNodeById = {
   name: 'query_node_by_id',
+  title: '根据ID查询节点',
   description:
     'Query a node by id from the current TinyEngine low-code application. Use this when you need to query a node by id from your application.',
   inputSchema: inputSchema.shape,

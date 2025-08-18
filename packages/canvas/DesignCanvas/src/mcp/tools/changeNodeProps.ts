@@ -13,6 +13,7 @@ const inputSchema = z.object({
 
 export const changeNodeProps = {
   name: 'change_node_props',
+  title: '修改节点属性',
   description:
     'Change the props of a node in the current TinyEngine low-code application. Use this when you need to change the props of a node in your application.',
   inputSchema: inputSchema.shape,

@@ -16,6 +16,7 @@ const inputSchema = z.object({
 export const changePageBasicInfo = {
   name: 'change_page_basic_info',
   label: 'Change Page Basic Info',
+  title: '修改页面基础信息',
   order: 8,
   description:
     'Change a page basic info from the current TinyEngine low-code application. Use this when you need to change a page from your application.',

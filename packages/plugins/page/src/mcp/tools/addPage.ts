@@ -15,6 +15,7 @@ const inputSchema = z.object({
 export const addPage = {
   name: 'add_page',
   label: 'Add Page',
+  title: '新增页面',
   order: 6,
   description:
     'Add a new page to the current TinyEngine low-code application. Use this when you need to add new page to your application.',

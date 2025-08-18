@@ -7,6 +7,7 @@ const inputSchema = z.object({
 
 export const selectSpecificNode = {
   name: 'select_specific_node',
+  title: '选择特定节点',
   description:
     'Select a specific node from the current TinyEngine low-code application. Use this when you need to select a specific node from your application.',
   inputSchema: inputSchema.shape,

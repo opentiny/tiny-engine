@@ -8,6 +8,7 @@ const inputSchema = z.object({
 
 export const switchPluginPanel = {
   name: 'switch_plugin_panel',
+  title: '切换插件面板',
   description:
     'Switch to the current TinyEngine low-code application. Use this when you need to switch to the current TinyEngine low-code application.',
   inputSchema: inputSchema.shape,

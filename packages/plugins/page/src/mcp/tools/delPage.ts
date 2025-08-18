@@ -8,6 +8,7 @@ const inputSchema = z.object({
 export const delPage = {
   name: 'del_page',
   label: 'Delete Page',
+  title: '删除页面',
   order: 7,
   description:
     'Delete a page from the current TinyEngine low-code application. Use this when you need to delete a page from your application.',

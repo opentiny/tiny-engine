@@ -5,6 +5,7 @@ const inputSchema = z.object({})
 
 export const getAllPlugins = {
   name: 'get_all_plugins',
+  title: '获取所有插件',
   description: 'Get all plugins',
   inputSchema: inputSchema.shape,
   callback: async (_args: z.infer<typeof inputSchema>) => {

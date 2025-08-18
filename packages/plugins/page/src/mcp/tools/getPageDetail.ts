@@ -8,6 +8,7 @@ const inputSchema = z.object({
 export const getPageDetail = {
   name: 'get_page_detail',
   label: 'Get Page Detail',
+  title: '获取页面详情',
   order: 8,
   description:
     'Get a page detail from the current TinyEngine low-code application. Use this when you need to get a page detail from your application.',
@@ -36,7 +37,7 @@ export const getPageDetail = {
         status: 'error',
         message: 'Failed to fetch page detail',
         data: {
-          error: error?.message || ''
+          error: error instanceof Error ? error.message : 'Unknown error occurred'
         }
       }
 

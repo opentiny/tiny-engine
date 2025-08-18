@@ -62,11 +62,12 @@ const updateServerTools = (serverId: string, tools: PluginTool[]) => {
 }
 
 const updateEngineTools = async () => {
-  const tools: Array<{ name: string; description: string; status: string }> =
+  const tools: Array<{ name: string; description: string; status: string; title: string }> =
     (await getMetaApi(META_SERVICE.McpService)?.getToolList?.()) || []
   const engineTools = tools.map((tool) => ({
     id: tool.name,
     name: tool.name,
+    title: tool.title,
     description: tool.description,
     enabled: tool.status === 'enabled'
   }))

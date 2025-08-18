@@ -7,6 +7,7 @@ const inputSchema = z.object({
 
 export const delNode = {
   name: 'del_node',
+  title: '删除节点',
   description:
     'Delete a node from the current TinyEngine low-code application. Use this when you need to delete a node from your application.',
   inputSchema: inputSchema.shape,
