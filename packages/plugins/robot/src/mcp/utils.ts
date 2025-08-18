@@ -6,6 +6,14 @@ import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 let requestOptions: RequestOptions = {}
 
+// 格式化LLM输入messages消息
+const formatMessages = (messages: LLMMessage[]) => {
+  return messages.map((message) => ({
+    role: message.role,
+    content: message.content
+  }))
+}
+
 const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {
   const bodyObj: LLMRequestBody = {
     model: options?.model || 'deepseek-chat',
@@ -41,11 +49,11 @@ const handleToolCall = async (
     return
   }
   const currentMessage = messages.at(-1)!
-  if (typeof currentMessage.content === 'string' || !currentMessage.content) {
-    currentMessage.content = []
+  if (!currentMessage.renderContent) {
+    currentMessage.renderContent = []
   }
   if (res.choices[0].message.content) {
-    currentMessage.content.push({
+    currentMessage.renderContent.push({
       type: 'markdown',
       content: res.choices[0].message.content
     })
@@ -66,7 +74,7 @@ const handleToolCall = async (
         },
         formatPretty: true
       }
-      currentMessage.content.push(currentToolMessage)
+      currentMessage.renderContent.push(currentToolMessage)
       const toolCallResult = await useMcpServer().callTool(name, parsedArgs)
       toolMessages.push({
         type: 'text',
@@ -75,8 +83,8 @@ const handleToolCall = async (
         tool_call_id: tool.id
       })
 
-      currentMessage.content.at(-1)!.status = 'success'
-      currentMessage.content.at(-1)!.content = {
+      currentMessage.renderContent.at(-1)!.status = 'success'
+      currentMessage.renderContent.at(-1)!.content = {
         params: parsedArgs,
         result: toolCallResult.content
       }
@@ -87,7 +95,7 @@ const handleToolCall = async (
       await handleToolCall(newResp, tools, messages, toolMessages)
     } else {
       if (newResp.choices[0].message.content) {
-        currentMessage.content.push({
+        currentMessage.renderContent.push({
           type: 'markdown',
           content: newResp.choices[0].message.content
         })
@@ -102,10 +110,11 @@ export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOpt
   }
   const tools = await useMcpServer().getLLMTools()
   requestOptions = options
-  const res = await fetchLLM(messages.slice(0, -1), tools, options)
+  const res = await fetchLLM(formatMessages(messages.slice(0, -1)), tools, options)
   const hasToolCall = res.choices[0].message.tool_calls?.length > 0
   if (hasToolCall) {
     await handleToolCall(res, tools, messages)
+    messages.at(-1)!.content = messages.at(-1)!.renderContent.at(-1)!.content
   } else {
     messages.at(-1)!.content = res.choices[0].message.content
   }
