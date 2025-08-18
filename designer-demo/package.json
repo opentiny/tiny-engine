@@ -1,7 +1,7 @@
 {
   "name": "designer-demo",
   "private": true,
-  "version": "2.8.0-rc.0",
+  "version": "2.8.0-rc.1",
   "type": "module",
   "scripts": {
     "dev": "cross-env vite",
