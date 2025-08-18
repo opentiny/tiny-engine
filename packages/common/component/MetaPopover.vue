@@ -21,7 +21,7 @@ export default {
   components: {
     MetaChildItem,
     TinyPopover: Popover as Component,
-    TinyButton: Button
+    TinyButton: Button as Component
   },
   inheritAttrs: false,
   props: {

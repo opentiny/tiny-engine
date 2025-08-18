@@ -56,6 +56,7 @@
 
 <script lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { useLayout, useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { PROP_DATA_TYPE } from '../js/constants'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -65,7 +66,7 @@ export default {
   components: {
     TinySelect: Select,
     TinyOption: Option,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyInput: Input
   },
   inheritAttrs: false,

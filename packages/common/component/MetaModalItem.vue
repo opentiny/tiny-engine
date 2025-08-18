@@ -26,6 +26,7 @@
 </template>
 
 <script lang="ts">
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { reactive, computed } from 'vue'
@@ -34,7 +35,7 @@ import MetaChildItem from './MetaChildItem.vue'
 export default {
   components: {
     MetaChildItem,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     IconClose: iconClose()
   },
   props: {

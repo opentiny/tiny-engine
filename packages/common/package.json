@@ -9,6 +9,7 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
@@ -56,6 +57,7 @@
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "glob": "^10.3.4",
     "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-static-copy": "^1.0.6"
   },
   "peerDependencies": {

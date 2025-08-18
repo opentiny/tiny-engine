@@ -18,6 +18,7 @@ import { glob } from 'glob'
 import { fileURLToPath } from 'node:url'
 import generateComments from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
+import dts from 'vite-plugin-dts'
 
 const jsEntries = glob.sync('./js/**/*.js').map((file) => {
   return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
@@ -37,6 +38,13 @@ export default defineConfig({
           dest: '.'
         }
       ]
+    }),
+    dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.json'),
+      rollupTypes: true,
+      outDir: path.resolve(__dirname, './dist'),
+      entryRoot: path.resolve(__dirname, './')
+      // include: ['index.ts', 'js/**/*.js', 'component/**/*', 'composable/**/*']
     })
   ],
   publicDir: false,

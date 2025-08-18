@@ -76,6 +76,7 @@
 
 <script lang="ts">
 import { computed, nextTick, reactive, ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Button, DialogBox, Split } from '@opentiny/vue'
 import VueMonaco from './VueMonaco.vue'
 import { formatString } from '../js/ast'
@@ -85,7 +86,7 @@ export default {
   components: {
     TinySplit: Split,
     MonacoEditor: VueMonaco,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyDialogBox: DialogBox
   },
   props: {

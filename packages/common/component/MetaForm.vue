@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { reactive } from 'vue'
+import type { Component } from 'vue'
 import { Form, FormItem, Input, Button } from '@opentiny/vue'
 
 export default {
@@ -23,7 +24,7 @@ export default {
     TinyForm: Form,
     TinyFormItem: FormItem,
     TinyInput: Input,
-    TinyButton: Button
+    TinyButton: Button as Component
   },
   props: {
     option: {

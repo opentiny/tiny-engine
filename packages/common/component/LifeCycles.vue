@@ -97,6 +97,7 @@ import { initCompletion } from '../js/completion'
 import { initLinter, lint } from '../js/linter'
 import { SvgButton } from '../index'
 import { constants } from '@opentiny/tiny-engine-utils'
+
 const { OPEN_DELAY } = constants
 
 export default {
@@ -104,7 +105,7 @@ export default {
     TinyPopover: Popover as Component,
     TinyDialogBox: DialogBox,
     TinySearch: Search,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     MonacoEditor: VueMonaco,
     SvgButton,
     MetaListItems,
