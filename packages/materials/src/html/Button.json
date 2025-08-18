@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "icon": "button",
   "name": {
     "zh_CN": "Button"

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "formitem",
   "name": {
     "zh_CN": "表单项"

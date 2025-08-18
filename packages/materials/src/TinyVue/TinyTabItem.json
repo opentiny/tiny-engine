@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "tabitem",
   "name": {
     "zh_CN": "tab页签"

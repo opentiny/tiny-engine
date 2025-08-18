@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": {
     "zh_CN": "视频"
   },
@@ -12,7 +13,7 @@
   "devMode": "proCode",
   "npm": {},
   "group": "component",
-  "category": "basic",
+  "category": "html",
   "priority": 50,
   "schema": {
     "properties": [
@@ -180,12 +181,13 @@
       "schema": {
         "componentName": "video",
         "props": {
-          "src": "img/webNova.jpg",
+          "src": "https://tinyengine-assets.obs.myhuaweicloud.com/files/in-action.mp4#t=1.5",
           "width": "200",
           "height": "100",
           "style": "border:1px solid #ccc"
         }
-      }
+      },
+      "category": "basic"
     }
   ]
 }

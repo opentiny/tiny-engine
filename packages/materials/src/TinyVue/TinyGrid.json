@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "grid",
   "name": {
     "zh_CN": "表格"
@@ -965,8 +966,8 @@
             }
           ]
         }
-      }
+      },
+      "category": "table"
     }
-  ],
-  "category": "table"
+  ]
 }

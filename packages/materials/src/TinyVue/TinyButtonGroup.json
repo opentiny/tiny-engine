@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "name": {
     "zh_CN": "按钮组"
   },
@@ -16,7 +17,7 @@
     "destructuring": true
   },
   "group": "component",
-  "category": "basic",
+  "category": "general",
   "priority": 2,
   "schema": {
     "properties": [
@@ -157,7 +158,7 @@
       "name": {
         "zh_CN": "互斥按钮组"
       },
-      "icon": "buttons",
+      "icon": "MutexButtons",
       "snippetName": "TinyButtonGroup",
       "screenshot": "",
       "schema": {
@@ -179,7 +180,8 @@
           ],
           "modelValue": "1"
         }
-      }
+      },
+      "category": "basic"
     }
   ]
 }

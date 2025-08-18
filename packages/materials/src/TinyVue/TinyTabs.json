@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "tabs",
   "name": {
     "zh_CN": "标签页"
@@ -27,26 +28,6 @@
           "zh_CN": "基础信息"
         },
         "content": [
-          {
-            "property": "showEditIcon",
-            "label": {
-              "text": {
-                "zh_CN": "显示编辑图标"
-              }
-            },
-            "required": true,
-            "readOnly": false,
-            "disabled": false,
-            "cols": 12,
-            "widget": {
-              "component": "CheckBoxConfigurator",
-              "props": {}
-            },
-            "description": {
-              "zh_CN": "是否显示标题后编辑 ICON"
-            },
-            "labelPosition": "left"
-          },
           {
             "property": "tabs",
             "label": {
@@ -321,8 +302,8 @@
             ]
           }
         ]
-      }
+      },
+      "category": "navigation"
     }
-  ],
-  "category": "navigation"
+  ]
 }

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "switch",
   "name": {
     "zh_CN": "开关"
@@ -206,8 +207,8 @@
         "props": {
           "modelValue": ""
         }
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "tooltip",
   "name": {
     "zh_CN": "文字提示框"
@@ -261,8 +262,8 @@
             ]
           }
         ]
-      }
+      },
+      "category": "data-display"
     }
-  ],
-  "category": "data-display"
+  ]
 }

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "tree",
   "name": {
     "zh_CN": "树"
@@ -377,8 +378,8 @@
             }
           ]
         }
-      }
+      },
+      "category": "data-display"
     }
-  ],
-  "category": "data-display"
+  ]
 }

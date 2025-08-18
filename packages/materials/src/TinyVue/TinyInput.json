@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "name": {
     "zh_CN": "输入框"
   },
@@ -422,8 +423,8 @@
           "placeholder": "请输入",
           "modelValue": ""
         }
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

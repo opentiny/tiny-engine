@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "collapseitem",
   "name": {
     "zh_CN": "折叠面板项"

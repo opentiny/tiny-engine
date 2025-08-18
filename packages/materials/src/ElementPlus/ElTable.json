@@ -39,7 +39,7 @@
       "properties": ["inline", "label-width"]
     },
     "contextMenu": {
-      "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+      "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
       "disable": []
     },
     "invalidity": [""],
@@ -1281,7 +1281,8 @@
             }
           ]
         }
-      }
+      },
+      "category": "element-plus"
     }
   ]
 }

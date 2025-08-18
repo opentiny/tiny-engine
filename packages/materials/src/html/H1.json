@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": {
     "zh_CN": "标题"
   },
@@ -12,7 +13,7 @@
   "devMode": "proCode",
   "npm": {},
   "group": "component",
-  "category": "basic",
+  "category": "html",
   "priority": 20,
   "schema": {
     "properties": [
@@ -106,7 +107,8 @@
         "componentName": "h1",
         "props": {},
         "children": "Heading"
-      }
+      },
+      "category": "basic"
     }
   ]
 }

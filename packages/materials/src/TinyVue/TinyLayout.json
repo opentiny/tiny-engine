@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "row",
   "name": {
     "zh_CN": "row"
@@ -13,6 +14,7 @@
   "npm": {
     "package": "@opentiny/vue",
     "exportName": "Layout",
+    "version": "3.20.0",
     "destructuring": true
   },
   "group": "component",
@@ -178,8 +180,8 @@
             ]
           }
         ]
-      }
+      },
+      "category": "layout"
     }
-  ],
-  "category": "layout"
+  ]
 }

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "form",
   "name": {
     "zh_CN": "表单"
@@ -418,8 +419,8 @@
             ]
           }
         ]
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

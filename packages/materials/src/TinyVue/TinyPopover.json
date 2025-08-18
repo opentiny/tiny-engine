@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "popover",
   "name": {
     "zh_CN": "提示框"
@@ -535,8 +536,8 @@
             ]
           }
         ]
-      }
+      },
+      "category": "data-display"
     }
-  ],
-  "category": "data-display"
+  ]
 }

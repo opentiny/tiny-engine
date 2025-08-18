@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "name": {
     "zh_CN": "数字输入框"
   },
@@ -168,7 +169,7 @@
                 "zh_CN": "加减按钮位置"
               }
             },
-            "required": true,
+            "required": false,
             "readOnly": false,
             "disabled": false,
             "cols": 12,
@@ -450,11 +451,11 @@
         "props": {
           "allow-empty": true,
           "placeholder": "请输入",
-          "controlsPosition": "right",
+          "controls-position": "right",
           "step": 1
         }
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

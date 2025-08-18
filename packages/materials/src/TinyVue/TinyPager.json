@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "name": {
     "zh_CN": "分页"
   },
@@ -243,8 +244,8 @@
           "pageSize": 10,
           "currentPage": 1
         }
-      }
+      },
+      "category": "table"
     }
-  ],
-  "category": "table"
+  ]
 }

@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "radio",
   "name": {
     "zh_CN": "单选"
@@ -245,8 +246,8 @@
           "label": "1",
           "text": "单选文本"
         }
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

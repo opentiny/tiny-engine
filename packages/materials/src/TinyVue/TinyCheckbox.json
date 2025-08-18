@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "checkbox",
   "name": {
     "zh_CN": "复选框"
@@ -266,8 +267,8 @@
         "props": {
           "text": "复选框文案"
         }
-      }
+      },
+      "category": "form"
     }
-  ],
-  "category": "form"
+  ]
 }

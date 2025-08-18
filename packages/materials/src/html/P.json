@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "name": {
     "zh_CN": "段落"
   },
@@ -12,7 +13,7 @@
   "devMode": "proCode",
   "npm": {},
   "group": "component",
-  "category": "basic",
+  "category": "html",
   "priority": 30,
   "schema": {
     "properties": [
@@ -103,7 +104,8 @@
       "schema": {
         "componentName": "p",
         "children": "TinyEngine 前端可视化设计器致力于通过友好的用户交互提升业务应用的开发效率。"
-      }
+      },
+      "category": "basic"
     }
   ]
 }

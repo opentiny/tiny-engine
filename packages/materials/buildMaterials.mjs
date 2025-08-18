@@ -99,7 +99,9 @@ const generateComponents = async (entry) => {
         snippet.children = []
       }
 
-      componentSnippets && snippet.children.push(...componentSnippets)
+      if (componentSnippets) {
+        snippet.children.push(...componentSnippets)
+      }
     } else if (category && componentInfo && componentSnippets) {
       bundle.snippets.push({
         group: category,
@@ -162,7 +164,9 @@ const buildComponents = async (config = {}) => {
         continue
       }
 
-      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res.bundle), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.json`), getFrameworkWithData(res.bundle), {
+        spaces: 2
+      })
       fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/${entry}.compsMap.json`), res.componentsMap, { spaces: 2 })
 
       allBundles.components = allBundles.components.concat(res.bundle.components)
@@ -185,7 +189,9 @@ const buildComponents = async (config = {}) => {
     }
 
     if (buildCombine) {
-      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.json`), getFrameworkWithData(allBundles), { spaces: 2 })
+      fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.json`), getFrameworkWithData(allBundles), {
+        spaces: 2
+      })
       fsExtra.outputJSONSync(path.resolve(__dirname, `./dist/index.compsMap.json`), allComponentsMap, { spaces: 2 })
     }
 
@@ -199,7 +205,7 @@ const buildComponents = async (config = {}) => {
 async function serve() {
   // 监听materials下json文件的变化
   const watcher = chokidar.watch(`${materialsDir}/**/*.json`, { ignoreInitial: true })
-  
+
   watcher.on('all', (event, file) => {
     const eventMap = {
       add: '新增',
@@ -207,9 +213,9 @@ async function serve() {
       unlink: '删除'
     }
     const fileFullPath = path.join(process.cwd(), file)
-  
+
     logger.info(`${eventMap[event]}组件文件 (${fileFullPath})`)
-  
+
     // 监听物料文件变化，更新物料资产包
     buildComponents()
   })
@@ -228,7 +234,6 @@ async function serve() {
   server.listen(staticServerPort, () => {
     logger.success(`物料服务已启动  http://127.0.0.1:${staticServerPort}`)
   })
-
 }
 
 // 单次构建，分组件库
@@ -241,24 +246,22 @@ function build() {
   buildComponents()
 }
 
-
 function start() {
   const commandsMap = {
     serve: serve,
     build: build,
     'build:split': buildSplit
   }
-  
+
   const command = process.argv.slice(2)
-  
+
   if (!commandsMap[command]) {
     logger.error(`[@opentiny/tiny-engine-materials] 不支持${command}命令`)
 
     return
   }
-  
+
   commandsMap[command]()
 }
-
 
 start()

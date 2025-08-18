@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "icon": "td",
   "name": {
     "zh_CN": "表格单元格"

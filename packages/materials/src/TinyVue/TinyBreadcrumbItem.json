@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "breadcrumb",
   "name": {
     "zh_CN": "面包屑项"

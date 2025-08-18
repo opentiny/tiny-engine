@@ -39,7 +39,7 @@
       "properties": ["type", "size"]
     },
     "contextMenu": {
-      "actions": ["copy", "remove", "insert", "updateAttr", "bindEevent", "createBlock"],
+      "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
       "disable": []
     },
     "invalidity": [""],
@@ -282,7 +282,8 @@
       "icon": "input",
       "screenshot": "",
       "snippetName": "ElInput",
-      "schema": {}
+      "schema": {},
+      "category": "element-plus"
     }
   ]
 }

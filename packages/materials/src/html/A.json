@@ -1,4 +1,5 @@
 {
+  "version": "1.0.0",
   "icon": "link",
   "name": {
     "zh_CN": "提示框"
@@ -152,8 +153,8 @@
       "schema": {
         "componentName": "a",
         "children": "链接"
-      }
+      },
+      "category": "basic"
     }
-  ],
-  "category": "basic"
+  ]
 }

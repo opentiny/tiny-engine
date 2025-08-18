@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "name": {
     "zh_CN": "按钮"
   },
@@ -346,8 +347,8 @@
         "props": {
           "text": "按钮文案"
         }
-      }
+      },
+      "category": "basic"
     }
-  ],
-  "category": "basic"
+  ]
 }

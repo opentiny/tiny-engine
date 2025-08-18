@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "dialogbox",
   "name": {
     "zh_CN": "对话框"
@@ -292,8 +293,8 @@
             "componentName": "div"
           }
         ]
-      }
+      },
+      "category": "data-display"
     }
-  ],
-  "category": "data-display"
+  ]
 }

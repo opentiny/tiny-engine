@@ -1,4 +1,5 @@
 {
+  "version": "3.20.0",
   "icon": "checkboxbutton",
   "name": {
     "zh_CN": "复选按钮"
