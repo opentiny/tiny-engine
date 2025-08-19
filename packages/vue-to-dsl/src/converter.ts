@@ -124,11 +124,10 @@ export class VueToDslConverter {
       const result = await this.convertFromString(vueCode)
 
       const fileName = path.basename(filePath, '.vue')
-      const relativePath = path.dirname(filePath)
 
       if (result.schema) {
         result.schema.fileName = fileName
-        result.schema.path = relativePath
+        result.schema.meta.name = fileName
       }
       return result
     } catch (error: any) {

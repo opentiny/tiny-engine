@@ -31,10 +31,8 @@ describe('VueToDslConverter testcases', () => {
     const expectFile = path.join(caseDir, 'expected', 'schema.json')
 
     it(`case ${caseName} should convert correctly`, async () => {
-      const vueCode = fs.readFileSync(inputFile, 'utf-8')
+      const result = await converter.convertFromFile(inputFile)
       const expected = JSON.parse(fs.readFileSync(expectFile, 'utf-8'))
-
-      const result = await converter.convertFromString(vueCode)
 
       // 保存到output目录
       const outputFile = path.join(caseDir, 'output', 'schema.json')

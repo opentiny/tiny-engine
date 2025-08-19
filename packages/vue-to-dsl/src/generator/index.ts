@@ -141,9 +141,8 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   const schema: any = {
     componentName: 'Page',
     fileName: options.fileName || 'UnnamedPage',
-    path: options.path || '',
     meta: {
-      title: options.title || 'Generated Page',
+      name: options.fileName || 'UnnamedPage',
       description: options.description || 'Page generated from Vue SFC',
       generatedAt: new Date().toISOString(),
       generator: '@opentiny/tiny-engine-vue-to-dsl'
