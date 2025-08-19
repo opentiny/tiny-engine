@@ -144,7 +144,8 @@ function parseDirectives(node: any, schema: any, _options: any) {
         break
       case 'on': {
         const eventName = prop.arg ? prop.arg.content : 'click'
-        schema.props[`@${eventName}`] = prop.exp ? prop.exp.content : ''
+        const val = prop.exp ? String(prop.exp.content || '') : ''
+        schema.props[eventName] = { type: 'JSExpression', value: val }
         break
       }
       case 'bind': {
