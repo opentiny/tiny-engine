@@ -44,6 +44,9 @@ const props = defineProps({
 
 const themeClass = computed(() => `hljs-theme-${props.theme}`)
 
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!))
+
 const markdownIt = new MarkdownIt({
   html: true,
   breaks: true,
@@ -51,17 +54,13 @@ const markdownIt = new MarkdownIt({
   highlight: (str: string, lang: string) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return `<pre class="hljs"><code>${
-          hljs.highlight(str, {
-            language: lang,
-            ignoreIllegals: true
-          }).value
-        }</code></pre>`
+        const { value } = hljs.highlight(str, { language: lang, ignoreIllegals: true })
+        return `<pre class="hljs"><code class="language-${lang}">${value}</code></pre>`
       } catch (e) {
         /* ignore */
       }
     }
-    return `<pre class="hljs"><code>${DOMPurify.sanitize(str)}</code></pre>`
+    return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`
   },
   ...props.options
 })
@@ -88,8 +87,6 @@ const renderContent = computed(() => {
   // TODO: 适配TInyEngine主题，实现跟随主题自动切换
   /* 亮色主题 */
   &.hljs-theme-light {
-    @import 'highlight.js/styles/github.css';
-
     pre {
       background-color: #f6f8fa;
     }
@@ -97,8 +94,6 @@ const renderContent = computed(() => {
 
   /* 暗色主题 */
   &.hljs-theme-dark {
-    @import 'highlight.js/styles/github-dark.css';
-
     pre {
       background-color: #0d1117;
     }
