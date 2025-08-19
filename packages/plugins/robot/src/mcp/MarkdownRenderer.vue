@@ -3,12 +3,11 @@
 </template>
 
 <script setup lang="ts">
-import { computed, watch, onMounted, nextTick } from 'vue'
+import { computed } from 'vue'
 import DOMPurify from 'dompurify'
 import MarkdownIt, { type Options } from 'markdown-it'
 import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'
-import 'highlight.js/styles/github-dark.css'
 
 // 按需加载语言
 import bash from 'highlight.js/lib/languages/bash'
@@ -35,7 +34,7 @@ const props = defineProps({
   },
   theme: {
     type: String as () => 'light' | 'dark',
-    default: 'dark'
+    default: 'light'
   },
   options: {
     type: Object as () => Options,
@@ -70,26 +69,6 @@ const markdownIt = new MarkdownIt({
 const renderContent = computed(() => {
   return DOMPurify.sanitize(markdownIt.render(props.content))
 })
-
-// 动态切换主题时重新高亮
-watch(
-  () => props.theme,
-  () => {
-    nextTick(() => {
-      document.querySelectorAll('.markdown-renderer pre code').forEach((el) => {
-        hljs.highlightElement(el as HTMLElement)
-      })
-    })
-  }
-)
-
-onMounted(() => {
-  nextTick(() => {
-    document.querySelectorAll('.markdown-renderer pre code').forEach((el) => {
-      hljs.highlightElement(el as HTMLElement)
-    })
-  })
-})
 </script>
 
 <style lang="less">
@@ -101,8 +80,12 @@ onMounted(() => {
     padding: 1em;
     overflow: auto;
     line-height: 1.45;
+    > code {
+      font-size: 12px;
+    }
   }
 
+  // TODO: 适配TInyEngine主题，实现跟随主题自动切换
   /* 亮色主题 */
   &.hljs-theme-light {
     @import 'highlight.js/styles/github.css';

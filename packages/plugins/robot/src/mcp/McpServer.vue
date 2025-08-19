@@ -90,13 +90,6 @@ onMounted(() => {
     display: none !important;
   }
 }
-:deep(.mcp-server-picker__content-item) {
-  .plugin-card__operations {
-    .tiny-popconfirm {
-      display: none !important;
-    }
-  }
-}
 
 :deep(.mcp-server-picker__content) {
   .tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav {
@@ -109,13 +102,23 @@ onMounted(() => {
   .tiny-tabs.tiny-tabs .tiny-tabs__header .tiny-tabs__nav {
     width: 160px;
   }
-}
-
-:deep(.tiny-tabs__content) {
-  .plugin-card__add-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .tiny-tabs__content {
+    .plugin-card__operations {
+      .tiny-popconfirm {
+        display: none;
+      }
+    }
+    .plugin-card__add-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .plugin-card__name {
+      text-align: left;
+    }
+    .plugin-card__desc {
+      font-size: 12px;
+    }
   }
 }
 

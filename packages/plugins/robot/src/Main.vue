@@ -53,7 +53,7 @@
                 @item-click="handlePromptItemClick"
               ></tr-prompts>
             </div>
-            <tr-bubble-provider :content-renderers="{ markdown: MarkdownRenderer }" v-else>
+            <tr-bubble-provider :content-renderers="contentRenderers" v-else>
               <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
             </tr-bubble-provider>
           </div>
@@ -80,7 +80,18 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.robot.Main */
-import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent, computed, watch } from 'vue'
+import {
+  ref,
+  onMounted,
+  watchEffect,
+  type CSSProperties,
+  h,
+  resolveComponent,
+  computed,
+  watch,
+  nextTick,
+  type Component
+} from 'vue'
 import { Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
@@ -92,6 +103,7 @@ import { getBlockContent, initBlockList, getAIModelOptions } from './js/robotSet
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
+import LoadingRenderer from './mcp/LoadingRenderer.vue'
 import { sendMcpRequest } from './mcp/utils'
 
 export default {
@@ -151,6 +163,14 @@ export default {
       )
     }
 
+    const scrollContent = async () => {
+      await nextTick()
+      const el = chatContainerRef.value as HTMLElement | null
+      if (el) {
+        el.scrollTop = el.scrollHeight
+      }
+    }
+
     const createNewPage = (schema) => {
       if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
         pageSettingState.isNew = true
@@ -206,7 +226,7 @@ export default {
       if (useMcpServer().isToolsEnabled) {
         try {
           requestLoading.value = true
-          await scrollContent() // eslint-disable-line
+          await scrollContent()
           await sendMcpRequest(messages.value, {
             model: selectedModel.value.value,
             headers: {
@@ -218,7 +238,7 @@ export default {
         } finally {
           inProcesing.value = false
           requestLoading.value = false
-          await scrollContent() // eslint-disable-line
+          await scrollContent()
         }
         return
       }
@@ -244,12 +264,6 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         })
-    }
-
-    const scrollContent = async () => {
-      if (chatContainerRef.value) {
-        chatContainerRef.value.scrollTop = chatContainerRef.value.scrollHeight
-      }
     }
 
     const resetContent = async () => {
@@ -429,9 +443,14 @@ export default {
       user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer }
     }
 
-    watch([activeMessages.value.length, activeMessages.value.at(-1)?.renderContent?.length], async () => {
-      await scrollContent()
+    watch([() => activeMessages.value.length, () => activeMessages.value.at(-1)?.renderContent?.length ?? 0], () => {
+      scrollContent()
     })
+
+    const contentRenderers: Record<string, Component> = {
+      markdown: MarkdownRenderer,
+      loading: LoadingRenderer
+    }
 
     const mcpDrawerPosition = computed(() => {
       return {
@@ -468,7 +487,7 @@ export default {
       handlePromptItemClick,
       welcomeIcon,
       roles,
-      MarkdownRenderer,
+      contentRenderers,
       requestLoading,
       mcpDrawerPosition
     }

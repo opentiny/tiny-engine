@@ -5,9 +5,9 @@ import type { McpListToolsResponse, McpTool, RequestTool } from './types'
 
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',
-  name: 'Tiny Engine MCP 服务器',
+  name: 'Tiny Engine MCP 工具',
   icon: 'https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/opentiny-tinyengine-logo-4f8a3801.svg',
-  description: '使用TinyEngine设计器能力，如添加国际化',
+  description: '使用TinyEngine设计器能力，如操作画布、编辑页面等',
   added: true
 }
 
@@ -27,7 +27,7 @@ const updateEngineTools = async () => {
     (await getMetaApi(META_SERVICE.McpService)?.getToolList?.()) || []
   const engineTools = tools.map((tool) => ({
     id: tool.name,
-    name: tool.title ? `${tool.title}（${tool.name}）` : tool.name,
+    name: tool.title ? `${tool.title} ${tool.name}` : tool.name,
     description: tool.description,
     enabled: tool.status === 'enabled'
   }))

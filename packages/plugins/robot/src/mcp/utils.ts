@@ -89,7 +89,9 @@ const handleToolCall = async (
         result: toolCallResult.content
       }
     }
+    currentMessage.renderContent.push({ type: 'loading', content: '' })
     const newResp = await fetchLLM(toolMessages, tools)
+    currentMessage.renderContent.pop()
     const hasToolCall = newResp.choices[0].message.tool_calls?.length > 0
     if (hasToolCall) {
       await handleToolCall(newResp, tools, messages, toolMessages)
@@ -110,7 +112,9 @@ export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOpt
   }
   const tools = await useMcpServer().getLLMTools()
   requestOptions = options
+  messages.at(-1)!.renderContent = [{ type: 'loading', content: '' }]
   const res = await fetchLLM(formatMessages(messages.slice(0, -1)), tools, options)
+  delete messages.at(-1)!.renderContent
   const hasToolCall = res.choices[0].message.tool_calls?.length > 0
   if (hasToolCall) {
     await handleToolCall(res, tools, messages)

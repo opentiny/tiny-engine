@@ -6,7 +6,7 @@ const inputSchema = z.object({
 })
 
 export const editSpecificPage = {
-  name: 'Edit_page_in_canvas.',
+  name: 'edit_page_in_canvas',
   title: '在画布中编辑页面',
   order: 9,
   description: 'Edit a specific page in canvas. Use this tool when you need to edit some page in canvas.',
