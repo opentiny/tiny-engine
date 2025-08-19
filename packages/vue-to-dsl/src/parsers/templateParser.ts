@@ -186,11 +186,35 @@ function parseInterpolationNode(node: any, _options: any) {
   }
 }
 
+// Normalize tiny-icon-* to generic Icon component with name prop
+// e.g. <tiny-icon-panel-mini /> -> { componentName: 'Icon', props: { name: 'IconPanelMini', style: '...' } }
+function normalizeTinyIcon(schema: any, node: any) {
+  const lowerTag = typeof node.tag === 'string' ? node.tag.toLowerCase() : ''
+  if (!lowerTag.startsWith('tiny-icon-')) return
+  const toPascal = (s: string) =>
+    s
+      .split(/[-_\s]+/)
+      .filter(Boolean)
+      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+      .join('')
+  const rawName = lowerTag.replace(/^tiny-icon-/, '')
+  const iconName = `Icon${toPascal(rawName)}`
+  const styleVal = schema.props && typeof schema.props.style === 'string' ? schema.props.style : undefined
+  // Rebuild props: keep style if present; set name; drop other raw attributes like fill
+  schema.componentName = 'Icon'
+  schema.props = {}
+  if (styleVal) schema.props.style = styleVal
+  schema.props.name = iconName
+}
+
 function parseTemplateNode(node: any, options: any) {
   if (node.type !== 1) return null
   const schema: any = { componentName: getComponentName(node.tag, options), props: {}, children: [] }
   if (node.props && node.props.length > 0) schema.props = parseNodeProps(node.props, options)
   parseDirectives(node, schema, options)
+  // Apply icon normalization
+  normalizeTinyIcon(schema, node)
+
   if (node.children && node.children.length > 0) {
     schema.children = node.children
       .map((child: any) => {
