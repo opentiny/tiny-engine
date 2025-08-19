@@ -1,11 +1,10 @@
 {
   "componentName": "Page",
-  "fileName": "UnnamedPage",
-  "path": "",
+  "fileName": "component",
   "meta": {
-    "title": "Generated Page",
+    "name": "component",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-17T07:51:25.638Z",
+    "generatedAt": "2025-08-19T16:02:26.724Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -42,15 +41,18 @@
                   "value": "message"
                 }
               },
-              "id": "bp9b7hl0"
+              "id": "gsnwzm8v"
             }
           ],
-          "id": "cg7ba1fy"
+          "id": "ifco39h5"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "updateMessage"
+            "click": {
+              "type": "JSExpression",
+              "value": "updateMessage"
+            }
           },
           "children": [
             {
@@ -58,14 +60,14 @@
               "props": {
                 "text": "更新"
               },
-              "id": "ps91m3ch"
+              "id": "tdej00iv"
             }
           ],
-          "id": "64jplt17"
+          "id": "gpaama49"
         }
       ],
-      "id": "8nzyf2bp"
+      "id": "dfr7378c"
     }
   ],
-  "id": "rwmrkbsi"
+  "id": "m28407tn"
 }

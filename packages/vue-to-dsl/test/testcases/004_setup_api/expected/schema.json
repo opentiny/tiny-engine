@@ -1,11 +1,10 @@
 {
   "componentName": "Page",
-  "fileName": "UnnamedPage",
-  "path": "",
+  "fileName": "component",
   "meta": {
-    "title": "Generated Page",
+    "name": "component",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-17T07:51:25.647Z",
+    "generatedAt": "2025-08-19T16:02:26.727Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -66,10 +65,10 @@
                   "value": "title"
                 }
               },
-              "id": "6rf3felv"
+              "id": "aa80rpjh"
             }
           ],
-          "id": "ywix5xao"
+          "id": "bsaz6wbt"
         },
         {
           "componentName": "p",
@@ -80,7 +79,7 @@
               "props": {
                 "text": "Count:"
               },
-              "id": "9r4y019q"
+              "id": "w0l8ttxh"
             },
             {
               "componentName": "Text",
@@ -90,10 +89,10 @@
                   "value": "count"
                 }
               },
-              "id": "ufpkhdo5"
+              "id": "bdp5cc3o"
             }
           ],
-          "id": "vglarcph"
+          "id": "xar78wpe"
         },
         {
           "componentName": "p",
@@ -104,7 +103,7 @@
               "props": {
                 "text": "Double:"
               },
-              "id": "54d7kpbo"
+              "id": "6rlqe23k"
             },
             {
               "componentName": "Text",
@@ -114,15 +113,18 @@
                   "value": "doubleCount"
                 }
               },
-              "id": "bsd2369y"
+              "id": "r9zc0eyb"
             }
           ],
-          "id": "ltzaht8v"
+          "id": "wzsvppzf"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "inc"
+            "click": {
+              "type": "JSExpression",
+              "value": "inc"
+            }
           },
           "children": [
             {
@@ -130,15 +132,18 @@
               "props": {
                 "text": "Add"
               },
-              "id": "iiv8wikn"
+              "id": "x8tcpyae"
             }
           ],
-          "id": "awlcwro5"
+          "id": "oqwrxxn9"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "reset",
+            "click": {
+              "type": "JSExpression",
+              "value": "reset"
+            },
             "disabled": {
               "type": "JSExpression",
               "value": "!canReset"
@@ -150,14 +155,14 @@
               "props": {
                 "text": "Reset"
               },
-              "id": "19m4lxst"
+              "id": "xdiwuxp0"
             }
           ],
-          "id": "4lzjexqq"
+          "id": "ruqpfuxu"
         }
       ],
-      "id": "utbejiqm"
+      "id": "4dzq0k8b"
     }
   ],
-  "id": "fvmk5b0x"
+  "id": "kh3xaoc3"
 }

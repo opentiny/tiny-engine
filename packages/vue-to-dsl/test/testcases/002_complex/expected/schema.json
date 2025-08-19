@@ -1,11 +1,10 @@
 {
   "componentName": "Page",
-  "fileName": "UnnamedPage",
-  "path": "",
+  "fileName": "component",
   "meta": {
-    "title": "Generated Page",
+    "name": "component",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-17T07:51:25.629Z",
+    "generatedAt": "2025-08-19T16:02:26.721Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -94,10 +93,10 @@
                       "value": "state.userInfo.name"
                     }
                   },
-                  "id": "ul6679n1"
+                  "id": "kvqb13w8"
                 }
               ],
-              "id": "88l8ebzd"
+              "id": "im8ssuo5"
             },
             {
               "componentName": "span",
@@ -116,13 +115,13 @@
                       "value": "state.userInfo.isActive ? '在线' : '离线'"
                     }
                   },
-                  "id": "637bit02"
+                  "id": "10a7qsym"
                 }
               ],
-              "id": "h9437wd4"
+              "id": "3s5r8jne"
             }
           ],
-          "id": "2jgpice4"
+          "id": "333w7h7a"
         },
         {
           "componentName": "div",
@@ -139,7 +138,7 @@
                   "props": {
                     "text": "邮箱:"
                   },
-                  "id": "ahq5tc4d"
+                  "id": "g98tg2zr"
                 },
                 {
                   "componentName": "Text",
@@ -149,10 +148,10 @@
                       "value": "state.userInfo.email"
                     }
                   },
-                  "id": "mjs04qdk"
+                  "id": "fl6xmkz3"
                 }
               ],
-              "id": "9fkxs4c5"
+              "id": "je0su5jl"
             },
             {
               "componentName": "p",
@@ -163,7 +162,7 @@
                   "props": {
                     "text": "年龄:"
                   },
-                  "id": "1mue1u1z"
+                  "id": "ewevg1tn"
                 },
                 {
                   "componentName": "Text",
@@ -173,10 +172,10 @@
                       "value": "state.userInfo.age"
                     }
                   },
-                  "id": "qp5ldycy"
+                  "id": "1tjj4u7i"
                 }
               ],
-              "id": "io8iww1s"
+              "id": "r0n0wokz"
             },
             {
               "componentName": "p",
@@ -187,7 +186,7 @@
                   "props": {
                     "text": "注册时间:"
                   },
-                  "id": "wbkam44e"
+                  "id": "qjg7mgoz"
                 },
                 {
                   "componentName": "Text",
@@ -197,13 +196,13 @@
                       "value": "formatDate(state.userInfo.createTime)"
                     }
                   },
-                  "id": "usxt1qh2"
+                  "id": "litlono3"
                 }
               ],
-              "id": "ce7s8e6i"
+              "id": "mxkfid9q"
             }
           ],
-          "id": "fhtz1s9u"
+          "id": "3jicse14"
         },
         {
           "componentName": "div",
@@ -215,7 +214,10 @@
               "componentName": "button",
               "props": {
                 "class": "btn btn-primary",
-                "@click": "editUser",
+                "click": {
+                  "type": "JSExpression",
+                  "value": "editUser"
+                },
                 "disabled": {
                   "type": "JSExpression",
                   "value": "!canEdit"
@@ -227,16 +229,19 @@
                   "props": {
                     "text": "编辑用户"
                   },
-                  "id": "vqe911wo"
+                  "id": "ooksvl5j"
                 }
               ],
-              "id": "uhvz04d0"
+              "id": "mrfi7lwv"
             },
             {
               "componentName": "button",
               "props": {
                 "class": "btn btn-danger",
-                "@click": "deleteUser"
+                "click": {
+                  "type": "JSExpression",
+                  "value": "deleteUser"
+                }
               },
               "children": [
                 {
@@ -244,14 +249,14 @@
                   "props": {
                     "text": "删除用户"
                   },
-                  "id": "8ohjxioy"
+                  "id": "gdrv9bn4"
                 }
               ],
               "condition": "state.userInfo.canDelete",
-              "id": "3bzu8jqj"
+              "id": "0g344him"
             }
           ],
-          "id": "xzz52yx4"
+          "id": "3kdnawn4"
         },
         {
           "componentName": "div",
@@ -268,10 +273,10 @@
                   "props": {
                     "text": "用户统计"
                   },
-                  "id": "x2ln8gjp"
+                  "id": "aq2nixnt"
                 }
               ],
-              "id": "ayl3id8g"
+              "id": "b122y7zz"
             },
             {
               "componentName": "ul",
@@ -286,7 +291,7 @@
                       "props": {
                         "text": "总登录次数:"
                       },
-                      "id": "po0niawx"
+                      "id": "5uop23mq"
                     },
                     {
                       "componentName": "Text",
@@ -296,10 +301,10 @@
                           "value": "state.userStats.loginCount"
                         }
                       },
-                      "id": "ssqmsu33"
+                      "id": "jahbgx8d"
                     }
                   ],
-                  "id": "msc86xgw"
+                  "id": "0iz05b4c"
                 },
                 {
                   "componentName": "li",
@@ -310,7 +315,7 @@
                       "props": {
                         "text": "最后登录:"
                       },
-                      "id": "zotpc32t"
+                      "id": "bi22ucsf"
                     },
                     {
                       "componentName": "Text",
@@ -320,10 +325,10 @@
                           "value": "formatDate(state.userStats.lastLogin)"
                         }
                       },
-                      "id": "hoalo929"
+                      "id": "cqbfwkb1"
                     }
                   ],
-                  "id": "f20ghlog"
+                  "id": "v1p0nw4x"
                 },
                 {
                   "componentName": "li",
@@ -334,7 +339,7 @@
                       "props": {
                         "text": "账户等级:"
                       },
-                      "id": "ce3zqskx"
+                      "id": "pa44yeku"
                     },
                     {
                       "componentName": "Text",
@@ -344,21 +349,21 @@
                           "value": "userLevel"
                         }
                       },
-                      "id": "c8sytj36"
+                      "id": "53or6qlu"
                     }
                   ],
-                  "id": "e2habc5h"
+                  "id": "z7570btt"
                 }
               ],
-              "id": "6g8tsdi9"
+              "id": "d1bri2tm"
             }
           ],
           "condition": "showStats",
-          "id": "unmgl7ci"
+          "id": "yp55eqkd"
         }
       ],
-      "id": "haakr04e"
+      "id": "zy4o5wjx"
     }
   ],
-  "id": "h1ywegts"
+  "id": "39sdzurt"
 }

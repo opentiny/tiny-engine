@@ -1,11 +1,10 @@
 {
   "componentName": "Page",
-  "fileName": "UnnamedPage",
-  "path": "",
+  "fileName": "component",
   "meta": {
-    "title": "Generated Page",
+    "name": "component",
     "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-17T07:51:25.597Z",
+    "generatedAt": "2025-08-19T16:02:26.707Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "state": {
@@ -44,7 +43,7 @@
               "props": {
                 "text": "计数器:"
               },
-              "id": "1j9buof0"
+              "id": "rd9vuepa"
             },
             {
               "componentName": "Text",
@@ -54,15 +53,18 @@
                   "value": "count"
                 }
               },
-              "id": "jyn7mn5w"
+              "id": "v25egrti"
             }
           ],
-          "id": "bx4utyiw"
+          "id": "7j6tx839"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "increment"
+            "click": {
+              "type": "JSExpression",
+              "value": "increment"
+            }
           },
           "children": [
             {
@@ -70,15 +72,18 @@
               "props": {
                 "text": "增加"
               },
-              "id": "ts6aqruy"
+              "id": "qyzg99gb"
             }
           ],
-          "id": "svn5xmz3"
+          "id": "ucgug5pz"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "decrement"
+            "click": {
+              "type": "JSExpression",
+              "value": "decrement"
+            }
           },
           "children": [
             {
@@ -86,15 +91,18 @@
               "props": {
                 "text": "减少"
               },
-              "id": "2mzta0xq"
+              "id": "j7p87lzv"
             }
           ],
-          "id": "v2zllzff"
+          "id": "mahw0wl3"
         },
         {
           "componentName": "button",
           "props": {
-            "@click": "reset"
+            "click": {
+              "type": "JSExpression",
+              "value": "reset"
+            }
           },
           "children": [
             {
@@ -102,14 +110,14 @@
               "props": {
                 "text": "重置"
               },
-              "id": "mz9i76xj"
+              "id": "l2a43rr2"
             }
           ],
-          "id": "e1evwtmm"
+          "id": "lfvqe4es"
         }
       ],
-      "id": "86045n9t"
+      "id": "rgi6bxnv"
     }
   ],
-  "id": "nybnmt8o"
+  "id": "dxv478en"
 }
