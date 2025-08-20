@@ -2,7 +2,11 @@ import { z } from 'zod'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const inputSchema = z.object({
-  id: z.string().describe('The id of the node to delete.')
+  id: z
+    .string()
+    .describe(
+      'The id of the node to delete. if you don\'t know the id, you can use the tool "get_current_selected_node" to get the current selected node. or you can use the tool "get_page_schema" to get the page schema. when get the page schema, you can find the id in the "id" field.'
+    )
 })
 
 export const delNode = {

@@ -1,8 +1,13 @@
 import { z } from 'zod'
 import { fetchPageDetail } from '../../http'
+import { getAllPages } from './get_all_pages_utils'
 
 const inputSchema = z.object({
-  id: z.string().describe('The id of the page')
+  id: z
+    .string()
+    .describe(
+      'The id of the page. if you don\'t know the id, you can use the tool "get_page_list" to get the page list.'
+    )
 })
 
 export const getPageDetail = {
@@ -17,6 +22,32 @@ export const getPageDetail = {
     const { id } = args
 
     try {
+      const allPages = await getAllPages()
+      const page = allPages.find((page) => page.id === id)
+
+      if (!page) {
+        return {
+          content: [
+            {
+              isError: true,
+              type: 'text',
+              text: JSON.stringify({
+                errorCode: 'PAGE_NOT_FOUND',
+                reason: `Unknown pageId: ${id}`,
+                userMessage: `Page not found. Fetch the available page list.`,
+                next_action: [
+                  {
+                    type: 'tool_call',
+                    name: 'get_page_list',
+                    args: {}
+                  }
+                ]
+              })
+            }
+          ]
+        }
+      }
+
       const data = await fetchPageDetail(id)
       const res = {
         status: 'success',

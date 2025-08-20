@@ -1,12 +1,12 @@
 import { z } from 'zod'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { validateParams } = utils
 
 type NodeSchema = z.ZodObject<{
   componentName: z.ZodString
-  props: z.ZodObject<Record<string, z.ZodTypeAny>, 'strip', z.ZodTypeAny>
+  props: z.ZodRecord<z.ZodString, z.ZodTypeAny>
   children: z.ZodArray<z.ZodLazy<any>, 'many'>
 }>
 
@@ -15,8 +15,8 @@ const nodeArraySchema = z.lazy(() => nodeSchema)
 
 const nodeSchema: NodeSchema = z.object({
   componentName: z.string().describe('The name of the component.'),
-  props: z.object({}).describe('The props of the component.'),
-  children: z.array(z.lazy(() => nodeArraySchema)).describe('The children of the component')
+  props: z.record(z.string(), z.any()).describe('The props of the component.'),
+  children: z.array(nodeArraySchema).describe('The children of the component')
 })
 
 const inputSchema = z.object({
@@ -60,11 +60,6 @@ export const addNode = {
     const { props = {}, children = [] } = newNodeData
 
     const validateResult = validateParams(args, {
-      componentName: {
-        required: true,
-        message:
-          'Component name is required, if you don\'t know the component name, you can use the tool "get_component_list" to get the component detail.'
-      },
       parentId: {
         validator: (value: string) => {
           const parentNode = useCanvas().getNodeById(value)
@@ -85,6 +80,31 @@ export const addNode = {
 
     if (!validateResult.isValid) {
       return validateResult.error
+    }
+
+    const { getMaterial } = useMaterial()
+    const material = getMaterial(componentName)
+
+    if (!newNodeData.componentName || !Object.keys(material).length) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              errorCode: 'COMPONENT_NAME_REQUIRED',
+              reason: 'Component name is required',
+              userMessage: 'Component name is required. Fetch the available component list.',
+              next_action: {
+                type: 'tool_call',
+                name: 'get_component_list',
+                args: {}
+              }
+            })
+          }
+        ]
+      }
     }
 
     useCanvas().operateNode({

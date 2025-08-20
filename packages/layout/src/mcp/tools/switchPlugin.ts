@@ -14,7 +14,29 @@ export const switchPluginPanel = {
   inputSchema: inputSchema.shape,
   callback: async (_args: z.infer<typeof inputSchema>) => {
     const { pluginId, operation } = _args
-    const { activePlugin, closePlugin } = useLayout()
+    const { activePlugin, closePlugin, getAllPlugins } = useLayout()
+    const plugins = await getAllPlugins()
+    const plugin = plugins.find((item) => item.id === pluginId)
+
+    if (!plugin) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              errorCode: 'PLUGIN_NOT_FOUND',
+              reason: `Unknown pluginId: ${pluginId}`,
+              userMessage: 'Plugin not found. Fetch the available plugin list.',
+              next_action: {
+                type: 'tool_call',
+                name: 'get_all_plugins',
+                args: {}
+              }
+            })
+          }
+        ]
+      }
+    }
 
     if (operation === 'open' && pluginId) {
       await activePlugin(pluginId)

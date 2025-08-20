@@ -603,7 +603,7 @@ const createNewPage = async ({
   } catch (error) {
     return {
       success: false,
-      error: JSON.stringify(error?.message || error)
+      error: JSON.stringify(error instanceof Error ? error.message : error)
     }
   }
 }

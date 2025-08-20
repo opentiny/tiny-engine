@@ -1,8 +1,13 @@
 import { z } from 'zod'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
+import { getAllPages } from './get_all_pages_utils'
 
 const inputSchema = z.object({
-  id: z.string().describe('The id of the page')
+  id: z
+    .string()
+    .describe(
+      'The id of the page. if you don\'t know the id, you can use the tool "get_page_list" to get the page list.'
+    )
 })
 
 export const editSpecificPage = {
@@ -14,6 +19,31 @@ export const editSpecificPage = {
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
     const { switchPage } = usePage()
+    const allPages = await getAllPages()
+    const page = allPages.find((page) => page.id === id)
+
+    if (!page) {
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
+              errorCode: 'PAGE_NOT_FOUND',
+              reason: `Unknown pageId: ${id}`,
+              userMessage: `Page not found. Fetch the available page list.`,
+              next_action: [
+                {
+                  type: 'tool_call',
+                  name: 'get_page_list',
+                  args: {}
+                }
+              ]
+            })
+          }
+        ]
+      }
+    }
 
     await switchPage(id)
 

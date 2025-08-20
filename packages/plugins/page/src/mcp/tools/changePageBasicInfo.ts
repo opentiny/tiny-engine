@@ -1,15 +1,24 @@
 import { z } from 'zod'
 import { usePage } from '@opentiny/tiny-engine-meta-register'
+import { getAllPages } from './get_all_pages_utils'
 
 const inputSchema = z.object({
-  id: z.string().describe('The id of the page'),
+  id: z
+    .string()
+    .describe(
+      'The id of the page. if you don\'t know the id, you can use the tool "get_page_list" to get the page list.'
+    ),
   name: z.string().describe('The name of the page. The name must be unique and Capitalize the first letter.'),
-  route: z.string().describe('The route of the page'),
+  route: z
+    .string()
+    .describe(
+      'The route of the page. only allow contain english letter, number, underline, hyphen, slash, and start with english letter.'
+    ),
   parentId: z
     .string()
     .optional()
     .describe(
-      'The parent id of the page, if not provided, the page will be created at the root level. if provided, the page will be created at the specified parent id.'
+      'The parent id of the page, if not provided, the page will be created at the root level. if provided, the page will be created at the specified parent id. if you don\'t know the parentId, you can use the tool "get_page_list" to get the page list.'
     )
 })
 
@@ -23,6 +32,31 @@ export const changePageBasicInfo = {
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id, name, route, parentId } = args
+    const allPages = await getAllPages()
+    const page = allPages.find((page) => page.id === id)
+
+    if (!page) {
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
+              errorCode: 'PAGE_NOT_FOUND',
+              reason: `Unknown pageId: ${id}`,
+              userMessage: `Page not found. Fetch the available page list.`,
+              next_action: [
+                {
+                  type: 'tool_call',
+                  name: 'get_page_list',
+                  args: {}
+                }
+              ]
+            })
+          }
+        ]
+      }
+    }
 
     const { updatePageById } = usePage()
     const { success, error } = await updatePageById(id, { id, name, route, parentId })

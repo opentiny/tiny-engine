@@ -2,7 +2,11 @@ import { z } from 'zod'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
 const inputSchema = z.object({
-  id: z.string().describe('The id of the node to select.')
+  id: z
+    .string()
+    .describe(
+      'The id of the node to select. if you don\'t know the id, you can use the tool "get_page_schema" to get the page schema. when get the page schema, you can find the id in the "id" field.'
+    )
 })
 
 export const selectSpecificNode = {
@@ -21,6 +25,36 @@ export const selectSpecificNode = {
   },
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
+    const node = useCanvas().getNodeById(id)
+
+    if (!node) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              errorCode: 'NODE_NOT_FOUND',
+              reason: `Node not found: ${id}`,
+              userMessage: `Node not found: ${id}. Fetch the available node list.`,
+              next_action: [
+                {
+                  type: 'tool_call',
+                  name: 'get_current_selected_node',
+                  args: {},
+                  when: 'you want to select the current selected node'
+                },
+                {
+                  type: 'tool_call',
+                  name: 'get_page_schema',
+                  args: {},
+                  when: 'you want to select the node with the specified id'
+                }
+              ]
+            })
+          }
+        ]
+      }
+    }
 
     useCanvas().canvasApi.value?.selectNode?.(id, 'clickTree')
 

@@ -503,7 +503,7 @@ export default () => {
 
   const getAllPlugins = () => {
     return getAllMergeMeta()
-      .filter((item) => item.type === 'plugin')
+      .filter((item) => item.type === 'plugins')
       .map((item) => {
         return {
           id: item.id,
