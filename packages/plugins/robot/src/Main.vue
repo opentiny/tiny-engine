@@ -408,7 +408,7 @@ export default {
       },
       {
         label: '页面搭建场景',
-        description: '如何生成表单嵌进我的网站？',
+        description: '给当前页面中添加一个问卷调查表单',
         icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨')
       },
       {

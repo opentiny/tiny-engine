@@ -75,18 +75,26 @@ const handleToolCall = async (
         formatPretty: true
       }
       currentMessage.renderContent.push(currentToolMessage)
-      const toolCallResult = await useMcpServer().callTool(name, parsedArgs)
+      let toolCallResult
+      let toolCallStatus
+      try {
+        toolCallStatus = 'success'
+        toolCallResult = (await useMcpServer().callTool(name, parsedArgs)).content
+      } catch (error) {
+        toolCallStatus = 'failed'
+        toolCallResult = JSON.stringify(error)
+      }
       toolMessages.push({
         type: 'text',
-        content: toolCallResult.content,
+        content: toolCallResult,
         role: 'tool',
         tool_call_id: tool.id
       })
 
-      currentMessage.renderContent.at(-1)!.status = 'success'
+      currentMessage.renderContent.at(-1)!.status = toolCallStatus
       currentMessage.renderContent.at(-1)!.content = {
         params: parsedArgs,
-        result: toolCallResult.content
+        result: toolCallResult
       }
     }
     currentMessage.renderContent.push({ type: 'loading', content: '' })
