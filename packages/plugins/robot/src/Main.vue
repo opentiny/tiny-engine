@@ -121,7 +121,7 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const { initData, clearCurrentState } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
@@ -283,15 +283,6 @@ export default {
     })
 
     const sendContent = async (content, isModel) => {
-      if (!isSaved() && !pageSettingState.isNew) {
-        Notify({
-          type: 'error',
-          message: `当前${isBlock() ? '区块' : '页面'}尚未保存，请保存后再试！`,
-          position: 'top-right',
-          duration: 5000
-        })
-        return
-      }
       if (inProcesing.value) {
         Notify({
           type: 'error',
