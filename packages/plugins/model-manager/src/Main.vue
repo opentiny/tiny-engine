@@ -40,6 +40,7 @@
             ref="fieldManagerRef"
             :model="selectedModel"
             :expand-config="expandConfig"
+            :available-models="models"
             @add-field="handleAddField"
             @insert-enum-after="insertEnumValueAfter"
             @remove-enum="removeEnumValue"
@@ -61,6 +62,7 @@
                     <tiny-option value="Boolean" label="布尔值" />
                     <tiny-option value="Date" label="日期" />
                     <tiny-option value="Enum" label="枚举值" />
+                    <tiny-option value="ModelRef" label="模型引用" />
                   </tiny-select>
                 </div>
                 <div v-else class="readonly-cell">{{ getFieldTypeLabel(row.type) }}</div>
@@ -178,15 +180,21 @@ const expandConfig = ref({
   trigger: 'row',
   expandRowKeys: [],
   accordion: false,
-  activeMethod: (row) => row.type === 'Enum', // 所有枚举类型都显示展开箭头
-  showIcon: (row) => row.type === 'Enum' // 所有枚举类型都显示展开箭头
+  activeMethod: (row) => row.type === 'Enum' || row.type === 'ModelRef', // 枚举类型和模型引用类型都显示展开箭头
+  showIcon: (row) => row.type === 'Enum' || row.type === 'ModelRef' // 枚举类型和模型引用类型都显示展开箭头
 })
 
 // 选中模型
 const selectModel = (model) => {
   if (model.parameters?.length > 0) {
     model.parameters.forEach((item) => {
-      item.options = item.options ? JSON.parse(item.options) : []
+      if (item.type === 'Enum') {
+        item.options = item.options ? JSON.parse(item.options) : []
+      }
+      if (item.type === 'ModelRef') {
+        item.isModel = true
+        item.defaultValue = item.defaultValue || null
+      }
     })
   }
   selectedModel.value = { ...model }
@@ -230,7 +238,16 @@ const getModelLists = async () => {
     currentPage: 1,
     pageSize: 500
   })
-  if (data && data.records.length > 0) models.value = data.records
+  if (data && data.records.length > 0) {
+    data.records.forEach((_item) => {
+      _item.parameters.forEach((param) => {
+        if ((param.type = 'Number' && param.isModel)) {
+          param.type = 'ModelRef'
+        }
+      })
+    })
+  }
+  models.value = data.records
 }
 
 // 保存模型时一并保存version字段
@@ -252,6 +269,11 @@ const saveModel = async () => {
     newModel.parameters.forEach((item) => {
       if (item.type === 'Enum') {
         item.options = JSON.stringify(item.options)
+      }
+      if (item.type === 'ModelRef') {
+        item.isModel = true
+        item.defaultValue = item.defaultValue || null
+        item.type = 'Number'
       }
     })
   }
@@ -286,16 +308,22 @@ const handleAddField = () => {
     if (nameInputs.length > 0) nameInputs[nameInputs.length - 1].focus()
   })
 }
+
 // 字段进入编辑状态
 const startFieldEdit = (field) => {
   field._editCache = { ...field } // 缓存原始数据
   field.isEditing = true
-  // 如果字段类型是枚举值，自动展开
-  if (field.type === 'Enum') {
+  // 如果字段类型是枚举值或模型引用类型，自动展开
+  if (field.type === 'Enum' || field.type === 'ModelRef') {
     field.isExpanded = true
     // 枚举类型：至少保证一条空数据
-    if (!Array.isArray(field.options) || field.options.length === 0) {
+    if (field.type === 'Enum' && (!Array.isArray(field.options) || field.options.length === 0)) {
       field.options = [{ value: '', label: '' }]
+    }
+    // 模型引用类型：初始化模型引用
+    if (field.type === 'ModelRef') {
+      field.isModel = true
+      field.defaultValue = field.defaultValue || null
     }
     // 添加到展开行keys（使用 _RID），并避免重复
     const gridData = fieldManagerRef.value?.getGridData() || []
@@ -306,7 +334,6 @@ const startFieldEdit = (field) => {
     })
   }
 }
-
 // 字段保存编辑
 const saveFieldEdit = (field) => {
   field.isEditing = false
@@ -352,17 +379,24 @@ const getFieldTypeLabel = (type) => {
     Number: '数字',
     Boolean: '布尔值',
     Date: '日期',
-    Enum: '枚举值'
+    Enum: '枚举值',
+    ModelRef: '模型引用'
   }
   return typeMap[type] || type
 }
 // 字段类型变化处理
+// 字段类型变化处理
 const handleTypeChange = (field) => {
-  if (field.type === 'Enum') {
+  if (field.type === 'Enum' || field.type === 'ModelRef') {
     field.isExpanded = true
     // 初始化相应的数据结构
-    if (!Array.isArray(field.options) || field.options.length === 0) {
+    if (field.type === 'Enum' && (!Array.isArray(field.options) || field.options.length === 0)) {
       field.options = [{ value: '', label: '' }]
+    }
+    // 模型引用类型：初始化模型引用
+    if (field.type === 'ModelRef') {
+      field.isModel = true
+      field.defaultValue = field.defaultValue || null
     }
     // 将对应 _RID 推入展开 keys（去重）
     nextTick(() => {

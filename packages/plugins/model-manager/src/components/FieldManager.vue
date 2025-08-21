@@ -45,6 +45,29 @@
                 </div>
               </div>
             </div>
+            <div v-else-if="row.type === 'ModelRef'" class="expand-content">
+              <div class="expand-section">
+                <h4>引用的模型</h4>
+                <div class="model-ref-section">
+                  <tiny-select
+                    v-model="row.defaultValue"
+                    placeholder="请选择要引用的模型"
+                    size="small"
+                    style="width: 100%"
+                  >
+                    <tiny-option
+                      v-for="model in availableModels"
+                      :key="model.id"
+                      :value="model.id"
+                      :label="`${model.nameCn} (${model.nameEn})`"
+                    />
+                  </tiny-select>
+                  <div class="model-ref-info" v-if="row.defaultValue">
+                    <p>已选择模型：{{ getModelName(row.defaultValue) }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </template>
         </tiny-grid-column>
         <slot />
@@ -57,12 +80,13 @@
 // 字段表格与展开编辑内容组件
 // 仅承载表格与展开内容，具体列通过插槽从父组件传入，保证与现有逻辑一致
 import { ref } from 'vue'
-import { TinyButton, TinyGrid, TinyGridColumn, TinyInput } from '@opentiny/vue'
+import { TinyButton, TinyGrid, TinyGridColumn, TinyInput, TinySelect, TinyOption } from '@opentiny/vue'
 import { IconPlus } from '@opentiny/vue-icon'
 
-defineProps({
+const props = defineProps({
   model: { type: Object, required: true },
-  expandConfig: { type: Object, required: true }
+  expandConfig: { type: Object, required: true },
+  availableModels: { type: Array, default: () => [] }
 })
 
 defineEmits(['add-field', 'insert-enum-after', 'remove-enum'])
@@ -72,6 +96,12 @@ const fieldGrid = ref(null)
 // 父组件需要：
 // 1) 读取 grid 数据以拿到 _RID
 const getGridData = () => fieldGrid.value?.getData?.() || []
+
+// 根据模型ID获取模型名称
+const getModelName = (modelId) => {
+  const model = props.availableModels.find((m) => m.id === modelId)
+  return model ? `${model.nameCn} (${model.nameEn})` : '未知模型'
+}
 
 defineExpose({
   fieldGrid,
@@ -136,6 +166,24 @@ defineExpose({
   background: #fff;
   border-radius: 4px;
   border: 1px solid #e4e7ed;
+}
+
+.model-ref-section {
+  margin-top: 8px;
+}
+
+.model-ref-info {
+  margin-top: 8px;
+  padding: 8px;
+  background: #f0f8ff;
+  border-radius: 4px;
+  border: 1px solid #d6e4ff;
+}
+
+.model-ref-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #1890ff;
 }
 .variable-editor {
   height: 260px;
