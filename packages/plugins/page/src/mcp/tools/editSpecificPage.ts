@@ -20,7 +20,7 @@ export const editSpecificPage = {
     const { id } = args
     const { switchPage } = usePage()
     const allPages = await getAllPages()
-    const page = allPages.find((page) => page.id === id)
+    const page = allPages.find((page) => String(page.id) === String(id))
 
     if (!page) {
       return {

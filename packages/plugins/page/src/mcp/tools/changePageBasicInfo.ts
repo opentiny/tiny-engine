@@ -18,7 +18,7 @@ const inputSchema = z.object({
     .string()
     .optional()
     .describe(
-      'The parent id of the page, if not provided, the page will be created at the root level. if provided, the page will be created at the specified parent id. if you don\'t know the parentId, you can use the tool "get_page_list" to get the page list.'
+      'The parentId under which to place the page. If omitted, the page remains at its current level. Set to "0" to move it to the root. Use "get_page_list" to discover available parent IDs.'
     )
 })
 

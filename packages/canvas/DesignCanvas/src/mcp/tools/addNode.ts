@@ -75,8 +75,13 @@ export const addNode = {
 
     const { getMaterial } = useMaterial()
     const material = getMaterial(componentName)
+    const isEmptyPlainObject =
+      material &&
+      typeof material === 'object' &&
+      !Array.isArray(material) &&
+      Object.keys(material as Record<string, unknown>).length === 0
 
-    if (!newNodeData.componentName || !Object.keys(material).length) {
+    if (!newNodeData.componentName || isEmptyPlainObject) {
       return {
         isError: true,
         content: [

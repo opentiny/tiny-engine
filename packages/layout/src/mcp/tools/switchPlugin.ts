@@ -38,7 +38,7 @@ export const switchPluginPanel = {
       }
     }
 
-    if (operation === 'open' && pluginId) {
+    if (operation === 'open') {
       await activePlugin(pluginId)
     } else {
       await closePlugin(true)
