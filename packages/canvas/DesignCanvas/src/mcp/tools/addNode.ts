@@ -4,21 +4,6 @@ import { utils } from '@opentiny/tiny-engine-utils'
 
 const { validateParams } = utils
 
-type NodeSchema = z.ZodObject<{
-  componentName: z.ZodString
-  props: z.ZodRecord<z.ZodString, z.ZodTypeAny>
-  children: z.ZodArray<z.ZodLazy<any>, 'many'>
-}>
-
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
-const nodeArraySchema = z.lazy(() => nodeSchema)
-
-const nodeSchema: NodeSchema = z.object({
-  componentName: z.string().describe('The name of the component.'),
-  props: z.record(z.string(), z.any()).describe('The props of the component.'),
-  children: z.array(nodeArraySchema).describe('The children of the component')
-})
-
 const inputSchema = z.object({
   parentId: z
     .string()
@@ -26,7 +11,13 @@ const inputSchema = z.object({
     .describe(
       'The id of the parent node. If not provided, the new node will be added to the root. if you don\'t know the parentId, you can use the tool "get_page_schema" to get the page schema. if you want to add to page root, just don\'t provide the parentId.'
     ),
-  newNodeData: z.lazy(() => nodeSchema).describe('The new node data.'),
+  newNodeData: z.object({
+    componentName: z.string().describe('The name of the component.'),
+    props: z.record(z.string(), z.any()).describe('The props of the component.'),
+    children: z
+      .array(z.record(z.string(), z.any()))
+      .describe('Array of child nodes; each child has the same shape as newNodeData (recursive tree).')
+  }),
   position: z
     .enum(['before', 'after'])
     .optional()
@@ -107,15 +98,17 @@ export const addNode = {
       }
     }
 
+    const insertData = {
+      componentName,
+      props,
+      children
+    }
+
     useCanvas().operateNode({
       type: 'insert',
       parentId: parentId!,
       // @ts-ignore
-      newNodeData: {
-        componentName,
-        props,
-        children
-      },
+      newNodeData: insertData,
       position: position!,
       referTargetNodeId
     })
@@ -123,11 +116,7 @@ export const addNode = {
     const res = {
       status: 'success',
       message: `Node added successfully`,
-      data: {
-        componentName,
-        props,
-        children
-      }
+      data: insertData
     }
 
     return {

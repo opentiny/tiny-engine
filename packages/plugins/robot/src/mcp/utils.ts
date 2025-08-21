@@ -2,7 +2,9 @@ import { toRaw } from 'vue'
 import useMcpServer from './useMcp'
 import type { LLMMessage, RobotMessage } from './types'
 import type { LLMRequestBody, LLMResponse, ReponseToolCall, RequestOptions, RequestTool } from './types'
-import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
+import { META_SERVICE, getMetaApi, getOptions } from '@opentiny/tiny-engine-meta-register'
+import systemPrompt from '../system-prompt.md?raw'
+import meta from '../../meta'
 
 let requestOptions: RequestOptions = {}
 
@@ -29,6 +31,48 @@ const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: R
       ...options?.headers
     }
   })
+}
+
+// 计算当前生效的 system prompt（支持注册表覆盖与关闭）
+const getEffectiveSystemPrompt = (): { disabled: boolean; prompt?: string } => {
+  try {
+    const options = getOptions && typeof getOptions === 'function' ? getOptions((meta as any)?.id) : undefined
+    const disabled = options?.disableSystemPrompt === true
+    if (disabled) {
+      return { disabled: true }
+    }
+    const custom = options?.customSystemPrompt
+    const prompt = typeof custom === 'string' && custom.trim().length > 0 ? custom : systemPrompt
+    return { disabled: false, prompt }
+  } catch (_err) {
+    // 安全回退到内置 system prompt
+    return { disabled: false, prompt: systemPrompt }
+  }
+}
+
+// 确保 system prompt 仅注入一次，并作为首条历史消息（仅限 MCP 路径）
+const withSystemPromptOnce = (messages: LLMMessage[]): LLMMessage[] => {
+  const { disabled, prompt } = getEffectiveSystemPrompt()
+  if (disabled) {
+    return messages
+  }
+
+  // 正常情况下 prompt 一定存在；若异常则透传
+  if (!prompt) {
+    return messages
+  }
+
+  if (!messages.length) {
+    return [{ role: 'system', content: prompt }]
+  }
+  const first = messages[0]
+  if (first.role === 'system') {
+    // 若首条已为 system：
+    // - 与当前生效 prompt 全等：直接返回
+    // - 不等：尊重现有会话，不做热替换，避免双 system
+    return first.content === prompt ? messages : messages
+  }
+  return [{ role: 'system', content: prompt }, ...messages]
 }
 
 const parseArgs = (args: string) => {
@@ -98,11 +142,12 @@ const handleToolCall = async (
       }
     }
     currentMessage.renderContent.push({ type: 'loading', content: '' })
-    const newResp = await fetchLLM(toolMessages, tools)
+    const preppedToolMessages = withSystemPromptOnce(toolMessages)
+    const newResp = await fetchLLM(preppedToolMessages, tools)
     currentMessage.renderContent.pop()
     const hasToolCall = newResp.choices[0].message.tool_calls?.length > 0
     if (hasToolCall) {
-      await handleToolCall(newResp, tools, messages, toolMessages)
+      await handleToolCall(newResp, tools, messages, preppedToolMessages)
     } else {
       if (newResp.choices[0].message.content) {
         currentMessage.renderContent.push({
@@ -121,12 +166,20 @@ export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOpt
   const tools = await useMcpServer().getLLMTools()
   requestOptions = options
   messages.at(-1)!.renderContent = [{ type: 'loading', content: '' }]
-  const res = await fetchLLM(formatMessages(messages.slice(0, -1)), tools, options)
+  const historyRaw = toRaw(messages.slice(0, -1)) as LLMMessage[]
+  const requestMessages = withSystemPromptOnce(historyRaw)
+  const res = await fetchLLM(formatMessages(requestMessages), tools, options)
   delete messages.at(-1)!.renderContent
   const hasToolCall = res.choices[0].message.tool_calls?.length > 0
   if (hasToolCall) {
     await handleToolCall(res, tools, messages)
-    messages.at(-1)!.content = messages.at(-1)!.renderContent.at(-1)!.content
+    const lastMsg: any = messages.at(-1) as any
+    const renderList: any[] | undefined = Array.isArray(lastMsg.renderContent)
+      ? (lastMsg.renderContent as any[])
+      : undefined
+    const lastRendered: any = renderList && renderList.length > 0 ? renderList[renderList.length - 1] : undefined
+    const renderedContent: unknown = lastRendered?.content
+    lastMsg.content = typeof renderedContent === 'string' ? renderedContent : JSON.stringify(renderedContent ?? '')
   } else {
     messages.at(-1)!.content = res.choices[0].message.content
   }

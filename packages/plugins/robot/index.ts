@@ -17,5 +17,6 @@ import '@opentiny/tiny-robot/dist/style.css'
 
 export default {
   ...metaData,
+  options: {},
   icon: RobotIcon
 }
