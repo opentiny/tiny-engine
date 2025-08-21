@@ -1,4 +1,4 @@
-import type { Branch } from '../../domain/models/Branch'
+import { Branch } from '../../domain/models/Branch'
 import type { BranchService } from '../../domain/services/BranchService'
 import type { BranchRepository } from '../../infrastructure/repositories/BranchRepository'
 import type { CommitRepository } from '../../infrastructure/repositories/CommitRepository'
@@ -190,8 +190,10 @@ export class BranchAppServiceImpl implements BranchAppService {
     const newBranch = this.branchService.createBranch(name, upstreamBranchId, creator, baseCommit!.id, description)
 
     await this.branchRepository.save(newBranch)
-    upstreamBranch!.addDownstreamBranch(newBranch.id)
-    await this.branchRepository.update(upstreamBranch!)
+
+    const updateBranchInstance = Branch.formData(upstreamBranch)
+    updateBranchInstance!.addDownstreamBranch(newBranch.id)
+    await this.branchRepository.update(updateBranchInstance)
 
     // 记录分支操作历史
     // this.recordBranchOperation(newBranch.id, creator, 'create', { name, upstreamBranchId, commitId });
@@ -275,7 +277,8 @@ export class BranchAppServiceImpl implements BranchAppService {
         targetBranch.id,
         commitMessage || `Merge branch '${sourceBranch.name}' into '${targetBranch.name}'`,
         sourceBranch.creator, // 合并操作的作者
-        result.mergedSchema! // 使用合并后的 Schema
+        result.mergedSchema!, // 使用合并后的 Schema
+        'feature'
       )
 
       targetBranch.setHeadCommitId(newCommit.id) // 更新头提交
@@ -363,10 +366,7 @@ export class BranchAppServiceImpl implements BranchAppService {
       operator: {
         id: 'u1',
         username: 'test',
-        email: 't@t.com',
-        displayName: 'Test User',
-        createdAt: 0,
-        lastActiveAt: 0
+        email: 't@t.com'
       },
       operationType: 'create',
       timestamp: Date.now(),

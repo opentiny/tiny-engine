@@ -1,0 +1,122 @@
+[
+  {
+    "id": "commit_a1b2c3",
+    "hash": "hash_1a2b3c4d5e",
+    "message": "feat: 增加用户登录功能",
+    "author": {
+      "id": "user_1",
+      "username": "alice",
+      "email": "alice@example.com",
+      "createdAt": 1691000000000,
+      "avatar": "https://avatars.githubusercontent.com/u/1?v=4"
+    },
+    "committer": {
+      "id": "user_1",
+      "username": "alice",
+      "email": "alice@example.com",
+      "createdAt": 1691000000000,
+      "avatar": "https://avatars.githubusercontent.com/u/1?v=4"
+    },
+    "timestamp": 1691832000000,
+    "parentCommits": [],
+    "branchId": "branch-main",
+    "schema": {
+      "pages": [
+        {
+          "id": "page_1",
+          "title": "首页",
+          "components": []
+        }
+      ],
+      "version": "1.0.0"
+    },
+    "tags": ["v1.0"],
+    "verified": true,
+    "stats": {
+      "filesChanged": 5,
+      "additions": 150,
+      "deletions": 10
+    },
+    "type": "feature"
+  },
+  {
+    "id": "commit_d4e5f6",
+    "hash": "hash_2b3c4d5e6f",
+    "message": "fix: 修复用户登录崩溃问题",
+    "author": {
+      "id": "user_2",
+      "username": "bob",
+      "email": "bob@example.com",
+      "createdAt": 1691050000000,
+      "avatar": "https://avatars.githubusercontent.com/u/2?v=4"
+    },
+    "committer": {
+      "id": "user_2",
+      "username": "bob",
+      "email": "bob@example.com",
+      "createdAt": 1691050000000,
+      "avatar": "https://avatars.githubusercontent.com/u/2?v=4"
+    },
+    "timestamp": 1691832100000,
+    "parentCommits": ["commit_1691832000000_abcd12345"],
+    "branchId": "branch-main",
+    "schema": {
+      "pages": [
+        {
+          "id": "page_1",
+          "title": "首页",
+          "components": []
+        }
+      ],
+      "version": "1.0.0"
+    },
+    "tags": ["hotfix"],
+    "verified": false,
+    "stats": {
+      "filesChanged": 2,
+      "additions": 5,
+      "deletions": 3
+    },
+    "type": "bugfix"
+  },
+  {
+    "id": "commit_1691832200000_cdef34567",
+    "hash": "hash_3c4d5e6f7a",
+    "message": "docs: 更新部署文档",
+    "author": {
+      "id": "user_3",
+      "username": "carol",
+      "email": "carol@example.com",
+      "createdAt": 1691100000000,
+      "avatar": "https://avatars.githubusercontent.com/u/3?v=4"
+    },
+    "committer": {
+      "id": "user_3",
+      "username": "carol",
+      "email": "carol@example.com",
+      "createdAt": 1691100000000,
+      "avatar": "https://avatars.githubusercontent.com/u/3?v=4"
+    },
+    "timestamp": 1691832200000,
+    "parentCommits": ["commit_1691832100000_bcdf23456"],
+    "branchId": "branch-develop",
+    "schema": {
+      "pages": [
+        {
+          "id": "page_2",
+          "title": "文档页",
+          "components": []
+        }
+      ],
+      "version": "1.0.0"
+    },
+    "tags": ["documentation"],
+    "verified": true,
+    "stats": {
+      "filesChanged": 3,
+      "additions": 40,
+      "deletions": 5
+    },
+    "type": "docs"
+  }
+]

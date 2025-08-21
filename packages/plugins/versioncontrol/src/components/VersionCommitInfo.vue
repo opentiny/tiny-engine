@@ -34,12 +34,12 @@
             <div class="detail-item">
               <label>类型:</label>
               <span class="commit-type-badge" :class="modelSelectedCommit.type">
-                {{ getCommitTypeText(modelSelectedCommit.type) }}
+                {{ `${getCommitType(modelSelectedCommit.type)} - ${modelSelectedCommit.type}` }}
               </span>
             </div>
             <div class="detail-item full-width">
               <label>提交信息:</label>
-              <div class="commit-message-full">{{ modelSelectedCommit.message }}</div>
+              <span class="commit-message-full">{{ modelSelectedCommit.message }}</span>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path d="M18 20V10M6 20V4m6 16v-8"></path>
             </svg>
-            与当前版本比较
+            与当前分支最初提交比较
           </button>
           <button @click="createBranchFromCommit(selectedCommit)" class="action-btn">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { useUtils } from '../composable/useUtils'
 
 export default {
   props: {
@@ -117,7 +117,6 @@ export default {
   },
   emits: [
     'close-dialog',
-    'get-commit-type-text',
     'compare-with-current',
     'create-branch-from-commit',
     'revert-to-commit',
@@ -125,37 +124,16 @@ export default {
     'update:selectedCommit'
   ],
   setup(props, { emit }) {
-    // 计算属性
-    const modelDialogVisible = computed({
-      get: () => props.dialogVisible,
-      set: (val) => emit('update:dialogVisible', val)
-    })
-
-    const modelSelectedCommit = computed({
-      get: () => props.selectedCommit,
-      set: (val) => emit('update:selectedCommit', val)
-    })
+    const { useVModel } = useUtils()
+    // 双向绑定
+    const modelDialogVisible = useVModel(props, emit, 'dialogVisible')
+    const modelSelectedCommit = useVModel(props, emit, 'selectedCommit')
 
     // 父组件传递的事件
-    const closeDialog = () => {
-      emit('close-dialog')
-    }
-
-    const getCommitTypeText = () => {
-      emit('get-commit-type-text')
-    }
-
-    const compareWithCurrent = () => {
-      emit('compare-with-current')
-    }
-
-    const createBranchFromCommit = (commit) => {
-      emit('create-branch-from-commit', commit)
-    }
-
-    const revertToCommit = (commit) => {
-      emit('revert-to-commit', commit)
-    }
+    const closeDialog = () => emit('close-dialog')
+    const compareWithCurrent = () => emit('compare-with-current')
+    const createBranchFromCommit = (commit) => emit('create-branch-from-commit', commit)
+    const revertToCommit = (commit) => emit('revert-to-commit', commit)
 
     const formatDate = (dateString) => {
       const date = new Date(dateString)
@@ -169,15 +147,37 @@ export default {
       })
     }
 
+    const getCommitType = (type) => {
+      const typeMap = {
+        feature: '新功能',
+        feat: '新功能', // 别名
+        bugfix: 'Bug修复',
+        fix: 'Bug修复', // 别名
+        docs: '文档更新',
+        style: '代码风格',
+        refactor: '代码重构',
+        perf: '性能优化',
+        test: '测试相关',
+        merge: '分支合并',
+        build: '构建系统',
+        ci: '持续集成',
+        chore: '日常事务',
+        revert: '版本回滚',
+        release: '版本发布'
+      }
+
+      return typeMap[type] || '其他'
+    }
+
     return {
       modelSelectedCommit,
       modelDialogVisible,
       closeDialog,
-      getCommitTypeText,
       compareWithCurrent,
       createBranchFromCommit,
       revertToCommit,
-      formatDate
+      formatDate,
+      getCommitType
     }
   }
 }
@@ -359,6 +359,26 @@ export default {
               &.merge {
                 background: #ede9fe;
                 color: #6b21a8;
+              }
+
+              &.perf {
+                background: #fef9c3;
+                color: #854d0e;
+              }
+
+              &.build {
+                background: #cffafe;
+                color: #155e75;
+              }
+
+              &.release {
+                background: #fef2f2;
+                color: #b91c1c;
+              }
+
+              &.chore {
+                background: #f5f5f5;
+                color: #44403c;
               }
             }
 

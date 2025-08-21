@@ -20,7 +20,7 @@ export default class CommitService {
     })
 
     this.db.ensureIndex({
-      fieldName: 'name',
+      fieldName: 'id',
       unique: true
     })
 
@@ -37,33 +37,49 @@ export default class CommitService {
       verified: false,
       stats: { added: 0, modified: 0, deleted: 0 }
     }
+
+    this.initData()
+  }
+
+  async initData() {
+    const count = await this.db.countAsync({})
+    if (count === 0) {
+      console.log('初始化分支数据...')
+      const defaultCommit = require('./commit.json')
+      try {
+        await this.db.insertAsync(defaultCommit)
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error('插入失败，唯一索引冲突:', err.message)
+      }
+    }
   }
 
   async create(params) {
-    const commitData = { ...this.commitModel, ...params }
+    const commitData = { app: '1', ...this.commitModel, ...params }
     const result = await this.db.insertAsync(commitData)
     return getResponseData(result)
   }
 
   async update(id, params) {
-    await this.db.updateAsync({ _id: id }, { $set: params })
-    const result = await this.db.findOneAsync({ _id: id })
+    await this.db.updateAsync({ id: id }, { $set: params })
+    const result = await this.db.findOneAsync({ id: id })
     return getResponseData(result)
   }
 
   async list(appId) {
-    const result = await this.db.findAsync()
+    const result = await this.db.findAsync({ app: appId.toString() })
     return getResponseData(result)
   }
 
   async delete(id) {
-    const result = await this.db.findOneAsync({ _id: id })
-    await this.db.removeAsync({ _id: id })
+    const result = await this.db.findOneAsync({ id: id })
+    await this.db.removeAsync({ id: id })
     return getResponseData(result)
   }
 
-  async find(params) {
-    const result = await this.db.findAsync()
+  async detail(id) {
+    const result = await this.db.findOneAsync({ id: id })
     return getResponseData(result)
   }
 }

@@ -9,6 +9,7 @@ import type {
   Timestamp,
   User
 } from '../../shared/type'
+import { sha1 } from '../../shared/utils'
 import type { Branch } from '../models/Branch'
 import { Commit } from '../models/Commit'
 import { SchemaDiffResolver } from '../strategies/SchemaDiffResolver'
@@ -34,8 +35,9 @@ export interface CommitService {
     message: string,
     author: User,
     schema: PageSchema,
-    stats: CommitStats
-  ): Commit
+    stats: CommitStats,
+    type: string
+  ): Promise<Commit>
 
   /**
    * 获取两个提交之间的差异
@@ -98,27 +100,30 @@ export class CommitServiceImpl implements CommitService {
   /**
    * 创建提交
    */
-  createCommit(
+  async createCommit(
     branchId: ID,
     parentCommits: ID[],
     message: string,
     author: User,
     schema: PageSchema,
-    stats: CommitStats
-  ): Commit {
+    stats: CommitStats,
+    type: string
+  ): Promise<Commit> {
     // 创建提交对象
     const commit = new Commit(
-      this.idGenerator(),
-      message,
-      author,
-      author, // 默认提交者与作者相同
-      Date.now(),
-      parentCommits,
-      branchId,
-      schema, // 传入 PageSchema
-      [], // 初始无标签
-      false, // 初始未验证
-      stats
+      this.idGenerator(), // id
+      await sha1(Date.now()), // hash
+      message, // message
+      author, // author
+      author, // committer（默认同作者）
+      Date.now(), // timestamp
+      parentCommits, // parentCommits
+      branchId, // branchId
+      schema, // schema
+      [], // tags
+      false, // verified
+      stats, // stats
+      type // type
     )
 
     return commit

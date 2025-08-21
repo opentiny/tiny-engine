@@ -8,9 +8,10 @@
     <div class="header-center">
       <!-- 分支选择器 -->
       <div class="branch-selector">
-        <select v-model="modelCurrentBranch" @change="onBranchChange" class="branch-select">
-          <option v-for="branch in propsBranches" :key="branch" :value="branch">
-            {{ branch }}
+        <select v-model="modelCurrentBranch" @change="onBranchChange" class="branch-select" required>
+          <option :value="allBranch.name">all</option>
+          <option v-for="branch in modelAvailableBranches" :key="branch.id" :value="branch.name">
+            {{ branch.name }}
           </option>
         </select>
       </div>
@@ -57,7 +58,9 @@
 /// <reference types="@opentiny/vue-renderless/types/tooltip.type" />
 import { LinkButton, CloseIcon } from '@opentiny/tiny-engine-common'
 import { useHelp } from '@opentiny/tiny-engine-meta-register'
-import { computed } from 'vue'
+import { onMounted, ref } from 'vue'
+import { versionManager } from '../js'
+import { useUtils } from '../composable/useUtils'
 
 export default {
   components: {
@@ -65,7 +68,7 @@ export default {
     CloseIcon
   },
   props: {
-    branches: {
+    availableBranches: {
       type: Array,
       default: () => []
     },
@@ -85,20 +88,17 @@ export default {
     'createTag',
     'createBranch',
     'update:currentBranch',
-    'update:searchQuery'
+    'update:searchQuery',
+    'update:availableBranches'
   ],
   setup(props, { emit }) {
+    const { useVModel } = useUtils()
     const docsUrl = useHelp().getDocsUrl('script')
-
-    // 计算属性
-    const modelCurrentBranch = computed({
-      get: () => props.currentBranch,
-      set: (val) => emit('update:currentBranch', val)
-    })
-    const modelSearchQuery = computed({
-      get: () => props.searchQuery,
-      set: (val) => emit('update:searchQuery', val)
-    })
+    const allBranch = ref([{ name: 'all', id: '0' }])
+    // 双向绑定
+    const modelCurrentBranch = useVModel(props, emit, 'currentBranch')
+    const modelSearchQuery = useVModel(props, emit, 'searchQuery')
+    const modelAvailableBranches = useVModel(props, emit, 'availableBranches')
 
     // 父组件事件
     const close = () => emit('close')
@@ -107,10 +107,24 @@ export default {
     const createTag = () => emit('createTag')
     const createBranch = () => emit('createBranch')
 
+    const fetchAvailableBranches = async () => {
+      try {
+        modelAvailableBranches.value = await versionManager.branchRepository.findAll()
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('获取可用分支失败:', error)
+      }
+    }
+
+    onMounted(() => {
+      fetchAvailableBranches()
+    })
+
     return {
-      propsBranches: props.branches,
+      allBranch,
       modelCurrentBranch,
       modelSearchQuery,
+      modelAvailableBranches,
       docsUrl,
       close,
       onBranchChange,

@@ -20,12 +20,14 @@
               <span class="version-info">
                 {{ modelCompareData.base?.hash?.slice(0, 7) }} - {{ modelCompareData.base?.message }}
               </span>
+              <span class="version-info"> 分支 - {{ modelCompareData.base.branches[0] || '未知' }} </span>
             </div>
             <div class="compare-item">
-              <label>目标版本:</label>
+              <label>当前版本:</label>
               <span class="version-info">
                 {{ modelCompareData.target?.hash?.slice(0, 7) }} - {{ modelCompareData.target?.message }}
               </span>
+              <span class="version-info"> 分支 - {{ modelCompareData.target.branches[0] || '未知' }} </span>
             </div>
           </div>
         </div>
@@ -37,11 +39,11 @@
           </div>
           <div class="stat-card additions">
             <div class="stat-number">+{{ modelCompareData.additions || 0 }}</div>
-            <div class="stat-label">新增行</div>
+            <div class="stat-label">新增</div>
           </div>
           <div class="stat-card deletions">
             <div class="stat-number">-{{ modelCompareData.deletions || 0 }}</div>
-            <div class="stat-label">删除行</div>
+            <div class="stat-label">删除</div>
           </div>
         </div>
 
@@ -69,7 +71,7 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { useUtils } from '../composable/useUtils'
 
 export default {
   props: {
@@ -84,21 +86,13 @@ export default {
   },
   emits: ['close-compare-dialog', 'update:compareDialogVisible', 'update:compareData'],
   setup(props, { emit }) {
-    // 计算属性
-    const modelCompareDialogVisible = computed({
-      get: () => props.compareDialogVisible,
-      set: (val) => emit('update:compareDialogVisible', val)
-    })
-
-    const modelCompareData = computed({
-      get: () => props.compareData,
-      set: (val) => emit('update:compareData', val)
-    })
+    const { useVModel } = useUtils()
+    // 双向绑定
+    const modelCompareDialogVisible = useVModel(props, emit, 'compareDialogVisible')
+    const modelCompareData = useVModel(props, emit, 'compareData')
 
     // 父组件传递事件
-    const closeCompareDialog = () => {
-      emit('close-compare-dialog')
-    }
+    const closeCompareDialog = () => emit('close-compare-dialog')
 
     return {
       modelCompareData,

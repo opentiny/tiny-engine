@@ -95,7 +95,11 @@ const getCommitTypeClass = (commit) => {
     'docs-commit': commit.type === 'docs',
     'refactor-commit': commit.type === 'refactor',
     'style-commit': commit.type === 'style',
-    'test-commit': commit.type === 'test'
+    'test-commit': commit.type === 'test',
+    'perf-commit': commit.type === 'perf',
+    'build-commit': commit.type === 'build',
+    'release-commit': commit.type === 'release',
+    'chore-commit': commit.type === 'chore'
   }
 }
 
@@ -269,6 +273,26 @@ const getConnectorClass = (currentCommit, nextCommit) => {
           &.test-commit {
             background: #84cc16;
             color: white;
+          }
+
+          &.perf-commit {
+            background: #fef9c3;
+            color: #854d0e;
+          }
+
+          &.build-commit {
+            background: #cffafe;
+            color: #155e75;
+          }
+
+          &.release-commit {
+            background: #ec4899;
+            color: white;
+          }
+
+          &.chore-commit {
+            background: #f5f5f5;
+            color: #44403c;
           }
 
           svg {

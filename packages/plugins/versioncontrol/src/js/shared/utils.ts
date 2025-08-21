@@ -99,3 +99,33 @@ export function Memoize(options: MemoizeOptions = {}): MethodDecorator {
     return descriptor
   }
 }
+
+/**
+ * 通用 SHA-1 计算函数，自动把参数转成字符串
+ * @param input 任意类型的输入（string、number、对象等）
+ * @returns Promise<string> 返回 40 位十六进制 SHA-1 哈希
+ */
+export async function sha1(input: any): Promise<string> {
+  let str: string
+
+  if (typeof input === 'string') {
+    str = input
+  } else if (typeof input === 'number') {
+    str = input.toString()
+  } else if (input instanceof Date) {
+    str = input.toISOString()
+  } else {
+    // 复杂对象用 JSON.stringify 转字符串（注意循环引用问题）
+    try {
+      str = JSON.stringify(input)
+    } catch {
+      str = String(input)
+    }
+  }
+
+  const encoder = new TextEncoder()
+  const data = encoder.encode(str)
+  const hashBuffer = await crypto.subtle.digest('SHA-1', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
+}

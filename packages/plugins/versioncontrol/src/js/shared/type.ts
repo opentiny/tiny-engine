@@ -18,10 +18,7 @@ export interface User {
   readonly id: ID
   readonly username: string
   readonly email: string
-  readonly displayName: string
   readonly avatar?: string
-  readonly createdAt: Timestamp
-  readonly lastActiveAt: Timestamp
 }
 
 /**
@@ -61,7 +58,7 @@ export interface DiffResult {
 export interface CommitStats {
   readonly totalAdditions: number
   readonly totalDeletions: number
-  readonly changedFiles: number
+  readonly changedFiles: string[]
 }
 
 /**
@@ -69,6 +66,7 @@ export interface CommitStats {
  */
 export interface Commit {
   readonly id: ID
+  readonly hash: string
   readonly message: string
   readonly author: User
   readonly committer: User
@@ -79,6 +77,7 @@ export interface Commit {
   readonly tags: readonly string[]
   readonly verified: boolean // 签名验证状态
   readonly stats: CommitStats
+  readonly type: string
 }
 
 /**

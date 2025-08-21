@@ -1,5 +1,4 @@
 <template>
-  <!-- 新建分支对话框 -->
   <div v-if="modelBranchDialogVisible" class="dialog-overlay" @click="closeBranchDialog">
     <div class="dialog-content small" @click.stop>
       <div class="dialog-header">
@@ -23,77 +22,153 @@
           />
         </div>
         <div class="form-group">
-          <label>基于提交 (可选):</label>
-          <select v-model="modelBranchTargetCommit" class="form-select">
+          <label for="upstreamBranch">上游分支:</label>
+          <select id="upstreamBranch" v-model="upstreamBranchId" class="form-select" required>
+            <option value="">请选择上游分支</option>
+            <option v-for="branch in modelAvailableBranches" :key="branch.id" :value="branch.id">
+              {{ branch.name }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="commitId">基于提交 (可选):</label>
+          <select id="commitId" v-model="modelBranchTargetCommit" class="form-select" required>
             <option value="">选择提交 (默认为当前分支最新提交)</option>
-            <option v-for="commit in commits.slice(0, 10)" :key="commit.hash" :value="commit.hash">
+            <option v-for="commit in commits" :key="commit.id" :value="commit.id">
               {{ commit.hash.slice(0, 7) }} - {{ commit.message.slice(0, 50) }}
             </option>
           </select>
         </div>
+        <div class="form-group">
+          <label for="description">描述 (可选):</label>
+          <textarea id="description" v-model="description" class="form-textarea"></textarea>
+        </div>
 
         <div class="dialog-actions">
           <button @click="closeBranchDialog" class="action-btn secondary">取消</button>
-          <button @click="confirmCreateBranch" class="action-btn primary" :disabled="!modelNewBranchName.trim()">
-            新建分支
-          </button>
+          <button @click="handleSubmit" class="action-btn primary" :disabled="buttonDisable">新建分支</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
-import { computed, defineProps, defineEmits } from 'vue'
+<script>
+import { computed, onMounted, ref } from 'vue'
+import { versionManager } from '../js'
+import { useUtils } from '../composable/useUtils'
 
-const props = defineProps({
-  branchDialogVisible: {
-    type: Boolean,
-    default: false
+export default {
+  props: {
+    branchDialogVisible: {
+      type: Boolean,
+      default: false
+    },
+    newBranchName: {
+      type: String,
+      default: ''
+    },
+    branchTargetCommit: {
+      type: String,
+      default: ''
+    },
+    commits: {
+      type: Array,
+      default: () => []
+    },
+    availableBranches: {
+      type: Array,
+      default: () => {}
+    }
   },
-  newBranchName: {
-    type: String,
-    default: ''
-  },
-  branchTargetCommit: {
-    type: String,
-    default: ''
-  },
-  commits: {
-    type: Array,
-    default: () => []
+  emits: [
+    'update:branchDialogVisible',
+    'update:newBranchName',
+    'update:branchTargetCommit',
+    'update:availableBranches',
+    'close-branch-dialog',
+    'confirm-create-branch'
+  ],
+  setup(props, { emit }) {
+    const { useVModel } = useUtils()
+    const description = ref('')
+    const upstreamBranchId = ref('')
+
+    // 双向绑定计算属性
+    const modelBranchDialogVisible = useVModel(props, emit, 'branchDialogVisible')
+    const modelNewBranchName = useVModel(props, emit, 'newBranchName')
+    const modelBranchTargetCommit = useVModel(props, emit, 'branchTargetCommit')
+    const modelAvailableBranches = useVModel(props, emit, 'availableBranches')
+
+    // 关闭对话框
+    const closeBranchDialog = () => emit('close-branch-dialog')
+    const confirmCreateBranch = () => emit('confirm-create-branch')
+
+    // 模拟当前登录用户
+    const currentUser = {
+      id: 'user-123',
+      username: 'dev_user',
+      email: 'dev@example.com',
+      avatar: 'https://avatars.githubusercontent.com/u/3?v=4'
+    }
+
+    // 提交按钮是否禁用
+    const buttonDisable = computed(() => {
+      const nameEmpty = modelNewBranchName.value.trim() === ''
+      const upstreamEmpty = !upstreamBranchId.value
+      return nameEmpty || upstreamEmpty
+    })
+
+    // 获取分支列表
+    const fetchAvailableBranches = async () => {
+      try {
+        modelAvailableBranches.value = await versionManager.branchRepository.findAll()
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('获取可用分支失败:', error)
+      }
+    }
+
+    // 提交新分支
+    const handleSubmit = async () => {
+      try {
+        await versionManager.branchAppService.createBranch(
+          modelNewBranchName.value,
+          upstreamBranchId.value,
+          currentUser,
+          modelBranchTargetCommit.value || undefined,
+          description.value || undefined
+        )
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('创建分支失败:', error)
+      } finally {
+        await fetchAvailableBranches()
+        modelBranchTargetCommit.value = ''
+        upstreamBranchId.value = ''
+        modelNewBranchName.value = ''
+        description.value = ''
+        closeBranchDialog()
+      }
+    }
+
+    onMounted(() => {
+      fetchAvailableBranches()
+    })
+
+    return {
+      description,
+      upstreamBranchId,
+      modelBranchDialogVisible,
+      modelNewBranchName,
+      modelBranchTargetCommit,
+      modelAvailableBranches,
+      buttonDisable,
+      handleSubmit,
+      closeBranchDialog,
+      confirmCreateBranch
+    }
   }
-})
-
-const emit = defineEmits([
-  'update:branchDialogVisible',
-  'update:newBranchName',
-  'update:branchTargetCommit',
-  'close-branch-dialog',
-  'confirm-create-branch'
-])
-
-const modelBranchDialogVisible = computed({
-  get: () => props.branchDialogVisible,
-  set: (val) => emit('update:branchDialogVisible', val)
-})
-
-const modelNewBranchName = computed({
-  get: () => props.newBranchName,
-  set: (val) => emit('update:newBranchName', val)
-})
-
-const modelBranchTargetCommit = computed({
-  get: () => props.branchTargetCommit,
-  set: (val) => emit('update:branchTargetCommit', val)
-})
-
-const closeBranchDialog = () => {
-  emit('close-branch-dialog')
-}
-
-const confirmCreateBranch = () => {
-  emit('confirm-create-branch')
 }
 </script>
 
@@ -205,7 +280,7 @@ const confirmCreateBranch = () => {
         }
 
         .form-textarea {
-          resize: vertical;
+          resize: none;
           min-height: 80px;
           font-family: inherit;
         }

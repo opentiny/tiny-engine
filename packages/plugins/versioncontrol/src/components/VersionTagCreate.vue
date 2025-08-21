@@ -16,7 +16,7 @@
         <div class="form-group">
           <label>标签名称:</label>
           <input
-            v-model="modelNewTagName"
+            v-model="newTargetName"
             placeholder="例如: v1.0.0"
             class="form-input"
             @keyup.enter="confirmCreateTag"
@@ -24,13 +24,13 @@
         </div>
         <div class="form-group">
           <label>描述 (可选):</label>
-          <textarea v-model="modelNewTagDescription" placeholder="标签描述..." class="form-textarea"></textarea>
+          <textarea v-model="newTagDescription" placeholder="标签描述..." class="form-textarea"></textarea>
         </div>
         <div class="form-group">
           <label>目标提交:</label>
           <select v-model="modelTagTargetCommit" class="form-select">
             <option value="">选择提交 (默认为最新)</option>
-            <option v-for="commit in commits.slice(0, 10)" :key="commit.hash" :value="commit.hash">
+            <option v-for="commit in modelCommits.slice(0, 10)" :key="commit.id" :value="commit.id">
               {{ commit.hash.slice(0, 7) }} - {{ commit.message.slice(0, 50) }}
             </option>
           </select>
@@ -38,7 +38,7 @@
 
         <div class="dialog-actions">
           <button @click="closeTagDialog" class="action-btn secondary">取消</button>
-          <button @click="confirmCreateTag" class="action-btn primary" :disabled="!newTagName.trim()">创建标签</button>
+          <button @click="handleSubmit" class="action-btn primary" :disabled="!newTargetName.trim()">创建标签</button>
         </div>
       </div>
     </div>
@@ -46,21 +46,15 @@
 </template>
 
 <script>
-import { computed } from 'vue'
+import { ref } from 'vue'
+import { useUtils } from '../composable/useUtils'
+import { versionManager } from '../js'
 
 export default {
   props: {
     tagDialogVisible: {
       type: Boolean,
       default: true
-    },
-    newTagName: {
-      type: String,
-      default: ''
-    },
-    newTagDescription: {
-      type: String,
-      default: ''
     },
     tagTargetCommit: {
       type: String,
@@ -71,51 +65,42 @@ export default {
       default: () => []
     }
   },
-  emits: [
-    'close-tag-dialog',
-    'confirm-create-tag',
-    'update:tagDialogVisible',
-    'update:newTagName',
-    'update:newTagDescription',
-    'update:tagTargetCommit'
-  ],
+  emits: ['close-tag-dialog', 'update:tagDialogVisible', 'update:tagTargetCommit', 'update:commits'],
   setup(props, { emit }) {
-    // 计算属性
-    const modelTagDialogVisible = computed({
-      get: () => props.tagDialogVisible,
-      set: (val) => emit('update:tagDialogVisible', val)
-    })
+    const { useVModel, transformCommit } = useUtils()
+    const newTargetName = ref('')
+    const newTagDescription = ref('')
+    // 双向绑定
+    const modelTagDialogVisible = useVModel(props, emit, 'tagDialogVisible')
+    const modelTagTargetCommit = useVModel(props, emit, 'tagTargetCommit')
+    const modelCommits = useVModel(props, emit, 'commits')
 
-    const modelNewTagName = computed({
-      get: () => props.newTagName,
-      set: (val) => emit('update:newTagName', val)
-    })
+    // 父组件事件
+    const closeTagDialog = () => emit('close-tag-dialog')
 
-    const modelNewTagDescription = computed({
-      get: () => props.newTagDescription,
-      set: (val) => emit('update:newTagDescription', val)
-    })
-
-    const modelTagTargetCommit = computed({
-      get: () => props.tagTargetCommit,
-      set: (val) => emit('update:tagTargetCommit', val)
-    })
-
-    const closeTagDialog = () => {
-      emit('close-tag-dialog')
-    }
-
-    const confirmCreateTag = () => {
-      emit('confirm-create-tag')
+    const handleSubmit = async () => {
+      try {
+        await versionManager.commitAppService.addTagToCommit(modelTagTargetCommit.value, newTargetName.value)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('为提交创建标签失败:', error)
+      } finally {
+        newTargetName.value = ''
+        newTagDescription.value = ''
+        closeTagDialog()
+        const rawCommits = await versionManager.commitRepository.findAll()
+        modelCommits.value = await Promise.all(rawCommits.map(transformCommit))
+      }
     }
 
     return {
+      newTargetName,
+      newTagDescription,
       modelTagDialogVisible,
-      modelNewTagName,
-      modelNewTagDescription,
       modelTagTargetCommit,
+      modelCommits,
       closeTagDialog,
-      confirmCreateTag
+      handleSubmit
     }
   }
 }

@@ -3,7 +3,7 @@
     <version-header
       v-model:currentBranch="currentBranch"
       v-model:searchQuery="searchQuery"
-      :branches="branches"
+      v-model:availableBranches="availableBranches"
       @close="close"
       @branch-change="onBranchChange"
       @search="onSearch"
@@ -21,6 +21,7 @@
         :uniqueAuthorsLength="uniqueAuthors.length"
         @applyFilters="applyFilters"
         @clearFilters="clearFilters"
+        @createCommit="createCommit"
       />
 
       <!-- 主要内容区域 -->
@@ -65,7 +66,6 @@
       v-model:dialogVisible="dialogVisible"
       v-model:selectedCommit="selectedCommit"
       @close-dialog="closeDialog"
-      @get-commit-type-text="getCommitTypeText"
       @compare-with-current="compareWithCurrent"
       @create-branch-from-commit="createBranchFromCommit"
       @revert-to-commit="revertToCommit"
@@ -74,12 +74,9 @@
     <!-- 标签创建对话框 -->
     <version-tag-create
       v-model:tagDialogVisible="tagDialogVisible"
-      v-model:newTagName="newTagName"
-      v-model:newTagDescription="newTagDescription"
       v-model:tagTargetCommit="tagTargetCommit"
-      :commits="commits"
+      v-model:commits="commits"
       @close-tag-dialog="closeTagDialog"
-      @confirm-create-tag="confirmCreateTag"
     />
 
     <!-- 分支创建对话框 -->
@@ -87,9 +84,17 @@
       v-model:branchDialogVisible="branchDialogVisible"
       v-model:newBranchName="newBranchName"
       v-model:branchTargetCommit="branchTargetCommit"
+      v-model:availableBranches="availableBranches"
       :commits="commits"
       @close-branch-dialog="closeBranchDialog"
       @confirm-create-branch="confirmCreateBranch"
+    />
+
+    <version-commit-create
+      v-model:commitDialogVisible="commitDialogVisible"
+      v-model:availableBranches="availableBranches"
+      v-model:commits="commits"
+      @close-commit-dialog="closeCommitDialog"
     />
 
     <!-- 比较差异对话框 -->
@@ -110,6 +115,7 @@ import VersionControlFilters from './components/VersionControlFilters.vue'
 import TimelineContainer from './components/TimelineContainer.vue'
 import CommitsContainer from './components/CommitsContainer.vue'
 import VersionBranchCreate from './components/VersionBranchCreate.vue'
+import VersionCommitCreate from './components/VersionCommitCreate.vue'
 
 import { useVersionControlData } from './composable/uesVersionControlData'
 import { useVersionControlActions } from './composable/useVersionControlAction'
@@ -123,6 +129,7 @@ const close = () => {
 const {
   currentBranch,
   branches,
+  availableBranches,
   searchQuery,
   authorFilter,
   timeFilter,
@@ -136,8 +143,6 @@ const {
   currentPage,
   pageSize,
   tagDialogVisible,
-  newTagName,
-  newTagDescription,
   tagTargetCommit,
   compareData,
   commits,
@@ -147,7 +152,8 @@ const {
   hasMore,
   branchDialogVisible,
   newBranchName,
-  branchTargetCommit
+  branchTargetCommit,
+  commitDialogVisible
 } = useVersionControlData()
 
 const {
@@ -164,13 +170,14 @@ const {
   revertToCommit,
   createTag,
   closeTagDialog,
-  confirmCreateTag,
   createBranch,
   createBranchFromCommit,
   loadMore,
   compareWithCurrent,
   closeBranchDialog,
-  confirmCreateBranch
+  confirmCreateBranch,
+  closeCommitDialog,
+  createCommit
 } = useVersionControlActions(null, {
   commits,
   branches,
@@ -181,21 +188,21 @@ const {
   isLoading,
   compareData,
   tagDialogVisible,
-  newTagName,
-  newTagDescription,
   tagTargetCommit,
   currentPage,
-  pageSize,
   searchQuery,
   authorFilter,
   timeFilter,
   branchDialogVisible,
   branchTargetCommit,
-  newBranchName
+  newBranchName,
+  commitDialogVisible
 })
 
-const { formatDate, formatTime, getCommitTypePrefix, getCommitTypeClass, getConnectorClass, getCommitTypeText } =
-  useVersionControlUtils({ currentBranch, searchQuery })
+const { formatDate, formatTime, getCommitTypePrefix, getCommitTypeClass, getConnectorClass } = useVersionControlUtils({
+  currentBranch,
+  searchQuery
+})
 </script>
 
 <style lang="less" scoped>

@@ -542,6 +542,26 @@ const getCommitTypePrefix = (type) => {
             background: #ede9fe;
             color: #6b21a8;
           }
+
+          &.perf {
+            background: #fef9c3;
+            color: #854d0e;
+          }
+
+          &.build {
+            background: #cffafe;
+            color: #155e75;
+          }
+
+          &.release {
+            background: #fef2f2;
+            color: #ec4899;
+          }
+
+          &.chore {
+            background: #f5f5f5;
+            color: #44403c;
+          }
         }
       }
 

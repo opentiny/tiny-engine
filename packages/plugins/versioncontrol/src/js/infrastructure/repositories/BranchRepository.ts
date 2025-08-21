@@ -2,8 +2,7 @@ import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { Branch } from '../../domain/models/Branch'
 import type { ID } from '../../shared/type'
 
-const api = getMetaApi(META_SERVICE.Http)
-const BASE_URL = '/branch'
+const BASE_URL = '/app-center/api/version/branch'
 
 /**
  * BranchApi 接口定义
@@ -35,7 +34,7 @@ export interface BranchRepository {
 export class BranchApiImpl implements BranchApi {
   async fetchBranchById(id: ID): Promise<Branch | null> {
     try {
-      const res = await api.get(`${BASE_URL}/getById/${id}`)
+      const res = await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/getById/${id}`)
       return res || null
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -46,7 +45,7 @@ export class BranchApiImpl implements BranchApi {
 
   async fetchBranchByName(name: string): Promise<Branch | null> {
     try {
-      const res = await api.get(`${BASE_URL}/getByName`, { params: { name } })
+      const res = await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/getByName/${encodeURIComponent(name)}`)
       return res || null
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -55,10 +54,10 @@ export class BranchApiImpl implements BranchApi {
     }
   }
 
-  async fetchAllBranches(): Promise<Branch[]> {
+  async fetchAllBranches() {
     try {
-      const res = await api.get(`${BASE_URL}/list`)
-      return res.data || []
+      const res = await getMetaApi(META_SERVICE.Http).get(`/app-center/api/version/branch/list/${1}`)
+      return res || []
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to fetch all branches:', error)
@@ -68,7 +67,7 @@ export class BranchApiImpl implements BranchApi {
 
   async saveBranch(branch: Branch): Promise<void> {
     try {
-      await api.post(`${BASE_URL}/create`, branch.toData())
+      await getMetaApi(META_SERVICE.Http).post(`${BASE_URL}/create`, branch.toData())
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to save branch:', error)
@@ -77,7 +76,7 @@ export class BranchApiImpl implements BranchApi {
 
   async updateBranch(branch: Branch): Promise<void> {
     try {
-      await api.post(`${BASE_URL}/update`, branch)
+      await getMetaApi(META_SERVICE.Http).post(`${BASE_URL}/update/${branch.id}`, branch.toData())
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to update branch:', error)
@@ -86,7 +85,7 @@ export class BranchApiImpl implements BranchApi {
 
   async deleteBranch(id: ID): Promise<void> {
     try {
-      await api.get(`${BASE_URL}/delete/${id}`)
+      await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/delete/${id}`)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to delete branch:', error)

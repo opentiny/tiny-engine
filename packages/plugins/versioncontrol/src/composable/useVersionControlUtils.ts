@@ -1,6 +1,5 @@
 import { watch } from 'vue'
 import type { Ref } from 'vue'
-import type { Commit } from './uesVersionControlData'
 
 interface UseVersionControlUtilsParams {
   currentBranch: Ref<string>
@@ -43,37 +42,19 @@ export function useVersionControlUtils({ currentBranch, searchQuery }: UseVersio
     return typeMap[type] || type
   }
 
-  const getCommitTypeClass = (commit: Commit): string => {
+  const getCommitTypeClass = (commit: any): string => {
     if (commit.type === 'merge') return 'merge-dot'
     if (commit.tags && commit.tags.length > 0) return 'tag-dot'
     return 'normal-dot'
   }
 
-  const getConnectorClass = (currentCommit: Commit, nextCommit: Commit): string => {
+  const getConnectorClass = (currentCommit: any, nextCommit: any): string => {
     // 简单的连接线逻辑，可以根据实际需求复杂化
-    if (currentCommit.branches?.some((b) => nextCommit.branches?.includes(b))) {
+    if (currentCommit.branches?.some((b: any) => nextCommit.branches?.includes(b))) {
       return 'straight-line'
     } else {
       return 'branching-line'
     }
-  }
-
-  const getCommitTypeText = (type: string): string => {
-    const typeMap: { [key: string]: string } = {
-      feat: '新功能',
-      fix: 'Bug修复',
-      docs: '文档更新',
-      style: '代码风格',
-      refactor: '代码重构',
-      perf: '性能优化',
-      test: '测试相关',
-      build: '构建系统',
-      ci: '持续集成',
-      chore: '日常事务',
-      revert: '版本回滚',
-      merge: '分支合并'
-    }
-    return typeMap[type] || '其他'
   }
 
   // 监听器
@@ -92,7 +73,6 @@ export function useVersionControlUtils({ currentBranch, searchQuery }: UseVersio
     formatTime,
     getCommitTypePrefix,
     getCommitTypeClass,
-    getConnectorClass,
-    getCommitTypeText
+    getConnectorClass
   }
 }

@@ -1,5 +1,7 @@
-import type { Commit } from '../../domain/models/Commit'
+import { Branch } from '../../domain/models/Branch'
+import { Commit } from '../../domain/models/Commit'
 import type { CommitService } from '../../domain/services/CommitService'
+import { SchemaStatsCalculator } from '../../domain/strategies/SchemaStatsCalculator'
 import type { BranchRepository } from '../../infrastructure/repositories/BranchRepository'
 import type { CommitRepository } from '../../infrastructure/repositories/CommitRepository'
 import type {
@@ -25,9 +27,10 @@ export interface CommitAppService {
    * @param message 提交信息
    * @param author 提交者
    * @param schema 提交的 Schema 内容
+   * @param type 提交类型
    * @returns 新创建的提交对象
    */
-  createCommit(branchId: ID, message: string, author: User, schema: PageSchema): Promise<Commit>
+  createCommit(branchId: ID, message: string, author: User, schema: PageSchema, type: string): Promise<Commit>
 
   /**
    * 获取提交详情用例
@@ -103,17 +106,19 @@ export class CommitAppServiceImpl implements CommitAppService {
   private readonly commitService: CommitService
   private readonly branchRepository: BranchRepository
   private readonly commitRepository: CommitRepository
+  private readonly schemaStatsCalc: SchemaStatsCalculator
 
   constructor(commitService: CommitService, branchRepository: BranchRepository, commitRepository: CommitRepository) {
     this.commitService = commitService
     this.branchRepository = branchRepository
     this.commitRepository = commitRepository
+    this.schemaStatsCalc = new SchemaStatsCalculator()
   }
 
   /**
    * 创建提交
    */
-  async createCommit(branchId: ID, message: string, author: User, schema: PageSchema): Promise<Commit> {
+  async createCommit(branchId: ID, message: string, author: User, schema: PageSchema, type: string): Promise<Commit> {
     // 参数校验
     Validator.batchRequired([
       [branchId, 'Branch Id'],
@@ -129,20 +134,40 @@ export class CommitAppServiceImpl implements CommitAppService {
       throw new Error(`Branch with id ${branchId} not found`)
     }
 
-    // 计算统计信息 (简化处理，实际可能需要深度比较 Schema)
-    const stats = { totalAdditions: 1, totalDeletions: 0, changedFiles: 1 } // 假设每次 Schema 提交都算作一次变更
+    const branchInstance = Branch.formData(branch)
+    const baseCommitId = branchInstance.baseCommitId
+
+    // 获取该分支基准commit的schema，用于计算stats计算统计信息
+    let stats
+    if (baseCommitId) {
+      const baseCommit = await this.commitRepository.findById(baseCommitId)
+      const oldSchema = Commit.fromData(baseCommit).schema
+      const newSchema = JSON.parse(JSON.stringify(schema))
+
+      stats = this.schemaStatsCalc.calculateStats(oldSchema, newSchema)
+    } else {
+      stats = { totalAdditions: 1, totalDeletions: 0, changedFiles: [] }
+    }
 
     // 获取父提交
-    const parentCommits = branch.headCommitId ? [branch.headCommitId] : []
+    const parentCommits = branchInstance.headCommitId ? [branchInstance.headCommitId] : []
 
-    const newCommit = this.commitService.createCommit(branchId, parentCommits, message, author, schema, stats)
+    const newCommit = await this.commitService.createCommit(
+      branchId,
+      parentCommits,
+      message,
+      author,
+      schema,
+      stats,
+      type
+    )
 
     // 保存提交
     this.commitRepository.save(newCommit)
 
     // 更新头指针
-    branch.setHeadCommitId(newCommit.id)
-    this.branchRepository.update(branch)
+    branchInstance.setHeadCommitId(newCommit.id)
+    this.branchRepository.update(branchInstance)
 
     return newCommit
   }
@@ -151,7 +176,7 @@ export class CommitAppServiceImpl implements CommitAppService {
    * 获取特定提交
    */
   @Memoize({ ttl: 60000, maxSize: 20 })
-  async getCommit(commitId: ID): Promise<Commit | null> {
+  async getCommit(commitId: ID): Promise<any | null> {
     //参数校验
     Validator.check(commitId, 'Commit ID').required().run()
 
@@ -265,8 +290,9 @@ export class CommitAppServiceImpl implements CommitAppService {
       throw new Error(`Commit with id ${commitId} not found`)
     }
 
-    commit.addTag(tag)
-    await this.commitRepository.update(commit)
+    const commitInstance = Commit.fromData(commit)
+    commitInstance.addTag(tag)
+    await this.commitRepository.update(commitInstance)
   }
 
   /**

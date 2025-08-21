@@ -44,22 +44,33 @@ export default class BranchService {
       protection: undefined,
       metadata: {}
     }
+
+    this.initData()
+  }
+
+  async initData() {
+    const count = await this.db.countAsync({})
+    if (count === 0) {
+      console.log('初始化分支数据...')
+      const defaultBranches = require('./branch.json')
+      await this.db.insertAsync(defaultBranches)
+    }
   }
 
   async create(params) {
-    const branchData = { ...this.branchModel, ...params }
+    const branchData = { app: '1', ...this.branchModel, ...params }
     const result = await this.db.insertAsync(branchData)
     return getResponseData(result)
   }
 
   async update(id, params) {
-    await this.db.updateAsync({ _id: id }, { $set: params })
-    const result = await this.db.findOneAsync({ _id: id })
+    await this.db.updateAsync({ id: id }, { $set: params })
+    const result = await this.db.findOneAsync({ id: id })
     return getResponseData(result)
   }
 
   async list(appId) {
-    const result = await this.db.findAsync()
+    const result = await this.db.findAsync({ app: appId.toString() })
     return getResponseData(result)
   }
 
@@ -69,8 +80,13 @@ export default class BranchService {
     return getResponseData(result)
   }
 
-  async find(params) {
-    const result = await this.db.findAsync()
+  async findById(id) {
+    const result = await this.db.findOneAsync({ id: id })
+    return getResponseData(result)
+  }
+
+  async findByName(name) {
+    const result = await this.db.findOneAsync({ name })
     return getResponseData(result)
   }
 }

@@ -2,7 +2,7 @@
   <div class="filters-container">
     <div class="filter-group">
       <label>作者:</label>
-      <select v-model="authorFilter" @change="applyFilters" class="filter-select">
+      <select v-model="modelAuthorFilter" @change="applyFilters" class="filter-select">
         <option value="">全部</option>
         <option v-for="author in uniqueAuthors" :key="author" :value="author">
           {{ author }}
@@ -12,7 +12,7 @@
 
     <div class="filter-group">
       <label>时间范围:</label>
-      <select v-model="timeFilter" @change="applyFilters" class="filter-select">
+      <select v-model="modelTimeFilter" @change="applyFilters" class="filter-select">
         <option value="">全部</option>
         <option value="today">今天</option>
         <option value="week">本周</option>
@@ -24,41 +24,62 @@
       <button @click="clearFilters" class="clear-filters-btn">清除筛选</button>
     </div>
 
+    <div class="filter-group">
+      <button @click="createCommit" class="commit-btn">提交Commit</button>
+    </div>
+
     <div class="filter-group stats">
       <span class="stats-text"> 共 {{ filteredCommitsLength }} 个提交 | {{ uniqueAuthorsLength }} 位贡献者 </span>
     </div>
   </div>
 </template>
 
-<script setup>
-import { defineProps, defineEmits, computed } from 'vue'
+<script>
+import { useUtils } from '../composable/useUtils'
 
-const props = defineProps({
-  authorFilter: String,
-  timeFilter: String,
-  uniqueAuthors: Array,
-  filteredCommitsLength: Number,
-  uniqueAuthorsLength: Number
-})
+export default {
+  props: {
+    authorFilter: {
+      type: String,
+      default: ''
+    },
+    timeFilter: {
+      type: String,
+      default: ''
+    },
+    uniqueAuthors: {
+      type: Array,
+      default: () => []
+    },
+    filteredCommitsLength: {
+      type: Number,
+      default: 0
+    },
+    uniqueAuthorsLength: {
+      type: Number,
+      default: 0
+    }
+  },
+  emits: ['update:authorFilter', 'update:timeFilter', 'applyFilters', 'clearFilters', 'createCommit'],
+  setup(props, { emit }) {
+    const { useVModel } = useUtils()
+    // 双向绑定
+    const modelAuthorFilter = useVModel(props, emit, 'authorFilter')
+    const modelTimeFilter = useVModel(props, emit, 'timeFilter')
 
-const emit = defineEmits(['update:authorFilter', 'update:timeFilter', 'applyFilters', 'clearFilters'])
+    // 事件方法
+    const applyFilters = () => emit('applyFilters')
+    const clearFilters = () => emit('clearFilters')
+    const createCommit = () => emit('createCommit')
 
-const authorFilter = computed({
-  get: () => props.authorFilter,
-  set: (value) => emit('update:authorFilter', value)
-})
-
-const timeFilter = computed({
-  get: () => props.timeFilter,
-  set: (value) => emit('update:timeFilter', value)
-})
-
-const applyFilters = () => {
-  emit('applyFilters')
-}
-
-const clearFilters = () => {
-  emit('clearFilters')
+    return {
+      modelAuthorFilter,
+      modelTimeFilter,
+      applyFilters,
+      clearFilters,
+      createCommit
+    }
+  }
 }
 </script>
 
@@ -116,6 +137,22 @@ const clearFilters = () => {
       &:hover {
         background: #f3f4f6;
         color: #374151;
+      }
+    }
+
+    .commit-btn {
+      padding: 6px 12px;
+      border: 1px solid #3b82f6;
+      border-radius: 6px;
+      background: #3b82f6;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+
+      &:hover {
+        background: #2563eb;
+        border-color: #2563eb;
       }
     }
 

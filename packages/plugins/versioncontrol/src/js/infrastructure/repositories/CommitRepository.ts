@@ -2,8 +2,7 @@ import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { ID } from '../../shared/type'
 import type { Commit } from '../../domain/models/Commit'
 
-const api = getMetaApi(META_SERVICE.Http)
-const BASE_URL = '/commit'
+const BASE_URL = '/app-center/api/version/commit'
 
 /**
  * CommitApi 接口定义
@@ -12,6 +11,7 @@ export interface CommitApi {
   fetchCommitById(id: ID): Promise<Commit | null>
   fetchCommitsByBranchId(branchId: ID, limit?: number, offset?: number): Promise<Commit[]>
   fetchCommitsByTag(tag: string): Promise<Commit[]>
+  fetchAllCommits(): Promise<Commit[]>
   saveCommit(commit: Commit): Promise<void>
   updateCommit(commit: Commit): Promise<void>
   deleteCommit(id: ID): Promise<void>
@@ -22,9 +22,10 @@ export interface CommitApi {
  */
 export interface CommitRepository {
   save(commit: Commit): Promise<void>
-  findById(id: ID): Promise<Commit | null>
+  findById(id: ID): Promise<any | null>
   findByBranchId(branchId: ID, limit?: number, offset?: number): Promise<Commit[]>
   findByTag(tag: string): Promise<Commit[]>
+  findAll(): Promise<Commit[]>
   update(commit: Commit): Promise<void>
   delete(id: ID): Promise<void>
 }
@@ -32,7 +33,7 @@ export interface CommitRepository {
 export class CommitApiImpl implements CommitApi {
   async fetchCommitById(id: ID): Promise<Commit | null> {
     try {
-      const res = await api.get(`${BASE_URL}/getById/${id}`)
+      const res = await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/detail/${id}`)
       return res || null
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -43,7 +44,7 @@ export class CommitApiImpl implements CommitApi {
 
   async fetchCommitsByBranchId(branchId: ID, limit?: number, offset?: number): Promise<Commit[]> {
     try {
-      const res = await api.get(`${BASE_URL}/listByBranch`, {
+      const res = await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/listByBranch`, {
         params: {
           branchId,
           limit,
@@ -60,7 +61,7 @@ export class CommitApiImpl implements CommitApi {
 
   async fetchCommitsByTag(tag: string): Promise<Commit[]> {
     try {
-      const res = await api.get(`${BASE_URL}/listByTag`, {
+      const res = await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/listByTag`, {
         params: { tag }
       })
       return res || []
@@ -71,9 +72,21 @@ export class CommitApiImpl implements CommitApi {
     }
   }
 
+  async fetchAllCommits(): Promise<Commit[]> {
+    try {
+      const res = await getMetaApi(META_SERVICE.Http).get(`/app-center/api/version/commit/list/${1}`)
+      return res || null
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to fetch all commits:', error)
+      return []
+    }
+  }
+
   async saveCommit(commit: Commit): Promise<void> {
     try {
-      await api.post(`${BASE_URL}/create`, commit)
+      const result = await getMetaApi(META_SERVICE.Http).post(`${BASE_URL}/create`, commit.toData())
+      return result || null
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to save commit:', error)
@@ -82,7 +95,8 @@ export class CommitApiImpl implements CommitApi {
 
   async updateCommit(commit: Commit): Promise<void> {
     try {
-      await api.post(`${BASE_URL}/update`, commit)
+      const res = await getMetaApi(META_SERVICE.Http).post(`${BASE_URL}/update/${commit.id}`, commit.toData())
+      return res || null
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to update commit:', error)
@@ -91,7 +105,7 @@ export class CommitApiImpl implements CommitApi {
 
   async deleteCommit(id: ID): Promise<void> {
     try {
-      await api.get(`${BASE_URL}/delete/${id}`)
+      await getMetaApi(META_SERVICE.Http).get(`${BASE_URL}/delete/${id}`)
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Failed to delete commit:', error)
@@ -113,7 +127,7 @@ export class CommitRepositoryImpl implements CommitRepository {
     await this.commitApi.saveCommit(commit)
   }
 
-  async findById(id: ID): Promise<Commit | null> {
+  async findById(id: ID): Promise<any | null> {
     return await this.commitApi.fetchCommitById(id)
   }
 
@@ -123,6 +137,10 @@ export class CommitRepositoryImpl implements CommitRepository {
 
   async findByTag(tag: string): Promise<Commit[]> {
     return await this.commitApi.fetchCommitsByTag(tag)
+  }
+
+  async findAll(): Promise<Commit[]> {
+    return await this.commitApi.fetchAllCommits()
   }
 
   async update(commit: Commit): Promise<void> {

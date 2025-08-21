@@ -1,4 +1,4 @@
-import type { Commit as CommitType, CommitStats, ID, PageSchema, Timestamp, User } from '../../shared/type'
+import type { CommitStats, ID, PageSchema, Timestamp, User } from '../../shared/type'
 
 /**
  * Commit 领域模型
@@ -6,6 +6,7 @@ import type { Commit as CommitType, CommitStats, ID, PageSchema, Timestamp, User
  */
 export class Commit {
   readonly id: ID
+  readonly hash: string
   private _message: string
   readonly author: User
   readonly committer: User
@@ -16,9 +17,11 @@ export class Commit {
   private _tags: readonly string[]
   private _verified: boolean
   private _stats: CommitStats
+  private _type: string // commit 类型（如 feat, fix, docs...）
 
   constructor(
     id: ID,
+    hash: string,
     message: string,
     author: User,
     committer: User,
@@ -28,9 +31,11 @@ export class Commit {
     schema: PageSchema,
     tags: readonly string[],
     verified: boolean,
-    stats: CommitStats
+    stats: CommitStats,
+    type: string
   ) {
     this.id = id
+    this.hash = hash
     this._message = message
     this.author = author
     this.committer = committer
@@ -41,6 +46,7 @@ export class Commit {
     this._tags = tags
     this._verified = verified
     this._stats = stats
+    this._type = type
   }
 
   // Getters
@@ -70,7 +76,7 @@ export class Commit {
     return this
   }
 
-  addTag(tag: string): this {
+  public addTag(tag: string): this {
     if (!this._tags.includes(tag)) {
       this._tags = [...this._tags, tag]
     }
@@ -106,6 +112,7 @@ export class Commit {
    */
   toData(): {
     id: ID
+    hash: string
     message: string
     author: User
     committer: User
@@ -116,9 +123,11 @@ export class Commit {
     tags: readonly string[]
     verified: boolean
     stats: CommitStats
+    type: string
   } {
     return {
       id: this.id,
+      hash: this.hash,
       message: this._message,
       author: this.author,
       committer: this.committer,
@@ -128,15 +137,17 @@ export class Commit {
       schema: this._schema,
       tags: this._tags,
       verified: this._verified,
-      stats: this._stats
+      stats: this._stats,
+      type: this._type
     }
   }
 
   /**
-   * 从纯粹的数据接口创建 Commit 实例
+   * 从纯数据对象创建 Commit 实例
    */
   static fromData(data: {
     id: ID
+    hash: string
     message: string
     author: User
     committer: User
@@ -147,9 +158,11 @@ export class Commit {
     tags: readonly string[]
     verified: boolean
     stats: CommitStats
-  }): CommitType {
+    type: string
+  }) {
     return new Commit(
       data.id,
+      data.hash,
       data.message,
       data.author,
       data.committer,
@@ -159,7 +172,8 @@ export class Commit {
       data.schema,
       data.tags,
       data.verified,
-      data.stats
+      data.stats,
+      data.type
     )
   }
 }
