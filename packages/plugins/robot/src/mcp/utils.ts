@@ -39,7 +39,7 @@ const parseArgs = (args: string) => {
   }
 }
 
-const serializeError = (err: unknown): string => {
+export const serializeError = (err: unknown): string => {
   if (err instanceof Error) {
     return JSON.stringify({ name: err.name, message: err.message })
   }

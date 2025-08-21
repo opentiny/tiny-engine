@@ -104,7 +104,7 @@ import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import LoadingRenderer from './mcp/LoadingRenderer.vue'
-import { sendMcpRequest } from './mcp/utils'
+import { sendMcpRequest, serializeError } from './mcp/utils'
 import type { RobotMessage } from './mcp/types'
 
 export default {
@@ -242,10 +242,10 @@ export default {
             }
             renderContent.push({
               type: 'text',
-              content: '连接失败, 请稍后重试'
+              content: `连接失败, 请稍后重试: ${serializeError(error)}`
             })
           } else {
-            messages.value.at(-1)!.content = '连接失败, 请稍后重试'
+            messages.value.at(-1)!.content = `连接失败, 请稍后重试: ${serializeError(error)}`
           }
         } finally {
           inProcesing.value = false
