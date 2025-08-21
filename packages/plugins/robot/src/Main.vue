@@ -105,6 +105,7 @@ import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import LoadingRenderer from './mcp/LoadingRenderer.vue'
 import { sendMcpRequest } from './mcp/utils'
+import type { RobotMessage } from './mcp/types'
 
 export default {
   components: {
@@ -127,7 +128,7 @@ export default {
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
     let sessionProcess = null
-    const messages = ref([])
+    const messages = ref<RobotMessage[]>([])
     const activeMessages = ref([])
     const connectedFailed = ref(false)
     const inputContent = ref('')
@@ -234,7 +235,18 @@ export default {
             }
           })
         } catch (error) {
-          messages.value[messages.value.length - 1].content = '连接失败'
+          const { renderContent } = messages.value.at(-1)!
+          if (renderContent?.length) {
+            if (renderContent.at(-1)!.type === 'loading') {
+              renderContent.pop()
+            }
+            renderContent.push({
+              type: 'text',
+              content: '连接失败, 请稍后重试'
+            })
+          } else {
+            messages.value.at(-1)!.content = '连接失败, 请稍后重试'
+          }
         } finally {
           inProcesing.value = false
           requestLoading.value = false
@@ -431,7 +443,8 @@ export default {
         contentRenderer: MarkdownRenderer,
         customContentField: 'renderContent'
       },
-      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer }
+      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer },
+      system: { hidden: true }
     }
 
     watch([() => activeMessages.value.length, () => activeMessages.value.at(-1)?.renderContent?.length ?? 0], () => {
