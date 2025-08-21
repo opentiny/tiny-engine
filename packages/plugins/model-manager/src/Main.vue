@@ -193,7 +193,7 @@ const selectModel = (model) => {
       }
       if (item.type === 'ModelRef') {
         item.isModel = true
-        item.defaultValue = item.defaultValue || null
+        item.defaultValue = Number(item.defaultValue)
       }
     })
   }
@@ -272,6 +272,7 @@ const saveModel = async () => {
       }
       if (item.type === 'ModelRef') {
         item.isModel = true
+        delete item.options
         item.defaultValue = item.defaultValue || null
         item.type = 'Number'
       }
@@ -384,7 +385,7 @@ const getFieldTypeLabel = (type) => {
   }
   return typeMap[type] || type
 }
-// 字段类型变化处理
+
 // 字段类型变化处理
 const handleTypeChange = (field) => {
   if (field.type === 'Enum' || field.type === 'ModelRef') {
