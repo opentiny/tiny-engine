@@ -83,6 +83,18 @@ const parseArgs = (args: string) => {
   }
 }
 
+const serializeError = (err: unknown): string => {
+  if (err instanceof Error) {
+    return JSON.stringify({ name: err.name, message: err.message })
+  }
+  if (typeof err === 'string') return err
+  try {
+    return JSON.stringify(err)
+  } catch {
+    return String(err)
+  }
+}
+
 const handleToolCall = async (
   res: LLMResponse,
   tools: RequestTool[],
@@ -119,14 +131,15 @@ const handleToolCall = async (
         formatPretty: true
       }
       currentMessage.renderContent.push(currentToolMessage)
-      let toolCallResult
-      let toolCallStatus
+      let toolCallResult: string
+      let toolCallStatus: 'success' | 'failed'
       try {
+        const resp = await useMcpServer().callTool(name, parsedArgs)
         toolCallStatus = 'success'
-        toolCallResult = (await useMcpServer().callTool(name, parsedArgs)).content
+        toolCallResult = resp.content
       } catch (error) {
         toolCallStatus = 'failed'
-        toolCallResult = JSON.stringify(error)
+        toolCallResult = serializeError(error)
       }
       toolMessages.push({
         type: 'text',
