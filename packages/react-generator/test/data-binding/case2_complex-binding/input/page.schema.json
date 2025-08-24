@@ -1,0 +1,179 @@
+{
+  "componentName": "Page",
+  "fileName": "ComplexBindingDemo",
+  "css": "",
+  "props": {},
+  "state": {
+    "userInfo": {
+      "name": "",
+      "age": 25,
+      "email": "",
+      "interests": []
+    },
+    "settings": {
+      "notifications": true,
+      "theme": "light"
+    },
+    "formData": {
+      "title": "",
+      "content": ""
+    }
+  },
+  "methods": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "style": "padding: 20px; max-width: 600px; margin: 0 auto;"
+      },
+      "children": [
+        {
+          "componentName": "h2",
+          "children": "用户信息表单"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "姓名: "
+            },
+            {
+              "componentName": "AntdInput",
+              "props": {
+                "value": {
+                  "type": "JSDataBinding",
+                  "value": "this.state.userInfo.name"
+                },
+                "placeholder": "请输入姓名"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "年龄: "
+            },
+            {
+              "componentName": "AntdInput",
+              "props": {
+                "value": {
+                  "type": "JSExpression",
+                  "value": "this.state.userInfo.age",
+                  "model": {
+                    "prop": "value"
+                  }
+                },
+                "type": "number",
+                "placeholder": "请输入年龄"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "邮箱: "
+            },
+            {
+              "componentName": "AntdInput",
+              "props": {
+                "value": {
+                  "type": "JSDataBinding",
+                  "value": "this.state.userInfo.email"
+                },
+                "type": "email",
+                "placeholder": "请输入邮箱"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "接收通知: "
+            },
+            {
+              "componentName": "AntdCheckbox",
+              "props": {
+                "checked": {
+                  "type": "JSDataBinding",
+                  "value": "this.state.settings.notifications"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "h3",
+          "children": "文章编辑"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "标题: "
+            },
+            {
+              "componentName": "AntdInput",
+              "props": {
+                "value": {
+                  "type": "JSDataBinding",
+                  "value": "this.state.formData.title"
+                },
+                "placeholder": "请输入文章标题"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "margin-bottom: 15px;"
+          },
+          "children": [
+            {
+              "componentName": "label",
+              "children": "内容: "
+            },
+            {
+              "componentName": "AntdInput",
+              "props": {
+                "value": {
+                  "type": "JSDataBinding",
+                  "value": "this.state.formData.content"
+                },
+                "rows": 4,
+                "placeholder": "请输入文章内容"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

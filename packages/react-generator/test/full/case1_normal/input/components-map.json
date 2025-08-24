@@ -1,0 +1,63 @@
+[
+  {
+    "componentName": "TinyButton",
+    "exportName": "TinyButton",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyForm",
+    "exportName": "TinyForm",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyFormItem",
+    "exportName": "TinyFormItem",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyInput",
+    "exportName": "TinyInput",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinySelect",
+    "exportName": "TinySelect",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyGrid",
+    "exportName": "TinyGrid",
+    "package": "@opentiny/react",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "TinyIconHelpCircle",
+    "exportName": "TinyIconHelpCircle",
+    "package": "@opentiny/react-icon",
+    "version": "^3.10.0",
+    "destructuring": true
+  },
+  {
+    "componentName": "ImageTitle",
+    "main": "../components"
+  },
+  {
+    "componentName": "FormTable",
+    "main": "./views"
+  },
+  {
+    "componentName": "CrmQuoteListGridStatus",
+    "main": "./views/crm/quote-list"
+  }
+]

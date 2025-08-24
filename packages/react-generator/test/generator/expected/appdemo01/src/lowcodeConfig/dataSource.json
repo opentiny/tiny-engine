@@ -1,0 +1,16 @@
+{
+  "list": [
+    {
+      "id": 132,
+      "name": "getAllComponent"
+    },
+    {
+      "id": 133,
+      "name": "getAllList"
+    }
+  ],
+  "dataHandler": {
+    "type": "JSFunction",
+    "value": "function dataHanlder(res){\n return res;\n}"
+  }
+}
