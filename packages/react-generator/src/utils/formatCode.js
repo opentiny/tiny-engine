@@ -91,11 +91,11 @@ function getDefaultPrettierConfig() {
     semi: false,
     singleQuote: true,
     quoteProps: 'as-needed',
-    jsxSingleQuote: true,
+    jsxSingleQuote: false,
     trailingComma: 'none',
     bracketSpacing: true,
     bracketSameLine: false,
-    arrowParens: 'avoid',
+    arrowParens: 'always',
     endOfLine: 'lf',
     
     // React特定配置

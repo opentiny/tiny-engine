@@ -1,4 +1,4 @@
-import { formatCode, formatFiles } from '../utils/formatCode'
+import { formatFiles } from '../utils/formatCode'
 import { mergeOptions } from '../utils/mergeOptions'
 
 function formatCodePlugin(options = {}) {
@@ -10,11 +10,11 @@ function formatCodePlugin(options = {}) {
     semi: false,
     singleQuote: true,
     quoteProps: 'as-needed',
-    jsxSingleQuote: true,
+    jsxSingleQuote: false,
     trailingComma: 'none',
     bracketSpacing: true,
     bracketSameLine: false,
-    arrowParens: 'avoid',
+    arrowParens: 'always',
     endOfLine: 'lf',
     
     // 插件配置
