@@ -6,8 +6,7 @@ const path = require('path');
 // 初始化OpenAI客户端
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
-  baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
-  timeout: 6000000
+  baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1"
 });
 
 /**
@@ -80,13 +79,23 @@ function saveSchemaToFile(schema, subComponentName) {
  */
 async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
   const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
-  console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
+  console.log(`\n=== 开始转换子组件[${subComponentName}]（多轮对话模式） ===`);
 
-  console.log(`[Prompt构建] 开始组装system和user指令（含组件API数据）`);
-  const messages = [
+  // 1. 初始化多轮对话配置
+  const MAX_ROUNDS = 5; // 最大多轮次数（避免无限循环）
+  let currentRound = 1;
+  let accumulatedSchema = ""; // 累积已生成的JSON片段
+  let isComplete = false;
+  let finalSchema = null;
+
+  // 2. 初始prompt（同原逻辑，但去掉“输出完整JSON”，改为“可分多轮生成”）
+  let messages = [
     {
       role: "system",
-      content: `你是专业的组件协议转换工具，负责将组件API文档转换为符合tinyEngine组件协议的标准schema。请严格遵循tinyEngine的规范，确保输出格式正确、信息完整。`
+      content: `你是专业的组件协议转换工具，负责将组件API文档转换为符合tinyEngine组件协议的标准schema。
+- 若内容过长可分多轮生成，每轮仅输出未完成的JSON部分（不重复已有内容）；
+- 最终输出必须是完整、语法正确的JSON；
+- 不要输出任何额外文字（如“继续生成如下”“已完成”等），仅输出JSON片段。`
     },
     {
       role: "user",
@@ -117,10 +126,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 - \`name\`：i18n 格式，\`{"zh_CN": 组件中文名称}\`。规则：
   - 若 \`description\` 含中文名称，优先提取（如 "常用的操作按钮"→"按钮"）
   - 否则按组件名语义翻译（如 "Input"→"输入框"，"Select"→"选择器"）
-- \`icon\`：默认使用 \`component\` 值的「核心标识」（小写），规则如下：
-  - 若为 tinyVue 组件，直接使用组件名小写（如 "Tooltip"→"tooltip"）
-  - 若为其他组件库（如 element-plus），移除前缀标识后转为小写（如 "ElForm"→"form"、"ElButton"→"button"）
-  - 若 \`notes\` 中有明确图标提示（如 "图标使用 'calendar'"），则优先使用该值（保持原大小写）
+- \`icon\`：默认使用 \`component\` 值（如 "Button"）；若 \`notes\` 有图标提示则替换
 - \`group\`：根据组件库识别，如 element - plus 组件填 "element - plus"
 - \`category\`：固定为 "element-plus"（可根据实际调整）
 - \`description\`：直接使用输入的 \`description\` 值
@@ -240,196 +246,38 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
   ]
 
 #### 6. \`snippets\`（代码片段）
-- 任务：为组件生成**符合实际使用场景**的有代表性、有意义的代码片段数组（snippets），准确体现组件的典型用法和嵌套关系，用于在组件面板中展示。
+- 任务：为组件生成一个有代表性、有意义的代码片段数组（snippets），用于在组件面板中展示。
 - 生成规则：
-  - snippets 数组应包含一个默认代码片段，需完整展示组件的核心用法。
-  - 每个代码片段必须包含以下字段，且配置需遵循统一要求：
-    1. name.zh_CN：填写与组件定义中一致的中文名称，比如 “表格”“表单”“按钮”；
-    2. icon：填写与组件定义中一致的图标标识，比如 “table”“form”“button”；
-    3. screenshot：固定填空字符串（""），预留截图位置；
-    4. snippetName：填写与组件定义中 component 字段一致的完整组件名，比如 “ElTable”“ElForm”；
-    5. category：填写与组件定义中一致的组件库归属，比如 “element-plus”；
-    6. schema：组件核心配置结构，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
-  - schema 核心规则
-    1. 结构选择
-      - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法；
-      - 基础组件（如 ElButton、ElInput）：通过 props 配置业务常用属性（如按钮 type、输入框 placeholder），通过 children 承载文本或辅助组件（如按钮嵌套 Text 组件）。
-    2. props 要求
-      - 禁用 “请输入”“示例值” 等泛型占位符，填写真实业务场景值（如 “请输入手机号”“提交”）；
-      - 复杂类型属性（数组、对象）需提供完整模拟数据（如表格 data 包含 2-4 条真实结构数据）；
-      - 关联属性需严格对应（如 ElTable 的 columns.prop 与 data 中的字段名一致）。
-    3. children 要求
-      - 仅嵌套组件专用子组件（如 ElTable→ElTableColumn、ElForm→ElFormItem），禁止嵌套无关组件；
-      - 嵌套层级符合组件原生用法（如 ElForm→ElFormItem→ElInput），子组件 props 需与父组件逻辑一致。
-  - 错误规避
-    1. 避免自身嵌套（如 ElTable 嵌套 ElTable）；
-    2. 不遗漏核心配置（如 ElTable 缺失 data）；
-    3. 防止属性不匹配（如 ElTable 的 columns.prop 与 data 中的字段名不一致）。
-  - 错误示例（反例）：
-    - ElTable 的 children 包含 ElTable（自身嵌套自身）
-    - ElForm 的 children 为空或包含无关组件（如 ElButton）
-  - 正确示例（正例）：
-    1. ElButton 按钮示例：
-      "snippets": [
-        {
-          "name": {
-            "zh_CN": "按钮"
-          },
-          "icon": "button",
-          "screenshot": "",
-          "snippetName": "ElButton",
-          "schema": {
-            "children": [
-              {
-                "componentName": "Text",
-                "props": {
-                  "text": "按钮文本"
-                }
-              }
-            ]
-          },
-          "category": "element-plus"
-        }
-      ]
-    2. 表格（ElTable）示例：
-      "snippets": [
-        {
-          "name": {
-            "zh_CN": "表格"
-          },
-          "icon": "grid",
-          "screenshot": "",
-          "snippetName": "ElTable",
-          "schema": {
-            "props": {
-              "data": [
-                {
-                  "date": "2016-05-03",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-02",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-04",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-01",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                }
-              ],
-              "columns": [
-                {
-                  "type": "index"
-                },
-                {
-                  "label": "Date",
-                  "prop": "date"
-                },
-                {
-                  "label": "Name",
-                  "prop": "name"
-                },
-                {
-                  "label": "Address",
-                  "prop": "address"
-                }
-              ]
-            }
-          },
-          "category": "element-plus"
-        }
-      ]
-    3. 表单（ElForm）示例：
-        "snippets": [
-          {
-            "name": {
-              "zh_CN": "表单"
-            },
-            "icon": "form",
-            "screenshot": "",
-            "snippetName": "ElForm",
-            "schema": {
-              "children": [
-                {
-                  "componentName": "ElFormItem",
-                  "props": {
-                    "label": "账号",
-                    "prop": "account"
-                  },
-                  "children": [
-                    {
-                      "componentName": "ElInput",
-                      "props": {
-                        "modelValue": "",
-                        "placeholder": "请输入账号"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "componentName": "ElFormItem",
-                  "props": {
-                    "label": "密码",
-                    "prop": "password"
-                  },
-                  "children": [
-                    {
-                      "componentName": "ElInput",
-                      "props": {
-                        "modelValue": "",
-                        "placeholder": "请输入密码",
-                        "type": "password"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "componentName": "ElFormItem",
-                  "props": {},
-                  "children": [
-                    {
-                      "componentName": "ElButton",
-                      "props": {
-                        "type": "primary",
-                        "style": "margin-right: 10px"
-                      },
-                      "children": [
-                        {
-                          "componentName": "Text",
-                          "props": {
-                            "text": "提交"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "componentName": "ElButton",
-                      "props": {
-                        "type": "primary"
-                      },
-                      "children": [
-                        {
-                          "componentName": "Text",
-                          "props": {
-                            "text": "重置"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            "category": "element-plus"
-          }
-        ]
+  - snippets 数组应包含一个默认代码片段。
+  - 每个代码片段对象必须包含以下字段：
+    - name.zh_CN：组件的中文名称，例如："按钮"。
+    - icon：组件对应的图标。
+    - snippetName：组件的名称，例如："ElButton"。
+    - category：组件库名称，例如："element-plus"。
+    - schema.children：此数组是生成的核心。它应包含一个组件对象，其 props 字段应根据组件的核心功能，为最关键的属性设置有意义的示例值。
+  - 请确保示例值是能清晰展示组件基本功能的，而不是留空或使用通用占位符。
+- 示例参考（以 ElButton 为例）：
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "按钮"
+      },
+      "icon": "button",
+      "screenshot": "",
+      "snippetName": "ElButton",
+      "schema": {
+        "children": [
+          {
+            "componentName": "Text",
+            "props": {
+              "text": "按钮文本"
+            }
+          }
+        ]
+      },
+      "category": "element-plus"
+    }
+  ]
 
 ### 输出要求
 严格遵循上述上述规则执行转换，需确保确保字段与输入信息完整映射、格式完全符合 JSON 规范。
@@ -1257,74 +1105,88 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 组件API内容: ${JSON.stringify(apiObj, null, 2)}`
     }
   ];
-  console.log(`[Prompt构建完成] 指令总长度（字符数）：${JSON.stringify(messages).length}`);
-  console.log(`[API调用准备] 即将向模型${model}发起请求`);
 
-  // API调用日志：记录调用开始时间，便于定位超时问题
-  const apiCallStartTime = Date.now();
-  console.log(`[API调用开始] 时间：${new Date(apiCallStartTime).toLocaleString()} | 等待模型响应...`);
+  // 3. 多轮对话循环
+  while (currentRound <= MAX_ROUNDS && !isComplete) {
+    console.log(`[轮次${currentRound}/${MAX_ROUNDS}] 发起API请求...`);
+    try {
+      // 调用大模型（每轮携带完整上下文）
+      const completion = await client.chat.completions.create({
+        model: model,
+        messages,
+        temperature: 0.2,
+        max_tokens: 32000, // 按模型最大支持调整
+      });
 
-  // 调用OpenAI API
-  const completion = await client.chat.completions.create({
-    model: model,
-    messages,
-    temperature: 0.2,
-    // max_tokens: 16384,
-    max_tokens: 65536,
-    // stream: true
-  });
+      const roundContent = completion.choices[0].message.content.trim();
+      // 清理当前轮内容（移除可能的代码块标识，避免重复处理）
+      const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
+      const match = roundContent.match(codeBlockRegex);
+      const cleanedRoundContent = match && match[2] ? match[2].trim() : roundContent;
 
-  console.log("等待大模型生成...")
+      // 累积当前轮片段（关键：拼接已有内容）
+      accumulatedSchema += cleanedRoundContent;
+      console.log(`[轮次${currentRound}] 累积JSON长度：${accumulatedSchema.length} 字符`);
 
-  // API响应日志：记录响应耗时和结果长度，排查响应异常
-  const apiCallEndTime = Date.now();
+      // 4. 校验JSON完整性（尝试解析）
+      try {
+        finalSchema = JSON.parse(accumulatedSchema);
+        isComplete = true; // 解析成功 = 完整
+        console.log(`[轮次${currentRound}] JSON解析成功，生成完整`);
+      } catch (parseErr) {
+        // 解析失败 = 未完整，准备下一轮对话
+        console.warn(`[轮次${currentRound}] JSON暂未完整（${parseErr.message}），准备下一轮...`);
+        // 更新上下文：新增“继续生成”的用户指令
+        messages.push(
+          { role: "assistant", content: roundContent }, // 记录模型上一轮输出
+          {
+            role: "user",
+            content: `基于以下已生成的JSON片段，继续补充剩余部分：
+${accumulatedSchema}
+注意：1. 仅输出未完成的JSON内容（不重复已有片段）；2. 保证最终JSON语法闭合；3. 不要输出额外文字。`
+          }
+        );
+        currentRound++;
+      }
 
-  const schemaText = completion.choices[0].message.content;
-
-  console.log(`[API调用成功] 耗时：${(apiCallEndTime - apiCallStartTime) / 1000} 秒`);
-  console.log(`[响应结果] 生成的schema文本长度（字符数）：${schemaText.length}`);
-  // console.log(`[响应结果预览] 前100字符：${schemaText.slice(0, 100)}...`);
-
-
-  // console.log("获取大模型生成结果: ", schemaText);
-
-  let parsedSchema = null;
-
-  // 数据清理日志：记录清理过程（是否移除代码块标识）
-  console.log(`[数据清理] 开始处理schema文本（移除可能的代码块标识）`);
-
-  // 清理并解析schema（确保返回JSON对象）
-  try {
-    let cleanedSchema = schemaText.trim();
-    const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
-    const match = cleanedSchema.match(codeBlockRegex);
-
-    // if (match && match[2]) cleanedSchema = match[2].trim();
-    if (match && match[2]) {
-      cleanedSchema = match[2].trim();
-      console.log(`[数据清理成功] 检测到JSON代码块标识，已移除 | 清理后长度：${cleanedSchema.length}`);
-    } else {
-      console.log(`[数据清理] 未检测到代码块标识，直接使用原始文本`);
+    } catch (apiErr) {
+      console.error(`[轮次${currentRound}] API调用失败：${apiErr.message}`);
+      currentRound++;
     }
-
-    parsedSchema = JSON.parse(cleanedSchema);
-  } catch (parseError) {
-    console.warn(`子组件[${subComponentName}]：schema文本解析为JSON失败，返回原始文本`, parseError.message);
-    parsedSchema = schemaText; // 解析失败时返回原始文本，便于后续调试
   }
 
-  // 保存文件
-  if (save) {
-    console.log(`[文件保存] 开始调用saveSchemaToFile，保存内容长度：${schemaText.length}字符`);
-    saveSchemaToFile(schemaText, subComponentName);
+  // 5. 多轮结束后处理（仅完整JSON才保存）
+  if (isComplete && finalSchema) {
+    console.log(`子组件[${subComponentName}]：多轮对话生成完整JSON`);
+    // 保存文件（此时传入完整的JSON字符串，避免解析错误）
+    if (save) {
+      const completeSchemaText = JSON.stringify(finalSchema, null, 2); // 确保格式统一
+      saveSchemaToFile(completeSchemaText, subComponentName);
+    }
+    return {
+      subComponentName,
+      schema: finalSchema,
+      rawSchemaText: JSON.stringify(finalSchema, null, 2),
+      success: true
+    };
+  } else {
+    // 未生成完整JSON，记录错误
+    const errorMsg = `超过最大轮次(${MAX_ROUNDS})或生成失败，未得到完整JSON`;
+    console.error(`子组件[${subComponentName}]：${errorMsg}`);
+    // 可选：保存不完整片段用于调试
+    if (save && accumulatedSchema) {
+      const errorPath = path.join(__dirname, `../schema-log/incomplete-${subComponentName}-${Date.now()}.txt`);
+      fs.writeFileSync(errorPath, accumulatedSchema, 'utf8');
+      console.log(`不完整片段已保存至：${errorPath}`);
+    }
+    return {
+      subComponentName,
+      schema: null,
+      rawSchemaText: accumulatedSchema,
+      success: false,
+      error: errorMsg
+    };
   }
-
-  console.log(`子组件[${subComponentName}]：转换完成`);
-  return {
-    subComponentName,
-    schema: parsedSchema, // 返回解析后的JSON对象（或原始文本）
-    rawSchemaText: schemaText // 额外返回原始文本，便于追溯
-  };
 }
 
 /**
@@ -1345,14 +1207,11 @@ async function batchConvertToTinyEngineSchema(apiArray, model = process.env.OPEN
   // 逐个转换（串行执行，避免并发调用API导致限流）
   for (const apiObj of apiArray) {
     try {
-      console.log(`\n开始转换：${apiObj.name}`);
       const result = await convertSingleSubComponent(apiObj, model, save);
-      console.log(`转换完成：${apiObj.name}`);
       conversionResults.push(result);
     } catch (error) {
       const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
-      // console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error.message);
-      console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error);
+      console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error.message);
       // 失败时仍记录，便于后续排查
       conversionResults.push({
         subComponentName,

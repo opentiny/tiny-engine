@@ -54,3 +54,4 @@ dataset/
 json-test-log/
 api-log/
 schema-log/
+src/backend/log
