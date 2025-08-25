@@ -1,0 +1,48 @@
+{
+  "name": "@opentiny/tiny-engine-react-to-dsl",
+  "version": "0.1.0",
+  "description": "Transform React source code (JSX/TSX) to TinyEngine DSL schema.",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/react-to-dsl"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@babel/generator": "~7.23.2",
+    "@babel/parser": "~7.23.2",
+    "@babel/traverse": "~7.23.2",
+    "nanoid": "^5.0.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.2",
+    "@babel/types": "^7.28.2",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__traverse": "^7.28.0",
+    "typescript": "~5.4.5",
+    "vite": "^5.4.2",
+    "vitest": "^1.6.0"
+  },
+  "peerDependencies": {
+    "react": ">=17",
+    "react-dom": ">=17"
+  }
+}
