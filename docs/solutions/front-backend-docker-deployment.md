@@ -18,7 +18,7 @@
   ```
 - **拉取代码**
   ```sh
-  git clone -b develop https://github.com/opentiny/tint-engine.git
+  git clone -b develop https://github.com/opentiny/tiny-engine.git
   git clone -b develop https://github.com/opentiny/tiny-engine-backend-java.git
   ```
 ## 2、配置修改
