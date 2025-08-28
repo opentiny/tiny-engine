@@ -43,8 +43,10 @@ import { camelize, capitalize } from '@vue/shared'
 import { ButtonGroup, PluginSetting, SvgButton } from '@opentiny/tiny-engine-common'
 import DataSourceType from './DataSourceType.vue'
 import DataSourceName, { getDataSourceName } from './DataSourceName.vue'
+import { getServiceForm } from './DataSourceRemoteForm.vue'
 import DataSourceSettings from './DataSourceSettings.vue'
 import { close as closeRemoteResult, open as openRemoteResult } from './DataSourceSettingRemoteResult.vue'
+import { getRecordGrid } from './DataSourceSettingRecordList.vue'
 import {
   requestUpdateDataSource,
   requestAddDataSource,
@@ -203,12 +205,20 @@ export default {
       })
     }
 
-    const save = () => {
-      getDataSourceName().validate((valid) => {
-        if (valid) {
-          close()
-          closeRemoteResult()
+    const activeTabChange = (name) => {
+      emit('activeTab', name)
+    }
 
+    const save = async () => {
+      try {
+        // await validate() 如果验证不通过会抛出异常，而不是返回 false
+        await getServiceForm().validate()
+      } catch (error) {
+        activeTabChange('remote')
+        return
+      }
+      getDataSourceName().validate(async (valid) => {
+        if (valid) {
           const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
             return {
               name,
@@ -218,6 +228,14 @@ export default {
               format
             }
           })
+
+          try {
+            // await validate() 如果验证不通过会抛出异常，而不是返回 false
+            await getRecordGrid().fullValidate()
+          } catch (error) {
+            activeTabChange('record')
+            return
+          }
 
           settingRef.value.saveRecord().then((record) => {
             const editRequestData = {
@@ -254,6 +272,7 @@ export default {
                 emit('save')
                 dataSourceState.dataSourceColumn = {}
                 dataSourceState.dataSourceColumnCopies = {}
+                dataSourceState.remoteConfig = {}
               })
             } else {
               requestAddDataSource({
@@ -270,12 +289,15 @@ export default {
                   emit('save')
                   dataSourceState.dataSourceColumn = {}
                   dataSourceState.dataSourceColumnCopies = {}
+                  dataSourceState.remoteConfig = {}
                 })
                 .catch((error) => {
                   message({ message: `数据源保存失败：${error?.message || ''}`, status: 'error' })
                 })
             }
           })
+          close()
+          closeRemoteResult()
         }
       })
     }
@@ -296,10 +318,6 @@ export default {
 
     const renderRemoteData = (remoteData) => {
       emit('renderRemoteData', remoteData)
-    }
-
-    const activeTabChange = (name) => {
-      emit('activeTab', name)
     }
 
     watch(

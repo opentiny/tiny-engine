@@ -39,7 +39,7 @@ $ npm install -g pnpm
 
 ```sh
 # 创建低代码平台
-$ npx @opentiny/engine-cli create-platform <name>
+$ npx @opentiny/tiny-engine-cli@latest create-platform <name>
 # 进入低代码平台
 $ cd <name>
 # 安装依赖

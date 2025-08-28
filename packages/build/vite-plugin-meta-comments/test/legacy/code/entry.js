@@ -37,11 +37,13 @@ export const useRenderless = ({ props }) => {
     })
   }
 
-  const ccc = 111
-
   const sendMessage = () => {
     logMessage('自定义是的范德萨')
   }
+
+  sendMessage()
+
+  const ccc = 111
 
   return {
     state,

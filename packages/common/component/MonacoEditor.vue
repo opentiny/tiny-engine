@@ -193,6 +193,7 @@ export default {
 }
 
 .editor-container-content {
+  display: flex;
   flex: 1;
   overflow: hidden;
 }

@@ -126,6 +126,56 @@ export const getModuleBindings = (path) => {
   return moduleBindings
 }
 
+// 获取当前上下文已经可以使用的scope变量
+export const getValidBindings = ({ path, state, functionName }) => {
+  const validBindings = {}
+  const { varDeclartion } = state
+  let varArr = []
+  let parentPath = path.parentPath
+  let block
+  while (parentPath) {
+    const newBlock = parentPath.scope.block
+    parentPath = parentPath.parentPath
+    if (newBlock === block) {
+      continue
+    }
+    block = newBlock
+    varArr = varArr.concat(varDeclartion.get(block))
+  }
+
+  const allBindings = path.scope.getAllBindings()
+  const selfBindings = path.scope.bindings
+  Object.keys(allBindings).forEach((key) => {
+    if (selfBindings[key]) {
+      return
+    }
+    const value = allBindings[key]
+    // 如果是变量定义，并且此时还没有初始化，则过滤掉
+    if ((['var', 'const', 'let'].includes(value.kind) && !varArr.includes(key)) || key === functionName) {
+      return
+    }
+    validBindings[key] = value
+  })
+  return validBindings
+}
+
+// 获取当前作用域 body 和变量名
+function getCurrentScopeBodyAndVarId(path) {
+  // 处理变量声明的函数表达式 (例如: const foo = () => {} 或 const foo = function() {})
+  if (
+    path.parentPath &&
+    path.parentPath.isVariableDeclarator() && // 检查是否为 const/let/var 的声明符
+    path.parentPath.parentPath &&
+    path.parentPath.parentPath.isVariableDeclaration() && // 检查是否为变量声明语句
+    path.parentPath.parentPath.parent &&
+    Array.isArray(path.parentPath.parentPath.parent.body) // 确保父节点有函数体数组
+  ) {
+    return path.parentPath.parentPath.parent.body
+  }
+
+  return null
+}
+
 /**
  * 生成callEntry表达式并包裹当前函数
  * @param {Object} params - 参数对象
@@ -136,12 +186,28 @@ export const getModuleBindings = (path) => {
  */
 export const wrapEntryFuncNode = ({ path, functionName = '', varName, state }) => {
   const asyncVars = getOuterBindings(path)
+  const body = getCurrentScopeBodyAndVarId(path, functionName)
+
+  // 判断是否为"直接调用"
+  let isDirectlyCalled = false
+  if (body) {
+    isDirectlyCalled = body.some(
+      (node) =>
+        node.type === 'ExpressionStatement' &&
+        node.expression.type === 'CallExpression' &&
+        node.expression.callee.type === 'Identifier' &&
+        node.expression.callee.name === functionName
+    )
+  }
+
+  // 根据是否为直接调用，选择用 syncVars 还是 asyncVars 组装 ctx
   const entryParam = getEntryParam({
     functionName,
-    asyncVars,
+    asyncVars: isDirectlyCalled ? getValidBindings({ path, state, functionName }) : asyncVars, // 直接调用用 syncVars，否则用 asyncVars
     varName,
     state
   })
+
   const callEntry = varName[CALLENTRY]
   const entryAst = statement(`${callEntry}(${entryParam})`)()
   const resultNode = path.node

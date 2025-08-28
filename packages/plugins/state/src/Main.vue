@@ -230,7 +230,7 @@ export default {
 
       if (activeName.value === STATE.CURRENT_STATE) {
         // 校验
-        variableRef.value.validateForm().then(() => {
+        variableRef.value.validateForm().then(async () => {
           // 获取数据
           const variable = variableRef.value.getFormData()
 
@@ -243,7 +243,17 @@ export default {
           updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
 
           useHistory().addHistory()
-          openCommon()
+
+          const isFixed = props.fixedPanels.includes(PLUGIN_NAME.State)
+          // 如果面板没有固定，临时固定，避免因保存时清空选中状态导致的面板关闭
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
+          await openCommon()
+          // 恢复原来固定的状态
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
         })
       } else {
         storeRef.value.validateForm().then(() => {
@@ -276,6 +286,7 @@ export default {
           updateGlobalState(id, { global_state: storeList }).then((res) => {
             isPanelShow.value = false
             useResource().appSchemaState.globalState = res.global_state || []
+            useNotify({ message: '保存成功!', type: 'success' })
           })
           openCommon()
         })

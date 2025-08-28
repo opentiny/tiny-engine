@@ -201,33 +201,9 @@ export const transform = (code, id) => {
     plugins: ['typescript', 'jsx']
   })
 
-  const handleCallExpression = (state) => (path) => {
-    const callee = path.node.callee
-    const name = callee.name
-    if (name === state.varName[CALLENTRY]) {
-      return
-    }
-    if (name) {
-      const bindings = path.scope.bindings
-      // 判断调用的函数是否来自本文件中的函数表达式,且在同一个函数作用域内
-      if (
-        callee.type === 'Identifier' &&
-        bindings?.[name] &&
-        bindings?.[name]?.kind !== 'module' &&
-        state.ArrowOrFunctionExpression.includes(name)
-      ) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `文件 ${state.fileId} 中函数 ${name} 在声明后直接调用了，可能造成函数覆盖场景报错！整改建议：1、导入后再调用。2、在文件最后调用`
-        )
-      }
-    }
-  }
-
   traverse(resultAst, {
     // 使用特定的类型回调处理、函数表达式、箭头函数、带导出的函数
     'ArrowFunctionExpression|FunctionExpression': handleFunctionExpression(state),
-    CallExpression: handleCallExpression(state),
     ImportDeclaration: handleImportDeclaration(state),
     VariableDeclaration: handleVariableDeclaration(state),
     ExpressionStatement: handleExpressionStatement(state),

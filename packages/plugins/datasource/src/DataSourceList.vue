@@ -33,6 +33,7 @@ import { onMounted, reactive, ref } from 'vue'
 import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { fetchDataSourceList, fetchDataSourceDetail } from './js/http'
 import { SvgButton } from '@opentiny/tiny-engine-common'
+import { getServiceForm } from './DataSourceRemoteForm.vue'
 
 const dataSourceList = ref([])
 const activeIndex = ref(-1)
@@ -74,6 +75,7 @@ export default {
           data: { ...item.data, type: 'remote' }
         }
         emit('edit', editData)
+        getServiceForm()?.clearValidate()
       })
     }
 
