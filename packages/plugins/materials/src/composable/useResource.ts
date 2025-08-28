@@ -80,7 +80,8 @@ interface PageInfo {
 
 const initPage = (pageInfo: PageInfo) => {
   try {
-    if (pageInfo?.occupier !== undefined) {
+    // 有id，说明不是临时的页面
+    if (pageInfo?.id || typeof pageInfo?.id === 'number') {
       useLayout().layoutState.pageStatus = getCanvasStatus(pageInfo.occupier)
       goPage(pageInfo.id)
     } else {

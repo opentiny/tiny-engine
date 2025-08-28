@@ -133,7 +133,7 @@ class MysqlConnection {
       const fields = [
         'version',
         'name',
-        'component',
+        'name_en',
         'icon',
         'description',
         'docUrl',
@@ -189,7 +189,7 @@ class MysqlConnection {
     })
 
     sqlContent += values.join()
-    sqlContent += ` where component = '${component.component}';`
+    sqlContent += ` where name_en = '${component.component}';`
 
     this.query(sqlContent, component.component)
       .then(() => {

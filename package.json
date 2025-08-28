@@ -20,7 +20,8 @@
     "setup": "node ./scripts/setup.js",
     "splitMaterials": "node ./scripts/splitMaterials.mjs",
     "buildMaterials": "node ./scripts/buildMaterials.mjs",
-    "updateTemplate": "node ./scripts/updateTemplate.mjs"
+    "updateTemplate": "node ./scripts/updateTemplate.mjs",
+    "uploadMaterials": "node scripts/uploadMaterials.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^8.57.1",
@@ -55,7 +56,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "@vue/repl@2.9.0": "patches/@vue__repl@2.9.0.patch"
+      "@vue/repl@4.6.1": "patches/@vue__repl@4.6.1.patch"
     },
     "overrides": {
       "rollup": "~4.44.0"

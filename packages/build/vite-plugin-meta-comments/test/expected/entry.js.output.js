@@ -34,8 +34,8 @@ export const useRenderless = _callEntry(({
       aaa,
       bbb,
       handleClick,
-      ccc,
       sendMessage,
+      ccc,
       deepCopy,
       useRenderless
     })
@@ -54,8 +54,8 @@ export const useRenderless = _callEntry(({
       aaa,
       bbb,
       handleClick,
-      ccc,
       sendMessage,
+      ccc,
       deepCopy,
       useRenderless
     })
@@ -80,13 +80,12 @@ export const useRenderless = _callEntry(({
       aaa,
       bbb,
       handleClick,
-      ccc,
       sendMessage,
+      ccc,
       deepCopy,
       useRenderless
     })
   });
-  const ccc = 111;
   const sendMessage = _callEntry(() => {
     logMessage('自定义是的范德萨');
   }, {
@@ -101,12 +100,12 @@ export const useRenderless = _callEntry(({
       aaa,
       bbb,
       handleClick,
-      ccc,
-      sendMessage,
       deepCopy,
       useRenderless
     })
   });
+  sendMessage();
+  const ccc = 111;
   return {
     state,
     aa,

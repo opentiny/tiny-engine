@@ -39,7 +39,7 @@ $ npm install -g pnpm
 
 ```sh
 # Create low-code platform
-$ npx @opentiny/engine-cli create-platform <name>
+$ npx @opentiny/tiny-engine-cli@latest create-platform <name>
 # Enter the low-code platform directory
 $ cd <name>
 # Install dependencies
