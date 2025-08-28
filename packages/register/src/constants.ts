@@ -68,6 +68,8 @@ export const META_APP = {
   Help: 'engine.plugins.editorhelp',
   // AI 插件
   Robot: 'engine.plugins.robot',
+  // 模型管理插件
+  ModelManager: 'engine.plugins.modelmanager',
   // 属性设置面板
   Props: 'engine.setting.props',
   // 样式设置面板

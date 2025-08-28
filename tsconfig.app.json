@@ -34,6 +34,7 @@
       "@opentiny/tiny-engine-plugin-script": ["packages/plugins/script/index"],
       "@opentiny/tiny-engine-plugin-state": ["packages/plugins/state/index"],
       "@opentiny/tiny-engine-plugin-tree": ["packages/plugins/tree/index"],
+      "@opentiny/tiny-engine-plugin-model-manager": ["packages/plugins/model-manager/index"],
       "@opentiny/tiny-engine-setting-events": ["packages/settings/events/index"],
       "@opentiny/tiny-engine-setting-props": ["packages/settings/props/index"],
       "@opentiny/tiny-engine-setting-styles": ["packages/settings/styles/index"],
