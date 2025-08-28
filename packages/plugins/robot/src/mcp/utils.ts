@@ -8,13 +8,14 @@ let requestOptions: RequestOptions = {}
 const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {
   const bodyObj: LLMRequestBody = {
     model: options?.model || 'deepseek-chat',
+    baseUrl: options?.baseUrl || 'https://api.deepseek.com/v1',
     stream: false,
     messages: toRaw(messages)
   }
   if (tools.length > 0) {
     bodyObj.tools = toRaw(tools)
   }
-  return fetch(options?.url || '/app-center/api/chat/completions', {
+  return fetch(options?.url || '/app-center/api/ai/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

@@ -51,31 +51,39 @@
           </tr-bubble-provider>
           <template #footer>
             <tr-sender
+              :maxlength="4000"
+              mode="multiple"
+              :autoSize="{ minRows: 1, maxRows: 5 }"
+              :loagding="requestLoading"
               class="footer-sender"
               ref="senderRef"
               v-model="inputContent"
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model)"
+              :allowFiles="
+                singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model) && aiType === BUILD_TYPE
+              "
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
             >
-              <template #footer-left>
-                <mcp-server></mcp-server>
-              </template>
               <template #header v-if="singleAttachmentItems.length > 0">
                 <div>
                   <tr-attachments
                     ref="singleAttachmentRef"
                     v-model:items="singleAttachmentItems"
-                    status-type="message"
+                    variant="card"
+                    wrap
                     @file-remove="handleSingleFileRemove"
                     @file-retry="handleSingleFileRetry"
                   >
                   </tr-attachments>
                 </div>
+              </template>
+              <template #footer-left>
+                <mcp-server v-if="aiType === MCP_TYPE"></mcp-server>
+                <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
               </template>
             </tr-sender>
           </template>
@@ -92,8 +100,7 @@
 /* metaService: engine.plugins.robot.Main */
 import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
+import { useCanvas, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import {
   TrContainer,
   TrWelcome,
@@ -104,7 +111,7 @@ import {
   TrAttachments,
   TrBubbleProvider
 } from '@opentiny/tiny-robot'
-import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
+import type { PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
@@ -114,7 +121,10 @@ import {
   getAIModelOptions,
   defaultSelectedModel,
   isValidFastJsonPatch,
-  VISUAL_MODEL
+  VISUAL_MODEL,
+  TALK_TYPE,
+  MCP_TYPE,
+  BUILD_TYPE
 } from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
@@ -123,6 +133,7 @@ import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import { sendMcpRequest } from './mcp/utils'
+import RobotTypeSelect from './RobotTypeSelect.vue'
 
 export default {
   components: {
@@ -138,11 +149,12 @@ export default {
     IconNewSession,
     SchemaRenderer,
     McpServer,
-    TrBubbleProvider
+    TrBubbleProvider,
+    RobotTypeSelect
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
+    const { isBlock, isSaved, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
@@ -155,7 +167,6 @@ export default {
     const inProcesing = ref(false)
     const selectedModel = ref(defaultSelectedModel)
     const { confirm } = useModal()
-    const tokenValue = ref('')
     const showPopover = ref(false)
     const searchContent = ref('')
     const currentSchema = ref(null)
@@ -163,6 +174,7 @@ export default {
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
+    const aiType = ref(TALK_TYPE)
 
     const { pageSettingState } = usePage()
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
@@ -180,10 +192,21 @@ export default {
                 ...selectedModel.value
               },
               messages: [],
-              displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+              displayMessages: [], // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+              aiType: aiType.value
             })
       )
     }
+
+    const codeRules = `
+    请扮演一名前端开发专家，生成代码时遵从以下几点要求：
+    ###
+    1.只使用element-ui组件库完成代码编写
+    2.使用vue2技术栈
+    3.回复中只能有一个代码块
+    4.el-table标签内不得出现el-table-column
+    ###
+    `
 
     // 在每一次发送请求之前，都把提示词，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
@@ -191,14 +214,20 @@ export default {
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
-      const firstContent = firstMessage.content.map((item) => {
-        if (item.type === 'text') {
-          item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
-            pageState.pageSchema
-          )}`
-        }
-        return item
-      })
+      let firstContent = firstMessage.content
+      if (aiType.value === BUILD_TYPE) {
+        firstContent = firstMessage.content.map((item) => {
+          if (item.type === 'text') {
+            item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
+              pageState.pageSchema
+            )}`
+          }
+          return item
+        })
+      }
+      if (aiType.value === MCP_TYPE) {
+        firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
+      }
 
       sendProcess.messages = [
         {
@@ -239,27 +268,34 @@ export default {
     // 处理响应
     const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }) => {
       try {
-        const regex = /```json([\s\S]*?)```/
-        const match = chatMessage?.content.match(regex)
+        if (aiType.value === BUILD_TYPE) {
+          const regex = /```json([\s\S]*?)```/
+          const match = chatMessage?.content.match(regex)
 
-        if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
-          const newValue = JSON.parse(match[1])
-          // 使用 applyPatch 修改 Schema
-          const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+          if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
+            const newValue = JSON.parse(match[1])
+            // 使用 applyPatch 修改 Schema
+            const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
 
-          sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
-          sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
-          messages.value[messages.value.length - 1].content = MESSAGE_TIP
-          messages.value[messages.value.length - 1].schema = result
-          messages.value[messages.value.length - 1].id = id
-        } else {
+            sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
+            sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
+            messages.value[messages.value.length - 1].content = MESSAGE_TIP
+            messages.value[messages.value.length - 1].schema = result
+            messages.value[messages.value.length - 1].id = id
+          } else {
+            sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
+            sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
+            messages.value[messages.value.length - 1].content = chatMessage?.content
+          }
+          setContextSession()
+          inProcesing.value = false
+          connectedFailed.value = false
+        }
+        if (aiType.value === TALK_TYPE) {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
           messages.value[messages.value.length - 1].content = chatMessage?.content
         }
-        setContextSession()
-        inProcesing.value = false
-        connectedFailed.value = false
       } catch (e) {
         messages.value[messages.value.length - 1].content = '处理响应时出错'
         inProcesing.value = false
@@ -270,13 +306,15 @@ export default {
     const requestLoading = ref(false)
     // 发送流式请求
     const sendStreamRequest = async () => {
-      if (useMcpServer().isToolsEnabled) {
+      const requestData = getSendSeesionProcess()
+      if (useMcpServer().isToolsEnabled && aiType.value === MCP_TYPE) {
         try {
           requestLoading.value = true
           await sendMcpRequest(messages.value, {
-            model: selectedModel.value.value,
+            model: selectedModel.value.model,
+            baseUrl: selectedModel.value.baseUrl,
             headers: {
-              Authorization: `Bearer ${tokenValue.value || import.meta.env.VITE_API_TOKEN}`
+              Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
             }
           })
         } catch (error) {
@@ -286,54 +324,56 @@ export default {
           requestLoading.value = false
         }
         return
-      }
+      } else {
+        if (requestData.foundationModel) {
+          requestData.foundationModel.stream = true
+        }
 
-      const requestData = getSendSeesionProcess()
-      if (requestData.foundationModel) {
-        requestData.foundationModel.stream = true
-      }
-
-      let streamContent = ''
-      const chatId = Date.now().toString()
-      await chatStream(
-        {
-          requestUrl: '/app-center/api/ai/chat',
-          requestData
-        },
-        {
-          onData: (data) => {
-            const choice = data.choices?.[0]
-            if (choice && choice.delta.content) {
-              if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
-                messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+        let streamContent = ''
+        const chatId = Date.now().toString()
+        await chatStream(
+          {
+            requestUrl: '/app-center/api/ai/chat',
+            requestData: { ...requestData.foundationModel, messages: requestData.messages }
+          },
+          {
+            onData: (data) => {
+              const choice = data.choices?.[0]
+              if (choice && choice.delta.content) {
+                if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                  messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+                }
+                if (streamContent !== messages.value[messages.value.length - 1].content) {
+                  messages.value[messages.value.length - 1].content = ''
+                }
+                streamContent += choice.delta.content
+                messages.value[messages.value.length - 1].content += choice.delta.content
               }
-              if (streamContent !== messages.value[messages.value.length - 1].content) {
-                messages.value[messages.value.length - 1].content = ''
-              }
-              streamContent += choice.delta.content
-              messages.value[messages.value.length - 1].content += choice.delta.content
+            },
+            onError: (error) => {
+              messages.value[messages.value.length - 1].content = '连接失败'
+              localStorage.removeItem('aiChat')
+              inProcesing.value = false
+              connectedFailed.value = false
+              // eslint-disable-next-line no-console
+              console.error('Stream error:', error)
+            },
+            onDone: () => {
+              handleResponse({
+                id: chatId,
+                chatMessage: {
+                  role: 'assistant',
+                  content: streamContent || '没有返回内容',
+                  name: 'AI'
+                }
+              })
             }
           },
-          onError: (error) => {
-            messages.value[messages.value.length - 1].content = '连接失败'
-            localStorage.removeItem('aiChat')
-            inProcesing.value = false
-            connectedFailed.value = false
-            // eslint-disable-next-line no-console
-            console.error('Stream error:', error)
-          },
-          onDone: () => {
-            handleResponse({
-              id: chatId,
-              chatMessage: {
-                role: 'assistant',
-                content: streamContent || '没有返回内容',
-                name: 'AI'
-              }
-            })
+          {
+            Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
           }
-        }
-      )
+        )
+      }
     }
 
     const scrollContent = async () => {
@@ -380,7 +420,7 @@ export default {
           text
         }
       ]
-      if (singleAttachmentItems.value.length > 0) {
+      if (singleAttachmentItems.value.length > 0 && aiType.value === BUILD_TYPE) {
         content.push({
           type: 'image_url',
           image_url: {
@@ -419,7 +459,7 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        if (!sessionProcess?.messages?.length) {
+        if (!sessionProcess?.messages?.length && aiType.value !== TALK_TYPE) {
           sessionProcess?.messages.push({
             role: 'system',
             content: [
@@ -435,7 +475,7 @@ export default {
         messages.value.push(message)
         sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
-        if (!searchContent.value || !sessionProcess.messages?.length) {
+        if (aiType.value === BUILD_TYPE && (!searchContent.value || !sessionProcess.messages?.length)) {
           await search(realContent)
         }
 
@@ -457,6 +497,7 @@ export default {
       selectedModel.value = {
         ...JSON.parse(aiSession)?.foundationModel
       }
+      aiType.value = JSON.parse(aiSession)?.aiType
     }
 
     const initChat = () => {
@@ -596,7 +637,7 @@ export default {
           footer: ({ bubbleProps }) => {
             return h(TrFeedback, {
               style: {
-                display: getItemSchema(bubbleProps)?.schema ? 'block' : 'none'
+                display: getItemSchema(bubbleProps)?.schema && aiType.value === BUILD_TYPE ? 'block' : 'none'
               },
               actions: [
                 { name: 'run', label: '应用', icon: saveIcon },
@@ -649,14 +690,8 @@ export default {
         if (files && files.length > 0) {
           // 将选中的文件转换为 Attachment 格式并添加到附件列表
           const newAttachments = Array.from(files).map((file, index) => ({
-            uid: `${Date.now()}-${index}`,
-            name: file.name,
             size: file.size,
-            type: file.type,
-            status: 'uploading',
-            isUploading: true,
-            messageType: 'uploading',
-            file: file
+            rawFile: file
           }))
           singleAttachmentItems.value.push(...newAttachments)
         }
@@ -703,6 +738,11 @@ export default {
       handleSingleFilesSelected(file.file, true)
     }
 
+    const typeChange = (type) => {
+      aiType.value = type
+      endContent()
+    }
+
     return {
       robotVisible,
       avatarUrl,
@@ -712,7 +752,6 @@ export default {
       connectedFailed,
       AIModelOptions,
       selectedModel,
-      tokenValue,
       showPopover,
       fullscreen,
       welcomeIcon,
@@ -724,6 +763,10 @@ export default {
       promptItems,
       MarkdownRenderer,
       requestLoading,
+      aiType,
+      TALK_TYPE,
+      MCP_TYPE,
+      BUILD_TYPE,
       sendContent,
       endContent,
       changeApiKey,
@@ -735,7 +778,8 @@ export default {
       setSchema,
       handleSingleFilesSelected,
       handleSingleFileRemove,
-      handleSingleFileRetry
+      handleSingleFileRetry,
+      typeChange
     }
   }
 }
@@ -763,11 +807,11 @@ export default {
 
 .tiny-container {
   top: var(--base-top-panel-height) !important;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
+  // background-image: linear-gradient(
+  //   var(--te-chat-bg-top-color),
+  //   var(--te-chat-bg-mid-color),
+  //   var(--te-chat-bg-bottom-color)
+  // );
   container-type: inline-size;
 
   &.tr-container.tr-container {
@@ -870,6 +914,23 @@ export default {
       .upload-option:first-child {
         display: none;
       }
+    }
+  }
+  .tiny-sender__container
+    .tiny-sender__footer-slot
+    .tiny-sender__footer-right
+    .tiny-sender__toolbar
+    .action-buttons__button,
+  .action-buttons__submit-content {
+    width: 28px;
+    height: 28px;
+  }
+}
+.tr-attachments {
+  .tr-attachments__file-list {
+    .tr-file-card {
+      margin-top: 10px;
+      margin-left: 10px;
     }
   }
 }

@@ -3,6 +3,7 @@ import type { BubbleContentItem } from '@opentiny/tiny-robot'
 export interface RequestOptions {
   url?: string
   model?: string
+  baseUrl?: string
   headers?: Record<string, string>
 }
 

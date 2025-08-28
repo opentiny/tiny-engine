@@ -18,6 +18,9 @@ import meta from '../../meta'
 export const EXISTING_MODELS = 'existingModels'
 export const CUSTOMIZE = 'customize'
 export const VISUAL_MODEL = ['qwen-vl-max','qwen-vl-plus']
+export const TALK_TYPE = 'talk'
+export const MCP_TYPE = 'mcp'
+export const BUILD_TYPE = 'build'
 
 export const AIModelOptions = [
   {
