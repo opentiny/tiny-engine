@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar-helpGuid">
-    <toolbar-base content="出码" :icon="options.icon.default || options.icon" :options="options" @click-api="generate">
+    <toolbar-base content="出码" :icon="options.icon.download || options.icon" :options="options" @click-api="generate">
       <template #default>
         <generate-file-selector
           :visible="state.showDialogbox"
@@ -10,12 +10,23 @@
         ></generate-file-selector>
       </template>
     </toolbar-base>
+    <toolbar-base
+      class="ml-8"
+      content="上传"
+      :icon="options.icon?.upload || options?.icon"
+      :options="options"
+      @click-api="triggerUpload"
+    >
+      <template #default>
+        <input ref="fileInputRef" type="file" accept=".vue" style="display: none" @change="handleFileChange" />
+      </template>
+    </toolbar-base>
   </div>
 </template>
 
 <script lang="ts">
 /* metaService: engine.toolbars.generate-code.Main */
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import {
   useBlock,
   useCanvas,
@@ -30,11 +41,13 @@ import { fs } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
+import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
+
 // @ts-ignore
 export default {
   components: {
-    GenerateFileSelector: FileSelector,
-    ToolbarBase
+    GenerateFileSelector: FileSelector as any,
+    ToolbarBase: ToolbarBase as any
   },
   props: {
     options: {
@@ -52,6 +65,9 @@ export default {
       showDialogbox: false,
       saveFilesInfo: []
     })
+
+    // 文件上传引用
+    const fileInputRef = ref<HTMLInputElement | null>(null)
 
     const getParams = () => {
       const { getSchema } = useCanvas()
@@ -258,16 +274,61 @@ export default {
       state.saveFilesInfo = []
     }
 
+    // 触发隐藏文件上传
+    const triggerUpload = () => {
+      fileInputRef.value?.click()
+    }
+
+    // 处理上传的 .vue 文件
+    const handleFileChange = async (e: Event) => {
+      const input = e.target as HTMLInputElement
+      const file = input?.files?.[0]
+      if (!file) return
+
+      try {
+        const text = await file.text()
+
+        // 转换器实例
+        const converter = new VueToDslConverter()
+        const result = await converter.convertFromString(text, file.name)
+
+        // 写入画布
+        const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
+        if (isBlock()) {
+          resetBlockCanvasState({ ...pageState, pageSchema: result.schema })
+        } else {
+          resetPageCanvasState({ ...pageState, pageSchema: result.schema })
+        }
+
+        useNotify({ type: 'success', title: '加载成功', message: `已加载并应用 ${file.name}` })
+      } catch (error: any) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        useNotify({ type: 'error', title: '加载失败', message: error?.message || String(error) })
+      } finally {
+        // 清空 input 以便可重复选择同一文件
+        if (fileInputRef.value) fileInputRef.value.value = ''
+      }
+    }
+
     return {
       state,
       generate,
       confirm,
-      cancel
+      cancel,
+      triggerUpload,
+      handleFileChange,
+      fileInputRef
     }
   }
 }
 </script>
 <style lang="less" scoped>
+.toolbar-helpGuid {
+  display: inline-flex;
+  align-items: center;
+}
+
 .toolbar-generate {
   .toolbar-generate-btn {
     display: flex;
