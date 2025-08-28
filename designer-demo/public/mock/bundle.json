@@ -5410,33 +5410,6 @@
             "properties": [
               {
                 "label": {
-                  "zh_CN": "选择模型"
-                },
-                "description": {
-                  "zh_CN": "选择模型"
-                },
-                "content": [
-                  {
-                    "property": "model",
-                    "label": {
-                      "text": {
-                        "zh_CN": "选择模型"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "ModelConfigurator",
-                      "props": {}
-                    },
-                    "labelPosition": "left"
-                  }
-                ]
-              },
-              {
-                "label": {
                   "zh_CN": "基础信息"
                 },
                 "description": {
