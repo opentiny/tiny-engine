@@ -25,7 +25,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
-      name: 'plugin-page',
+      name: 'plugin-model-manager',
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
