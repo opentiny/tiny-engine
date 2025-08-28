@@ -16,9 +16,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "pnpm run build:types && vite build && pnpm run build:cli",
+    "build": "pnpm run build:types && vite build",
     "build:types": "tsc -p tsconfig.json",
-    "build:cli": "tsc -p tsconfig.cli.json",
     "test": "vitest",
     "test:unit": "vitest run",
     "coverage": "vitest run --coverage",

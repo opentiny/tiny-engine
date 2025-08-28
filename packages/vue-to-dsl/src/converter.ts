@@ -3,6 +3,7 @@ import { parseTemplate } from './parsers/templateParser'
 import { parseScript } from './parsers/scriptParser'
 import { parseStyle } from './parsers/styleParser'
 import { generateSchema } from './generator/index'
+import { defaultComponentMap } from './constants'
 import fs from 'fs/promises'
 import path from 'path'
 
@@ -33,7 +34,7 @@ export class VueToDslConverter {
 
   constructor(options: VueToSchemaOptions = {}) {
     this.options = {
-      componentMap: {},
+      componentMap: defaultComponentMap,
       preserveComments: false,
       strictMode: false,
       customParsers: {},
