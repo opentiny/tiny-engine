@@ -41,7 +41,7 @@ export class VueToDslConverter {
     }
   }
 
-  async convertFromString(vueCode: string): Promise<ConvertResult> {
+  async convertFromString(vueCode: string, fileName?: string): Promise<ConvertResult> {
     const errors: string[] = []
     const warnings: string[] = []
     const dependencies: string[] = []
@@ -104,6 +104,11 @@ export class VueToDslConverter {
         }
       }
 
+      // Set fileName in options for schema generation
+      if (fileName) {
+        this.options.fileName = fileName.replace(/\.vue$/i, '')
+      }
+
       const schema = await generateSchema(templateSchema, scriptSchema, styleSchema, this.options as any)
 
       return {
@@ -121,14 +126,8 @@ export class VueToDslConverter {
   async convertFromFile(filePath: string): Promise<ConvertResult> {
     try {
       const vueCode = await fs.readFile(filePath, 'utf-8')
-      const result = await this.convertFromString(vueCode)
-
       const fileName = path.basename(filePath, '.vue')
-
-      if (result.schema) {
-        result.schema.fileName = fileName
-        result.schema.meta.name = fileName
-      }
+      const result = await this.convertFromString(vueCode, fileName)
       return result
     } catch (error: any) {
       return { schema: null, dependencies: [], errors: [`File reading error: ${error.message}`], warnings: [] }
