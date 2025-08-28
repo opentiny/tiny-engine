@@ -48,7 +48,8 @@ import {
   GenerateCodeService,
   GlobalService,
   ThemeSwitchService,
-  HttpService
+  HttpService,
+  McpService
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -56,7 +57,7 @@ window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
+    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService, McpService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
   },
   config: {
     id: 'engine.config',

@@ -10,7 +10,7 @@ labels:
     sync: true
     matcher:
       title: '^.+!:|#breaking'
-      body: '#breaking'
+      body: '## Does this PR introduce a breaking change\?\s+- \[[xX]\] *Yes'
   - label: 'enhancement'
     sync: true
     matcher:

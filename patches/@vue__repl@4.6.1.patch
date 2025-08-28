@@ -1,0 +1,65 @@
+diff --git a/dist/monaco-editor.js b/dist/monaco-editor.js
+index 5132a3752a80f6bbeb67e7e8d1aff65cdc97ae02..9e67e62c44419aeb752966de75afe11b967597b4 100644
+--- a/dist/monaco-editor.js
++++ b/dist/monaco-editor.js
+@@ -3,6 +3,15 @@ import { watchEffect, defineComponent, useTemplateRef, shallowRef, inject, compu
+ import { d as debounce } from './chunks/utils-BJf_b1Uq.js';
+ import { a as injectKeyProps } from './chunks/types-XqLqBVey.js';
+ 
++function getWorkerURL(url){
++    if (typeof document !== 'undefined' && document.location && document.location.origin !== url.origin) {
++        return URL.createObjectURL(new Blob([`import '${url.href}'`], {
++            type: 'application/javascript'
++        }))
++    }
++    return url.href;
++}
++
+ /*---------------------------------------------------------------------------------------------
+  *  Copyright (c) Microsoft Corporation. All rights reserved.
+  *  Licensed under the MIT License. See License.txt in the project root for license information.
+@@ -73583,12 +73592,6 @@ function fuzzyScoreGracefulAggressive(pattern, lowPattern, patternPos, word, low
+ }
+ function fuzzyScoreWithPermutations(pattern, lowPattern, patternPos, word, lowWord, wordPos, aggressive, options) {
+     let top = fuzzyScore(pattern, lowPattern, patternPos, word, lowWord, wordPos, options);
+-    if (top && false) {
+-        // when using the original pattern yield a result we`
+-        // return it unless we are aggressive and try to find
+-        // a better alignment, e.g. `cno` -> `^co^ns^ole` or `^c^o^nsole`.
+-        return top;
+-    }
+     if (pattern.length >= 3) {
+         // When the pattern is long enough then try a few (max 7)
+         // permutations of the pattern to find a better match. The
+@@ -178015,7 +178018,7 @@ async function registerProviders(worker, language, getSyncUris, languages) {
+ 
+ function WorkerWrapper$1(options) {
+           return new Worker(
+-            ""+new URL('assets/editor.worker-KaUq7_iC.js', import.meta.url).href+"",
++            ""+getWorkerURL(new URL('assets/editor.worker-KaUq7_iC.js', import.meta.url))+"",
+             {
+         type: "module",
+         name: options?.name
+@@ -178034,7 +178037,7 @@ function getOrCreateModel(uri, lang, value) {
+ 
+ function WorkerWrapper(options) {
+           return new Worker(
+-            ""+new URL('assets/vue.worker-Dc6PZdLj.js', import.meta.url).href+"",
++            ""+getWorkerURL(new URL('assets/vue.worker-Dc6PZdLj.js', import.meta.url))+"",
+             {
+         type: "module",
+         name: options?.name
+diff --git a/dist/vue-repl.js b/dist/vue-repl.js
+index cfb74a062a5661ba5a8105825714c8eb464cbf70..91b4747b22b96899c96612b909dc662d87b890e6 100644
+--- a/dist/vue-repl.js
++++ b/dist/vue-repl.js
+@@ -551,7 +551,8 @@ const _sfc_main$7 = /* @__PURE__ */ defineComponent({
+           "allow-popups",
+           "allow-same-origin",
+           "allow-scripts",
+-          "allow-top-navigation-by-user-activation"
++          "allow-top-navigation-by-user-activation",
++          "allow-downloads"
+         ].join(" ")
+       );
+       const importMap = store.value.getImportMap();

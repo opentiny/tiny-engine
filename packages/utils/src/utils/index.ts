@@ -13,6 +13,9 @@
 import { isRef, isProxy, unref, toRaw } from 'vue'
 import { isObject, isArray } from '@opentiny/vue-renderless/grid/static'
 
+export * from './validateParams'
+export type * from './validateParams'
+
 export const fun_ctor = Function
 
 /**

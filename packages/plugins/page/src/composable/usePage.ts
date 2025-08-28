@@ -570,6 +570,89 @@ const getFamily = async (currentPage: { id: string }) => {
   return familyPages
 }
 
+const createNewPage = async ({
+  name = 'Untitled',
+  route = '',
+  group = 'staticPages',
+  parentId = pageSettingState.ROOT_ID
+}) => {
+  try {
+    const defaultPage = getDefaultPage()
+    const params = {
+      ...defaultPage,
+      parentId,
+      route,
+      name,
+      group,
+      app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
+      isPage: true
+    }
+
+    const data = await http.requestCreatePage(params)
+
+    pageSettingState.updateTreeData?.()
+    useNotify({
+      type: 'success',
+      message: '新建页面成功!'
+    })
+
+    return {
+      success: true,
+      data
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: JSON.stringify(error?.message || error)
+    }
+  }
+}
+
+const deletePage = async (id) => {
+  try {
+    await http.requestDeletePage(id)
+    await pageSettingState.updateTreeData?.()
+    // TODO: 删除页面后，如果当前页面是删除的页面，则需要切换到上一个页面删除页面后，如果当前页面是删除的页面，则需要切换到上一个页面
+    // if (pageState?.currentPage?.id !== id) {
+    //   return {
+    //     success: true
+    //   }
+    // }
+
+    return {
+      success: true
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: JSON.stringify(error?.message || error)
+    }
+  }
+}
+
+const updatePageById = async (id, params) => {
+  try {
+    const pageDetail = await http.fetchPageDetail(id)
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== undefined && value !== null)
+    )
+    const res = await http.requestUpdatePage(id, {
+      ...pageDetail,
+      ...filteredParams
+    })
+
+    return {
+      success: true,
+      data: res
+    }
+  } catch (error) {
+    return {
+      success: false,
+      error: JSON.stringify(error?.message || error)
+    }
+  }
+}
+
 export default () => {
   return {
     getDefaultPage,
@@ -590,6 +673,9 @@ export default () => {
     getPageChildren,
     updatePageSettingAfterSave,
     STATIC_PAGE_GROUP_ID,
-    COMMON_PAGE_GROUP_ID
+    COMMON_PAGE_GROUP_ID,
+    createNewPage,
+    deletePage,
+    updatePageById
   }
 }

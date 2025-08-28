@@ -14,7 +14,7 @@
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta, getAllMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import defaultLayout from '../defaultLayout'
 import { utils } from '@opentiny/tiny-engine-utils'
 
@@ -391,13 +391,6 @@ export default () => {
     pluginStorageReactive.value = pluginList
   }
 
-  const getIsUserCustomLayout = () => {
-    const defaultLayoutString = JSON.stringify(defaultLayout)
-    const userLayoutString = JSON.stringify(getMergeMeta('engine.layout')?.options?.layoutConfig)
-
-    return defaultLayoutString !== userLayoutString
-  }
-
   const removeUndefineLayoutId = (layout) => {
     if (Array.isArray(layout)) {
       layout.forEach((item, index) => {
@@ -496,17 +489,28 @@ export default () => {
       return finalLayoutConfig
     }
 
-    const isUserCustomLayout = getIsUserCustomLayout()
+    const userCustomLayout = getMergeMeta('engine.layout')?.options?.layoutConfig
     // 用户传了自定义配置，则忽略 insertBefore insertAfter 的配置
-    if (isUserCustomLayout) {
-      finalLayoutConfig = getMergeMeta('engine.layout')?.options?.layoutConfig
-      return finalLayoutConfig
+    if (userCustomLayout) {
+      return userCustomLayout
     }
 
     const relativeLayoutConfig = getMergeMeta('engine.layout')?.options?.relativeLayoutConfig || {}
     finalLayoutConfig = computeFinalLayoutConfig(deepClone(defaultLayout), relativeLayoutConfig)
 
     return finalLayoutConfig
+  }
+
+  const getAllPlugins = () => {
+    return getAllMergeMeta()
+      .filter((item) => item.type === 'plugin')
+      .map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          type: item.type
+        }
+      })
   }
 
   return {
@@ -547,6 +551,7 @@ export default () => {
     getMoveDragBarState,
     changeMoveDragBarState,
     getPluginsByPosition,
-    getFinalLayoutConfig
+    getFinalLayoutConfig,
+    getAllPlugins
   }
 }

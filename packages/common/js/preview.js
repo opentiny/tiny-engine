@@ -216,7 +216,7 @@ const handleHistoryPreview = (params, url) => {
               styles
             })
           },
-          previewWindow.origin || window.location.origin
+          historyPreviewWindow?.origin || window.location.origin
         )
 
         // 历史页面不需要实时更新预览，发送完消息后移除监听

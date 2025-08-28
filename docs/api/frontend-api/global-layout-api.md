@@ -40,7 +40,7 @@ export default {
 #### 自定义插件位置
 
 自定义插件位置可以使用 options.layoutConfig 配置项，也可以使用 options.relativeLayoutConfig 配置项。
-⚠️注意：当使用 `options.relativeLayoutConfig` 配置项时，`options.layoutConfig` 配置项将失效。
+⚠️注意：当使用 `options.layoutConfig` 配置项时，`options.relativeLayoutConfig` 配置项将失效。
 
 ##### 使用 options.relativeLayoutConfig 配置项修改插件位置
 

@@ -127,7 +127,7 @@ export const getComponents = async ({ package: pkg, script, components }: Compon
         // 当item是配置对象时，根据destructuring属性决定如何获取组件
         const config = item as ComponentConfig
         window.TinyLowcodeComponent[componentId] =
-          config?.destructuring && config?.exportName ? modules[config.exportName] : modules
+          config?.destructuring && config?.exportName ? modules[config.exportName] : modules?.default
       }
     }
   })

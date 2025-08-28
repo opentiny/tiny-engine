@@ -36,7 +36,7 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.materials.component.Main */
-import { inject, onMounted, reactive, ref, watch, watchEffect } from 'vue'
+import { inject, onMounted, reactive, ref, watch, watchEffect, computed } from 'vue'
 import { Collapse, CollapseItem, Search } from '@opentiny/vue'
 import { SearchEmpty, CanvasDragItem } from '@opentiny/tiny-engine-common'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
@@ -57,29 +57,41 @@ export default {
     const SHORTCUT_PANEL_COLUMNS = '1fr 1fr 1fr 1fr 1fr 1fr'
     const { generateNode, materialState, getComponentsByGroup } = useMaterial()
     const gridTemplateColumns = ref(COMPONENT_PANEL_COLUMNS)
-    const panelState = inject('panelState', {})
+    interface PanelState {
+      isShortcutPanel: boolean
+      materialGroup: string
+      emitEvent: (event: string) => void
+    }
+    const panelState = inject('panelState', {}) as PanelState
     const { locale } = i18n.global
+    const componentsWithChildren = computed(() => materialState.components.filter((item) => item.children.length))
 
-    const fetchComponents = (components, name) => {
+    type Component = typeof componentsWithChildren.value[number]
+
+    const fetchComponents = (components: Component[], name: string) => {
       if (!name) {
         return components
       }
 
-      const result = []
+      const result: Component[] = []
       components.forEach((component) => {
-        const children = []
+        const children: Component['children'] = []
 
         component.children.forEach((child) => {
-          if (child.name?.[locale.value]?.toLowerCase().indexOf(name.toLowerCase()) > -1) {
+          if ((child.name?.[locale.value as 'zh_CN'] || '')?.toLowerCase().indexOf(name.toLowerCase()) > -1) {
             children.push(child)
           }
         })
 
         if (children.length > 0) {
           result.push({
+            // @ts-ignore 数据类型兼容
             groupId: component.groupId,
             group: component.group,
+            // @ts-ignore 数据类型兼容
             groupName: component.groupName,
+            // @ts-ignore 数据类型兼容
+            label: component.label,
             children: children
           })
         }
@@ -91,28 +103,32 @@ export default {
     const initComponents = () => {
       const groupName = panelState.materialGroup
       if (groupName) {
-        return getComponentsByGroup(materialState.components, groupName)
+        return getComponentsByGroup(componentsWithChildren.value, groupName)
       }
 
-      return materialState.components
+      return componentsWithChildren.value
     }
 
-    const state = reactive({
+    const state = reactive<{
+      components: Component[]
+      activeName: number[]
+      searchValue: string
+    }>({
       components: initComponents(),
       activeName: [],
       searchValue: ''
     })
 
     watchEffect(() => {
-      state.activeName = [...Array(materialState.components.length).keys()]
+      state.activeName = [...Array(componentsWithChildren.value.length).keys()]
     })
 
-    const change = (value) => {
-      state.components = fetchComponents(materialState.components, value)
+    const change = (value: string) => {
+      state.components = fetchComponents(componentsWithChildren.value, value)
     }
 
     watch(
-      () => materialState.components,
+      () => componentsWithChildren.value,
       (value) => {
         state.components = fetchComponents(value, state.searchValue)
       },
@@ -121,12 +137,14 @@ export default {
       }
     )
 
-    const componentClick = (data) => {
+    const componentClick = (data: any) => {
       const { isShortcutPanel, emitEvent } = panelState
       const { addComponent } = useCanvas().canvasApi.value
 
       if (isShortcutPanel) {
-        addComponent(data, isShortcutPanel)
+        // FIXME: 类型修复
+        // @ts-ignore
+        addComponent?.(data, isShortcutPanel)
         emitEvent('close')
       }
     }

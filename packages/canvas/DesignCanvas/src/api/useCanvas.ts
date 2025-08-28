@@ -95,13 +95,23 @@ const handleTinyGridColumnsSlots = (node: Node) => {
       if (Array.isArray(slotItem?.value)) {
         // 这里要给 TinyGrid 的表格列插槽添加一个虚拟 Template 节点
         // 不然有可能在拖拽的时候，拖拽到插槽的同级节点上，此时由于插槽的父节点是 TinyGrid，导致插入到了TinyGrid 的 children 中。添加一个父节点可以避免该问题
-        const virtualNode = {
+        let virtualNode = {
           id: utils.guid(),
           componentName: 'Template',
           props: {},
           children: slotItem.value
         }
-        nodesMap.value.set(virtualNode.id, { node: virtualNode, parent: node })
+
+        const existVirtualNode = nodesMap.value.get(slotItem.value?.[0]?.id)?.parent
+
+        // 已经存在虚拟节点，直接使用
+        if (existVirtualNode?.componentName === 'Template') {
+          virtualNode = existVirtualNode
+          virtualNode.children = slotItem.value
+        } else {
+          // 不存在，则添加到 nodesMap 中
+          nodesMap.value.set(virtualNode.id, { node: virtualNode, parent: node })
+        }
 
         slotItem.value.forEach((item: Node) => {
           if (!item.id) {
@@ -443,6 +453,8 @@ const operationTypeMap = {
     } else {
       Object.assign(node.props, value?.props || {})
     }
+
+    handleNodesInProps(node)
 
     return {
       current: node,

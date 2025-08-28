@@ -4,19 +4,14 @@
       <svg-icon name="AI" @click="openAIRobot"></svg-icon>
     </div>
     <Teleport to="body">
-      <div v-if="robotVisible" class="robot-dialog">
-        <div class="bind-chatgpt" id="bind-chatgpt">
-          <section>
-            <div class="chat-title-icons">
-              <svg-icon name="close" class="common-svg opt-button" @click="robotVisible = false"></svg-icon>
-              <svg-icon
-                :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-                class="common-svg opt-button"
-                @click="resizeChatWindow"
-              ></svg-icon>
-            </div>
-          </section>
-          <header class="chat-title">
+      <div class="robot-chat-container">
+        <tr-container
+          v-if="robotVisible"
+          v-model:fullscreen="fullscreen"
+          v-model:show="robotVisible"
+          class="tiny-container"
+        >
+          <template #operations>
             <tiny-popover
               width="270"
               trigger="manual"
@@ -33,79 +28,44 @@
               ></robot-setting-popover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
-                  <span class="chat-title-label">{{ selectedModel.label }}</span>
-                  <svg-icon name="setting" class="ml8"> </svg-icon>
+                  <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
                 </span>
               </template>
             </tiny-popover>
-          </header>
-          <div class="robot-dialog-content">
-            <div class="robot-dialog-content-top">
-              <div class="robot-dialog-content-top-title">我是你的开发小助手</div>
-              <span class="robot-dialog-content-top-icon"><svg-icon name="AI" class="icon-ai"></svg-icon>智能对话</span>
-              <article class="chat-tips">
-                <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
-                <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-              </article>
-            </div>
-            <article
-              :class="[
-                'chat-window',
-                'lowcode-scrollbar-hide',
-                chatWindowOpened ? 'max-chat-window' : 'min-chat-window'
-              ]"
-              id="chatgpt-window"
-            >
-              <tiny-layout>
-                <tiny-row
-                  v-for="(item, index) in activeMessages"
-                  :key="index"
-                  :flex="true"
-                  :order="item.role === 'user' ? 'des' : 'asc'"
-                  :justify="item.role === 'user' ? 'end' : 'start'"
-                  class="chat-message-row"
-                >
-                  <tiny-col
-                    :span="1"
-                    :no="1"
-                    class="chat-avatar-wrap"
-                    :class="{ 'chat-avatar-wrap-ai': item.role !== 'user' }"
-                  >
-                    <svg-icon v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" name="AI"></svg-icon>
-                    <svg-icon v-else class="chat-avatar" name="user-head"></svg-icon>
-                  </tiny-col>
-                  <tiny-col :span="22" :no="2">
-                    <div
-                      :class="[
-                        'chat-content',
-                        item.role === 'user'
-                          ? 'chat-content-user'
-                          : connectedFailed
-                          ? 'chat-content-ai-unconnected'
-                          : 'chat-content-ai'
-                      ]"
-                    >
-                      <span>{{ item.content }}</span>
-                    </div>
-                  </tiny-col>
-                </tiny-row>
-              </tiny-layout>
-            </article>
-
-            <footer class="chat-submit">
-              <tiny-input
-                @keydown.enter="sendContent(inputContent, false)"
-                placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-                v-model="inputContent"
-              >
-                <template #suffix>
-                  <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
-                </template>
-              </tiny-input>
-              <tiny-button @click="endContent"><svg-icon name="add"></svg-icon><span>新对话</span></tiny-button>
-            </footer>
+            <button class="icon-btn" @click="endContent">
+              <icon-new-session />
+            </button>
+          </template>
+          <div v-if="activeMessages.length === 0">
+            <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
+            </tr-welcome>
+            <tr-prompts
+              :items="promptItems"
+              :wrap="true"
+              item-class="prompt-item"
+              class="tiny-prompts"
+              @item-click="handlePromptItemClick"
+            ></tr-prompts>
           </div>
-        </div>
+          <tr-bubble-provider :message-renderers="{ markdown: MarkdownRenderer }" v-else>
+            <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
+          </tr-bubble-provider>
+          <template #footer>
+            <tr-sender
+              :maxlength="4000"
+              mode="multiple"
+              v-model="inputContent"
+              :autoSize="{ minRows: 1, maxRows: 5 }"
+              :loading="requestLoading"
+              placeholder="请输入您的问题..."
+              @submit="sendContent(inputContent, false)"
+            >
+              <template #footer-left>
+                <mcp-server></mcp-server>
+              </template>
+            </tr-sender>
+          </template>
+        </tr-container>
       </div>
     </Teleport>
   </div>
@@ -113,26 +73,37 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.robot.Main */
-import { ref, onMounted, watchEffect } from 'vue'
-import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
+import { ref, onMounted, watchEffect, type CSSProperties, h, resolveComponent } from 'vue'
+import { Notify, Loading, TinyPopover } from '@opentiny/vue'
 import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { extend } from '@opentiny/vue-renderless/common/object'
+import { TrContainer, TrWelcome, TrPrompts, TrBubbleList, TrSender, TrBubbleProvider } from '@opentiny/tiny-robot'
+import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
+import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import { getBlockContent, initBlockList, getAIModelOptions } from './js/robotSetting'
+import McpServer from './mcp/McpServer.vue'
+import useMcpServer from './mcp/useMcp'
+import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
+import { sendMcpRequest } from './mcp/utils'
 
 export default {
   components: {
-    TinyLayout,
-    TinyButton,
-    TinyRow,
-    TinyCol,
-    TinyInput,
     TinyPopover,
-    RobotSettingPopover
+    RobotSettingPopover,
+    TrContainer,
+    TrWelcome,
+    TrPrompts,
+    TrBubbleList,
+    TrSender,
+    IconNewSession,
+    McpServer,
+    TrBubbleProvider
   },
   emits: ['close-chat'],
   setup() {
     const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
@@ -220,7 +191,27 @@ export default {
       content,
       name: 'AI'
     })
-    const sendRequest = () => {
+
+    const requestLoading = ref(false)
+
+    const sendRequest = async () => {
+      if (useMcpServer().isToolsEnabled) {
+        try {
+          requestLoading.value = true
+          await sendMcpRequest(messages.value, {
+            model: selectedModel.value.value,
+            headers: {
+              Authorization: `Bearer ${tokenValue.value || import.meta.env.VITE_API_TOKEN}`
+            }
+          })
+        } catch (error) {
+          messages.value[messages.value.length - 1].content = '连接失败'
+        } finally {
+          inProcesing.value = false
+          requestLoading.value = false
+        }
+        return
+      }
       getMetaApi(META_SERVICE.Http)
         .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
         .then((res) => {
@@ -244,6 +235,7 @@ export default {
           connectedFailed.value = false
         })
     }
+
     const scrollContent = async () => {
       await sleep(100)
       const scrollElement = document.getElementById('chatgpt-window')
@@ -313,7 +305,7 @@ export default {
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
       const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
+      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue) || AIModelOptions[0]
       tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
     }
 
@@ -346,6 +338,7 @@ export default {
     const endContent = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
+      inProcesing.value = false
       initChat()
     }
 
@@ -381,6 +374,48 @@ export default {
       showPopover.value = false
     }
 
+    // 控制全屏切换
+    const fullscreen = ref(false)
+
+    // 欢迎界面提示
+    const promptItems: PromptProps[] = [
+      {
+        label: 'MCP工具',
+        description: '帮我查询当前的页面列表',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🔧'),
+        badge: 'NEW'
+      },
+      {
+        label: '页面搭建场景',
+        description: '如何生成表单嵌进我的网站？',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨')
+      },
+      {
+        label: '学习/知识型场景',
+        description: 'Vue3 和 React 有什么区别？',
+        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🤔')
+      }
+    ]
+
+    // 处理提示项点击事件
+    const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
+      sendContent(item.description, true)
+    }
+
+    // Icon
+    const getSvgIcon = (name: string, style?: CSSProperties) => {
+      return h(resolveComponent('svg-icon'), { name, style: { fontSize: '32px', ...style } })
+    }
+    const aiAvatar = getSvgIcon('AI')
+    const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
+    const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
+
+    // 对话角色配置
+    const roles: Record<string, BubbleRoleConfig> = {
+      assistant: { placement: 'start', avatar: aiAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer },
+      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer }
+    }
+
     return {
       robotVisible,
       avatarUrl,
@@ -398,7 +433,14 @@ export default {
       openAIRobot,
       closePanel,
       tokenValue,
-      showPopover
+      showPopover,
+      fullscreen,
+      promptItems,
+      handlePromptItemClick,
+      welcomeIcon,
+      roles,
+      MarkdownRenderer,
+      requestLoading
     }
   }
 }
@@ -411,257 +453,107 @@ export default {
   align-items: center;
   width: 26px;
   height: 26px;
+
   .chatgpt-icon {
     width: 18px;
     height: 18px;
   }
 }
 
-.robot-dialog {
-  position: fixed;
-  width: 450px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  border-radius: 12px;
-}
-.common-svg {
-  color: var(--te-chat-model-common-icon);
-}
-
-.chat-title-icons {
-  font-size: 20px;
-  height: 20px;
-  margin-bottom: 20px;
-  svg {
-    float: right;
-    margin: 0 6px;
-    cursor: pointer;
-    color: var(--te-chat-model-icon);
-    &:hover {
-      opacity: 0.8;
-    }
-    &:first-child {
-      margin-right: 0;
-    }
+.chat-popover {
+  .robot-setting .bottom-buttons .tiny-button {
+    margin-left: 10px;
   }
 }
-.chat-title {
-  position: absolute;
-  top: 16px;
-  left: 28px;
-  font-weight: bold;
-  color: var(--te-chat-model-text);
-  .chat-title-dropdown {
+
+.tiny-container {
+  container-type: inline-size;
+
+  &.tr-container.tr-container {
+    top: var(--base-top-panel-height);
+    --tr-container-width: 400px;
+  }
+
+  :deep(button.icon-btn) {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  :deep(.robot-setting button) {
+    margin-left: 10px;
+  }
+
+  .tr-bubble-list {
+    flex: 1;
+    .tr-bubble {
+      word-break: break-word;
+    }
+  }
+
+  .robot-welcome > div {
     display: flex;
     align-items: center;
-    height: 24px;
-    cursor: pointer;
+    justify-content: center;
   }
-  .chat-title-label,
-  .ml8 {
-    color: var(--te-chat-model-text);
-    font-weight: 700;
-    font-size: 16px;
-  }
-  .ml8 {
-    margin-left: 8px;
-    outline: none;
-  }
-}
 
-.robot-dialog-content {
-  background: var(--te-chat-model-bg);
-  border-radius: 6px;
-  padding: 16px;
-  &-top {
-    margin-bottom: 30px;
-    &-title {
-      color: var(--te-chat-model-helper-text);
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    &-icon {
-      color: var(--te-chat-model-text);
-    }
-    .icon-ai {
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-    }
-    .chat-tips {
-      text-align: left;
-      font-size: 12px;
-      margin-top: 10px;
-      color: var(--te-chat-model-tips-text);
-      span {
-        display: inline-block;
-        height: 28px;
-        line-height: 28px;
-        padding: 0 8px;
-        margin-right: 8px;
-        border-radius: 4px;
-        background: var(--te-chat-model-tips-bg);
-        cursor: pointer;
-        &:hover {
-          border-color: var(--te-chat-model-text);
-        }
+  .operations-setting {
+    font-size: 20px;
+    padding: 4px;
+  }
+
+  .tiny-prompts > div {
+    padding: 16px 24px;
+
+    .prompt-item {
+      width: 100%;
+      box-sizing: border-box;
+
+      @container (width >=64rem) {
+        width: calc(50% - 8px);
+      }
+
+      .tr-prompt__content-label {
+        font-size: 14px;
+        line-height: 24px;
+      }
+
+      &:hover {
+        background-color: #f8f8f8;
       }
     }
   }
-}
-.chat-window {
-  overflow: scroll;
-  .chat-avatar-wrap {
-    width: 40px;
-    color: var(--te-chat-model-avatar-border);
-    .chat-avatar {
-      width: 24px;
-      height: 24px;
-      font-size: 26px;
-      margin-top: 6px;
-      border-radius: 50px;
-      border: none;
-    }
-  }
-  .chat-avatar-wrap-ai {
-    padding-left: 0;
-  }
-  .chat-content {
-    max-width: 465px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: normal;
-    line-height: 20px;
-    padding: 12px;
 
-    &.chat-content-user {
-      background-color: var(--te-chat-model-user-text-bg);
-      color: var(--te-chat-model-user-text);
-    }
-  }
-  .chat-message-row {
-    margin-bottom: 20px;
-  }
-  &.max-chat-window {
-    height: 520px;
-  }
-  &.min-chat-window {
-    height: 80px;
-  }
-}
-
-.chat-content-ai {
-  background-color: var(--te-chat-model-ai-text-bg);
-  border: 1px solid var(--te-chat-model-ai-text-border);
-  color: var(--te-chat-model-ai-text);
-}
-
-.chat-content-ai-unconnected {
-  background-color: var(--te-chat-model-ai-fail-text-bg);
-  border: 1px solid var(--te-chat-model-ai-fail-text-border);
-  color: var(--te-chat-model-ai-fail-text);
-}
-
-.chat-submit.chat-submit {
-  margin-top: 14px;
-  font-size: 14px;
-  display: flex;
-  .tiny-input {
-    .tiny-input__inner {
-      padding-left: 12px;
-      color: var(--te-chat-model-helper-text);
-      height: 40px;
-      border: 2px solid var(--te-chat-model-input-border);
-      border-radius: 8px;
-      padding-right: 44px;
-    }
-    .tiny-input__inner:hover {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__inner:focus {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__prefix,
-    .tiny-input__suffix {
-      padding-right: 8px;
-    }
-    clip-path: inset(0 0 round 2px);
-    svg {
-      font-size: 16px;
-    }
-  }
-
-  .tiny-button.tiny-button.tiny-button {
-    margin-left: 12px;
-    background-image: linear-gradient(
-      to bottom right,
-      var(--te-chat-model-button-bg-1),
-      var(--te-chat-model-button-bg-2),
-      var(--te-chat-model-button-bg-3)
-    );
+  button.icon-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     border: none;
-    color: var(--te-chat-model-button-text) !important;
-    font-size: 14px;
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    float: right;
+    border-radius: 8px;
+    cursor: pointer;
     padding: 0;
-    transition: all 0.1s linear;
-    .svg-icon {
-      fill: var(--te-chat-model-button-text);
-      margin-right: 0;
-    }
-    span {
-      display: none;
-    }
-    &:hover {
-      transform: scale(1);
-      border-radius: 8px;
-      width: 105px;
-      padding: 0 12px;
-      span {
-        display: inline-block;
-        margin-left: 4px;
-      }
-    }
-  }
-}
-.hidden-text {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
+    transition: background-color 0.3s;
+    background-color: rgba(0, 0, 0, 0);
 
-.chat-loading .tiny-loading__spinner svg {
-  fill: var(--te-chat-loading-svg-color);
-}
-.chat-loading .tiny-loading__spinner .tiny-loading__text {
-  color: var(--te-chat-loading-text-color);
-}
-.chat-model-popover.chat-model-popover {
-  width: 220px;
-  background-color: var(--te-chat-model-popover-bg);
-  .tiny-dropdown-item {
-    color: var(--te-chat-model-popover-color);
-    max-width: 220px;
     &:hover {
-      color: var(--te-chat-model-popover-color);
-      background-color: var(--te-chat-model-popover-active-bg);
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    svg {
+      font-size: 20px;
     }
   }
-  .selected-model {
-    color: var(--te-chat-model-popover-color);
-    background-color: var(--te-chat-model-popover-active-bg);
+
+  .tiny-sender {
+    margin: 20px;
+
+    .tiny-sender__footer-slot.tiny-sender__bottom-row {
+      justify-content: space-between !important;
+    }
   }
 }
 </style>
