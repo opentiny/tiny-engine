@@ -118,8 +118,7 @@ import {
   type Component
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
+import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import {
   TrContainer,
   TrWelcome,
@@ -175,7 +174,7 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
+    const { pageState, importSchema, setSaved } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
@@ -197,9 +196,6 @@ export default {
     const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
     const aiType = ref(TALK_TYPE)
     const chatContainerRef = ref(null)
-
-    const { pageSettingState, getDefaultPage } = usePage()
-    const ROOT_ID = pageSettingState.ROOT_ID
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -985,7 +981,7 @@ export default {
     .action-buttons__utility
     .action-buttons__button {
     .action-buttons__submit-content {
-      width: 24px;
+      width: 24px !important;
     }
     .action-buttons__icon {
       width: 24px;
