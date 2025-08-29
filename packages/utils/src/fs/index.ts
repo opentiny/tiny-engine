@@ -162,7 +162,7 @@ export const writeFile = async (handle: any, { filePath, fileContent }) => {
   }
 
   const writable = await fileHandle.createWritable()
-  await writable.write(fileContent)
+  await writable.write({ type: 'write', data: fileContent })
   await writable.close()
 }
 
