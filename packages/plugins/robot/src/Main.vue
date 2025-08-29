@@ -972,22 +972,10 @@ export default {
       }
     }
   }
-  .tiny-sender__container
-    .tiny-sender__footer-slot
-    .tiny-sender__footer-right
-    .tiny-sender__toolbar
-    .tiny-sender__buttons-container
-    .action-buttons
-    .action-buttons__utility
-    .action-buttons__button {
-    .action-buttons__submit-content {
-      width: 24px !important;
-    }
-    .action-buttons__icon {
-      width: 24px;
-      height: 24px;
-    }
-  }
+}
+:deep(.action-buttons__icon) {
+  width: 26px !important;
+  height: 26px !important;
 }
 :deep(.tr-attachments) {
   .tr-attachments__file-list {
