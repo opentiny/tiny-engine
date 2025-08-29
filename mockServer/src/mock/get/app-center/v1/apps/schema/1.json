@@ -1722,13 +1722,6 @@
     ],
     "componentsMap": [
       {
-        "componentName": "TinyNavMenu",
-        "package": "@opentiny/vue",
-        "exportName": "NavMenu",
-        "destructuring": true,
-        "version": "0.1.16"
-      },
-      {
         "componentName": "TinyCarouselItem",
         "package": "@opentiny/vue",
         "exportName": "CarouselItem",
