@@ -54,7 +54,7 @@
               :maxlength="4000"
               mode="multiple"
               :autoSize="{ minRows: 1, maxRows: 5 }"
-              :loagding="requestLoading"
+              :loading="requestLoading"
               class="footer-sender"
               ref="senderRef"
               v-model="inputContent"
