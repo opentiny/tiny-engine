@@ -175,7 +175,7 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
+    const { initData, pageState, importSchema, setSaved, clearCurrentState } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
@@ -227,26 +227,6 @@ export default {
       if (el) {
         el.scrollTop = el.scrollHeight
       }
-    }
-
-    const createNewPage = (schema) => {
-      if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
-        pageSettingState.isNew = true
-        pageSettingState.isAIPage = true
-        pageSettingState.currentPageData = {
-          ...getDefaultPage(),
-          parentId: ROOT_ID,
-          route: 'temporaryPage',
-          name: 'TemporaryPage',
-          group: 'staticPages'
-        }
-      }
-      pageSettingState.currentPageData['page_content'] = schema
-      pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
-      clearCurrentState()
-      // 已经创建过临时页面只更新schema
-      initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
-      useHistory().addHistory()
     }
 
     const codeRules = `
@@ -687,7 +667,7 @@ export default {
 
         if (files && files.length > 0) {
           // 将选中的文件转换为 Attachment 格式并添加到附件列表
-          const newAttachments = Array.from(files).map((file, index) => ({
+          const newAttachments = Array.from(files).map((file) => ({
             size: file.size,
             rawFile: file
           }))
@@ -1003,9 +983,14 @@ export default {
     .tiny-sender__buttons-container
     .action-buttons
     .action-buttons__utility
-    .action-buttons__button .action-buttons__icon {
-    width: 24px;
-    height: 24px;
+    .action-buttons__button {
+    .action-buttons__submit-content {
+      width: 24px;
+    }
+    .action-buttons__icon {
+      width: 24px;
+      height: 24px;
+    }
   }
 }
 :deep(.tr-attachments) {
