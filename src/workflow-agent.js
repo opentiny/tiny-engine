@@ -2,7 +2,7 @@
 require('dotenv').config({ path: '../.env' });
 const { ChatOpenAI } = require("@langchain/openai");
 const { initializeAgentExecutorWithOptions } = require("langchain/agents");
-const { ElementApiCrawlerTool, TinyEngineConverterTool } = require("./tools");
+const { ElementApiCrawlerTool, TinyEngineConverterTool, SchemaPostProcessorTool } = require("./tools");
 
 // 移除：不需要手动导入ChatMessageHistory和BufferMemory（避免版本兼容问题）
 
@@ -24,13 +24,13 @@ const model = new ChatOpenAI({
   modelName: process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
   apiKey: process.env.OPENAI_API_KEY,
   baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
-  // timeout: 300000, // 超时时间1分钟
 });
 
 // 注册工具
 const tools = [
   new ElementApiCrawlerTool(),
-  new TinyEngineConverterTool()
+  new TinyEngineConverterTool(),
+  new SchemaPostProcessorTool()
 ];
 
 // Agent系统提示词（强化步骤强制性，适配chat-conversational类型）
@@ -45,14 +45,16 @@ const systemPrompt = `
 - 必须完整使用第一步的输出（不可删减或修改任何字符）
 - 若转换失败，直接返回错误信息（如"转换失败：xxx，请检查URL是否正确"）
 
-第三步：转换完成后，将结果直接输出，不添加任何额外解释文字。
+第三步：转换完成后，将返回的完整JSON字符串作为输入，调用schema_post_processor工具进行后处理。
+- 必须完整使用第二步的输出（不可删减或修改任何字符）
+- 后处理完成后，将结果直接输出，不添加任何额外解释文字
 
 注意：
-- 严格按"爬取→转换"顺序执行，不跳过任何步骤
+- 严格按"爬取→转换→后处理"顺序执行，不跳过任何步骤
 - 每次仅调用一个工具，工具调用完成后再进行下一步
 - 无需询问用户确认，直接执行流程
-- 若输入包含多个Element Plus组件URL（用逗号、“和”“以及”等连接），需逐个按“爬取→转换”流程处理，前一个完成后再处理下一个
-- 所有URL处理完成后，汇总输出所有转换结果，不遗漏任何一个
+- 若输入包含多个Element Plus组件URL（用逗号、“和”“以及”等连接），需逐个按三步流程处理，前一个完成后再处理下一个
+- 所有URL处理完成后，汇总输出所有最终结果，不遗漏任何一个
 `;
 
 /**
@@ -61,41 +63,26 @@ const systemPrompt = `
  */
 async function runConversionWorkflow(query) {
   try {
-    // 恢复为chat-conversational-react-description类型，无需手动配置memory（自动创建基础memory）
     const executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "chat-conversational-react-description",
       verbose: true, // 输出工具调用日志，便于调试
       agentArgs: {
         systemMessage: systemPrompt,
       },
-      // 移除手动memory配置：该类型默认创建适合对话的memory，无需额外处理
     });
 
     console.log(`\n开始处理任务: ${query}`);
-    
-    // 执行工作流（输入仅传用户查询，memory由Agent自动管理）
+
+    // 执行工作流
     const result = await executor.invoke({ input: query });
-    
-    // 格式化输出结果（若为JSON则美化显示）
-    console.log("\n=== 转换完成！ ===");
-    // console.log("\n=== 最终转换结果 ===");
-    // let output;
-    // try {
-    //   // 尝试解析为JSON并美化（转换结果应为JSON字符串）
-    //   output = JSON.parse(result.output);
-    //   console.log(JSON.stringify(output, null, 2));
-    // } catch {
-    //   // 非JSON格式（如错误提示）直接输出
-    //   console.log(result.output);
-    // }
-    
+
+    console.log("\n=== 全流程完成！ ===");
     return result.output;
 
+
   } catch (error) {
-    // 捕获并处理所有执行过程中的错误
     console.error("\n=== 工作流执行失败 ===");
     console.error("错误原因：", error.message);
-    // 针对性提示
     if (error.message.includes("API key")) {
       console.error("请检查.env文件中的OPENAI_API_KEY是否正确配置");
     } else if (error.message.includes("timeout")) {

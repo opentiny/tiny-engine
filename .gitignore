@@ -55,3 +55,5 @@ json-test-log/
 api-log/
 schema-log/
 src/backend/log
+post-process-log/
+node_modules/

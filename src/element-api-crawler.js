@@ -90,9 +90,9 @@ function getComponentKey(title, mainComponentKey) {
 	if (!cleanTitle) return mainComponentKey;
 
 	const functionKeywords = [
-		'api', 'attributes', 'events', 'slots', 'methods', 'exposes',
-		'attribute', 'event', 'slot', 'method', 'expose',
-		'属性', '事件', '插槽', '方法', '暴露'
+		'api', 'attributes', 'events', 'slots', 'methods',
+		'attribute', 'event', 'slot', 'method',
+		'属性', '事件', '插槽', '方法'
 	];
 	const keywordRegex = new RegExp(`^(.*?)\\s+(?=${functionKeywords.join('|')})`, 'i');
 	const componentMatch = cleanTitle.match(keywordRegex);
@@ -108,11 +108,11 @@ function getComponentKey(title, mainComponentKey) {
  */
 function getApiType(title) {
 	const lowerTitle = title.toLowerCase().trim();
-	if (lowerTitle.includes('attribute') || lowerTitle.includes('属性')) return 'properties';
+	if (lowerTitle.includes('attribute') || lowerTitle.includes('属性') || lowerTitle.includes('配置项')) return 'properties';
 	if (lowerTitle.includes('event') || lowerTitle.includes('事件')) return 'events';
 	if (lowerTitle.includes('slot') || lowerTitle.includes('插槽')) return 'slots';
 	if (lowerTitle.includes('method') || lowerTitle.includes('方法')) return 'methods';
-	if (lowerTitle.includes('expose') || lowerTitle.includes('暴露')) return 'exposes';
+	// if (lowerTitle.includes('expose') || lowerTitle.includes('暴露')) return 'exposes';
 	return 'others';
 }
 
@@ -128,7 +128,13 @@ function processTables(tables, mainComponentKey) {
 		others: []
 	};
 
-	tables.forEach(table => {
+	// ---------------- 关键修改：先过滤掉跳过的exposes表格 ----------------
+	const nonExposesTables = tables.filter(table => !table.isSkipped);
+	console.log(`📊 总表格数：${tables.length}，过滤后非exposes表格数：${nonExposesTables.length}`);
+	// ---------------------------------------------------------------------
+
+	// tables.forEach((table, tableIndex) => {
+	nonExposesTables.forEach((table, tableIndex) => {
 		const componentKey = getComponentKey(table.title, mainComponentKey);
 		const apiType = getApiType(table.title);
 
@@ -138,11 +144,13 @@ function processTables(tables, mainComponentKey) {
 				events: [],
 				slots: [],
 				methods: [],
-				exposes: [],
+				// exposes: [],
 				others: []
 			};
 		}
 		const componentApi = result.components[componentKey];
+
+		console.log(`处理表格${tableIndex}: 归属组件=${componentKey}, 类型=${apiType}, 标题=${table.title}`);
 
 		if (!componentApi.hasOwnProperty(apiType)) {
 			componentApi.others.push({ category: table.title, ...table.rows });
@@ -164,6 +172,9 @@ function processTables(tables, mainComponentKey) {
 
 			if (item.type && item.type.includes('enum') && table.enumValues && table.enumValues[rowIndex]) {
 				item.enumOptions = table.enumValues[rowIndex];
+			}
+			if (apiType === 'events' && item.type && item.type.includes('Function') && table.functionParams && table.functionParams[rowIndex]) {
+				item.functionParams = table.functionParams[rowIndex];
 			}
 
 			componentApi[apiType].push(item);
@@ -278,6 +289,21 @@ async function crawlElementPlusAPI(url, retries = 3) {
 				while (prevEl) {
 					if (['H2', 'H3', 'H4', 'H5'].includes(prevEl.tagName)) {
 						title = prevEl.textContent.replace(/[​]/g, '').trim();
+
+						// ---------------- 关键修改：识别exposes表格，直接跳过 ----------------
+						if (title.toLowerCase().includes('expose') || title.toLowerCase().includes('暴露')) {
+							console.log(`🔍 发现exposes表格[${tableIndex}]，直接跳过：${title}`);
+							// 返回空数据，且不执行后续表头/行数据提取
+							return {
+								title: title, // 保留标题便于日志追溯（可选）
+								headers: [],
+								rows: [],
+								enumValues: {},
+								functionParams: {},
+								isSkipped: true // 新增标记，用于后续结构化阶段过滤
+							};
+						}
+
 						break;
 					}
 					prevEl = prevEl.previousElementSibling;
@@ -291,6 +317,8 @@ async function crawlElementPlusAPI(url, retries = 3) {
 
 				const typeColumnIndex = headers.findIndex(header => normalizeHeader(header) === 'type');
 				const enumValues = {};
+				const functionParams = {};
+				const isEventsTable = title.toLowerCase().includes('event') || title.toLowerCase().includes('事件');
 
 				if (typeColumnIndex !== -1) {
 					const tableRows = table.querySelectorAll('tbody tr, tr:not(:first-child)');
@@ -305,17 +333,33 @@ async function crawlElementPlusAPI(url, retries = 3) {
 								const iconButton = typeCell.querySelector('button.el-button.el-tooltip__trigger');
 								if (iconButton) {
 									iconButton.click();
-									await delay(500);
+									await delay(1000);
 
+									// 关键优化：1. 获取当前行的位置信息
+									const rowRect = tableRow.getBoundingClientRect();
+									let codeEl = null;
+									let targetTooltip = null;
+
+									// 2. 遍历所有 tooltip，找到与当前行位置重叠的那个
 									const tooltips = document.querySelectorAll('.el-popper');
-									let codeEl;
 									for (const tooltip of tooltips) {
-										if (tooltip.offsetParent !== null && tooltip.getBoundingClientRect().height > 0) {
+										if (tooltip.offsetParent === null || tooltip.getBoundingClientRect().height === 0) {
+											continue; // 跳过隐藏的 tooltip
+										}
+										const tooltipRect = tooltip.getBoundingClientRect();
+										// 判断 tooltip 是否与当前行在垂直方向重叠（容忍 10px 误差）
+										const isOverlapping = !(
+											tooltipRect.bottom < rowRect.top - 10 ||
+											tooltipRect.top > rowRect.bottom + 10
+										);
+										if (isOverlapping) {
+											targetTooltip = tooltip;
 											codeEl = tooltip.querySelector('.m-1 > code');
-											if (codeEl) break;
+											break;
 										}
 									}
 
+									// 3. 提取枚举值（仅用当前行匹配到的 tooltip）
 									if (codeEl) {
 										const enumText = codeEl.textContent.trim();
 										const parts = enumText.split(' | ');
@@ -327,24 +371,87 @@ async function crawlElementPlusAPI(url, retries = 3) {
 											return value;
 										});
 										enumValues[rowIndex] = parsedValues;
-										console.log(`提取成功: ${parsedValues}`);
+										console.log(`提取成功[表格${tableIndex}-行${rowIndex}]: ${parsedValues}`);
 									} else {
-										console.log('未找到code元素');
+										console.log(`未找到当前行的 tooltip[表格${tableIndex}-行${rowIndex}]`);
 									}
 
-									document.body.click();
-									await delay(200);
+									// 4. 关闭当前 tooltip
+									// document.body.click();
+									// await delay(800);
+									if (iconButton) {
+										iconButton.click(); // 第二次点击：触发弹框关闭（toggle 切换）
+										await delay(900); // 等待弹框完全关闭（时间可根据页面性能调整）
+									} else {
+										// 最终兜底：全局点击空白处（避免弹框残留）
+										document.body.click();
+										await delay(900);
+									}
+
 								} else {
-									console.log('未找到枚举按钮');
+									console.log(`未找到枚举按钮[表格${tableIndex}-行${rowIndex}]`);
 								}
 							} else {
 								console.log('未找到类型单元格');
+							}
+						} else if (isEventsTable && row && row[typeColumnIndex]?.toLowerCase().includes('function')) {
+							console.log(`尝试提取Function参数：表格 ${tableIndex}, 行 ${rowIndex}`);
+							const typeCell = tableRow.querySelector(`td:nth-child(${typeColumnIndex + 1})`);
+							if (typeCell) {
+								const iconButton = typeCell.querySelector('button.el-button.el-tooltip__trigger');
+								if (iconButton) {
+									// 第一次点击：打开弹框
+									iconButton.click();
+									await delay(1000); // 等待弹框渲染
+
+									// 匹配当前行的弹框，提取内容（逻辑不变）
+									const rowRect = tableRow.getBoundingClientRect();
+									let codeEl = null;
+									let targetTooltip = null;
+									const tooltips = document.querySelectorAll('.el-popper');
+									for (const tooltip of tooltips) {
+										if (tooltip.offsetParent === null || tooltip.getBoundingClientRect().height === 0) continue;
+										const tooltipRect = tooltip.getBoundingClientRect();
+										const isOverlapping = !(
+											tooltipRect.bottom < rowRect.top - 20 ||
+											tooltipRect.top > rowRect.bottom + 20
+										);
+										if (isOverlapping) {
+											targetTooltip = tooltip;
+											codeEl = tooltip.querySelector('.m-1 > code') || tooltip.querySelector('code');
+											break;
+										}
+									}
+
+									// 提取弹框内容（逻辑不变）
+									if (codeEl) {
+										const functionText = codeEl.textContent.trim();
+										functionParams[rowIndex] = functionText;
+										console.log(`提取成功[表格${tableIndex}-行${rowIndex}]: ${functionText}`);
+									} else {
+										console.log(`未找到Function参数的code元素[表格${tableIndex}-行${rowIndex}]`);
+									}
+
+									if (iconButton) {
+										iconButton.click(); // 第二次点击：触发弹框关闭（toggle 切换）
+										await delay(900); // 等待弹框完全关闭（时间可根据页面性能调整）
+									} else {
+										// 最终兜底：全局点击空白处（避免弹框残留）
+										document.body.click();
+										await delay(900);
+									}
+
+								} else {
+									console.log(`未找到Function参数的按钮[表格${tableIndex}-行${rowIndex}]`);
+								}
+							} else {
+								console.log(`未找到类型单元格[表格${tableIndex}-行${rowIndex}]`);
 							}
 						}
 					}
 				}
 
-				return { title, headers, rows, enumValues };
+				return { title, headers, rows, enumValues, functionParams };
 			}));
 
 			return { componentInfo, tables };

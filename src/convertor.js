@@ -2,6 +2,8 @@ require('dotenv').config({ path: '../.env' });
 const { OpenAI } = require("openai");
 const fs = require('fs');
 const path = require('path');
+const { postProcessSchemas } = require('./post-process-schemas');
+const { crawlElementPlusAPI } = require('./element-api-crawler');
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -82,7 +84,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
   const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
   console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
 
-  console.log(`[Prompt构建] 开始组装system和user指令（含组件API数据）`);
+  console.log(`[任务${subComponentName} Prompt构建] 开始组装system和user指令（含组件API数据）`);
   const messages = [
     {
       role: "system",
@@ -102,7 +104,6 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 - \`components\`：子组件集合（如主组件、Group 组件），每个子组件包含：
   - \`properties\`：属性数组（含 name、description、type、default、enumOptions 等）
   - （可选）\`slots\`：插槽数组（含 name、description 等）
-  - （可选）\`exposes\`：暴露的方法/属性数组（含 name、description、type 等）
   - （可选）\`events\`：事件数组（含 name、description、parameters 等）
 - （可选）\`notes\`：组件备注（含废弃说明、使用提示等）
 
@@ -188,7 +189,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 - \`cols\`：固定为 \`12\`
 - \`labelPosition\`：固定为 "left"
 - \`type\`：\`property.type\`（转为小写，如 "enum"|"boolean"）
-- \`defaultValue\`：\`property.default\`（"—" 转为 \`null\`）
+- \`defaultValue\`：\`property.default\`（"—" 转为 \`null\`；"undefined" 转为 \`null\`）
 - \`widget\`：按以下优先级推断：
   1. 若 \`type\` 为 "enum"：\`{"component": "SelectConfigurator","props": {"options": property.enumOptions.map(v => ({label: v, value: v}))}}\`
   2. 若 \`type\` 为 "boolean"：
@@ -224,9 +225,6 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
   - \`[slot.name]\`: \`{"label.zh_CN": slot.name 的中文（如 "default"→"默认内容"）,"description.zh_CN": slot.description}\`
   - 示例：\`"default": {"label.zh_CN": "默认内容","description.zh_CN": "自定义默认内容"}\`
 
-##### 4.4 \`schema.exposes\`（暴露方法/属性）
-- 从 \`components.[子组件].exposes\` 提取，每个映射为：
-  - \`[expose.name]\`: \`{"type": expose.type,"description": expose.description}\`
 
 #### 5. 多组件处理
 若输入 \`components\` 包含多个子组件（如主组件、Group 组件），需按以下规则处理：
@@ -249,7 +247,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
     3. screenshot：固定填空字符串（""），预留截图位置；
     4. snippetName：填写与组件定义中 component 字段一致的完整组件名，比如 “ElTable”“ElForm”；
     5. category：填写与组件定义中一致的组件库归属，比如 “element-plus”；
-    6. schema：组件核心配置结构，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
+    6. schema：组件核心配置结构，根据组件的信息与特性，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
   - schema 核心规则
     1. 结构选择
       - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法；
@@ -259,16 +257,10 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
       - 复杂类型属性（数组、对象）需提供完整模拟数据（如表格 data 包含 2-4 条真实结构数据）；
       - 关联属性需严格对应（如 ElTable 的 columns.prop 与 data 中的字段名一致）。
     3. children 要求
-      - 仅嵌套组件专用子组件（如 ElTable→ElTableColumn、ElForm→ElFormItem），禁止嵌套无关组件；
+      - 若有专用子组件，需嵌套组件专用子组件（如 ElForm→ElFormItem、Splitter→SplitterPanel），禁止嵌套无关组件；
       - 嵌套层级符合组件原生用法（如 ElForm→ElFormItem→ElInput），子组件 props 需与父组件逻辑一致。
-  - 错误规避
-    1. 避免自身嵌套（如 ElTable 嵌套 ElTable）；
-    2. 不遗漏核心配置（如 ElTable 缺失 data）；
-    3. 防止属性不匹配（如 ElTable 的 columns.prop 与 data 中的字段名不一致）。
-  - 错误示例（反例）：
-    - ElTable 的 children 包含 ElTable（自身嵌套自身）
-    - ElForm 的 children 为空或包含无关组件（如 ElButton）
-  - 正确示例（正例）：
+
+  - snippets 正确示例：
     1. ElButton 按钮示例：
       "snippets": [
         {
@@ -730,28 +722,6 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
         }
       ],
       "methods": [],
-      "exposes": [
-        {
-          "name": "focus",
-          "description": "使组件获取焦点",
-          "type": "Function"
-        },
-        {
-          "name": "blur",
-          "description": "使组件失去焦点",
-          "type": "Function"
-        },
-        {
-          "name": "handleOpen",
-          "description": "打开日期选择器弹窗",
-          "type": "Function"
-        },
-        {
-          "name": "handleClose",
-          "description": "关闭日期选择器弹窗",
-          "type": "Function"
-        }
-      ],
       "others": []
     }
   },
@@ -1257,12 +1227,13 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 组件API内容: ${JSON.stringify(apiObj, null, 2)}`
     }
   ];
-  console.log(`[Prompt构建完成] 指令总长度（字符数）：${JSON.stringify(messages).length}`);
-  console.log(`[API调用准备] 即将向模型${model}发起请求`);
+  // console.log(`[任务${subComponentName} Prompt构建完成] 指令总长度（字符数）：${JSON.stringify(messages).length}`);
+  console.log(`[任务${subComponentName} API调用准备] 即将向模型${model}发起请求`);
 
-  // API调用日志：记录调用开始时间，便于定位超时问题
-  const apiCallStartTime = Date.now();
-  console.log(`[API调用开始] 时间：${new Date(apiCallStartTime).toLocaleString()} | 等待模型响应...`);
+  // 记录开始时间（毫秒级时间戳）
+  const taskStartTime = Date.now();
+  const taskStartISO = new Date(taskStartTime).toISOString(); // 可读性更好的ISO时间
+  console.log(`[任务${subComponentName}] 开始执行 | 时间：${taskStartISO} | 时间戳：${taskStartTime}`);
 
   // 调用OpenAI API
   const completion = await client.chat.completions.create({
@@ -1274,24 +1245,28 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
     // stream: true
   });
 
-  console.log("等待大模型生成...")
-
-  // API响应日志：记录响应耗时和结果长度，排查响应异常
-  const apiCallEndTime = Date.now();
-
+  console.log("[任务${subComponentName}] 正在等待大模型生成...")
   const schemaText = completion.choices[0].message.content;
 
-  console.log(`[API调用成功] 耗时：${(apiCallEndTime - apiCallStartTime) / 1000} 秒`);
-  console.log(`[响应结果] 生成的schema文本长度（字符数）：${schemaText.length}`);
-  // console.log(`[响应结果预览] 前100字符：${schemaText.slice(0, 100)}...`);
+  // 记录结束时间
+  const taskEndTime = Date.now();
+  const taskEndISO = new Date(taskEndTime).toISOString();
+  const duration = (taskEndTime - taskStartTime) / 1000; // 耗时（秒）
+  console.log(`[任务${subComponentName}] 执行完成 | 时间：${taskEndISO} | 耗时：${duration.toFixed(2)}秒`);
 
-
-  // console.log("获取大模型生成结果: ", schemaText);
+  console.log(`[任务${subComponentName} 响应结果] 生成的schema文本长度（字符数）：${schemaText.length}`);
 
   let parsedSchema = null;
+  let success = false;
+
+  // 保存文件
+  if (save) {
+    // console.log(`[任务${subComponentName} 文件保存] 开始调用saveSchemaToFile，保存内容长度：${schemaText.length}字符`);
+    saveSchemaToFile(schemaText, subComponentName);
+  }
 
   // 数据清理日志：记录清理过程（是否移除代码块标识）
-  console.log(`[数据清理] 开始处理schema文本（移除可能的代码块标识）`);
+  // console.log(`[任务${subComponentName} 数据清理] 开始处理schema文本（移除可能的代码块标识）`);
 
   // 清理并解析schema（确保返回JSON对象）
   try {
@@ -1302,74 +1277,178 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
     // if (match && match[2]) cleanedSchema = match[2].trim();
     if (match && match[2]) {
       cleanedSchema = match[2].trim();
-      console.log(`[数据清理成功] 检测到JSON代码块标识，已移除 | 清理后长度：${cleanedSchema.length}`);
+      console.log(`[任务${subComponentName} 数据清理成功] 检测到JSON代码块标识，已移除 | 清理后长度：${cleanedSchema.length}`);
     } else {
-      console.log(`[数据清理] 未检测到代码块标识，直接使用原始文本`);
+      console.log(`[任务${subComponentName} 数据清理] 未检测到代码块标识，直接使用原始文本`);
+    }
+    if (!cleanedSchema) {
+      throw new Error(`子组件[${subComponentName}]：清理后schema为空`);
     }
 
     parsedSchema = JSON.parse(cleanedSchema);
+    // 新增日志：打印 parsedSchema 的类型和结构
+    console.log(`子组件[${subComponentName}]：parsedSchema 类型 = ${typeof parsedSchema}`);
+    console.log(`子组件[${subComponentName}]：parsedSchema 是数组 = ${Array.isArray(parsedSchema)}`);
+
+    // -------------------------- 优化：强制处理数组为单个对象 --------------------------
+    let validSchema = null;
+    if (Array.isArray(parsedSchema)) {
+      console.log(`子组件[${subComponentName}]：检测到数组格式（长度=${parsedSchema.length}），开始处理`);
+
+      // 1. 过滤数组中有效子元素（必须包含component和schema字段，符合单组件输入预期）
+      const validItems = parsedSchema.filter(item => item?.component && item?.schema);
+
+      if (validItems.length === 0) {
+        // 无有效元素：直接抛出错误
+        throw new Error(`子组件[${subComponentName}]：数组中无有效schema（需包含component和schema字段）`);
+      } else if (validItems.length === 1) {
+        // 仅1个有效元素：提取为单个对象（符合输入预期）
+        validSchema = validItems[0];
+        console.log(`子组件[${subComponentName}]：数组中仅1个有效元素，已提取为单个schema对象`);
+      } else {
+        // 多个有效元素：属于异常情况（输入单个组件却返回多组件）
+        // 取第一个有效元素作为主schema，同时告警提示异常
+        validSchema = validItems[0];
+        console.warn(`⚠️  子组件[${subComponentName}]：输入单个组件却返回${validItems.length}个有效schema（异常），已默认取第一个元素`);
+        // 可选：记录异常到日志文件（便于后续排查大模型Prompt问题）
+        const warnLogPath = path.join(__dirname, `../schema-log/warn-multi-schema-${subComponentName}-${new Date().getTime()}.json`);
+        fs.writeFileSync(warnLogPath, JSON.stringify(validItems, null, 2), 'utf8');
+        console.warn(`⚠️  异常详情已保存至：${warnLogPath}`);
+      }
+    } else {
+      // 非数组格式：直接校验核心字段（component + schema）
+      if (!parsedSchema?.component || !parsedSchema?.schema) {
+        throw new Error(`子组件[${subComponentName}]：schema缺少核心字段（需同时包含component和schema）`);
+      }
+      validSchema = parsedSchema;
+      console.log(`子组件[${subComponentName}]：非数组格式，核心字段校验通过`);
+    }
+
+    // -------------------------- 校验最终schema的完整性 --------------------------
+    if (validSchema?.schema) {
+      console.log(`子组件[${subComponentName}]：最终schema包含核心schema字段，结构正常`);
+    } else {
+      throw new Error(`子组件[${subComponentName}]：最终schema缺少核心schema字段，无法使用`);
+    }
+
+    // 更新为处理后的有效schema（确保是单个对象）
+    parsedSchema = validSchema;
+
+    success = true;
   } catch (parseError) {
-    console.warn(`子组件[${subComponentName}]：schema文本解析为JSON失败，返回原始文本`, parseError.message);
-    parsedSchema = schemaText; // 解析失败时返回原始文本，便于后续调试
+    // console.warn(`子组件[${subComponentName}]：schema文本解析为JSON失败，返回原始文本`, parseError.message);
+    // parsedSchema = schemaText; // 解析失败时返回原始文本，便于后续调试
+    const errorLogPath = path.join(__dirname, `../schema-log/parse-error-${subComponentName}-${new Date().getTime()}.json`);
+    fs.writeFileSync(errorLogPath, cleanedSchema, 'utf8');
+    throw new Error(`子组件[${subComponentName}]：schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
   }
 
-  // 保存文件
-  if (save) {
-    console.log(`[文件保存] 开始调用saveSchemaToFile，保存内容长度：${schemaText.length}字符`);
-    saveSchemaToFile(schemaText, subComponentName);
-  }
-
-  console.log(`子组件[${subComponentName}]：转换完成`);
+  console.log(`[任务${subComponentName}]：转换完成`);
   return {
     subComponentName,
     schema: parsedSchema, // 返回解析后的JSON对象（或原始文本）
-    rawSchemaText: schemaText // 额外返回原始文本，便于追溯
+    rawSchemaText: schemaText, // 额外返回原始文本，便于追溯,
+    success: success
   };
 }
 
 /**
- * 批量转换API数组为tinyEngine schema数组（对外导出的核心函数）
+ * 辅助函数：将数组拆分为指定大小的批次（用于分批并行）
+ * @param {Array} array - 待拆分的原始数组
+ * @param {number} batchSize - 每批大小（并发数）
+ * @returns {Array<Array>} 批次数组（每个子数组为一批）
+ */
+function splitIntoBatches(array, batchSize) {
+  const batches = [];
+  for (let i = 0; i < array.length; i += batchSize) {
+    batches.push(array.slice(i, i + batchSize));
+  }
+  return batches;
+}
+
+/**
+ * 批量转换API数组为tinyEngine schema数组（改进：支持分批并行处理）
  * @param {Array} apiArray - crawlElementPlusAPI返回的子组件API对象数组
  * @param {string} model - 大模型名称（可选，默认用环境变量）
  * @param {boolean} save - 是否保存到文件（可选，默认true）
+ * @param {number} concurrentLimit - 并发数上限（可选，默认3，支持环境变量配置）
  * @returns {Promise<Array>} 子组件schema结果数组（每个元素含子组件名、schema对象、原始文本）
  */
-async function batchConvertToTinyEngineSchema(apiArray, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
+async function batchConvertToTinyEngineSchema(
+  apiArray,
+  model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
+  save = true,
+  concurrentLimit = 5 // 新增：并发数配置
+) {
   if (!Array.isArray(apiArray) || apiArray.length === 0) {
     throw new Error("输入必须是非空的API对象数组（来自crawlElementPlusAPI）");
   }
 
-  console.log(`\n开始批量转换：共${apiArray.length}个子组件`);
+  // 校验并发数（避免非法值，最小1，最大建议不超过10）
+  const validConcurrentLimit = Math.max(1, Math.min(concurrentLimit, 10));
+  console.log(`\n=== 开始批量转换 ===`);
+  console.log(`总子组件数：${apiArray.length} | 并发数上限：${validConcurrentLimit} | 模型：${model}`);
+
+  // 记录开始时间（毫秒级时间戳）
+  const startTime = Date.now();
+  const startISO = new Date(startTime).toISOString(); // 可读性更好的ISO时间
+  console.log(`批量转换开始执行 | 时间：${startISO} | 时间戳：${startTime}`);
+
+  // 1. 将API数组拆分为批次
+  const batches = splitIntoBatches(apiArray, validConcurrentLimit);
+  console.log(`共拆分为 ${batches.length} 个批次`);
+
   const conversionResults = [];
 
-  // 逐个转换（串行执行，避免并发调用API导致限流）
-  for (const apiObj of apiArray) {
-    try {
-      console.log(`\n开始转换：${apiObj.name}`);
-      const result = await convertSingleSubComponent(apiObj, model, save);
-      console.log(`转换完成：${apiObj.name}`);
-      conversionResults.push(result);
-    } catch (error) {
+  // 2. 批次间串行执行（避免全量并发），批次内并行执行
+  for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+    const currentBatch = batches[batchIndex];
+    const batchNumber = batchIndex + 1; // 批次号（从1开始）
+    console.log(`\n--- 处理批次 ${batchNumber}/${batches.length}（含 ${currentBatch.length} 个子组件）---`);
+
+    // 3. 批次内并行处理每个子组件
+    const batchPromises = currentBatch.map(async (apiObj) => {
       const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
-      // console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error.message);
-      console.error(`子组件[${subComponentName}]转换失败，跳过该组件`, error);
-      // 失败时仍记录，便于后续排查
-      conversionResults.push({
-        subComponentName,
-        success: false,
-        error: error.message,
-        schema: null
-      });
-    }
+      try {
+        console.log(`[批次${batchNumber}] 开始转换子组件：${subComponentName}`);
+        const result = await convertSingleSubComponent(apiObj, model, save);
+        console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
+        return result; // 成功结果（含subComponentName、schema等）
+      } catch (error) {
+        console.error(`[批次${batchNumber}] 转换失败：${subComponentName} | 原因：${error.message}`);
+        // 失败结果（保持与原有结构一致，便于汇总）
+        return {
+          subComponentName,
+          success: false,
+          error: error.message,
+          schema: null
+        };
+      }
+    });
+
+    // 4. 等待当前批次所有子组件处理完成（并行）
+    const batchResults = await Promise.all(batchPromises);
+
+    conversionResults.push(...batchResults); // 收集当前批次结果
+    console.log(`--- 批次 ${batchNumber}/${batches.length} 处理完成 ---`);
   }
 
-  console.log(`\n批量转换完成：成功${conversionResults.filter(r => r.success !== false).length}个，失败${conversionResults.filter(r => r.success === false).length}个`);
+  // 记录结束时间
+  const endTime = Date.now();
+  const endISO = new Date(endTime).toISOString();
+  const duration = (endTime - startTime) / 1000; // 耗时（秒）
+  console.log(`批量转换执行完成 | 时间：${endISO} | 耗时：${duration.toFixed(2)}秒`);
+
+  // 5. 汇总统计
+  const successCount = conversionResults.filter(r => r.success !== false).length;
+  const failCount = conversionResults.filter(r => r.success === false).length;
+  console.log(`\n=== 批量转换全部完成 ===`);
+  console.log(`总处理：${apiArray.length} 个 | 成功：${successCount} 个 | 失败：${failCount} 个`);
+
   return conversionResults;
 }
 
-/**
- * 主函数：命令行入口（调用批量转换函数）
- */
+// 主函数（调用批量转换时，可按需传递并发数）
 async function main() {
   try {
     const url = process.argv[2];
@@ -1379,29 +1458,34 @@ async function main() {
       return;
     }
 
-    // 1. 先爬取API数组（依赖element-api-crawler.js）
-    const { crawlElementPlusAPI } = require('./element-api-crawler');
+    // 1. 爬取API数组
     console.log(`开始爬取URL: ${url}`);
     const apiArray = await crawlElementPlusAPI(url);
     console.log(`爬取完成：共${apiArray.length}个子组件`);
 
-    // 2. 调用批量转换函数
-    const results = await batchConvertToTinyEngineSchema(apiArray);
+    // 2. 调用改进后的批量转换（可选传递并发数，此处用默认值3）
+    // 若需调整并发数，可传入第4个参数，如：batchConvertToTinyEngineSchema(apiArray, undefined, true, 5)
+    const conversionResults = await batchConvertToTinyEngineSchema(apiArray);
 
     // 3. 输出汇总结果
-    console.log('\n--- 批量转换汇总 ---');
-    results.forEach((item, index) => {
-      if (item.success === false) {
-        console.log(`[${index + 1}] 子组件[${item.subComponentName}]：失败 - ${item.error}`);
-      } else {
-        console.log(`[${index + 1}] 子组件[${item.subComponentName}]：成功`);
-      }
+    console.log('\n--- 转换结果明细 ---');
+    conversionResults.forEach((item, index) => {
+      const status = item.success === false ? '❌ 失败' : '✅ 成功';
+      const msg = item.success === false ? `| 原因：${item.error}` : '';
+      console.log(`[${index + 1}] 子组件[${item.subComponentName}]：${status} ${msg}`);
     });
+
+    // 转换完成后调用后续处理
+    console.log('\n--- 开始后续处理 ---');
+    const finalResults = postProcessSchemas(conversionResults);
+    console.log('\n--- 批量转换全部完成 ---');
+    return finalResults;
 
   } catch (error) {
     console.error(`整体流程失败: ${error.message}`);
   }
 }
+
 
 // 命令行直接运行时执行主函数
 if (require.main === module) {
