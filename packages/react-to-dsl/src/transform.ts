@@ -8,6 +8,7 @@ import { genId8 } from './utils'
 export interface TransformOptions {
   filename?: string
   isBlock?: boolean
+  css?: string | string[]
 }
 
 // 将通用 AST 表达式节点转换为可序列化值：基本字面量直接返回；
@@ -167,9 +168,15 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     }
   })
 
+  // 读取并拼接 css 内容
+  let cssContent = ''
+  if (options.css) {
+    cssContent = Array.isArray(options.css) ? options.css.join('\n') : options.css
+  }
+
   const page: IPageSchema = {
     componentName: options.isBlock ? 'Block' : 'Page',
-    css: '',
+    css: cssContent,
     fileName: filename.replace(/\.(t|j)sx?$/, ''),
     lifeCycles: {},
     methods: {},

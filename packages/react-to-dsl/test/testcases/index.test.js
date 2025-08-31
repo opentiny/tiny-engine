@@ -22,6 +22,16 @@ function findInputSource(caseDir) {
   return src ? path.join(inputDir, src) : null
 }
 
+// 读取 input 目录下的所有 .css 内容并拼接
+function readAllCss(caseDir) {
+  const inputDir = path.join(caseDir, 'input')
+  if (!fs.existsSync(inputDir)) return ''
+  const files = fs.readdirSync(inputDir)
+  const cssFiles = files.filter((f) => f.endsWith('.css'))
+  const contents = cssFiles.map((f) => fs.readFileSync(path.join(inputDir, f), 'utf-8'))
+  return contents.join('\n')
+}
+
 // 将 DSL 写入 <caseName>/output/app.schema.json，并额外导出 page.schema.json 便于查看
 function writeOutputs(rootDir, caseName, appSchema) {
   const outputDir = path.join(rootDir, caseName, 'output')
@@ -56,7 +66,11 @@ describe('react-to-dsl: run all testcases and output to ./output', () => {
       expect(srcPath, `No JSX/TSX found in ${path.join(caseDir, 'input')}`).toBeTruthy()
 
       const code = fs.readFileSync(srcPath, 'utf-8')
-      const appSchema = transformReactToDsl(code, { filename: path.basename(srcPath) })
+      const css = readAllCss(caseDir)
+      const appSchema = transformReactToDsl(code, {
+        filename: path.basename(srcPath),
+        css
+      })
 
       // 基本校验
       expect(appSchema).toBeTruthy()
