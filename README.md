@@ -30,3 +30,11 @@
         // FormItem组件的API...
     }
     }
+
+element-plus的package.json文件：C:\Users\zyun\Desktop\LowCode-Material-Import\node_modules\element-plus\package.json
+
+node code-convertor.js --vuePath D:\OSPP\element-plus\packages\components\badge\src\badge.vue --tsPath D:\OSPP\element-plus\packages\components\badge\src\badge.ts --packageJsonPath C:\Users\zyun\Desktop\LowCode-Material-Import\node_modules\element-plus\package.json
+
+node code-convertor.js --vuePath D:\OSPP\element-plus\packages\components\button\src\button-group.vue,D:\OSPP\element-plus\packages\components\button\src\button.vue --tsPath D:\OSPP\element-plus\packages\components\button\src\button-group.ts,D:\OSPP\element-plus\packages\components\button\src\button.ts --packageJsonPath C:\Users\zyun\Desktop\LowCode-Material-Import\node_modules\element-plus\package.json
+
+node code-convertor.js --vuePath D:\OSPP\element-plus\packages\components\table\src\table.vue,D:\OSPP\element-plus\packages\components\table\src\filter-panel.vue --tsPath D:\OSPP\element-plus\packages\components\table\src\table\defaults.ts,D:\OSPP\element-plus\packages\components\table\src\table-column\defaults.ts --packageJsonPath C:\Users\zyun\Desktop\LowCode-Material-Import\node_modules\element-plus\package.json
