@@ -132,6 +132,16 @@ function buildNodeFromJSX(jsxEl: any): ISchemaChildrenItem {
   }
 }
 
+// 将箭头函数表达式转换为普通函数源码字符串，尽量保持参数/async/主体一致
+function arrowToFunctionCode(name: string | undefined, node: any): string {
+  const params = (node.params || []).map((p: any) => generate(p).code).join(', ')
+  const bodyCode =
+    node.body?.type === 'BlockStatement' ? generate(node.body).code : `{ return ${generate(node.body).code}; }`
+  const asyncPrefix = node.async ? 'async ' : ''
+  const namePart = name ? ` ${name}` : ''
+  return `${asyncPrefix}function${namePart}(${params}) ${bodyCode}`
+}
+
 export function transformReactToDsl(code: string, options: TransformOptions = {}): IAppSchema {
   const filename = options.filename || 'App.tsx'
   const ast: File = parse(code, {
@@ -238,7 +248,10 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
               const name = decl.id.name
               const init = decl.init
               if (!init) continue
-              if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+              if (init.type === 'ArrowFunctionExpression') {
+                methods[name] = { type: 'JSFunction', value: arrowToFunctionCode(name, init) }
+              } else if (init.type === 'FunctionExpression') {
+                // 若是匿名函数表达式，保留为函数表达式；如需可改为具名函数
                 methods[name] = { type: 'JSFunction', value: generate(init).code }
               }
             }
@@ -274,8 +287,12 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
           const key: any = m.key
           const name = key.type === 'Identifier' ? key.name : key.type === 'PrivateName' ? key.id?.name : undefined
           const init: any = (m as any).value
-          if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
-            methods[name] = { type: 'JSFunction', value: generate(init).code }
+          if (name && init) {
+            if (init.type === 'ArrowFunctionExpression') {
+              methods[name] = { type: 'JSFunction', value: arrowToFunctionCode(name, init) }
+            } else if (init.type === 'FunctionExpression') {
+              methods[name] = { type: 'JSFunction', value: generate(init).code }
+            }
           }
         }
       }
