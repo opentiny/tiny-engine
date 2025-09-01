@@ -51,10 +51,10 @@ export interface IPageSchema {
   state: Array<Record<string, any>>
   meta: {
     id: number
+    isPage: boolean
     isHome: boolean
     parentId: string
-    rootElement: string
-    route: string
+    router: string
   }
   children: Array<ISchemaChildrenItem>
   schema?: {

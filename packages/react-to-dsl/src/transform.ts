@@ -184,10 +184,10 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     state: [],
     meta: {
       id: 1,
+      isPage: !options.isBlock,
       isHome: true,
-      parentId: 'root',
-      rootElement: 'root',
-      route: '/'
+      parentId: '0',
+      router: '/'
     },
     children: []
   }
