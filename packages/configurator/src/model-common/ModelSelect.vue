@@ -33,7 +33,7 @@
 </template>
 <script>
 import { ref, reactive, watch } from 'vue'
-import { Search, Grid, GridColumn, Pager, DropdownMenu, DropdownItem } from '@opentiny/vue'
+import { Search, Grid, GridColumn, Pager } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { getModelList } from '../model-common/http'
 import { handleSelectedModelParameters } from './utils'
@@ -44,8 +44,6 @@ export default {
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     TinyPager: Pager,
-    TinyDropdownMenu: DropdownMenu,
-    TinyDropdownItem: DropdownItem,
     TinyIconSearch: iconSearch()
   },
   props: {
@@ -64,336 +62,7 @@ export default {
 
     const modelListRef = ref(null)
     // 模型列表
-    const modelList = ref([
-      {
-        id: 1,
-        createdBy: '1',
-        lastUpdatedBy: '1',
-        tenantId: '1',
-        renterId: null,
-        siteId: null,
-        nameCn: 'model1',
-        nameEn: 'model1',
-        version: '1.0.0',
-        parameters: [
-          {
-            prop: 'name',
-            label: '名称',
-            type: 'String'
-          },
-          {
-            prop: 'age',
-            label: '年龄',
-            type: 'Number'
-          },
-          {
-            prop: 'job',
-            label: '职业',
-            type: 'Enum',
-            options: "[{'label': '前端开发','value': 'frontend developer'},{'label': '后端开发','value': 'backend developer'}]"
-          },
-          {
-            prop: 'birth',
-            label: '生日',
-            type: 'Date'
-          },
-          {
-            prop: 'probation',
-            label: '实习',
-            type: 'Boolean'
-          }
-        ],
-        method: [
-          {
-            name: '新增方法',
-            nameEn: 'insertApi',
-            requestParameters: [
-              {
-                prop: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              }
-            ]
-          },
-          {
-            name: '修改方法',
-            nameEn: 'updateApi',
-            requestParameters: [
-              {
-                prop: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'number'
-              },
-              {
-                prop: 'message',
-                type: 'string'
-              }
-            ]
-          },
-          {
-            name: '查询方法',
-            nameEn: 'queryApi',
-            requestParameters: [
-              {
-                prop: 'currentPage',
-                type: 'number'
-              },
-              {
-                prop: 'pageSize',
-                type: 'number'
-              },
-              {
-                prop: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              },
-              {
-                prop: 'data',
-                type: 'Array'
-              },
-              {
-                prop: 'total',
-                type: 'number'
-              }
-            ]
-          },
-          {
-            name: '删除方法',
-            nameEn: 'deleteApi',
-            requestParameters: [
-              {
-                prop: 'id',
-                type: 'Number'
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              }
-            ]
-          }
-        ],
-        description: 'test',
-        created_at: '2025-07-18 16:39:04',
-        updated_at: '2025-07-18 16:39:04'
-      },
-      {
-        id: 2,
-        createdBy: '1',
-        lastUpdatedBy: '1',
-        tenantId: '1',
-        renterId: null,
-        siteId: null,
-        nameCn: 'model2',
-        nameEn: 'model2',
-        version: '1.0.0',
-        parameters: [
-          {
-            prop: 'name',
-            label: '名称',
-            type: 'String'
-          },
-          {
-            prop: 'age',
-            label: '年龄',
-            type: 'Number'
-          },
-          {
-            prop: 'job',
-            label: '职业',
-            type: 'Enum',
-            options: "[{'label': '前端开发','value': 'frontend developer'},{'label': '后端开发','value': 'backend developer'}]"
-          },
-          {
-            prop: 'birth',
-            label: '生日',
-            type: 'Date'
-          },
-          {
-            prop: 'probation',
-            label: '实习',
-            type: 'Boolean'
-          }
-        ],
-        method: [
-          {
-            name: '新增方法',
-            nameEn: 'insertApi',
-            requestParameters: [
-              {
-                name: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              }
-            ]
-          },
-          {
-            name: '修改方法',
-            nameEn: 'updateApi',
-            requestParameters: [
-              {
-                prop: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              }
-            ]
-          },
-          {
-            name: '查询方法',
-            nameEn: 'queryApi',
-            requestParameters: [
-              {
-                prop: 'params',
-                type: 'Object',
-                children: [
-                  {
-                    prop: 'name',
-                    type: 'string'
-                  },
-                  {
-                    prop: 'age',
-                    type: 'number'
-                  }
-                ]
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              },
-              {
-                prop: 'data',
-                type: 'Array'
-              }
-            ]
-          },
-          {
-            name: '删除方法',
-            nameEn: 'deleteApi',
-            requestParameters: [
-              {
-                prop: 'id',
-                type: 'Number'
-              }
-            ],
-            responseParameters: [
-              {
-                prop: 'code',
-                type: 'Number'
-              },
-              {
-                prop: 'message',
-                type: 'String'
-              }
-            ]
-          }
-        ],
-        description: 'test', 
-        created_at: '2025-07-18 16:39:16',
-        updated_at: '2025-07-18 16:39:16'
-      }
-    ])
+    const modelList = ref([])
     // 分页配置
     const pagerState = reactive({
       currentPage: 1,
@@ -405,11 +74,10 @@ export default {
     const searchWords = ref('')
 
     const getModels = () => {
-      getModelList(pagerState.currentPage, { nameCn: searchWords.value })
-        .then((res) => {
-          modelList.value = res.records
-          pagerState.total = res.total
-        })
+      getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then((res) => {
+        modelList.value = res.records
+        pagerState.total = res.total
+      })
     }
 
     const search = () => {
@@ -423,13 +91,9 @@ export default {
 
     const selectModel = async (data) => {
       // 处理parameters
-      currentSelectedModel.value = await handleSelectedModelParameters(data.row);
+      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
       emit('modelSelect', currentSelectedModel.value)
     }
-
-    const showVersions = (e, data) => {}
-
-    const changeVersion = (e, data) => {}
 
     watch(
       () => props.isShow,
@@ -448,9 +112,7 @@ export default {
       searchWords,
       search,
       pageChange,
-      selectModel,
-      showVersions,
-      changeVersion
+      selectModel
     }
   }
 }

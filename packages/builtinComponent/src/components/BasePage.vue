@@ -1,11 +1,6 @@
 <template>
   <div>
-    <div
-      class="placeholder-layer"
-      v-if="!pageModel || !pageModel?.id"
-    >
-      请选择模型
-    </div>
+    <div class="placeholder-layer" v-if="!pageModel || !pageModel?.id">请选择模型</div>
     <div v-else>
       <tiny-form
         ref="formRef"
@@ -16,26 +11,15 @@
         :size="pageState?.size"
       >
         <tiny-row>
-          <tiny-col
-            :span="colNumber"
-            v-for="(item, index) in pageModel.parameters"
-            :key="index"
-          >
+          <tiny-col :span="colNumber" v-for="(item, index) in pageModel.parameters" :key="index">
             <tiny-form-item :prop="item.prop">
               <template #label>
-                <div
-                  class="custom-label"
-                  v-auto-tip
-                >
+                <div class="custom-label" v-auto-tip>
                   {{ item.label }}
                 </div>
               </template>
               <div v-if="item?.isModel && item.defaultValue !== null">
-                <tiny-form
-                  label-width="100"
-                  label-position="left"
-                  :model="formData[item.prop]"
-                >
+                <tiny-form label-width="100" label-position="left" :model="formData[item.prop]">
                   <tiny-row>
                     <tiny-col
                       :span="insideColNumber"
@@ -44,10 +28,7 @@
                     >
                       <tiny-form-item :prop="insideItem.prop">
                         <template #label>
-                          <div
-                            class="custom-label"
-                            v-auto-tip
-                          >
+                          <div class="custom-label" v-auto-tip>
                             {{ insideItem.label }}
                           </div>
                         </template>
@@ -75,51 +56,16 @@
         </tiny-row>
       </tiny-form>
       <div>
-        <tiny-button
-          type="primary"
-          :size="pageState?.size"
-          @click="addRow"
-        >
-          新增
-        </tiny-button>
-        <tiny-button
-          :size="pageState?.size"
-          @click="search"
-        >
-          搜索
-        </tiny-button>
-        <tiny-button
-          :size="pageState?.size"
-          @click="resetSearchForm"
-        >
-          重置
-        </tiny-button>
+        <tiny-button type="primary" :size="pageState?.size" @click="addRow"> 新增 </tiny-button>
+        <tiny-button :size="pageState?.size" @click="search"> 搜索 </tiny-button>
+        <tiny-button :size="pageState?.size" @click="resetSearchForm"> 重置 </tiny-button>
       </div>
-      <tiny-grid
-        ref="gridRef"
-        :data="tableData"
-        v-bind="pageState"
-      >
-        <tiny-grid-column
-          v-if="pageState.selectedEnabled"
-          type="selection"
-          width="60"
-        ></tiny-grid-column>
-        <template
-          v-for="item in gridColumns"
-          :key="item.prop"
-        >
-          <tiny-grid-column
-            :field="item.prop"
-            :title="item.label"
-            :editor="item.editor"
-          ></tiny-grid-column>
+      <tiny-grid ref="gridRef" :data="tableData" v-bind="pageState">
+        <tiny-grid-column v-if="pageState.selectedEnabled" type="selection" width="60"></tiny-grid-column>
+        <template v-for="item in gridColumns" :key="item.prop">
+          <tiny-grid-column :field="item.prop" :title="item.label" :editor="item.editor"></tiny-grid-column>
         </template>
-        <tiny-grid-column
-          v-if="pageState.rowOperationEnabled"
-          field="operation"
-          title="操作"
-        >
+        <tiny-grid-column v-if="pageState.rowOperationEnabled" field="operation" title="操作">
           <template #default="data">
             <tiny-button
               v-for="operate in rowOperationList"
@@ -135,10 +81,7 @@
                 :content="operate.label"
               >
                 <template #reference>
-                  <component
-                    :is="operate.icon"
-                    class="tiny-svg-size"
-                  ></component>
+                  <component :is="operate.icon" class="tiny-svg-size"></component>
                 </template>
               </tiny-popover>
               <span v-else>{{ operate.label }}</span>
@@ -152,11 +95,7 @@
         @current-change="pageChange"
         @size-change="pageSizeChange"
       ></tiny-pager>
-      <tiny-dialog-box
-        v-model:visible="boxVisibility"
-        :title="isEdit ? '编辑' : '新增'"
-        width="70%"
-      >
+      <tiny-dialog-box v-model:visible="boxVisibility" :title="isEdit ? '编辑' : '新增'" width="70%">
         <tiny-form
           label-width="100px"
           label-position="left"
@@ -165,26 +104,15 @@
           :size="pageState?.size"
         >
           <tiny-row>
-            <tiny-col
-              :span="colNumber"
-              v-for="(item, index) in pageModel.parameters"
-              :key="index"
-            >
+            <tiny-col :span="colNumber" v-for="(item, index) in pageModel.parameters" :key="index">
               <tiny-form-item :prop="item.prop">
                 <template #label>
-                  <div
-                    class="custom-label"
-                    v-auto-tip
-                  >
+                  <div class="custom-label" v-auto-tip>
                     {{ item.label }}
                   </div>
                 </template>
                 <div v-if="item?.isModel && item.defaultValue !== null">
-                  <tiny-form
-                    label-width="100"
-                    label-position="left"
-                    :model="addFormData[item.prop]"
-                  >
+                  <tiny-form label-width="100" label-position="left" :model="addFormData[item.prop]">
                     <tiny-row>
                       <tiny-col
                         :span="insideColNumber"
@@ -193,10 +121,7 @@
                       >
                         <tiny-form-item :prop="insideItem.prop">
                           <template #label>
-                            <div
-                              class="custom-label"
-                              v-auto-tip
-                            >
+                            <div class="custom-label" v-auto-tip>
                               {{ insideItem.label }}
                             </div>
                           </template>
@@ -224,26 +149,15 @@
           </tiny-row>
         </tiny-form>
         <template #footer>
-          <tiny-button
-            @click="closeDialogBox"
-            round
-          >
-            取 消
-          </tiny-button>
-          <tiny-button
-            type="primary"
-            @click="confirmSubmit"
-            round
-          >
-            确 定
-          </tiny-button>
+          <tiny-button @click="closeDialogBox" round> 取 消 </tiny-button>
+          <tiny-button type="primary" @click="confirmSubmit" round> 确 定 </tiny-button>
         </template>
       </tiny-dialog-box>
     </div>
   </div>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, defineExpose, computed, reactive, watch, useAttrs, onMounted } from 'vue';
+import { ref, defineProps, defineEmits, defineExpose, computed, reactive, watch, useAttrs, onMounted } from 'vue'
 import {
   Form as TinyForm,
   FormItem as TinyFormItem,
@@ -262,74 +176,74 @@ import {
   GridColumn as TinyGridColumn,
   DialogBox as TinyDialogBox,
   Modal,
-  Notify,
-} from '@opentiny/vue';
-import * as tinyVueIcon from '@opentiny/vue-icon';
-import axios from 'axios';
+  Notify
+} from '@opentiny/vue'
+import * as tinyVueIcon from '@opentiny/vue-icon'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
-    type: String,
+    type: String
   },
   className: {
-    type: String,
+    type: String
   },
   layout: {
     type: Number,
-    default: 2,
+    default: 2
   },
   pager: {
-    type: Object,
+    type: Object
   },
   viewOnly: {
     type: Boolean,
-    default: false,
+    default: false
   },
   searchFormData: {
-    type: Object,
+    type: Object
   },
   editFormData: {
-    type: Object,
+    type: Object
   },
   tableData: {
-    type: Object,
-    default: () => [],
+    type: Array,
+    default: () => []
   },
   serviceModel: {
-    type: Object,
+    type: Object
   },
   modelApis: {
     type: Array,
-    default: () => [],
+    default: () => []
   },
   rowOperations: {
-    type: Object,
-  },
-});
+    type: Object
+  }
+})
 
-const emit = defineEmits(['update:searchFormData', 'update:tableData', 'update:editFormData']);
+const emit = defineEmits(['update:searchFormData', 'update:tableData', 'update:editFormData'])
 
-const formRef = ref(null);
+const formRef = ref(null)
 
-const colNumber = computed(() => 12 / props.layout);
+const colNumber = computed(() => 12 / props.layout)
 
-const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12));
+const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12))
 
-const pageModel = computed(() => props.serviceModel);
+const pageModel = computed(() => props.serviceModel)
 
-const formData = ref({});
+const formData = ref({})
 
-const addFormData = ref({});
+const addFormData = ref({})
 
-const boxVisibility = ref(false);
+const boxVisibility = ref(false)
 
-const isEdit = ref(false);
+const isEdit = ref(false)
 
-const tableData = ref(props.tableData);
+const tableData = ref(props.tableData)
 
-const attrs = useAttrs();
+const attrs = useAttrs()
 
-const gridRef = ref();
+const gridRef = ref()
 
 const componentsMap = reactive({
   TinyInput: TinyInput,
@@ -337,26 +251,26 @@ const componentsMap = reactive({
   TinyCheckbox: TinyCheckbox,
   TinyRadio: TinyRadio,
   TinyDatePicker: TinyDatePicker,
-  TinyNumeric: TinyNumeric,
-});
+  TinyNumeric: TinyNumeric
+})
 
 const pageState = computed(() => {
-  const state = { ...attrs };
-  return state;
-});
+  const state = { ...attrs }
+  return state
+})
 
 const gridColumns = computed(() => {
-  return (props.serviceModel?.parameters || []).map(column => {
-    const columnData = { ...column };
+  return (props.serviceModel?.parameters || []).map((column) => {
+    const columnData = { ...column }
     if (pageState.value.rowOperationEnabled) {
       columnData.editor = {
         component: componentsMap[column.component],
-        attrs: column,
-      };
+        attrs: column
+      }
     }
-    return columnData;
-  });
-});
+    return columnData
+  })
+})
 
 const pagerState = reactive(
   props.pager || {
@@ -364,236 +278,241 @@ const pagerState = reactive(
     pageSize: 10,
     pageSizes: [5, 10, 20, 50],
     total: 0,
-    layout: 'total, sizes, prev, pager, next, jumper',
+    layout: 'total, sizes, prev, pager, next, jumper'
   }
-);
+)
 
-const rowOperationList = computed(() => {
-  return (props.rowOperations?.value || []).map(operate => {
-    if (operate.builtIn && operate.label === '编辑') {
-      operate.handler = operate.handler ?? editRow;
-    }
-    if (operate.builtIn && operate.label === '删除') {
-      operate.handler = operate.handler ?? deleteRow;
-    }
-    return {
-      ...operate,
-      icon: operate.icon ? tinyVueIcon?.[operate.icon]() : '',
-    };
-  });
-});
+const pageChange = (curPage) => {
+  pagerState.currentPage = curPage
+}
 
-const pageChange = curPage => {
-  pagerState.currentPage = curPage;
-};
-
-const pageSizeChange = pageSize => {
-  pagerState.pageSize = pageSize;
-};
+const pageSizeChange = (pageSize) => {
+  pagerState.pageSize = pageSize
+}
 
 const openDialogBox = () => {
-  boxVisibility.value = true;
-};
+  boxVisibility.value = true
+}
 
 const closeDialogBox = () => {
-  boxVisibility.value = false;
-};
+  boxVisibility.value = false
+}
 
 const insertApi = (data = addFormData.value) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'insertApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'insertApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, data)
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
         Notify({
           type: 'success',
           message: res.data.message,
-          position: 'top-right',
-        });
-        return res.data;
+          position: 'top-right'
+        })
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const updateApi = (data = addFormData.value) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'updateApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, data)
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
         Notify({
           type: 'success',
           message: res.data.message,
-          position: 'top-right',
-        });
-        return res.data;
+          position: 'top-right'
+        })
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const queryApi = ({ currentPage, pageSize, data } = {}) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'queryApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: data || formData.value,
+    params: data || formData.value
   })
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
-        tableData.value = res.data.data;
-        pagerState.total = res.data.total;
-        return res.data;
+        tableData.value = res.data.data
+        pagerState.total = res.data.total
+        emit('update:tableData', tableData.value)
+        return res.data
       }
-      throw new Error('request fail');
+      throw new Error('request fail')
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
-const deleteApi = evidence => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'deleteApi');
+const deleteApi = (evidence) => {
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'deleteApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, { params: evidence })
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
         Notify({
           type: 'success',
           message: res.data.message,
-          position: 'top-right',
-        });
-        return res.data;
+          position: 'top-right'
+        })
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const confirmSubmit = async () => {
   if (isEdit.value) {
-    await updateApi();
+    await updateApi()
   } else {
-    await insertApi();
+    await insertApi()
   }
-  await queryApi();
-  closeDialogBox();
-};
+  await queryApi()
+  closeDialogBox()
+}
 
 const search = () => {
-  queryApi();
-};
+  queryApi()
+}
 
 const initSearchFormData = () => {
   formData.value = Object.fromEntries(
-    (pageModel.value?.parameters || []).map(item => {
+    (pageModel.value?.parameters || []).map((item) => {
       return [
         item.prop,
         item?.isModel
-          ? Object.fromEntries(item.defaultValue.map(insideItem => [insideItem.prop, insideItem.defaultValue || null]))
-          : item.defaultValue || null,
-      ];
+          ? Object.fromEntries(
+              item.defaultValue.map((insideItem) => [insideItem.prop, insideItem.defaultValue || null])
+            )
+          : item.defaultValue || null
+      ]
     })
-  );
+  )
+  emit('update:searchFormData', formData.value)
 }
 
 const initEditFormData = () => {
   addFormData.value = Object.fromEntries(
-    (pageModel.value?.parameters || []).map(item => {
+    (pageModel.value?.parameters || []).map((item) => {
       return [
         item.prop,
         item?.isModel
-          ? Object.fromEntries(item.defaultValue.map(insideItem => [insideItem.prop, insideItem.defaultValue || null]))
-          : item.defaultValue || null,
-      ];
+          ? Object.fromEntries(
+              item.defaultValue.map((insideItem) => [insideItem.prop, insideItem.defaultValue || null])
+            )
+          : item.defaultValue || null
+      ]
     })
-  );
+  )
+  emit('update:editFormData', formData.value)
 }
 
 const resetSearchForm = () => {
-  initSearchFormData();
-  emit('update:searchFormData', formData.value);
-};
+  initSearchFormData()
+}
 
 const addRow = () => {
-  initEditFormData();
-  emit('update:searchFormData', addFormData.value);
-  isEdit.value = false;
-  openDialogBox();
-};
+  initEditFormData()
+  isEdit.value = false
+  openDialogBox()
+}
 
-const editRow = (rowData, index) => {
-  addFormData.value = { ...rowData };
-  emit('update:searchFormData', addFormData.value);
-  isEdit.value = true;
-  openDialogBox();
-};
+const editRow = (rowData) => {
+  addFormData.value = { ...rowData }
+  emit('update:editFormData', addFormData.value)
+  isEdit.value = true
+  openDialogBox()
+}
 
-const deleteRow = rowData => {
-  const evidence = { id: rowData.id };
-  Modal.confirm('您确定要删除吗？').then(res => {
-    deleteApi(evidence);
-  });
-};
+const deleteRow = (rowData) => {
+  const evidence = { id: rowData.id }
+  Modal.confirm('您确定要删除吗？').then(() => {
+    deleteApi(evidence)
+  })
+}
+
+const rowOperationList = computed(() => {
+  return (props.rowOperations?.value || []).map((operate) => {
+    if (operate.builtIn && operate.label === '编辑') {
+      operate.handler = operate.handler ?? editRow
+    }
+    if (operate.builtIn && operate.label === '删除') {
+      operate.handler = operate.handler ?? deleteRow
+    }
+    return {
+      ...operate,
+      icon: operate.icon ? tinyVueIcon?.[operate.icon]() : ''
+    }
+  })
+})
 
 watch(
   () => props.searchFormData,
-  value => {
+  (value) => {
     if (value) {
-      formData.value = props.searchFormData;
+      formData.value = props.searchFormData
     } else {
       initSearchFormData()
     }
   },
   { deep: true, immediate: true }
-);
+)
 
 watch(
   () => props.editFormData,
-  value => {
+  (value) => {
     if (value) {
-      addFormData.value = props.editFormData;
+      addFormData.value = props.editFormData
     } else {
       initEditFormData()
     }
   },
   { deep: true, immediate: true }
-);
+)
 
 onMounted(() => {
-  queryApi();
-});
+  queryApi()
+})
 
 const exposedData = {
   tableData: () => tableData.value,
   insertApi,
   updateApi,
   queryApi,
-  deleteApi,
-};
+  deleteApi
+}
 
 defineExpose({
-  ...exposedData,
-});
+  ...exposedData
+})
 </script>
 <style lang="less" scoped>
 .placeholder-layer {

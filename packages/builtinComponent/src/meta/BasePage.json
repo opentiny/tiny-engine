@@ -1625,7 +1625,7 @@
     "screenshot": "",
     "snippetName": "PageModel",
     "schema": {
-      "componentName": "BasePageModel",
+      "componentName": "PageModel",
       "props": {
         "rowOperations": {
           "value": [
