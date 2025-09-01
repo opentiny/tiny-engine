@@ -150,7 +150,7 @@ const compatibleI18n = (i18n) => {
  * @param {*} cssList css文件
  * @returns
  */
-export const processAppJsCode = (code, cssList) => {
+export const processAppJsCode = (code, cssList, enableTailWindCSS) => {
   if (!Array.isArray(cssList) || !cssList.length) {
     return code
   }
@@ -162,6 +162,10 @@ export const processAppJsCode = (code, cssList) => {
       res += `addCss('${css}')\n`
     }
   })
+
+  if (enableTailWindCSS) {
+    res += `\nimport('@tailwindcss/browser')\n`
+  }
 
   return res
 }

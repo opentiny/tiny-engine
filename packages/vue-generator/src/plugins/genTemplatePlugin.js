@@ -25,12 +25,12 @@ function genTemplatePlugin(options = {}) {
       }
 
       if (typeof template === 'function') {
-        context.genResult.push(...(template(schema) || []))
+        context.genResult.push(...(template(schema, options) || []))
         return
       }
 
       if (templateMap[template]) {
-        context.genResult.push(...templateMap[template](schema))
+        context.genResult.push(...templateMap[template](schema, options))
       }
     }
   }
