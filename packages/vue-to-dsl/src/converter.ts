@@ -269,6 +269,8 @@ export class VueToDslConverter {
       const storeFiles = await this.walk(storesDir, (p) => p.endsWith('.js'))
       for (const sf of storeFiles) {
         const code = await fs.readFile(sf, 'utf-8')
+        // Skip files that don't define a Pinia store (e.g., re-export index.js)
+        if (!/defineStore\s*\(/.test(code)) continue
         // naive extraction: id: 'xxx'
         const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
         const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
@@ -283,9 +285,13 @@ export class VueToDslConverter {
             entry.state = {}
           }
         } else {
-          entry.state = {}
+          // No state found, skip this file to avoid empty entries
+          continue
         }
-        globalState.push(entry)
+        // Only push when we have some keys in state (avoid empty {})
+        if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
+          globalState.push(entry)
+        }
       }
     } catch {
       // ignore
