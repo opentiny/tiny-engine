@@ -297,7 +297,49 @@ export class VueToDslConverter {
       // ignore
     }
 
-    // 6) Assemble app schema
+    // 6) Read router info to enrich page meta (router path, isPage, isHome)
+    try {
+      const routerPath = path.join(srcDir, 'router', 'index.js')
+      const rcode = await fs.readFile(routerPath, 'utf-8')
+      // find root redirect name (home)
+      // Simply capture the first redirect name (root level in this project)
+      const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
+      const homeName = homeMatch ? homeMatch[1] : ''
+
+      // To avoid incorrectly pairing the redirect name with the first route's path/component,
+      // remove the redirect object before extracting route entries.
+      const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
+
+      const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
+      const routeRegex =
+        /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
+      let m: RegExpExecArray | null
+      while ((m = routeRegex.exec(rclean))) {
+        routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
+      }
+      // Build map by fileName (basename of the import .vue)
+      const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
+      for (const e of routeEntries) {
+        const base = path.basename(e.importPath).replace(/\.vue$/i, '')
+        byFile[base] = { routeName: e.routeName, routePath: e.routePath, isHome: e.routeName === homeName }
+      }
+      // Enrich page schemas
+      for (const ps of pageSchemas) {
+        const fileName = ps?.fileName
+        if (!fileName) continue
+        const info = byFile[fileName]
+        if (!info) continue
+        ps.meta = ps.meta || {}
+        // keep existing meta.name; add router, isPage, isHome
+        ps.meta.router = info.routePath.startsWith('/') ? info.routePath : `/${info.routePath}`
+        ps.meta.isPage = true
+        ps.meta.isHome = !!info.isHome
+      }
+    } catch {
+      // ignore router enrichment failures
+    }
+
+    // 7) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
       i18n,
       utils,
