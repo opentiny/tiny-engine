@@ -28,6 +28,8 @@ export interface ISchemaChildrenItem {
   componentName: string
   id: string
   props: Record<string, any>
+  // optional loop expression for repeated rendering
+  loop?: JSExpression
 }
 
 export interface IFolderItem {

@@ -131,7 +131,33 @@ function buildNodeFromJSX(jsxEl: any): ISchemaChildrenItem {
         })
       }
     } else if (c.type === 'JSXExpressionContainer') {
-      const code = generate(c.expression).code
+      const expr = c.expression
+      // 识别 arr.map((item, idx) => <JSX .../>)
+      if (
+        expr &&
+        expr.type === 'CallExpression' &&
+        expr.callee &&
+        expr.callee.type === 'MemberExpression' &&
+        expr.callee.property &&
+        expr.callee.property.type === 'Identifier' &&
+        expr.callee.property.name === 'map' &&
+        expr.arguments &&
+        expr.arguments.length === 1 &&
+        (expr.arguments[0].type === 'ArrowFunctionExpression' || expr.arguments[0].type === 'FunctionExpression')
+      ) {
+        const fn: any = expr.arguments[0]
+        // 仅处理返回单个 JSXElement 的情况
+        const ret = fn.body?.type === 'JSXElement' ? fn.body : null
+        if (ret) {
+          const node = buildNodeFromJSX(ret)
+          const col = generate(expr.callee.object).code
+          node.loop = { type: 'JSExpression', value: col }
+          children.push(node)
+          return
+        }
+      }
+      // 默认：保留表达式
+      const code = generate(expr).code
       children.push({
         componentName: 'Fragment',
         id: genId8(),
@@ -160,11 +186,36 @@ function arrowToFunctionCode(name: string | undefined, node: any): string {
 }
 
 // 递归应用组件名映射（如 antd -> TinyVue）
+function styleObjToCss(obj: Record<string, any> | string | undefined): any {
+  if (!obj || typeof obj === 'string') return obj
+  const toKebab = (s: string) => s.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
+  return Object.entries(obj)
+    .map(([k, v]) => `${toKebab(k)}: ${v}`)
+    .join('; ')
+}
+
 function applyComponentMapping(nodes: ISchemaChildrenItem[] | undefined | null, map: Record<string, string>) {
   if (!nodes || nodes.length === 0) return
   for (const n of nodes) {
-    const mapped = map[n.componentName]
-    if (mapped) n.componentName = mapped
+    // 特殊图标映射：DatabaseOutlined -> Icon name: IconPanelMini
+    if (n.componentName === 'DatabaseOutlined') {
+      n.componentName = 'Icon'
+      n.props = { ...n.props, name: 'IconPanelMini' }
+    } else {
+      const mapped = map[n.componentName]
+      if (mapped) n.componentName = mapped
+    }
+    // 规范 style：对象 -> 字符串
+    if (n.props && n.props.style) {
+      n.props.style = styleObjToCss(n.props.style)
+    }
+    // Tiny 组件属性名调整
+    if (n.componentName === 'TinySelect' || n.componentName === 'TinyInput') {
+      if (n.props && n.props.value !== undefined) {
+        n.props.modelValue = n.props.value
+        delete n.props.value
+      }
+    }
     if (n.children && n.children.length) applyComponentMapping(n.children, map)
   }
 }
