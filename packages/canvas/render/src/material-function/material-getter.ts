@@ -18,7 +18,8 @@ import {
   CanvasImg,
   CanvasPlaceholder,
   CanvasRouterView,
-  CanvasRouterLink
+  CanvasRouterLink,
+  CanvasNavigation
 } from '../builtin'
 import { getController } from '../canvas-function/controller'
 import BlockLoadError from '../BlockLoadError.vue'
@@ -39,7 +40,8 @@ export const Mapper = {
   CanvasRowColContainer,
   CanvasPlaceholder,
   RouterView: CanvasRouterView,
-  RouterLink: CanvasRouterLink
+  RouterLink: CanvasRouterLink,
+  Navigation: CanvasNavigation
 }
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]

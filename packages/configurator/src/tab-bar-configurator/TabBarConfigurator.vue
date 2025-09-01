@@ -8,7 +8,12 @@
       <template #content="{ data }">
         <div class="item-text">
           <div class="tiny-input">
-            <tiny-input v-model="data.props.text" @update:modelValue="onTitleUpdate(data)" />
+            <tiny-input
+              v-if="data.children"
+              v-model="data.children[1].props.text"
+              @update:modelValue="onTitleUpdate(data)"
+            />
+            <tiny-input v-else v-model="data.props.text" @update:modelValue="onTitleUpdate(data)" />
           </div>
         </div>
       </template>
@@ -44,6 +49,7 @@ export default {
     const configureMap = useMaterial().getConfigureMap()
     const childComponentName =
       configureMap[componentName]?.nestingRule?.childWhitelist?.[0] || schemaChildren?.[0]?.componentName
+    const hasChildren = schemaChildren?.[0]?.children
 
     const updateChildrenToValid = () => {
       const schema = useProperties().getSchema()
@@ -77,13 +83,37 @@ export default {
     const children = ref(schemaChildren)
     const addChildren = () => {
       const schema = useProperties().getSchema()
-      const newNodeData = {
-        componentName: childComponentName,
-        props: {
-          text: '标签栏项',
-          iconPath: 'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/harmony/images/tabbar/home.svg'
-        }
-      }
+      const newNodeData = hasChildren
+        ? {
+            componentName: childComponentName,
+            props: {
+              to: '',
+              style: 'display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;'
+            },
+            children: [
+              {
+                componentName: 'Icon',
+                props: {
+                  name: 'IconPublicHome',
+                  style: 'margin-top: 3px;'
+                }
+              },
+              {
+                componentName: 'Text',
+                props: {
+                  text: '标签栏项'
+                }
+              }
+            ]
+          }
+        : {
+            componentName: childComponentName,
+            props: {
+              text: '标签栏项',
+              iconPath:
+                'https://tinyengine-assets.obs.cn-north-4.myhuaweicloud.com/files/harmony/images/tabbar/home.svg'
+            }
+          }
 
       const { operateNode } = useCanvas()
 

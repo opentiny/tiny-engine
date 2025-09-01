@@ -518,6 +518,83 @@
           "configure": {
             "loop": true
           }
+        },
+        {
+          "icon": "navigation",
+          "name": {
+            "zh_CN": "导航条"
+          },
+          "component": "Navigation",
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "type",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "类型"
+                    },
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "string",
+                    "defaultValue": "horizontal",
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "horizontal",
+                            "value": "horizontal"
+                          },
+                          {
+                            "label": "vertical",
+                            "value": "vertical"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "tabs",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项卡"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "defaultValue": "",
+                    "cols": 12,
+                    "bindState": false,
+                    "widget": {
+                      "component": "TabBarConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "tabs 选项卡"
+                    },
+                    "labelPosition": "none"
+                  }
+                ]
+              }
+            ]
+          },
+          "configure": {
+            "loop": true,
+            "isContainer": true
+          }
         }
       ],
       "snippets": [
@@ -644,12 +721,24 @@
             },
             {
               "name": {
+                "zh_CN": "数据源容器"
+              },
+              "screenshot": "",
+              "snippetName": "Collection",
+              "icon": "Collection",
+              "schema": {
+                "componentName": "Collection",
+                "props": {}
+              }
+            },
+            {
+              "name": {
                 "zh_CN": "导航条"
               },
               "snippetName": "Navigation",
               "icon": "navigation",
               "schema": {
-                "componentName": "div",
+                "componentName": "Navigation",
                 "props": {
                   "style": "text-align: center; padding: 8px 12px; box-shadow: 0 0 4px #0003;"
                 },
@@ -702,131 +791,6 @@
                     "componentName": "RouterLink",
                     "props": {
                       "to": "",
-                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
-                    },
-                    "children": [
-                      {
-                        "componentName": "Icon",
-                        "props": {
-                          "name": "IconText",
-                          "style": "margin-top: 3px;"
-                        }
-                      },
-                      {
-                        "componentName": "Text",
-                        "props": {
-                          "text": "文档"
-                        }
-                      }
-                    ]
-                  }
-                ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "纵向导航"
-              },
-              "snippetName": "NavigationV",
-              "icon": "NavigationV",
-              "schema": {
-                "componentName": "div",
-                "props": {
-                  "style": "padding: 8px 12px; border-right: 1px solid #0003;"
-                },
-                "children": [
-                  {
-                    "componentName": "RouterLink",
-                    "props": {
-                      "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
-                    },
-                    "children": [
-                      {
-                        "componentName": "Icon",
-                        "props": {
-                          "name": "IconPublicHome",
-                          "style": "margin-top: 3px;"
-                        }
-                      },
-                      {
-                        "componentName": "Text",
-                        "props": {
-                          "text": "首页"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "RouterLink",
-                    "props": {
-                      "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
-                    },
-                    "children": [
-                      {
-                        "componentName": "Icon",
-                        "props": {
-                          "name": "IconTaskCooperation",
-                          "style": "margin-top: 3px;"
-                        }
-                      },
-                      {
-                        "componentName": "Text",
-                        "props": {
-                          "text": "介绍"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "RouterLink",
-                    "props": {
-                      "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
-                    },
-                    "children": [
-                      {
-                        "componentName": "Icon",
-                        "props": {
-                          "name": "IconText",
-                          "style": "margin-top: 3px;"
-                        }
-                      },
-                      {
-                        "componentName": "Text",
-                        "props": {
-                          "text": "文档"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "RouterLink",
-                    "props": {
-                      "to": "",
-                      "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
-                    },
-                    "children": [
-                      {
-                        "componentName": "Icon",
-                        "props": {
-                          "name": "IconText",
-                          "style": "margin-top: 3px;"
-                        }
-                      },
-                      {
-                        "componentName": "Text",
-                        "props": {
-                          "text": "文档"
-                        }
-                      }
-                    ]
-                  },
-                  {
-                    "componentName": "RouterLink",
-                    "props": {
-                      "to": "",
                       "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
                     },
                     "children": [
@@ -846,18 +810,6 @@
                     ]
                   }
                 ]
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "数据源容器"
-              },
-              "screenshot": "",
-              "snippetName": "Collection",
-              "icon": "Collection",
-              "schema": {
-                "componentName": "Collection",
-                "props": {}
               }
             }
           ]
