@@ -142,6 +142,7 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
   let rootJsx: any | null = null
   let stateInitNode: any | null = null
   let componentFuncPath: any | null = null
+  let componentClassPath: any | null = null
 
   traverse(ast, {
     VariableDeclarator(path) {
@@ -170,6 +171,12 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
           (p: any) => p.isFunctionDeclaration?.() || p.isFunctionExpression?.() || p.isArrowFunctionExpression?.()
         )
         if (funcPath && !componentFuncPath) componentFuncPath = funcPath
+        // 如果在类组件的 render 方法中，记录类路径
+        const renderMethodPath = path.findParent((p: any) => p.isClassMethod?.() && p.node.key?.name === 'render')
+        if (renderMethodPath && !componentClassPath) {
+          const cls = renderMethodPath.findParent((p: any) => p.isClassDeclaration?.() || p.isClassExpression?.())
+          if (cls) componentClassPath = cls
+        }
       }
     }
   })
@@ -239,7 +246,45 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
         }
       }
     }
-    page.methods = methods
+    // 类组件方法与生命周期
+    if (componentClassPath && componentClassPath.node && componentClassPath.node.body) {
+      const classBody = componentClassPath.node.body.body || []
+      const lifeCycleRecord: Record<string, any> = {}
+      const lifecycleNames = new Set([
+        'constructor',
+        'componentDidMount',
+        'componentWillUnmount',
+        'componentDidUpdate',
+        'componentDidCatch',
+        'shouldComponentUpdate',
+        'getSnapshotBeforeUpdate',
+        'componentWillReceiveProps'
+      ])
+      for (const m of classBody) {
+        if (m.type === 'ClassMethod' && m.key && (m.key.type === 'Identifier' || m.key.type === 'StringLiteral')) {
+          const name = m.key.type === 'Identifier' ? m.key.name : String(m.key.value)
+          if (name === 'render') continue
+          if (lifecycleNames.has(name)) {
+            lifeCycleRecord[name] = { type: 'JSFunction', value: generate(m).code }
+          } else {
+            methods[name] = { type: 'JSFunction', value: generate(m).code }
+          }
+        }
+        if ((m.type === 'ClassProperty' || m.type === 'ClassPrivateProperty') && m.key) {
+          const key: any = m.key
+          const name = key.type === 'Identifier' ? key.name : key.type === 'PrivateName' ? key.id?.name : undefined
+          const init: any = (m as any).value
+          if (name && init && (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression')) {
+            methods[name] = { type: 'JSFunction', value: generate(init).code }
+          }
+        }
+      }
+      if (Object.keys(lifeCycleRecord).length > 0) {
+        page.lifeCycles = { ...page.lifeCycles, ...lifeCycleRecord }
+      }
+    }
+
+    page.methods = { ...page.methods, ...methods }
   } catch (e) {
     // 忽略方法提取失败，不影响总体转换
   }
