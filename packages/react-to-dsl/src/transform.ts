@@ -141,6 +141,7 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
 
   let rootJsx: any | null = null
   let stateInitNode: any | null = null
+  let componentFuncPath: any | null = null
 
   traverse(ast, {
     VariableDeclarator(path) {
@@ -164,6 +165,11 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
       const arg: any = path.node.argument
       if (arg && (arg.type === 'JSXElement' || arg.type === 'JSXFragment') && !rootJsx) {
         rootJsx = arg.type === 'JSXFragment' ? arg.children.find((c: any) => c.type === 'JSXElement') : arg
+        // 记录包含该 return 的最近函数（函数声明/函数表达式/箭头函数）——即组件函数
+        const funcPath = path.findParent(
+          (p: any) => p.isFunctionDeclaration?.() || p.isFunctionExpression?.() || p.isArrowFunctionExpression?.()
+        )
+        if (funcPath && !componentFuncPath) componentFuncPath = funcPath
       }
     }
   })
@@ -201,6 +207,41 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     } catch (e) {
       // 失败则忽略
     }
+  }
+
+  // 提取组件函数体内的方法定义，写入 schema.methods
+  try {
+    const methods: Record<string, any> = {}
+    if (componentFuncPath) {
+      const funcNode: any = componentFuncPath.node
+      // 仅处理块体
+      const block = funcNode.body && funcNode.body.type === 'BlockStatement' ? funcNode.body : null
+      if (block && Array.isArray(block.body)) {
+        for (const stmt of block.body) {
+          // 1) function handleX() {}
+          if (stmt.type === 'FunctionDeclaration' && stmt.id && stmt.id.name) {
+            const name = stmt.id.name
+            methods[name] = { type: 'JSFunction', value: generate(stmt).code }
+          }
+          // 2) const fn = () => {} / function() {}
+          if (stmt.type === 'VariableDeclaration') {
+            for (const decl of stmt.declarations) {
+              if (!decl || decl.type !== 'VariableDeclarator') continue
+              if (!decl.id || decl.id.type !== 'Identifier') continue
+              const name = decl.id.name
+              const init = decl.init
+              if (!init) continue
+              if (init.type === 'ArrowFunctionExpression' || init.type === 'FunctionExpression') {
+                methods[name] = { type: 'JSFunction', value: generate(init).code }
+              }
+            }
+          }
+        }
+      }
+    }
+    page.methods = methods
+  } catch (e) {
+    // 忽略方法提取失败，不影响总体转换
   }
 
   const appSchema: IAppSchema = {
