@@ -1,5 +1,5 @@
 <template>
-  <!-- 鸿蒙组件tabber属性配置 -->
+  <!-- 导航属性配置 -->
   <div>
     <div class="tabs-header">
       <div>标签栏项</div>
