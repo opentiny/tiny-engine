@@ -1,3 +1,4 @@
+import { defaultComponentsMap } from '../constants'
 function convertToPlainValue(expr: any) {
   if (typeof expr !== 'string') return expr
   const trimmed = expr.trim()
@@ -166,21 +167,17 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
 
 export function generateAppSchema(pageSchemas: any[], options: any = {}) {
   return {
-    id: options.id || 'generated-app',
-    name: options.name || 'Generated App',
-    version: '1.0.0',
-    description: options.description || 'App generated from Vue SFC files',
     meta: {
+      name: options.name || 'Generated App',
+      description: options.description || 'App generated from Vue SFC files',
       generatedAt: new Date().toISOString(),
-      generator: '@opentiny/tiny-engine-vue-to-dsl',
-      sourceType: 'vue-sfc'
+      generator: '@opentiny/tiny-engine-vue-to-dsl'
     },
     i18n: options.i18n || { en_US: {}, zh_CN: {} },
     utils: options.utils || [],
     dataSource: options.dataSource || { list: [] },
     globalState: options.globalState || [],
     pageSchema: pageSchemas || [],
-    blockSchema: options.blockSchema || [],
-    componentsMap: options.componentsMap || []
+    componentsMap: options.componentsMap || defaultComponentsMap
   }
 }
