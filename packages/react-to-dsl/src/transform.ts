@@ -82,8 +82,24 @@ function jsxAttrValueToLiteral(node: any): any {
   }
 }
 
+function getJsxName(n: any): string {
+  if (!n) return 'Fragment'
+  if (n.type === 'JSXIdentifier') return n.name
+  if (n.type === 'JSXMemberExpression') {
+    const obj = getJsxName(n.object)
+    const prop = n.property?.name || ''
+    return obj && prop ? `${obj}.${prop}` : prop || obj || 'Fragment'
+  }
+  if (n.type === 'JSXNamespacedName') {
+    const ns = n.namespace?.name || ''
+    const name = n.name?.name || ''
+    return ns && name ? `${ns}:${name}` : name || ns || 'Fragment'
+  }
+  return 'Fragment'
+}
+
 function buildNodeFromJSX(jsxEl: any): ISchemaChildrenItem {
-  const componentName = jsxEl.openingElement.name.name || 'Fragment'
+  const componentName = getJsxName(jsxEl.openingElement.name)
   const props: Record<string, any> = {}
 
   jsxEl.openingElement.attributes.forEach((attr: any) => {
