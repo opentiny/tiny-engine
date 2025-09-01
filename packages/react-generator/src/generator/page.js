@@ -518,7 +518,7 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
     .join('\n')
 
   // 处理方法
-  const arrowMethods = Object.entries(methods)
+  const normalMethods = Object.entries(methods)
     .map(([key, item]) => ({ key, ...getFunctionInfo(item.value) }))
     .filter(({ body }) => Boolean(body))
     .map(({ key, type, params, body }) => {
@@ -527,10 +527,14 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
           const setterName = `set${stateName.charAt(0).toUpperCase()}${stateName.slice(1)}`
           return `${setterName}(${value})`
         })
+        // 将类组件风格的 this 引用替换为函数组件上下文
+        .replace(/this\.state\./g, 'state.')
+        .replace(/this\.props\./g, 'props.')
         .replace(/this\.utils/g, 'utils')
         .replace(/this\.emit\(/g, '/* emit not supported in function components */ console.log(')
 
-      return `  const ${key} = ${type} (${params.join(',')}) => { ${convertedBody} }`
+      const asyncPrefix = type ? 'async ' : ''
+      return `  ${asyncPrefix}function ${key}(${params.join(',')}) { ${convertedBody} }`
     })
 
   // 处理生命周期
@@ -653,7 +657,7 @@ ${jsxNode.match(/\bt\(/) ? 'const { t } = useTranslation()' : ''}
   
 ${Object.values(hooks).filter(Boolean).join('\n')}
   
-${arrowMethods.join('\n')}
+${normalMethods.join('\n')}
   
     return (
       <>
