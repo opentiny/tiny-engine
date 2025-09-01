@@ -1,8 +1,12 @@
 <template>
   <div class="robot">
-    <div title="AI对话框" class="robot-img">
-      <svg-icon name="AI" @click="openAIRobot"></svg-icon>
-    </div>
+    <toolbar-base
+      content="AI对话框"
+      :icon="options.icon?.default || options?.icon"
+      :options="options"
+      @click-api="openAIRobot"
+    >
+    </toolbar-base>
     <Teleport to="body">
       <div class="robot-chat-container">
         <tr-container
@@ -119,6 +123,7 @@ import {
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
 import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
   TrWelcome,
@@ -160,6 +165,7 @@ export default {
     TinyPopover: TinyPopover as unknown,
     TinyDialogBox: TinyDialogBox as unknown,
     RobotSettingPopover,
+    ToolbarBase,
     TrContainer,
     TrWelcome,
     TrPrompts,
@@ -171,6 +177,12 @@ export default {
     McpServer,
     TrBubbleProvider,
     RobotTypeSelect
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    },
   },
   emits: ['close-chat'],
   setup() {
