@@ -367,7 +367,13 @@ export const appSchemaDemo01 = {
           networkConfig: ''
         }
       },
-      methods: {},
+      methods: {
+        handleFormSubmit: {
+          type: 'JSFunction',
+          value:
+            'function handleFormSubmit() { console.log("Form submitted with data:", this.state.formData); alert("Form submitted successfully!"); }'
+        }
+      },
       componentName: 'Page',
       css: 'body {\r\n  background-color:#eef0f5 ;\r\n  margin-bottom: 80px;\r\n}',
       props: {},
@@ -1391,8 +1397,7 @@ export const appSchemaDemo01 = {
                         danger: true,
                         onClick: {
                           type: 'JSExpression',
-                          value:
-                            'function handleFormSubmit() { console.log("Form submitted with data:", this.state.formData); alert("Form submitted successfully!"); }'
+                          value: 'handleFormSubmit'
                         }
                       },
                       children: '下一步: 网络配置',

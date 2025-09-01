@@ -25,6 +25,11 @@ const CreateVm = (props = {}) => {
 
   const utils = {}
 
+  function handleFormSubmit() {
+    console.log('Form submitted with data:', state.formData)
+    alert('Form submitted successfully!')
+  }
+
   return (
     <>
       <div>
@@ -459,15 +464,7 @@ IOPS上限600，IOPS突发上限5,000"
                 alignItems: 'center'
               }}
             >
-              <Button
-                type="primary"
-                style={{ maxWidth: 'unset' }}
-                danger={true}
-                onClick={function handleFormSubmit() {
-                  console.log('Form submitted with data:', state.formData)
-                  alert('Form submitted successfully!')
-                }}
-              >
+              <Button type="primary" style={{ maxWidth: 'unset' }} danger={true} onClick={handleFormSubmit}>
                 下一步: 网络配置
               </Button>
             </Col>
