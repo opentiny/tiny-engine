@@ -3,6 +3,7 @@ import traverse from '@babel/traverse'
 import generate from '@babel/generator'
 import type { File } from '@babel/types'
 import type { IAppSchema, IPageSchema, ISchemaChildrenItem } from './types'
+import { defaultComponentMap } from './constants'
 import { genId8 } from './utils'
 
 export interface TransformOptions {
@@ -156,6 +157,16 @@ function arrowToFunctionCode(name: string | undefined, node: any): string {
   const asyncPrefix = node.async ? 'async ' : ''
   const namePart = name ? ` ${name}` : ''
   return `${asyncPrefix}function${namePart}(${params}) ${bodyCode}`
+}
+
+// 递归应用组件名映射（如 antd -> TinyVue）
+function applyComponentMapping(nodes: ISchemaChildrenItem[] | undefined | null, map: Record<string, string>) {
+  if (!nodes || nodes.length === 0) return
+  for (const n of nodes) {
+    const mapped = map[n.componentName]
+    if (mapped) n.componentName = mapped
+    if (n.children && n.children.length) applyComponentMapping(n.children, map)
+  }
 }
 
 export function transformReactToDsl(code: string, options: TransformOptions = {}): IAppSchema {
@@ -320,6 +331,13 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     page.methods = { ...page.methods, ...methods }
   } catch (e) {
     // 忽略方法提取失败，不影响总体转换
+  }
+
+  // 在输出 schema 前应用组件映射
+  try {
+    applyComponentMapping(page.children, defaultComponentMap)
+  } catch (e) {
+    // ignore mapping errors
   }
 
   const appSchema: IAppSchema = {
