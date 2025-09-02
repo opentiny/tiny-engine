@@ -3,22 +3,33 @@
     <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
       <tiny-tab-item class="json-tab" :name="TALK_TYPE">
         <template #title>
-          <tiny-tooltip type="normal" content="回答日常问题或对话">
-            <icon-information class="plugin-common_icon" />
-          </tiny-tooltip>
-        </template>
-      </tiny-tab-item>
-      <tiny-tab-item :name="MCP_TYPE">
-        <template #title>
-          <tiny-tooltip type="normal" content="使用MCP">
-            <icon-separate class="plugin-common_icon" />
+          <tiny-tooltip effect="light" content="对话">
+            <template #content>
+              <div class="tip-cantainer">
+                <svg-icon name="chat" class="plugin-common_icon"></svg-icon>
+                <div class="tips">
+                  <div class="tip-header">对话</div>
+                  <div class="tip-content">回答日常问题或在开始任务前进行对话。</div>
+                </div>
+              </div>
+            </template>
+            <svg-icon name="chat" class="plugin-common_icon"></svg-icon>
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
       <tiny-tab-item :name="BUILD_TYPE">
         <template #title>
-          <tiny-tooltip type="normal" content="让AI帮忙搭建页面">
-            <icon-task-cooperation class="plugin-common_icon" />
+          <tiny-tooltip effect="light" content="智能搭建">
+            <template #content>
+              <div class="tip-cantainer">
+                <svg-icon name="intelligent-construction" class="plugin-common_icon"></svg-icon>
+                <div class="tips">
+                  <div class="tip-header">智能搭建</div>
+                  <div class="tip-content">根据描述文案自动搭建对应的页面。</div>
+                </div>
+              </div>
+            </template>
+            <svg-icon name="intelligent-construction" class="plugin-common_icon"></svg-icon>
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
@@ -29,17 +40,13 @@
 <script lang="ts">
 import { reactive, watch } from 'vue'
 import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
-import { iconInformation, iconSeparate, iconTaskCooperation } from '@opentiny/vue-icon'
 import { TALK_TYPE, MCP_TYPE, BUILD_TYPE } from './js/robotSetting'
 
 export default {
   components: {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    TinyTooltip: Tooltip,
-    iconInformation: iconInformation(),
-    iconSeparate: iconSeparate(),
-    iconTaskCooperation: iconTaskCooperation()
+    TinyTooltip: Tooltip
   },
   props: {
     aiType: {
@@ -77,12 +84,8 @@ export default {
 
 <style lang="less" scoped>
 .button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 80px;
-  height: 30px;
-  border: 1px solid rgb(194, 194, 194);
+  height: 32px;
   border-radius: 999px;
   cursor: pointer;
   box-sizing: border-box;
@@ -91,9 +94,44 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid var(--te-common-border-default);
+    width: 80px;
+    height: 32px;
+    border-radius: 999px;
+    background-color: var(--te-common-bg-container);
     .plugin-common_icon {
       margin: 0 4px;
     }
+    .tiny-tabs__header {
+      width: calc(100% - 8px);
+      .tiny-tabs__nav-wrap {
+        border-radius: 999px;
+      }
+      .tiny-tabs__item {
+        height: 24px;
+        &.is-active {
+          border-radius: 24px;
+          border: none;
+          box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.08);
+        }
+      }
+    }
+  }
+}
+.tip-cantainer {
+  width: 180px;
+  padding: 4px 0;
+  display: flex;
+  align-items: flex-start;
+  .tips {
+    margin-left: 10px;
+    line-height: 18px;
+  }
+  .tip-header {
+    font-weight: 600;
+  }
+  .tip-content {
+    color: var(--te-common-text-secondary);
   }
 }
 </style>
