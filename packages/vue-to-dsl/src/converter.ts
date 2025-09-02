@@ -332,8 +332,7 @@ export class VueToDslConverter {
         const info = byFile[fileName]
         if (!info) continue
         ps.meta = ps.meta || {}
-        // keep existing meta.name; add router, isPage, isHome
-        ps.meta.router = info.routePath.startsWith('/') ? info.routePath : `/${info.routePath}`
+        ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
         ps.meta.isPage = true
         ps.meta.isHome = !!info.isHome
       }
@@ -526,7 +525,7 @@ export class VueToDslConverter {
             const info = byFile[fileName]
             if (!info) continue
             ps.meta = ps.meta || {}
-            ps.meta.router = info.routePath.startsWith('/') ? info.routePath : `/${info.routePath}`
+            ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
             ps.meta.isPage = true
             ps.meta.isHome = !!info.isHome
           }
