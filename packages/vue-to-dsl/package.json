@@ -10,14 +10,15 @@
   "module": "dist/tiny-engine-vue-to-dsl.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "tiny-vue-to-dsl": "dist/cli.js"
+    "tiny-vue-to-dsl": "dist/cli.cjs"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "pnpm run build:types && vite build",
+    "build": "pnpm run build:types && vite build && pnpm run build:cli",
     "build:types": "tsc -p tsconfig.json",
+    "build:cli": "vite build --config vite.config.cli.mjs",
     "test": "vitest",
     "test:unit": "vitest run",
     "coverage": "vitest run --coverage",
