@@ -399,7 +399,7 @@ export default {
 
           // 不直接应用到画布：创建一个新的静态页面
           const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
-          const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+          const safeRoute = `${rawName.replace(/\s+/g, '-').toLowerCase()}`
           const fileName = result?.schema?.fileName || rawName
           const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
