@@ -1,6 +1,6 @@
 # @opentiny/tiny-engine-dsl-react
 
-[![npm version](https://img.shields.io/npm/v/@opentiny/tiny-engine-dsl-react.svg)](https://www.npmjs.com/package/@opentiny/tiny-engine-dsl-react)
+[![pnpm version](https://img.shields.io/pnpm/v/@opentiny/tiny-engine-dsl-react.svg)](https://www.npmjs.com/package/@opentiny/tiny-engine-dsl-react)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 一个DSL到React代码生成器，支持将TinyEngine设计器的DSL schema转换为可运行的React应用代码。
@@ -19,7 +19,7 @@
 ## 📦 安装
 
 ```bash
-npm install @opentiny/tiny-engine-dsl-react
+pnpm install @opentiny/tiny-engine-dsl-react
 ```
 
 ## 🚀 快速开始
@@ -280,15 +280,15 @@ pnpm install
 
 ```bash
 # 运行所有测试
-npm test
+pnpm test
 
 # 运行特定测试
-npm test test/data-binding
-npm test test/lifecycle
-npm test test/formatCode
+pnpm test test/data-binding
+pnpm test test/lifecycle
+pnpm test test/formatCode
 
 # 运行完整测试套件
-npm run test:latest
+pnpm run test:latest
 ```
 
 ### 测试用例
