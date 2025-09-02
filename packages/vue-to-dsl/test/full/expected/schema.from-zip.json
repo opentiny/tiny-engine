@@ -2,7 +2,7 @@
   "meta": {
     "name": "Generated App",
     "description": "App generated from Vue SFC files",
-    "generatedAt": "2025-09-02T09:36:48.442Z",
+    "generatedAt": "2025-09-02T09:36:48.471Z",
     "generator": "@opentiny/tiny-engine-vue-to-dsl"
   },
   "i18n": {
@@ -791,7 +791,7 @@
       "meta": {
         "name": "DemoPage",
         "description": "Page generated from Vue SFC",
-        "generatedAt": "2025-09-02T09:36:48.406Z",
+        "generatedAt": "2025-09-02T09:36:48.461Z",
         "generator": "@opentiny/tiny-engine-vue-to-dsl",
         "router": "Demopage",
         "isPage": true,
@@ -820,19 +820,19 @@
                         "modelValue": ""
                       },
                       "children": [],
-                      "id": "46w7h9ak"
+                      "id": "6cy6adu8"
                     }
                   ],
-                  "id": "b7okj55k"
+                  "id": "402tjbdg"
                 }
               ],
-              "id": "v66rb6e2"
+              "id": "2ohp2v8y"
             }
           ],
-          "id": "uw0bytgk"
+          "id": "n7r191lh"
         }
       ],
-      "id": "w3l68jnh"
+      "id": "lt3ppicf"
     },
     {
       "componentName": "Page",
@@ -840,7 +840,7 @@
       "meta": {
         "name": "LifeCyclePage",
         "description": "Page generated from Vue SFC",
-        "generatedAt": "2025-09-02T09:36:48.415Z",
+        "generatedAt": "2025-09-02T09:36:48.464Z",
         "generator": "@opentiny/tiny-engine-vue-to-dsl",
         "router": "Lifecycle",
         "isPage": true,
@@ -887,13 +887,13 @@
                                   "value": "'活跃用户: ' + state.activeUsers"
                                 }
                               },
-                              "id": "fviphsm3"
+                              "id": "b1uvpi6j"
                             }
                           ],
-                          "id": "cjgk0jwl"
+                          "id": "3hntead1"
                         }
                       ],
-                      "id": "clg6qg3i"
+                      "id": "x5cqx5ts"
                     },
                     {
                       "componentName": "div",
@@ -913,16 +913,16 @@
                                   "value": "'系统负载: ' + state.systemLoad + '%'"
                                 }
                               },
-                              "id": "hglpkkrx"
+                              "id": "f7xlbc7m"
                             }
                           ],
-                          "id": "omn7jr9f"
+                          "id": "ns9ksg3q"
                         }
                       ],
-                      "id": "arbdtw0b"
+                      "id": "5pgdm9gt"
                     }
                   ],
-                  "id": "ikuqq705"
+                  "id": "dvytj4k3"
                 },
                 {
                   "componentName": "TinyButton",
@@ -939,19 +939,19 @@
                       "props": {
                         "text": "刷新数据"
                       },
-                      "id": "lb2xs21g"
+                      "id": "zrjy8fsq"
                     }
                   ],
-                  "id": "h4meo1mx"
+                  "id": "gc66a9y7"
                 }
               ],
-              "id": "b8up5tpr"
+              "id": "a2soigzv"
             }
           ],
-          "id": "y4ulx5jr"
+          "id": "pn5jokqc"
         }
       ],
-      "id": "dhhqdiq4"
+      "id": "y2fq2ij9"
     },
     {
       "componentName": "Page",
@@ -959,7 +959,7 @@
       "meta": {
         "name": "UntitledA",
         "description": "Page generated from Vue SFC",
-        "generatedAt": "2025-09-02T09:36:48.417Z",
+        "generatedAt": "2025-09-02T09:36:48.466Z",
         "generator": "@opentiny/tiny-engine-vue-to-dsl",
         "router": "UntitledA",
         "isPage": true,
@@ -992,13 +992,13 @@
                       "props": {
                         "text": "Hello World!"
                       },
-                      "id": "zyom5ofy"
+                      "id": "5bzzte19"
                     }
                   ],
-                  "id": "tm91p7xz"
+                  "id": "h96lfict"
                 }
               ],
-              "id": "9t2m2azm"
+              "id": "jwcrlzcq"
             },
             {
               "componentName": "h2",
@@ -1011,10 +1011,10 @@
                   "props": {
                     "text": "Vue -> DSL"
                   },
-                  "id": "023hetaf"
+                  "id": "1gxpkt2e"
                 }
               ],
-              "id": "9mlx4oxu"
+              "id": "tcrkm7t9"
             },
             {
               "componentName": "TinyButton",
@@ -1024,13 +1024,13 @@
                 "class": "component-base-style"
               },
               "children": [],
-              "id": "8xwz1t1a"
+              "id": "k29s8bi0"
             }
           ],
-          "id": "6thlfwjd"
+          "id": "tf58zpo9"
         }
       ],
-      "id": "mxft10ea"
+      "id": "59um8wkb"
     },
     {
       "componentName": "Page",
@@ -1038,7 +1038,7 @@
       "meta": {
         "name": "createVm",
         "description": "Page generated from Vue SFC",
-        "generatedAt": "2025-09-02T09:36:48.439Z",
+        "generatedAt": "2025-09-02T09:36:48.470Z",
         "generator": "@opentiny/tiny-engine-vue-to-dsl",
         "router": "CreateVm",
         "isPage": true,
@@ -1110,10 +1110,10 @@
                     ]
                   },
                   "children": [],
-                  "id": "u6tbr8t3"
+                  "id": "rw0ul2dp"
                 }
               ],
-              "id": "71girsnr"
+              "id": "nyxqn0nx"
             },
             {
               "componentName": "div",
@@ -1154,10 +1154,10 @@
                             ]
                           },
                           "children": [],
-                          "id": "phxhvaly"
+                          "id": "lz7a6ueg"
                         }
                       ],
-                      "id": "lhslapli"
+                      "id": "7za88qg8"
                     },
                     {
                       "componentName": "TinyFormItem",
@@ -1178,7 +1178,7 @@
                             ]
                           },
                           "children": [],
-                          "id": "00e99dy9"
+                          "id": "71onummr"
                         },
                         {
                           "componentName": "span",
@@ -1191,10 +1191,10 @@
                               "props": {
                                 "text": "温馨提示：页面左上角切换区域"
                               },
-                              "id": "w6zeqr7n"
+                              "id": "om6umz3r"
                             }
                           ],
-                          "id": "z722boyo"
+                          "id": "sjg3jqsa"
                         },
                         {
                           "componentName": "span",
@@ -1207,13 +1207,13 @@
                               "props": {
                                 "text": "不同区域的云服务产品之间内网互不相通；请就近选择靠近您业务的区域，可减少网络时延，提高访问速度"
                               },
-                              "id": "13a9jqlr"
+                              "id": "pmoixy2q"
                             }
                           ],
-                          "id": "hps7y01c"
+                          "id": "79fk7kpl"
                         }
                       ],
-                      "id": "v5mv42zr"
+                      "id": "j0wirqqb"
                     },
                     {
                       "componentName": "TinyFormItem",
@@ -1242,16 +1242,16 @@
                             ]
                           },
                           "children": [],
-                          "id": "4bcwsnzi"
+                          "id": "ohtmw0bi"
                         }
                       ],
-                      "id": "lyfndpaj"
+                      "id": "lvqjojtb"
                     }
                   ],
-                  "id": "nrbrpyyj"
+                  "id": "y5nkibu5"
                 }
               ],
-              "id": "5z43sskv"
+              "id": "9lg2s3fc"
             },
             {
               "componentName": "div",
@@ -1292,10 +1292,10 @@
                             ]
                           },
                           "children": [],
-                          "id": "mdokadsz"
+                          "id": "1bmzloev"
                         }
                       ],
-                      "id": "u8ow7wbr"
+                      "id": "f8avel5r"
                     },
                     {
                       "componentName": "TinyFormItem",
@@ -1326,10 +1326,10 @@
                                       "props": {
                                         "text": "vCPUs"
                                       },
-                                      "id": "1a0onb6s"
+                                      "id": "jd46xsx9"
                                     }
                                   ],
-                                  "id": "g2wbvhm4"
+                                  "id": "ljgffqrf"
                                 },
                                 {
                                   "componentName": "TinySelect",
@@ -1348,10 +1348,10 @@
                                     ]
                                   },
                                   "children": [],
-                                  "id": "oc6npmmt"
+                                  "id": "t2q4lq3m"
                                 }
                               ],
-                              "id": "m7bagayu"
+                              "id": "nriid8zm"
                             },
                             {
                               "componentName": "div",
@@ -1370,10 +1370,10 @@
                                       "props": {
                                         "text": "内存"
                                       },
-                                      "id": "sz57kj3v"
+                                      "id": "8ty9b98c"
                                     }
                                   ],
-                                  "id": "9bfhly7o"
+                                  "id": "no65vtqz"
                                 },
                                 {
                                   "componentName": "TinySelect",
@@ -1392,10 +1392,10 @@
                                     ]
                                   },
                                   "children": [],
-                                  "id": "gnjdr9zr"
+                                  "id": "e9fk37ah"
                                 }
                               ],
-                              "id": "fcfx9zzq"
+                              "id": "bkugr1g3"
                             },
                             {
                               "componentName": "div",
@@ -1414,10 +1414,10 @@
                                       "props": {
                                         "text": "规格名称"
                                       },
-                                      "id": "7irhlb33"
+                                      "id": "ppv3a1ki"
                                     }
                                   ],
-                                  "id": "bu4qcff6"
+                                  "id": "1h6el36q"
                                 },
                                 {
                                   "componentName": "TinySearch",
@@ -1426,13 +1426,13 @@
                                     "v-model": "state.inputValues.diskLabel"
                                   },
                                   "children": [],
-                                  "id": "6c6iebup"
+                                  "id": "5cnf4fz8"
                                 }
                               ],
-                              "id": "f1ifb2ss"
+                              "id": "602pj50s"
                             }
                           ],
-                          "id": "is4bdjir"
+                          "id": "l63qi1o4"
                         },
                         {
                           "componentName": "div",
@@ -1477,7 +1477,7 @@
                                 ]
                               },
                               "children": [],
-                              "id": "n7toaecy"
+                              "id": "s6eo4w5e"
                             },
                             {
                               "componentName": "TinyGrid",
@@ -1537,7 +1537,7 @@
                                 ]
                               },
                               "children": [],
-                              "id": "8xwf9ezm"
+                              "id": "w68ailrf"
                             },
                             {
                               "componentName": "div",
@@ -1556,10 +1556,10 @@
                                       "props": {
                                         "text": "当前规格"
                                       },
-                                      "id": "p44mjbkr"
+                                      "id": "17ddf9t4"
                                     }
                                   ],
-                                  "id": "6riym1o2"
+                                  "id": "yfcz63n0"
                                 },
                                 {
                                   "componentName": "span",
@@ -1572,25 +1572,25 @@
                                       "props": {
                                         "text": "通用计算型 | Si2.large.2 | 2vCPUs | 4 GiB"
                                       },
-                                      "id": "wxpz7pn7"
+                                      "id": "db741tcr"
                                     }
                                   ],
-                                  "id": "c7h9ys24"
+                                  "id": "mqxqqj77"
                                 }
                               ],
-                              "id": "8574pbve"
+                              "id": "v8ozdwzo"
                             }
                           ],
-                          "id": "8ggf26bd"
+                          "id": "bm0vznon"
                         }
                       ],
-                      "id": "9wwawbyj"
+                      "id": "28psvaqa"
                     }
                   ],
-                  "id": "pu2e3fj9"
+                  "id": "p7hgzcok"
                 }
               ],
-              "id": "d409pz36"
+              "id": "g0bfo8lg"
             },
             {
               "componentName": "div",
@@ -1636,7 +1636,7 @@
                             ]
                           },
                           "children": [],
-                          "id": "6ucskqrw"
+                          "id": "4gv7jmk6"
                         },
                         {
                           "componentName": "div",
@@ -1662,7 +1662,7 @@
                                 ]
                               },
                               "children": [],
-                              "id": "6u431ukd"
+                              "id": "enw208mz"
                             },
                             {
                               "componentName": "TinySelect",
@@ -1682,10 +1682,10 @@
                                 ]
                               },
                               "children": [],
-                              "id": "li5mfqzc"
+                              "id": "46rqcvy7"
                             }
                           ],
-                          "id": "i1uu6f33"
+                          "id": "np1vqusj"
                         },
                         {
                           "componentName": "div",
@@ -1704,22 +1704,22 @@
                                   "props": {
                                     "text": "请注意操作系统的语言类型。"
                                   },
-                                  "id": "miup24ly"
+                                  "id": "1nq8dslj"
                                 }
                               ],
-                              "id": "4qoawucn"
+                              "id": "x17t7eax"
                             }
                           ],
-                          "id": "ki894vw9"
+                          "id": "i2hkffv5"
                         }
                       ],
-                      "id": "vuxihnv3"
+                      "id": "n637mwsg"
                     }
                   ],
-                  "id": "wysgpw8g"
+                  "id": "q9uhclp6"
                 }
               ],
-              "id": "rox1x0x1"
+              "id": "06il4g6p"
             },
             {
               "componentName": "div",
@@ -1769,7 +1769,7 @@
                                 ]
                               },
                               "children": [],
-                              "id": "zqu23e2i"
+                              "id": "wndlerks"
                             },
                             {
                               "componentName": "TinyInput",
@@ -1779,7 +1779,7 @@
                                 "v-model": "state.inputValues.systemDisk"
                               },
                               "children": [],
-                              "id": "620dlwzb"
+                              "id": "quq2ay4w"
                             },
                             {
                               "componentName": "span",
@@ -1792,19 +1792,19 @@
                                   "props": {
                                     "text": "GiB IOPS上限240，IOPS突发上限5,000"
                                   },
-                                  "id": "7i5w4fub"
+                                  "id": "gz3v56vm"
                                 }
                               ],
-                              "id": "14mejuvh"
+                              "id": "m4uabous"
                             }
                           ],
-                          "id": "hem0mudk"
+                          "id": "9c2f8lgg"
                         }
                       ],
-                      "id": "xyt1yh01"
+                      "id": "186y96yl"
                     }
                   ],
-                  "id": "yd70trp5"
+                  "id": "phypvf6u"
                 },
                 {
                   "componentName": "TinyForm",
@@ -1837,7 +1837,7 @@
                                 "name": "IconPanelMini"
                               },
                               "children": [],
-                              "id": "ogqp50jg"
+                              "id": "kxho3zho"
                             },
                             {
                               "componentName": "TinySelect",
@@ -1857,7 +1857,7 @@
                                 ]
                               },
                               "children": [],
-                              "id": "vjmrlhyh"
+                              "id": "98p6teez"
                             },
                             {
                               "componentName": "TinyInput",
@@ -1867,7 +1867,7 @@
                                 "v-model": "state.inputValues.dataDiskSize"
                               },
                               "children": [],
-                              "id": "ojzjxdrc"
+                              "id": "detp2eno"
                             },
                             {
                               "componentName": "span",
@@ -1880,10 +1880,10 @@
                                   "props": {
                                     "text": "GiB IOPS上限600，IOPS突发上限5,000"
                                   },
-                                  "id": "pzd7fac7"
+                                  "id": "eac6uxm2"
                                 }
                               ],
-                              "id": "sjmx11f2"
+                              "id": "39gybgi7"
                             },
                             {
                               "componentName": "TinyInput",
@@ -1893,14 +1893,14 @@
                                 "v-model": "state.inputValues.diskLabel"
                               },
                               "children": [],
-                              "id": "bsn6qo26"
+                              "id": "dkj0ws7l"
                             }
                           ],
                           "loop": {
                             "type": "JSExpression",
                             "value": "this.state.dataDisk"
                           },
-                          "id": "9hyuwzov"
+                          "id": "c0ptidgn"
                         },
                         {
                           "componentName": "div",
@@ -1915,7 +1915,7 @@
                                 "name": "IconPlus"
                               },
                               "children": [],
-                              "id": "c7000zug"
+                              "id": "cxx737nu"
                             },
                             {
                               "componentName": "span",
@@ -1928,10 +1928,10 @@
                                   "props": {
                                     "text": "增加一块数据盘"
                                   },
-                                  "id": "85odqqp4"
+                                  "id": "v1shbc9e"
                                 }
                               ],
-                              "id": "8469n29b"
+                              "id": "jjigijwr"
                             },
                             {
                               "componentName": "span",
@@ -1944,22 +1944,22 @@
                                   "props": {
                                     "text": "您还可以挂载 21 块磁盘（云硬盘）"
                                   },
-                                  "id": "ocebt17d"
+                                  "id": "6lzikq1k"
                                 }
                               ],
-                              "id": "cch9kohy"
+                              "id": "gp81ungz"
                             }
                           ],
-                          "id": "mqds40mr"
+                          "id": "1qljb4qv"
                         }
                       ],
-                      "id": "9spk7gyn"
+                      "id": "b2koz5tg"
                     }
                   ],
-                  "id": "9ldxk1n5"
+                  "id": "vr1jf5yn"
                 }
               ],
-              "id": "qxbjbysa"
+              "id": "yfr476l9"
             },
             {
               "componentName": "div",
@@ -1978,7 +1978,7 @@
                     "inline": false
                   },
                   "children": [],
-                  "id": "8kr6xx9h"
+                  "id": "z964ibtb"
                 },
                 {
                   "componentName": "TinyRow",
@@ -2016,10 +2016,10 @@
                                       "props": {
                                         "text": "购买量"
                                       },
-                                      "id": "d9s8svai"
+                                      "id": "ti90n6y2"
                                     }
                                   ],
-                                  "id": "7lu87yjl"
+                                  "id": "p27a4wzk"
                                 },
                                 {
                                   "componentName": "TinyInput",
@@ -2029,7 +2029,7 @@
                                     "v-model": "state.formData.instanceCount"
                                   },
                                   "children": [],
-                                  "id": "sh1v2npz"
+                                  "id": "sn9i5qkd"
                                 },
                                 {
                                   "componentName": "span",
@@ -2040,13 +2040,13 @@
                                       "props": {
                                         "text": "台"
                                       },
-                                      "id": "ylpi3bq0"
+                                      "id": "7xfvpp9u"
                                     }
                                   ],
-                                  "id": "865mig72"
+                                  "id": "kjttc1al"
                                 }
                               ],
-                              "id": "ebjh81zf"
+                              "id": "zw5l3k1g"
                             },
                             {
                               "componentName": "TinyCol",
@@ -2069,10 +2069,10 @@
                                           "props": {
                                             "text": "配置费用"
                                           },
-                                          "id": "rrorke2l"
+                                          "id": "f7wim7vp"
                                         }
                                       ],
-                                      "id": "0erjziri"
+                                      "id": "3o4gahyr"
                                     },
                                     {
                                       "componentName": "span",
@@ -2085,10 +2085,10 @@
                                           "props": {
                                             "text": "¥1.5776"
                                           },
-                                          "id": "snupyo3b"
+                                          "id": "ovxigq9e"
                                         }
                                       ],
-                                      "id": "bdge8bav"
+                                      "id": "l27ms44a"
                                     },
                                     {
                                       "componentName": "span",
@@ -2101,13 +2101,13 @@
                                           "props": {
                                             "text": "/小时"
                                           },
-                                          "id": "px64rky0"
+                                          "id": "zbifzxnb"
                                         }
                                       ],
-                                      "id": "xblo6ow6"
+                                      "id": "qocnhpvb"
                                     }
                                   ],
-                                  "id": "qvh9kvvj"
+                                  "id": "5pxp0f59"
                                 },
                                 {
                                   "componentName": "div",
@@ -2124,10 +2124,10 @@
                                           "props": {
                                             "text": "参考价格，具体扣费请以账单为准。"
                                           },
-                                          "id": "rmhgtx9g"
+                                          "id": "pgdp03fe"
                                         }
                                       ],
-                                      "id": "2qcp3mq7"
+                                      "id": "nkw3lv01"
                                     },
                                     {
                                       "componentName": "span",
@@ -2140,22 +2140,22 @@
                                           "props": {
                                             "text": "了解计费详情"
                                           },
-                                          "id": "6xgukgzv"
+                                          "id": "8jhzx6q4"
                                         }
                                       ],
-                                      "id": "ehwo8361"
+                                      "id": "q7x7hn8r"
                                     }
                                   ],
-                                  "id": "0ybjmqyy"
+                                  "id": "l8cofrrr"
                                 }
                               ],
-                              "id": "q1uldfvb"
+                              "id": "vx006l3c"
                             }
                           ],
-                          "id": "we2leese"
+                          "id": "ib4e7y4z"
                         }
                       ],
-                      "id": "phbyjk4z"
+                      "id": "w7ycgxgf"
                     },
                     {
                       "componentName": "TinyCol",
@@ -2172,22 +2172,22 @@
                             "style": "max-width: unset"
                           },
                           "children": [],
-                          "id": "miez3v3e"
+                          "id": "woo2mlc7"
                         }
                       ],
-                      "id": "xi66n0lu"
+                      "id": "m54askr3"
                     }
                   ],
-                  "id": "sfwc46do"
+                  "id": "plz94odh"
                 }
               ],
-              "id": "ovyfpb7d"
+              "id": "gqxjyjjm"
             }
           ],
-          "id": "988epqko"
+          "id": "jqbze8s0"
         }
       ],
-      "id": "3ekbzjum"
+      "id": "ex4oxb31"
     }
   ],
   "componentsMap": [

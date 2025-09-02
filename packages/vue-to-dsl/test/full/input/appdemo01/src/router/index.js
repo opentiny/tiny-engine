@@ -6,7 +6,7 @@ const routes = [
       {
         name: '1',
         path: 'CreateVm',
-        component: () => import('@/views/createVm.vue'),
+        component: () => import('@/views/CreateVm.vue'),
         children: []
       },
       {

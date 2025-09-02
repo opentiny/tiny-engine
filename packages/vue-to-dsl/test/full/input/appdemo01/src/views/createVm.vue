@@ -55,6 +55,7 @@
         >
         <tiny-form-item label="可用区" style="border-radius: 0px">
           <tiny-button-group
+            modelValue="1"
             v-model="state.selectValues.availableZone"
             :data="[
               { text: '可用区1', value: '1' },
@@ -174,8 +175,8 @@
               <span style="width: 150px; display: inline-block">当前规格</span>
               <span style="font-weight: 700">通用计算型 | Si2.large.2 | 2vCPUs | 4 GiB</span>
             </div>
-          </div></tiny-form-item
-        ></tiny-form
+          </div>
+        </tiny-form-item></tiny-form
       >
     </div>
     <div
@@ -232,8 +233,8 @@
           </div>
           <div style="margin-top: 12px">
             <span style="color: #e37d29">请注意操作系统的语言类型。</span>
-          </div></tiny-form-item
-        ></tiny-form
+          </div>
+        </tiny-form-item></tiny-form
       >
     </div>
     <div
@@ -276,8 +277,8 @@
               v-model="state.inputValues.systemDisk"
             ></tiny-input>
             <span style="color: #575d6c; font-size: 12px">GiB IOPS上限240，IOPS突发上限5,000</span>
-          </div></tiny-form-item
-        ></tiny-form
+          </div>
+        </tiny-form-item></tiny-form
       >
       <tiny-form
         labelWidth="80px"
@@ -314,8 +315,8 @@
             <tiny-icon-plus style="width: 16px; height: 16px; margin-right: 10px" fill="currentColor"></tiny-icon-plus>
             <span style="font-size: 12px; border-radius: 0px; margin-right: 10px">增加一块数据盘</span>
             <span style="color: #8a8e99; font-size: 12px">您还可以挂载 21 块磁盘（云硬盘）</span>
-          </div></tiny-form-item
-        ></tiny-form
+          </div>
+        </tiny-form-item></tiny-form
       >
     </div>
     <div
@@ -364,8 +365,8 @@
               <div>
                 <span style="font-size: 12px; border-radius: 0px">参考价格，具体扣费请以账单为准。</span>
                 <span style="font-size: 12px; color: #344899">了解计费详情</span>
-              </div></tiny-col
-            ></tiny-row
+              </div>
+            </tiny-col></tiny-row
           ></tiny-col
         >
         <tiny-col
