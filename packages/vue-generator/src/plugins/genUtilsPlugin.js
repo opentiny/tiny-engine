@@ -15,7 +15,13 @@ function genUtilsPlugin(options = {}) {
     const { content, name } = utilsConfig
     const { package: packageName, exportName, destructuring } = content
 
-    const statement = generateImportStatement({ moduleName: packageName, exportName, alias: name, destructuring })
+    // 如果 destructuring 为 false，则使用 name 作为导出名称
+    const statement = generateImportStatement({
+      moduleName: packageName,
+      exportName: destructuring ? exportName : name,
+      alias: name,
+      destructuring
+    })
     let realExportName = exportName
 
     if (name) {
