@@ -12,13 +12,13 @@
     </toolbar-base>
     <toolbar-base
       class="ml-8"
-      content="上传"
+      content="导入"
       :icon="options.icon?.upload || options?.icon"
       :options="options"
       @click-api="triggerUpload"
     >
       <template #default>
-        <input ref="fileInputRef" type="file" accept=".vue" style="display: none" @change="handleFileChange" />
+        <input ref="fileInputRef" type="file" accept=".vue,.zip" style="display: none" @change="handleFileChange" />
       </template>
     </toolbar-base>
   </div>
@@ -32,6 +32,9 @@ import {
   useCanvas,
   useNotify,
   useLayout,
+  useResource,
+  usePage,
+  useTranslate,
   getMetaApi,
   META_APP,
   getMergeMeta,
@@ -279,28 +282,148 @@ export default {
       fileInputRef.value?.click()
     }
 
-    // 处理上传的 .vue 文件
+    // 处理上传的 .vue 或 .zip 文件
     const handleFileChange = async (e: Event) => {
       const input = e.target as HTMLInputElement
       const file = input?.files?.[0]
       if (!file) return
 
       try {
-        const text = await file.text()
-
         // 转换器实例
         const converter = new VueToDslConverter()
-        const result = await converter.convertFromString(text, file.name)
 
-        // 写入画布
-        const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
-        if (isBlock()) {
-          resetBlockCanvasState({ ...pageState, pageSchema: result.schema })
+        // zip：转换整个应用；vue：转换单文件
+        const isZip = /\.zip$/i.test(file.name)
+        if (isZip) {
+          const buffer = await file.arrayBuffer()
+          const appSchema: any = await converter.convertAppFromZip(buffer)
+          // 将 appSchema 应用到全局
+          const { appSchemaState } = useResource()
+          // 1) 全局元数据（i18n/utils/dataSource/globalState/componentsMap）
+          const i18n = appSchema?.i18n || {}
+          const locales = Object.keys(i18n).length
+            ? Object.keys(i18n).map((key) => ({ lang: key, label: key }))
+            : [
+                { lang: 'zh_CN', label: 'zh_CN' },
+                { lang: 'en_US', label: 'en_US' }
+              ]
+          appSchemaState.langs = {
+            locales,
+            messages: i18n
+          }
+          appSchemaState.utils = appSchema?.utils || []
+          appSchemaState.dataSource = appSchema?.dataSource?.list || []
+          appSchemaState.globalState = appSchema?.globalState || []
+          appSchemaState.componentsMap = appSchema?.componentsMap || appSchemaState.componentsMap
+
+          // 同步刷新 i18n 到画布/设计器
+          const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+          await useTranslate().initI18n({ host: id, hostType: type, init: true })
+
+          // 2) 创建静态页面（批量）并刷新页面树
+          const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+          // 将应用级 schema 归一化并持久化，便于 Http 拦截器统一返回
+          try {
+            const componentsTree = pages.map((ps: any) => ({
+              name: ps?.meta?.name || ps?.fileName || 'Page',
+              meta: { ...(ps?.meta || {}), isPage: true },
+              page_content: ps
+            }))
+            if (!componentsTree.some((p: any) => p?.meta?.isHome) && componentsTree[0]) {
+              componentsTree[0].meta.isHome = true
+            }
+            const normalizedAppData = {
+              ...appSchema,
+              componentsTree,
+              pageSchema: pages,
+              meta: {
+                ...(appSchema.meta || {}),
+                globalState: (appSchema.meta && appSchema.meta.globalState) || appSchema.globalState || []
+              }
+            }
+            localStorage.setItem('TE_LOCAL_APPSCHEMA', JSON.stringify(normalizedAppData))
+          } catch (e) {
+            // ignore persistence errors
+          }
+          const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+          const buildCreateParams = (ps: any) => {
+            const rawName = (ps?.meta?.name || ps?.fileName || 'Page') as string
+            const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+            return {
+              name: rawName,
+              route: ps?.meta?.router || safeRoute,
+              group: 'staticPages',
+              parentId: '0',
+              isPage: true,
+              app: appId,
+              page_content: {
+                ...ps,
+                fileName: ps?.fileName || rawName
+              }
+            }
+          }
+
+          if (pages.length) {
+            // 并发创建，忽略失败项
+            await Promise.allSettled(
+              pages.map((ps: any) =>
+                getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+              )
+            )
+
+            // 刷新页面列表
+            const { pageSettingState } = usePage()
+            await pageSettingState.updateTreeData?.()
+          }
+
+          // 3) 渲染首页或第一个页面到画布
+          const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+          if (!chosen) {
+            useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
+          } else {
+            const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
+            if (isBlock()) {
+              resetBlockCanvasState({ ...pageState, pageSchema: chosen })
+            } else {
+              resetPageCanvasState({ ...pageState, pageSchema: chosen })
+            }
+            useNotify({
+              type: 'success',
+              title: '导入成功',
+              message: `已创建页面并加载：${chosen?.meta?.name || '页面'}`
+            })
+          }
         } else {
-          resetPageCanvasState({ ...pageState, pageSchema: result.schema })
-        }
+          const text = await file.text()
+          const result = await converter.convertFromString(text, file.name)
 
-        useNotify({ type: 'success', title: '加载成功', message: `已加载并应用 ${file.name}` })
+          // 不直接应用到画布：创建一个新的静态页面
+          const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
+          const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+          const fileName = result?.schema?.fileName || rawName
+          const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
+          const createParams: any = {
+            name: rawName,
+            route: result?.schema?.meta?.router || safeRoute,
+            group: 'staticPages',
+            parentId: '0',
+            isPage: true,
+            app: appId,
+            page_content: {
+              ...result.schema,
+              fileName
+            }
+          }
+
+          await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
+
+          // 刷新页面列表
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+
+          useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
+        }
       } catch (error: any) {
         // eslint-disable-next-line no-console
         console.error(error)
