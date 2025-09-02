@@ -1,8 +1,15 @@
 <template>
-  <div class="page-base-style"></div>
+  <div>
+    <div class="page-base-style">
+      <h1 class="component-base-style">Hello World!</h1>
+    </div>
+    <h2 class="component-base-style">Vue -> DSL</h2>
+    <tiny-button text="OK" type="success" class="component-base-style"></tiny-button>
+  </div>
 </template>
 
 <script setup>
+import { Button as TinyButton } from '@opentiny/vue'
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
@@ -22,11 +29,9 @@ wrap({ state })
   padding: 24px;
   background: #ffffff;
 }
-
 .block-base-style {
   margin: 16px;
 }
-
 .component-base-style {
   margin: 8px;
 }

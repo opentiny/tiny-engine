@@ -1,7 +1,9 @@
 <template>
   <div>
     <div>
-      <tiny-switch modelValue=""></tiny-switch>
+      <div>
+        <tiny-switch modelValue=""></tiny-switch>
+      </div>
     </div>
   </div>
 </template>
