@@ -26,6 +26,7 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-robot": "0.3.0-rc.0",
     "@opentiny/tiny-robot-kit": "0.3.0-rc.0",
     "@opentiny/tiny-robot-svgs": "0.3.0-rc.0",
