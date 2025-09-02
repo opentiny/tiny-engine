@@ -12,14 +12,14 @@ function genUtilsPlugin(options = {}) {
   const { path, fileName } = realOptions
 
   const handleNpmUtils = (utilsConfig) => {
-    const { content } = utilsConfig
-    const { package: packageName, exportName, destructuring, subName } = content
+    const { content, name } = utilsConfig
+    const { package: packageName, exportName, destructuring } = content
 
-    const statement = generateImportStatement({ moduleName: packageName, exportName, alias: subName, destructuring })
+    const statement = generateImportStatement({ moduleName: packageName, exportName, alias: name, destructuring })
     let realExportName = exportName
 
-    if (subName) {
-      realExportName = subName
+    if (name) {
+      realExportName = name
     }
 
     return {
