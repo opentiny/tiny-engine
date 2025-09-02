@@ -6,6 +6,8 @@ import { generateSchema, generateAppSchema } from './generator/index'
 import { defaultComponentMap } from './constants'
 import fs from 'fs/promises'
 import path from 'path'
+import os from 'os'
+import JSZip from 'jszip'
 
 export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
@@ -356,5 +358,48 @@ export class VueToDslConverter {
 
   getOptions(): VueToSchemaOptions {
     return { ...this.options }
+  }
+
+  // Convert an app from a zip buffer (in-memory). The buffer should be the content of the zip file (not a path).
+  async convertAppFromZip(zipBuffer: ArrayBuffer | Uint8Array | Buffer): Promise<any> {
+    // 1) Unzip into a temp directory
+    const tmpBase = await fs.mkdtemp(path.join(os.tmpdir(), 'vue-to-dsl-'))
+    const zip = await JSZip.loadAsync(zipBuffer as any)
+
+    const fileEntries: string[] = []
+    const writeTasks: Promise<any>[] = []
+    zip.forEach((relPath, file) => {
+      // Skip macOS metadata
+      if (relPath.startsWith('__MACOSX/')) return
+      const outPath = path.join(tmpBase, relPath)
+      if (file.dir) {
+        writeTasks.push(fs.mkdir(outPath, { recursive: true }))
+      } else {
+        fileEntries.push(relPath)
+        writeTasks.push(
+          (async () => {
+            await fs.mkdir(path.dirname(outPath), { recursive: true })
+            const content = await file.async('nodebuffer')
+            await fs.writeFile(outPath, content)
+          })()
+        )
+      }
+    })
+    await Promise.all(writeTasks)
+
+    // 2) Determine the root app directory inside the zip
+    const topLevels = new Set(
+      fileEntries.map((p) => p.split('/')[0]).filter((seg) => !!seg && seg !== '.' && seg !== '..')
+    )
+
+    let appRoot = tmpBase
+    if (topLevels.size === 1) {
+      const only = [...topLevels][0]
+      appRoot = path.join(tmpBase, only)
+    }
+
+    // 3) Delegate to convertAppDirectory
+    const schema = await this.convertAppDirectory(appRoot)
+    return schema
   }
 }

@@ -40,6 +40,7 @@
     "@babel/types": "^7.23.0",
     "@vue/compiler-dom": "^3.4.15",
     "@vue/compiler-sfc": "^3.4.15",
+    "jszip": "^3.10.1",
     "vue": "^3.4.15"
   },
   "devDependencies": {
