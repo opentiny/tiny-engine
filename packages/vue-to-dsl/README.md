@@ -1,36 +1,44 @@
 # @opentiny/tiny-engine-vue-to-dsl
 
-> 将Vue SFC文件反向转换为TinyEngine DSL Schema的工具包
+> 将 Vue 代码文件/项目反向转换为 TinyEngine DSL Schema 的工具包
 
-## 📖 简介
+## 简介
 
-`@opentiny/tiny-engine-vue-to-dsl` 是一个专门用于将Vue单文件组件（SFC）反向转换为TinyEngine DSL Schema的工具包。它能够解析Vue的模板、脚本和样式，并生成对应的DSL结构，便于在低代码平台中使用。
+`@opentiny/tiny-engine-vue-to-dsl` 解析 Vue 代码文件，生成可用于 TinyEngine 的 DSL Schema；同时内置“整包应用”转换能力，可从项目目录或 zip 包中聚合出 App 级 Schema（含 i18n、数据源、全局状态、页面元信息等）。
 
-## ✨ 特性
+## 主要特性
 
-- 🔄 **双向转换**: 支持Vue SFC到DSL Schema的反向转换
-- 🎯 **完整解析**: 支持模板、脚本（Options API & Composition API）、样式的完整解析
-- 🛠️ **可配置**: 提供丰富的配置选项，支持自定义解析器
-- 📦 **类型安全**: 完整的TypeScript类型定义
-- 🧪 **测试覆盖**: 完善的单元测试覆盖
-- ⚡ **高性能**: 基于官方Vue编译器，解析性能优异
+- 支持模板、脚本（Options API / script setup）、样式的完整解析
+- 提供 CLI：一条命令把 .vue 转为 Schema
+- 从 Vue 工程目录或 zip 文件生成 AppSchema
+- 可配置组件映射、可插拔自定义解析器
+- TypeScript 实现，导出完整类型；提供单元与集成测试
 
-## 🚀 安装
+## 安装
 
 ```bash
-npm install @opentiny/tiny-engine-vue-to-dsl
+pnpm add @opentiny/tiny-engine-vue-to-dsl
 ```
 
-## 📋 使用
+## 目录结构
 
-### 基础用法
+```text
+src/
+├─ converter.ts        # 主转换器（含 app 级聚合与 zip 支持）
+├─ generator/          # schema 生成与归一
+├─ parser/             # SFC 粗分（template/script/style 块）
+├─ parsers/            # 各块解析实现
+├─ constants.ts        # 组件映射与组件包清单
+├─ index.ts            # 包导出入口
+└─ types/              # 类型导出
+```
 
-```javascript
+## 快速开始
+
+```ts
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 
 const converter = new VueToDslConverter()
-
-// 从字符串转换
 const vueCode = `
 <template>
   <div class="hello">
@@ -38,221 +46,171 @@ const vueCode = `
     <button @click="handleClick">Click me</button>
   </div>
 </template>
-
 <script setup>
 import { ref } from 'vue'
-
 const title = ref('Hello World')
-
-function handleClick() {
-  console.log('Button clicked')
-}
+function handleClick() { console.log('clicked') }
 </script>
-
 <style scoped>
-.hello {
-  color: red;
-  font-size: 16px;
-}
+.hello { color: red; font-size: 16px; }
 </style>
 `
 
-const result = await converter.convertFromString(vueCode)
-
-if (result.schema) {
-  console.log('转换成功:', result.schema)
-} else {
-  console.error('转换失败:', result.errors)
-}
+const result = await converter.convertFromString(vueCode, 'Hello.vue')
+console.log(result.schema)
 ```
 
-### 从文件转换
+## 测试
 
-```javascript
-// 从文件转换
-const result = await converter.convertFromFile('./components/MyComponent.vue')
+使用 Vitest 进行单元与集成测试，运行：
+
+```bash
+pnpm install
+pnpm test
+# 或
+npx vitest run
 ```
 
-### 批量转换
+## CLI 使用
 
-```javascript
-// 批量转换多个文件
-const results = await converter.convertMultipleFiles([
-  './components/Page1.vue',
-  './components/Page2.vue',
-  './components/Page3.vue'
-])
+方式一：作为已安装包使用
+
+```bash
+tiny-vue-to-dsl <vue-file-path> [--output <path>] [--format json|js]
+
+# 示例
+tiny-vue-to-dsl ./components/MyComponent.vue
+tiny-vue-to-dsl ./components/MyComponent.vue -o ./out/schema.json
+tiny-vue-to-dsl ./components/MyComponent.vue -f js -o ./out/schema.js
 ```
 
-### 自定义配置
+方式二：在本仓库本地运行（先构建后执行）
 
-```javascript
-const converter = new VueToDslConverter({
-  // 组件映射配置
-  componentMap: {
-    'div': 'TinyDiv',
-    'button': 'TinyButton',
-    'input': 'TinyInput'
-  },
-  
-  // 是否保留注释
-  preserveComments: true,
-  
-  // 是否严格模式
-  strictMode: false,
-  
-  // 自定义解析器
-  customParsers: {
-    template: customTemplateParser,
-    script: customScriptParser,
-    style: customStyleParser
-  }
-})
+```bash
+# 在仓库根目录安装依赖并构建当前包
+pnpm i
+pnpm --filter @opentiny/tiny-engine-vue-to-dsl run build
+
+# 执行构建产物（CJS）
+node packages/vue-to-dsl/dist/cli.cjs path/to/Component.vue \
+  --output out/schema.json \
+  --format json
 ```
 
-## 🔧 API
+参数：
+
+- --output/-o：输出文件路径（默认：同名 -schema.json）
+- --format/-f：输出 json 或 js（默认 json；js 以 ES 模块导出 schema）
+
+提示：可使用 `--help` 查看帮助；CLI 执行后会打印基础统计（状态/方法/计算属性/生命周期/子节点数量等）。
+
+## API 概览
+
+入口：`src/index.ts`
+
+导出：
+
+- `VueToDslConverter` 主转换器
+- 解析工具：`parseVueFile`、`parseSFC`
+- 生成器：`generateSchema`、`generateAppSchema`
+- 细分解析器：`parseTemplate`、`parseScript`、`parseStyle`
+- 类型与常量：`types/*`、默认组件映射 `defaultComponentMap`、默认组件包清单 `defaultComponentsMap`
 
 ### VueToDslConverter
 
-主要的转换器类，提供Vue SFC到DSL Schema的转换功能。
+```ts
+new VueToDslConverter(options?: VueToSchemaOptions)
 
-#### 构造函数
-
-```typescript
-constructor(options?: VueToSchemaOptions)
-```
-
-#### 方法
-
-- `convertFromString(vueCode: string): Promise<ConvertResult>` - 从字符串转换
-- `convertFromFile(filePath: string): Promise<ConvertResult>` - 从文件转换
-- `convertMultipleFiles(filePaths: string[]): Promise<ConvertResult[]>` - 批量转换
-
-### 工具函数
-
-- `parseVueFile(filePath: string)` - 解析Vue文件
-- `parseSFC(vueCode: string)` - 解析SFC字符串
-- `generateSchema(template, script, style, options)` - 生成DSL Schema
-- `parseTemplate(template: string)` - 解析模板
-- `parseScript(script: string)` - 解析脚本
-- `parseStyle(style: string)` - 解析样式
-
-## 📝 类型定义
-
-```typescript
 interface VueToSchemaOptions {
   componentMap?: Record<string, string>
   preserveComments?: boolean
   strictMode?: boolean
   customParsers?: {
-    template?: TemplateParser
-    script?: ScriptParser
-    style?: StyleParser
+    template?: { parse: (code: string) => any }
+    script?: { parse: (code: string) => any }
+    style?: { parse: (code: string) => any }
   }
+  fileName?: string
+  path?: string
+  title?: string
+  description?: string
 }
 
-interface ConvertResult {
-  schema: PageSchema | null
+type ConvertResult = {
+  schema: any | null
   dependencies: string[]
   errors: string[]
   warnings: string[]
 }
+```
 
-interface PageSchema {
-  componentName: 'Page'
-  fileName: string
-  path: string
-  meta?: Record<string, any>
-  state?: Record<string, any>
-  methods?: Record<string, any>
-  computed?: Record<string, any>
-  lifecycle?: Record<string, any>
-  props?: PropInfo[]
-  css?: string
-  children?: TemplateSchema[]
+实例方法：
+
+- `convertFromString(code, fileName?)`：从字符串转换
+- `convertFromFile(filePath)`：从文件转换
+- `convertMultipleFiles(filePaths)`：批量转换
+- `convertAppDirectory(appDir)`：从工程目录（约定 src/ 结构）生成 App 级 schema
+- `convertAppFromZip(zipBuffer)`：从 zip Buffer 生成 App 级 schema（Node 与浏览器均可用）
+- `setOptions(partial)` / `getOptions()`：运行期更新/读取配置
+
+### App 级聚合产物（convertAppDirectory/convertAppFromZip）
+
+输出结构（概要）：
+
+```ts
+{
+  meta: { name, description, generatedAt, generator },
+  i18n: { en_US: {}, zh_CN: {} },
+  utils: Array<{
+    name: string,
+    type: 'npm' | 'function',
+    content: { type: 'JSFunction', value: string, package?: string, destructuring?: boolean, exportName?: string }
+  }>,
+  dataSource: { list: any[] },
+  globalState: Array<{ id: string, state: Record<string, any> }>,
+  pageSchema: any[],
+  componentsMap: typeof defaultComponentsMap
 }
 ```
 
-## 🎯 支持的Vue特性
+数据来源约定：
 
-### 模板特性
-- ✅ 基础HTML标签
-- ✅ Vue组件
-- ✅ 指令（v-if, v-for, v-show, v-model等）
-- ✅ 事件绑定（@click, @input等）
-- ✅ 属性绑定（:prop, :class等）
-- ✅ 插槽（slot）
-- ✅ 插值表达式（{{ }}）
+- 页面：`src/views/**/*.vue`
+- i18n：`src/i18n/en_US.json`、`src/i18n/zh_CN.json`
+- 工具函数：`src/utils.js`（简单 import/export 分析，支持命名/默认导入导出）
+- 数据源：`src/lowcodeConfig/dataSource.json`
+- 全局状态：`src/stores/*.js`（简易 Pinia `defineStore` 解析，只提取 state 返回对象）
+- 路由：`src/router/index.js`（提取 name/path 与 import 的页面文件，设置 `meta.router/isPage/isHome`）
 
-### 脚本特性
-- ✅ Composition API（script setup）
-- ✅ Options API（data, methods, computed等）
-- ✅ 响应式API（ref, reactive, computed）
-- ✅ 生命周期钩子
-- ✅ Props定义
-- ✅ Emits定义
-- ✅ Import语句解析
+## 模板/脚本/样式支持
 
-### 样式特性
-- ✅ 普通CSS
-- ✅ Scoped样式
-- ✅ CSS预处理器（scss, less等）
-- ✅ CSS变量
-- ✅ 媒体查询
+模板（`parseTemplate`）
 
-## 🧪 测试
+- HTML 标签与自定义组件；通过 `componentMap` 做名称映射
+- 指令：`v-if`/`v-for`/`v-show`/`v-model`/`v-on`/`v-bind`/`v-slot` 等核心指令
+- v-for：尝试抽取迭代表达式，写入 `loop: { type: 'JSExpression', value: 'this.xxx' }`
+- 事件与绑定：能解析简单字面量，复杂表达式以 `JSExpression` 形式保留
+- 文本与插值：转为 `Text` 组件；插值为 `JSExpression`
+- 特殊：`tiny-icon-*` 归一为通用 `Icon` 组件并写入 `name` 属性
 
-```bash
-# 运行测试
-npm test
+脚本（`parseScript`）
 
-# 运行测试并生成覆盖率报告
-npm run coverage
+- script setup：
+  - `reactive`/`ref` 识别到 state；`computed` 识别到 computed
+  - 顶层函数与返回对象内成员识别到 methods
+  - onMounted/onUpdated... 等生命周期识别
+- Options API：
+  - `props`（数组语法）/`methods`/`computed`/生命周期基础支持
+- import 收集：用于返回 `dependencies`
 
-# 运行单元测试
-npm run test:unit
-```
+样式（`parseStyle` + 辅助）
 
-## 📁 项目结构
+- 基础样式串：直出 `css`
+- 辅助能力：`parseCSSRules`、`extractCSSVariables`、`hasMediaQueries`、`extractMediaQueries`
 
-```
-src/
-├── converter.js          # 主转换器类
-├── parser/               # SFC解析器
-│   └── index.js
-├── parsers/              # 各部分解析器
-│   ├── templateParser.js # 模板解析器
-│   ├── scriptParser.js   # 脚本解析器
-│   ├── styleParser.js    # 样式解析器
-│   └── index.js
-├── generator/            # Schema生成器
-│   └── index.js
-├── types/                # 类型定义
-│   └── index.js
-└── index.js              # 主入口文件
-```
+## 输出 Schema 约定（页面级）
 
-## 🤝 贡献
-
-欢迎贡献代码！请查看 [CONTRIBUTING.md](../../CONTRIBUTING.md) 了解贡献指南。
-
-## 📄 许可证
-
-[MIT](../../LICENSE)
-
-## 🔗 相关链接
-
-- [TinyEngine](https://opentiny.design/tiny-engine)
-- [Vue.js](https://vuejs.org/)
-- [Vue Compiler](https://github.com/vuejs/core/tree/main/packages/compiler-sfc)
-
-## 🐛 问题反馈
-
-如果您在使用过程中遇到问题，请通过以下方式反馈：
-
-- [GitHub Issues](https://github.com/opentiny/tiny-engine/issues)
-- [官方社区](https://opentiny.design/tiny-engine)
-
-## 📈 更新日志
-
-查看 [CHANGELOG.md](./CHANGELOG.md) 了解版本更新信息。
+- 根节点 `componentName: 'Page'`，自动补齐 `id`（8 位字母数字）
+- `state`/`methods`/`computed`/`lifecycle` 值以 `{ type: 'JSFunction', value: string }` 表达（state 中基础类型按需折叠）
+- `children` 为模板树；属性中无法安全字面量化的表达式以 `JSExpression` 表达
+- 所有字符串做轻度“去换行/多空格”规整
