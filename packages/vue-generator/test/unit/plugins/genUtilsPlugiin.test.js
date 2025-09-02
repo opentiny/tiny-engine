@@ -28,7 +28,7 @@ describe('genUtilsPlugin', () => {
     expect(result?.fileType).toBe('js')
     expect(result?.fileName).toBe('utils.js')
     expect(result?.path).toBe('./src')
-    expect(result?.fileContent).toContain("import axios as request from 'axios'")
+    expect(result?.fileContent).toContain("import request from 'axios'")
     expect(result?.fileContent).toContain('export { request }')
   })
 
@@ -98,7 +98,7 @@ describe('genUtilsPlugin', () => {
     const result = plugin.run(schema)
     expect(result?.fileName).toBe('my-utils.js')
     expect(result?.path).toBe('./custom')
-    expect(result?.fileContent).toContain("import axios as request from 'axios'")
+    expect(result?.fileContent).toContain("import request from 'axios'")
     expect(result?.fileContent).toContain('const sum = (a, b) => a + b')
     expect(result?.fileContent).toContain('export { request,sum }')
   })
