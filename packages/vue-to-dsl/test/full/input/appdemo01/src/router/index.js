@@ -11,19 +11,19 @@ const routes = [
       },
       {
         name: '1GhxcwoNeestd4aI',
-        path: 'demopage',
+        path: 'Demopage',
         component: () => import('@/views/DemoPage.vue'),
         children: []
       },
       {
         name: 'MQSQpz7noWlTRnse',
-        path: 'lifecycle',
+        path: 'Lifecycle',
         component: () => import('@/views/LifeCyclePage.vue'),
         children: []
       },
       {
         name: 'mPX398RIysZI3CRG',
-        path: 'untitledFA/UntitledA',
+        path: 'UntitledA',
         component: () => import('@/views/UntitledA.vue'),
         children: []
       }
