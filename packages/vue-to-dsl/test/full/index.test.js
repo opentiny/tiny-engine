@@ -27,4 +27,17 @@ describe('Full - convert app directory', () => {
     expect(Array.isArray(schema.globalState)).toBe(true)
     writeOutput('schema.json', schema)
   })
+
+  it('should convert appdemo01.zip buffer into a merged schema.json', async () => {
+    const converter = new VueToDslConverter()
+    const zipPath = path.join(inputDir, 'appdemo01.zip')
+    const zipBuf = fs.readFileSync(zipPath)
+    const schema = await converter.convertAppFromZip(zipBuf)
+    expect(schema).toBeDefined()
+    expect(schema.pageSchema && Array.isArray(schema.pageSchema)).toBe(true)
+    expect(schema.i18n && schema.i18n.en_US && schema.i18n.zh_CN).toBeDefined()
+    expect(schema.dataSource && Array.isArray(schema.dataSource.list)).toBe(true)
+    expect(Array.isArray(schema.globalState)).toBe(true)
+    writeOutput('schema.from-zip.json', schema)
+  })
 })
