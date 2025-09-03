@@ -837,6 +837,9 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.robot {
+  margin-right: 8px;
+}
 .robot-chat-container {
   height: 100%;
 }

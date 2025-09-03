@@ -6,7 +6,9 @@
           <tiny-tooltip effect="light" content="对话">
             <template #content>
               <div class="tip-cantainer">
-                <svg-icon name="chat" class="plugin-common_icon"></svg-icon>
+                <div>
+                  <svg-icon name="chat" class="tip-common_icon"></svg-icon>
+                </div>
                 <div class="tips">
                   <div class="tip-header">对话</div>
                   <div class="tip-content">回答日常问题或在开始任务前进行对话。</div>
@@ -22,7 +24,9 @@
           <tiny-tooltip effect="light" content="智能搭建">
             <template #content>
               <div class="tip-cantainer">
-                <svg-icon name="intelligent-construction" class="plugin-common_icon"></svg-icon>
+                <div>
+                  <svg-icon name="intelligent-construction" class="tip-common_icon"></svg-icon>
+                </div>
                 <div class="tips">
                   <div class="tip-header">智能搭建</div>
                   <div class="tip-content">根据描述文案自动搭建对应的页面。</div>
