@@ -7,7 +7,7 @@
       @click-api="openAIRobot"
     >
     </toolbar-base>
-    <Teleport defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
+    <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
       <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
         <tr-container
           v-if="robotVisible"
@@ -211,6 +211,7 @@ export default {
     const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
     const aiType = ref(TALK_TYPE)
     const chatContainerRef = ref(null)
+    const showTeleport = ref(false)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -548,6 +549,9 @@ export default {
     }
 
     onMounted(async () => {
+      setTimeout(() => {
+        showTeleport.value = true
+      }, 1000)
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -811,6 +815,7 @@ export default {
       TALK_TYPE,
       MCP_TYPE,
       BUILD_TYPE,
+      showTeleport,
       sendContent,
       endContent,
       changeApiKey,
