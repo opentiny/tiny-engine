@@ -93,6 +93,7 @@ export default {
   border-radius: 999px;
   cursor: pointer;
   box-sizing: border-box;
+  margin-left: 10px;
 
   :deep(.tiny-tabs) {
     display: flex;

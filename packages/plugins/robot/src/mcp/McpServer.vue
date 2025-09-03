@@ -131,6 +131,7 @@ onMounted(() => {
   border-radius: 999px;
   cursor: pointer;
   box-sizing: border-box;
+  background-color: var(--te-common-bg-container);
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.08);
