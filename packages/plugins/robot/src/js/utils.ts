@@ -26,3 +26,19 @@ export const chatStream = async (requestOpts: any, handler: StreamHandler, heade
     logger.error('Error in chatStream:', error)
   }
 }
+
+export const checkComponentNameExists = (data: any) => {
+  if (!data.componentName) {
+    return false
+  }
+
+  if (data.children && Array.isArray(data.children)) {
+    for (const child of data.children) {
+      if (!checkComponentNameExists(child)) {
+        return false
+      }
+    }
+  }
+
+  return true
+}
