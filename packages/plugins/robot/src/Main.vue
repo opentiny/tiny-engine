@@ -130,7 +130,6 @@ import {
   TrPrompts,
   TrBubbleList,
   TrSender,
-  TrFeedback,
   TrAttachments,
   TrBubbleProvider
 } from '@opentiny/tiny-robot'
@@ -425,7 +424,7 @@ export default {
                   } catch (error) {
                     // error
                   }
-                  lastExecutionTime = currentTime // 更新最后执行时间
+                  lastExecutionTime = currentTime
                 }
               }
             },
@@ -673,12 +672,6 @@ export default {
       sendContent(item.description, true)
     }
 
-    const getItemSchema = (item) => {
-      const targetMessage = messages.value.find((message) => message.id && message.id === item.id)
-
-      return targetMessage
-    }
-
     // Icon
     const getSvgIcon = (name: string, style?: CSSProperties) => {
       return h(resolveComponent('svg-icon'), { name, style: { fontSize: '32px', ...style } })
@@ -686,8 +679,6 @@ export default {
     const aiAvatar = getSvgIcon('AI')
     const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
     const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
-    const saveIcon = getSvgIcon('save', { fontSize: '20px' })
-    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
 
     // 处理文件选择事件
     const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
