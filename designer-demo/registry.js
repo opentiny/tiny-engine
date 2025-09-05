@@ -10,42 +10,7 @@
  *
  */
 
-import {
-  Breadcrumb,
-  Fullscreen,
-  Lang,
-  ViewSetting,
-  Media,
-  Redoundo,
-  Save,
-  Clean,
-  ThemeSwitch,
-  Preview,
-  GenerateCode,
-  Refresh,
-  Collaboration,
-  Materials,
-  State,
-  Script,
-  Tree,
-  Help,
-  Schema,
-  Page,
-  I18n,
-  Bridge,
-  Block,
-  // TODO: demo 支持 datasource
-  // Datasource,
-  Robot,
-  Props,
-  Events,
-  Styles,
-  Layout,
-  Canvas,
-  GenerateCodeService,
-  GlobalService,
-  ThemeSwitchService
-} from '@opentiny/tiny-engine'
+import { META_SERVICE, META_APP } from '@opentiny/tiny-engine'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 import Header from './src/plugins/header'
@@ -53,77 +18,27 @@ import ResetDataBase from './src/plugins/resetDatabase'
 
 
 export default {
-  root: {
-    id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
-  },
-  config: engineConfig,
-  layout: {
-    ...Layout,
+  [META_SERVICE.Http]: HttpService,
+  [engineConfig.id]: engineConfig,
+  [META_APP.Layout]: {
     options: {
-      ...Layout.options,
-      isShowLine: true,
-      isShowCollapse: true,
-      toolbars: {
-        left: [
-          'engine.toolbars.header',
-          'engine.toolbars.breadcrumb', 
-        ],
-        center: ['engine.toolbars.media'],
-        right: [
-          ['engine.toolbars.themeSwitch', 'engine.toolbars.redoundo', 'engine.toolbars.clean'],
-          ['engine.toolbars.preview'],
-          ['engine.toolbars.generate-code', 'engine.toolbars.save', 'engine.toolbars.resetDataBase']
-        ],
-        collapse: [
-          ['engine.toolbars.collaboration'],
-          ['engine.toolbars.refresh', 'engine.toolbars.fullscreen'],
-          ['engine.toolbars.lang'],
-          ['engine.toolbars.viewSetting']
-        ]
+      relativeLayoutConfig: {
+        [Header.id]: {
+          insertBefore: META_APP.Breadcrumb
+        },
+        [ResetDataBase.id]: {
+          insertAfter: META_APP.Save
+        }
       }
     }
   },
-  themes: [
-    {
-      id: 'engine.theme.light'
-    },
-    {
-      id: 'engine.theme.dark'
+  [Header.id]: Header,
+  [ResetDataBase.id]: ResetDataBase,
+  [META_APP.Preview]: {
+    options: {
+      previewUrl:  ['prod', 'alpha'].includes(import.meta.env.MODE) ? './preview.html' : ''
     }
-  ],
-  toolbars: [
-    Header,
-    ThemeSwitch,
-    Breadcrumb,
-    Media,
-    Redoundo,
-    Collaboration,
-    Clean,
-    [Preview, { options: { ...Preview.options,  previewUrl:  ['prod', 'alpha'].includes(import.meta.env.MODE) ? './preview.html' : '' } }],
-    Refresh,
-    GenerateCode,
-    Save,
-    Fullscreen,
-    Lang,
-    ViewSetting,
-    ResetDataBase
-  ],
-  plugins: [
-    Materials,
-    Tree,
-    Page,
-    [Block, { options: { ...Block.options, mergeCategoriesAndGroups: true } }],
-    // Datasource,
-    Bridge,
-    I18n,
-    Script,
-    State,
-    Schema,
-    Help,
-    Robot
-  ],
-  dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [Props, Styles, Events],
-  canvas: Canvas
+  },
+  // TODO: demo 支持 datasource
+  [META_APP.Collections]: false
 }
