@@ -16,6 +16,10 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-common/component': path.resolve(basePath, 'packages/common/component'),
     '@opentiny/tiny-engine-common/js': path.resolve(basePath, 'packages/common/js'),
     '@opentiny/tiny-engine-common': path.resolve(basePath, 'packages/common/index.ts'),
+    '@opentiny/tiny-engine-multi-person-collaboration': path.resolve(
+      basePath,
+      'packages/multi-person-collaboration/src/index'
+    ),
     '@opentiny/tiny-engine-plugin-materials': path.resolve(basePath, 'packages/plugins/materials/index.ts'),
     '@opentiny/tiny-engine-plugin-block': path.resolve(basePath, 'packages/plugins/block/index.ts'),
     '@opentiny/tiny-engine-plugin-state': path.resolve(basePath, 'packages/plugins/state/index.ts'),

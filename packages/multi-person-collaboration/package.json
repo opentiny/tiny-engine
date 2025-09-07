@@ -34,15 +34,29 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "author": "OpenTiny Team",
   "license": "MIT",
+  "dependencies": {
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-canvas": "workspace:*"
+  },
   "devDependencies": {
-    "vite": "^7.0.0",
-    "@vitejs/plugin-vue": "^5.0.0",
-    "@vitejs/plugin-vue-jsx": "^3.0.0",
-    "glob": "^10.0.0"
+    "vite": "^5.4.2",
+    "vitest": "^1.4.0",
+    "vue": "^3.4.21",
+    "glob": "^10.0.0",
+    "yjs": "^13.6.8",
+    "y-websocket": "^1.5.0",
+    "y-protocols": "^1.0.6",
+    "lib0": "^0.2.85",
+    "uuid": "^9.0.1",
+    "lodash-es": "^4.17.21",
+    "mitt": "^3.0.1"
   },
   "peerDependencies": {
-    "vue": "^3.2.0",
-    "yjs": "^13.0.0",
-    "y-websocket": "^3.0.0"
+    "vue": "^3.4.21",
+    "yjs": "^13.6.8",
+    "y-websocket": "^1.5.0",
+    "y-protocols": "^1.0.6"
   }
 }

@@ -1,10 +1,10 @@
 import { ref } from 'vue'
-import { useCanvas, useMessage, useHistory, getOptions } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage, useHistory, getOptions, useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { getRect, querySelectById, POSITION, insertNode, selectNode, canvasState } from '../container'
 import type { Node } from '../../../types'
 
-interface SelectionState {
+export interface SelectionState {
   id: string
   top?: number
   left?: number
@@ -113,6 +113,9 @@ export const useMultiSelect = () => {
 
     // 单选
     multiSelectedStates.value = [selectState]
+
+    // 多人协作
+    useRealtimeCollab().updateUserSelection(selectState)
 
     return true
   }

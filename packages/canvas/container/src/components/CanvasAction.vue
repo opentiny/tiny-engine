@@ -9,7 +9,7 @@
       width: selectState.width + 'px'
     }"
   >
-    <div v-if="showQuickAction" ref="labelRef" class="corner-mark-left" :style="labelStyle">
+    <div v-if="showQuickAction && !haveRemoteState" ref="labelRef" class="corner-mark-left" :style="labelStyle">
       <span>{{ selectState.componentName }}</span>
       <TinyPopover
         v-model="showPopover"
@@ -24,6 +24,9 @@
           <icon-setting class="icon-setting svg-currentcolor" @click.stop="showPopover = !showPopover"></icon-setting>
         </template>
       </TinyPopover>
+    </div>
+    <div v-else-if="haveRemoteState" ref="labelRef" class="corner-mark-left" :style="labelStyle">
+      <span> {{ selectState.user.name }} 正在编辑 </span>
     </div>
     <!-- 绝对定位画布时调节元素大小 -->
     <template v-else>
@@ -68,7 +71,7 @@
         @mousedown.stop="onMousedown($event, 'end', 'end')"
       ></div>
     </template>
-    <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
+    <div v-if="showAction && !haveRemoteState" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
         <div v-if="showToParent" title="选择父级">
           <icon-chevron-left class="svg-currentcolor" @click.stop="selectParent"></icon-chevron-left>
@@ -134,7 +137,7 @@ import {
   querySelectById
 } from '../container'
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
-import { Popover } from '@opentiny/vue'
+import { Numeric, Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 
 // 工具操作条高度
@@ -185,6 +188,10 @@ export default {
     multiStateLength: {
       type: Number,
       default: () => 0
+    },
+    remoteStatesLength: {
+      type: Numeric,
+      default: () => {}
     },
     resize: {
       type: Boolean,
@@ -257,6 +264,10 @@ export default {
 
     const isSingleNode = computed(() => {
       return props.multiStateLength < 2
+    })
+
+    const haveRemoteState = computed(() => {
+      return props.remoteStatesLength > 0
     })
 
     const showAction = computed(() => {
@@ -543,6 +554,7 @@ export default {
       fixStyle,
       showAction,
       showQuickAction,
+      haveRemoteState,
       showPopover,
       showToParent,
       activeSetting,

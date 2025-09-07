@@ -14,12 +14,16 @@ import Koa2 from 'koa'
 import KoaBody from 'koa-body'
 import KoaStatic from 'koa-static2'
 import path from 'path'
+import http from 'http'
+import WebSocket from 'ws'
+import { setupWSConnection, docs } from 'y-websocket/bin/utils'
 import { env, port } from './config/config'
 import ErrorRoutesCatch from './middleware/ErrorRoutesCatch'
 import ErrorRoutes from './routes/error-routes'
 import MainRoutes from './routes/main-routes'
 
 const app = new Koa2()
+// -------------------- HTTP 相关中间件 --------------------
 app
   .use((ctx, next) => {
     ctx.set('Access-Control-Allow-Origin', '*')
@@ -56,6 +60,34 @@ if (env === 'development') {
   })
 }
 
-app.listen(port)
+// -------------------- 创建 HTTP Server --------------------
+const server = http.createServer(app.callback())
+
+// -------------------- Yjs WebSocket --------------------
+const wss = new WebSocket.Server({ server })
+
+wss.on('connection', (conn, req) => {
+  setupWSConnection(conn, req, { gc: true })
+
+  const docName = req.url.slice(1) // 去掉开头的 '/'
+  const doc = docs.get(docName)
+  if (doc) {
+    doc.on('update', (update, origin, docInstance) => {
+      console.log(`
+        ==== Yjs Server Stats (Doc Changed) ====
+        Time: ${new Date().toLocaleString()}
+        DocId: ${docName}
+        Update byteLength: ${update.byteLength}
+        Current connections: ${docInstance.conns?.size ?? 0}
+        ==========================
+      `)
+    })
+  }
+})
+
+// -------------------- 启动服务 --------------------
+server.listen(port, () => {
+  console.log(`HTTP+Yjs server listening at http://localhost:${port} , WebSocket: ws://localhost:${port}/ws`)
+})
 
 export default app

@@ -1,6 +1,6 @@
 /**
- * Copyright (c) 2025 - present TinyEngine Authors.
- * Copyright (c) 2025 - present Huawei Cloud Computing Technologies Co., Ltd.
+ * Copyright (c) 2023 - present TinyEngine Authors.
+ * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
  *
  * Use of this source code is governed by an MIT-style license.
  *
@@ -11,50 +11,26 @@
  */
 
 import { defineConfig } from 'vite'
+import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import path from 'path'
-import { globSync } from 'glob'
-import { fileURLToPath } from 'node:url'
-
-// 动态收集核心模块和 Vue UI 组件作为额外入口
-const coreEntries = globSync('./src/core/**/*.js').map((file) => {
-  return [
-    file.slice(0, file.length - path.extname(file).length), // 去掉后缀
-    fileURLToPath(new URL(file, import.meta.url))
-  ]
-})
-
-const uiEntries = globSync('./src/ui/**/*.vue').map((file) => {
-  return [file.slice(0, file.length - path.extname(file).length), fileURLToPath(new URL(file, import.meta.url))]
-})
+import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), vueJsx()],
+  plugins: [generateComment(), vue(), vueJsx()],
   publicDir: false,
-  base: './',
   resolve: {},
-  define: {
-    'import.meta': 'import.meta',
-    'import.meta.env.MODE': 'import.meta.env.MODE',
-    'import.meta.env.PROD': 'import.meta.env.PROD',
-    'import.meta.env.BASE_URL': 'import.meta.env.BASE_URL'
-  },
   build: {
-    cssCodeSplit: false,
+    sourcemap: true,
     lib: {
-      entry: {
-        index: path.resolve(__dirname, './src/index.js'),
-        ...Object.fromEntries(coreEntries),
-        ...Object.fromEntries(uiEntries)
-      },
-      name: 'multi-person-collaboration',
-      fileName: (format, entryName) => `${entryName}.js`,
+      entry: path.resolve(__dirname, '.src/index.ts'),
+      name: 'tiny-engine-multi-person-collaboration',
+      fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue', 'yjs', 'y-websocket', /^@babel.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
   }
 })

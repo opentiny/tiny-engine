@@ -25,6 +25,7 @@
       "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"],
       "@opentiny/tiny-engine-layout": ["packages/layout/index"],
       "@opentiny/tiny-engine-meta-register": ["packages/register/src/index"],
+      "@opentiny/tiny-engine-multi-person-collaboration": ["packages/multi-person-collaboration/src/index"],
       "@opentiny/tiny-engine-plugin-block": ["packages/plugins/block/index"],
       "@opentiny/tiny-engine-plugin-bridge": ["packages/plugins/bridge/index"],
       "@opentiny/tiny-engine-plugin-datasource": ["packages/plugins/datasource/index"],

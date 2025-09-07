@@ -1,5 +1,5 @@
 <template>
-  <div v-for="state in multiSelectedStates" :key="state.id">
+  <div v-for="state in allMultiSelectedStates" :key="state.id">
     <canvas-action
       :hoverState="hoverState"
       :inactiveHoverState="inactiveHoverState"
@@ -8,6 +8,7 @@
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
+      :remoteStatesLength="remoteStatesLength"
       :isMultiDragging="isMultiDragging"
       @select-slot="selectSlot"
       @setting="settingModel"
@@ -91,8 +92,12 @@ import {
   clearLineState,
   querySelectById,
   getCurrent,
-  canvasApi
+  canvasApi,
+  getRect
 } from './container'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
+import useCollabSchema from '@opentiny/tiny-engine-multi-person-collaboration'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -138,7 +143,53 @@ export default {
 
     const { multiSelectedStates, isMouseDown } = useMultiSelect()
 
+    // Awareness 是否完成初始化，initHook之后才能得到 remoteStates数据
+    const isReady = ref(false)
+
+    // Awareness 远端数据
+    const remoteStates = ref({})
+
+    // 滚动保持节点位置同步
+    const syncRemoteStatesSelections = ref([])
+
+    // 全部 Selection States 信息
+    const allMultiSelectedStates = computed(() => {
+      return [...multiSelectedStates.value, ...syncRemoteStatesSelections.value]
+    })
+
+    // 将 state 映射成带位置信息的 selection
+    const mapStateToSelection = (state) => {
+      const element = querySelectById(state.selection.id)
+      if (!element) return null
+      const { top, left, width, height } = getRect(element)
+      return {
+        ...state,
+        isRemote: true,
+        user: state.user,
+        top,
+        left,
+        width,
+        height
+      }
+    }
+
+    // 远端 selections，自动过滤不存在的元素
+    const remoteStatesSelections = computed(() => {
+      if (!remoteStates.value) return []
+
+      return Object.values(remoteStates.value)
+        .filter((state) => state.selection)
+        .map(mapStateToSelection)
+        .filter(Boolean)
+    })
+
+    // 手动刷新远端节点位置
+    const syncRemoteNode = () => {
+      syncRemoteStatesSelections.value = syncRemoteStatesSelections.value.map(mapStateToSelection).filter(Boolean)
+    }
+
     const multiStateLength = computed(() => multiSelectedStates.value.length)
+    const remoteStatesLength = computed(() => syncRemoteStatesSelections.value.length)
     const {
       startMultiDrag,
       moveMultiDrag,
@@ -397,6 +448,26 @@ export default {
         registerHotkeyEvent(doc)
 
         win.addEventListener('scroll', syncNodeScroll, true)
+        win.addEventListener('scroll', syncRemoteNode, true)
+
+        const { insertSharedNode, deleteSharedNode, updateUserSelection, remoteStates } = useCollabSchema({
+          roomId: 'schema-yjs',
+          currentUser: {
+            id: 2,
+            name: 'Bob',
+            color: '#4ECDC4',
+            avatarUrl: 'https://i.pravatar.cc/150?img=2'
+          }
+        })
+
+        initHook(HOOK_NAME.useRealtimeCollab, {
+          insertSharedNode,
+          deleteSharedNode,
+          updateUserSelection,
+          remoteStates
+        })
+
+        isReady.value = true
       }
     }
     // 设置弹窗
@@ -452,6 +523,30 @@ export default {
     document.addEventListener('beforeCanvasReady', beforeCanvasReady)
     document.addEventListener('canvasReady', canvasReady)
 
+    watch(isReady, (newVal) => {
+      if (newVal) {
+        const newStates = useRealtimeCollab().remoteStates
+        remoteStates.value = newStates
+      }
+    })
+
+    watch(
+      remoteStatesSelections,
+      (newVal) => {
+        syncRemoteStatesSelections.value = newVal
+      },
+      { immediate: true }
+    )
+
+    watch(
+      remoteStates,
+      (newVal) => {
+        // eslint-disable-next-line no-console
+        console.log('remoteStates变动', newVal)
+      },
+      { deep: true }
+    )
+
     return {
       isMouseDown,
       iframe,
@@ -477,7 +572,12 @@ export default {
       srcAttrName,
       isMultiDragging,
       multiDragState,
-      getMultiDragPositionText
+      getMultiDragPositionText,
+      remoteStates,
+      allMultiSelectedStates,
+      remoteStatesSelections,
+      remoteStatesLength,
+      syncRemoteStatesSelections
     }
   }
 }
