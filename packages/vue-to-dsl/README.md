@@ -4,12 +4,11 @@
 
 ## 简介
 
-`@opentiny/tiny-engine-vue-to-dsl` 解析 Vue 代码文件，生成可用于 TinyEngine 的 DSL Schema；同时内置“整包应用”转换能力，可从项目目录或 zip 包中聚合出 App 级 Schema（含 i18n、数据源、全局状态、页面元信息等）。
+`@opentiny/tiny-engine-vue-to-dsl` 解析 Vue 代码文件，生成可用于 TinyEngine 的 DSL Schema。同时内置“整包应用”转换能力，可从项目目录或 zip 包中聚合出 App 级 Schema（含 i18n、数据源、全局状态、页面元信息等）。
 
 ## 主要特性
 
 - 支持模板、脚本（Options API / script setup）、样式的完整解析
-- 提供 CLI：一条命令把 .vue 转为 Schema
 - 从 Vue 工程目录或 zip 文件生成 AppSchema
 - 可配置组件映射、可插拔自定义解析器
 - TypeScript 实现，导出完整类型；提供单元与集成测试
@@ -36,9 +35,9 @@ src/
 ## 快速开始
 
 ```ts
-import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
+import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl';
 
-const converter = new VueToDslConverter()
+const converter = new VueToDslConverter();
 const vueCode = `
 <template>
   <div class="hello">
@@ -54,55 +53,11 @@ function handleClick() { console.log('clicked') }
 <style scoped>
 .hello { color: red; font-size: 16px; }
 </style>
-`
+`;
 
-const result = await converter.convertFromString(vueCode, 'Hello.vue')
-console.log(result.schema)
+const result = await converter.convertFromString(vueCode, 'Hello.vue');
+console.log(result.schema);
 ```
-
-## 测试
-
-使用 Vitest 进行单元与集成测试，运行：
-
-```bash
-pnpm install
-pnpm test
-# 或
-npx vitest run
-```
-
-## CLI 使用
-
-方式一：作为已安装包使用
-
-```bash
-tiny-vue-to-dsl <vue-file-path> [--output <path>] [--format json|js]
-
-# 示例
-tiny-vue-to-dsl ./components/MyComponent.vue
-tiny-vue-to-dsl ./components/MyComponent.vue -o ./out/schema.json
-tiny-vue-to-dsl ./components/MyComponent.vue -f js -o ./out/schema.js
-```
-
-方式二：在本仓库本地运行（先构建后执行）
-
-```bash
-# 在仓库根目录安装依赖并构建当前包
-pnpm i
-pnpm --filter @opentiny/tiny-engine-vue-to-dsl run build
-
-# 执行构建产物（CJS）
-node packages/vue-to-dsl/dist/cli.cjs path/to/Component.vue \
-  --output out/schema.json \
-  --format json
-```
-
-参数：
-
-- --output/-o：输出文件路径（默认：同名 -schema.json）
-- --format/-f：输出 json 或 js（默认 json；js 以 ES 模块导出 schema）
-
-提示：可使用 `--help` 查看帮助；CLI 执行后会打印基础统计（状态/方法/计算属性/生命周期/子节点数量等）。
 
 ## API 概览
 
@@ -214,3 +169,52 @@ type ConvertResult = {
 - `state`/`methods`/`computed`/`lifecycle` 值以 `{ type: 'JSFunction', value: string }` 表达（state 中基础类型按需折叠）
 - `children` 为模板树；属性中无法安全字面量化的表达式以 `JSExpression` 表达
 - 所有字符串做轻度“去换行/多空格”规整
+
+## 测试用例说明
+
+测试目录位于 `test/`，包含：
+
+- `test/sfc/`：单个 SFC 的基础转换测试
+- `test/testcases/`：按用例目录组织的场景测试（新增用例放这里）
+- `test/full/`：整包项目/zip 的端到端转换测试
+
+在本包目录 `packages/vue-to-dsl` 下使用 Vitest 进行单元与集成测试，运行：
+
+```bash
+pnpm i
+pnpm test
+# 或
+npx vitest run
+```
+
+运行后会将每个用例的结果写入 `output/schema.json`，便于比对。
+
+用例结构（示例）：
+
+```text
+test/testcases/
+  001_simple/
+    input/component.vue     # 输入 SFC
+    expected/schema.json    # 期望 Schema（可为“子集”）
+    output/schema.json      # 测试生成（自动写入）
+```
+
+断言规则（见 `test/testcases/index.test.js`）：
+
+- 忽略动态字段：递归忽略所有层级的 `meta` 与 `id`
+- 子集匹配：实际输出只需“包含” expected 的结构和值（数组按 expected 长度顺序比对前 N 项）
+- 若 expected 含 `error: true`：仅断言发生错误并允许 schema 存在部分内容
+
+因此 expected 可仅保留关键片段，无需完全复制整个 schema，适合 children 很多的页面。
+
+新增用例步骤：
+
+1. 在 `test/testcases/` 新建目录（序号递增）
+2. 添加 `input/component.vue`
+3. 添加最小化 `expected/schema.json`（仅关键字段）
+4. 运行测试，参考 `output/schema.json` 微调 expected
+
+组件映射：
+
+- 本测试文件内已设置常用 OpenTiny 组件映射（`tiny-form`、`tiny-grid`、`tiny-select`、`tiny-button-group`、`tiny-time-line` 等）
+- 如使用未映射组件，可在测试中补充 `componentMap`，或在用例中用已映射组件替代
