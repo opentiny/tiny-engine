@@ -13,6 +13,25 @@ function getTestCaseDirs(rootDir) {
     .filter((name) => name !== 'output' && !name.startsWith('.'))
 }
 
+// 遍历 children 树的通用工具
+function walkNodes(nodes, visit) {
+  if (!Array.isArray(nodes)) return
+  for (const n of nodes) {
+    visit(n)
+    if (n && Array.isArray(n.children) && n.children.length) {
+      walkNodes(n.children, visit)
+    }
+  }
+}
+
+function someNode(nodes, predicate) {
+  let hit = false
+  walkNodes(nodes, (n) => {
+    if (!hit && predicate(n)) hit = true
+  })
+  return hit
+}
+
 // 读取指定用例 input 目录中的首个 .jsx/.tsx 文件
 function findInputSource(caseDir) {
   const inputDir = path.join(caseDir, 'input')
@@ -75,6 +94,84 @@ describe('react-to-dsl: run all testcases and output to ./output', () => {
       // 基本校验
       expect(appSchema).toBeTruthy()
       expect(Array.isArray(appSchema.pageSchema)).toBe(true)
+
+      // 获取第一个 Page/Block
+      const pageOrFolder = appSchema.pageSchema[0]
+      expect(pageOrFolder).toBeTruthy()
+      if (pageOrFolder && pageOrFolder.componentName === 'Folder') return
+      const page = pageOrFolder
+
+      // 通用结构校验
+      expect(Array.isArray(page.children)).toBe(true)
+      expect(typeof page.css).toBe('string')
+
+      // 各用例特定断言
+      if (caseName.startsWith('001_normal')) {
+        // 1) CSS 注入
+        expect(page.css.includes('.main-body')).toBe(true)
+        // 2) 组件存在（Tiny 体系）
+        expect(
+          someNode(page.children, (n) => n.componentName === 'TinyForm') &&
+            someNode(page.children, (n) => n.componentName === 'TinyGrid')
+        ).toBe(true)
+        // 3) 循环识别：state.buttons.map -> loop 表达式
+        expect(
+          someNode(
+            page.children,
+            (n) => n.loop && n.loop.type === 'JSExpression' && /state\.buttons/.test(n.loop.value)
+          )
+        ).toBe(true)
+        // 4) 方法提取
+        expect(page.methods && typeof page.methods === 'object').toBe(true)
+        expect(!!page.methods.getTableData).toBe(true)
+        expect(!!page.methods.handleSearch).toBe(true)
+      }
+
+      if (caseName.startsWith('002_data-binding')) {
+        // value/checked 等数据绑定应转为 JSExpression
+        const hasBoundValue = someNode(page.children, (n) => {
+          const v = n?.props?.value
+          return v && typeof v === 'object' && v.type === 'JSExpression' && /state\.(username|email)/.test(v.value)
+        })
+        const hasBoundChecked = someNode(page.children, (n) => {
+          const v = n?.props?.checked
+          return v && typeof v === 'object' && v.type === 'JSExpression' && /state\.isSubscribed/.test(v.value)
+        })
+        expect(hasBoundValue && hasBoundChecked).toBe(true)
+      }
+
+      if (caseName.startsWith('003_createVM')) {
+        // 组件映射校验：Steps -> TinyTimeLine
+        expect(someNode(page.children, (n) => n.componentName === 'TinyTimeLine')).toBe(true)
+        // Input.Search -> TinySearch
+        expect(someNode(page.children, (n) => n.componentName === 'TinySearch')).toBe(true)
+        // Radio.Group -> TinyButtonGroup
+        expect(someNode(page.children, (n) => n.componentName === 'TinyButtonGroup')).toBe(true)
+        // Select -> TinySelect
+        expect(someNode(page.children, (n) => n.componentName === 'TinySelect')).toBe(true)
+        // DatabaseOutlined 特殊图标映射
+        expect(
+          someNode(page.children, (n) => n.componentName === 'Icon' && n.props && n.props.name === 'IconPanelMini')
+        ).toBe(true)
+        // style 规范化为字符串（例如 padding-bottom: 10px）
+        expect(
+          someNode(
+            page.children,
+            (n) => typeof n?.props?.style === 'string' && /padding-bottom:\s*10px/.test(n.props.style)
+          )
+        ).toBe(true)
+      }
+
+      if (caseName.startsWith('004_lifecycle')) {
+        // 生命周期与类方法提取
+        const lc = page.lifeCycles || {}
+        const methods = page.methods || {}
+        expect(!!lc.componentDidMount).toBe(true)
+        expect(!!lc.componentWillUnmount).toBe(true)
+        expect(!!lc.componentDidUpdate).toBe(true)
+        expect(!!lc.componentDidCatch).toBe(true)
+        expect(!!methods.handleClick).toBe(true)
+      }
 
       // 输出到 output/<caseName>
       writeOutputs(casesRoot, caseName, appSchema)
