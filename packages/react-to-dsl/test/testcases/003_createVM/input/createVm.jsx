@@ -1,7 +1,7 @@
 import React from 'react'
 import './createVm.css'
 import { Button, Input, Form, Select, Table, Row, Col, Steps, Radio, Typography } from 'antd'
-import { DatabaseOutlined, PlusOutlined } from '@ant-design/icons'
+import { DatabaseOutlined } from '@ant-design/icons'
 
 const CreateVm = (props = {}) => {
   const [state, setState] = React.useState({
@@ -386,7 +386,6 @@ IOPS上限600，IOPS突发上限5,000"
                 </div>
               ))}
               <div style={{ display: 'flex', marginTop: '12px', borderRadius: '0px' }}>
-                <PlusOutlined style={{ width: '16px', height: '16px', marginRight: '10px' }}></PlusOutlined>
                 <Typography.Text
                   label="增加一块数据盘"
                   style={{ fontSize: '12px', borderRadius: '0px', marginRight: '10px' }}
