@@ -1,0 +1,399 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-09-07T05:16:34.432Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {
+    "activeStep": 1,
+    "filters": {
+      "keyword": "",
+      "module": ""
+    },
+    "category": "all",
+    "steps": [
+      {
+        "name": "准备"
+      },
+      {
+        "name": "处理"
+      },
+      {
+        "name": "完成"
+      }
+    ],
+    "columns": [
+      {
+        "field": "name",
+        "title": "名称"
+      },
+      {
+        "field": "path",
+        "title": "路径"
+      }
+    ],
+    "quickLinks": [
+      {
+        "id": 1,
+        "name": "用户管理",
+        "path": "/users"
+      },
+      {
+        "id": 2,
+        "name": "订单管理",
+        "path": "/orders"
+      }
+    ],
+    "modules": [
+      {
+        "value": "user",
+        "label": "用户"
+      },
+      {
+        "value": "order",
+        "label": "订单"
+      },
+      {
+        "value": "report",
+        "label": "报表"
+      }
+    ],
+    "categories": [
+      {
+        "text": "全部",
+        "value": "all"
+      },
+      {
+        "text": "常用",
+        "value": "fav"
+      },
+      {
+        "text": "最近",
+        "value": "recent"
+      }
+    ],
+    "todoCols": [
+      {
+        "field": "title",
+        "title": "标题"
+      },
+      {
+        "field": "deadline",
+        "title": "截止时间"
+      }
+    ],
+    "todos": [
+      {
+        "id": 1,
+        "title": "修复登录问题",
+        "deadline": "2025-09-30"
+      },
+      {
+        "id": 2,
+        "title": "升级依赖",
+        "deadline": "2025-10-10"
+      }
+    ]
+  },
+  "methods": {
+    "onSearch": {
+      "type": "JSFunction",
+      "value": "function onSearch() { console.log('search with', state.filters, state.category); }"
+    },
+    "onReset": {
+      "type": "JSFunction",
+      "value": "function onReset() { state.filters.keyword = ''; state.filters.module = ''; state.category = 'all'; }"
+    },
+    "go": {
+      "type": "JSFunction",
+      "value": "function go(item) { console.log('go to', item.path); }"
+    }
+  },
+  "computed": {},
+  "lifecycle": {},
+  "css": ".dashboard-page { padding: 16px; } .panel { padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; } .panel-title { margin: 0 0 8px; font-size: 16px; font-weight: 600; } .quick-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; } .quick-link-tile { height: 80px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fafafa; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; } .quick-link-tile:hover { background: #f0f6ff; border-color: #cfe0ff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); } .quick-link-text { color: #1f2329; font-size: 14px; font-weight: 500; }",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "class": "dashboard-page"
+      },
+      "children": [
+        {
+          "componentName": "TinyTimeLine",
+          "props": {
+            "style": "margin-bottom: 12px",
+            "horizontal": true,
+            "active": {
+              "type": "JSExpression",
+              "value": "state.activeStep"
+            },
+            "data": {
+              "type": "JSExpression",
+              "value": "state.steps"
+            }
+          },
+          "children": [],
+          "id": "ygd6neb0"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "class": "panel",
+            "style": "margin-bottom: 12px"
+          },
+          "children": [
+            {
+              "componentName": "h3",
+              "props": {
+                "class": "panel-title"
+              },
+              "children": [
+                {
+                  "componentName": "Text",
+                  "props": {
+                    "text": "筛选"
+                  },
+                  "id": "8guqlwea"
+                }
+              ],
+              "id": "lsushe3l"
+            },
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "label-width": "80px",
+                "label-position": "left",
+                "inline": true
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "关键词"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinySearch",
+                      "props": {
+                        "placeholder": "请输入关键词",
+                        "v-model": "state.filters.keyword"
+                      },
+                      "children": [],
+                      "id": "6mw5759s"
+                    }
+                  ],
+                  "id": "hzxcb08p"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "模块"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinySelect",
+                      "props": {
+                        "placeholder": "请选择模块",
+                        "v-model": "state.filters.module",
+                        "options": {
+                          "type": "JSExpression",
+                          "value": "state.modules"
+                        }
+                      },
+                      "children": [],
+                      "id": "kuepu6yc"
+                    }
+                  ],
+                  "id": "0bqj7ybl"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "分类"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "v-model": "state.category",
+                        "data": {
+                          "type": "JSExpression",
+                          "value": "state.categories"
+                        }
+                      },
+                      "children": [],
+                      "id": "durheebb"
+                    }
+                  ],
+                  "id": "99fgya4j"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "TinyButton",
+                      "props": {
+                        "type": "primary",
+                        "click": {
+                          "type": "JSExpression",
+                          "value": "onSearch"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "搜索"
+                          },
+                          "id": "1m0b6h33"
+                        }
+                      ],
+                      "id": "fa0agu1q"
+                    },
+                    {
+                      "componentName": "TinyButton",
+                      "props": {
+                        "style": "margin-left: 8px",
+                        "click": {
+                          "type": "JSExpression",
+                          "value": "onReset"
+                        }
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "重置"
+                          },
+                          "id": "5dt8vdno"
+                        }
+                      ],
+                      "id": "yslovlkt"
+                    }
+                  ],
+                  "id": "j79jkql2"
+                }
+              ],
+              "id": "bkmhl0po"
+            }
+          ],
+          "id": "da1wz8ue"
+        },
+        {
+          "componentName": "TinyRow",
+          "props": {},
+          "children": [
+            {
+              "componentName": "TinyCol",
+              "props": {
+                "span": 12
+              },
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "class": "panel"
+                  },
+                  "children": [
+                    {
+                      "componentName": "h3",
+                      "props": {
+                        "class": "panel-title"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "快速入口"
+                          },
+                          "id": "rdfuwng4"
+                        }
+                      ],
+                      "id": "6v6plgzv"
+                    },
+                    {
+                      "componentName": "TinyGrid",
+                      "props": {
+                        "columns": {
+                          "type": "JSExpression",
+                          "value": "state.columns"
+                        },
+                        "data": {
+                          "type": "JSExpression",
+                          "value": "state.quickLinks"
+                        },
+                        "auto-resize": true
+                      },
+                      "children": [],
+                      "id": "rxvaqytv"
+                    }
+                  ],
+                  "id": "qzh3gdo9"
+                }
+              ],
+              "id": "xf7auyel"
+            },
+            {
+              "componentName": "TinyCol",
+              "props": {
+                "span": 12
+              },
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "class": "panel"
+                  },
+                  "children": [
+                    {
+                      "componentName": "h3",
+                      "props": {
+                        "class": "panel-title"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "待办事项"
+                          },
+                          "id": "tcpy0ssp"
+                        }
+                      ],
+                      "id": "i4d3uafg"
+                    },
+                    {
+                      "componentName": "TinyGrid",
+                      "props": {
+                        "columns": {
+                          "type": "JSExpression",
+                          "value": "state.todoCols"
+                        },
+                        "data": {
+                          "type": "JSExpression",
+                          "value": "state.todos"
+                        },
+                        "auto-resize": true
+                      },
+                      "children": [],
+                      "id": "8i4krbvp"
+                    }
+                  ],
+                  "id": "pmxmazif"
+                }
+              ],
+              "id": "bebifxkg"
+            }
+          ],
+          "id": "b2aibhqb"
+        }
+      ],
+      "id": "bnhx35xa"
+    }
+  ],
+  "id": "hidyyzlo"
+}

@@ -1,0 +1,249 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component",
+    "description": "Page generated from Vue SFC",
+    "generatedAt": "2025-09-07T05:16:34.426Z",
+    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+  },
+  "state": {
+    "form": {
+      "username": "",
+      "password": ""
+    }
+  },
+  "methods": {
+    "onSubmit": {
+      "type": "JSFunction",
+      "value": "function onSubmit() { if (!state.form.username || !state.form.password) return; console.log('login', state.form); }"
+    },
+    "onReset": {
+      "type": "JSFunction",
+      "value": "function onReset() { state.form.username = ''; state.form.password = ''; }"
+    }
+  },
+  "computed": {},
+  "lifecycle": {},
+  "css": ".login-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(135deg, #f5f7fa 0%, #e9eff7 100%); } .login-card { width: 420px; background: #fff; border: 1px solid #eef0f5; border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06); padding: 24px 24px 16px; } .login-header { text-align: center; margin-bottom: 12px; } .login-title { margin: 0; font-size: 22px; color: #1f2329; } .login-subtitle { margin: 6px 0 0; color: #6b7280; font-size: 12px; } .login-extra { display: flex; justify-content: space-between; font-size: 12px; } .link { color: #344899; text-decoration: none; } .link:hover { text-decoration: underline; }",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "class": "login-page"
+      },
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "class": "login-card"
+          },
+          "children": [
+            {
+              "componentName": "div",
+              "props": {
+                "class": "login-header"
+              },
+              "children": [
+                {
+                  "componentName": "h2",
+                  "props": {
+                    "class": "login-title"
+                  },
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "text": "欢迎登录"
+                      },
+                      "id": "asynpwrd"
+                    }
+                  ],
+                  "id": "rxfvqy1e"
+                }
+              ],
+              "id": "9rfe3rvk"
+            },
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "label-width": "80px",
+                "label-position": "left",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "用户名"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "props": {
+                        "placeholder": "请输入用户名",
+                        "v-model": "state.form.username"
+                      },
+                      "children": [],
+                      "id": "d1zrz38f"
+                    }
+                  ],
+                  "id": "f9mjrhcu"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "密码"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "props": {
+                        "type": "password",
+                        "placeholder": "请输入密码",
+                        "v-model": "state.form.password"
+                      },
+                      "children": [],
+                      "id": "lstyztmt"
+                    }
+                  ],
+                  "id": "6eyqmqaw"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "TinyRow",
+                      "props": {
+                        "gutter": 8
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyCol",
+                          "props": {
+                            "span": 12
+                          },
+                          "children": [
+                            {
+                              "componentName": "TinyButton",
+                              "props": {
+                                "type": "primary",
+                                "style": "width: 100%",
+                                "click": {
+                                  "type": "JSExpression",
+                                  "value": "onSubmit"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "登录"
+                                  },
+                                  "id": "5me8pp4p"
+                                }
+                              ],
+                              "id": "lc8nyzn6"
+                            }
+                          ],
+                          "id": "w8ko8mak"
+                        },
+                        {
+                          "componentName": "TinyCol",
+                          "props": {
+                            "span": 12
+                          },
+                          "children": [
+                            {
+                              "componentName": "TinyButton",
+                              "props": {
+                                "type": "default",
+                                "style": "width: 100%",
+                                "click": {
+                                  "type": "JSExpression",
+                                  "value": "onReset"
+                                }
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "重置"
+                                  },
+                                  "id": "vjpw809x"
+                                }
+                              ],
+                              "id": "ci54ugeg"
+                            }
+                          ],
+                          "id": "7859rks1"
+                        }
+                      ],
+                      "id": "dw2193ie"
+                    }
+                  ],
+                  "id": "hrd6qivc"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {},
+                  "children": [
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "class": "login-extra"
+                      },
+                      "children": [
+                        {
+                          "componentName": "a",
+                          "props": {
+                            "href": "#",
+                            "class": "link"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "忘记密码?"
+                              },
+                              "id": "d6d3mfay"
+                            }
+                          ],
+                          "id": "de4qcwhh"
+                        },
+                        {
+                          "componentName": "a",
+                          "props": {
+                            "href": "#",
+                            "class": "link"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "注册账号"
+                              },
+                              "id": "bzyl5feo"
+                            }
+                          ],
+                          "id": "qplpco0b"
+                        }
+                      ],
+                      "id": "5x0235qo"
+                    }
+                  ],
+                  "id": "ec54fku7"
+                }
+              ],
+              "id": "x2jqxnep"
+            }
+          ],
+          "id": "u7dfesx2"
+        }
+      ],
+      "id": "igo2031f"
+    }
+  ],
+  "id": "ihvf3mw4"
+}
