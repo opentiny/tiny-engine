@@ -11,5 +11,6 @@ export const defaultComponentMap: Record<string, string> = {
   Col: 'TinyCol',
   Row: 'TinyRow',
   Steps: 'TinyTimeLine',
-  'Typography.Text': 'Text'
+  'Typography.Text': 'Text',
+  Table: 'TinyGrid'
 }
