@@ -23,17 +23,6 @@
 pnpm add @opentiny/tiny-engine-react-to-dsl
 ```
 
-## 测试
-
-使用 Vitest 进行单元与集成测试：
-
-```bash
-pnpm install
-pnpm test
-# 或
-npx vitest run
-```
-
 ## 目录结构
 
 ```text
@@ -126,3 +115,49 @@ function transformReactToDsl(code: string, options?: TransformOptions): IAppSche
 ```bash
 pnpm build
 ```
+
+## 测试
+
+使用 Vitest 进行单元与集成测试：
+
+```bash
+pnpm install
+pnpm test
+# 或
+npx vitest run
+```
+
+### 测试用例说明
+
+集成用例位于 `test/testcases/`，每个用例目录遵循：
+
+- `input/`：包含 1 个 `.jsx/.tsx` 源文件与可选的 `.css` 文件（会被拼接后注入到 `page.css`）
+- `output/`：测试执行后会生成 `app.schema.json` 与首个 `page.schema.json`，便于对照查看
+
+具体用例与断言覆盖点：
+
+- 001_normal
+  - 覆盖点：
+    - CSS 注入：校验注入的样式中包含 `.main-body`
+    - Tiny 组件存在：`TinyForm`、`TinyGrid` 等
+    - 列表渲染识别：`state.buttons.map(...)` 识别为子节点的 `loop: { type: 'JSExpression', value: 'state.buttons' }`
+    - 方法提取：`getTableData`、`handleSearch` 被收集到 `page.methods`
+
+- 002_data-binding
+  - 覆盖点：
+    - 数据绑定保持表达式：`value` 与 `checked` 转为 `{ type: 'JSExpression', value: 'state.xxx' }`
+
+- 003_createVM
+  - 覆盖点：
+    - 组件名映射（antd -> Tiny）：
+      - `Steps -> TinyTimeLine`
+      - `Input.Search -> TinySearch`
+      - `Radio.Group -> TinyButtonGroup`
+      - `Select -> TinySelect`
+    - 图标特殊映射：`DatabaseOutlined -> Icon` 且 `props.name = 'IconPanelMini'`
+    - 样式规范化：对象样式被转为字符串（如 `padding-bottom: 10px`）
+
+- 004_lifecycle
+  - 覆盖点：
+    - 类组件生命周期提取：`componentDidMount`、`componentWillUnmount`、`componentDidUpdate`、`componentDidCatch`
+    - 类字段方法提取：`handleClick` 出现在 `page.methods`
