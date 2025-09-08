@@ -17,6 +17,7 @@ import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny
 import { constants } from '@opentiny/tiny-engine-utils'
 import { lint } from '@opentiny/tiny-engine-common/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
+import { useCollabMonaco } from '@opentiny/tiny-engine-multi-person-collaboration'
 
 const { SCHEMA_DATA_TYPE } = constants
 
@@ -230,6 +231,19 @@ export default ({ emit }) => {
       state.script = getScriptString()
       monaco.value?.focus()
       window.dispatchEvent(new Event('resize'))
+      const currentUser = {
+        id: 2,
+        name: 'Bob',
+        color: '#ff0000ff',
+        avatarUrl: 'https://i.pravatar.cc/150?img=2'
+      }
+      // 代码的协同编辑
+      useCollabMonaco({
+        currentUser,
+        editorRef: monaco,
+        roomId: 'page-js-Yjs',
+        fieldName: 'page-js'
+      })
     })
   })
 

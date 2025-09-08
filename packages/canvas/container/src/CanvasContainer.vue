@@ -96,7 +96,7 @@ import {
   getRect
 } from './container'
 import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
-import useCollabSchema from '@opentiny/tiny-engine-multi-person-collaboration'
+import { useCollabSchema } from '@opentiny/tiny-engine-multi-person-collaboration'
 import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 export default {

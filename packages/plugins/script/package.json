@@ -30,6 +30,7 @@
     "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {
+    "@opentiny/tiny-engine-multi-person-collaboration": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
