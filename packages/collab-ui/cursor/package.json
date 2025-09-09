@@ -1,12 +1,13 @@
 {
-  "name": "@opentiny/tiny-engine-plugin-version-control",
-  "version": "1.0.0",
+  "name": "@opentiny/tiny-engine-collab-ui-cursor",
+  "version": "2.7.0",
   "publishConfig": {
     "access": "public"
   },
   "scripts": {
     "build": "vite build"
   },
+  "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "files": [
@@ -15,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
-    "directory": "packages/plugins/versioncontrol"
+    "directory": "packages/collab-ui/cursor"
   },
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"
@@ -28,15 +29,13 @@
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-canvas": "workspace:*",
-    "jsondiffpatch": "^0.6.0",
-    "diff-match-patch": "^1.0.5"
+    "@opentiny/tiny-engine-multi-person-collaboration": "workspace:*"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "vite": "^5.4.2",
-    "@types/diff-match-patch": "^1.0.36"
+    "vite": "^5.4.2"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",

@@ -1,4 +1,5 @@
 <template>
+  <component :is="cursorComponent.entry"></component>
   <div v-for="state in allMultiSelectedStates" :key="state.id">
     <canvas-action
       :hoverState="hoverState"
@@ -61,7 +62,7 @@
 <script>
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useTranslate, useCanvas, useMessage, useResource, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
@@ -96,7 +97,7 @@ import {
   getRect
 } from './container'
 import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
-import { useCollabSchema } from '@opentiny/tiny-engine-multi-person-collaboration'
+import { useCollabSchema, useCollabCursor } from '@opentiny/tiny-engine-multi-person-collaboration'
 import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 export default {
@@ -118,6 +119,7 @@ export default {
   },
   emits: ['selected', 'remove'],
   setup(props, { emit }) {
+    const cursorComponent = getMergeMeta('engine.collabUI.cursor')
     const iframe = ref(null)
     const insertPanel = ref(null)
     const insertPosition = ref(false)
@@ -142,6 +144,13 @@ export default {
     const currentDragType = ref(DRAG_TYPE.NONE)
 
     const { multiSelectedStates, isMouseDown } = useMultiSelect()
+
+    const currentUser = {
+      id: 2,
+      name: 'Bob',
+      color: '#4ECDC4',
+      avatarUrl: 'https://i.pravatar.cc/150?img=2'
+    }
 
     // Awareness 是否完成初始化，initHook之后才能得到 remoteStates数据
     const isReady = ref(false)
@@ -321,8 +330,14 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let isScrolling = false
 
+        const { updateCursorPositioin, mouseUpHandler, mouseDownHandler } = useCollabCursor({
+          roomId: 'cursor-yjs',
+          currentUser
+        })
+
         // 监听鼠标按下事件
         win.addEventListener('mousedown', (event) => {
+          mouseDownHandler()
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
             if (event.target === doc.documentElement) {
@@ -355,6 +370,7 @@ export default {
         // 监听鼠标移动事件
         win.addEventListener('mousemove', (ev) => {
           handleCanvasEvent(() => {
+            updateCursorPositioin(ev)
             // 根据当前拖拽类型执行相应操作
             switch (currentDragType.value) {
               case DRAG_TYPE.MULTI:
@@ -382,6 +398,7 @@ export default {
         // 监听拖拽结束事件
         win.addEventListener('mouseup', (ev) => {
           handleCanvasEvent(() => {
+            mouseUpHandler()
             if (ev.button === 0 && isMouseDown.value) {
               isMouseDown.value = false
 
@@ -452,12 +469,7 @@ export default {
 
         const { insertSharedNode, deleteSharedNode, updateUserSelection, remoteStates } = useCollabSchema({
           roomId: 'schema-yjs',
-          currentUser: {
-            id: 2,
-            name: 'Bob',
-            color: '#4ECDC4',
-            avatarUrl: 'https://i.pravatar.cc/150?img=2'
-          }
+          currentUser
         })
 
         initHook(HOOK_NAME.useRealtimeCollab, {
@@ -548,6 +560,7 @@ export default {
     )
 
     return {
+      cursorComponent,
       isMouseDown,
       iframe,
       dragState,

@@ -49,7 +49,8 @@ import {
   GenerateCodeService,
   GlobalService,
   ThemeSwitchService,
-  HttpService
+  HttpService,
+  Cursor
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -168,5 +169,6 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
   ],
+  collabUI: [__TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.cursor'] === false ? null : Cursor],
   canvas: Canvas
 }
