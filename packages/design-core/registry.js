@@ -50,7 +50,8 @@ import {
   GlobalService,
   ThemeSwitchService,
   HttpService,
-  Cursor
+  Cursor,
+  Avatar
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -169,6 +170,9 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
   ],
-  collabUI: [__TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.cursor'] === false ? null : Cursor],
+  collabUI: [
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.cursor'] === false ? null : Cursor,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.avatar'] === false ? null : Avatar
+  ],
   canvas: Canvas
 }

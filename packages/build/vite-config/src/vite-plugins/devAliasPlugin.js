@@ -66,7 +66,8 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
     '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts'),
-    '@opentiny/tiny-engine-collab-ui-cursor': path.resolve(basePath, 'packages/collab-ui/cursor/index.ts')
+    '@opentiny/tiny-engine-collab-ui-cursor': path.resolve(basePath, 'packages/collab-ui/cursor/index.ts'),
+    '@opentiny/tiny-engine-collab-ui-avatar': path.resolve(basePath, 'packages/collab-ui/avatar/index.ts')
   }
 }
 

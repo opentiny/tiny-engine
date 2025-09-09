@@ -78,5 +78,7 @@ export const META_APP = {
   Canvas: 'engine.canvas',
   Tutorial: 'engine.plugins.tutorial',
   // 版本管理
-  VersionControl: 'engine.plugins.versioncontrol'
+  VersionControl: 'engine.plugins.versioncontrol',
+  // 用户在线头像
+  Avatar: 'engine.collabUI.avatar'
 }

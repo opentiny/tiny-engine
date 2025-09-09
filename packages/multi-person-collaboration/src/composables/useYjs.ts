@@ -31,6 +31,17 @@ export function useYjs(roomId: string, options?: UseYjsOptions): UseYjsReturn {
   const awareness = shallowRef<Awareness | null>(null)
   const status = ref<'connecting' | 'connected' | 'disconnected' | 'error'>('disconnected')
 
+  // 清理函数
+  const cleanup = () => {
+    if (provider.value) {
+      provider.value.awareness.setLocalState(null)
+      // 销毁 provider，即断开 WebSocket 连接
+      providerManager.destroyProvider(roomId)
+      // eslint-disable-next-line no-console
+      console.log(`[useYjs] Actively disconnected and cleaned up for room ${roomId}.`)
+    }
+  }
+
   // 初始化 Provider
   if (options?.websocketUrl) {
     const p = providerManager.createProvider(roomId, ydoc, { websocketUrl: options.websocketUrl })
@@ -52,6 +63,9 @@ export function useYjs(roomId: string, options?: UseYjsOptions): UseYjsReturn {
         console.log(`[${roomId}] useYjs: Initial sync for room ${roomId} completed.`)
       }
     })
+
+    // 刷新时调用 清理函数
+    window.addEventListener('beforeunload', cleanup)
   } else {
     // eslint-disable-next-line no-console
     console.warn('useYjs: No provider options provided. Yjs will operate in offline mode.')
@@ -61,9 +75,10 @@ export function useYjs(roomId: string, options?: UseYjsOptions): UseYjsReturn {
   // 在组件中销毁 Yjs 资源
   onUnmounted(() => {
     // eslint-disable-next-line no-console
-    console.log(`useYjs: Cleaning up Yjs resources for room ${roomId}.`)
-    providerManager.destroyProvider(roomId)
-    // docManager.destroyDoc(roomId)
+    console.log(`useYjs: Cleaning up Yjs resources for room ${roomId} in onUnmounted.`)
+    window.removeEventListener('beforeunload', cleanup)
+    // 调用清理函数
+    cleanup()
   })
 
   return {

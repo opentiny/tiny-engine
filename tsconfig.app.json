@@ -57,7 +57,8 @@
       "@opentiny/tiny-engine-toolbar-view-setting": ["packages/toolbars/view-setting/index"],
       "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
       "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"],
-      "@opentiny/tiny-engine-collab-ui-cursor": ["packages/collab-ui/cursor/index"]
+      "@opentiny/tiny-engine-collab-ui-cursor": ["packages/collab-ui/cursor/index"],
+      "@opentiny/tiny-engine-collab-ui-avatar": ["packages/collab-ui/avatar/index"]
     }
   },
   "include": ["packages/**/*"],
