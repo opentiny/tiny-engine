@@ -1,3 +1,4 @@
+// npm install --save-dev fast-glob@3.3.3 vue-component-meta@3.0.6
 // 仅导入必要依赖
 const fs = require('fs');
 const path = require('path');

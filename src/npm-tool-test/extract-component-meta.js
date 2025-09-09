@@ -1,3 +1,4 @@
+// npm install --save-dev fast-glob@3.3.3 vue-component-meta@3.0.6
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
