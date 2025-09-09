@@ -15,5 +15,9 @@
     "langchain": "^0.3.30",
     "openai": "^5.10.1",
     "puppeteer": "^24.14.0"
+  },
+  "devDependencies": {
+    "fast-glob": "^3.3.3",
+    "vue-component-meta": "^3.0.6"
   }
 }

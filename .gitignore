@@ -58,3 +58,6 @@ src/backend/log
 post-process-log/
 node_modules/
 code-to-material-output/
+code-file-content/
+code-to-api-json-log/
+code-to-api-json-log-2/

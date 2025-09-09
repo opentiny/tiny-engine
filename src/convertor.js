@@ -3,7 +3,8 @@ const { OpenAI } = require("openai");
 const fs = require('fs');
 const path = require('path');
 const { postProcessSchemas } = require('./post-process-schemas');
-const { crawlElementPlusAPI } = require('./element-api-crawler');
+const { extractElementPlusApiFromUrl } = require('./element-api-crawler');
+const { generateComponentApiJson } = require('./generate-component-api-json');
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -123,7 +124,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
   - 若为其他组件库（如 element-plus），移除前缀标识后转为小写（如 "ElForm"→"form"、"ElButton"→"button"）
   - 若 \`notes\` 中有明确图标提示（如 "图标使用 'calendar'"），则优先使用该值（保持原大小写）
 - \`group\`：根据组件库识别，如 element - plus 组件填 "element - plus"
-- \`category\`：固定为 "element-plus"（可根据实际调整）
+- \`category\`：根据组件库识别，如 element - plus 组件填 "element - plus"
 - \`description\`：直接使用输入的 \`description\` 值
 - \`tags\`：从 \`description\` 提取核心关键词（如 "按钮"→["操作","交互"]）
 - \`keywords\`：同 \`tags\`，补充组件名英文（如 ["Button","按钮","操作"]）
@@ -1368,7 +1369,7 @@ function splitIntoBatches(array, batchSize) {
 
 /**
  * 批量转换API数组为tinyEngine schema数组（改进：支持分批并行处理）
- * @param {Array} apiArray - crawlElementPlusAPI返回的子组件API对象数组
+ * @param {Array} apiArray - extractElementPlusApiFromUrl返回的子组件API对象数组
  * @param {string} model - 大模型名称（可选，默认用环境变量）
  * @param {boolean} save - 是否保存到文件（可选，默认true）
  * @param {number} concurrentLimit - 并发数上限（可选，默认3，支持环境变量配置）
@@ -1381,7 +1382,7 @@ async function batchConvertToTinyEngineSchema(
   concurrentLimit = 5 // 新增：并发数配置
 ) {
   if (!Array.isArray(apiArray) || apiArray.length === 0) {
-    throw new Error("输入必须是非空的API对象数组（来自crawlElementPlusAPI）");
+    throw new Error("输入必须是非空的API对象数组（来自extractElementPlusApiFromUrl）");
   }
 
   // 校验并发数（避免非法值，最小1，最大建议不超过10）
@@ -1448,20 +1449,83 @@ async function batchConvertToTinyEngineSchema(
   return conversionResults;
 }
 
-// 主函数（调用批量转换时，可按需传递并发数）
+/**
+ * 解析命令行参数
+ * @returns {Object} 包含解析后的参数（url, componentDir, outputPath）
+ */
+function parseCommandLineArgs() {
+  const args = process.argv.slice(2);
+  const result = {};
+
+  // 简单的参数解析逻辑
+  for (let i = 0; i < args.length; i++) {
+    switch (args[i]) {
+      case '--url':
+        result.url = args[i + 1];
+        i++; // 跳过下一个参数
+        break;
+      case '--dir':
+        result.componentDir = args[i + 1];
+        i++; // 跳过下一个参数
+        break;
+      case '--output':
+        result.outputPath = args[i + 1];
+        i++; // 跳过下一个参数
+        break;
+      default:
+        console.warn(`忽略未知参数: ${args[i]}`);
+    }
+  }
+
+  // 验证参数
+  if (!result.url && !result.componentDir) {
+    console.error('请提供URL或组件文件夹路径作为参数');
+    console.log('使用示例1 (通过URL爬取): node convertor.js --url https://cn.element-plus.org/zh-CN/component/button.html');
+    console.log('使用示例2 (通过组件文件夹): node convertor.js --dir ./components/button [--output ./output-path]');
+    process.exit(1);
+  }
+
+  // 验证路径是否存在（针对文件夹方式）
+  if (result.componentDir && !fs.existsSync(result.componentDir)) {
+    console.error(`指定的组件文件夹不存在: ${result.componentDir}`);
+    process.exit(1);
+  }
+
+  return result;
+}
+
+/**
+ * 主函数（支持两种方式获取子组件数组）
+ * 方式1：通过URL爬取 - 用法: node convertor.js --url https://xxx
+ * 方式2：通过组件文件夹生成 - 用法: node convertor.js --dir ./components/button [--output ./output]
+ */
 async function main() {
   try {
-    const url = process.argv[2];
-    if (!url) {
-      console.error('请提供URL作为参数');
-      console.log('使用示例: node convertor.js https://cn.element-plus.org/zh-CN/component/button.html');
-      return;
-    }
+    // 解析命令行参数
+    const { url, componentDir, outputPath } = parseCommandLineArgs();
 
-    // 1. 爬取API数组
-    console.log(`开始爬取URL: ${url}`);
-    const apiArray = await crawlElementPlusAPI(url);
-    console.log(`爬取完成：共${apiArray.length}个子组件`);
+    let apiArray;
+
+    // 1. 根据参数类型获取子组件数组
+    if (url) {
+      // 方式1：通过URL爬取API数组
+      console.log(`开始爬取URL: ${url}`);
+      apiArray = await extractElementPlusApiFromUrl(url);
+      console.log(`爬取完成：共${apiArray.length}个子组件`);
+    } else if (componentDir) {
+      // 方式2：通过组件文件夹生成API数组
+      console.log(`开始处理组件文件夹: ${componentDir}`);
+      // 确保 generateComponentApiJson获取API数组
+      apiArray = await generateComponentApiJson(componentDir, outputPath);
+
+      // 验证生成的API数组
+      if (!Array.isArray(apiArray) || apiArray.length === 0) {
+        throw new Error("生成的API数组为空或格式不正确");
+      }
+      console.log(`组件API生成完成：共${apiArray.length}个子组件`);
+    } else {
+      throw new Error("未提供有效的URL或组件文件夹路径");
+    }
 
     // 2. 调用改进后的批量转换（可选传递并发数，此处用默认值3）
     // 若需调整并发数，可传入第4个参数，如：batchConvertToTinyEngineSchema(apiArray, undefined, true, 5)
@@ -1475,7 +1539,7 @@ async function main() {
       console.log(`[${index + 1}] 子组件[${item.subComponentName}]：${status} ${msg}`);
     });
 
-    // 转换完成后调用后续处理
+    // 4. 转换完成后调用后续处理
     console.log('\n--- 开始后续处理 ---');
     const finalResults = postProcessSchemas(conversionResults);
     console.log('\n--- 批量转换全部完成 ---');

@@ -1,5 +1,5 @@
 const { Tool } = require("@langchain/core/tools");
-const { crawlElementPlusAPI } = require("./element-api-crawler");
+const { extractElementPlusApiFromUrl } = require("./element-api-crawler");
 const { batchConvertToTinyEngineSchema } = require("./convertor");
 const { postProcessSchemas } = require("./post-process-schemas"); // 导入后处理函数
 
@@ -22,7 +22,7 @@ class ElementApiCrawlerTool extends Tool {
         return "错误：请提供以http/https开头的有效Element Plus组件文档URL";
       }
 
-      const apiArray = await crawlElementPlusAPI(input);
+      const apiArray = await extractElementPlusApiFromUrl(input);
       return JSON.stringify(apiArray, null, 2);
     } catch (error) {
       return `爬取失败：${error.message}`;

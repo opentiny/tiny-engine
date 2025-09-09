@@ -12,6 +12,86 @@ const client = new OpenAI({
   timeout: 6000000
 });
 
+// 1. 原始规则集合（保持原有命名习惯，支持任意格式）
+const NO_PROCESS_RAW = new Set([
+  "Button", "ButtonGroup", "button-group", "Checkbox", "checkbox-group",
+  "Radio", "radio-button", "Cascader Panel", "Tag", "CheckTag",
+  "Statistic", "Countdown", "Image Viewer", "Select"
+]);
+
+const MERGE_TABLE_RAW = new Set([
+  "Table", "table-column", "TableColumn", "TableV2", "table-v2",
+  "Column", "column"
+]);
+
+const REMOVE_SNIPPET_RAW = new Set([
+  "SplitterPanel", "splitter-panel", "Transfer Panel", "transfer-panel",
+  "FormItem", "form-item", "Carousel-Item", "carousel item",
+  "Collapse Item", "collapse-item", "DescriptionsItem", "descriptions-item",
+  "SkeletonItem", "Timeline-Item", "BreadcrumbItem", "Dropdown-Menu",
+  "Dropdown-Item", "TourStep", "AnchorLink", "Step", "Tab-pane",
+  "Tab-nav", "Row", "Col", "Option Group", "option-group", "Option"
+]);
+
+const PARENT_COMPONENTS_RAW = new Set([
+  "Table", "table-v2", "TableV2", "Splitter", "splitter",
+  "Transfer", "Form", "form", "Carousel", "Collapse",
+  "Descriptions", "Skeleton", "Timeline", "Dropdown",
+  "Tour", "Anchor", "Steps", "Tabs"
+]);
+
+// 2. 预标准化为 Map（key：标准化名，value：原始名）
+const NO_PROCESS_MAP = createStandardizedMap(NO_PROCESS_RAW);
+const MERGE_TABLE_MAP = createStandardizedMap(MERGE_TABLE_RAW);
+const REMOVE_SNIPPET_MAP = createStandardizedMap(REMOVE_SNIPPET_RAW);
+const PARENT_COMPONENTS_MAP = createStandardizedMap(PARENT_COMPONENTS_RAW);
+
+/**
+ * 组件名标准化：将任意格式（连字符、空格、下划线、大小写）转换为驼峰式且首字母大写（PascalCase）
+ * 示例：
+ * - "table-column" → "TableColumn"
+ * - "Table Column" → "TableColumn"
+ * - "TABLE_COLUMN" → "TableColumn"
+ * - "tableColumn" → "TableColumn"（已为驼峰式，仅首字母大写）
+ * - "table" → "Table"（单单词直接首字母大写）
+ * @param {string} name - 原始组件名
+ * @returns {string} 标准化后的驼峰式组件名
+ */
+function standardizeComponentName(name) {
+  if (!name || typeof name !== 'string') return '';
+
+  // 将驼峰式命名（如 TableColumn）转换为连字符分隔（Table-Column）
+  // 原理：在大写字母前插入连字符（排除第一个字符）
+  const camelToHyphen = name.replace(/(?<!^)(?=[A-Z])/g, '-');
+
+  // 1. 统一将分隔符（连字符、空格、下划线）替换为连字符
+  const withHyphens = camelToHyphen.replace(/[\s_]/g, '-');
+
+  // 2. 分割为单词数组（按连字符分割，并过滤空字符串）
+  const words = withHyphens.split('-').filter(word => word.length > 0);
+
+  // 3. 每个单词首字母大写，其余字母小写，然后拼接
+  return words.map(word => {
+    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+  }).join('');
+}
+
+/**
+ * 标准化规则集合：将原始 Set 转换为“标准化格式→原始格式”的 Map，便于匹配和回溯
+ * @param {Set<string>} originalSet - 原始组件名集合
+ * @returns {Map<string, string>} 标准化后的映射（key：标准化驼峰名，value：原始名）
+ */
+function createStandardizedMap(originalSet) {
+  const map = new Map();
+  originalSet.forEach(originalName => {
+    const standardized = standardizeComponentName(originalName);
+    if (standardized) {
+      map.set(standardized, originalName); // 若有重复标准化名，以最后一个为准
+    }
+  });
+  return map;
+}
+
 /**
  * 后续处理主函数：接收转换结果，按规则处理后保存
  * @param {Array} conversionResults - batchConvertToTinyEngineSchema 的返回结果
@@ -26,11 +106,6 @@ async function postProcessSchemas(conversionResults) {
     return conversionResults;
   }
 
-  // 2. 提取有效结果（仅成功的 schema 和子组件名）
-  // const validResults = conversionResults.map(item => ({
-  //   subComponentName: item.subComponentName,
-  //   schema: item.schema
-  // }));
   const validResults = conversionResults.map(item => {
     const { subComponentName, schema } = item;
     // 校验1：schema 必须是对象
@@ -58,11 +133,6 @@ async function postProcessSchemas(conversionResults) {
     saveProcessedSchemas(processed);
     console.log("✅ 所有结果后处理完毕，保存到文件");
 
-    // 新增：优化父组件的snippets字段
-    // const optimizedProcessed = await optimizeParentSnippets(processed);
-    // console.log("✅ 所有父组件snippet字段处理完毕，保存到文件");
-    // saveProcessedSchemas(optimizedProcessed);
-
     return processed;
     // return optimizedProcessed;
   }
@@ -76,72 +146,82 @@ async function postProcessSchemas(conversionResults) {
  * @returns {Array} 处理后的结果（含新 schema 或原始数据）
  */
 function processMultiResults(validResults) {
-  // 定义三类组件的匹配规则（用 Set 提升查找效率）
-  const NO_PROCESS = new Set([
-    "Button", "ButtonGroup", "Checkbox", "CheckboxGroup", "CheckboxButton",
-    "Radio", "RadioGroup", "RadioButton", "Cascader", "CascaderPanel",
-    "Tag", "CheckTag", "Statistic", "Countdown", "Image", "Image Viewer", "Select"
-  ]);
-  const MERGE_TABLE = new Set(["Table", "Table-column", "TableV2", "Column"]);
-  const REMOVE_SNIPPET = new Set([
-    "SplitterPanel", "Transfer Panel", "FormItem", "Carousel-Item",
-    "Collapse Item", "DescriptionsItem", "SkeletonItem", "Timeline-Item",
-    "BreadcrumbItem", "Dropdown-Menu", "Dropdown-Item", "TourStep", "AnchorLink",
-    "Step", "Tab-pane", "Tab-nav", "Row", "Col", "Option Group", "Option"
-  ]);
-
   const processed = [];
   const tableCandidates = []; // 暂存表格相关组件，后续合并
 
+  // 1. 遍历所有有效结果，分类处理（仅收集表格组件，不执行合并）
   validResults.forEach(item => {
     const { subComponentName, schema } = item;
+    // 关键：将输入的 subComponentName 标准化
+    const standardizedName = standardizeComponentName(subComponentName);
 
-    if (NO_PROCESS.has(subComponentName)) {
-      console.log(`ℹ️ [${subComponentName}] 无需处理，直接保留`);
+    // 1.1 匹配 NO_PROCESS（通过标准化Map判断）
+    if (NO_PROCESS_MAP.has(standardizedName)) {
+      const originalName = NO_PROCESS_MAP.get(standardizedName);
+      console.log(`ℹ️ [${subComponentName}]（标准化为${originalName}）无需处理，直接保留`);
       processed.push({ subComponentName, schema });
-    } else if (MERGE_TABLE.has(subComponentName)) {
-      console.log(`🔢 [${subComponentName}] 标记为表格相关，待合并`);
-      tableCandidates.push({ subComponentName, schema });
-    } else if (REMOVE_SNIPPET.has(subComponentName)) {
-      console.log(`🧹 [${subComponentName}] 执行 removeItemSnippets 处理`);
+    }
+    // 1.2 匹配 MERGE_TABLE（通过标准化Map判断）：仅收集，不立即合并
+    else if (MERGE_TABLE_MAP.has(standardizedName)) {
+      const originalName = MERGE_TABLE_MAP.get(standardizedName);
+      console.log(`🔢 [${subComponentName}]（标准化为${originalName}）标记为表格相关，待合并`);
+      // 存储时保留原始 subComponentName 和标准化名，便于后续配对
+      tableCandidates.push({ subComponentName, standardizedName, schema });
+    }
+    // 1.3 匹配 REMOVE_SNIPPET（通过标准化Map判断）
+    else if (REMOVE_SNIPPET_MAP.has(standardizedName)) {
+      const originalName = REMOVE_SNIPPET_MAP.get(standardizedName);
+      console.log(`🧹 [${subComponentName}]（标准化为${originalName}）执行 removeItemSnippets 处理`);
       const cleanedSchema = removeItemSnippets(schema);
       processed.push({ subComponentName, schema: cleanedSchema });
-    } else {
+    }
+    // 1.4 无匹配规则：直接保留
+    else {
       console.log(`ℹ️ [${subComponentName}] 无匹配规则，直接保留`);
       processed.push({ subComponentName, schema });
     }
   });
 
-  // 处理表格合并（需成对出现）
+  // 2. 遍历结束后，统一处理表格合并（放在forEach外部！）
   if (tableCandidates.length === 2) {
     console.log("🔧 发现表格组件配对，执行 mergeTableColumns 合并");
-    // 定义两种合法配对
+    // 标准化合法配对的名称（支持多格式匹配）
     const validPair1 = {
-      tableName: "Table",
-      columnName: "Table-column",
+      tableStd: standardizeComponentName("Table"), // 标准化后为 "Table"
+      columnStd: standardizeComponentName("Table-column"), // 标准化后为 "TableColumn"
       mergedName: "Table"
     };
     const validPair2 = {
-      tableName: "TableV2",
-      columnName: "Column",
+      tableStd: standardizeComponentName("TableV2"), // 标准化后为 "TableV2"
+      columnStd: standardizeComponentName("Column"), // 标准化后为 "Column"
       mergedName: "TableV2"
     };
+
+    console.log("📋 预设的表格配对规则：");
+    console.log(`- 配对1：Table标准名=${validPair1.tableStd}，Column标准名=${validPair1.columnStd}`);
+    console.log(`- 配对2：TableV2标准名=${validPair2.tableStd}，Column标准名=${validPair2.columnStd}`);
+
     let matchedPair = null;
-    // 检查是否为合法配对
-    if (
-      (tableCandidates.some(item => item.subComponentName === validPair1.tableName) &&
-        tableCandidates.some(item => item.subComponentName === validPair1.columnName))
-    ) {
+    // 提取表格候选者的标准化名称
+    const candidateStdNames = tableCandidates.map(item => item.standardizedName);
+
+    console.log("📌 当前表格候选者的标准化名称：\n  - " + candidateStdNames.join("\n  - "));
+
+    // 检查是否匹配配对1（Table + TableColumn）
+    if (candidateStdNames.includes(validPair1.tableStd) && candidateStdNames.includes(validPair1.columnStd)) {
       matchedPair = validPair1;
-    } else if (
-      (tableCandidates.some(item => item.subComponentName === validPair2.tableName) &&
-        tableCandidates.some(item => item.subComponentName === validPair2.columnName))
-    ) {
-      matchedPair = validPair2;
+      console.log("✅ 匹配到配对1：Table + TableColumn");
     }
+    // 检查是否匹配配对2（TableV2 + Column）
+    else if (candidateStdNames.includes(validPair2.tableStd) && candidateStdNames.includes(validPair2.columnStd)) {
+      matchedPair = validPair2;
+      console.log("✅ 匹配到配对2：TableV2 + Column");
+    }
+
     if (matchedPair) {
-      const tableSchema = tableCandidates.find(i => i.subComponentName === matchedPair.tableName)?.schema;
-      const columnSchema = tableCandidates.find(i => i.subComponentName === matchedPair.columnName)?.schema;
+      // 根据标准化名称找到对应的 schema
+      const tableSchema = tableCandidates.find(i => i.standardizedName === matchedPair.tableStd)?.schema;
+      const columnSchema = tableCandidates.find(i => i.standardizedName === matchedPair.columnStd)?.schema;
 
       if (tableSchema && columnSchema) {
         const merged = mergeTableColumns(tableSchema, columnSchema);
@@ -151,300 +231,23 @@ function processMultiResults(validResults) {
         });
       } else {
         console.warn("⚠️ 表格组件配对不完整，跳过合并");
-        processed.push(...tableCandidates);
+        processed.push(...tableCandidates.map(item => ({ subComponentName: item.subComponentName, schema: item.schema })));
       }
     } else {
       console.warn("⚠️ 表格组件配对不合法，跳过合并");
-      processed.push(...tableCandidates);
+      if (!candidateStdNames.includes(validPair1.tableStd) && !candidateStdNames.includes(validPair2.tableStd)) {
+        console.log("- 原因：候选者中没有 Table 或 TableV2 的标准化名称");
+      }
+      if (!candidateStdNames.includes(validPair1.columnStd) && !candidateStdNames.includes(validPair2.columnStd)) {
+        console.log("- 原因：候选者中没有 TableColumn 或 Column 的标准化名称");
+      }
+      processed.push(...tableCandidates.map(item => ({ subComponentName: item.subComponentName, schema: item.schema })));
     }
   } else {
-    processed.push(...tableCandidates);
+    // 表格候选者数量不是2，直接加入结果
+    processed.push(...tableCandidates.map(item => ({ subComponentName: item.subComponentName, schema: item.schema })));
   }
-
   return processed;
-}
-
-// 定义父组件列表
-const PARENT_COMPONENTS = new Set([
-  "Table", "TableV2", "Splitter", "Transfer", "Form", "Carousel",
-  "Collapse", "Descriptions", "Skeleton", "Timeline", "Dropdown",
-  "Tour", "Anchor", "Steps", "Tabs"
-]);
-
-/**
- * 优化父组件的snippets字段
- * @param {Array} processed - 处理后的组件数组
- * @returns {Promise<Array>} 优化后的组件数组
- */
-async function optimizeParentSnippets(processed) {
-  console.log("🔍 开始优化父组件的snippets字段");
-
-  // 分离父组件和子组件
-  const parentComponents = processed.filter(item =>
-    PARENT_COMPONENTS.has(item.subComponentName)
-  );
-  const childComponents = processed.filter(item =>
-    !PARENT_COMPONENTS.has(item.subComponentName)
-  );
-
-  console.log(`📌 发现 ${parentComponents.length} 个父组件，${childComponents.length} 个子组件`);
-
-  // 对每个父组件进行优化
-  for (const parent of parentComponents) {
-    console.log(`🔧 正在优化父组件 [${parent.subComponentName}] 的snippets字段`);
-
-    try {
-      // 调用大模型进行优化
-      const optimizedSnippets = await callLLMForSnippets(parent, childComponents);
-
-      // 更新父组件的snippets字段
-      if (optimizedSnippets) {
-        parent.schema.snippets = optimizedSnippets;
-        console.log(`✅ 父组件 [${parent.subComponentName}] 的snippets字段优化完成`);
-      } else {
-        console.log(`ℹ️ 未获取到有效的优化结果，父组件 [${parent.subComponentName}] 的snippets字段保持不变`);
-      }
-    } catch (error) {
-      console.error(`❌ 优化父组件 [${parent.subComponentName}] 的snippets字段时出错:`, error.message);
-      // 出错时不修改原snippets，继续处理下一个
-    }
-  }
-
-  // 合并处理后的父组件和子组件
-  return [...parentComponents, ...childComponents];
-}
-
-/**
- * 调用大模型优化snippets
- * @param {Object} parent - 父组件
- * @param {Array} children - 所有子组件
- * @returns {Promise<Array>} 优化后的snippets数组
- */
-async function callLLMForSnippets(parent, children, model = process.env.OPENAI_MODEL || "deepseek-reasoner") {
-  // 构建子组件信息字符串
-  const childrenInfo = children.map(child =>
-    `子组件${child.subComponentName}的物料json为${JSON.stringify(child.schema)};`
-  ).join('\n');
-
-  // 构建系统提示
-  const systemPrompt = `你是一位专业的前端组件库专家，擅长优化组件的代码片段示例。你的任务是根据提供的父组件、子组件以及规则，检验并优化父组件的snippets字段值。请确保生成的代码片段符合实际使用场景，准确体现组件的典型用法和嵌套关系。输出必须是一个可直接作为snippets值的数组，不要包含任何额外解释。`;
-
-  // 构建用户提示
-  const userPrompt = `
-父组件${parent.subComponentName}的物料json为${JSON.stringify(parent.schema)};
-${childrenInfo}
-请你根据以下规则以及相应的子组件，给出父组件的snippets字段值。注意只需要回答一个数组，以供直接作为snippets值。
-规则如下：
-- 任务：为组件生成**符合实际使用场景**的有代表性、有意义的代码片段数组（snippets），准确体现组件的典型用法和嵌套关系，用于在组件面板中展示。
-- 生成规则：
-  - snippets 数组应包含一个默认代码片段，需完整展示组件的核心用法。
-  - 每个代码片段必须包含以下字段，且配置需遵循统一要求：
-    1. name.zh_CN：填写与组件定义中一致的中文名称，比如 “表格”“表单”“按钮”；
-    2. icon：填写与组件定义中一致的图标标识，比如 “table”“form”“button”；
-    3. screenshot：固定填空字符串（""），预留截图位置；
-    4. snippetName：填写与组件定义中 component 字段一致的完整组件名，比如 “ElTable”“ElForm”；
-    5. category：填写与组件定义中一致的组件库归属，比如 “element-plus”；
-    6. schema：组件核心配置结构，根据物料json，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
-  - schema 核心规则
-    1. 结构选择
-      - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法；
-      - 基础组件（如 ElButton、ElInput）：通过 props 配置业务常用属性（如按钮 type、输入框 placeholder），通过 children 承载文本或辅助组件（如按钮嵌套 Text 组件）。
-    2. props 要求
-      - 禁用 “请输入”“示例值” 等泛型占位符，填写真实业务场景值（如 “请输入手机号”“提交”）；
-      - 复杂类型属性（数组、对象）需提供完整模拟数据（如表格 data 包含 2-4 条真实结构数据）；
-      - 关联属性需严格对应（如 ElTable 的 columns.prop 与 data 中的字段名一致）。
-    3. children 要求
-      - 仅嵌套组件专用子组件（如 ElForm→ElFormItem、Splitter→SplitterPanel），禁止嵌套无关组件；
-      - 嵌套层级符合组件原生用法（如 ElForm→ElFormItem→ElInput），子组件 props 需与父组件逻辑一致。
-  - snippets 正确参考示例：
-    1. ElButton 按钮示例：
-      "snippets": [
-        {
-          "name": {
-            "zh_CN": "按钮"
-          },
-          "icon": "button",
-          "screenshot": "",
-          "snippetName": "ElButton",
-          "schema": {
-            "children": [
-              {
-                "componentName": "Text",
-                "props": {
-                  "text": "按钮文本"
-                }
-              }
-            ]
-          },
-          "category": "element-plus"
-        }
-      ]
-    2. 表格（ElTable）示例：
-      "snippets": [
-        {
-          "name": {
-            "zh_CN": "表格"
-          },
-          "icon": "grid",
-          "screenshot": "",
-          "snippetName": "ElTable",
-          "schema": {
-            "props": {
-              "data": [
-                {
-                  "date": "2016-05-03",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-02",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-04",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                },
-                {
-                  "date": "2016-05-01",
-                  "name": "Tom",
-                  "address": "No. 189, Grove St, Los Angeles"
-                }
-              ],
-              "columns": [
-                {
-                  "type": "index"
-                },
-                {
-                  "label": "Date",
-                  "prop": "date"
-                },
-                {
-                  "label": "Name",
-                  "prop": "name"
-                },
-                {
-                  "label": "Address",
-                  "prop": "address"
-                }
-              ]
-            }
-          },
-          "category": "element-plus"
-        }
-      ]
-    3. 表单（ElForm）示例：
-        "snippets": [
-          {
-            "name": {
-              "zh_CN": "表单"
-            },
-            "icon": "form",
-            "screenshot": "",
-            "snippetName": "ElForm",
-            "schema": {
-              "children": [
-                {
-                  "componentName": "ElFormItem",
-                  "props": {
-                    "label": "账号",
-                    "prop": "account"
-                  },
-                  "children": [
-                    {
-                      "componentName": "ElInput",
-                      "props": {
-                        "modelValue": "",
-                        "placeholder": "请输入账号"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "componentName": "ElFormItem",
-                  "props": {
-                    "label": "密码",
-                    "prop": "password"
-                  },
-                  "children": [
-                    {
-                      "componentName": "ElInput",
-                      "props": {
-                        "modelValue": "",
-                        "placeholder": "请输入密码",
-                        "type": "password"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "componentName": "ElFormItem",
-                  "props": {},
-                  "children": [
-                    {
-                      "componentName": "ElButton",
-                      "props": {
-                        "type": "primary",
-                        "style": "margin-right: 10px"
-                      },
-                      "children": [
-                        {
-                          "componentName": "Text",
-                          "props": {
-                            "text": "提交"
-                          }
-                        }
-                      ]
-                    },
-                    {
-                      "componentName": "ElButton",
-                      "props": {
-                        "type": "primary"
-                      },
-                      "children": [
-                        {
-                          "componentName": "Text",
-                          "props": {
-                            "text": "重置"
-                          }
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            },
-            "category": "element-plus"
-          }
-        ]
-`;
-
-  console.log("🚀 正在调用OpenAI API...");
-  // 调用OpenAI API
-  const completion = await client.chat.completions.create({
-    model: model,  // 可根据需要修改模型
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt }
-    ],
-    temperature: 0.2,
-    max_tokens: 65536
-  });
-
-  // 解析返回结果
-  const responseContent = completion.choices[0].message.content.trim();
-
-  try {
-    // 尝试将返回内容解析为JSON数组
-    const parsedResults = JSON.parse(responseContent);
-    console.log("✅ 大模型返回的snippets结果解析成功:\n", parsedResults);
-    return parsedResults;
-  } catch (error) {
-    console.error("❌ 解析大模型返回的snippets结果失败:", error.message);
-    console.error("原始返回内容:", responseContent);
-    return null;
-  }
 }
 
 /**

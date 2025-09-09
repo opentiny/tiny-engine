@@ -190,7 +190,7 @@ function processTables(tables, mainComponentKey) {
  * @param {number} retries 重试次数，默认为3次
  * @returns {Promise<Array>} 子组件API对象数组
  */
-async function crawlElementPlusAPI(url, retries = 3) {
+async function extractElementPlusApiFromUrl(url, retries = 3) {
 	const browser = await puppeteer.launch({
 		headless: 'new',
 		defaultViewport: { width: 1280, height: 720 },
@@ -493,7 +493,7 @@ async function crawlElementPlusAPI(url, retries = 3) {
 		if (retries > 0) {
 			console.log(`剩余重试次数: ${retries}，正在重试...`);
 			await browser.close();
-			return crawlElementPlusAPI(url, retries - 1);
+			return extractElementPlusApiFromUrl(url, retries - 1);
 		}
 		throw error;
 	} finally {
@@ -511,7 +511,7 @@ if (require.main === module) {
 		process.exit(1);
 	}
 
-	crawlElementPlusAPI(url)
+	extractElementPlusApiFromUrl(url)
 		.then(apiArray => {
 			console.log(`爬取完成，子组件API数组长度: ${apiArray.length}`);
 		})
@@ -521,4 +521,4 @@ if (require.main === module) {
 		});
 }
 
-module.exports = { crawlElementPlusAPI };
+module.exports = { extractElementPlusApiFromUrl };

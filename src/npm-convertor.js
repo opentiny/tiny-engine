@@ -49,11 +49,60 @@ async function batchReadFiles(pathsStr) {
 
   for (const filePath of paths) {
     const content = await readFileContent(filePath);
-    // 提取文件名及后缀（使用path.basename）
+    // 提取文件名及后缀
     const filename = path.basename(filePath);
     result.push({ filename, content });
   }
   return result;
+}
+
+/**
+ * 处理文件内容：分类并拼接不同类型的文件内容
+ * @param {Array<{filename: string, content: string}>} typeFiles - 待处理的文件数组
+ * @returns {Object} 包含各类文件拼接内容的对象
+ */
+function processFileContents(typeFiles) {
+  // 按文件类型分组处理内容
+  const groupedFiles = {
+    ts: [],
+    dts: [],
+    vueDjs: []
+  };
+
+  // 分类文件
+  typeFiles.forEach(({ filename, content }) => {
+    if (filename.endsWith('.ts')) {
+      groupedFiles.ts.push({ filename, content });
+    } else if (filename.endsWith('.d.ts')) {
+      groupedFiles.dts.push({ filename, content });
+    } else if (filename.endsWith('.vue.d.js')) {
+      groupedFiles.vueDjs.push({ filename, content });
+    }
+  });
+
+  // 拼接TS文件内容
+  const tsContentStr = groupedFiles.ts.map(({ filename, content }) =>
+    `### TypeScript文件：${filename}\n\`\`\`typescript\n${content}\n\`\`\``
+  ).join('\n\n') || '无TS类型文件';
+  console.log(`✅ 构建TS文件内容成功，长度为：${tsContentStr.length}`);
+
+  // 拼接d.ts文件内容
+  const dtsContentStr = groupedFiles.dts.map(({ filename, content }) =>
+    `### 类型声明文件：${filename}\n\`\`\`typescript\n${content}\n\`\`\``
+  ).join('\n\n') || '无d.ts类型声明文件';
+  console.log(`✅ 构建d.ts文件内容成功，长度为：${dtsContentStr.length}`);
+
+  // 拼接.vue.d.js文件内容
+  const vueDjsContentStr = groupedFiles.vueDjs.map(({ filename, content }) =>
+    `### Vue编译文件：${filename}\n\`\`\`javascript\n${content}\n\`\`\``
+  ).join('\n\n') || '无.vue.d.js编译文件';
+  console.log(`✅ 构建.vue.d.js文件内容成功，长度为：${vueDjsContentStr.length}`);
+
+  return {
+    tsContentStr,
+    dtsContentStr,
+    vueDjsContentStr
+  };
 }
 
 /**
@@ -151,21 +200,10 @@ function extractSubComponentName(componentFullName) {
  * @returns {Array<object>} 大模型消息数组
  */
 function buildPrompt(inputData) {
-  const { vueFiles, tsFiles, packageJsonContent, metadata } = inputData;
-
-  // 拼接多Vue文件内容
-  const vueContentStr = vueFiles.map(({ filename, content }) =>
-    `### Vue文件：${filename}\n\`\`\`vue\n${content}\n\`\`\``
-  ).join('\n\n');
-  console.log(`✅ 构建Vue文件内容成功，长度为：${vueContentStr.length}`);
-
-  // 拼接多TS文件内容
-  const tsContentStr = tsFiles.length
-    ? tsFiles.map(({ filename, content }) =>
-      `### TS文件：${filename}\n\`\`\`typescript\n${content}\n\`\`\``
-    ).join('\n\n')
-    : '无TypeScript类型定义文件';
-  console.log(`✅ 构建TS文件内容成功，长度为：${tsContentStr.length}`);
+  const { typeFiles, packageJsonContent, metadata } = inputData;
+  
+  // 调用封装的函数处理文件内容
+  const { tsContentStr, dtsContentStr, vueDjsContentStr } = processFileContents(typeFiles);
 
   return [
     {
@@ -177,34 +215,38 @@ function buildPrompt(inputData) {
       content: `# 任务：Vue 组件 Schema 生成器 (专业级)
 
 ## 输入数据
-### 1. 组件源代码 (.vue)
-\`\`\`vue
-${vueContentStr}
-\`\`\`
-
-### 2. TypeScript 类型定义 (.ts)
+### 1. TypeScript 代码 (.ts)
 \`\`\`typescript
 ${tsContentStr}
 \`\`\`
 
-### 3. package.json
+### 2. 类型声明文件 (.d.ts)
+\`\`\`typescript
+${dtsContentStr}
+\`\`\`
+
+### 3. Vue编译文件 (.vue.d.js)
+\`\`\`javascript
+${vueDjsContentStr}
+\`\`\`
+
+### 4. package.json
 \`\`\`json
 ${packageJsonContent}
 \`\`\`
 
-### 4. 组件元数据 (可选)
+### 5. 组件元数据 (可选)
 ${JSON.stringify(metadata || {}, null, 2)}
 
 ---
 
 ## 前置检查：验证输入信息
 **以下项目是必需的：**
-1. 组件源代码 (.vue)
+1. 组件源代码(.ts 或 .d.ts 或 .vue.d.js)
 2. package.json
 
 **以下项目是可选的：**
-1. 组件TypeScript类型定义 (.ts)
-2. 组件元数据
+* 组件元数据
     *   \`中文名称 (zh_CN)\`: 如果未提供，从组件的 \`defineComponent({ name: '...' })\` 中提取 \`name\` 值。
     *   \`图标 (icon)\`: 如果未提供，从组件的 \`defineComponent({ name: '...' })\` 中提取 \`name\` 值。
     *   \`描述 (description)\`
@@ -624,8 +666,7 @@ async function generateMaterialJson(promptMessages) {
 /**
  * 主函数：执行源码转物料JSON流程
  * @param {object} options - 配置选项
- * @param {string} options.vuePath - 逗号分隔的Vue组件路径
- * @param {string} [options.tsPath] - 逗号分隔的TS文件路径
+ * @param {string} options.filePath - 逗号分隔的组件文件路径（支持.ts、.d.ts、.vue.d.js）
  * @param {string} options.packageJsonPath - package.json路径
  * @param {object} [options.metadata] - 组件元数据（可选）
  */
@@ -633,17 +674,15 @@ async function main(options) {
   try {
     console.log(`=== 开始执行组件源码转物料JSON流程 ===`);
 
-    // 1. 批量读取输入文件（Vue、TS支持多路径，package.json单路径）
-    const [vueFiles, tsFiles, packageJsonContent] = await Promise.all([
-      batchReadFiles(options.vuePath), // 多Vue文件：[{path, content}, ...]
-      options.tsPath ? batchReadFiles(options.tsPath) : Promise.resolve([]), // 多TS文件
+    // 1. 批量读取输入文件（支持多种类型文件，package.json单路径）
+    const [typeFiles, packageJsonContent] = await Promise.all([
+      batchReadFiles(options.filePath), // 多类型文件：[{filename, content}, ...]
       readFileContent(options.packageJsonPath) // package.json单文件
     ]);
 
-    // 2. 构建输入数据（新增customPrompt字段）
+    // 2. 构建输入数据
     const inputData = {
-      vueFiles,
-      tsFiles,
+      typeFiles,
       packageJsonContent,
       metadata: options.metadata || {}
     };
@@ -658,7 +697,7 @@ async function main(options) {
     // 5. 保存物料JSON（以时间戳命名，包含所有组件数组）
     const savePaths = saveMaterialJson(materialJsonArray);
 
-    // 6. 新增：适配 postProcessSchemas 格式
+    // 6. 适配 postProcessSchemas 格式
     console.log(`🔄 正在适配 postProcessSchemas 输入格式`);
     const conversionResults = adaptToPostProcessFormat(materialJsonArray);
     if (conversionResults.length === 0) {
@@ -666,13 +705,11 @@ async function main(options) {
     }
     console.log(`✅ 适配完成，共生成 ${conversionResults.length} 个组件的conversionResults`);
 
-    // 7. 新增：调用 postProcessSchemas 进行后续处理
+    // 7. 调用 postProcessSchemas 进行后续处理
     console.log(`=== 开始执行 postProcessSchemas 后续处理 ===`);
     const processedResults = await postProcessSchemas(conversionResults);
 
     console.log(`=== 流程完成 ===`);
-    // console.log(`📌 所有物料文件已保存至：`);
-    // savePaths.forEach(path => console.log(`- ${path}`));
 
     return {
       materialJsonArray,
@@ -685,6 +722,7 @@ async function main(options) {
     process.exit(1);
   }
 }
+
 /**
  * 命令行参数解析
  * @returns {object} 解析后的参数
@@ -703,17 +741,16 @@ function parseCliArgs() {
   }
 
   // 验证必填参数
-  const requiredParams = ['vuePath', 'packageJsonPath'];
+  const requiredParams = ['filePath', 'packageJsonPath'];
   const missingParams = requiredParams.filter(param => !options[param]);
 
   if (missingParams.length > 0) {
     console.error(`❌ 缺少必填参数：${missingParams.join(', ')}`);
     console.log(`\n使用示例：`);
     console.log(`# 基础用法`);
-    console.log(`node code-convertor.js --vuePath ./Table.vue --packageJsonPath ./package.json`);
+    console.log(`node code-convertor.js --filePath ./component.ts,./component.d.ts,./component.vue.d.js --packageJsonPath ./package.json`);
     console.log(`\n参数说明：`);
-    console.log(`--vuePath: Vue组件文件路径（必填）`);
-    console.log(`--tsPath: TypeScript类型文件路径（可选）`);
+    console.log(`--filePath: 组件文件路径（必填，支持.ts、.d.ts、.vue.d.js，多路径用逗号分隔）`);
     console.log(`--packageJsonPath: package.json文件路径（必填）`);
     process.exit(1);
   }
@@ -732,5 +769,6 @@ module.exports = {
   main,
   readFileContent,
   generateMaterialJson,
-  saveMaterialJson
+  saveMaterialJson,
+  processFileContents // 导出新封装的函数
 };
