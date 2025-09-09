@@ -15,7 +15,7 @@
       "subName": "",
       "destructuring": false,
       "main": "",
-      "cdnLink": "https://unpkg.com/axios@1.0.0/dist/esm/axios.js"
+      "cdnLink": "https://registry.npmmirror.com/axios/1.0.0/files/dist/esm/axios.js"
     },
     "app": 1,
     "category": "utils",
