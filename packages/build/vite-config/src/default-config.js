@@ -21,6 +21,7 @@ const nodeModulesPolyfillPlugin = nodeModulesPolyfillPluginCjs.default
 const visualizer = visualizerCjs.default
 
 const origin = 'http://localhost:9090/'
+const logger = console
 
 const getDefaultConfig = (engineConfig) => {
   const { root } = engineConfig
@@ -143,12 +144,40 @@ export function useTinyEngineBaseConfig(engineConfig) {
   })
   const config = getDefaultConfig(engineConfig)
 
+  if (
+    Array.isArray(engineConfig.iconDirs) &&
+    engineConfig.iconDirs.some(
+      (item) => typeof item === 'string' && item.includes('node_modules/@opentiny/tiny-engine/assets')
+    )
+  ) {
+    logger.warn(
+      [
+        '【TinyEngine 提示】检测到 iconDirs 使用了已废弃的 "node_modules/@opentiny/tiny-engine/assets" 路径。',
+        '内置 SVG 图标已预编译，无需在 vite.config.js 中配置指向 node_modules 的 iconDirs。',
+        '仅当需要“自定义图标”时，请改为使用项目本地目录，例如：',
+        '  iconDirs: [path.resolve(__dirname, "./node_modules/@opentiny/tiny-engine/assets/")]',
+        '替换为：',
+        '  iconDirs: [path.resolve(__dirname, "./assets/")]',
+        '并将自定义 SVG 图标放入项目的 assets 目录。',
+        '若没有自定义图标，可直接删除整个 iconDirs 配置。'
+      ].join('\n')
+    )
+  }
+
   config.plugins.push(
     treeShakingPlugin(engineConfig.registryPath),
     createSvgIconsPlugin({
-      iconDirs: engineConfig.iconDirs || [],
+      iconDirs: [
+        // 源码调试时，需要手动注入图标
+        ...(engineConfig.useSourceAlias
+          ? [path.resolve(engineConfig.root, 'node_modules/@opentiny/tiny-engine/assets')]
+          : []),
+        // 自定义图标
+        ...(engineConfig.iconDirs || [])
+      ],
       symbolId: 'icon-[name]',
-      inject: 'body-last'
+      inject: 'body-last',
+      customDomId: 'custom-icons'
     }),
     monacoEditorPluginInstance,
     htmlUpgradeHttpsPlugin(mode),
@@ -164,7 +193,6 @@ export function useTinyEngineBaseConfig(engineConfig) {
 
   // 添加本地化CDN插件支持
   if (isLocalImportMap) {
-    const logger = console
     logger.log('[local-cdn-plugin]: Initializing local CDN plugin')
 
     const importMapPlugins = importMapLocalPlugin({

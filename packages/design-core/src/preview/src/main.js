@@ -16,6 +16,7 @@ import { mergeRegistry, initServices } from '@opentiny/tiny-engine-meta-register
 import './styles/vars.less'
 import defaultRegistry from './previewDefaultRegistry.js'
 import App from './App.vue'
+import 'virtual:svg-icons-register'
 
 export const initPreview = ({ registry, lifeCycles = {} }) => {
   const { beforeAppCreate } = lifeCycles
