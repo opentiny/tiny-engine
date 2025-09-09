@@ -16,7 +16,7 @@ export default () => {
     },
     plugins: [vue(), vueJsx()],
     define: {
-      '${processStr.join('.')}': { ...${processStr.join('.')} }
+      '${processStr.join('.')}': { }
     },
     build: {
       minify: true,
