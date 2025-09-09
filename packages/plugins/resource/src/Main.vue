@@ -1,5 +1,175 @@
 <template>
-  <div>Main</div>
+  <div class="plugin-resource">
+    <plugin-panel
+      :title="title"
+      :fixed-name="PLUGIN_NAME.Resource"
+      :fixedPanels="fixedPanels"
+      @close="pluginPanelClosed"
+      :docsContent="docsContent"
+      :isShowDocsIcon="true"
+    >
+      <template #header>
+        <svg-button
+          class="add-collection-icon"
+          name="add-collection"
+          placement="bottom"
+          tips="新建分组"
+          @click="openCategoryForm"
+        ></svg-button>
+      </template>
+      <template #content>
+        <div class="resouce-list">
+          <div
+            v-for="item in resourceList"
+            :class="['resource-item', { 'active-item': item.active }]"
+            @click="openResourceList(item)"
+          >
+            <span>
+              <svg-icon name="plugin-icon-data"></svg-icon>
+              <span>{{ item.name }}</span>
+            </span>
+            <svg-icon name="setting" class="item-setting" @click.stop="openCategoryForm(item)"></svg-icon>
+          </div>
+        </div>
+        <search-empty :isShow="!resourceList?.length" />
+      </template>
+    </plugin-panel>
+    <resource-setting @create-group="createCategory"></resource-setting>
+    <resource-list></resource-list>
+  </div>
 </template>
-<script setup></script>
-<style lang="less" scoped></style>
+<script>
+import { ref, reactive, provide, onMounted } from 'vue'
+import { useLayout, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
+import ResourceSetting, { openResourceSettingPanel, closeResourceSettingPanel } from './ResourceSetting.vue'
+import ResourceList, { openResourceListPanel, closeResourceListPanel } from './ResourceList.vue'
+import { fetchResourceGroupByAppId } from './js/http'
+export default {
+  components: {
+    PluginPanel,
+    SvgButton,
+    SearchEmpty,
+    ResourceSetting,
+    ResourceList
+  },
+  props: {
+    title: {
+      type: String,
+      default: '资源管理'
+    },
+    fixedPanels: {
+      type: Array
+    }
+  },
+  emits: ['close'],
+  setup(props, { emit }) {
+    const { PLUGIN_NAME } = useLayout()
+    const docsContent = '在这里新增图片资源，包括上传图片和使用uri。'
+
+    const panelState = reactive({
+      emitEvent: emit
+    })
+
+    provide('panelState', panelState)
+
+    const resourceList = ref([])
+
+    const pluginPanelClosed = () => {
+      closeResourceListPanel()
+      closeResourceSettingPanel()
+      emit('close')
+    }
+
+    const openCategoryForm = (data) => {
+      if (data) {
+        setItemActive(data)
+        openResourceSettingPanel(data)
+      } else {
+        openResourceSettingPanel()
+      }
+      closeResourceListPanel()
+    }
+
+    const getCategoryList = () => {
+      fetchResourceGroupByAppId().then(res => {
+        resourceList.value = res
+      })
+    }
+
+    const setItemActive = (data) => {
+      resourceList.value.forEach((item) => {
+        if (data.id === item.id) {
+          item.active = true
+        } else {
+          item.active = false
+        }
+      })
+    }
+
+    const createCategory = () => {
+      getCategoryList()
+    }
+
+    const updateCategory = (data) => {
+      resourceList.value = data
+    }
+
+    const openResourceList = (data) => {
+      setItemActive(data)
+      openResourceListPanel(data)
+      closeResourceSettingPanel()
+    }
+
+    onMounted(() => {
+      getCategoryList()
+    })
+
+    return {
+      PLUGIN_NAME,
+      docsContent,
+      resourceList,
+      pluginPanelClosed,
+      openCategoryForm,
+      openResourceList,
+      createCategory,
+      updateCategory
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+.resouce-list {
+  margin: 8px 0;
+
+  .resource-item {
+    padding: 0 16px;
+    height: 32px;
+    line-height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    .item-setting {
+      display: none;
+    }
+    .svg-icon {
+      color: #808080;
+      margin-right: 4px;
+    }
+    &:hover {
+      background-color: #f5f5f5;
+      .item-setting {
+        display: inline;
+      }
+    }
+  }
+  .active-item {
+    font-weight: 600;
+    background-color: #f5f5f5;
+  }
+}
+.plugin-resource {
+  width: 100%;
+}
+</style>
