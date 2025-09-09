@@ -21,6 +21,7 @@
         <div class="resouce-list">
           <div
             v-for="item in resourceList"
+            :key="item.id"
             :class="['resource-item', { 'active-item': item.active }]"
             @click="openResourceList(item)"
           >
@@ -40,7 +41,7 @@
 </template>
 <script>
 import { ref, reactive, provide, onMounted } from 'vue'
-import { useLayout, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import ResourceSetting, { openResourceSettingPanel, closeResourceSettingPanel } from './ResourceSetting.vue'
 import ResourceList, { openResourceListPanel, closeResourceListPanel } from './ResourceList.vue'
@@ -81,6 +82,16 @@ export default {
       emit('close')
     }
 
+    const setItemActive = (data) => {
+      resourceList.value.forEach((item) => {
+        if (data.id === item.id) {
+          item.active = true
+        } else {
+          item.active = false
+        }
+      })
+    }
+
     const openCategoryForm = (data) => {
       if (data) {
         setItemActive(data)
@@ -92,19 +103,16 @@ export default {
     }
 
     const getCategoryList = () => {
-      fetchResourceGroupByAppId().then(res => {
-        resourceList.value = res
-      })
-    }
-
-    const setItemActive = (data) => {
-      resourceList.value.forEach((item) => {
-        if (data.id === item.id) {
-          item.active = true
-        } else {
-          item.active = false
-        }
-      })
+      fetchResourceGroupByAppId()
+        .then((res) => {
+          resourceList.value = res
+        })
+        .catch((error) => {
+          useNotify({
+            type: 'error',
+            message: error
+          })
+        })
     }
 
     const createCategory = () => {

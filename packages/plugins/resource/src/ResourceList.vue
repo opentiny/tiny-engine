@@ -29,7 +29,7 @@
           </div>
         </div>
         <div class="source-list-wrap">
-          <div v-for="item in state.sourceList" class="source-list-item">
+          <div v-for="item in state.sourceList" :key="item.id" class="source-list-item">
             <div class="source-image-wrap">
               <img :src="item.thumbnailUrl ?? item.resourceUrl" />
               <tiny-checkbox
@@ -78,6 +78,7 @@
           :multiple="true"
           :auto-upload="false"
           :show-file-list="false"
+          action="#"
           @change="chooseFileChange"
         >
           <template #trigger>
@@ -205,9 +206,7 @@ export default {
     SearchEmpty,
     TinyIconPopup: iconPopup()
   },
-  props: {},
-  emits: ['close'],
-  setup(props, { emit }) {
+  setup() {
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const { toClipboard } = useClipboard()
     const { confirm } = useModal()
@@ -228,20 +227,23 @@ export default {
     const addSourceData = ref([])
 
     const validRules = {
-      name: [{ required: true, message: '资源名称必填' }, {
-        type: 'string',
-        validator: ({ row }, value) => {
-          return new Promise((resolve, reject) => {
-            if (!/^[a-zA-Z0-9_-]+\.(png|jpg|jpeg|svg)$/.test(value)) {
-              reject(new Error('资源名成只能包含字母、数字、_和-等字符，且须以文件后缀名结尾'))
-            } else if (addSourceData.value.find(item => item._RID !== row._RID && item.name === value)) {
-              reject(new Error('已存在的资源名称'))
-            } else {
-              resolve()
-            }
-          })
+      name: [
+        { required: true, message: '资源名称必填' },
+        {
+          type: 'string',
+          validator: ({ row }, value) => {
+            return new Promise((resolve, reject) => {
+              if (!/^[a-zA-Z0-9_-]+\.(png|jpg|jpeg|svg)$/.test(value)) {
+                reject(new Error('资源名成只能包含字母、数字、_和-等字符，且须以文件后缀名结尾'))
+              } else if (addSourceData.value.find((item) => item._RID !== row._RID && item.name === value)) {
+                reject(new Error('已存在的资源名称'))
+              } else {
+                resolve()
+              }
+            })
+          }
         }
-      }],
+      ],
       resourceUrl: {
         type: 'string',
         validator: ({ row }, value) => {
@@ -337,7 +339,7 @@ export default {
               })
               .filter((source) => source !== null)
           })
-            .then((res) => {
+            .then(() => {
               getSourceList()
             })
             .catch((error) => {
@@ -367,14 +369,14 @@ export default {
             description: state.group.description,
             resources: state.sourceList
               .map((source) => {
-                if (selectedSources.value.find(item => item.id === source.id)) {
+                if (selectedSources.value.find((item) => item.id === source.id)) {
                   return null
                 }
                 return { id: source.id }
               })
               .filter((source) => source !== null)
           })
-            .then((res) => {
+            .then(() => {
               getSourceList()
             })
             .catch((error) => {
@@ -422,7 +424,6 @@ export default {
 
     const submitSourceAdd = () => {
       addSourceGridRef.value.validate((valid) => {
-        console.log(valid)
         if (!valid) {
           return
         }
@@ -436,7 +437,7 @@ export default {
           }
         })
         batchCreateResource(params)
-          .then((res) => {
+          .then(() => {
             getSourceList()
             enableUrlForm.value = false
             addSourceData.value = []
@@ -456,7 +457,7 @@ export default {
 
     watch(
       () => state.group.id,
-      (groupId) => {
+      () => {
         getSourceList()
       }
     )

@@ -17,13 +17,14 @@
         </div>
         <div class="source-content">
           <div class="source-filter">
-            <tiny-select v-model="sourceCategory" :options="categoryOptions" placeholder="请选择分组" @change="categoryChange"> </tiny-select>
-            <tiny-search
-              class="search"
-              v-model="searchWords"
-              placeholder="按资源名称搜索"
-              clearable
+            <tiny-select
+              v-model="sourceCategory"
+              :options="categoryOptions"
+              placeholder="请选择分组"
+              @change="categoryChange"
             >
+            </tiny-select>
+            <tiny-search class="search" v-model="searchWords" placeholder="按资源名称搜索" clearable>
               <template #prefix>
                 <tiny-icon-search />
               </template>
@@ -45,7 +46,12 @@
           <div class="source-list">
             <div v-for="(item, index) in sourceList" :key="item.id" class="source-item">
               <img :src="item.thumbnailUrl ?? item.resourceUrl" />
-              <tiny-radio v-model="selectedSourceIndex" @change="selectSource(index)" :label="index" text=""></tiny-radio>
+              <tiny-radio
+                v-model="selectedSourceIndex"
+                @change="selectSource(index)"
+                :label="index"
+                text=""
+              ></tiny-radio>
               <div class="source-name-wrap">
                 <span :title="item.name">{{ item.name }}</span>
               </div>
@@ -68,12 +74,12 @@
   </div>
 </template>
 <script>
-import { ref, reactive, watch } from 'vue'
-import { Popover, Button, Input, Search, Select, Divider, RadioGroup, Radio } from '@opentiny/vue'
+import { ref, watch } from 'vue'
+import { Popover, Button, Input, Search, Select, Divider, Radio } from '@opentiny/vue'
 import { iconClose, iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
-import { fetchResourceListByGroupId, fetchResourceGroupByAppId } from './http'
+import { fetchResourceGroupByAppId } from './http'
 
 const isShow = ref(false)
 
@@ -94,7 +100,6 @@ export default {
     TinySelect: Select,
     TinyDivider: Divider,
     TinyRadio: Radio,
-    TinyRadioGroup: RadioGroup,
     SearchEmpty,
     TinyIconClose: iconClose(),
     TinyIconSearch: iconSearch()
@@ -126,26 +131,28 @@ export default {
     const selectedSourceIndex = ref()
 
     const getResourceData = () => {
-      fetchResourceGroupByAppId().then((res) => {
-        categoryData.value = res
-        categoryOptions.value = res.map((item) => ({ label: item.name, value: item.id, resources: item.resources }))
-        if (categoryOptions.value.length) {
-          sourceCategory.value = categoryOptions.value[0].value
-          sourceOriginList.value = categoryOptions.value[0].resources
-          sourceList.value = categoryOptions.value[0].resources
-          openPopover()
-        }
-      }).catch(error => {
-        useNotify({
-          type: 'error',
-          message: error
+      fetchResourceGroupByAppId()
+        .then((res) => {
+          categoryData.value = res
+          categoryOptions.value = res.map((item) => ({ label: item.name, value: item.id, resources: item.resources }))
+          if (categoryOptions.value.length) {
+            sourceCategory.value = categoryOptions.value[0].value
+            sourceOriginList.value = categoryOptions.value[0].resources
+            sourceList.value = categoryOptions.value[0].resources
+            openPopover()
+          }
         })
-      })
+        .catch((error) => {
+          useNotify({
+            type: 'error',
+            message: error
+          })
+        })
     }
 
     const categoryChange = () => {
-      sourceOriginList.value = categoryData.value.find(item => item.id === sourceCategory.value).resources
-      sourceList.value = sourceOriginList.value.filter(item => item.name.includes(searchWords.value))
+      sourceOriginList.value = categoryData.value.find((item) => item.id === sourceCategory.value).resources
+      sourceList.value = sourceOriginList.value.filter((item) => item.name.includes(searchWords.value))
     }
 
     const selectSource = (sourceIndex) => {
@@ -164,7 +171,7 @@ export default {
     watch(
       () => searchWords.value,
       () => {
-        sourceList.value = sourceOriginList.value.filter(item => item.name.includes(searchWords.value))
+        sourceList.value = sourceOriginList.value.filter((item) => item.name.includes(searchWords.value))
       }
     )
 
@@ -286,7 +293,7 @@ export default {
       gap: 16px;
 
       .empty-wrap {
-        width: 100%
+        width: 100%;
       }
 
       .source-item {
