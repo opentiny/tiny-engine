@@ -86,7 +86,8 @@ export default {
         icon: 'dark',
         oppositeTheme: 'light'
       }
-    ]
+    ],
+    enableTailWindCSS: true
   },
   toolbars: [Breadcrumb, Media, Lang]
 }
