@@ -1,0 +1,65 @@
+{
+  "basicInfo": {
+    "name": "h1",
+    "description": "h1 + p",
+    "version": "span.el-tag__content"
+  },
+  "components": [
+    {
+      "name": "Button",
+      "selector": "",
+      "tables": {
+        "properties": "h3:contains('Button Attributes') + .vp-table",
+        "events": "h3:contains('Events') + .vp-table",
+        "slots": "h3:contains('Button Slots') + .vp-table",
+        "methods": "h3:contains('Methods') + .vp-table"
+      },
+      "fieldMapping": {
+        "properties": {
+          "name": "属性名",
+          "description": "说明",
+          "type": "类型",
+          "default": "默认值"
+        },
+        "events": {
+          "name": "事件名",
+          "description": "说明",
+          "type": "类型",
+          "functionParams": "回调参数"
+        },
+        "slots": {
+          "name": "插槽名",
+          "description": "说明"
+        },
+        "methods": {
+          "name": "方法名",
+          "description": "说明",
+          "type": "类型",
+          "functionParams": "参数"
+        }
+      }
+    },
+    {
+      "name": "ButtonGroup",
+      "selector": "",
+      "tables": {
+        "properties": "h3:contains('ButtonGroup Attributes') + .vp-table",
+        "events": "h3:contains('ButtonGroup Events') + .vp-table"
+      },
+      "fieldMapping": {
+        "properties": {
+          "name": "属性名",
+          "description": "说明",
+          "type": "类型",
+          "default": "默认值"
+        },
+        "events": {
+          "name": "事件名",
+          "description": "说明",
+          "type": "类型",
+          "functionParams": "回调参数"
+        }
+      }
+    }
+  ]
+}

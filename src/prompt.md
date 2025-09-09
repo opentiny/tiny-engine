@@ -208,3 +208,75 @@
 
 请整合以上所有分析结果，生成最终的 JSON 文件。
 
+{
+  "url": "",
+  "name": "",
+  "description": "",
+  "version": "",
+  "components": {
+    "component1-name": {
+      "properties": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "default": ""
+        }
+      ],
+      "events": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "functionParams": ""
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": ""
+        }
+      ],
+      "methods": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "functionParams": ""
+        }
+      ]
+    },
+    "component2-name": {
+      "properties": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "default": ""
+        }
+      ],
+      "events": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "functionParams": ""
+        }
+      ],
+      "slots": [
+        {
+          "name": "",
+          "description": ""
+        }
+      ],
+      "methods": [
+        {
+          "name": "",
+          "description": "",
+          "type": "",
+          "functionParams": ""
+        }
+      ]
+    }
+  }
+}

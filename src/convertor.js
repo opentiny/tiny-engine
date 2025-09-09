@@ -241,28 +241,40 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 #### 6. \`snippets\`（代码片段）
 - 任务：为组件生成**符合实际使用场景**的有代表性、有意义的代码片段数组（snippets），准确体现组件的典型用法和嵌套关系，用于在组件面板中展示。
 - 生成规则：
-  - snippets 数组应包含一个默认代码片段，需完整展示组件的核心用法。
-  - 每个代码片段必须包含以下字段，且配置需遵循统一要求：
-    1. name.zh_CN：填写与组件定义中一致的中文名称，比如 “表格”“表单”“按钮”；
-    2. icon：填写与组件定义中一致的图标标识，比如 “table”“form”“button”；
-    3. screenshot：固定填空字符串（""），预留截图位置；
-    4. snippetName：填写与组件定义中 component 字段一致的完整组件名，比如 “ElTable”“ElForm”；
-    5. category：填写与组件定义中一致的组件库归属，比如 “element-plus”；
-    6. schema：组件核心配置结构，根据组件的信息与特性，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
-  - schema 核心规则
-    1. 结构选择
-      - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法；
+  1. **基础要求**：
+    - snippets 数组应包含一个默认代码片段，需完整展示组件的核心用法。
+    - 每个代码片段必须包含以下字段，且配置需遵循统一要求：
+      1. name.zh_CN：填写与组件定义中一致的中文名称，比如 “表格”“表单”“按钮”；
+      2. icon：填写与组件定义中一致的图标标识，比如 “table”“form”“button”；
+      3. screenshot：固定填空字符串（""），预留截图位置；
+      4. snippetName：填写与组件定义中 component 字段一致的完整组件名，比如 “ElTable”“ElForm”；
+      5. category：填写与组件定义中一致的组件库归属，比如 “element-plus”；
+      6. schema：组件核心配置结构，根据组件的信息与特性，可灵活包含 props（组件自身属性）和 / 或 children（子组件嵌套）。
+  
+  2. **schema 核心规则**：
+    - **结构选择**：
       - 基础组件（如 ElButton、ElInput）：通过 props 配置业务常用属性（如按钮 type、输入框 placeholder），通过 children 承载文本或辅助组件（如按钮嵌套 Text 组件）。
-    2. props 要求
+      - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法。
+      - **父-子依赖组件（重点）**：若组件为“容器型父组件”，且存在“必须依赖的子组件”（无则无法正常使用），则 **必须在 schema.children 中包含对应子组件**，禁止用 Text 组件替代。
+    
+    - **父-子依赖组件的识别标准**（满足任一即可判定）：
+      1. **名称关联性**：父组件名称与子组件名称存在明显从属关系（如 ElTabs ↔ ElTabPane、ElSelect ↔ ElOption、ElDropdown ↔ ElDropdownItem）；
+      2. **功能必要性**：父组件的核心功能依赖子组件实现（如 ElForm 必须包含 ElFormItem 才能承载表单元素、ElSteps 必须包含 ElStep 才能展示步骤）；
+      3. **文档暗示性**：组件 description 或 notes 中明确提到“需配合 XX 组件使用”（如“Tabs 组件需配合 TabPane 组件使用”）。
+
+    - **父-子依赖组件的嵌套要求**（强制）：
+      1. 子组件必须是该父组件的**专用子组件**（如 ElTabs 只能嵌套 ElTabPane，不能嵌套 ElFormItem）；
+      2. 子组件数量需符合实际用法（如 ElTabs 至少嵌套 2 个 ElTabPane，ElSteps 至少嵌套 2 个 ElStep）；
+      3. 子组件需配置**核心必填 props**（如 ElTabPane 需配置 "label" 属性，ElOption 需配置 "label" 和 "value" 属性）；
+      4. 嵌套层级需符合原生用法（如 ElTabs → ElTabPane → ElInput，禁止跨层级嵌套）。
+
+    - **props 要求**：
       - 禁用 “请输入”“示例值” 等泛型占位符，填写真实业务场景值（如 “请输入手机号”“提交”）；
       - 复杂类型属性（数组、对象）需提供完整模拟数据（如表格 data 包含 2-4 条真实结构数据）；
       - 关联属性需严格对应（如 ElTable 的 columns.prop 与 data 中的字段名一致）。
-    3. children 要求
-      - 若有专用子组件，需嵌套组件专用子组件（如 ElForm→ElFormItem、Splitter→SplitterPanel），禁止嵌套无关组件；
-      - 嵌套层级符合组件原生用法（如 ElForm→ElFormItem→ElInput），子组件 props 需与父组件逻辑一致。
 
-  - snippets 正确示例：
-    1. ElButton 按钮示例：
+  3. **snippets 正确示例**：
+    - 示例1：按钮 ElButton（独立组件）：
       "snippets": [
         {
           "name": {
@@ -284,7 +296,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
           "category": "element-plus"
         }
       ]
-    2. 表格（ElTable）示例：
+    - 示例2：表格 ElTable（包含 column 属性）：
       "snippets": [
         {
           "name": {
@@ -339,7 +351,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
           "category": "element-plus"
         }
       ]
-    3. 表单（ElForm）示例：
+    - 示例3：表单 ElForm（包含 ElFormItem 子组件）：
         "snippets": [
           {
             "name": {
