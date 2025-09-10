@@ -30,15 +30,16 @@
   </tiny-popover>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, computed } from 'vue'
+import type { Component } from 'vue'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Popover as TinyPopover } from '@opentiny/vue'
 import { useLayout, useModal, useCanvas, useBlock, useHistory } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
-    TinyPopover
+    TinyPopover: TinyPopover as Component
   },
   props: {
     data: {

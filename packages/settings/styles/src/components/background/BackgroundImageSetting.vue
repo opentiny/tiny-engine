@@ -24,9 +24,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.styles.BackgroundImageSetting */
 import { reactive, onMounted } from 'vue'
+import type { Component } from 'vue'
 import { Tooltip, Checkbox } from '@opentiny/vue'
 import { ColorConfigurator, TabsGroupConfigurator } from '@opentiny/tiny-engine-configurator'
 import InputSelect from '../inputs/InputSelect.vue'
@@ -41,7 +42,7 @@ import { BACKGROUND_PROPERTY } from '../../js/styleProperty'
 export default {
   components: {
     TinyTooltip: Tooltip,
-    TinyCheckbox: Checkbox,
+    TinyCheckbox: Checkbox as Component,
     InputSelect,
     ColorConfigurator,
     TabsGroupConfigurator,

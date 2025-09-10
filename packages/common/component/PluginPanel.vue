@@ -43,6 +43,7 @@
 <script lang="ts">
 import { useThrottleFn } from '@vueuse/core'
 import { inject, ref, computed, onMounted, provide } from 'vue'
+import type { Component } from 'vue'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import { SvgButton } from '@opentiny/tiny-engine-common'
 import { constants } from '@opentiny/tiny-engine-utils'
@@ -52,7 +53,7 @@ import { Tooltip } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     LinkButton,
     CloseIcon,
     SvgButton

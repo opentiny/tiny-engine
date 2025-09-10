@@ -30,12 +30,13 @@
 <script lang="ts">
 /* metaService: engine.plugins.materials.block.BlockGroupSort */
 import { reactive } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { iconDeltaDown } from '@opentiny/vue-icon'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconDeltaDown: iconDeltaDown()
   },
   props: {

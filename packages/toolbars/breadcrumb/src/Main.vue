@@ -40,13 +40,14 @@ import { Breadcrumb, BreadcrumbItem, Button } from '@opentiny/vue'
 import { useBreadcrumb, useLayout, useBlock } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { BlockDeployDialog } from '@opentiny/tiny-engine-common'
+import type { Component } from 'vue'
 
 export default {
   components: {
     TinyBreadcrumb: Breadcrumb,
     TinyBreadcrumbItem: BreadcrumbItem,
     BlockDeployDialog,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     ToolbarBase
   },
   props: {

@@ -5,12 +5,20 @@
       <tiny-tab-item title="可选模型" :name="EXISTING_MODELS">
         <tiny-form ref="robotSettingExistForm" label-position="top" :model="state.existFormData" validate-type="text">
           <tiny-form-item prop="baseUrl" label="大模型平台" label-width="150px">
-            <tiny-select v-model="state.existFormData.baseUrl" :options="AIModelOptions" placeholder="请选择"
-              @change="changeBaseUrl"></tiny-select>
+            <tiny-select
+              v-model="state.existFormData.baseUrl"
+              :options="AIModelOptions"
+              placeholder="请选择"
+              @change="changeBaseUrl"
+            ></tiny-select>
           </tiny-form-item>
           <tiny-form-item prop="model" label="模型名称" label-width="150px">
-            <tiny-select v-model="state.existFormData.model" :options="state.modelOptions" placeholder="请选择"
-              @change="changeModel"></tiny-select>
+            <tiny-select
+              v-model="state.existFormData.model"
+              :options="state.modelOptions"
+              placeholder="请选择"
+              @change="changeModel"
+            ></tiny-select>
           </tiny-form-item>
           <tiny-form-item prop="apiKey" label-width="150px">
             <template #label>
@@ -25,11 +33,19 @@
       </tiny-tab-item>
       <tiny-tab-item title="自定义" :name="CUSTOMIZE">
         <tiny-alert size="normal" :closable="false" description="请使用兼容OpenAI SDK的平台模型服务"></tiny-alert>
-        <tiny-form ref="robotSettingCustomizeForm" label-position="top" :rules="customizeFormRules"
-          :model="state.customizeFormData" validate-type="text">
+        <tiny-form
+          ref="robotSettingCustomizeForm"
+          label-position="top"
+          :rules="customizeFormRules"
+          :model="state.customizeFormData"
+          validate-type="text"
+        >
           <tiny-form-item prop="baseUrl" label="大模型平台baseUrl" label-width="150px">
-            <tiny-input class="filedName" v-model="state.customizeFormData.baseUrl"
-              placeholder="例如：https://api.deepseek.com/v1"></tiny-input>
+            <tiny-input
+              class="filedName"
+              v-model="state.customizeFormData.baseUrl"
+              placeholder="例如：https://api.deepseek.com/v1"
+            ></tiny-input>
           </tiny-form-item>
           <tiny-form-item prop="model" label="模型名称" label-width="150px">
             <tiny-input class="filedName" v-model="state.customizeFormData.model" placeholder="请输入"></tiny-input>
@@ -50,7 +66,11 @@
                 <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
               </tiny-tooltip>
             </template>
-            <tiny-input class="filedName" v-model="state.customizeFormData.maxTokens" placeholder="例如：64000"></tiny-input>
+            <tiny-input
+              class="filedName"
+              v-model="state.customizeFormData.maxTokens"
+              placeholder="例如：64000"
+            ></tiny-input>
           </tiny-form-item>
         </tiny-form>
       </tiny-tab-item>
@@ -65,6 +85,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.robot.RobotSettingPopover */
 import { ref, reactive } from 'vue'
+import type { Component } from 'vue'
 import {
   TinyForm,
   TinyFormItem,
@@ -85,7 +106,7 @@ export default {
     TinyInput,
     TinyButton,
     TinySelect,
-    TinyTooltip,
+    TinyTooltip: TinyTooltip as Component,
     TinyTabs,
     TinyTabItem,
     TinyAlert

@@ -18,10 +18,11 @@
 </template>
 <script lang="ts">
 import { Popover } from '@opentiny/vue'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover as Component
   },
   props: {
     icon: {

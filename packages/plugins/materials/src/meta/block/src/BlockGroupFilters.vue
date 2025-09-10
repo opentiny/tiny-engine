@@ -39,12 +39,13 @@
 <script lang="ts">
 /* metaService: engine.plugins.materials.block.BlockGroupFilters */
 import { computed, reactive } from 'vue'
+import type { Component } from 'vue'
 import { CheckboxGroup, Checkbox, Select, Option } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyCheckboxGroup: CheckboxGroup,
-    TinyCheckbox: Checkbox,
+    TinyCheckboxGroup: CheckboxGroup as Component,
+    TinyCheckbox: Checkbox as Component,
     TinySelect: Select,
     TinyOption: Option
   },

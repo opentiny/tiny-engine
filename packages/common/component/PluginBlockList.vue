@@ -104,8 +104,9 @@
   <search-empty :isShow="!state.data.length && !showAddButton" />
 </template>
 
-<script>
+<script lang="ts">
 import { computed, watch, inject, reactive } from 'vue'
+import type { Component } from 'vue'
 import { format } from '@opentiny/vue-renderless/common/date'
 import { Tooltip } from '@opentiny/vue'
 import PluginBlockItemImg from './PluginBlockItemImg.vue'
@@ -124,7 +125,7 @@ const defaultImg =
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     PluginBlockItemImg,
     SvgButton,
     SearchEmpty,
