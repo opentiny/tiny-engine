@@ -249,13 +249,14 @@ export default {
         validator: ({ row }, value) => {
           const { type } = row
           return new Promise((resolve, reject) => {
-            if (type === 'url' && !value) {
-              reject(new Error('资源URL必填'))
-            } else if (!/^(http|https):\/\/[^\s]+(\.png|\.jpg|\.jpeg|\.svg)$/.test(value)) {
-              reject(new Error('URL须以http或https开头，以文件后缀名结尾'))
-            } else {
-              resolve()
+            if (type === 'url') {
+              if (!value) {
+                reject(new Error('资源URL必填'))
+              } else if (!/^(http|https):\/\/[^\s]+(\.png|\.jpg|\.jpeg|\.svg)$/.test(value)) {
+                reject(new Error('URL须以http或https开头，以文件后缀名结尾'))
+              }
             }
+            resolve()
           })
         }
       }
