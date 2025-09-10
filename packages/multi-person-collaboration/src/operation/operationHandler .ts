@@ -147,7 +147,7 @@ export class OperationHandler {
 
       const childrenArray = yNode.get('children') as Y.Array<Y.Map<any>>
       if (nodeData.children && childrenArray) {
-        this.setYNode(nodeData, yNode)
+        this.setYNode(nodeData.children, childrenArray)
       }
     }
   }
