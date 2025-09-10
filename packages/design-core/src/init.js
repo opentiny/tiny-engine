@@ -31,6 +31,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import App from './App.vue'
 import defaultRegistry from '../registry.js'
 import { registerConfigurators } from './registerConfigurators'
+import 'virtual:svg-icons-register'
 
 const { guid } = utils
 

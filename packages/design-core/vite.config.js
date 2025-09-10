@@ -5,6 +5,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
+import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import { fileURLToPath } from 'node:url'
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
@@ -43,6 +44,12 @@ export default defineConfig({
           dest: '.'
         }
       ]
+    }),
+    createSvgIconsPlugin({
+      iconDirs: [path.resolve(__dirname, './assets/')],
+      symbolId: 'icon-[name]',
+      inject: 'body-last',
+      customDomId: 'tiny-engine-icons'
     })
   ],
   publicDir: false,
