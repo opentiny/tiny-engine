@@ -165,6 +165,7 @@ export default {
 
     const setSource = () => {
       emit('update:modelValue', sourceList.value[selectedSourceIndex.value].resourceUrl)
+      imgSrc.value = sourceList.value[selectedSourceIndex.value].resourceUrl
       closePopover()
     }
 
