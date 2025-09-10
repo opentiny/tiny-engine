@@ -1,6 +1,5 @@
 import { PORT } from '../config'
 import type { UserAwareness } from '../type'
-import { throttle } from '../utils'
 import { useAwareness } from './useAwareness'
 import { useYjs } from './useYjs'
 
@@ -25,7 +24,7 @@ interface DragAwarenessState {
  * 负责通过 Y.js Awareness 同步拖拽操作的实时状态。
  */
 export function useCollabTree(options: UseCollabDragOptions) {
-  const { roomId, currentUser, throttleWait = 50 } = options
+  const { roomId, currentUser } = options
   const { awareness } = useYjs(roomId, { websocketUrl: `ws://localhost:${PORT}` })
 
   const { remoteStates, updateLocalStateField } = useAwareness<DragAwarenessState>(awareness, currentUser)
@@ -41,7 +40,7 @@ export function useCollabTree(options: UseCollabDragOptions) {
   }
 
   // 更新拖拽位置
-  const updateDrag = throttle((currentPosition: { x: number; y: number }): void => {
+  const updateDrag = (currentPosition: { x: number; y: number }): void => {
     const currentDragState = awareness.value?.getLocalState()?.drag as DragAwarenessState['drag']
 
     if (currentDragState && currentDragState.status !== 'end') {
@@ -51,12 +50,12 @@ export function useCollabTree(options: UseCollabDragOptions) {
         currentPosition
       })
     }
-  }, throttleWait)
+  }
 
   // 结束当前的拖拽
   const endDrag = (): void => {
     // 在结束拖拽时，立即取消任何待处理的节流调用
-    updateDrag.cancel()
+    // updateDrag.cancel()
 
     const currentDragState = awareness.value?.getLocalState()?.drag as DragAwarenessState['drag']
 
