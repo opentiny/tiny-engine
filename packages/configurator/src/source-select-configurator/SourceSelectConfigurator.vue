@@ -139,8 +139,8 @@ export default {
             sourceCategory.value = categoryOptions.value[0].value
             sourceOriginList.value = categoryOptions.value[0].resources
             sourceList.value = categoryOptions.value[0].resources
-            openPopover()
           }
+          openPopover()
         })
         .catch((error) => {
           useNotify({
