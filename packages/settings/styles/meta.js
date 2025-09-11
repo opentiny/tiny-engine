@@ -3,5 +3,5 @@ export default {
   title: '样式',
   name: 'style',
   type: 'plugins',
-  icon: 'display-inline'
+  icon: 'style'
 }

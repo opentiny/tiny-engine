@@ -37,19 +37,20 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.event.BindEventsDialogContent */
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { getMetaApi, META_APP } from '@opentiny/tiny-engine-meta-register'
 import { Input, Checkbox } from '@opentiny/vue'
 import { inject } from 'vue'
+import type { Component } from 'vue'
 import { METHOD_TIPS_MAP, NEW_METHOD_TYPE, VALID_VARNAME_RE } from './constants'
 
 export default {
   components: {
     MonacoEditor: VueMonaco,
     TinyInput: Input,
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   props: {
     dialogVisible: Boolean

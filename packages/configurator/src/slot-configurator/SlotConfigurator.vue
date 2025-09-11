@@ -22,15 +22,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect, nextTick } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useProperties, useModal, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconHelpCircle: iconHelpCircle()
   },
   props: {

@@ -61,8 +61,14 @@ MCP工具管理面板允许用户：
 [META_APP.Robot]: {
   options: {
     customCompatibleAIModels: [
-      { label: 'SiliconFlow：DeepSeek-V3', value: 'deepseek-ai/DeepSeek-V3', manufacturer: 'siliconflow' },
-      { label: 'Qwen：qwen-max', value: 'qwen-max', manufacturer: 'qwen' },
+      {
+        label: 'DeepSeek',
+        value: 'https://api.deepseek.com/v1',
+        model: [
+          { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
+          { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
+        ]
+      }
     ]
   }
 },

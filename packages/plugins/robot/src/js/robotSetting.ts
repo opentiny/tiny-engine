@@ -15,11 +15,59 @@ import { reactive } from 'vue'
 import { getOptions, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 
-const DEFAULT_MODELS = [{ label: 'DeepSeek：DeepSeek-V3', value: 'deepseek-chat', manufacturer: 'deepseek' }]
+export const EXISTING_MODELS = 'existingModels'
+export const CUSTOMIZE = 'customize'
+export const VISUAL_MODEL = ['qwen-vl-max', 'qwen-vl-plus']
+export const TALK_TYPE = 'talk'
+export const MCP_TYPE = 'mcp'
+export const BUILD_TYPE = 'build'
+
+export const AIModelOptions = [
+  {
+    label: '阿里云百炼',
+    value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    model: [
+      { label: 'qwen-vl-max', value: 'qwen-vl-max', maxTokens: 32000 },
+      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', maxTokens: 32000 },
+      { label: 'qwen-plus', value: 'qwen-plus', maxTokens: 131072 },
+      { label: 'qwen-max', value: 'qwen-max', maxTokens: 32768 },
+      { label: 'qwen-turbo', value: 'qwen-turbo', maxTokens: 1000000 },
+      { label: 'qwen-long', value: 'qwen-long', maxTokens: 1000000 },
+      { label: 'deepseek-r1', value: 'deepseek-r1', maxTokens: 65792 },
+      { label: 'deepseek-v3', value: 'deepseek-v3', maxTokens: 65792 }
+    ]
+  },
+  {
+    label: 'DeepSeek',
+    value: 'https://api.deepseek.com/v1',
+    model: [
+      { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
+      { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
+    ]
+  },
+  {
+    label: '月之暗面',
+    value: 'https://api.moonshot.cn/v1',
+    model: [
+      { label: 'moonshot-v1-8k', value: 'moonshot-v1-8k', maxTokens: 8192 },
+      { label: 'moonshot-v1-32k', value: 'moonshot-v1-32k', maxTokens: 32768 },
+      { label: 'moonshot-v1-128k', value: 'moonshot-v1-128k', maxTokens: 131072 }
+    ]
+  }
+]
 
 export const getAIModelOptions = () => {
   const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
-  return aiRobotOptions.length ? aiRobotOptions : DEFAULT_MODELS
+  return aiRobotOptions.length ? aiRobotOptions : AIModelOptions
+}
+
+export const defaultSelectedModel = {
+  label: getAIModelOptions()[0].label,
+  activeName: EXISTING_MODELS,
+  baseUrl: getAIModelOptions()[0].value,
+  model: getAIModelOptions()[0].model[0].value,
+  maxTokens: getAIModelOptions()[0].model[0].maxTokens,
+  apiKey: ''
 }
 
 // 这里存放的是aichat的响应式数据
@@ -71,4 +119,47 @@ export const initBlockList = async () => {
     // 捕获错误
     throw new Error('获取block列表失败', { cause: err })
   }
+}
+
+export const isValidOperation = (operation) => {
+  const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
+
+  if (typeof operation !== 'object' || operation === null) {
+    return false
+  }
+  // 检查操作类型是否有效
+  if (!operation.op || !allowedOps.includes(operation.op)) {
+    return false
+  }
+  // 检查path字段是否存在且为字符串
+  if (!operation.path || typeof operation.path !== 'string') {
+    return false
+  }
+  // 根据操作类型检查其他必需字段
+  switch (operation.op) {
+    case 'add':
+    case 'replace':
+    case 'test':
+      if (!('value' in operation)) {
+        return false
+      }
+      break
+    case 'move':
+    case 'copy':
+      if (!operation.from || typeof operation.from !== 'string') {
+        return false
+      }
+      break
+  }
+
+  return true
+}
+
+export const isValidFastJsonPatch = (patch) => {
+  if (Array.isArray(patch)) {
+    return patch.every(isValidOperation)
+  } else if (typeof patch === 'object' && patch !== null) {
+    return isValidOperation(patch)
+  }
+  return false
 }

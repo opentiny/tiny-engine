@@ -106,6 +106,7 @@
 <script lang="ts">
 /* metaService: engine.layout.DesignPlugins */
 import { reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useLayout, usePage, META_APP, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
@@ -114,9 +115,9 @@ import { PublicIcon, PluginRightMenu } from '@opentiny/tiny-engine-common'
 export default {
   components: {
     PluginRightMenu,
-    VueDraggableNext,
-    TinyPopover: Popover,
-    TinyTooltip: Tooltip,
+    VueDraggableNext: VueDraggableNext as Component,
+    TinyPopover: Popover as Component,
+    TinyTooltip: Tooltip as Component,
     PublicIcon
   },
   props: {

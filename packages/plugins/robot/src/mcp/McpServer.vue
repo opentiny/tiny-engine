@@ -2,7 +2,6 @@
   <div :class="['button-wrapper', activeCount > 0 ? 'active' : '']" @click="handleVisibleToggle">
     <div class="button">
       <icon-plugin class="plugin-common_icon" />
-      <span class="plugin-common_text">MCP</span>
     </div>
   </div>
   <div class="robot-mcp-server-picker">
@@ -126,12 +125,13 @@ onMounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   border: 1px solid rgb(194, 194, 194);
   border-radius: 999px;
   cursor: pointer;
   box-sizing: border-box;
+  background-color: var(--te-common-bg-container);
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.08);

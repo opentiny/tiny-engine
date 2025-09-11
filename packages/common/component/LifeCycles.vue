@@ -84,8 +84,9 @@
   </tiny-dialog-box>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, ref, watchEffect, onBeforeUnmount } from 'vue'
+import type { Component } from 'vue'
 import { Button, DialogBox, Popover, Search } from '@opentiny/vue'
 import { useModal, usePage, useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
@@ -100,7 +101,7 @@ const { OPEN_DELAY } = constants
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     TinyDialogBox: DialogBox,
     TinySearch: Search,
     TinyButton: Button,

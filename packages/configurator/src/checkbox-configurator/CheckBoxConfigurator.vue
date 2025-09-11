@@ -2,13 +2,14 @@
   <tiny-checkbox v-model="checked" @change="change"></tiny-checkbox>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   props: {
     modelValue: { type: Boolean, default: false }
