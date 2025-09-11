@@ -1,10 +1,14 @@
 <template>
   <div class="robot">
-    <div title="AI对话框" class="robot-img">
-      <svg-icon name="AI" @click="openAIRobot"></svg-icon>
-    </div>
-    <Teleport to="body">
-      <div class="robot-chat-container">
+    <toolbar-base
+      content="AI对话框"
+      :icon="options.icon?.default || options?.icon"
+      :options="options"
+      @click-api="openAIRobot"
+    >
+    </toolbar-base>
+    <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
+      <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
         <tr-container
           v-if="robotVisible"
           v-model:fullscreen="fullscreen"
@@ -89,8 +93,8 @@
                 </div>
               </template>
               <template #footer-left>
-                <mcp-server :position="mcpDrawerPosition" v-if="aiType === MCP_TYPE"></mcp-server>
                 <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === TALK_TYPE"></mcp-server>
               </template>
             </tr-sender>
           </template>
@@ -119,19 +123,20 @@ import {
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
 import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
   TrWelcome,
   TrPrompts,
   TrBubbleList,
   TrSender,
-  TrFeedback,
   TrAttachments,
   TrBubbleProvider
 } from '@opentiny/tiny-robot'
 import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
 import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
+import { utils } from '@opentiny/tiny-engine-utils'
 import RobotSettingPopover from './RobotSettingPopover.vue'
 import {
   getBlockContent,
@@ -146,7 +151,7 @@ import {
 } from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
-import { chatStream } from './js/utils'
+import { chatStream, checkComponentNameExists } from './js/utils'
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
@@ -154,12 +159,17 @@ import LoadingRenderer from './mcp/LoadingRenderer.vue'
 import { sendMcpRequest, serializeError } from './mcp/utils'
 import type { RobotMessage } from './mcp/types'
 import RobotTypeSelect from './RobotTypeSelect.vue'
+import McpIconComponent from './icon-prompt/mcp-icon.vue'
+import PageIconComponent from './icon-prompt/page-icon.vue'
+import StudyIconComponent from './icon-prompt/study-icon.vue'
+import { jsonrepair } from 'jsonrepair'
 
 export default {
   components: {
     TinyPopover: TinyPopover as unknown,
     TinyDialogBox: TinyDialogBox as unknown,
     RobotSettingPopover,
+    ToolbarBase,
     TrContainer,
     TrWelcome,
     TrPrompts,
@@ -171,6 +181,12 @@ export default {
     McpServer,
     TrBubbleProvider,
     RobotTypeSelect
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
   },
   emits: ['close-chat'],
   setup() {
@@ -193,9 +209,11 @@ export default {
     const showPreview = ref(false)
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
-    const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
+    const MESSAGE_TIP = '已生成新的页面效果。'
     const aiType = ref(TALK_TYPE)
     const chatContainerRef = ref(null)
+    const showTeleport = ref(false)
+    const { deepClone, string2Obj, reactiveObj2String: obj2String } = utils
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -252,7 +270,7 @@ export default {
           return item
         })
       }
-      if (aiType.value === MCP_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
         firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
       }
 
@@ -280,19 +298,20 @@ export default {
       id
     })
 
-    const setSchema = () => {
+    const setSchema = async (schema: any) => {
       const value = {
         ...pageState.pageSchema,
-        ...currentSchema.value,
+        ...schema,
         componentName: pageState.pageSchema.componentName
       }
       importSchema(value)
       setSaved(false)
       showPreview.value = false
+      await nextTick()
     }
 
     // 处理响应
-    const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }) => {
+    const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }, currentJson) => {
       try {
         if (aiType.value === BUILD_TYPE) {
           const regex = /```json([\s\S]*?)```/
@@ -301,7 +320,7 @@ export default {
           if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
             const newValue = JSON.parse(match[1])
             // 使用 applyPatch 修改 Schema
-            const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+            const result = newValue.reduce(jsonpatch.applyReducer, currentJson)
 
             sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
             sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
@@ -333,7 +352,7 @@ export default {
     // 发送流式请求
     const sendStreamRequest = async () => {
       const requestData = getSendSeesionProcess()
-      if (useMcpServer().isToolsEnabled && aiType.value === MCP_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
         try {
           requestLoading.value = true
           await scrollContent()
@@ -369,6 +388,9 @@ export default {
 
         let streamContent = ''
         const chatId = Date.now().toString()
+        const currentJson = deepClone(pageState.pageSchema)
+        let lastExecutionTime = 0
+        const throttleDelay = 3000
         await chatStream(
           {
             requestUrl: '/app-center/api/ai/chat',
@@ -386,6 +408,24 @@ export default {
                 }
                 streamContent += choice.delta.content
                 messages.value[messages.value.length - 1].content += choice.delta.content
+                const currentTime = Date.now()
+                if (currentTime - lastExecutionTime > throttleDelay) {
+                  try {
+                    const repaired = jsonrepair(streamContent)
+                    const parsedJson = JSON.parse(repaired)
+                    const result = parsedJson.reduce((acc, patch) => {
+                      return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
+                    }, currentJson)
+                    const editorValue = string2Obj(obj2String(result))
+
+                    if (editorValue && checkComponentNameExists(result)) {
+                      setSchema(result)
+                    }
+                  } catch (error) {
+                    // error
+                  }
+                  lastExecutionTime = currentTime
+                }
               }
             },
             onError: (error) => {
@@ -397,14 +437,17 @@ export default {
               console.error('Stream error:', error)
             },
             onDone: () => {
-              handleResponse({
-                id: chatId,
-                chatMessage: {
-                  role: 'assistant',
-                  content: streamContent || '没有返回内容',
-                  name: 'AI'
-                }
-              })
+              handleResponse(
+                {
+                  id: chatId,
+                  chatMessage: {
+                    role: 'assistant',
+                    content: streamContent || '没有返回内容',
+                    name: 'AI'
+                  }
+                },
+                currentJson
+              )
             }
           },
           {
@@ -533,6 +576,9 @@ export default {
     }
 
     onMounted(async () => {
+      setTimeout(() => {
+        showTeleport.value = true
+      }, 1000)
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -606,30 +652,24 @@ export default {
       {
         label: 'MCP工具',
         description: '帮我查询当前的页面列表',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🔧'),
+        icon: h(McpIconComponent),
         badge: 'NEW'
       },
       {
         label: '页面搭建场景',
         description: '给当前页面中添加一个问卷调查表单',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '✨')
+        icon: h(PageIconComponent)
       },
       {
         label: '学习/知识型场景',
         description: 'Vue3 和 React 有什么区别？',
-        icon: h('span', { style: { fontSize: '18px' } as CSSProperties }, '🤔')
+        icon: h(StudyIconComponent)
       }
     ]
 
     // 处理提示项点击事件
     const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       sendContent(item.description, true)
-    }
-
-    const getItemSchema = (item) => {
-      const targetMessage = messages.value.find((message) => message.id && message.id === item.id)
-
-      return targetMessage
     }
 
     // Icon
@@ -639,8 +679,6 @@ export default {
     const aiAvatar = getSvgIcon('AI')
     const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
     const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
-    const saveIcon = getSvgIcon('save', { fontSize: '20px' })
-    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
 
     // 处理文件选择事件
     const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
@@ -723,29 +761,7 @@ export default {
         avatar: aiAvatar,
         maxWidth: '90%',
         contentRenderer: MarkdownRenderer,
-        customContentField: 'renderContent',
-        slots: {
-          footer: ({ bubbleProps }) => {
-            return h(TrFeedback, {
-              style: {
-                display: getItemSchema(bubbleProps)?.schema && aiType.value === BUILD_TYPE ? 'block' : 'none'
-              },
-              actions: [
-                { name: 'run', label: '应用', icon: saveIcon },
-                { name: 'preview', label: '预览', icon: previewIcon }
-              ],
-              onAction(name) {
-                currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
-                if (name === 'preview') {
-                  showPreview.value = true
-                }
-                if (name === 'run') {
-                  setSchema()
-                }
-              }
-            })
-          }
-        }
+        customContentField: 'renderContent'
       },
       user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer },
       system: { hidden: true }
@@ -796,6 +812,7 @@ export default {
       TALK_TYPE,
       MCP_TYPE,
       BUILD_TYPE,
+      showTeleport,
       sendContent,
       endContent,
       changeApiKey,
@@ -817,6 +834,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.robot {
+  margin-right: 8px;
+}
+.robot-chat-container {
+  height: 100%;
+}
 .robot-img {
   display: flex;
   justify-content: center;
@@ -840,8 +863,9 @@ export default {
   container-type: inline-size;
 
   &.tr-container.tr-container {
-    top: var(--base-top-panel-height);
     --tr-container-width: 400px;
+    position: relative;
+    height: 100%;
     .tr-container__dragging-bar {
       display: none;
     }
@@ -897,7 +921,7 @@ export default {
   }
 
   .operations-setting {
-    font-size: 20px;
+    font-size: 28px;
     padding: 4px;
   }
 
@@ -948,9 +972,31 @@ export default {
       font-size: 20px;
     }
   }
+}
 
-  .footer-sender {
-    padding: 10px 15px;
+.robot-chat-container-fullscreen {
+  :deep(.tiny-container) {
+    container-type: inline-size;
+
+    &.tr-container.tr-container {
+      top: var(--base-top-panel-height);
+      position: fixed;
+      height: auto;
+    }
+  }
+  .operations-setting {
+    font-size: 20px;
+  }
+  @media (min-width: 1280px) {
+    .robot-chat-container-content {
+      width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-sender {
+      width: 1280px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
   }
 }
 
@@ -971,6 +1017,9 @@ export default {
         display: none;
       }
     }
+  }
+  .tiny-sender__input-field-wrapper .tiny-textarea__inner {
+    font-size: 20px;
   }
 }
 :deep(.action-buttons__icon) {

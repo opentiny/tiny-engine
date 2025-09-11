@@ -72,6 +72,7 @@
 
 <script lang="ts">
 import { reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 import {
   Checkbox as TinyCheckbox,
   Input as TinyInput,
@@ -87,13 +88,13 @@ import VueMonaco from './VueMonaco.vue'
 
 export default {
   components: {
-    TinyCheckbox,
-    TinyButton,
+    TinyCheckbox: TinyCheckbox as Component,
+    TinyButton: TinyButton as Component,
     TinyDialogBox,
     TinyForm,
     TinyInput,
     TinyFormItem,
-    TinyPopover,
+    TinyPopover: TinyPopover as Component,
     VueMonaco
   },
   props: {

@@ -17,9 +17,10 @@
 
 <script lang="ts">
 import { TinyTooltip } from '@opentiny/vue'
+import type { Component } from 'vue'
 export default {
   components: {
-    TinyTooltip
+    TinyTooltip: TinyTooltip as Component
   },
   props: {
     href: {

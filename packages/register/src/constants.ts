@@ -33,6 +33,7 @@ export const META_APP = {
   Media: 'engine.toolbars.media',
   Collaboration: 'engine.toolbars.collaboration',
   Clean: 'engine.toolbars.clean',
+  Robot: 'engine.toolbars.robot',
   ThemeSwitch: 'engine.toolbars.themeSwitch',
   Refresh: 'engine.toolbars.refresh',
   Save: 'engine.toolbars.save',
@@ -66,8 +67,6 @@ export const META_APP = {
   Schema: 'engine.plugins.schema',
   // 新手帮助/帮助文档
   Help: 'engine.plugins.editorhelp',
-  // AI 插件
-  Robot: 'engine.plugins.robot',
   // 属性设置面板
   Props: 'engine.setting.props',
   // 样式设置面板

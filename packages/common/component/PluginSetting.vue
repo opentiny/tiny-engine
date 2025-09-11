@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { nextTick, reactive, watchEffect, computed } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import { iconPlus } from '@opentiny/vue-icon'
 import ButtonGroup from './ButtonGroup.vue'
@@ -56,7 +57,7 @@ const EVENTS = {
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     SvgButton,
     ButtonGroup
   },

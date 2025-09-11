@@ -7,15 +7,16 @@
   ></tiny-checkbox-group>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect, computed } from 'vue'
+import type { Component } from 'vue'
 import { CheckboxGroup } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 
 export default {
   name: 'CheckboxGroupConfigurator',
   components: {
-    TinyCheckboxGroup: CheckboxGroup
+    TinyCheckboxGroup: CheckboxGroup as Component
   },
   props: {
     modelValue: {
