@@ -13,6 +13,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.appmanage.PageHome */
 import { computed, reactive, watchEffect, inject } from 'vue'
+import type { Component } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { usePage, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
@@ -21,7 +22,7 @@ import http from './http'
 
 export default {
   components: {
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   setup() {
     const { pageSettingState, STATIC_PAGE_GROUP_ID } = usePage()

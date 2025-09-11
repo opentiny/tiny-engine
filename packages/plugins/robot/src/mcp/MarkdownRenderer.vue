@@ -1,57 +1,109 @@
 <template>
-  <div v-html="renderContent" class="robot-markdown-renderer"></div>
+  <div v-html="renderContent" class="markdown-renderer" :class="themeClass"></div>
 </template>
 
 <script setup lang="ts">
-import DOMPurify from 'dompurify'
-import MarkdownIt, { type Options as MarkdownItOptions } from 'markdown-it'
-import hljs from 'highlight.js'
 import { computed } from 'vue'
-import 'highlight.js/styles/github.min.css'
+import DOMPurify from 'dompurify'
+import MarkdownIt, { type Options } from 'markdown-it'
+import hljs from 'highlight.js/lib/core'
+import 'highlight.js/styles/github.css'
 
-const defaultMarkdownItOptions = {
+// 按需加载语言
+import bash from 'highlight.js/lib/languages/bash'
+import javascript from 'highlight.js/lib/languages/javascript'
+import typescript from 'highlight.js/lib/languages/typescript'
+import json from 'highlight.js/lib/languages/json'
+import yaml from 'highlight.js/lib/languages/yaml'
+import xml from 'highlight.js/lib/languages/xml'
+import shell from 'highlight.js/lib/languages/shell'
+
+// 注册语言
+hljs.registerLanguage('bash', bash)
+hljs.registerLanguage('javascript', javascript)
+hljs.registerLanguage('typescript', typescript)
+hljs.registerLanguage('json', json)
+hljs.registerLanguage('yaml', yaml)
+hljs.registerLanguage('xml', xml)
+hljs.registerLanguage('shell', shell)
+
+const props = defineProps({
+  content: {
+    type: String,
+    required: true
+  },
+  theme: {
+    type: String as () => 'light' | 'dark',
+    default: 'light'
+  },
+  options: {
+    type: Object as () => Options,
+    default: () => ({})
+  }
+})
+
+const themeClass = computed(() => `hljs-theme-${props.theme}`)
+
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]!))
+
+const markdownIt = new MarkdownIt({
+  html: true,
   breaks: true,
   typographer: true,
-  highlight: function (str: string, lang: string) {
+  highlight: (str: string, lang: string) => {
     if (lang && hljs.getLanguage(lang)) {
       try {
-        return hljs.highlightAuto(str).value
-      } catch (__) {
+        const { value } = hljs.highlight(str, { language: lang, ignoreIllegals: true })
+        return `<pre class="hljs"><code class="language-${lang}">${value}</code></pre>`
+      } catch (e) {
         /* ignore */
       }
     }
-
-    return str
-  }
-}
-
-const props = defineProps<{
-  type: 'markdown' | 'text'
-  content: string
-  options?: MarkdownItOptions
-}>()
-
-const markdownIt = computed(
-  () =>
-    new MarkdownIt({
-      ...defaultMarkdownItOptions,
-      ...props.options
-    })
-)
+    return `<pre class="hljs"><code>${escapeHtml(str)}</code></pre>`
+  },
+  ...props.options
+})
 
 const renderContent = computed(() => {
-  const htmlContent = markdownIt.value.render(props.content)
-  return DOMPurify.sanitize(htmlContent)
+  return DOMPurify.sanitize(markdownIt.render(props.content))
 })
 </script>
 
-<style lang="less" scoped>
-.robot-markdown-renderer {
+<style lang="less">
+.markdown-renderer {
   word-break: break-word;
-  & > *:first-child {
+
+  pre {
+    border-radius: 6px;
+    padding: 1em;
+    overflow: auto;
+    line-height: 1.45;
+    > code {
+      font-size: 12px;
+    }
+  }
+
+  // TODO: 适配TInyEngine主题，实现跟随主题自动切换
+  /* 亮色主题 */
+  &.hljs-theme-light {
+    pre {
+      background-color: #f6f8fa;
+    }
+  }
+
+  /* 暗色主题 */
+  &.hljs-theme-dark {
+    pre {
+      background-color: #0d1117;
+    }
+  }
+
+  > *:first-child {
     margin-top: 0 !important;
   }
-  & > *:last-child {
+
+  > *:last-child {
     margin-bottom: 0 !important;
   }
 }

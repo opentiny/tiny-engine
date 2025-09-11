@@ -70,9 +70,10 @@
   </tiny-dialog-box>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 /* metaService: engine.setting.props.LifeCycle */
 import { getCurrentInstance, reactive, toRefs } from 'vue'
+import type { Component } from 'vue'
 import { Button, DialogBox, Modal, Popover, Search, Tooltip } from '@opentiny/vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
@@ -85,11 +86,11 @@ export default {
     IconSetting: iconSetting(),
     IconAdd: iconAdd(),
     IconYes: iconYes(),
-    TinyTooltip: Tooltip,
-    TinyPopover: Popover,
+    TinyTooltip: Tooltip as Component,
+    TinyPopover: Popover as Component,
     TinyDialogBox: DialogBox,
     TinySearch: Search,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     MonacoEditor: VueMonaco
   },
 

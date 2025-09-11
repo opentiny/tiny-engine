@@ -23,6 +23,7 @@ const outputSchema = createOutputSchema(i18nDataSchema)
 
 export const getI18n = {
   name: 'get_i18n',
+  title: '获取 I18n 词条',
   description:
     'Retrieve i18n entries from the current TinyEngine low-code application. Can get a specific entry by key or all entries if no key is provided.',
   inputSchema: inputSchema.shape,

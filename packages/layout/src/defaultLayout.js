@@ -24,7 +24,7 @@ export default {
     left: [META_APP.Breadcrumb, META_APP.Lock, META_APP.Logo],
     center: [META_APP.Media],
     right: [
-      [META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
+      [META_APP.Robot, META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
       [META_APP.Preview],
       [META_APP.GenerateCode, META_APP.Save]
     ],

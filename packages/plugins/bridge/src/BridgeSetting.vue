@@ -90,6 +90,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.bridge.BridgeSetting */
 import { computed, onMounted, reactive, ref, watchEffect, nextTick, watch } from 'vue'
+import type { Component } from 'vue'
 import {
   Input as TinyInput,
   Button as TinyButton,
@@ -133,7 +134,7 @@ export default {
     TinyInput,
     TinyButton,
     TinyFormItem,
-    TinyCheckbox,
+    TinyCheckbox: TinyCheckbox as Component,
     PluginSetting,
     MonacoEditor,
     TinyRadioGroup: RadioGroup,

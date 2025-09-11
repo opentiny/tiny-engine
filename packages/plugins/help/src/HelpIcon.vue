@@ -54,6 +54,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.editorhelp.HelpIcon */
 import { reactive, onMounted, ref } from 'vue'
+import type { Component } from 'vue'
 import { Guide, Popover } from '@opentiny/vue'
 import { IconFilletExternalLink } from '@opentiny/vue-icon'
 import { useLayout, META_APP } from '@opentiny/tiny-engine-meta-register'
@@ -64,7 +65,7 @@ const GUIDE_STORAGE_KEY = 'tinyengine_guide'
 export default {
   components: {
     TinyGuide: Guide,
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconFilletExternalLink: IconFilletExternalLink()
   },
   setup() {
@@ -106,7 +107,9 @@ export default {
 
     const toShowStep = () => {
       if (!tinyGuideRef.value?.state?.tour?.isActive()) {
-        state.showStep = !state.showStep
+        setTimeout(() => {
+          state.showStep = !state.showStep
+        }, 1000)
         state.helpBox = false
       }
     }

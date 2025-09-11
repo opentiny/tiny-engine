@@ -10,10 +10,11 @@
 </template>
 <script lang="ts">
 import { Button } from '@opentiny/vue'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyButton: Button
+    TinyButton: Button as Component
   },
   props: {
     icon: {

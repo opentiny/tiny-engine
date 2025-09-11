@@ -1,23 +1,8 @@
 import { z } from 'zod'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { validateParams } = utils
-
-type NodeSchema = z.ZodObject<{
-  componentName: z.ZodString
-  props: z.ZodObject<Record<string, z.ZodTypeAny>, 'strip', z.ZodTypeAny>
-  children: z.ZodArray<z.ZodLazy<any>, 'many'>
-}>
-
-// eslint-disable-next-line @typescript-eslint/no-use-before-define
-const nodeArraySchema = z.lazy(() => nodeSchema)
-
-const nodeSchema: NodeSchema = z.object({
-  componentName: z.string().describe('The name of the component.'),
-  props: z.object({}).describe('The props of the component.'),
-  children: z.array(z.lazy(() => nodeArraySchema)).describe('The children of the component')
-})
 
 const inputSchema = z.object({
   parentId: z
@@ -26,7 +11,13 @@ const inputSchema = z.object({
     .describe(
       'The id of the parent node. If not provided, the new node will be added to the root. if you don\'t know the parentId, you can use the tool "get_page_schema" to get the page schema. if you want to add to page root, just don\'t provide the parentId.'
     ),
-  newNodeData: z.lazy(() => nodeSchema).describe('The new node data.'),
+  newNodeData: z.object({
+    componentName: z.string().describe('The name of the component.'),
+    props: z.record(z.string(), z.any()).describe('The props of the component.'),
+    children: z
+      .array(z.record(z.string(), z.any()))
+      .describe('Array of child nodes; each child has the same shape as newNodeData (recursive tree).')
+  }),
   position: z
     .enum(['before', 'after'])
     .optional()
@@ -60,11 +51,6 @@ export const addNode = {
     const { props = {}, children = [] } = newNodeData
 
     const validateResult = validateParams(args, {
-      componentName: {
-        required: true,
-        message:
-          'Component name is required, if you don\'t know the component name, you can use the tool "get_component_list" to get the component detail.'
-      },
       parentId: {
         validator: (value: string) => {
           const parentNode = useCanvas().getNodeById(value)
@@ -87,15 +73,47 @@ export const addNode = {
       return validateResult.error
     }
 
+    const { getMaterial } = useMaterial()
+    const material = getMaterial(componentName)
+    const isEmptyPlainObject =
+      material &&
+      typeof material === 'object' &&
+      !Array.isArray(material) &&
+      Object.keys(material as Record<string, unknown>).length === 0
+
+    if (!newNodeData.componentName || isEmptyPlainObject) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              errorCode: 'COMPONENT_NAME_REQUIRED',
+              reason: 'Component name is required',
+              userMessage: 'Component name is required. Fetch the available component list.',
+              next_action: {
+                type: 'tool_call',
+                name: 'get_component_list',
+                args: {}
+              }
+            })
+          }
+        ]
+      }
+    }
+
+    const insertData = {
+      componentName,
+      props,
+      children
+    }
+
     useCanvas().operateNode({
       type: 'insert',
       parentId: parentId!,
       // @ts-ignore
-      newNodeData: {
-        componentName,
-        props,
-        children
-      },
+      newNodeData: insertData,
       position: position!,
       referTargetNodeId
     })
@@ -103,11 +121,7 @@ export const addNode = {
     const res = {
       status: 'success',
       message: `Node added successfully`,
-      data: {
-        componentName,
-        props,
-        children
-      }
+      data: insertData
     }
 
     return {
