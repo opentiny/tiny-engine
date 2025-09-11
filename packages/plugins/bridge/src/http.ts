@@ -14,22 +14,22 @@ import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { generateBridge, generateUtil } from '@opentiny/tiny-engine-common/js/vscodeGenerateFile'
 
 // 资源管理 -- 获取列表
-export const fetchResourceList = (appId, type) =>
+export const fetchResourceList = (appId: number, type: 'utils' | 'bridge') =>
   getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/extension/list?app=${appId}&category=${type}`)
 
 // 资源管理 -- 获取资源详情
 export const fetchResourceDetail = () => getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/extension`)
 
 // 资源管理 -- 新增
-export const requestAddReSource = (params) =>
+export const requestAddReSource = (params: Record<string, any>) =>
   getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/extension/create', params)
 
 // 资源管理 -- 修改
-export const requestUpdateReSource = (params) =>
+export const requestUpdateReSource = (params: Record<string, any>) =>
   getMetaApi(META_SERVICE.Http).post(`/app-center/api/apps/extension/update`, params)
 
 // 资源管理 -- 删除
-export const requestDeleteReSource = (params) =>
+export const requestDeleteReSource = (params: string) =>
   getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/extension/delete?${params}`)
 
 // 本地生成桥接工具类
