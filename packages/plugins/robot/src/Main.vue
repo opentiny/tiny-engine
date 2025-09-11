@@ -122,7 +122,7 @@ import {
   type Component
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useHistory, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
@@ -321,6 +321,7 @@ export default {
             const newValue = JSON.parse(match[1])
             // 使用 applyPatch 修改 Schema
             const result = newValue.reduce(jsonpatch.applyReducer, currentJson)
+            useHistory().addHistory()
 
             sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
             sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
