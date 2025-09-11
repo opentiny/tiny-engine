@@ -9,15 +9,16 @@
   </tiny-button-group>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { ButtonGroup } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 
 export default {
   name: 'ButtonGroupConfigurator',
   components: {
-    TinyButtonGroup: ButtonGroup
+    TinyButtonGroup: ButtonGroup as Component
   },
   props: {
     modelValue: {

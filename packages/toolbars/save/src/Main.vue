@@ -57,6 +57,7 @@
 <script lang="ts">
 /* metaService: engine.toolbars.save.Main */
 import { reactive, ref, onUnmounted, onMounted } from 'vue'
+import type { Component } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
@@ -73,10 +74,10 @@ export const api = {
 export default {
   components: {
     VueMonaco,
-    TinyButton: Button,
-    TinyPopover: Popover,
+    TinyButton: Button as Component,
+    TinyPopover: Popover as Component,
     TinyDialogBox: DialogBox,
-    TinyCheckbox: Checkbox,
+    TinyCheckbox: Checkbox as Component,
     TinySelect: Select,
     ToolbarBase
   },

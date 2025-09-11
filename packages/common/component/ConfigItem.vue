@@ -102,6 +102,7 @@
 
 <script lang="ts">
 import { inject, computed, watch, ref, reactive, provide } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Tooltip } from '@opentiny/vue'
 import { IconWriting, IconHelpCircle, IconPlusCircle } from '@opentiny/vue-icon'
 import { typeOf } from '@opentiny/vue-renderless/common/type'
@@ -130,8 +131,8 @@ const hasRule = (required: any, rules: string | any[]) => {
 export default {
   components: {
     MultiTypeSelector,
-    TinyPopover: Popover,
-    TinyTooltip: Tooltip,
+    TinyPopover: Popover as Component,
+    TinyTooltip: Tooltip as Component,
     IconWriting: IconWriting(),
     IconPlusCircle: IconPlusCircle(),
     IconHelpCircle: IconHelpCircle()

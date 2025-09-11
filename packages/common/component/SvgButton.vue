@@ -9,11 +9,12 @@
 
 <script lang="ts">
 import { computed } from 'vue'
+import type { Component } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     tips: {
