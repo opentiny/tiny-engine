@@ -9,6 +9,10 @@
     <template #content>
       <div class="resource-list-content">
         <tiny-button round @click="openAddSourceForm"><svg-icon name="add"></svg-icon>添加资源</tiny-button>
+        <tiny-alert
+          :closable="false"
+          description="资源名称只能包含中文、英文、数字、下划线、中划线、=、+、()、{}、[]等字符，且以文件后缀名为结尾"
+        ></tiny-alert>
         <span class="resource-description">支持上传png、jpg、svg文件，支持批量上传</span>
         <div class="action-wrap">
           <div>
@@ -95,7 +99,7 @@
         :valid-config="{ message: 'inline' }"
         :edit-rules="validRules"
       >
-        <tiny-grid-column field="name" title="资源名称" :show-icon="false" :editor="{}">
+        <tiny-grid-column field="name" title="资源名称" :show-icon="false" width="170" :editor="{}">
           <template #edit="data">
             <span v-if="data.row.type === 'upload'"> {{ data.row.name }} </span>
             <tiny-input
@@ -106,7 +110,7 @@
             ></tiny-input>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column field="resourceUrl" title="资源URL" :show-icon="false" :editor="{}">
+        <tiny-grid-column field="resourceUrl" title="资源URL" :show-icon="false" width="170" :editor="{}">
           <template #edit="data">
             <span v-if="data.row.type === 'upload'"></span>
             <tiny-input
@@ -122,29 +126,19 @@
             <tiny-input v-model="data.row.description" placeholder="请输入资源描述"></tiny-input>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column title="操作">
+        <tiny-grid-column title="操作" width="100">
           <template #default="data">
             <template v-if="$refs.addSourceGridRef && $refs.addSourceGridRef.hasActiveRow(data.row)">
-              <tiny-button size="mini" @click="saveRowEvent(data.row)"> 保存 </tiny-button>
-              <tiny-button size="mini" @click="cancelRowEvent(data)"> 取消 </tiny-button>
+              <tiny-button type="text" @click="saveRowEvent(data.row)"> 保存 </tiny-button>
+              <tiny-button type="text" @click="cancelRowEvent(data)"> 取消 </tiny-button>
             </template>
-            <tiny-popconfirm
-              v-else
-              title="确认要删除该资源吗？"
-              type="info"
-              trigger="click"
-              @confirm="removeSource(data)"
-            >
-              <template #reference>
-                <svg-icon name="delete"></svg-icon>
-              </template>
-            </tiny-popconfirm>
+            <tiny-button v-else type="text" @click="removeSource(data)">删除</tiny-button>
           </template>
         </tiny-grid-column>
       </tiny-grid>
       <template #footer>
-        <tiny-button type="primary" @click="submitSourceAdd" round>确 定</tiny-button>
-        <tiny-button @click="cancelAddSource" round>取 消</tiny-button>
+        <tiny-button type="primary" size="mini" @click="submitSourceAdd" round>确 定</tiny-button>
+        <tiny-button size="mini" @click="cancelAddSource" round>取 消</tiny-button>
       </template>
     </tiny-dialog-box>
   </teleport>
@@ -161,8 +155,8 @@ import {
   Checkbox,
   Popover,
   DialogBox,
-  FileUpload,
-  Popconfirm
+  Alert,
+  FileUpload
 } from '@opentiny/vue'
 import { iconPopup } from '@opentiny/vue-icon'
 import { useLayout, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -200,8 +194,8 @@ export default {
     TinyCheckbox: Checkbox,
     TinyPopover: Popover,
     TinyDialogBox: DialogBox,
+    TinyAlert: Alert,
     TinyFileUpload: FileUpload,
-    TinyPopconfirm: Popconfirm,
     ButtonGroup,
     SearchEmpty,
     TinyIconPopup: iconPopup()
@@ -233,8 +227,9 @@ export default {
           type: 'string',
           validator: ({ row }, value) => {
             return new Promise((resolve, reject) => {
-              if (!/^[a-zA-Z0-9_-]+\.(png|jpg|jpeg|svg)$/.test(value)) {
-                reject(new Error('资源名成只能包含字母、数字、_和-等字符，且须以文件后缀名结尾'))
+              const regex = /^[a-zA-Z0-9_\-=+(){}[\]]+\.(png|jpg|jpeg|svg|PNG|JPG|JPEG|SVG)$/i
+              if (!regex.test(value)) {
+                reject(new Error('资源名称格式错误'))
               } else if (addSourceData.value.find((item) => item._RID !== row._RID && item.name === value)) {
                 reject(new Error('已存在的资源名称'))
               } else {
@@ -252,8 +247,8 @@ export default {
             if (type === 'url') {
               if (!value) {
                 reject(new Error('资源URL必填'))
-              } else if (!/^(http|https):\/\/[^\s]+(\.png|\.jpg|\.jpeg|\.svg)$/.test(value)) {
-                reject(new Error('URL须以http或https开头，以文件后缀名结尾'))
+              } else if (!/^(http|https):\/\/[^\s]+$/.test(value)) {
+                reject(new Error('URL以http或https开头'))
               }
             }
             resolve()
@@ -379,6 +374,7 @@ export default {
           })
             .then(() => {
               getSourceList()
+              selectedSources.value = []
             })
             .catch((error) => {
               useNotify({
@@ -566,7 +562,7 @@ export default {
           left: 0;
           right: 0;
           bottom: 0;
-          text-align: center;
+          text-align: left;
           line-height: 28px;
           width: 185px;
           color: #fff;
@@ -611,6 +607,10 @@ export default {
   }
 }
 
+:deep(.tiny-button.tiny-button.tiny-button--text) {
+  padding: 0;
+}
+
 .actions {
   display: flex;
   flex-direction: column;
@@ -624,5 +624,6 @@ export default {
 .resource-action {
   display: flex;
   gap: 8px;
+  margin-bottom: 16px;
 }
 </style>

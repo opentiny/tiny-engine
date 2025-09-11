@@ -10,8 +10,8 @@
     >
       <template #header>
         <svg-button
-          class="add-collection-icon"
-          name="add-collection"
+          class="add-folder-icon"
+          name="add-folder"
           placement="bottom"
           tips="新建分组"
           @click="openCategoryForm"
@@ -26,7 +26,7 @@
             @click="openResourceList(item)"
           >
             <span>
-              <svg-icon name="plugin-icon-data"></svg-icon>
+              <svg-icon name="plugin-icon-resource"></svg-icon>
               <span>{{ item.name }}</span>
             </span>
             <svg-icon name="setting" class="item-setting" @click.stop="openCategoryForm(item)"></svg-icon>

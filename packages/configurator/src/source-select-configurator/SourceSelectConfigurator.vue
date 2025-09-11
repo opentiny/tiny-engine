@@ -6,12 +6,13 @@
       v-model="isShow"
       :visible-arrow="false"
       :popper-class="['option-popper', 'fixed-left']"
+      height="844"
     >
       <div class="source-wrap">
         <div class="source-title">
           <span>资源</span>
           <div class="right">
-            <tiny-button type="primary" plain @click="setSource"> 确认 </tiny-button>
+            <tiny-button type="primary" size="mini" plain @click="setSource"> 确认 </tiny-button>
             <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
           </div>
         </div>
@@ -205,6 +206,7 @@ export default {
     position: relative;
     width: 150px;
     height: 96px;
+    background-color: #f5f5f5;
     img {
       width: 100%;
       height: 100%;
