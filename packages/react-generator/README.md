@@ -1,8 +1,5 @@
 # @opentiny/tiny-engine-dsl-react
 
-[![pnpm version](https://img.shields.io/pnpm/v/@opentiny/tiny-engine-dsl-react.svg)](https://www.npmjs.com/package/@opentiny/tiny-engine-dsl-react)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 一个DSL到React代码生成器，支持将TinyEngine设计器的DSL schema转换为可运行的React应用代码。
 
 ## ✨ 特性
