@@ -29,6 +29,7 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
+import TabBarConfigurator from './tab-bar-configurator/TabBarConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import './styles/vars.less'
@@ -65,6 +66,7 @@ export {
   TableColumnsConfigurator,
   TabsGroupConfigurator,
   VariableConfigurator,
+  TabBarConfigurator,
   MetaCodeEditor,
   I18nInput as I18nConfigurator,
   MetaCodeEditor as CodeConfigurator,
