@@ -1,5 +1,11 @@
 export default {
-  id: 'engine.plugins.robot',
-  title: 'AI对话框',
-  type: 'plugins'
+  id: 'engine.toolbars.robot',
+  type: 'toolbars',
+  title: 'robot',
+  options: {
+    icon: {
+      default: 'AI'
+    },
+    renderType: 'icon'
+  }
 }

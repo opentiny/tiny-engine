@@ -9,9 +9,10 @@
   </div>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { nextTick, ref } from 'vue'
 import { Option, Select, Tooltip } from '@opentiny/vue'
+import type { Component } from 'vue'
 import { iconConmentRefresh as iconCommonRefresh } from '@opentiny/vue-icon'
 import { useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
@@ -20,7 +21,7 @@ export default {
     TinySelect: Select,
     TinyOption: Option,
     IconCommonRefresh: iconCommonRefresh(),
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     modelValue: [String, Number]

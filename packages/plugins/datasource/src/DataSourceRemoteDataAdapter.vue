@@ -36,6 +36,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRemoteDataAdapter */
 import { reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import RemoteDataAdapterForm from './RemoteDataAdapterForm.vue'
@@ -49,7 +50,7 @@ const errorHandler = ref(null)
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     RemoteDataAdapterForm
   },
   props: {

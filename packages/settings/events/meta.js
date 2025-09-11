@@ -3,5 +3,5 @@ export default {
   title: '高级',
   type: 'plugins',
   name: 'event',
-  icon: 'target'
+  icon: 'event'
 }

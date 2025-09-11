@@ -33,7 +33,7 @@ export default defineConfig({
       output: {
         banner: 'import "./style.css"'
       },
-      external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
+      external: ['vue', /@opentiny\/tiny-engine.*/, '@opentiny/tiny-schema-renderer', /@opentiny\/vue.*/]
     }
   }
 })

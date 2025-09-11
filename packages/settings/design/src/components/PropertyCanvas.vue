@@ -42,8 +42,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { onMounted, ref, provide, computed, watch, nextTick } from 'vue'
+import type { Component } from 'vue'
 import Sortable from 'sortablejs'
 import { Button, Tooltip } from '@opentiny/vue'
 import { ConfigRender } from '@opentiny/tiny-engine-common'
@@ -52,8 +53,8 @@ import ArrayConfigItemForm from './ArrayConfigItemForm.vue'
 
 export default {
   components: {
-    TinyButton: Button,
-    TinyTooltip: Tooltip,
+    TinyButton: Button as Component,
+    TinyTooltip: Tooltip as Component,
     ConfigRender,
     ArrayConfigItemForm
   },
