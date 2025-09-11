@@ -63,6 +63,16 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     schemaModel.deleteNode(nodeId)
   }
 
+  // canvas 内，节点向上移动
+  const moveUpSharedNode = (parentId: string, targetId: string, direction: 'up') => {
+    schemaModel.moveNode(parentId, targetId, direction)
+  }
+
+  // canvas 内，节点向下移动
+  const moveDownSharedNode = (parentId: string, targetId: string, direction: 'down') => {
+    schemaModel.moveNode(parentId, targetId, direction)
+  }
+
   // 用户信息同步 方法
   const updateUserSelection = (selectedNode: any) => {
     updateLocalStateField('selection', selectedNode)
@@ -93,6 +103,8 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     updateUserSelection,
     updateDragState,
     insertSharedNode,
-    deleteSharedNode
+    deleteSharedNode,
+    moveUpSharedNode,
+    moveDownSharedNode
   }
 }

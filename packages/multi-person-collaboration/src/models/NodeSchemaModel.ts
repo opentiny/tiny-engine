@@ -11,9 +11,9 @@ export class NodeSchemaModel {
   private yMap: Y.Map<any>
   public operationHandler: OperationHandler
 
-  constructor(yMap: Y.Map<any>, rootSchema: PageSchema) {
+  constructor(yMap: Y.Map<any>, rootSchema: PageSchema, docName: string) {
     this.yMap = yMap
-    this.operationHandler = new OperationHandler(rootSchema, yMap)
+    this.operationHandler = new OperationHandler(rootSchema, yMap, docName)
   }
 
   // 从 Y.Map 获取 NodeSchema 数据
@@ -61,6 +61,11 @@ export class NodeSchemaModel {
     this.operationHandler.remove({
       id: nodeId
     })
+  }
+
+  // canvas 内，节点上下移动
+  public moveNode(parentId: string, targetId: string, direction: 'up' | 'down') {
+    this.operationHandler.move({ parentId, targetId, direction })
   }
 
   // insert 操作

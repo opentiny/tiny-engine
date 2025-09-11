@@ -467,7 +467,14 @@ export default {
         win.addEventListener('scroll', syncNodeScroll, true)
         win.addEventListener('scroll', syncRemoteNode, true)
 
-        const { insertSharedNode, deleteSharedNode, updateUserSelection, remoteStates } = useCollabSchema({
+        const {
+          insertSharedNode,
+          deleteSharedNode,
+          updateUserSelection,
+          moveDownSharedNode,
+          moveUpSharedNode,
+          remoteStates
+        } = useCollabSchema({
           roomId: 'schema-yjs',
           currentUser
         })
@@ -476,6 +483,8 @@ export default {
           insertSharedNode,
           deleteSharedNode,
           updateUserSelection,
+          moveDownSharedNode,
+          moveUpSharedNode,
           remoteStates
         })
 
@@ -548,15 +557,6 @@ export default {
         syncRemoteStatesSelections.value = newVal
       },
       { immediate: true }
-    )
-
-    watch(
-      remoteStates,
-      (newVal) => {
-        // eslint-disable-next-line no-console
-        console.log('remoteStates变动', newVal)
-      },
-      { deep: true }
     )
 
     return {

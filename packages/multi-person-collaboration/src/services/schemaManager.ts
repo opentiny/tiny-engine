@@ -1,4 +1,4 @@
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import * as Y from 'yjs'
 import { NodeSchemaModel } from '../models/NodeSchemaModel'
 import { DocManager } from './docManager'
@@ -14,6 +14,14 @@ type DiffPatch =
   | { type: 'array-delete'; path: (string | number)[]; count: number; deletedIds: string[] }
   | { type: 'text-insert'; path: (string | number)[]; index: number; text: string }
   | { type: 'text-delete'; path: (string | number)[]; index: number; length: number }
+  | {
+      type: 'array-swap'
+      direction: 'down' | 'up'
+      parentId: string | undefined
+      schemaId: string
+      targetIndex: number
+      swapIndex: number
+    }
 
 /**
  * SchemaManager 类，负责管理 Yjs 中的 NodeSchema 文档
@@ -27,6 +35,7 @@ export class SchemaManager {
     { yRoot: Y.Map<any>; cb: (events: Y.YEvent<any>[], transaction: Y.Transaction) => void }
   > = new Map()
   private initialSyncDone: Map<string, boolean> = new Map() // 用于区分初始同步和增量同步
+  private eventListeners = new Map() // 用于存储事件监听器
 
   private constructor() {
     // 私有构造器，保证单例模式
@@ -68,6 +77,7 @@ export class SchemaManager {
 
       // 初始化监听器
       this.initObserver(docName, yMap)
+      this.setupEventListeners(docName)
 
       if (provider) {
         provider.on('sync', (isSynced: boolean) => {
@@ -94,9 +104,10 @@ export class SchemaManager {
       }
     } else {
       this.initObserver(docName, yMap)
+      this.setupEventListeners(docName)
     }
 
-    const nodeSchemaModel = new NodeSchemaModel(yMap, pageSchema as RootNode)
+    const nodeSchemaModel = new NodeSchemaModel(yMap, pageSchema as RootNode, docName)
     this.nodeSchemaModelMap.set(docName, nodeSchemaModel)
 
     return nodeSchemaModel
@@ -126,6 +137,48 @@ export class SchemaManager {
       this.getSchema(docName)?.unobserveDeep(callback.cb)
       this.observerCallbacks.delete(docName)
     }
+  }
+
+  // 设置一个专门的监听器来处理来自“事件总线”的自定义操作
+  public setupEventListeners(docName: string): void {
+    // 解绑旧的监听器，防止重复
+    if (this.eventListeners.has(docName)) {
+      const { map, cb } = this.eventListeners.get(docName)
+      map.unobserve(cb)
+    }
+
+    const docManager = DocManager.getInstance()
+    const ydoc = docManager.getOrCreateDoc(docName)
+    const eventsMap = ydoc.getMap('__app_events__')
+
+    const eventCallback = (event: Y.YMapEvent<any>, transaction: Y.Transaction) => {
+      if (transaction.local) return
+
+      event.changes.keys.forEach((change, key) => {
+        if (change.action === 'add') {
+          const payload: any = eventsMap.get(key)
+
+          if (payload && payload.op === 'move') {
+            const patch: DiffPatch = {
+              type: 'array-swap',
+              direction: payload.direction,
+              parentId: payload.parentId,
+              schemaId: payload.schemeId,
+              targetIndex: payload.targetIndex,
+              swapIndex: payload.swapIndex
+            }
+
+            this.applyPatches(docName, [patch])
+          }
+        }
+
+        eventsMap.delete(key)
+      })
+    }
+
+    // 绑定监听器
+    eventsMap.observe(eventCallback)
+    this.eventListeners.set(docName, { map: eventsMap, cb: eventCallback })
   }
 
   // 初始化监听器
@@ -159,6 +212,18 @@ export class SchemaManager {
         return
       }
 
+      const docManager = DocManager.getInstance()
+      const ydoc = docManager.getOrCreateDoc(docName)
+      const eventsMap: Y.Map<any> = ydoc.getMap('__app_events__')
+      if (transaction.changed.has(eventsMap as any)) {
+        // 这个事务包含了对 eventsMap 的修改，意味着它是一个我们自定义的复合操作。
+        // 我们的 eventCallback 已经或即将处理它。
+        // 因此，我们在这里跳过，以避免对底层的 delete/insert 进行重复处理。
+        // eslint-disable-next-line no-console
+        console.log('[observeDeep] Skipping transaction, as it is handled by the Event Bus.')
+        return
+      }
+
       // 在所有事件处理前，中心化地读取一次 meta 信息
       const deletedNodes = (transaction.meta.get('deletedNodes') || []) as any[]
       let deletedNodesConsumed = 0 // 用于追踪 meta 信息是否已被消费
@@ -181,7 +246,6 @@ export class SchemaManager {
               if (yMapNode.get('_node_deleted') === true) {
                 const nodeId = yMapNode.get('id')
                 if (nodeId) {
-                  // 创建一个自定义的、清晰的 patch 类型
                   patches.push({
                     type: 'array-delete',
                     path: event.path,
@@ -285,6 +349,20 @@ export class SchemaManager {
             })
           })
           break
+        case 'array-swap': {
+          const parentNode = patch.parentId ? useCanvas().getNode(patch.parentId, false) : useCanvas().getPageSchema()
+          const childrenArray: any[] = parentNode.children
+
+          if (patch.targetIndex > -1 && patch.swapIndex < childrenArray.length) {
+            ;[childrenArray[patch.targetIndex], childrenArray[patch.swapIndex]] = [
+              childrenArray[patch.swapIndex],
+              childrenArray[patch.targetIndex]
+            ]
+          }
+
+          useMessage().publish({ topic: 'schemaChange', data: {} })
+          break
+        }
         default:
           break
       }

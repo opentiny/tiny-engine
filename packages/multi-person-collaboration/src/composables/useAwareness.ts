@@ -30,20 +30,14 @@ export function useAwareness<TState extends { user: UserAwareness }>(
 
         newModel.emitter.on('enter', ({ clientId, state }) => {
           remoteStates[clientId] = state
-          // eslint-disable-next-line no-console
-          console.log('User entered:', clientId, remoteStates)
         })
 
         newModel.emitter.on('change', ({ clientId, state }) => {
           remoteStates[clientId] = state
-          // eslint-disable-next-line no-console
-          console.log('User changed:', clientId, remoteStates)
         })
 
         newModel.emitter.on('leave', ({ clientId }) => {
           delete remoteStates[clientId]
-          // eslint-disable-next-line no-console
-          console.log('User left:', clientId, remoteStates)
         })
       }
     },

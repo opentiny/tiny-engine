@@ -139,6 +139,7 @@ import {
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Numeric, Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -231,11 +232,13 @@ export default {
     const moveUp = () => {
       const { parent, schema } = getCurrent()
       moveChild(parent?.children, schema, -1)
+      useRealtimeCollab().moveUpSharedNode(parent.id, schema.id, 'up')
     }
 
     const moveDown = () => {
       const { parent, schema } = getCurrent()
       moveChild(parent?.children, schema, 1)
+      useRealtimeCollab().moveDownSharedNode(parent.id, schema.id, 'down')
     }
 
     const selectParent = () => {

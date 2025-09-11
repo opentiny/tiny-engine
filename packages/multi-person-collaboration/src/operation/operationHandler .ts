@@ -1,17 +1,25 @@
-import type { DeleteOperation, Node, NodeOperation, PageSchema } from '../type'
+import type { DeleteOperation, MoveOperation, Node, NodeOperation, PageSchema } from '../type'
 import * as Y from 'yjs'
 import { toYjs } from '../utils'
+import { DocManager } from '../services/docManager'
 
 export class OperationHandler {
   private yNodeMap = new Map<string, Y.Map<any>>() // 用于快速查找每个节点对应的 Y.Map 对象
   private yMap: Y.Map<any> // 代表整棵页面/文档的 根 Yjs 树
+  private yDoc: Y.Doc
+  private rootSchema: PageSchema
 
-  constructor(rootSchema: PageSchema, yMap: Y.Map<any>) {
+  constructor(rootSchema: PageSchema, yMap: Y.Map<any>, docName: string) {
+    this.rootSchema = rootSchema
     // yMap 已在 SchemaManager 完成初始化，直接赋值即可
     this.yMap = yMap
 
     // 初始化 yNodeMap
     this.setYNode(rootSchema.children, this.yMap.get('children'))
+
+    // 获得 yDoc 用于执行事务
+    const docManager = DocManager.getInstance()
+    this.yDoc = docManager.getOrCreateDoc(docName)
   }
 
   public insert(operation: NodeOperation) {
@@ -115,6 +123,36 @@ export class OperationHandler {
     }
   }
 
+  // 节点向上或者向下移动
+  public move(operation: MoveOperation) {
+    const { parentId, targetId, direction } = operation
+
+    let childrenArray: Y.Array<Y.Map<any>> | undefined
+    if (parentId) {
+      const parentNode = this.getYNode(parentId)
+      if (!parentNode) {
+        // eslint-disable-next-line no-console
+        console.error(`[Move] Parent node with ID ${parentId} not found.`)
+        return
+      }
+      childrenArray = parentNode.get('children') as Y.Array<Y.Map<any>>
+    } else {
+      // 没有 parentId 则说明是在根元素下进行移动
+      childrenArray = this.yMap.get('children')
+    }
+
+    if (!childrenArray || childrenArray.length < 2) return
+
+    const targetIndex = childrenArray.toArray().findIndex((node) => node.get('id') === targetId)
+    if (targetIndex === -1) return
+
+    const swapIndex = direction === 'up' ? targetIndex - 1 : targetIndex + 1
+    if (swapIndex < 0 || swapIndex >= childrenArray.length) return
+
+    // 调用交换函数
+    this.swapYArrayElements(childrenArray, targetIndex, swapIndex, parentId, targetId, direction)
+  }
+
   // 重建整个映射（刷新后可以手动调用）
   public rebuildYNodeMap(rootSchema: PageSchema) {
     this.yNodeMap.clear()
@@ -177,5 +215,65 @@ export class OperationHandler {
 
     // 最后，删除当前节点自身的引用
     this.yNodeMap.delete(nodeId)
+  }
+
+  // 交换 yArray 两个相邻子项的位置，并使用“事件总线”模式广播操作意图
+  private swapYArrayElements(
+    yarray: Y.Array<Y.Map<any>>,
+    index1: number,
+    index2: number,
+    parentId: string | undefined,
+    schemaId: string,
+    direction: 'down' | 'up'
+  ): void {
+    if (index1 === index2 || index1 < 0 || index2 < 0 || index1 >= yarray.length || index2 >= yarray.length) {
+      // eslint-disable-next-line no-console
+      console.warn('Invalid or identical indices provided for swap. No action taken.')
+      return
+    }
+
+    // 获取或创建专门用于事件通信的 Y.Map
+    const eventsMap = this.yDoc.getMap('__app_events__')
+
+    // 准备事件的“负载” (payload)，这是将被广播的数据
+    const eventPayload = {
+      op: 'move',
+      direction,
+      parentId,
+      schemaId,
+      targetIndex: index1,
+      swapIndex: index2,
+      timestamp: Date.now()
+    }
+
+    // 在同一个事务中，既执行数据交换，也发出事件
+    this.yDoc.transact(() => {
+      const i = Math.max(index1, index2)
+      const j = Math.min(index1, index2)
+      const elementI = yarray.get(i)
+      const elementJ = yarray.get(j)
+
+      // 类型安全的深拷贝函数
+      const cloneYMap = (el: Y.Map<any>): Y.Map<any> => {
+        const newMap = new Y.Map<any>()
+        toYjs(newMap, el.toJSON())
+        return newMap
+      }
+
+      const cloneI = cloneYMap(elementI)
+      const cloneJ = cloneYMap(elementJ)
+
+      yarray.delete(i, 1)
+      yarray.delete(j, 1)
+
+      yarray.insert(j, [cloneI])
+      yarray.insert(i, [cloneJ])
+
+      this.setYNode(this.rootSchema.children, this.yMap.get('children'))
+
+      // 构建唯一 ID
+      const eventId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+      eventsMap.set(eventId, eventPayload)
+    })
   }
 }

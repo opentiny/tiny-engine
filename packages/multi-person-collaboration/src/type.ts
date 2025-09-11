@@ -84,6 +84,12 @@ export interface DeleteOperation {
   id: string
 }
 
+export interface MoveOperation {
+  parentId: string
+  targetId: string
+  direction: 'up' | 'down'
+}
+
 export interface UserAwareness {
   id?: string | number
   name: string
