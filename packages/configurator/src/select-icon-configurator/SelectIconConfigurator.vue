@@ -30,8 +30,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, ref } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Search } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import SvgICons from '@opentiny/vue-icon'
@@ -39,7 +40,7 @@ import SvgICons from '@opentiny/vue-icon'
 export default {
   components: {
     TinySearch: Search,
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconClose: iconClose()
   },
   props: {

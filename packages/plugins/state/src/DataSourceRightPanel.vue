@@ -29,13 +29,14 @@
 <script lang="ts">
 /* metaService: engine.plugins.state.DataSourceRightPanel */
 import { reactive, toRefs, getCurrentInstance } from 'vue'
+import type { Component } from 'vue'
 import { Button } from '@opentiny/vue'
 import CreateRemote from './CreateRemoteAPI.vue'
 import CreateVariable from './CreateVariable.vue'
 
 export default {
   components: {
-    TinyButton: Button,
+    TinyButton: Button as Component,
     CreateRemote,
     CreateVariable
   },

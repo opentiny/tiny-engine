@@ -39,8 +39,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { getCurrentInstance, reactive, ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Button, Tabs, TabItem, Input, ButtonGroup, Switch, Select } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
@@ -53,7 +54,7 @@ export default {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
     TinyInput: Input,
-    TinyButtonGroup: ButtonGroup
+    TinyButtonGroup: ButtonGroup as Component
   },
   props: {
     buttonText: {

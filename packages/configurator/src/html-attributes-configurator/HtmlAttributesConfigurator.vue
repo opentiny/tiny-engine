@@ -46,8 +46,9 @@
   </div>
   <div class="attr-popover"></div>
 </template>
-<script>
+<script lang="ts">
 import { reactive, ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { useProperties, useMaterial, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { IconDel, IconEdit, IconClose } from '@opentiny/vue-icon'
 import { Form, FormItem, Input, Button, Popover, Tooltip } from '@opentiny/vue'
@@ -62,9 +63,9 @@ export default {
     TinyButton: Button,
     IconEdit: IconEdit(),
     IconDel: IconDel(),
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconClose: IconClose(),
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     modelValue: {

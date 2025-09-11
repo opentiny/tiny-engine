@@ -5,6 +5,7 @@ const inputSchema = z.object({})
 
 export const getComponentList = {
   name: 'get_component_list',
+  title: '获取可用组件列表',
   description: 'Get all components that can be dragged to the canvas in the current low-code platform application.',
   inputSchema: inputSchema.shape,
   callback: async (_args: z.infer<typeof inputSchema>) => {

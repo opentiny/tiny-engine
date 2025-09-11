@@ -119,8 +119,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, watchEffect, ref } from 'vue'
+import type { Component } from 'vue'
 import { Input, Select, Switch, RadioButton, RadioGroup, Tooltip } from '@opentiny/vue'
 import { MetaListItems } from '@opentiny/tiny-engine-common'
 import { iconPlusCircle } from '@opentiny/vue-icon'
@@ -140,7 +141,7 @@ export default {
     TinySwitch: Switch,
     TinyRadioButton: RadioButton,
     TinyRadioGroup: RadioGroup,
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     MetaListItems,
     IconPlusCircle: iconPlusCircle()
   },

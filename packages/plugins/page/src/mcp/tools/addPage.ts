@@ -3,18 +3,23 @@ import { usePage } from '@opentiny/tiny-engine-meta-register'
 
 const inputSchema = z.object({
   name: z.string().describe('The name of the page. The name must be unique and Capitalize the first letter.'),
-  route: z.string().describe('The route of the page'),
+  route: z
+    .string()
+    .describe(
+      'The route of the page. only allow contain english letter, number, underline, hyphen, slash, and start with english letter.'
+    ),
   parentId: z
     .string()
     .optional()
     .describe(
-      'The parent id of the page, if not provided, the page will be created at the root level. if provided, the page will be created at the specified parent id.'
+      'The parent id of the page, if not provided, the page will be created at the root level. if provided, the page will be created at the specified parent id. if you don\'t know the parentId, you can use the tool "get_page_list" to get the page list.'
     )
 })
 
 export const addPage = {
   name: 'add_page',
   label: 'Add Page',
+  title: '新增页面',
   order: 6,
   description:
     'Add a new page to the current TinyEngine low-code application. Use this when you need to add new page to your application.',
@@ -22,14 +27,14 @@ export const addPage = {
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { name, route, parentId } = args
     const { createNewPage } = usePage()
-    const { success, data } = await createNewPage({ name, route, parentId })
+    const { success, data, error } = await createNewPage({ name, route, parentId })
 
     if (!success) {
       const res = {
         status: 'error',
         message: 'Failed to create page',
         data: {
-          error: 'Failed to create page'
+          error: error || 'Failed to create page'
         }
       }
 

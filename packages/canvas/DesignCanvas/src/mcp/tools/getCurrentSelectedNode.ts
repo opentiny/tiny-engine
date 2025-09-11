@@ -5,6 +5,7 @@ const inputSchema = z.object({})
 
 export const getCurrentSelectedNode = {
   name: 'get_current_selected_node',
+  title: '获取当前选中节点',
   description:
     'Get the current selected node from the current TinyEngine low-code application. Use this when you need to get the current selected node from your application.',
   inputSchema: inputSchema.shape,

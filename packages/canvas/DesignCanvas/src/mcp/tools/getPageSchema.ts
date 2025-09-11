@@ -5,6 +5,7 @@ const inputSchema = z.object({})
 
 export const getPageSchema = {
   name: 'get_page_schema',
+  title: '获取页面结构',
   description:
     'Get current editing page schema from the current TinyEngine low-code application. Use this when you need to get current editing page schema from your application.',
   inputSchema: inputSchema.shape,

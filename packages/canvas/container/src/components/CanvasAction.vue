@@ -658,6 +658,12 @@ export default {
   pointer-events: none;
   border: 1px solid var(--te-canvas-container-border-color-checked);
   z-index: 2;
+  // 禁止文本选择
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
   &.absolute {
     pointer-events: all;
   }

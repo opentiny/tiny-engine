@@ -36,12 +36,13 @@ import { IconPopup } from '@opentiny/vue-icon'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { computed } from 'vue'
+import type { Component } from 'vue'
 
 const { OPEN_DELAY } = constants
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconPopup: IconPopup()
   },
   props: {

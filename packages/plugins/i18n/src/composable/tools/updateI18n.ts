@@ -23,6 +23,7 @@ const outputSchema = createOutputSchema(updateI18nDataSchema)
 
 export const updateI18n = {
   name: 'update_i18n',
+  title: '更新 I18n 词条',
   description:
     'Update an existing i18n entry in the current TinyEngine low-code application. Use this when you need to modify internationalization translations.',
   inputSchema: inputSchema.shape,

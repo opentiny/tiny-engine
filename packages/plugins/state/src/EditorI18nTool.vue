@@ -41,6 +41,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.state.EditorI18nTool */
 import { reactive, ref, computed } from 'vue'
+import type { Component } from 'vue'
 import { Button, Popover, Tooltip } from '@opentiny/vue'
 import { iconClose } from '@opentiny/vue-icon'
 import { BindI18n } from '@opentiny/tiny-engine-common'
@@ -51,8 +52,8 @@ const { OPEN_DELAY } = constants
 export default {
   components: {
     TinyButton: Button,
-    TinyTooltip: Tooltip,
-    TinyPopover: Popover,
+    TinyTooltip: Tooltip as Component,
+    TinyPopover: Popover as Component,
     IconClose: iconClose(),
     BindI18n
   },

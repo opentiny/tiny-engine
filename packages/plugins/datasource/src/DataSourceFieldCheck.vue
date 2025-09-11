@@ -19,6 +19,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceFieldCheck */
 import { computed, inject } from 'vue'
+import type { Component } from 'vue'
 import DataSourceFieldCheckMultipleLine from './DataSourceFieldCheckMultipleLine.vue'
 import DataSourceFieldCheckRanger from './DataSourceFieldCheckRanger.vue'
 import { formDataInjectionSymbols } from './DataSourceFieldForm.vue'
@@ -28,7 +29,7 @@ export default {
   components: {
     DataSourceFieldCheckMultipleLine,
     DataSourceFieldCheckRanger,
-    TinyCheckbox: Checkbox,
+    TinyCheckbox: Checkbox as Component,
     TinyFormItem: FormItem
   },
   props: {

@@ -42,6 +42,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.schema.Main */
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useNotify, useMessage, useLayout } from '@opentiny/tiny-engine-meta-register'
@@ -54,8 +55,8 @@ const { reactiveObj2String: obj2String, string2Obj } = utils
 export default {
   components: {
     MonacoEditor: VueMonaco,
-    TinyPopover: Popover,
-    TinyButton: Button,
+    TinyPopover: Popover as Component,
+    TinyButton: Button as Component,
     PluginPanel,
     IconDownloadLink: iconDownloadLink()
   },

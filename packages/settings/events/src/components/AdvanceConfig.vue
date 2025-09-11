@@ -71,9 +71,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.event.AdvanceConfig */
 import { ref, computed, reactive, watch } from 'vue'
+import type { Component } from 'vue'
 import {
   CodeConfigurator,
   InputConfigurator,
@@ -91,7 +92,7 @@ const { string2Obj } = utils
 export default {
   components: {
     SwitchConfigurator,
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     VariableConfigurator,
     InputConfigurator,
     CodeConfigurator

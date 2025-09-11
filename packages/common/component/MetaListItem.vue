@@ -74,6 +74,7 @@
 
 <script lang="ts">
 import { reactive, watchEffect, ref, onMounted } from 'vue'
+import type { Component } from 'vue'
 import { Tooltip, Input, FormItem, Form, Popover, DialogBox, Button } from '@opentiny/vue'
 import { iconDel, iconEdit, iconMore, iconClose } from '@opentiny/vue-icon'
 import MaskModal from './MaskModal.vue'
@@ -81,13 +82,13 @@ import MetaForm from './MetaForm.vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     TinyInput: Input,
     TinyFormItem: FormItem,
     TinyForm: Form,
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     MetaForm,
     MaskModal,
     IconDel: iconDel(),

@@ -50,6 +50,7 @@
 
 <script lang="ts">
 import { computed, ref, onActivated, onDeactivated } from 'vue'
+import type { Component } from 'vue'
 import { Tooltip } from '@opentiny/vue'
 import PublicIcon from './PublicIcon.vue'
 import VueMonaco from './VueMonaco.vue'
@@ -60,7 +61,7 @@ export default {
   components: {
     MonacoEditor: VueMonaco,
     PublicIcon,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     value: {
@@ -193,6 +194,7 @@ export default {
 }
 
 .editor-container-content {
+  display: flex;
   flex: 1;
   overflow: hidden;
 }

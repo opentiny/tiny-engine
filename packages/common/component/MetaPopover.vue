@@ -13,13 +13,14 @@
 
 <script lang="ts">
 import { computed } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import MetaChildItem from './MetaChildItem.vue'
 
 export default {
   components: {
     MetaChildItem,
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     TinyButton: Button
   },
   inheritAttrs: false,

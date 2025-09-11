@@ -17,8 +17,9 @@
   </tiny-popover>
 </template>
 
-<script lang="jsx">
+<script lang="tsx">
 import { reactive, computed } from 'vue'
+import type { Component } from 'vue'
 import { capitalize } from '@vue/shared'
 import { extend } from '@opentiny/vue-renderless/common/object'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, Popover as TinyPopover } from '@opentiny/vue'
@@ -26,7 +27,7 @@ import { useLayout, useModal, useCanvas, useBlock } from '@opentiny/tiny-engine-
 
 export default {
   components: {
-    TinyPopover
+    TinyPopover: TinyPopover as Component
   },
   props: {
     data: {

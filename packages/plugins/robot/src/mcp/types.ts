@@ -11,6 +11,7 @@ export interface RequestTool {
   function: {
     name: string
     description: string
+    title?: string
     parameters: {
       type: 'object'
       required?: string[]
@@ -34,7 +35,8 @@ export interface LLMMessage {
 
 export interface RobotMessage {
   role: string
-  content: string | BubbleContentItem[]
+  content: string
+  renderContent?: Array<BubbleContentItem>
   [prop: string]: unknown
 }
 
@@ -66,6 +68,7 @@ export interface LLMResponse {
 
 export interface McpTool {
   name: string
+  title?: string
   description: string
   inputSchema?: {
     type: 'object'

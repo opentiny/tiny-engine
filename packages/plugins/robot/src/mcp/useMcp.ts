@@ -5,68 +5,29 @@ import type { McpListToolsResponse, McpTool, RequestTool } from './types'
 
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',
-  name: 'Tiny Engine MCP 服务器',
+  name: 'Tiny Engine MCP 工具',
   icon: 'https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/opentiny-tinyengine-logo-4f8a3801.svg',
-  description: '使用TinyEngine设计器能力，如添加国际化',
+  description: '使用TinyEngine设计器能力，如操作画布、编辑页面等',
   added: true
 }
 
-const MOCK_SERVERS: PluginInfo[] = [
-  {
-    id: 'plugin-1',
-    name: 'Jira 集成 (Mock)',
-    icon: 'https://ts3.tc.mm.bing.net/th/id/ODLS.2a97aa8b-50c6-4e00-af97-3b563dfa07f4',
-    description: 'Jira 任务管理',
-    enabled: true,
-    added: false,
-    tools: [
-      { id: 'tool-5', name: '创建任务', description: '创建 Jira 任务', enabled: true },
-      { id: 'tool-6', name: '查询任务', description: '查询 Jira 任务', enabled: true }
-    ]
-  },
-  {
-    id: 'plugin-2',
-    name: 'Notion 集成 (Mock)',
-    icon: 'https://www.notion.so/front-static/favicon.ico',
-    description: 'Notion 文档管理和协作',
-    enabled: false,
-    added: false,
-    tools: [
-      { id: 'tool-7', name: '创建页面', description: '创建 Notion 页面', enabled: false },
-      { id: 'tool-8', name: '查询数据库', description: '查询 Notion 数据库', enabled: false }
-    ]
-  },
-  {
-    id: 'plugin-3',
-    name: 'Telegram 机器人 (Mock)',
-    icon: 'https://telegram.org/favicon.ico',
-    description: 'Telegram 消息推送和自动化',
-    enabled: false,
-    added: false,
-    tools: [{ id: 'tool-9', name: '发送消息', description: '发送 Telegram 消息', enabled: false }]
-  }
-]
+const mcpServers = ref<PluginInfo[]>([ENGINE_MCP_SERVER])
 
-const mcpServers = ref<PluginInfo[]>([ENGINE_MCP_SERVER, ...MOCK_SERVERS])
-
-const inUseMcpServers = ref<PluginInfo[]>([
-  { ...ENGINE_MCP_SERVER, enabled: true, expanded: false, tools: [], toolCount: 0 }
-])
+const inUseMcpServers = ref<PluginInfo[]>([{ ...ENGINE_MCP_SERVER, enabled: true, expanded: true, tools: [] }])
 
 const updateServerTools = (serverId: string, tools: PluginTool[]) => {
   const mcpServer = inUseMcpServers.value.find((item) => item.id === serverId)
   if (mcpServer) {
     mcpServer.tools = tools
-    mcpServer.toolCount = tools.length
   }
 }
 
 const updateEngineTools = async () => {
-  const tools: Array<{ name: string; description: string; status: string }> =
+  const tools: Array<{ name: string; description: string; status: string; title?: string }> =
     (await getMetaApi(META_SERVICE.McpService)?.getToolList?.()) || []
   const engineTools = tools.map((tool) => ({
     id: tool.name,
-    name: tool.name,
+    name: tool.title ? `${tool.title} ${tool.name}` : tool.name,
     description: tool.description,
     enabled: tool.status === 'enabled'
   }))
@@ -114,6 +75,8 @@ const connectMcpServer = (_server: PluginInfo) => {}
 const disconnectMcpServer = (_server: PluginInfo) => {}
 
 const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
+  // 市场添加状态修改
+  server.added = added
   if (added) {
     const newServer: PluginInfo = {
       ...server,
@@ -121,8 +84,7 @@ const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
       enabled: true,
       added: true,
       expanded: false,
-      tools: server.tools || [],
-      toolCount: server.tools?.length || 0
+      tools: server.tools || []
     }
     inUseMcpServers.value.push(newServer)
     if (server.id === ENGINE_MCP_SERVER.id) {

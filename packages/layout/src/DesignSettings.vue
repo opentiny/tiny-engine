@@ -58,6 +58,7 @@
 <script lang="ts">
 /* metaService: engine.layout.DesignSettings */
 import { computed, ref, watch } from 'vue'
+import type { Component } from 'vue'
 import { Tabs, TabItem } from '@opentiny/vue'
 import { useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { VueDraggableNext } from 'vue-draggable-next'
@@ -68,7 +69,7 @@ export default {
     PluginRightMenu,
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    VueDraggableNext
+    VueDraggableNext: VueDraggableNext as Component
   },
   props: {
     renderPanel: {

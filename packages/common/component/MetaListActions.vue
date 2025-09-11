@@ -8,10 +8,11 @@
 
 <script lang="ts">
 import { Tooltip } from '@opentiny/vue'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     actions: {

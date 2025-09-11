@@ -6,6 +6,7 @@ const inputSchema = z.object({})
 export const getPageList = {
   name: 'get_page_list',
   label: 'Get Page List',
+  title: '获取页面列表',
   order: 8,
   description:
     'Get a page list from the current TinyEngine low-code application. Use this when you need to get a page list from your application.',
