@@ -286,9 +286,6 @@ pnpm test
 pnpm test test/data-binding
 pnpm test test/lifecycle
 pnpm test test/formatCode
-
-# 运行完整测试套件
-pnpm run test:latest
 ```
 
 ### 测试用例
