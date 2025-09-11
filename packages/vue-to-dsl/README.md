@@ -41,13 +41,15 @@ const converter = new VueToDslConverter();
 const vueCode = `
 <template>
   <div class="hello">
-    <h1>{{ title }}</h1>
+    <h1>{{ state.title }}</h1>
     <button @click="handleClick">Click me</button>
   </div>
 </template>
 <script setup>
 import { ref } from 'vue'
-const title = ref('Hello World')
+const state = vue.reactive({
+  title: 'Hello TinyEngine'
+})
 function handleClick() { console.log('clicked') }
 </script>
 <style scoped>
