@@ -1,8 +1,5 @@
 <template>
-  <div
-    :class="['item-content', { 'active-item': currentIndex === index }]"
-    :key="item.itemId"
-  >
+  <div :class="['item-content', { 'active-item': currentIndex === index }]" :key="item.itemId">
     <div class="option-input">
       <div class="left">
         <slot name="content" :data="item"></slot>
@@ -25,15 +22,8 @@
                   @hide="hide(item)"
                 >
                   <template v-if="itemData.option.isVisible">
-                    <div
-                      ref="addOptions"
-                      class="add-options"
-                      :style="`left:${itemData.left}px;top:${itemData.top}px`"
-                    >
-                      <icon-close
-                        class="tiny-svg-size icon-close"
-                        @click="closeEditOption"
-                      ></icon-close>
+                    <div ref="addOptions" class="add-options" :style="`left:${itemData.left}px;top:${itemData.top}px`">
+                      <icon-close class="tiny-svg-size icon-close" @click="closeEditOption"></icon-close>
                       <slot name="metaForm">
                         <meta-form
                           v-bind="itemData"
@@ -70,10 +60,10 @@
 </template>
 
 <script>
-import { reactive, watchEffect, ref } from "vue";
-import { Tooltip, Input, FormItem, Form, Popover, Button } from "@opentiny/vue";
-import { iconMore, iconClose } from "@opentiny/vue-icon";
-import { MaskModal, MetaForm } from "@opentiny/tiny-engine-common";
+import { reactive, watchEffect, ref } from 'vue'
+import { Tooltip, Input, FormItem, Form, Popover, Button } from '@opentiny/vue'
+import { iconMore, iconClose } from '@opentiny/vue-icon'
+import { MaskModal, MetaForm } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
@@ -86,99 +76,99 @@ export default {
     MetaForm,
     MaskModal,
     IconClose: iconClose(),
-    IconMore: iconMore(),
+    IconMore: iconMore()
   },
   inheritAttrs: false,
   props: {
     item: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     dataScource: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     index: {
       type: Number,
-      default: 0,
+      default: 0
     },
     currentIndex: {
       type: Number,
-      default: -1,
+      default: -1
     },
     enabledOperation: {
       type: Boolean,
-      default: true,
+      default: true
     },
     // 子级弹出层是否在左侧展开
     expand: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
-  emits: ["editItem", "changeItem"],
+  emits: ['editItem', 'changeItem'],
   setup(props, { emit }) {
-    const itemData = reactive({});
-    const showMask = ref(false);
-    let top = ref(0);
+    const itemData = reactive({})
+    const showMask = ref(false)
+    const top = ref(0)
 
     const editList = () => {
-      showMask.value = true;
-      itemData.option.isVisible = true;
-    };
+      showMask.value = true
+      itemData.option.isVisible = true
+    }
 
     const btnClick = ($event, action) => {
       switch (action) {
-        case "edit":
-          emit("editItem", { action: "edit", index: props.index });
-          editList();
-          break;
+        case 'edit':
+          emit('editItem', { action: 'edit', index: props.index })
+          editList()
+          break
         default:
-          emit("editItem", { index: props.index });
-          editList();
-          break;
+          emit('editItem', { index: props.index })
+          editList()
+          break
       }
-    };
+    }
 
     const change = () => {
-      emit("changeItem", itemData);
-    };
+      emit('changeItem', itemData)
+    }
 
     const closeEditOption = () => {
-      emit("closeItem");
-      itemData.option.isVisible = false;
-      showMask.value = false;
-    };
+      emit('closeItem')
+      itemData.option.isVisible = false
+      showMask.value = false
+    }
 
     const hide = () => {
-      emit("hide");
-    };
+      emit('hide')
+    }
 
-    const isShowModal = ref(false);
+    const isShowModal = ref(false)
 
     const cancel = () => {
-      itemData.option.isVisible = false;
-    };
+      itemData.option.isVisible = false
+    }
 
     const formConfirm = (formData) => {
-      emit("changeItem", { data: formData, index: props.index });
-      itemData.option.isVisible = false;
-    };
+      emit('changeItem', { data: formData, index: props.index })
+      itemData.option.isVisible = false
+    }
 
     watchEffect(() => {
-      itemData.option = props.item;
-      itemData.textField = props.dataScource.textField;
-      itemData.valueField = props.dataScource.valueField;
-      itemData.label = props.dataScource.label;
-      itemData.index = props.index;
+      itemData.option = props.item
+      itemData.textField = props.dataScource.textField
+      itemData.valueField = props.dataScource.valueField
+      itemData.label = props.dataScource.label
+      itemData.index = props.index
       if (props.currentIndex !== props.index) {
-        cancel();
+        cancel()
       }
-    });
+    })
     const closeMask = () => {
-      showMask.value = false;
-      itemData.option.isVisible = false;
-    };
+      showMask.value = false
+      itemData.option.isVisible = false
+    }
 
     return {
       itemData,
@@ -192,10 +182,10 @@ export default {
       top,
       isShowModal,
       formConfirm,
-      cancel,
-    };
-  },
-};
+      cancel
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

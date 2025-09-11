@@ -43,7 +43,6 @@ export default {
     const variableForm = reactive({
       variableName: ''
     })
-
     const ruleFormRef = ref()
 
     const rules = ref({

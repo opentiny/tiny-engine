@@ -8,10 +8,7 @@
           handle=".tiny-svg-size"
           @change="dragEnd"
         >
-          <div
-            v-for="(item, index) in itemsOptions.optionsList"
-            :key="index"
-          >
+          <div v-for="(item, index) in itemsOptions.optionsList" :key="index">
             <meta-list-item
               :item="item"
               :index="index"
@@ -41,10 +38,7 @@
         </vue-draggable-next>
       </template>
       <template #bottom>
-        <div
-          class="add"
-          @click="addItem"
-        >
+        <div class="add" @click="addItem">
           <svg-icon name="plus"></svg-icon>
           <span>新增</span>
         </div>
@@ -54,13 +48,13 @@
 </template>
 
 <script>
-import { computed, reactive } from 'vue';
-import { iconDel, iconEdit, iconEyeclose, iconEyeopen } from '@opentiny/vue-icon';
-import MetaListItem from './MetaListItem.vue';
-import MetaChildItem from './MetaChildItem.vue';
-import MetaList from './MetaList.vue';
-import { TranslateService } from '@opentiny/tiny-engine-plugin-i18n';
-import { VueDraggableNext } from 'vue-draggable-next';
+import { computed, reactive } from 'vue'
+import { iconDel, iconEdit, iconEyeclose, iconEyeopen } from '@opentiny/vue-icon'
+import MetaListItem from './MetaListItem.vue'
+import MetaChildItem from './MetaChildItem.vue'
+import MetaList from './MetaList.vue'
+import { TranslateService } from '@opentiny/tiny-engine-plugin-i18n'
+import { VueDraggableNext } from 'vue-draggable-next'
 
 export default {
   name: 'ArrayItemConfigurator',
@@ -68,28 +62,28 @@ export default {
     MetaList,
     MetaListItem,
     MetaChildItem,
-    VueDraggableNext,
+    VueDraggableNext
   },
   inheritAttrs: false,
   props: {
     meta: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     expand: {
       type: Boolean,
-      default: false,
+      default: false
     },
     disableDrag: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   setup(props, { emit }) {
-    const { translate } = TranslateService.apis;
+    const { translate } = TranslateService.apis
     const columnsList = computed(() => {
-      return props.meta.widget.props.modelValue?.value || props.meta.widget.props.modelValue || [];
-    });
+      return props.meta.widget.props.modelValue?.value || props.meta.widget.props.modelValue || []
+    })
 
     const itemsOptions = computed(() => ({
       valueField: 'prop',
@@ -98,84 +92,84 @@ export default {
         {
           title: '编辑',
           type: 'edit',
-          icon: iconEdit(),
+          icon: iconEdit()
         },
         {
           title: '删除',
           type: 'delete',
-          icon: iconDel(),
+          icon: iconDel()
         },
         {
           title: '显示',
           type: 'show',
-          icon: iconEyeclose(),
+          icon: iconEyeclose()
         },
         {
           title: '隐藏',
           type: 'hide',
-          icon: iconEyeopen(),
-        },
+          icon: iconEyeopen()
+        }
       ],
       optionsList: columnsList.value,
       name: props.name,
-      draggable: true,
-    }));
+      draggable: true
+    }))
 
     const state = reactive({
-      currentIndex: -1,
-    });
+      currentIndex: -1
+    })
 
     const editItem = (data) => {
-      state.currentIndex = data.index;
-    };
+      state.currentIndex = data.index
+    }
 
     const updatedColumns = () => {
-      emit('update:modelValue', { ...props.meta.widget.props.modelValue, value: columnsList.value });
-    };
+      emit('update:modelValue', { ...props.meta.widget.props.modelValue, value: columnsList.value })
+    }
 
     const addItem = () => {
-      const defaultValue = props.meta.defaultValue?.[0] || null;
+      const defaultValue = props.meta.defaultValue?.[0] || null
       const newOption = ['string', 'boolean', 'number'].includes(props.meta.widget.props.type)
         ? defaultValue
-        : { ...defaultValue };
+        : { ...defaultValue }
 
-      columnsList.value.push(newOption);
-      state.currentIndex = columnsList.value.length - 1;
-      updatedColumns();
-    };
+      columnsList.value.push(newOption)
+      state.currentIndex = columnsList.value.length - 1
+      updatedColumns()
+    }
 
     const deleteItem = (params) => {
-      columnsList.value.splice(params.index, 1);
-      updatedColumns();
-    };
+      columnsList.value.splice(params.index, 1)
+      updatedColumns()
+    }
 
     const changeItem = (item) => {
-      columnsList.value[item.index] = item.data;
-      updatedColumns();
-    };
+      columnsList.value[item.index] = item.data
+      updatedColumns()
+    }
 
     const hideItem = (params) => {
-      columnsList.value[params.index].itemVisible = false;
-      updatedColumns();
-    };
+      columnsList.value[params.index].itemVisible = false
+      updatedColumns()
+    }
 
     const showItem = (params) => {
-      columnsList.value[params.index].itemVisible = true;
-      updatedColumns();
-    };
+      columnsList.value[params.index].itemVisible = true
+      updatedColumns()
+    }
 
     const onValueChange = (index, { propertyKey, propertyValue }) => {
       if (propertyValue === '' || propertyValue === undefined || propertyValue === null) {
-        delete columnsList.value[index][propertyKey];
+        delete columnsList.value[index][propertyKey]
       } else {
-        columnsList.value[index][propertyKey] = propertyValue;
+        columnsList.value[index][propertyKey] = propertyValue
       }
-      updatedColumns();
-    };
+      updatedColumns()
+    }
 
     const dragEnd = () => {
-      updatedColumns();
-    };
+      updatedColumns()
+    }
 
     return {
       state,
@@ -189,10 +183,10 @@ export default {
       showItem,
       onValueChange,
       translate,
-      dragEnd,
-    };
-  },
-};
+      dragEnd
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

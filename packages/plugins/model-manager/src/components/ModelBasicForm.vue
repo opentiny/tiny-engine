@@ -43,7 +43,6 @@ const props = defineProps({
 const localValue = ref(props.model)
 
 const ruleFormRef = ref()
-
 const rules = ref({
   nameCn: [{ required: true, message: '必填', trigger: 'blur' }],
   nameEn: [{ required: true, message: '必填', trigger: 'blur' }],

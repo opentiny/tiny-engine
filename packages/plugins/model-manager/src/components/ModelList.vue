@@ -30,12 +30,7 @@
     </div>
     <div class="model-list">
       <template v-if="models.length">
-        <div
-          v-for="model in models"
-          :key="model.id"
-          class="model-item"
-          @click="$emit('select-model', model)"
-        >
+        <div v-for="model in models" :key="model.id" class="model-item" @click="$emit('select-model', model)">
           <div class="model-info">
             <div class="model-name">{{ model.nameCn }}</div>
             <div class="model-english-name">{{ model.nameEn }}</div>

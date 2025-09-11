@@ -226,7 +226,6 @@ const emit = defineEmits(['update:searchFormData', 'update:tableData', 'update:e
 const formRef = ref(null)
 
 const colNumber = computed(() => 12 / props.layout)
-
 const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12))
 
 const pageModel = computed(() => props.serviceModel)

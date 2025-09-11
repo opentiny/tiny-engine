@@ -219,18 +219,18 @@ const getModelLists = async () => {
 }
 // 导出模型的sql
 const exportModel = async (id) => {
-  const sqlContent = id ? await getModelSqlById(selectedModel.value.id) : await getModelSql();
+  const sqlContent = id ? await getModelSqlById(selectedModel.value.id) : await getModelSql()
   // 创建 Blob 对象，指定 MIME 类型为 text/sql
-  const blob = new Blob([sqlContent], { type: 'text/sql' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${id ? selectedModel.value.nameEn : 'models'}.sql`;
+  const blob = new Blob([sqlContent], { type: 'text/sql' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `${id ? selectedModel.value.nameEn : 'models'}.sql`
   // 将 <a> 元素添加到 DOM 中
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  document.body.appendChild(a)
+  a.click()
+  document.body.removeChild(a)
+  URL.revokeObjectURL(url)
 }
 
 // 保存模型时一并保存version字段
@@ -249,7 +249,7 @@ const saveModel = async () => {
         parameters: latestModelData.parameters.filter((item) => !!item.prop)
       }
       let isModelRefRelative = true
-      let propertyName = '';
+      let propertyName = ''
       if (newModel.parameters?.length > 0) {
         newModel.parameters.forEach((item) => {
           if (item.type === 'Enum') {

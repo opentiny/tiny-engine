@@ -92,7 +92,6 @@ const props = defineProps({
 defineEmits(['add-field', 'insert-enum-after', 'remove-enum'])
 
 const fieldGrid = ref(null)
-
 const relativeModels = computed(() => props.availableModels.filter((item) => item.id !== props.model.id))
 
 // 父组件需要：

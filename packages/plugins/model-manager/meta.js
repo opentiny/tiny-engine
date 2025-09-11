@@ -3,5 +3,5 @@ export default {
   title: '模型管理',
   type: 'plugins',
   width: 600,
-  icon: 'plugin-icon-i18n'
-} 
+  icon: 'plugin-icon-modelmanager'
+}

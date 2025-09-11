@@ -1,25 +1,13 @@
 <template>
-  <div
-    :class="['item-content', { 'active-item': currentIndex === index }]"
-    @click="openEdit"
-  >
+  <div :class="['item-content', { 'active-item': currentIndex === index }]" @click="openEdit">
     <div class="option-input">
       <div class="left">
         <icon-more class="tiny-svg-size icon-more"></icon-more>
-        <slot
-          name="content"
-          :data="item"
-        ></slot>
+        <slot name="content" :data="item"></slot>
       </div>
       <div class="right">
-        <slot
-          name="operate"
-          :data="item"
-        >
-          <template
-            v-for="item in dataScource.btnList"
-            :key="item.type"
-          >
+        <slot name="operate" :data="item">
+          <template v-for="item in dataScource.btnList" :key="item.type">
             <template v-if="item.type === 'edit' && !itemData.option?.builtIn">
               <tiny-popover
                 :key="itemData.index"
@@ -33,15 +21,8 @@
                 @hide="hide(item)"
               >
                 <template v-if="isVisible">
-                  <div
-                    ref="addOptions"
-                    class="add-options"
-                    :style="`left:${itemData.left}px;top:${itemData.top}px`"
-                  >
-                    <icon-close
-                      class="tiny-svg-size icon-close"
-                      @click="closeEditOption"
-                    ></icon-close>
+                  <div ref="addOptions" class="add-options" :style="`left:${itemData.left}px;top:${itemData.top}px`">
+                    <icon-close class="tiny-svg-size icon-close" @click="closeEditOption"></icon-close>
                     <slot name="metaForm">
                       <meta-form
                         v-bind="itemData"
@@ -92,19 +73,13 @@
                   @click="btnClick($event, item.type)"
                 >
                   <span class="item-icon">
-                    <component
-                      :is="item.icon"
-                      @click="closeEditOption"
-                    ></component>
+                    <component :is="item.icon" @click="closeEditOption"></component>
                   </span>
                 </tiny-tooltip>
               </template>
             </template>
             <template v-if="item.type === 'delete' && !itemData.option?.builtIn">
-              <span
-                class="item-icon"
-                @click="btnClick($event, item.type)"
-              >
+              <span class="item-icon" @click="btnClick($event, item.type)">
                 <component :is="item.icon"></component>
               </span>
             </template>
@@ -127,25 +102,18 @@
     </span>
     <template #footer>
       <tiny-button @click="isShow = false">取消</tiny-button>
-      <tiny-button
-        type="danger"
-        @click="confirm"
-        >删除</tiny-button
-      >
+      <tiny-button type="danger" @click="confirm">删除</tiny-button>
     </template>
   </tiny-dialog-box>
   <!-- 遮罩层 -->
-  <mask-modal
-    :visible="showMask && !expand"
-    @close="closeMask"
-  ></mask-modal>
+  <mask-modal :visible="showMask && !expand" @close="closeMask"></mask-modal>
 </template>
 
 <script>
-import { reactive, watchEffect, ref, onMounted } from 'vue';
-import { Tooltip, Input, FormItem, Form, Popover, DialogBox, Button } from '@opentiny/vue';
-import { iconDel, iconMore, iconClose } from '@opentiny/vue-icon';
-import { MaskModal, MetaForm } from '@opentiny/tiny-engine-common';
+import { reactive, watchEffect, ref, onMounted } from 'vue'
+import { Tooltip, Input, FormItem, Form, Popover, DialogBox, Button } from '@opentiny/vue'
+import { iconDel, iconMore, iconClose } from '@opentiny/vue-icon'
+import { MaskModal, MetaForm } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
@@ -160,137 +128,137 @@ export default {
     MaskModal,
     IconDel: iconDel(),
     IconMore: iconMore(),
-    IconClose: iconClose(),
+    IconClose: iconClose()
   },
   inheritAttrs: false,
   props: {
     item: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     dataScource: {
       type: Object,
-      default: () => {},
+      default: () => {}
     },
     index: {
       type: Number,
-      default: 0,
+      default: 0
     },
     currentIndex: {
       type: Number,
-      default: -1,
+      default: -1
     },
     // 使用itemClick判断是否由双击触发弹出面板
     itemClick: {
       type: Boolean,
-      default: false,
+      default: false
     },
     // 子级弹出层是否在左侧展开
     expand: {
       type: Boolean,
-      default: false,
-    },
+      default: false
+    }
   },
   emits: ['editItem', 'changeItem', 'deleteItem', 'hide', 'hideItem', 'showItem'],
   setup(props, { emit }) {
-    const itemData = reactive({});
-    const isShow = ref(false);
-    const isVisible = ref(false);
-    const showMask = ref(false);
-    let top = ref(0);
+    const itemData = reactive({})
+    const isShow = ref(false)
+    const isVisible = ref(false)
+    const showMask = ref(false)
+    const top = ref(0)
 
     const deleteItem = () => {
-      isShow.value = true;
-    };
+      isShow.value = true
+    }
 
     const editList = () => {
-      showMask.value = true;
-      isVisible.value = true;
-    };
+      showMask.value = true
+      isVisible.value = true
+    }
 
     const btnClick = ($event, action) => {
       switch (action) {
         case 'delete':
-          deleteItem();
-          break;
+          deleteItem()
+          break
         case 'show':
-          emit('showItem', { index: props.index });
-          break;
+          emit('showItem', { index: props.index })
+          break
         case 'hide':
-          emit('hideItem', { index: props.index });
-          break;
+          emit('hideItem', { index: props.index })
+          break
         case 'openModal':
-          emit('editItem', { action: 'openModal', index: props.index });
-          break;
+          emit('editItem', { action: 'openModal', index: props.index })
+          break
         case 'edit':
-          emit('editItem', { action: 'edit', index: props.index });
-          editList();
-          break;
+          emit('editItem', { action: 'edit', index: props.index })
+          editList()
+          break
         default:
-          emit('editItem', { index: props.index });
-          editList();
-          break;
+          emit('editItem', { index: props.index })
+          editList()
+          break
       }
-    };
+    }
 
     const change = () => {
-      emit('changeItem', itemData);
-    };
+      emit('changeItem', itemData)
+    }
 
     const confirm = () => {
-      isShow.value = false;
+      isShow.value = false
 
-      emit('deleteItem', itemData);
-    };
+      emit('deleteItem', itemData)
+    }
 
     const closeEditOption = () => {
-      emit('closeItem');
-      isVisible.value = false;
-      showMask.value = false;
-    };
+      emit('closeItem')
+      isVisible.value = false
+      showMask.value = false
+    }
 
     const hide = () => {
-      emit('hide');
-    };
+      emit('hide')
+    }
 
-    const isShowModal = ref(false);
+    const isShowModal = ref(false)
 
     const cancel = () => {
-      isVisible.value = false;
-    };
+      isVisible.value = false
+    }
 
     const formConfirm = (formData) => {
-      emit('changeItem', { data: formData, index: props.index });
-      isVisible.value = false;
-    };
+      emit('changeItem', { data: formData, index: props.index })
+      isVisible.value = false
+    }
 
     watchEffect(() => {
-      itemData.option = props.item;
-      itemData.textField = props.dataScource.textField;
-      itemData.valueField = props.dataScource.valueField;
-      itemData.label = props.dataScource.label;
-      itemData.index = props.index;
+      itemData.option = props.item
+      itemData.textField = props.dataScource.textField
+      itemData.valueField = props.dataScource.valueField
+      itemData.label = props.dataScource.label
+      itemData.index = props.index
       if (props.currentIndex !== props.index) {
-        cancel();
+        cancel()
       }
-    });
+    })
 
     const openEdit = () => {
       if (props.itemClick && !isShow.value) {
-        editList();
+        editList()
       }
-    };
+    }
 
     const closeMask = () => {
-      showMask.value = false;
-      isVisible.value = false;
-    };
+      showMask.value = false
+      isVisible.value = false
+    }
 
     onMounted(() => {
       if (props.currentIndex === props.index) {
-        editList();
+        editList()
       }
-    });
+    })
 
     return {
       itemData,
@@ -309,10 +277,10 @@ export default {
       isShowModal,
       formConfirm,
       cancel,
-      openEdit,
-    };
-  },
-};
+      openEdit
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

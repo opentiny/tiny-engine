@@ -1,7 +1,7 @@
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 // 示例API路径，请根据实际后端接口调整
-const modelApi = 'http://10.234.151.79:9090/material-center/api/model'
+const modelApi = '/material-center/api/model'
 
 export function getModelList(params = {}) {
   return getMetaApi(META_SERVICE.Http).get(`${modelApi}/list`, { params })

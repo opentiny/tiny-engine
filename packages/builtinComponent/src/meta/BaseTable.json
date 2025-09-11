@@ -75,7 +75,10 @@
                       "readOnly": false,
                       "disabled": true,
                       "cols": 12,
-                      "widget": { "component": "InputConfigurator", "props": {} },
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
                       "description": {
                         "zh_CN": "列字段",
                         "en_US": "Column's field."
@@ -140,7 +143,9 @@
                       "cols": 12,
                       "widget": {
                         "component": "CodeConfigurator",
-                        "props": { "dataType": "JSFunction" }
+                        "props": {
+                          "dataType": "JSFunction"
+                        }
                       },
                       "description": {
                         "zh_CN": "格式化方法",
@@ -266,7 +271,10 @@
                       "readOnly": false,
                       "disabled": false,
                       "cols": 12,
-                      "widget": { "component": "InputConfigurator", "props": {} },
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
                       "description": {
                         "zh_CN": "表头tip内容",
                         "en_US": "Content of table header's tip."
@@ -1339,7 +1347,10 @@
             {
               "property": "modelValue",
               "label": {
-                "text": { "zh_CN": "表格数据绑定变量", "en_US": "Binding Variables For Table Data" }
+                "text": {
+                  "zh_CN": "表格数据绑定变量",
+                  "en_US": "Binding Variables For Table Data"
+                }
               },
               "required": false,
               "readOnly": false,
@@ -1495,7 +1506,9 @@
                       "cols": 12,
                       "widget": {
                         "component": "CodeConfigurator",
-                        "props": { "dataType": "JSFunction" }
+                        "props": {
+                          "dataType": "JSFunction"
+                        }
                       },
                       "description": {
                         "zh_CN": "操作的回调函数",
@@ -1537,7 +1550,10 @@
               "readOnly": false,
               "disabled": false,
               "cols": 12,
-              "widget": { "component": "NumberConfigurator", "props": {} },
+              "widget": {
+                "component": "NumberConfigurator",
+                "props": {}
+              },
               "description": {
                 "zh_CN": "表格列最小宽度",
                 "en_US": "Minimum width of table's column."
@@ -1555,7 +1571,10 @@
               "readOnly": false,
               "disabled": false,
               "cols": 12,
-              "widget": { "component": "NumberConfigurator", "props": {} },
+              "widget": {
+                "component": "NumberConfigurator",
+                "props": {}
+              },
               "description": {
                 "zh_CN": "表格列宽度",
                 "en_US": "Width of table's column."

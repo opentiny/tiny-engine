@@ -1080,7 +1080,10 @@
             {
               "property": "modelValue",
               "label": {
-                "text": { "zh_CN": "表单数据绑定变量", "en_US": "Binding Variables For Form Data" }
+                "text": {
+                  "zh_CN": "表单数据绑定变量",
+                  "en_US": "Binding Variables For Form Data"
+                }
               },
               "required": false,
               "readOnly": false,

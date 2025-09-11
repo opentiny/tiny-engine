@@ -51,10 +51,10 @@
             </tiny-form-item>
           </tiny-form>
           <tiny-collapse v-model="activeNames">
-            <tiny-collapse-item title="入参配置" name="request">
+            <tiny-collapse-item title="入参参考配置" name="request">
               <params-bind-grid :data="selectedFunction?.requestParameters || []" :type="'request'"></params-bind-grid>
             </tiny-collapse-item>
-            <tiny-collapse-item title="出参配置" name="response">
+            <tiny-collapse-item title="出参参考配置" name="response">
               <params-bind-grid
                 :data="selectedFunction?.responseParameters || []"
                 :type="'response'"
@@ -66,7 +66,7 @@
     </div>
   </tiny-popover>
   <div class="model-api-wrap" v-if="modelValue.length">
-    <div class="model-api-item" v-for="item in modelValue">
+    <div class="model-api-item" v-for="item in modelValue" :key="item.name">
       <span>{{ item.name }}</span>
       <tiny-icon-del @click="removeApi(item)"></tiny-icon-del>
     </div>
@@ -89,7 +89,6 @@ import {
   Notify
 } from '@opentiny/vue'
 import { iconClose, iconDel } from '@opentiny/vue-icon'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import ModelSelect from '../model-common/ModelSelect.vue'
 import ParamsBindGrid from './ParamsBindGrid.vue'
 
@@ -123,7 +122,6 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['update:modelValue'])
-const { getPageSchema } = useCanvas()
 const TinyIconClose = iconClose()
 const TinyIconDel = iconDel()
 const isShow = ref(false)

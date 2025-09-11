@@ -59,7 +59,6 @@ export default {
   emits: ['modelSelect'],
   setup(props, { emit }) {
     const gridLoading = ref(false)
-
     const modelListRef = ref(null)
     // 模型列表
     const modelList = ref([])

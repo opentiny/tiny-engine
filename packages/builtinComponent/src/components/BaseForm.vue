@@ -1,40 +1,17 @@
 <template>
   <div>
-    <div
-      class="placeholder-layer"
-      v-if="!formModel || !formModel?.id"
-    >
-      请选择表单模型
-    </div>
-    <tiny-form
-      v-else
-      ref="formRef"
-      label-width="120"
-      label-position="left"
-      :model="modelData"
-      v-bind="$attrs"
-    >
+    <div class="placeholder-layer" v-if="!formModel || !formModel?.id">请选择表单模型</div>
+    <tiny-form v-else ref="formRef" label-width="120" label-position="left" :model="modelData" v-bind="$attrs">
       <tiny-row>
-        <tiny-col
-          :span="colNumber"
-          v-for="(item, index) in formModel.parameters"
-          :key="index"
-        >
+        <tiny-col :span="colNumber" v-for="(item, index) in formModel.parameters" :key="index">
           <tiny-form-item :prop="item.prop">
             <template #label>
-              <div
-                class="custom-label"
-                v-auto-tip
-              >
+              <div class="custom-label" v-auto-tip>
                 {{ item.label }}
               </div>
             </template>
             <div v-if="item?.isModel && item.defaultValue !== null">
-              <tiny-form
-                label-width="100"
-                label-position="left"
-                :model="modelData[item.prop]"
-              >
+              <tiny-form label-width="100" label-position="left" :model="modelData[item.prop]">
                 <tiny-row>
                   <tiny-col
                     :span="insideColNumber"
@@ -43,10 +20,7 @@
                   >
                     <tiny-form-item :prop="insideItem.prop">
                       <template #label>
-                        <div
-                          class="custom-label"
-                          v-auto-tip
-                        >
+                        <div class="custom-label" v-auto-tip>
                           {{ insideItem.label }}
                         </div>
                       </template>
@@ -75,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, defineExpose, computed, watch, reactive } from 'vue';
+import { ref, defineProps, defineEmits, defineExpose, computed, watch, reactive } from 'vue'
 import {
   Form as TinyForm,
   FormItem as TinyFormItem,
@@ -86,48 +60,48 @@ import {
   DatePicker as TinyDatePicker,
   Numeric as TinyNumeric,
   Row as TinyRow,
-  Col as TinyCol,
-} from '@opentiny/vue';
-import axios from 'axios';
+  Col as TinyCol
+} from '@opentiny/vue'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
-    type: String,
+    type: String
   },
   className: {
-    type: String,
+    type: String
   },
   layout: {
     type: Number,
-    default: 2,
+    default: 2
   },
   viewOnly: {
     type: Boolean,
-    default: false,
+    default: false
   },
   modelValue: {
-    type: Object,
+    type: Object
   },
   serviceModel: {
-    type: Object,
+    type: Object
   },
   modelApis: {
     type: Array,
-    default: () => [],
-  },
-});
+    default: () => []
+  }
+})
 
-const modelData = ref({});
+const modelData = ref({})
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue'])
 
-const formRef = ref(null);
+const formRef = ref(null)
 
-const colNumber = computed(() => 12 / props.layout);
+const colNumber = computed(() => 12 / props.layout)
 
-const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12));
+const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12))
 
-const formModel = computed(() => props.serviceModel);
+const formModel = computed(() => props.serviceModel)
 
 const componentsMap = reactive({
   TinyInput,
@@ -135,106 +109,116 @@ const componentsMap = reactive({
   TinyCheckbox,
   TinyRadio,
   TinyDatePicker,
-  TinyNumeric,
-});
+  TinyNumeric
+})
 
 const insertApi = (data = modelData.value) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'insertApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'insertApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, data)
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
-        return res.data;
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const updateApi = (data = modelData.value) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'updateApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, data)
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
-        return res.data;
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const queryApi = ({ currentPage, pageSize, data } = {}) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'queryApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: data || modelData.value,
+    params: data || modelData.value
   })
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
-        return res.data;
+        return res.data
       }
-      throw new Error('request fail');
+      throw new Error('request fail')
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const deleteApi = (evidence = { id: modelData.value?.id }) => {
-  const apiInfo = props.modelApis.find(api => api.nameEn === 'deleteApi');
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'deleteApi')
   if (!apiInfo) {
-    return undefined;
+    return undefined
   }
   return axios[apiInfo.method](apiInfo.url, { params: evidence })
-    .then(res => {
+    .then((res) => {
       if (res.status === 200) {
-        return res.data;
+        return res.data
       } else {
-        throw new Error('request fail');
+        throw new Error('request fail')
       }
     })
-    .catch(err => {
-      throw new Error(err);
-    });
-};
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
 
 const initFormData = () => {
   modelData.value = Object.fromEntries(
-    (formModel.value.parameters || []).map(item => {
+    (formModel.value.parameters || []).map((item) => {
       return [
         item.prop,
         item?.isModel
-          ? Object.fromEntries(item.defaultValue.map(insideItem => [insideItem.prop, insideItem.defaultValue || null]))
-          : item.defaultValue || null,
-      ];
+          ? Object.fromEntries(
+              item.defaultValue.map((insideItem) => [insideItem.prop, insideItem.defaultValue || null])
+            )
+          : item.defaultValue || null
+      ]
     })
-  );
+  )
 }
 
 watch(
   () => props.modelValue,
-  value => {
+  (value) => {
     if (value) {
-      modelData.value = props.modelValue;
+      modelData.value = props.modelValue
     } else {
       initFormData()
     }
   },
   { deep: true, immediate: true }
-);
+)
+
+watch(
+  () => modelData.value,
+  (value) => {
+    emit('update:modelValue', value)
+  },
+  { deep: true }
+)
 
 const exposedData = {
   formData: () => modelData.value,
@@ -242,12 +226,12 @@ const exposedData = {
   insertApi,
   updateApi,
   queryApi,
-  deleteApi,
-};
+  deleteApi
+}
 
 defineExpose({
-  ...exposedData,
-});
+  ...exposedData
+})
 </script>
 <style lang="less" scoped>
 .placeholder-layer {
