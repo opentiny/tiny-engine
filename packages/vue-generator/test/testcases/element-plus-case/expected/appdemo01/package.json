@@ -1,6 +1,6 @@
 {
   "name": "portal-app",
-  "version": "1.0.0",
+  "version": "2.9.0-alpha.2",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
