@@ -1,7 +1,7 @@
-import { getUtils } from './tools/getUtils'
-import { addUtils } from './tools/addOrEditUtils'
-import { deleteUtils } from './tools/deleteUtils'
+import { getUtilsTool } from './tools/getUtilsTool'
+import { addOrEditUtilsTool } from './tools/addOrEditUtilsTool'
+import { deleteUtilsTool } from './tools/deleteUtilsTool'
 
 export default {
-  tools: [getUtils, addUtils, deleteUtils]
+  tools: [getUtilsTool, addOrEditUtilsTool, deleteUtilsTool]
 }

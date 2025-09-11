@@ -13,8 +13,8 @@ const descriptions = [
   "if you don't provide the id or name, you will get all utils."
 ]
 
-export const getUtils = {
-  name: 'get_utils',
+export const getUtilsTool = {
+  name: 'get_utils_tool',
   title: '获取工具类',
   description: descriptions.join('\n'),
   inputSchema: inputSchema.shape,

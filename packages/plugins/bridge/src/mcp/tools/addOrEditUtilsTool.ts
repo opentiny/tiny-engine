@@ -1,7 +1,6 @@
 import { z } from 'zod'
-import { getMetaApi, META_SERVICE, useResource } from '@opentiny/tiny-engine-meta-register'
-import { RESOURCE_CATEGORY, RESOURCE_TYPE } from '../../js/resource'
-import { requestAddReSource, requestUpdateReSource } from '../../http'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { RESOURCE_TYPE } from '../../js/constants'
 import type { IUtilItem } from '../../js/useUtils'
 
 const npmContentSchema = z
@@ -28,27 +27,10 @@ const functionContentSchema = z
   ])
   .describe('Function content for the utils tool')
 
-// const addUtilsDataSchema = z.discriminatedUnion('category', [
-//   z
-//     .object({
-//       category: z.literal(RESOURCE_CATEGORY.Npm).describe('Use npm dependency as utils'),
-//       name: z.string().describe('The name of the utils tool'),
-//       content: npmContentSchema
-//     })
-//     .describe('Utils defined by npm dependency'),
-//   z
-//     .object({
-//       category: z.literal(RESOURCE_CATEGORY.Function).describe('Use JS function as utils'),
-//       name: z.string().describe('The name of the utils tool'),
-//       content: functionContentSchema
-//     })
-//     .describe('Utils defined by JS function')
-// ])
-
 const OPERATION = {
   ADD: 'add',
   EDIT: 'edit'
-}
+} as const
 
 const inputSchema = z.object({
   operation: z.enum([OPERATION.ADD, OPERATION.EDIT]).describe('operation: add or edit'),
@@ -56,7 +38,7 @@ const inputSchema = z.object({
     .number()
     .optional()
     .describe('if you want to edit a existing utils tool, you need to provide the id of the utils tool'),
-  type: z.enum([RESOURCE_CATEGORY.Npm, RESOURCE_CATEGORY.Function]).describe('Utils category: npm or function'),
+  type: z.enum([RESOURCE_TYPE.Npm, RESOURCE_TYPE.Function]).describe('Utils category: npm or function'),
   name: z.string().describe('The name of the utils tool'),
   // 用 union 明确定义两种可接受格式，便于 AI 识别
   content: z
@@ -94,8 +76,71 @@ const inputSchema = z.object({
     )
 })
 
-export const addUtils = {
-  name: 'add_or_edit_utils',
+const validateParams = (
+  operation: typeof OPERATION[keyof typeof OPERATION],
+  id: number | undefined,
+  type: typeof RESOURCE_TYPE[keyof typeof RESOURCE_TYPE],
+  content: z.infer<typeof inputSchema>['content']
+) => {
+  if (operation === OPERATION.EDIT && !id) {
+    return {
+      isValid: false,
+      content: {
+        status: 'error',
+        message: 'id is required when operation is edit',
+        error: 'id is required'
+      }
+    }
+  }
+
+  if (operation === OPERATION.ADD && id) {
+    return {
+      isValid: false,
+      content: {
+        status: 'error',
+        message: 'id is not allowed when operation is add',
+        error: 'id is not allowed'
+      }
+    }
+  }
+
+  // 操作类型为编辑，带上 id
+  if (operation === OPERATION.EDIT) {
+    // data.id = id
+    const { getUtilById } = getMetaApi(META_SERVICE.UseUtils)
+    const item = getUtilById(id)
+
+    // 校验 id 是否存在
+    if (!item) {
+      return {
+        isValid: false,
+        content: {
+          status: 'error',
+          message: 'cannot find the item by id. please check the id.',
+          error: 'item not found.'
+        }
+      }
+    }
+  }
+
+  if (type === RESOURCE_TYPE.Npm && typeof content === 'string') {
+    return {
+      isValid: false,
+      content: {
+        status: 'error',
+        message: 'content must be an object when category is npm. Please read the input schema carefully.',
+        error: 'content must be an object'
+      }
+    }
+  }
+
+  return {
+    isValid: true
+  }
+}
+
+export const addOrEditUtilsTool = {
+  name: 'add_or_edit_utils_tool',
   title: '新增或修改 Utils 工具',
   description:
     'Add a new or edit a existing utils tool to the current TinyEngine low-code application. Use this when you need to add new or edit existing utils tool to your application.',
@@ -109,84 +154,29 @@ export const addUtils = {
       app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     }
 
-    const { getUtilById, updateUtils, addUtils } = getMetaApi(META_SERVICE.UseUtils)
+    const { updateUtils, addUtils } = getMetaApi(META_SERVICE.UseUtils)
+    const validateResult = validateParams(operation, id, type, content)
 
-    if (operation === OPERATION.EDIT && !id) {
+    if (!validateResult.isValid) {
       return {
         content: [
           {
             isError: true,
             type: 'text',
-            text: JSON.stringify({
-              status: 'error',
-              message: 'id is required when operation is edit',
-              error: 'id is required'
-            })
+            text: JSON.stringify(validateResult.content)
           }
         ]
       }
     }
 
-    if (operation === OPERATION.ADD && id) {
-      return {
-        content: [
-          {
-            isError: true,
-            type: 'text',
-            text: JSON.stringify({
-              status: 'error',
-              message: 'id is not allowed when operation is add',
-              error: 'id is not allowed'
-            })
-          }
-        ]
-      }
-    }
-
-    // 操作类型为编辑，带上 id
     if (operation === OPERATION.EDIT) {
       data.id = id
-      // @ts-ignore
-      const item = getUtilById(id)
-
-      // 校验 id 是否存在
-      if (!item) {
-        return {
-          content: [
-            {
-              isError: true,
-              type: 'text',
-              text: JSON.stringify({
-                status: 'error',
-                message: 'cannot find the item by id. please check the id.',
-                error: 'item not found.'
-              })
-            }
-          ]
-        }
-      }
-    }
-
-    if (type === RESOURCE_CATEGORY.Npm && typeof content === 'string') {
-      return {
-        content: [
-          {
-            isError: true,
-            type: 'text',
-            text: JSON.stringify({
-              status: 'error',
-              message: 'content must be an object when category is npm. Please read the input schema carefully.',
-              error: 'content must be an object'
-            })
-          }
-        ]
-      }
     }
 
     try {
       let result: Record<string, any> | null = null
 
-      if (type === RESOURCE_CATEGORY.Function) {
+      if (type === RESOURCE_TYPE.Function) {
         data.content =
           typeof content === 'string'
             ? {
@@ -194,39 +184,16 @@ export const addUtils = {
                 value: content
               }
             : content
-
-        if (operation === OPERATION.EDIT) {
-          result = await updateUtils(data as IUtilItem)
-        } else {
-          result = await addUtils(data as Omit<IUtilItem, 'id'>)
-        }
       }
 
-      if (type === RESOURCE_CATEGORY.Npm) {
+      if (type === RESOURCE_TYPE.Npm) {
         data.content = content
-
-        if (operation === OPERATION.EDIT) {
-          result = await requestUpdateReSource(data)
-        } else {
-          result = await requestAddReSource(data)
-        }
       }
 
-      if (result) {
-        if (operation === OPERATION.EDIT) {
-          // @ts-ignore
-          const index = useResource().appSchemaState[RESOURCE_TYPE.Util].findIndex(
-            (item: any) => item.name === result.name
-          )
-
-          if (index !== -1) {
-            // @ts-ignore
-            useResource().appSchemaState[RESOURCE_TYPE.Util][index] = result
-          }
-        } else {
-          // @ts-ignore
-          useResource().appSchemaState[RESOURCE_TYPE.Util].push(result)
-        }
+      if (operation === OPERATION.EDIT) {
+        result = await updateUtils(data as IUtilItem)
+      } else {
+        result = await addUtils(data as Omit<IUtilItem, 'id'>)
       }
 
       return {

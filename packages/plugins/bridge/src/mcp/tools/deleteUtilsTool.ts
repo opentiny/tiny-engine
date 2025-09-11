@@ -5,8 +5,8 @@ const inputSchema = z.object({
   id: z.number().describe('工具类 id')
 })
 
-export const deleteUtils = {
-  name: 'delete_utils',
+export const deleteUtilsTool = {
+  name: 'delete_utils_tool',
   title: '删除工具类',
   description: '删除工具类',
   inputSchema: inputSchema.shape,
