@@ -172,39 +172,76 @@ const getRange = (position, words) => ({
   endColumn: words[words.length - 1].endColumn
 })
 
-const fetchAiInlineCompletion = (wordContent, signal) => {
+const generateBaseReference = () => {
   const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState
   const { state, methods } = useCanvas().getPageSchema()
   const currentSchema = useCanvas().getCurrentSchema()
-  const context =
-    `const state=${
-      JSON.stringify(state) || '{}'
-    } // 请将其理解为js对象，使用方式如： this.state.xxx, 属于页面全局变量，不要作为入参或出参使用\nconst stores=${JSON.stringify(
-      globalState
-    )} // 请将其理解为pinia对象，使用方式如： this.stores.xxx, 属于应用全局变量，不要作为入参或出参使用\nconst dataSource=${JSON.stringify(
+  let referenceContext = `以下是一些通用的协议：
+  \n常规属性如：{ width: '300px' }
+  \n1.变量引用
+  \n{ width: { type: 'JSExpression', value: 'this.state.xxx' }}
+  \n即当type为JSExpression，取其value并将value的值当做变量调用
+  \n2.方法引用
+  \n{ onClickNew: { type: 'JSFunction', value: 'function onClickNew() {}' }}
+  \n即当type为JSFunction，取其value并将value的值函数调用
+  \n以下是一些依赖，调用均以this.开头：\n`
+  if (dataSource.length) {
+    referenceContext += `数据源是定义的数据模型\nconst dataSource=${JSON.stringify(
       dataSource
-    )} // 请将其理解为js对象，使用方式如： this.dataSource.xxx, 属于页面全局变量，不要作为入参或出参使用\nconst utils=${JSON.stringify(
-      utils
-    )} // 请将其理解为js对象，使用方式如： this.utils.xxx, 属于页面全局变量，不要作为入参或出参使用\nconst methods=${JSON.stringify(
-      methods
-    )} // 请将其理解为js对象，使用方式如： this.xxx，type为JSFunction表示他的类型是function，实际方法体为其value, 属于页面全局变量，不要作为入参或出参使用\n\n当前选中组件上下文\n${JSON.stringify(
-      currentSchema
-    )}\n 请理解当前组件，componentName为组件名称，组件均为vue组件\nref为vue3组件的ref属性，使用方式为this.$('xxx')\nprops为其属性，是一个对象，将其理解为vue3组件的props及传递的事件\n` +
-    `其中普通属性不以on开头，且如果其type为JSExpression表示绑定了变量，例如this.state.xxx，则从state上下文取值，其他同理\n` +
-    `其中属性以on开头的表示为绑定事件，绑定事件如果type为JSExpression，那么其value的this.xxx表示从methods上下文中读取对应方法,如果type为JSFunction，实际方法体为其value`
+    )}\n调用方式为： this.dataSource.xxx\n`
+  }
+  if (utils.length) {
+    referenceContext += `工具类是通用的调用方法或npm依赖
+    \nconst utils=${JSON.stringify(utils)}
+    \n调用方式为： this.utils.xxx 
+    \nutils有两种类型
+    \ntype为npm时，读取content内容，可构造如下引用，例如content中package（依赖包名）为@opentiny/vue，destructuring(解构)为true，exportName（导出组件名称）为Notify，实际引用方式是import { Notify } from '@opentiny/vue';
+    \ntype为function时，读取content内容，当content.type为JSFunction则将value视为JS方法并调用，其他可参考通用的协议\n`
+  }
+  if (globalState.length) {
+    referenceContext += `全局变量是使用pinia创建的变量\nconst stores=${JSON.stringify(
+      globalState
+    )}\n调用方式为： this.stores.xxx\n`
+  }
+  if (Object.keys(state).length) {
+    referenceContext += `js变量\nconst state=${JSON.stringify(state)}\n调用方式为： this.state.xxx\n`
+  }
+  if (Object.keys(methods).length) {
+    referenceContext += `js方法\nconst methods=${JSON.stringify(methods)}\n调用方式为： this.xxx\n`
+  }
+  referenceContext += `以上依赖中没有的，则不能调用，如utils中没有axios，则axios不能使用\n`
+  if (currentSchema) {
+    referenceContext += `以下是当前选中的组件
+    \n${JSON.stringify(currentSchema)}
+    \n请理解当前组件，componentName为组件名称，组件均为tinyVue组件，和基本html元素
+    \n该对象中的ref属性为vue组件的ref属性，如ref值为testForm，使用方式为this.$('testForm')
+    \nprops表示组件的属性，是一个对象，对应vue组件的defineProps和defineEmits中的内容
+    \nprops中以on开头的表示其传递的是方法，如onClick，其值可以参考通用协议
+    \nprops中没有以on开头的则是普通属性，如onClick，其值中满足type为JSExpression和JSFunction的可以参考通用协议\n`
+  }
+  return referenceContext
+}
+
+const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
+  const referenceContext = generateBaseReference()
   return fetch('https://agent.opentiny.design/api/v1/ai/chat/completions', {
     method: 'POST',
-    signal,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer sk-trial'
+      Authorization: 'Bearer sk-1234'
     },
     body: JSON.stringify({
-      model: 'deepseek-ai/Deepseek-V3',
+      model: 'internvl3-14b',
       messages: [
         {
           role: 'user',
-          content: `你是一个JavaScript或TypeScript代码补全器，以下是我的上下文：\n${context}\n，关键字如下：\n${wordContent}\n请帮我进行补全，紧跟着关键字进行补全，不需要多余代码，注意创建方法时，须以这种格式：function xxx() {}\n如果有多个示例，只选择其中一个，只需要返回对应的逻辑正确的纯粹代码，只返回纯粹代码，不需要返回思考过程和解释`
+          content: `你是一个JavaScript代码补全器，可以使用JS和ES的语法
+          \n${referenceContext}
+          \n直接上下文如下：
+          \n${codeBeforeCursor}<cursor>${codeAfterCursor}
+          \n请从<cursor>（光标位置）处进行补全
+          \n返回代码不要包含上下文代码，不需要多余代码，注意如果是函数时，须以这种格式：function xxx() {}
+          \n如果有多个示例，只选择其中一个，不需要返回思考过程和解释`
         }
       ],
       stream: false
@@ -213,14 +250,14 @@ const fetchAiInlineCompletion = (wordContent, signal) => {
 }
 
 const initInlineCompletion = (monacoInstance, editorModel) => {
-  const controller = ref(new AbortController())
-  const signal = ref(controller.value.signal)
   const requestAllowed = ref(true)
   const timer = ref()
   const inlineCompletionProvider = {
     provideInlineCompletions(model, position, _context, _token) {
       if (editorModel && model.id !== editorModel.id) {
-        return null
+        return new Promise((resolve) => {
+          resolve({ items: [] })
+        })
       }
 
       if (timer.value) {
@@ -230,23 +267,41 @@ const initInlineCompletion = (monacoInstance, editorModel) => {
       const words = getWords(model, position)
       const range = getRange(position, words)
       const wordContent = words.map((item) => item.word).join('')
-      if (!wordContent || wordContent.lastIndexOf('}') === 0) {
-        return null
+      if (!wordContent || wordContent.lastIndexOf('}') === 0 || wordContent.length < 4) {
+        return new Promise((resolve) => {
+          resolve({ items: [] })
+        })
       }
-      // 如果是第二次请求，则中断当前未完成的请求
-      if (controller.value && !requestAllowed.value) {
-        controller.value.abort()
+      if (!requestAllowed.value) {
+        return new Promise((resolve) => {
+          resolve({
+            items: [
+              {
+                insertText: '',
+                range
+              }
+            ]
+          })
+        })
       }
-      // 如果请求被中断后，重新设置AbortController
-      if (!controller.value || signal.value.aborted) {
-        controller.value = new AbortController()
-        signal.value = controller.value.signal
-      }
-      requestAllowed.value = false
+      const codeBeforeCursor = model.getValueInRange({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column
+      })
+      const codeAfterCursor = model.getValueInRange({
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: model.getLineCount(),
+        endColumn: model.getLineMaxColumn(model.getLineCount())
+      })
       return new Promise((resolve) => {
-        // 防抖操作，延迟请求800ms
+        // 延迟请求800ms
         timer.value = setTimeout(() => {
-          fetchAiInlineCompletion(wordContent, signal.value)
+          // 节流操作，防止接口一直被请求
+          requestAllowed.value = false
+          fetchAiInlineCompletion(codeBeforeCursor, codeAfterCursor)
             .then((response) => response.json())
             .then((res) => {
               let insertText = res.choices[0].message.content
@@ -257,7 +312,7 @@ const initInlineCompletion = (monacoInstance, editorModel) => {
                 .trim()
               const wordContentIndex = insertText.indexOf(wordContent)
               if (wordContentIndex === -1) {
-                insertText = `${wordContent}\n${insertText}`
+                insertText = `${wordContent}${insertText}\n`
               }
               if (wordContentIndex > 0) {
                 insertText = insertText.slice(wordContentIndex)
@@ -266,8 +321,6 @@ const initInlineCompletion = (monacoInstance, editorModel) => {
               resolve({
                 items: [
                   {
-                    label: wordContent,
-                    text: wordContent,
                     insertText,
                     range
                   }
@@ -280,9 +333,7 @@ const initInlineCompletion = (monacoInstance, editorModel) => {
         }, 800)
       })
     },
-    freeInlineCompletions(completions) {
-      completions.items = []
-    }
+    freeInlineCompletions() {}
   }
   return ['javascript', 'typescript'].map((lang) =>
     monacoInstance.languages.registerInlineCompletionsProvider(lang, inlineCompletionProvider)
