@@ -10,8 +10,8 @@
  *
  */
 
-import useHttp from '../http'
-import dataSources from './dataSource.json'
+import useHttp from '@/http/index.js'
+import dataSources from '@/lowcodeConfig/dataSource.json'
 
 const dataSourceMap = {}
 
@@ -82,7 +82,7 @@ dataSources.list.forEach((config) => {
   http.interceptors.request.use(willFetch, errorHandler)
   http.interceptors.response.use(dataHandler, errorHandler)
 
-  if (import.meta.env.VITE_APP_MOCK === 'mock') {
+  if (import.meta.env?.VITE_APP_MOCK === 'mock') {
     http.mock([
       {
         url: config.options?.uri,
