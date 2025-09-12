@@ -7,7 +7,8 @@ import {
   CanvasCol,
   CanvasRowColContainer,
   CanvasFlexBox,
-  CanvasSection
+  CanvasSection,
+  CanvasNavigation
 } from '@opentiny/tiny-engine-builtin-component'
 import {
   CanvasBox,
@@ -18,8 +19,7 @@ import {
   CanvasImg,
   CanvasPlaceholder,
   CanvasRouterView,
-  CanvasRouterLink,
-  CanvasNavigation
+  CanvasRouterLink
 } from '../builtin'
 import { getController } from '../canvas-function/controller'
 import BlockLoadError from '../BlockLoadError.vue'
@@ -41,7 +41,7 @@ export const Mapper = {
   CanvasPlaceholder,
   RouterView: CanvasRouterView,
   RouterLink: CanvasRouterLink,
-  Navigation: CanvasNavigation
+  CanvasNavigation
 }
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]

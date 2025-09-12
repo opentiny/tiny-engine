@@ -19,7 +19,6 @@ import CanvasImg from './CanvasImg.vue'
 import CanvasPlaceholder from './CanvasPlaceholder.vue'
 import CanvasRouterView from './CanvasRouterView.vue'
 import CanvasRouterLink from './CanvasRouterLink.vue'
-import CanvasNavigation from './CanvasNavigation.vue'
 
 export {
   CanvasText,
@@ -30,6 +29,5 @@ export {
   CanvasImg,
   CanvasPlaceholder,
   CanvasRouterView,
-  CanvasRouterLink,
-  CanvasNavigation
+  CanvasRouterLink
 }

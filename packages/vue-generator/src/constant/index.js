@@ -2209,6 +2209,13 @@ export const BUILTIN_COMPONENTS_MAP = [
     package: '@opentiny/tiny-engine-builtin-component',
     version: '^2.0.0',
     destructuring: true
+  },
+  {
+    componentName: 'CanvasNavigation',
+    exportName: 'CanvasNavigation',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
   }
 ]
 
