@@ -1,5 +1,8 @@
 import { z } from 'zod'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { createErrorResponse } = utils
 
 const inputSchema = z.object({
   id: z.number().optional().describe('工具类 id'),
@@ -41,18 +44,7 @@ export const getUtilsTool = {
       const item = getUtilById(id)
 
       if (!item) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                status: 'error',
-                message: 'cannot find the item by id. please check the id.',
-                error: 'item not found.'
-              })
-            }
-          ]
-        }
+        return createErrorResponse('cannot find the item by id. please check the id.')
       }
 
       return {
@@ -72,18 +64,7 @@ export const getUtilsTool = {
       const item = getUtilByName(name)
 
       if (!item) {
-        return {
-          content: [
-            {
-              type: 'text',
-              text: JSON.stringify({
-                status: 'error',
-                message: 'cannot find the item by name. please check the name.',
-                error: 'item not found.'
-              })
-            }
-          ]
-        }
+        return createErrorResponse('cannot find the item by name. please check the name.')
       }
 
       return {

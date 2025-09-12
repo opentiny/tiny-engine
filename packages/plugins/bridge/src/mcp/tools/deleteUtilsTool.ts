@@ -1,5 +1,8 @@
 import { z } from 'zod'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { createErrorResponse } = utils
 
 const inputSchema = z.object({
   id: z.number().describe('工具类 id')
@@ -16,34 +19,38 @@ export const deleteUtilsTool = {
     const utilItem = getUtilById(id)
 
     if (!utilItem) {
+      return createErrorResponse('cannot find the item by id. please check the id.')
+    }
+
+    try {
+      const data = await deleteUtils(id)
+
       return {
         content: [
           {
-            isError: true,
             type: 'text',
             text: JSON.stringify({
-              status: 'error',
-              message: 'cannot find the item by id. please check the id.',
-              error: 'item not found.'
+              status: 'success',
+              message: 'Utils tool deleted successfully',
+              data
             })
           }
         ]
       }
-    }
-
-    const data = await deleteUtils(id)
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: JSON.stringify({
-            status: 'success',
-            message: 'Utils tool deleted successfully',
-            data
-          })
-        }
-      ]
+    } catch (error) {
+      return {
+        isError: true,
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              message: 'Failed to delete utils tool',
+              error: error instanceof Error ? error.message : 'Unknown error occurred'
+            })
+          }
+        ]
+      }
     }
   }
 }

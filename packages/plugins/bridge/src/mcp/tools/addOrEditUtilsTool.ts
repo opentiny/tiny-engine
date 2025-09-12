@@ -134,6 +134,16 @@ const validateParams = (
     }
   }
 
+  if (type === RESOURCE_TYPE.Npm) {
+    const parsed = npmContentSchema.safeParse(content)
+    if (!parsed.success) {
+      return {
+        isValid: false,
+        content: { status: 'error', message: 'invalid npm content', error: parsed.error.flatten() }
+      }
+    }
+  }
+
   return {
     isValid: true
   }
@@ -143,7 +153,7 @@ export const addOrEditUtilsTool = {
   name: 'add_or_edit_utils_tool',
   title: '新增或修改 Utils 工具',
   description:
-    'Add a new or edit a existing utils tool to the current TinyEngine low-code application. Use this when you need to add new or edit existing utils tool to your application.',
+    'Add a new utils item or edit an existing one in the current TinyEngine application. Use this to create or update utils.',
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { operation, id, type, name, content } = args
@@ -154,7 +164,7 @@ export const addOrEditUtilsTool = {
       app: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     }
 
-    const { updateUtils, addUtils } = getMetaApi(META_SERVICE.UseUtils)
+    const { updateUtils, addUtils } = getMetaApi(META_SERVICE.UseUtils) || {}
     const validateResult = validateParams(operation, id, type, content)
 
     if (!validateResult.isValid) {

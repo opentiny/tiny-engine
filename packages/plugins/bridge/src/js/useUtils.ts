@@ -93,7 +93,8 @@ const addUtils = async (data: Omit<IUtilItem, 'id'>) => {
   updateCount.value++
 
   syncUtilsItemToAppSchemaState(result)
-  refreshUtils()
+  await refreshUtils()
+
   return result
 }
 
@@ -108,7 +109,8 @@ const updateUtils = async (data: IUtilItem) => {
   updateCount.value++
 
   syncUtilsItemToAppSchemaState(result)
-  refreshUtils()
+  await refreshUtils()
+
   return result
 }
 
@@ -123,13 +125,14 @@ const deleteUtils = async (id: number) => {
   lastOperation.value = { id, type: 'delete' }
   updateCount.value++
 
-  refreshUtils()
   const utilItem = getUtilById(id)
   const index = useResource().appSchemaState[RESOURCE_CATEGORY.Util].findIndex((item) => item.name === utilItem?.name)
 
   if (index !== -1) {
     useResource().appSchemaState[RESOURCE_CATEGORY.Util].splice(index, 1)
   }
+
+  await refreshUtils()
 
   return result
 }
