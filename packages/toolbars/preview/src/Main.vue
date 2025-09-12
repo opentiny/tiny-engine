@@ -2,9 +2,9 @@
   <div class="toolbar-save toolbar-helpGuid">
     <toolbar-base content="预览页面" :icon="options.icon?.default || options?.icon" :options="options" trigger="click">
       <template #button>
-        <div>
-          <tiny-button type="text" @click="preview('page')">页面预览</tiny-button>
-          <tiny-button type="text" @click="preview('app')">应用预览</tiny-button>
+        <div class="toolbar-preview-item">
+          <span @click="preview('page')">页面预览</span>
+          <span @click="preview('app')">应用预览</span>
         </div>
       </template>
     </toolbar-base>
@@ -12,7 +12,6 @@
 </template>
 
 <script lang="ts">
-import { Button } from '@opentiny/vue'
 /* metaService: engine.toolbars.preview.Main */
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
@@ -21,8 +20,7 @@ import { ToolbarBase } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
-    ToolbarBase,
-    TinyButton: Button
+    ToolbarBase
   },
   props: {
     options: {
@@ -81,3 +79,15 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.toolbar-preview-item {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    cursor: pointer;
+  }
+}
+</style>
