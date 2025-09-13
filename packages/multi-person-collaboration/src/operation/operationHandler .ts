@@ -153,6 +153,18 @@ export class OperationHandler {
     this.swapYArrayElements(childrenArray, targetIndex, swapIndex, parentId, targetId, direction)
   }
 
+  // 修改节点样式
+  public updatedStyle(strStyle: string, nodeId: string, className: string) {
+    // 添加样式
+    this.yMap.set('css', strStyle)
+
+    // 添加 class 类名
+    const targetNode = this.getYNode(nodeId)
+    targetNode?.get('props').set('className', `${className}_${nodeId}`)
+
+    Object.assign(this.rootSchema, { css: strStyle })
+  }
+
   // 重建整个映射（刷新后可以手动调用）
   public rebuildYNodeMap(rootSchema: PageSchema) {
     this.yNodeMap.clear()

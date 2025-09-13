@@ -473,6 +473,7 @@ export default {
           updateUserSelection,
           moveDownSharedNode,
           moveUpSharedNode,
+          updateStyleNode,
           remoteStates
         } = useCollabSchema({
           roomId: 'schema-yjs',
@@ -485,6 +486,7 @@ export default {
           updateUserSelection,
           moveDownSharedNode,
           moveUpSharedNode,
+          updateStyleNode,
           remoteStates
         })
 

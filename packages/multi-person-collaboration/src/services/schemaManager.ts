@@ -22,6 +22,8 @@ type DiffPatch =
       targetIndex: number
       swapIndex: number
     }
+  | { type: 'style-update'; path: (string | number)[]; css: string }
+  | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
 
 /**
  * SchemaManager 类，负责管理 Yjs 中的 NodeSchema 文档
@@ -139,7 +141,7 @@ export class SchemaManager {
     }
   }
 
-  // 设置一个专门的监听器来处理来自“事件总线”的自定义操作
+  // 设置一个专门的监听器来处理来自“事件总线”的自定义操作,处理无法被监听器很好处理的事件
   public setupEventListeners(docName: string): void {
     // 解绑旧的监听器，防止重复
     if (this.eventListeners.has(docName)) {
@@ -237,25 +239,47 @@ export class SchemaManager {
         if (event.target instanceof Y.Map) {
           const yMapNode = event.target
 
-          // 检查 _node_deleted 键的变化
-          if (event.changes.keys.has('_node_deleted')) {
-            const change = event.changes.keys.get('_node_deleted')
-
-            // 当一个节点被添加了 _node_deleted 属性时
-            if (change?.action === 'add' || change?.action === 'update') {
-              if (yMapNode.get('_node_deleted') === true) {
-                const nodeId = yMapNode.get('id')
-                if (nodeId) {
-                  patches.push({
-                    type: 'array-delete',
-                    path: event.path,
-                    count: 1,
-                    deletedIds: [nodeId]
-                  })
+          event.changes.keys.forEach((change, key) => {
+            // 软删除
+            if (key === '_node_deleted') {
+              // 删除逻辑
+              if (change?.action === 'add' || change?.action === 'update') {
+                if (yMapNode.get('_node_deleted') === true) {
+                  const nodeId = yMapNode.get('id')
+                  if (nodeId) {
+                    patches.push({
+                      type: 'array-delete',
+                      path: event.path,
+                      count: 1,
+                      deletedIds: [nodeId]
+                    })
+                  }
                 }
               }
+            } else if (key === 'className') {
+              // 新增样式，为配合 css 更新
+              if (change.action === 'add') {
+                const newClassAndId = yMapNode.get('className')
+                const [className, nodeId] = (newClassAndId as string).split('_')
+                patches.push({
+                  type: 'class-add',
+                  path: event.path,
+                  nodeId,
+                  className
+                })
+              }
+            } else if (key === 'css') {
+              // css 更新同步逻辑
+              if (change.action === 'update' || change.action === 'add') {
+                const newCss = yMapNode.get('css')
+                patches.push({
+                  type: 'style-update',
+                  path: event.path,
+                  css: newCss
+                })
+              }
             }
-          }
+          })
         }
 
         // Array 变更
@@ -330,7 +354,7 @@ export class SchemaManager {
   private applyPatches(docName: string, patches: DiffPatch[]) {
     for (const patch of patches) {
       switch (patch.type) {
-        case 'array-insert':
+        case 'array-insert': {
           patch.items.forEach((item) => {
             useCanvas().operateNode({
               type: 'insert',
@@ -341,7 +365,8 @@ export class SchemaManager {
             })
           })
           break
-        case 'array-delete':
+        }
+        case 'array-delete': {
           patch.deletedIds.forEach((item) => {
             useCanvas().operateNode({
               type: 'delete',
@@ -349,6 +374,7 @@ export class SchemaManager {
             })
           })
           break
+        }
         case 'array-swap': {
           const parentNode = patch.parentId ? useCanvas().getNode(patch.parentId, false) : useCanvas().getPageSchema()
           const childrenArray: any[] = parentNode.children
@@ -361,6 +387,21 @@ export class SchemaManager {
           }
 
           useMessage().publish({ topic: 'schemaChange', data: {} })
+          break
+        }
+        case 'class-add': {
+          const { nodeId, className } = patch
+          const node = useCanvas().getNode(nodeId)
+          node.props.className = className
+
+          useMessage().publish({ topic: 'schemaChange', data: {} })
+          break
+        }
+        case 'style-update': {
+          const { updateSchema } = useCanvas()
+          const strStyle = patch.css
+
+          updateSchema({ css: strStyle })
           break
         }
         default:

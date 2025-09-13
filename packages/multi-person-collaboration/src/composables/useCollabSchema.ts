@@ -50,7 +50,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   const schemaManager = SchemaManager.getInstance()
   const schemaModel = schemaManager.createSchema(roomId, provider.value!)
 
-  // 拖拽事件，更新共享 schema，同步到远端
+  // 拖拽节点
   const insertSharedNode = (
     node: { node: Node | RootNode; parent: Node | RootNode; data: Node },
     position: PositionType = POSITION.IN
@@ -71,6 +71,11 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   // canvas 内，节点向下移动
   const moveDownSharedNode = (parentId: string, targetId: string, direction: 'down') => {
     schemaModel.moveNode(parentId, targetId, direction)
+  }
+
+  // canvas 内，修改节点样式
+  const updateStyleNode = (styleStr: string, nodeId: string, className: string) => {
+    schemaModel.updatedNodeCss(styleStr, nodeId, className)
   }
 
   // 用户信息同步 方法
@@ -105,6 +110,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     insertSharedNode,
     deleteSharedNode,
     moveUpSharedNode,
-    moveDownSharedNode
+    moveDownSharedNode,
+    updateStyleNode
   }
 }

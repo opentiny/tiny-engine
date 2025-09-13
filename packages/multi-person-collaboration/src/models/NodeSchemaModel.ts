@@ -68,6 +68,11 @@ export class NodeSchemaModel {
     this.operationHandler.move({ parentId, targetId, direction })
   }
 
+  // canvas 内，更新节点样式
+  public updatedNodeCss(strStyle: string, nodeId: string, className: string) {
+    this.operationHandler.updatedStyle(strStyle, nodeId, className)
+  }
+
   // insert 操作
   private insert(parentId: string, newNodeData: Node, position: string, referTargetNodeId?: string) {
     this.operationHandler.insert({
