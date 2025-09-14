@@ -78,6 +78,11 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     schemaModel.updatedNodeCss(styleStr, nodeId, className)
   }
 
+  // settings， 修改节点属性
+  const updatePropsNode = (newProps: Record<any, any>, nodeId: string, overwrite: boolean) => {
+    schemaModel.updatedNodeProps(newProps, nodeId, overwrite)
+  }
+
   // 用户信息同步 方法
   const updateUserSelection = (selectedNode: any) => {
     updateLocalStateField('selection', selectedNode)
@@ -111,6 +116,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     deleteSharedNode,
     moveUpSharedNode,
     moveDownSharedNode,
-    updateStyleNode
+    updateStyleNode,
+    updatePropsNode
   }
 }

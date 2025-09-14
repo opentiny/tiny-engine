@@ -13,7 +13,7 @@
 /* metaService: engine.service.properties.useProperties */
 import { toRaw, shallowReactive, ref } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useMaterial, useTranslate } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMaterial, useTranslate, useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 import type { Property, Schema } from '@opentiny/tiny-engine-plugin-materials'
 
 const { COMPONENT_NAME } = constants
@@ -141,6 +141,9 @@ const setProp = (name: string, value: unknown, type?: unknown) => {
     value: { props: newProps },
     option: { overwrite }
   })
+
+  // 多人协作，属性同步
+  useRealtimeCollab().updatePropsNode(newProps, properties.schema.id || '', overwrite)
 
   propsUpdateKey.value++
 }

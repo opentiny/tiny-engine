@@ -24,6 +24,7 @@ type DiffPatch =
     }
   | { type: 'style-update'; path: (string | number)[]; css: string }
   | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
+  | { type: 'props-update'; path: (string | number)[]; props: Record<any, any>; meta: Record<any, any> }
 
 /**
  * SchemaManager 类，负责管理 Yjs 中的 NodeSchema 文档
@@ -278,6 +279,20 @@ export class SchemaManager {
                   css: newCss
                 })
               }
+            } else if (key === 'props') {
+              // Props 属性更新同步逻辑
+              if (change.action === 'add' || change.action === 'update') {
+                const newProps = yMapNode.get('props').toJSON()
+                const meta = newProps.meta // meta 包含操作的 nodeId 和 overwrite
+
+                delete newProps.meta // 删除元数据，保持 props 不被污染
+                patches.push({
+                  type: 'props-update',
+                  path: event.path,
+                  props: newProps,
+                  meta
+                })
+              }
             }
           })
         }
@@ -402,6 +417,18 @@ export class SchemaManager {
           const strStyle = patch.css
 
           updateSchema({ css: strStyle })
+          break
+        }
+        case 'props-update': {
+          const { props: newProps, meta } = patch
+          const { nodeId, overwrite } = meta
+
+          useCanvas().operateNode({
+            type: 'changeProps',
+            id: nodeId || '',
+            value: { props: newProps },
+            option: { overwrite }
+          })
           break
         }
         default:

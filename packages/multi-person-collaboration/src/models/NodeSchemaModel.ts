@@ -70,7 +70,12 @@ export class NodeSchemaModel {
 
   // canvas 内，更新节点样式
   public updatedNodeCss(strStyle: string, nodeId: string, className: string) {
-    this.operationHandler.updatedStyle(strStyle, nodeId, className)
+    this.operationHandler.updatedStyle({ strStyle, nodeId, className })
+  }
+
+  // settings，更新节点属性
+  public updatedNodeProps(newProps: Record<any, any>, nodeId: string, overwrite: boolean) {
+    this.operationHandler.updatedProps({ newProps, nodeId, overwrite })
   }
 
   // insert 操作

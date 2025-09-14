@@ -1,4 +1,12 @@
-import type { DeleteOperation, MoveOperation, Node, NodeOperation, PageSchema } from '../type'
+import type {
+  DeleteOperation,
+  MoveOperation,
+  Node,
+  NodeOperation,
+  PageSchema,
+  UpdatePropsOperation,
+  UpdateStyleOperation
+} from '../type'
 import * as Y from 'yjs'
 import { toYjs } from '../utils'
 import { DocManager } from '../services/docManager'
@@ -154,7 +162,8 @@ export class OperationHandler {
   }
 
   // 修改节点样式
-  public updatedStyle(strStyle: string, nodeId: string, className: string) {
+  public updatedStyle(operation: UpdateStyleOperation) {
+    const { strStyle, nodeId, className } = operation
     // 添加样式
     this.yMap.set('css', strStyle)
 
@@ -163,6 +172,46 @@ export class OperationHandler {
     targetNode?.get('props').set('className', `${className}_${nodeId}`)
 
     Object.assign(this.rootSchema, { css: strStyle })
+  }
+
+  // 修改节点属性
+  public updatedProps(operation: UpdatePropsOperation) {
+    const { newProps, nodeId, overwrite } = operation
+    let node = this.getYNode(nodeId)
+
+    if (!node) {
+      node = this.yMap
+    }
+
+    const yNewProps = new Y.Map<any>() // 新的 props
+    const propsMap = node.get('props') as Y.Map<any> // 旧的 props
+
+    if (overwrite) {
+      // 覆盖模式
+      for (const [k, v] of Object.entries(newProps || {})) {
+        yNewProps.set(k, v)
+      }
+    } else {
+      // 先复制旧的
+      if (propsMap) {
+        propsMap.forEach((val, key) => {
+          yNewProps.set(key, val)
+        })
+      }
+
+      // 再合并新的
+      for (const [k, v] of Object.entries(newProps) || {}) {
+        yNewProps.set(k, v)
+      }
+    }
+
+    // 元数据，用于补丁操作
+    const meta = new Y.Map<any>()
+    meta.set('nodeId', nodeId)
+    meta.set('overwrite', overwrite)
+
+    yNewProps.set('meta', meta)
+    node.set('props', yNewProps)
   }
 
   // 重建整个映射（刷新后可以手动调用）

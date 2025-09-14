@@ -90,6 +90,18 @@ export interface MoveOperation {
   direction: 'up' | 'down'
 }
 
+export interface UpdateStyleOperation {
+  strStyle: string
+  nodeId: string
+  className: string
+}
+
+export interface UpdatePropsOperation {
+  newProps: Record<string, string>
+  nodeId: string
+  overwrite: boolean
+}
+
 export interface UserAwareness {
   id?: string | number
   name: string
