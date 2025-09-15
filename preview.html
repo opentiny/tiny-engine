@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "./editor/monaco-workers/editor.worker.bundle.js",
+  "css": "./editor/monaco-workers/css.worker.bundle.js",
+  "html": "./editor/monaco-workers/html.worker.bundle.js",
+  "json": "./editor/monaco-workers/json.worker.bundle.js",
+  "typescript": "./editor/monaco-workers/ts.worker.bundle.js",
+  "javascript": "./editor/monaco-workers/ts.worker.bundle.js",
+  "less": "./editor/monaco-workers/css.worker.bundle.js",
+  "scss": "./editor/monaco-workers/css.worker.bundle.js",
+  "handlebars": "./editor/monaco-workers/html.worker.bundle.js",
+  "razor": "./editor/monaco-workers/html.worker.bundle.js"
+});</script>
+
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <meta charset="UTF-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Design Core Preview</title>
+    <script type="module" crossorigin src="./assets/preview-DfBcs9JN.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/virtual_svg-icons-register-DpjHuwzq.js">
+    <link rel="modulepreload" crossorigin href="./assets/monaco-fVYqdbFs.js">
+    <link rel="modulepreload" crossorigin href="./assets/vendor-DUN5MMhp.js">
+    <link rel="modulepreload" crossorigin href="./assets/index-CpDxYcNS.js">
+    <link rel="stylesheet" crossorigin href="./assets/monaco-ClMX5LRA.css">
+    <link rel="stylesheet" crossorigin href="./assets/vendor-DzXHu6xp.css">
+  </head>
+  <body>
+    <div id="app"></div>
+  </body>
+</html>
