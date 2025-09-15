@@ -35,9 +35,15 @@ jobs:
           // ---- appended by CI (gh-pages) ----
           VITE_ORIGIN=https://agent.opentiny.design/
           EOF
-
+      - name: change material url
+        run: |
+          sed -i "s#material: \['/mock/bundle.json'\]#material: \['https://opentiny.github.io/tiny-engine/mock/bundle.json'\]#g" designer-demo/engine.config.js
+          echo "Updated material url in designer-demo/engine.config.js"
       - name: Run Build
-        run: pnpm run build:plugin && pnpm run build:alpha > /tmp/build-alpha.log 2>&1
+        run: |
+          set -eo pipefail
+          pnpm run build:plugin 2>&1 | tee /tmp/build-plugin.log
+          pnpm run build:alpha 2>&1 | tee /tmp/build-alpha.log
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
