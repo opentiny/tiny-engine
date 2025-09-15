@@ -43,5 +43,12 @@ export default {
         }
       }
     }
+  },
+  [META_APP.Preview]: {
+    options: { 
+      // 配置预览跳转的 url：
+      // 文档：https://opentiny.design/tiny-engine#/help-center/course/dev/preview-api
+      previewUrl:  ['prod', 'alpha'].includes(import.meta.env.MODE) ? './preview.html' : '' 
+    }
   }
 }
