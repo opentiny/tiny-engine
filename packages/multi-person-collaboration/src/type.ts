@@ -97,10 +97,14 @@ export interface UpdateStyleOperation {
 }
 
 export interface UpdatePropsOperation {
-  newProps: Record<string, string>
+  newProps: Record<string, any>
   nodeId: string
   overwrite: boolean
 }
+
+export type UpdateMethodsOperation =
+  | { type: 'root'; methods: Record<string, any> }
+  | { type: 'node'; nodeId: string; methodsName: string; methods: Record<string, any>; params: any }
 
 export interface UserAwareness {
   id?: string | number

@@ -84,3 +84,37 @@ export const getValueByPath = (obj: any, path: (string | number)[]): any => {
     return acc[key]
   }, obj)
 }
+
+/**
+ * 递归地净化一个从 Yjs 转换而来的 schema 对象。
+ * 它会移除所有内部使用的键（如事件总线、元数据等）。
+ *
+ * @param schema - 从 fromYjs() 得到的原始 schema 对象。
+ * @param keysToFilter - 一个包含需要被移除的键名的数组。
+ * @returns 一个只包含纯 UI 数据的、干净的 schema 对象。
+ */
+export function sanitizeSchema(schema: any, keysToFilter: string[]): any {
+  // 如果输入不是对象或为 null，直接返回
+  if (typeof schema !== 'object' || schema === null) {
+    return schema
+  }
+
+  // 如果是数组，则递归地净化数组中的每一个元素
+  if (Array.isArray(schema)) {
+    return schema.map((item) => sanitizeSchema(item, keysToFilter))
+  }
+
+  // 如果是对象，则创建一个新对象，并过滤掉不需要的键
+  const sanitizedObject: { [key: string]: any } = {}
+  for (const key in schema) {
+    // 检查当前键是否在过滤列表中
+    if (keysToFilter.includes(key)) {
+      continue // 跳过这个内部键
+    }
+
+    // 递归地净化子属性
+    sanitizedObject[key] = sanitizeSchema(schema[key], keysToFilter)
+  }
+
+  return sanitizedObject
+}

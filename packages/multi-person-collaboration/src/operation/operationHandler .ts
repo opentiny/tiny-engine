@@ -4,6 +4,7 @@ import type {
   Node,
   NodeOperation,
   PageSchema,
+  UpdateMethodsOperation,
   UpdatePropsOperation,
   UpdateStyleOperation
 } from '../type'
@@ -212,6 +213,26 @@ export class OperationHandler {
 
     yNewProps.set('meta', meta)
     node.set('props', yNewProps)
+  }
+
+  // 添加 或 更新 methods
+  public updatedMethods(operation: UpdateMethodsOperation) {
+    const methods = operation.methods
+
+    if (operation.type === 'root') {
+      // 根节点直接设置 methods 不需要 id
+      this.yMap.set('methods', methods)
+    } else if (operation.type === 'node') {
+      const { nodeId, methodsName, methods } = operation
+      const node = this.getYNode(nodeId)
+      if (node) {
+        const nodeProps = node.get('props')
+        nodeProps.set(methodsName, {
+          methods,
+          meta: { nodeId }
+        })
+      }
+    }
   }
 
   // 重建整个映射（刷新后可以手动调用）

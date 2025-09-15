@@ -3,7 +3,7 @@ import * as Y from 'yjs'
 import { NodeSchemaModel } from '../models/NodeSchemaModel'
 import { DocManager } from './docManager'
 import type { RootNode } from '../type'
-import { fromYjs, toYjs } from '../utils'
+import { fromYjs, sanitizeSchema, toYjs } from '../utils'
 import { toRaw } from 'vue'
 import type { YjsProvider } from './providerManager'
 import { IGNORE_OBSERVER_ORIGIN, ROOT_SCHEMA_MAP } from '../config'
@@ -25,6 +25,14 @@ type DiffPatch =
   | { type: 'style-update'; path: (string | number)[]; css: string }
   | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
   | { type: 'props-update'; path: (string | number)[]; props: Record<any, any>; meta: Record<any, any> }
+  | { type: 'methods-add-root'; path: (string | number)[]; methods: Record<string, any> }
+  | {
+      type: 'methods-add-node'
+      path: (string | number)[]
+      methods: Record<string, any>
+      methodsName: string
+      nodeId: string
+    }
 
 /**
  * SchemaManager 类，负责管理 Yjs 中的 NodeSchema 文档
@@ -90,8 +98,14 @@ export class SchemaManager {
             console.log(`[${docName}] Initial sync complete. Applying full schema to UI.`)
 
             // 安全时间点，用 Yjs 的权威数据完全覆盖 UI
-            const remoteSchema = fromYjs(yMap)
-            useCanvas().importSchema(remoteSchema)
+            const rawRemoteSchema = fromYjs(yMap)
+
+            // 净化 schema
+            const INTERNAL_YJS_KEYS = ['meta'] // 定义需要过滤的键
+            const cleanSchema = sanitizeSchema(rawRemoteSchema, INTERNAL_YJS_KEYS)
+
+            // 使用干净的 schema 来覆盖 UI
+            useCanvas().importSchema(cleanSchema)
 
             // 标记初始同步已完成
             this.initialSyncDone.set(docName, true)
@@ -102,7 +116,7 @@ export class SchemaManager {
       // 冷启动：第一次启动，远端无数据 -> 用本地初始化
       if (yMap.size === 0) {
         ydoc.transact(() => {
-          toYjs(yMap!, pageSchema)
+          toYjs(yMap!, toRaw(useCanvas().getPageSchema()))
         }, IGNORE_OBSERVER_ORIGIN)
       }
     } else {
@@ -191,7 +205,6 @@ export class SchemaManager {
       | { yRoot: Y.Map<any>; cb: (events: Y.YEvent<any>[], tr: Y.Transaction) => void }
       | undefined
 
-    // 判断时也使用正确的大小写
     if (prev?.yRoot && prev?.cb) {
       try {
         prev.yRoot.unobserveDeep(prev.cb)
@@ -239,6 +252,7 @@ export class SchemaManager {
         // Map 变更
         if (event.target instanceof Y.Map) {
           const yMapNode = event.target
+          const regex = /^on[A-Z][A-Za-z]*$/
 
           event.changes.keys.forEach((change, key) => {
             // 软删除
@@ -283,14 +297,35 @@ export class SchemaManager {
               // Props 属性更新同步逻辑
               if (change.action === 'add' || change.action === 'update') {
                 const newProps = yMapNode.get('props').toJSON()
-                const meta = newProps.meta // meta 包含操作的 nodeId 和 overwrite
-
-                delete newProps.meta // 删除元数据，保持 props 不被污染
+                const { meta, ...cleanProps } = newProps
                 patches.push({
                   type: 'props-update',
                   path: event.path,
-                  props: newProps,
+                  props: cleanProps,
                   meta
+                })
+              }
+            } else if (key === 'methods') {
+              // 根节点添加 事件函数
+              if (change.action === 'add' || change.action === 'update') {
+                const newMethods = yMapNode.get('methods')
+                patches.push({
+                  type: 'methods-add-root',
+                  path: event.path,
+                  methods: newMethods
+                })
+              }
+            } else if (regex.test(key)) {
+              // 先判断非根节点 添加时间函数
+              if (change.action === 'add' || change.action === 'update') {
+                const newObj = yMapNode.get(key)
+                const { meta, methods } = newObj
+                patches.push({
+                  type: 'methods-add-node',
+                  path: event.path,
+                  methods,
+                  methodsName: key,
+                  nodeId: meta.nodeId
                 })
               }
             }
@@ -413,10 +448,9 @@ export class SchemaManager {
           break
         }
         case 'style-update': {
-          const { updateSchema } = useCanvas()
           const strStyle = patch.css
 
-          updateSchema({ css: strStyle })
+          useCanvas().updateSchema({ css: strStyle })
           break
         }
         case 'props-update': {
@@ -429,6 +463,19 @@ export class SchemaManager {
             value: { props: newProps },
             option: { overwrite }
           })
+          break
+        }
+        case 'methods-add-root': {
+          const { methods } = patch
+          useCanvas().updateSchema({ methods })
+          break
+        }
+        case 'methods-add-node': {
+          const { methods, methodsName, nodeId } = patch
+          const targetNode = useCanvas().getNode(nodeId, false)
+
+          targetNode[methodsName] = methods
+          useMessage().publish({ topic: 'schemaChange', data: {} })
           break
         }
         default:

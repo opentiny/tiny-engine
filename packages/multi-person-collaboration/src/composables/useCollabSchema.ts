@@ -1,7 +1,14 @@
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { onUnmounted, toRaw } from 'vue'
 import { SchemaManager } from '../services/schemaManager'
-import { POSITION, type Node, type PositionType, type RootNode, type UserAwareness } from '../type'
+import {
+  POSITION,
+  type Node,
+  type PositionType,
+  type RootNode,
+  type UpdateMethodsOperation,
+  type UserAwareness
+} from '../type'
 import { useYjs } from './useYjs'
 import { PORT } from '../config'
 import { useAwareness } from './useAwareness'
@@ -79,8 +86,13 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   }
 
   // settings， 修改节点属性
-  const updatePropsNode = (newProps: Record<any, any>, nodeId: string, overwrite: boolean) => {
+  const updatePropsNode = (newProps: Record<string, any>, nodeId: string, overwrite: boolean) => {
     schemaModel.updatedNodeProps(newProps, nodeId, overwrite)
+  }
+
+  // 根节点保存 methods
+  const updateMethodNode = (operation: UpdateMethodsOperation) => {
+    schemaModel.updatedNodeMethods(operation)
   }
 
   // 用户信息同步 方法
@@ -117,6 +129,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     moveUpSharedNode,
     moveDownSharedNode,
     updateStyleNode,
-    updatePropsNode
+    updatePropsNode,
+    updateMethodNode
   }
 }

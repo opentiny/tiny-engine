@@ -1,6 +1,14 @@
 import * as Y from 'yjs'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { type NodeSchema, type Node, type PositionType, POSITION, type InsertOptions, type PageSchema } from '../type'
+import {
+  type NodeSchema,
+  type Node,
+  type PositionType,
+  POSITION,
+  type InsertOptions,
+  type PageSchema,
+  type UpdateMethodsOperation
+} from '../type'
 import { OperationHandler } from '../operation/operationHandler '
 
 /**
@@ -76,6 +84,11 @@ export class NodeSchemaModel {
   // settings，更新节点属性
   public updatedNodeProps(newProps: Record<any, any>, nodeId: string, overwrite: boolean) {
     this.operationHandler.updatedProps({ newProps, nodeId, overwrite })
+  }
+
+  // methods， 添加或者更新事件
+  public updatedNodeMethods(operation: UpdateMethodsOperation) {
+    this.operationHandler.updatedMethods(operation)
   }
 
   // insert 操作
