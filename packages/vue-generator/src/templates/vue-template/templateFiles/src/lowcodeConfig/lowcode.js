@@ -17,6 +17,7 @@ import dataSourceMap from './dataSource'
 import * as utils from '../utils'
 import * as bridge from './bridge'
 import { useStores } from './store'
+import { useGlobalState } from '@/stores/globalState'
 
 export const lowcodeWrap = (props, context) => {
   const global = {}
@@ -81,6 +82,7 @@ export default () => {
   provide(I18nInjectionKey, i18n)
 
   const stores = useStores()
+  const globalState = useGlobalState()
 
-  return { t: i18n.global.t, lowcodeWrap, stores }
+  return { t: i18n.global.t, lowcodeWrap, stores, globalState }
 }

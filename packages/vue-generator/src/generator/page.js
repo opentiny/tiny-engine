@@ -407,7 +407,7 @@ const generateVueCode = ({ schema, name, type, componentsMap }) => {
     ? `const [${componentNames.join(',')}] = [${exportNames.map((name) => `${name}()`).join(',')}]`
     : ''
 
-  const contextArr = ['stores', 'state', ...methodsName]
+  const contextArr = ['stores', 'state', 'globalState', ...methodsName]
 
   const result = `
 <template>
@@ -420,7 +420,7 @@ ${imports.join('\n')}
 const props = defineProps({${propsArr.join(',\n')}})
 const emit = defineEmits(${JSON.stringify(emitsArr)})
 
-const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
+const { t, lowcodeWrap, stores, globalState } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit })
 
 ${iconStatement}

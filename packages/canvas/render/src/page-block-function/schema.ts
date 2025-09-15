@@ -72,6 +72,8 @@ export function useSchema(
       bridge,
       stores,
       state,
+      // 追加一个 globalState，指向 stores，用于全局状态管理
+      globalState: stores,
       props,
       dataSourceMap: {},
       emit: () => {} // 兼容访问器中getter和setter中this.emit写法
