@@ -14,7 +14,6 @@ import { useEnv } from '@opentiny/tiny-engine-meta-register'
 import { importMapConfig as importMapJSON } from '@opentiny/tiny-engine-common/js/importMap'
 
 const importMap = {}
-
 const opentinyVueVersion = '~3.20'
 
 function replacePlaceholder(v) {

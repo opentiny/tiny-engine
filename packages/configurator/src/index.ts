@@ -33,6 +33,8 @@ import BindVariableConfigurator from './bind-variable-configurator/BindVariableC
 import ModelConfigurator from './model-configurator/ModelConfigurator.vue'
 import ModelApiConfigurator from './model-api-configurator/ModelApiConfigurator.vue'
 import OperatorGroupConfigurator from './operator-group-configurator/OperatorGroupConfigurator.vue'
+import BasicTagConfigurator from './basic-tag-configurator/BasicTagConfigurator.vue'
+import ClassConfigurator from './class-configurator/ClassConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import './styles/vars.less'
@@ -73,6 +75,8 @@ export {
   ModelConfigurator,
   ModelApiConfigurator,
   OperatorGroupConfigurator,
+  BasicTagConfigurator,
+  ClassConfigurator,
   MetaCodeEditor,
   I18nInput as I18nConfigurator,
   MetaCodeEditor as CodeConfigurator,

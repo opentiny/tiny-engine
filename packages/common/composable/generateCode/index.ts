@@ -1,29 +1,46 @@
-import {
-  generateApp,
-  parseRequiredBlocks,
-  genSFCWithDefaultPlugin,
-  type IAppSchema
-} from '@opentiny/tiny-engine-dsl-vue'
+import { generateApp, type IAppSchema } from '@opentiny/tiny-engine-dsl-vue'
+import * as dslVue from '@opentiny/tiny-engine-dsl-vue'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import defaultPrettierConfig from '../../js/config-files/prettierrc'
 
 // 应用出码默认配置
 const defaultOptions = {
   pluginConfig: {
+    template: {},
+    block: {},
+    page: {},
+    dataSource: {},
+    dependencies: {},
+    globalState: {},
+    i18n: {},
+    router: {},
+    utils: {},
     formatCode: {
       // 默认格式化配置
       ...defaultPrettierConfig
-    }
+    },
+    parseSchema: {}
   }
 }
 
 // 应用出码
 const generateAppCode = async (appSchema: IAppSchema, options = {}) => {
-  const instance = generateApp({ ...defaultOptions, ...options })
+  const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+  const instance = generateApp({
+    ...defaultOptions,
+    pluginConfig: {
+      ...defaultOptions.pluginConfig,
+      template: { ...defaultOptions.pluginConfig.template, enableTailwindCSS }
+    },
+    ...options
+  })
 
   return instance.generate(appSchema)
 }
 
 // 页面出码
+const { parseRequiredBlocks, genSFCWithDefaultPlugin } = dslVue as any
+
 const generatePageCode = (...args: any[]) => {
   return genSFCWithDefaultPlugin(...args)
 }
@@ -53,10 +70,14 @@ const getAllNestedBlocksSchema = async (pageSchema: any, fetchBlockSchemaApi: an
   const schemaList = await Promise.allSettled(promiseList)
   const extraList: any[] = []
 
-  schemaList.forEach((item: { value: any[]; status: string }) => {
-    const blockItem = item.value?.[0]
+  schemaList.forEach((item) => {
+    if (item.status !== 'fulfilled') {
+      return
+    }
 
-    if (item.status !== 'fulfilled' || !blockItem) {
+    const blockItem = (item.value as any[])?.[0]
+
+    if (!blockItem) {
       return
     }
 

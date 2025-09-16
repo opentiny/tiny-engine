@@ -35,23 +35,28 @@ export type ValidationConfig = Record<string, ValidationRule>
  * @param message 错误信息
  * @returns 标准错误响应格式
  */
-export function createErrorResponse(message: string) {
+export function createErrorResponse(message: string, includeStructuredContent = false) {
   const errorData = {
     status: 'error' as const,
     message: 'Validation failed',
     error: message
   }
 
-  return {
+  const res: { isError: boolean; content: { type: 'text'; text: string }[]; structuredContent?: typeof errorData } = {
     isError: true,
     content: [
       {
         type: 'text' as const,
         text: JSON.stringify(errorData, null, 2)
       }
-    ],
-    structuredContent: errorData
+    ]
   }
+
+  if (includeStructuredContent) {
+    res.structuredContent = errorData
+  }
+
+  return res
 }
 
 /**
