@@ -25,12 +25,12 @@ const defaultOptions = {
 
 // 应用出码
 const generateAppCode = async (appSchema: IAppSchema, options = {}) => {
-  const enableTailWindCSS = getMergeMeta('engine.config')?.enableTailWindCSS
+  const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
   const instance = generateApp({
     ...defaultOptions,
     pluginConfig: {
       ...defaultOptions.pluginConfig,
-      template: { ...defaultOptions.pluginConfig.template, enableTailWindCSS }
+      template: { ...defaultOptions.pluginConfig.template, enableTailwindCSS }
     },
     ...options
   })

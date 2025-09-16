@@ -129,7 +129,7 @@ export default {
         oppositeTheme: 'light'
       }
     ],
-    enableTailWindCSS: true
+    enableTailwindCSS: true
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [

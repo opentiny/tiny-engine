@@ -87,7 +87,7 @@ export default {
         oppositeTheme: 'light'
       }
     ],
-    enableTailWindCSS: true
+    enableTailwindCSS: true
   },
   toolbars: [Breadcrumb, Media, Lang]
 }

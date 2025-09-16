@@ -1,5 +1,5 @@
 // 这里 package.json 格式设置为 js，避免被识别成一个 package
-export default (schema, options) => {
+export default (schema, options = {}) => {
   const packageName = schema?.meta?.name || '@opentiny/tiny-engine-preview-vue'
 
   const res = {
@@ -31,7 +31,7 @@ export default (schema, options) => {
     }
   }
 
-  if (options.enableTailWindCSS) {
+  if (options?.enableTailwindCSS) {
     res.dependencies['tailwindcss'] = '^4.1.12'
     res.devDependencies['@tailwindcss/vite'] = '^4.1.12'
   }

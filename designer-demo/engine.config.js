@@ -5,5 +5,5 @@ export default {
   scripts: [],
   styles: [],
   // 是否开启 TailWindCSS 特性
-  enableTailWindCSS: true
+  enableTailwindCSS: true
 }

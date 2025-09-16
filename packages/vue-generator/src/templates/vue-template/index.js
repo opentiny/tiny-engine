@@ -167,7 +167,7 @@ export function generateTemplate(schema, options) {
     }
   ]
 
-  if (options.enableTailWindCSS) {
+  if (options?.enableTailwindCSS) {
     res.push({
       fileType: 'css',
       fileName: 'style.css',

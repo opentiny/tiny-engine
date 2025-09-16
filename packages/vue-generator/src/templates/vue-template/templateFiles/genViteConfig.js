@@ -7,7 +7,7 @@ export default (schema, options) => {
   import path from 'path'
   import vue from '@vitejs/plugin-vue'
   import vueJsx from '@vitejs/plugin-vue-jsx'
-  ${options.enableTailWindCSS ? 'import tailwindcss from "@tailwindcss/vite"' : ''}
+  ${options.enableTailwindCSS ? 'import tailwindcss from "@tailwindcss/vite"' : ''}
   
   export default defineConfig({
     resolve: {
@@ -15,7 +15,7 @@ export default (schema, options) => {
         '@': path.resolve(__dirname, 'src')
       }
     },
-    plugins: [vue(), vueJsx(), ${options.enableTailWindCSS ? 'tailwindcss()' : ''}],
+    plugins: [vue(), vueJsx(), ${options.enableTailwindCSS ? 'tailwindcss()' : ''}],
     define: {
       '${processStr.join('.')}': { ...${processStr.join('.')} }
     },

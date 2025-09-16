@@ -17,7 +17,7 @@ import router from './router'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 
-${options.enableTailWindCSS ? 'import "./style.css"' : ''}
+${options.enableTailwindCSS ? 'import "./style.css"' : ''}
 
 const pinia = createPinia()
 

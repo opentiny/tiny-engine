@@ -150,20 +150,18 @@ const compatibleI18n = (i18n) => {
  * @param {*} cssList css文件
  * @returns
  */
-export const processAppJsCode = (code, cssList, enableTailWindCSS) => {
-  if (!Array.isArray(cssList) || !cssList.length) {
-    return code
-  }
-
+export const processAppJsCode = (code, cssList, enableTailwindCSS) => {
   let res = `${code}\n`
 
-  cssList.forEach((css) => {
-    if (!code.includes(`addCss('${css}')`)) {
-      res += `addCss('${css}')\n`
-    }
-  })
+  if (Array.isArray(cssList) && cssList.length) {
+    cssList.forEach((css) => {
+      if (!code.includes(`addCss('${css}')`)) {
+        res += `addCss('${css}')\n`
+      }
+    })
+  }
 
-  if (enableTailWindCSS) {
+  if (enableTailwindCSS) {
     res += `\nimport('@tailwindcss/browser')\n`
   }
 

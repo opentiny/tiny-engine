@@ -273,7 +273,7 @@ export default {
 
 ## Tailwind CSS 支持
 
-TinyEngine 自 v2.9 起支持在注册表中通过 `engine.config.enableTailWindCSS` 开关启用 Tailwind CSS（默认开启）。
+TinyEngine 自 v2.9 起支持在注册表中通过 `engine.config.enableTailwindCSS` 开关启用 Tailwind CSS（默认开启）。
 
 ### 开关配置
 
@@ -282,7 +282,7 @@ TinyEngine 自 v2.9 起支持在注册表中通过 `engine.config.enableTailWind
 export default {
   'engine.config': {
     // ...其他配置
-    enableTailWindCSS: true // 开启（默认即为 true）；设为 false 可关闭
+    enableTailwindCSS: true // 开启（默认即为 true）；设为 false 可关闭
   }
 }
 ```
@@ -300,7 +300,7 @@ export default {
 
 ### 关闭 Tailwind
 
-当配置为 `enableTailWindCSS: false` 时：
+当配置为 `enableTailwindCSS: false` 时：
 
 - 预览态不会加载 `@tailwindcss/browser`；
 - 出码时不会注入与 Tailwind 相关的依赖、Vite 插件及样式文件导入。
@@ -309,7 +309,7 @@ export default {
 
 - 预览依赖解析：内置 import-map 已包含 `@tailwindcss/browser` 映射；如使用自定义 CDN/离线环境，请确保该映射可用。
 - 自定义样式：可在生成的 `src/style.css` 中追加自定义样式，或在项目中新增样式文件后自行引入。
-- 运行时渲染：如果您自定义了运行时渲染引擎，请确保在允许时渲染中增加对 Tailwind CSS 的支持。
+- 运行时渲染：如果您自定义了运行时渲染引擎，请确保在运行时渲染中增加对 Tailwind CSS 的支持。
 
 
 ## Vite 配置要求
