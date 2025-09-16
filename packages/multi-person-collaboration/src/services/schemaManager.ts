@@ -18,6 +18,7 @@ type DiffPatch =
   | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
   | { type: 'props-update'; path: (string | number)[]; props: Record<any, any>; meta: Record<any, any> }
   | { type: 'methods-add-root'; path: (string | number)[]; methods: Record<string, any> }
+  | { type: 'methods-delete'; path: (string | number)[]; nodeId: string; methodsName: string }
   | {
       type: 'array-swap'
       direction: 'down' | 'up'
@@ -108,7 +109,7 @@ export class SchemaManager {
             const rawRemoteSchema = fromYjs(yMap)
 
             // 净化 schema
-            const INTERNAL_YJS_KEYS = ['meta'] // 定义需要过滤的键
+            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted'] // 定义需要过滤的键
             const cleanSchema = sanitizeSchema(rawRemoteSchema, INTERNAL_YJS_KEYS)
 
             // 使用干净的 schema 来覆盖 UI
@@ -350,14 +351,23 @@ export class SchemaManager {
               // 先判断非根节点 添加时间函数
               if (change.action === 'add' || change.action === 'update') {
                 const newObj = yMapNode.get(key)
-                const { meta, methods } = newObj
-                patches.push({
-                  type: 'methods-add-node',
-                  path: event.path,
-                  methods,
-                  methodsName: key,
-                  nodeId: meta.nodeId
-                })
+                if (newObj['_methods_deleted']) {
+                  patches.push({
+                    type: 'methods-delete',
+                    path: event.path,
+                    nodeId: newObj.meta.nodeId,
+                    methodsName: key
+                  })
+                } else {
+                  const { meta, ...methods } = newObj
+                  patches.push({
+                    type: 'methods-add-node',
+                    path: event.path,
+                    methods,
+                    methodsName: key,
+                    nodeId: meta.nodeId
+                  })
+                }
               }
             }
           })
@@ -505,8 +515,20 @@ export class SchemaManager {
           const { methods, methodsName, nodeId } = patch
           const targetNode = useCanvas().getNode(nodeId, false)
 
-          targetNode[methodsName] = methods
+          targetNode.props[methodsName] = methods
           useMessage().publish({ topic: 'schemaChange', data: {} })
+          break
+        }
+        case 'methods-delete': {
+          const { nodeId, methodsName } = patch
+          const targetNode = useCanvas().getNode(nodeId, false)
+
+          const keys = Object.keys(targetNode.props)
+
+          if (keys.indexOf(methodsName) > -1) {
+            delete targetNode.props[methodsName]
+          }
+          useMessage().publish({ topic: 'schemaChange', data: { props: targetNode.props } })
           break
         }
         case 'attributes-update': {

@@ -91,7 +91,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     schemaModel.updatedNodeProps(newProps, nodeId, overwrite)
   }
 
-  // 根节点保存 methods
+  // 节点保存 methods
   const updateMethodNode = (operation: UpdateMethodsOperation) => {
     schemaModel.updatedNodeMethods(operation)
   }

@@ -18,6 +18,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { lint } from '@opentiny/tiny-engine-common/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
 import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
+import { useCollabMonaco } from '@opentiny/tiny-engine-multi-person-collaboration'
 
 const { SCHEMA_DATA_TYPE } = constants
 
@@ -143,6 +144,11 @@ const saveMethods = async () => {
   })
 
   useCanvas().updateSchema({ methods: newMethods })
+  // 多人协作，同步 methods
+  useRealtimeCollab().updateMethodNode({
+    type: 'root',
+    methods: { ...newMethods }
+  })
   useCanvas().setSaved(false)
 
   // 这里需要先置空，再设置回来真正的值, 目的是让 monaco 感知到变化, 更新内容。
@@ -237,6 +243,20 @@ export default ({ emit }) => {
       state.script = getScriptString()
       monaco.value?.focus()
       window.dispatchEvent(new Event('resize'))
+
+      const currentUser = {
+        id: 2,
+        name: 'Bob',
+        color: '#4ECDC4',
+        avatarUrl: 'https://i.pravatar.cc/150?img=2'
+      }
+
+      useCollabMonaco({
+        currentUser,
+        editorRef: monaco,
+        roomId: 'monaco-yjs',
+        fieldName: 'monaco-code'
+      })
     })
   })
 

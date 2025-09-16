@@ -105,6 +105,7 @@ export interface UpdatePropsOperation {
 export type UpdateMethodsOperation =
   | { type: 'root'; methods: Record<string, any> }
   | { type: 'node'; nodeId: string; methodsName: string; methods: Record<string, any>; params: any }
+  | { type: 'delete-method'; nodeId: string; methodsName: string }
 
 export type UpdateAttributesOperation =
   | { type: 'loop'; value: Record<string, any>; nodeId: string }

@@ -218,9 +218,8 @@ export class OperationHandler {
 
   // 添加 或 更新 methods
   public updatedMethods(operation: UpdateMethodsOperation) {
-    const methods = operation.methods
-
     if (operation.type === 'root') {
+      const methods = operation.methods
       // 根节点直接设置 methods 不需要 id
       this.yMap.set('methods', methods)
     } else if (operation.type === 'node') {
@@ -229,9 +228,22 @@ export class OperationHandler {
       if (node) {
         const nodeProps = node.get('props')
         nodeProps.set(methodsName, {
-          methods,
+          ...methods,
           meta: { nodeId }
         })
+      }
+    } else if (operation.type === 'delete-method') {
+      const { nodeId, methodsName } = operation
+      const node = this.getYNode(nodeId)
+      if (node) {
+        const nodeProps = node.get('props')
+        // 依旧软删除
+        nodeProps.set(methodsName, {
+          _methods_deleted: true,
+          meta: { nodeId }
+        })
+        // 软删除后直接硬删除删除，保证 yMap 数据干净
+        nodeProps.delete(methodsName)
       }
     }
   }
