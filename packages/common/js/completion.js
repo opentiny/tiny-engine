@@ -367,8 +367,12 @@ export const initCompletion = (monacoInstance, editorModel, conditionFn) => {
     },
     triggerCharacters: ['.']
   }
-
-  return ['javascript', 'typescript']
-    .map((lang) => monacoInstance.languages.registerCompletionItemProvider(lang, completionItemProvider))
-    .concat(initInlineCompletion(monacoInstance, editorModel))
+  const completions = ['javascript', 'typescript'].map((lang) => {
+    return monacoInstance.languages.registerCompletionItemProvider(lang, completionItemProvider)
+  })
+  const { enableAICompletion } = getMergeMeta('engine.plugins.pagecontroller')?.options || {}
+  if (enableAICompletion) {
+    return completions.concat(initInlineCompletion(monacoInstance, editorModel))
+  }
+  return completions
 }
