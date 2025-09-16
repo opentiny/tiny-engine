@@ -169,7 +169,6 @@ export default {
       imgSrc.value = sourceList.value[selectedSourceIndex.value].resourceUrl
       closePopover()
     }
-
     watch(
       () => searchWords.value,
       () => {

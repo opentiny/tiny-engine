@@ -14,7 +14,6 @@
 import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const baseUrl = '/material-center/api'
-
 // 资源管理 -- 根据分组ID获取资源列表
 export const fetchResourceListByGroupId = (resourceGroupId: number) =>
   getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource/find/${resourceGroupId}`)

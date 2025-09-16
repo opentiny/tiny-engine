@@ -385,7 +385,6 @@ export default {
         }
       })
     }
-
     const openAddSourceForm = () => {
       addSourceData.value = []
       enableUrlForm.value = true

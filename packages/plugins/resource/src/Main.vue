@@ -173,6 +173,7 @@ export default {
       }
     }
   }
+
   .active-item {
     background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
     color: var(--te-resource-manage-draggable-text-color);
