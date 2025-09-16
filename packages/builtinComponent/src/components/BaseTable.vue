@@ -4,9 +4,14 @@
     <template v-else>
       <tiny-grid ref="gridRef" :data="tableData" v-bind="gridState">
         <tiny-grid-column v-if="gridState.selectedEnabled" type="selection" width="60"></tiny-grid-column>
-        <template v-for="item in gridColumns" :key="item.prop">
-          <tiny-grid-column :field="item.prop" :title="item.label" :editor="item.editor"></tiny-grid-column>
-        </template>
+        <tiny-grid-column
+          v-for="item in gridColumns"
+          :key="item.prop"
+          :field="item.prop"
+          :title="item.label"
+          :editor="item.editor"
+        ></tiny-grid-column>
+
         <tiny-grid-column v-if="gridState.rowOperationEnabled" field="operation" title="操作">
           <template #default="data">
             <tiny-button
@@ -15,7 +20,7 @@
               type="text"
               @click="operate?.handler(data.row, data.rowIndex, exposedData)"
             >
-              <div v-if="operate?.itemVisible">
+              <div v-if="operate.itemVisible">
                 <tiny-popover
                   v-if="gridState.useIconOperation && operate.icon"
                   width="auto"
@@ -43,7 +48,7 @@
   </div>
 </template>
 <script setup>
-import { defineProps, defineEmits, defineExpose, computed, ref, reactive, watch, useAttrs } from 'vue'
+import { defineProps, defineExpose, computed, ref, reactive, useAttrs } from 'vue'
 import {
   Grid as TinyGrid,
   GridColumn as TinyGridColumn,
@@ -92,8 +97,6 @@ const props = defineProps({
     default: () => []
   }
 })
-
-const emit = defineEmits(['update:modelValue'])
 
 const attrs = useAttrs()
 
@@ -147,7 +150,8 @@ const rowOperationList = computed(() => {
   return props.rowOperations?.value.map((operate) => {
     return {
       ...operate,
-      icon: operate.icon ? tinyVueIcon?.[operate.icon]() : ''
+      icon: operate.icon ? tinyVueIcon?.[operate.icon]() : '',
+      itemVisible: 'itemVisible' in operate ? operate.itemVisible : true
     }
   })
 })
@@ -236,14 +240,6 @@ const deleteApi = (evidence) => {
       throw new Error(err)
     })
 }
-
-watch(
-  () => tableData.value,
-  (value) => {
-    emit('update:modelValue', value)
-  },
-  { deep: true }
-)
 
 const exposedData = {
   tableData: () => tableData.value,
