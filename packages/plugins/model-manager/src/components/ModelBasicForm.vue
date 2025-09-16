@@ -1,6 +1,5 @@
 <template>
   <div class="section">
-    <h4 class="section-title">模型基本设置</h4>
     <tiny-form ref="ruleFormRef" :model="localValue" :rules="rules">
       <div class="form-item">
         <tiny-form-item label="中文名称" prop="nameCn">
@@ -43,6 +42,7 @@ const props = defineProps({
 const localValue = ref(props.model)
 
 const ruleFormRef = ref()
+
 const rules = ref({
   nameCn: [{ required: true, message: '必填', trigger: 'blur' }],
   nameEn: [{ required: true, message: '必填', trigger: 'blur' }],
@@ -71,10 +71,8 @@ defineExpose({
 <style scoped>
 .section {
   margin-bottom: 16px;
-  background: #fff;
   border-radius: 6px;
   padding: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 .section-title {
   font-size: 16px;
