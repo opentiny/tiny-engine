@@ -13,14 +13,20 @@
         <span>选择模型方法</span>
         <div class="right">
           <tiny-button @click="closePopover">取消</tiny-button>
-          <tiny-button type="primary" @click="setModelFunction">确定</tiny-button>
+          <tiny-button type="primary" @click="setModelFunction" :disabled="!selectedFunction">确定</tiny-button>
           <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
         </div>
       </div>
       <div class="model-set-wrap">
         <div class="model-wrap">
           <div class="model-groups">
-            <model-select :model-page-size="5" @model-select="getModel" :meta="meta" :isShow="isShow"></model-select>
+            <model-select
+              :model-page-size="5"
+              @model-select="getModel"
+              :meta="meta"
+              :isShow="isShow"
+              :isModelApi="true"
+            ></model-select>
           </div>
           <div class="model-parameters">
             <tiny-grid

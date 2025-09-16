@@ -216,12 +216,12 @@ const searchUnused = ref('')
 const searchValue = ref('')
 
 const selectedModel = ref()
+const originModelData = ref()
 
 const getModel = (data) => {
   selectedModel.value = data
 }
 
-const originModelData = ref()
 const modelDetail = ref(props.meta.widget.props.modelValue)
 
 const unusedParameters = ref([])

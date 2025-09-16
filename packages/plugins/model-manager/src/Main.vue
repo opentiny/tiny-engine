@@ -42,7 +42,7 @@
               </div>
             </div>
           </template>
-          <div v-else class="empty-tip">当前数据为空，请先添加模型</div>
+          <search-empty v-else />
         </div>
       </template>
     </plugin-panel>
@@ -59,7 +59,7 @@
 import { ref, reactive, provide, computed, onMounted } from 'vue'
 import { TinySearch, Modal } from '@opentiny/vue'
 import { IconSearch } from '@opentiny/vue-icon'
-import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
+import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import ModelSetting, { openModelSettingPanel, closeModelSettingPanel } from './components/ModelSetting.vue'
 import { getModelList, deleteModel, getModelSql, getModelSqlById } from './composable/useModelManager'
@@ -213,13 +213,13 @@ onMounted(async () => {
       align-items: center;
 
       &:hover {
-        background-color: var(--te-page-manage-draggable-row-bg-color-hover);
-        color: var(--te-page-manage-draggable-text-color);
+        background-color: var(--te-model-manage-draggable-row-bg-color-hover);
+        color: var(--te-model-manage-draggable-text-color);
       }
 
       &.active {
-        background-color: var(--te-page-manage-draggable-row-bg-color-hover);
-        color: var(--te-page-manage-draggable-text-color);
+        background-color: var(--te-model-manage-draggable-row-bg-color-hover);
+        color: var(--te-model-manage-draggable-text-color);
       }
 
       svg {
@@ -239,7 +239,7 @@ onMounted(async () => {
         }
         .model-desc {
           font-size: 12px;
-          color: var(--te-page-manage-tip-text-color);
+          color: var(--te-model-manage-tip-text-color);
           display: -webkit-box;
           overflow: hidden;
         }

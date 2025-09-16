@@ -281,7 +281,7 @@ defineExpose({
   }
 
   :deep(.tiny-grid-body__expanded-row) {
-    background-color: var(--te-page-manage-input-bg-color);
+    background-color: var(--te-model-manage-input-bg-color);
   }
   .expand-section {
     margin-bottom: 16px;
@@ -289,7 +289,7 @@ defineExpose({
     h4 {
       font-size: 14px;
       font-weight: 600;
-      color: var(--te-page-manage-title-text-color);
+      color: var(--te-model-manage-title-text-color);
       margin: 0 0 8px 0;
       padding-bottom: 1px;
     }
@@ -299,7 +299,7 @@ defineExpose({
       align-items: center;
       margin-bottom: 8px;
       padding: 8px;
-      background-color: var(--te-page-manage-input-bg-color);
+      background-color: var(--te-model-manage-input-bg-color);
       border-radius: 4px;
     }
 

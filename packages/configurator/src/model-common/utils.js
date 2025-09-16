@@ -46,8 +46,7 @@ export const handleSelectedModelParameters = async (model) => {
         description: model.description,
         version: model.version,
         baseUrl: model.modelUrl ?? '',
-        parameters,
-        method: model.method
+        parameters
       }
     : parameters
 }
