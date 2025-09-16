@@ -6,6 +6,7 @@ export default {
   width: 600,
   widthResizable: true,
   options: {
+    enableAICompletion: true,
     AIModel: {
       modelName: '',
       apiKey: '',
