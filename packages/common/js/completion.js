@@ -10,7 +10,7 @@
  *
  */
 import { ref } from 'vue'
-import { useCanvas, useResource } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useResource, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 const keyWords = [
   'state',
@@ -224,14 +224,15 @@ const generateBaseReference = () => {
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
   const referenceContext = generateBaseReference()
-  return fetch('https://agent.opentiny.design/api/v1/ai/chat/completions', {
+  const { modelName, apiKey, url } = getMergeMeta('engine.plugins.pagecontroller')?.options?.AIModel || {}
+  return fetch(`${url ?? 'https://agent.opentiny.design/api/v1/ai/chat/completions'}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: 'Bearer sk-1234'
+      Authorization: `Bearer ${apiKey ?? 'sk-1234'}`
     },
     body: JSON.stringify({
-      model: 'internvl3-14b',
+      model: modelName ?? 'internvl3-14b',
       messages: [
         {
           role: 'user',
