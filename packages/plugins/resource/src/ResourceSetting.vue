@@ -35,7 +35,7 @@
 <script>
 import { ref, reactive, computed } from 'vue'
 import { Button, Collapse, CollapseItem, Form, FormItem, Input } from '@opentiny/vue'
-import { useLayout, useNotify, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { createResourceGroup, updateResourceGroup } from './js/http'
 
@@ -53,7 +53,6 @@ const state = reactive({
 export const openResourceSettingPanel = (data) => {
   if (data) {
     state.data = { ...data }
-    console.log(state.data)
   }
   isShow.value = true
 }
@@ -87,9 +86,12 @@ export default {
     })
     const saveResourceSetting = () => {
       generalForm.value.validate((valid) => {
+        if (!valid) {
+          return
+        }
         if (state.data.id) {
           updateResourceGroup(state.data.id, { name: state.data.name, description: state.data.description })
-            .then((res) => {
+            .then(() => {
               emit('create-group')
               closeResourceSettingPanel()
               useNotify({ message: '修改资源分组成功', type: 'success' })
@@ -99,7 +101,7 @@ export default {
             })
         } else {
           createResourceGroup(state.data)
-            .then((res) => {
+            .then(() => {
               emit('create-group')
               closeResourceSettingPanel()
               useNotify({ message: '添加资源分组成功', type: 'success' })
