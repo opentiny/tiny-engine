@@ -10,17 +10,16 @@
  *
  */
 
-import entry from './src/Main.vue'
-import metaData from './meta'
-import mcp from './src/mcp'
-import useUtils from './src/js/useUtils'
-import './src/styles/vars.less'
+// 资源类型：utils 和 bridge
+// utils: 工具类
+// bridge: 桥接源
+export const RESOURCE_CATEGORY = {
+  Util: 'utils',
+  Bridge: 'bridge'
+} as const
 
-export default {
-  ...metaData,
-  entry,
-  mcp,
-  metas: [useUtils]
-}
-
-export { useUtils }
+// utils 类型: npm 和 function
+export const RESOURCE_TYPE = {
+  Npm: 'npm',
+  Function: 'function'
+} as const

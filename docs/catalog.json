@@ -95,6 +95,7 @@
           "title": "解决方案",
           "name": "solutions",
           "articles": [
+            {"title": "前端及Java服务端docker部署", "name": "front-backend-docker-deployment.md"},
             { "title": "Java服务端部署", "name": "server-deployment-solution-java.md" },
             { "title": "Node.js服务端部署", "name": "server-deployment-solution.md" },
             { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },

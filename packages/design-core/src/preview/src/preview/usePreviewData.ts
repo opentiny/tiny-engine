@@ -392,7 +392,8 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
     ]
 
     const newFiles = store.getFiles()
-    const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
+    const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+    const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
 
     newFiles['app.js'] = appJsCode
 

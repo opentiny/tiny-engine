@@ -71,7 +71,7 @@ export default {
     .tiny-input__prefix {
       left: 2px;
     }
-    .tiny-input__inner {
+    .tiny-input__inner.tiny-input__inner {
       padding-left: 24px;
       padding-right: 8px;
       background-color: transparent;
