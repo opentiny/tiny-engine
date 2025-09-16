@@ -162,20 +162,20 @@ export default {
       display: none;
     }
     .svg-icon {
-      color: var(--te-page-manage-draggable-icon-color);
+      color: var(--te-resource-manage-draggable-icon-color);
       margin-right: 4px;
     }
     &:hover {
-      background-color: var(--te-page-manage-draggable-row-bg-color-hover);
-      color: var(--te-page-manage-draggable-text-color);
+      background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
+      color: var(--te-resource-manage-draggable-text-color);
       .item-setting {
         display: inline;
       }
     }
   }
   .active-item {
-    background-color: var(--te-page-manage-draggable-row-bg-color-hover);
-    color: var(--te-page-manage-draggable-text-color);
+    background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
+    color: var(--te-resource-manage-draggable-text-color);
     font-weight: 600;
   }
 }

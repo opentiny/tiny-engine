@@ -31,6 +31,7 @@ import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurat
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
 import BasicTagConfigurator from './basic-tag-configurator/BasicTagConfigurator.vue'
 import ClassConfigurator from './class-configurator/ClassConfigurator.vue'
+import SourceSelectConfigurator from './source-select-configurator/SourceSelectConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import './styles/vars.less'
@@ -69,6 +70,7 @@ export {
   VariableConfigurator,
   BasicTagConfigurator,
   ClassConfigurator,
+  SourceSelectConfigurator,
   MetaCodeEditor,
   I18nInput as I18nConfigurator,
   MetaCodeEditor as CodeConfigurator,
