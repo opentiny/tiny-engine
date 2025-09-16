@@ -10,13 +10,13 @@ const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-  baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
+  apiKey: process.env.OPENAI_API_KEY_SF || "",
+  baseURL: process.env.OPENAI_BASE_URL_SF || "https://api.openai.com/v1",
   timeout: 600000, // 10分钟超时
 });
 
 /**
- * 递归获取指定目录下的所有文件路径
+ * 递归获取指定目录下的所有文件路径（跳过 style 文件夹）
  * @param {string} dirPath - 目录路径
  * @returns {string[]} 文件路径数组
  */
@@ -27,10 +27,16 @@ function getAllFiles(dirPath) {
     const entries = fs.readdirSync(currentPath, { withFileTypes: true });
     for (const entry of entries) {
       const fullPath = path.join(currentPath, entry.name);
+      
+      // 核心修改：若当前是目录且名称为 "style"，则跳过该目录
       if (entry.isDirectory()) {
-        traverse(fullPath);
+        if (entry.name.toLowerCase() === "style") {
+          console.log(`⚠️  跳过 style 文件夹: ${fullPath}`);
+          continue; // 不进入 style 目录，直接跳过
+        }
+        traverse(fullPath); // 非 style 目录，继续递归
       } else {
-        fileList.push(fullPath);
+        fileList.push(fullPath); // 是文件，加入列表
       }
     }
   }
@@ -71,7 +77,7 @@ ${content}
     ];
 
     const completion = await client.chat.completions.create({
-      model: process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
+      model: process.env.OPENAI_MODEL_SF || "Qwen/Qwen3-32B",
       messages: promptMessages,
       temperature: 0.2,
       max_tokens: 65536,

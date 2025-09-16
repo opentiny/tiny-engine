@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { postProcessSchemas } = require('./post-process-schemas');
 const { extractElementPlusApiFromUrl } = require('./element-api-crawler');
+const { extractApiFromUrl } = require('./generic-api-crawler');
 const { generateComponentApiJson } = require('./generate-component-api-json');
 
 // 初始化OpenAI客户端
@@ -1381,7 +1382,7 @@ function splitIntoBatches(array, batchSize) {
 
 /**
  * 批量转换API数组为tinyEngine schema数组（改进：支持分批并行处理）
- * @param {Array} apiArray - extractElementPlusApiFromUrl返回的子组件API对象数组
+ * @param {Array} apiArray - extractApiFromUrl返回的子组件API对象数组
  * @param {string} model - 大模型名称（可选，默认用环境变量）
  * @param {boolean} save - 是否保存到文件（可选，默认true）
  * @param {number} concurrentLimit - 并发数上限（可选，默认3，支持环境变量配置）
@@ -1394,7 +1395,7 @@ async function batchConvertToTinyEngineSchema(
   concurrentLimit = 5 // 新增：并发数配置
 ) {
   if (!Array.isArray(apiArray) || apiArray.length === 0) {
-    throw new Error("输入必须是非空的API对象数组（来自extractElementPlusApiFromUrl）");
+    throw new Error("输入必须是非空的API对象数组（来自extractApiFromUrl）");
   }
 
   // 校验并发数（避免非法值，最小1，最大建议不超过10）
@@ -1462,42 +1463,59 @@ async function batchConvertToTinyEngineSchema(
 }
 
 /**
- * 解析命令行参数
- * @returns {Object} 包含解析后的参数（url, componentDir, outputPath）
+ * 解析命令行参数（新增--config支持）
+ * @returns {Object} 包含解析后的参数（url, componentDir, outputPath, configPath）
  */
 function parseCommandLineArgs() {
   const args = process.argv.slice(2);
   const result = {};
 
-  // 简单的参数解析逻辑
+  // 遍历解析参数
   for (let i = 0; i < args.length; i++) {
     switch (args[i]) {
       case '--url':
         result.url = args[i + 1];
-        i++; // 跳过下一个参数
+        i++;
         break;
       case '--dir':
         result.componentDir = args[i + 1];
-        i++; // 跳过下一个参数
+        i++;
         break;
       case '--output':
         result.outputPath = args[i + 1];
-        i++; // 跳过下一个参数
+        i++;
+        break;
+      case '--config': // 新增：解析配置文件路径
+        result.configPath = args[i + 1];
+        i++;
         break;
       default:
         console.warn(`忽略未知参数: ${args[i]}`);
     }
   }
 
-  // 验证参数
-  if (!result.url && !result.componentDir) {
-    console.error('请提供URL或组件文件夹路径作为参数');
-    console.log('使用示例1 (通过URL爬取): node convertor.js --url https://cn.element-plus.org/zh-CN/component/button.html');
-    console.log('使用示例2 (通过组件文件夹): node convertor.js --dir ./components/button [--output ./output-path]');
+  // 验证：URL 模式必须提供配置文件
+  if (result.url && !result.configPath) {
+    console.error('通过 --url 爬取时，必须使用 --config 指定配置文件路径！');
+    console.log('示例：node convertor.js --url https://xxx --config ./your-config.json');
     process.exit(1);
   }
 
-  // 验证路径是否存在（针对文件夹方式）
+  // 验证：无有效参数时提示用法
+  if (!result.url && !result.componentDir) {
+    console.error('请提供 URL（需配合 --config）或组件文件夹路径作为参数！');
+    console.log('用法1（URL 爬取）: node convertor.js --url https://xxx --config ./config.json');
+    console.log('用法2（文件夹生成）: node convertor.js --dir ./components/button [--output ./output]');
+    process.exit(1);
+  }
+
+  // 验证：配置文件存在性
+  if (result.configPath && !fs.existsSync(result.configPath)) {
+    console.error(`指定的配置文件不存在: ${result.configPath}`);
+    process.exit(1);
+  }
+
+  // 验证：组件文件夹存在性
   if (result.componentDir && !fs.existsSync(result.componentDir)) {
     console.error(`指定的组件文件夹不存在: ${result.componentDir}`);
     process.exit(1);
@@ -1508,42 +1526,42 @@ function parseCommandLineArgs() {
 
 /**
  * 主函数（支持两种方式获取子组件数组）
- * 方式1：通过URL爬取 - 用法: node convertor.js --url https://xxx
+ * 方式1：通过URL爬取 - 用法: node convertor.js --url https://xxx --config ./config.json
  * 方式2：通过组件文件夹生成 - 用法: node convertor.js --dir ./components/button [--output ./output]
  */
 async function main() {
   try {
     // 解析命令行参数
-    const { url, componentDir, outputPath } = parseCommandLineArgs();
+    const { url, componentDir, outputPath, configPath } = parseCommandLineArgs();
 
     let apiArray;
 
     // 1. 根据参数类型获取子组件数组
     if (url) {
-      // 方式1：通过URL爬取API数组
-      console.log(`开始爬取URL: ${url}`);
-      apiArray = await extractElementPlusApiFromUrl(url);
-      console.log(`爬取完成：共${apiArray.length}个子组件`);
+      // 方式1：URL 爬取（需读取配置文件）
+      console.log(`开始爬取 URL: ${url}`);
+      // 读取并解析配置文件
+      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
+      // 传递 config 到爬取函数
+      apiArray = await extractApiFromUrl(url, config); 
+      console.log(`爬取完成：共 ${apiArray.length} 个子组件`);
     } else if (componentDir) {
-      // 方式2：通过组件文件夹生成API数组
+      // 方式2：组件文件夹生成
       console.log(`开始处理组件文件夹: ${componentDir}`);
-      // 确保 generateComponentApiJson获取API数组
       apiArray = await generateComponentApiJson(componentDir, outputPath);
 
-      // 验证生成的API数组
       if (!Array.isArray(apiArray) || apiArray.length === 0) {
         throw new Error("生成的API数组为空或格式不正确");
       }
-      console.log(`组件API生成完成：共${apiArray.length}个子组件`);
+      console.log(`组件API生成完成：共 ${apiArray.length} 个子组件`);
     } else {
       throw new Error("未提供有效的URL或组件文件夹路径");
     }
 
-    // 2. 调用改进后的批量转换（可选传递并发数，此处用默认值3）
-    // 若需调整并发数，可传入第4个参数，如：batchConvertToTinyEngineSchema(apiArray, undefined, true, 5)
+    // 2. 批量转换
     const conversionResults = await batchConvertToTinyEngineSchema(apiArray);
 
-    // 3. 输出汇总结果
+    // 3. 输出转换结果
     console.log('\n--- 转换结果明细 ---');
     conversionResults.forEach((item, index) => {
       const status = item.success === false ? '❌ 失败' : '✅ 成功';
@@ -1551,7 +1569,7 @@ async function main() {
       console.log(`[${index + 1}] 子组件[${item.subComponentName}]：${status} ${msg}`);
     });
 
-    // 4. 转换完成后调用后续处理
+    // 4. 后续处理
     console.log('\n--- 开始后续处理 ---');
     const finalResults = postProcessSchemas(conversionResults);
     console.log('\n--- 批量转换全部完成 ---');

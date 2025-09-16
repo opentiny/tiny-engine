@@ -6,10 +6,7 @@
   },
   "commonSelectors": {
     "tableRow": "tbody tr",
-    "tableHeader": "thead th, tr:first-child th",
-    "propTypeButton": "",
-    "propTypeTooltip": "",
-    "propTypeTooltipCode": ""
+    "tableHeader": "thead th, tr:first-child th"
   },
   "components": [
     {

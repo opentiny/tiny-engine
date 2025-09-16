@@ -35,6 +35,17 @@ function saveApiResult(result, subComponentName) {
 // ---------------- 2. 核心爬取函数 (重构) ----------------
 
 /**
+ * 移除名称字符串末尾的数字版本号（支持带v前缀、后缀的版本格式）
+ * @param {string} name - 可能包含版本号的名称字符串（如 "scroll 2.9.0"、"button v1.2.3-beta"）
+ * @returns {string} 移除版本号后的纯名称字符串（如 "scroll"、"button"）
+ */
+function removeVersionFromName(name) {
+	// 正则匹配版本号模式：空格 + 可选v + 数字.数字.数字 + 可选后缀（如-beta）
+	const versionRegex = /\s+v?\d+\.\d+\.\d+[-\w]*/i;
+	return name.replace(versionRegex, '').trim();
+}
+
+/**
  * 爬取组件API信息的主函数
  * @param {string} url 组件文档页面URL
  * @param {object} config 包含所有选择器的配置对象
@@ -79,6 +90,7 @@ async function extractApiFromUrl(url, config, retries = 3) {
 			const nameEl = document.querySelector(config.basicInfo.name);
 			if (nameEl) {
 				name = nameEl.textContent.replace(/[​]/g, '').trim();
+				name = removeVersionFromName(name);
 			}
 
 			let description = '';
@@ -136,22 +148,28 @@ async function extractApiFromUrl(url, config, retries = 3) {
 							const originalHeader = fieldMapping[key];
 							const colIndex = headers.indexOf(originalHeader);
 							if (colIndex !== -1 && tds[colIndex]) {
-								rowData[key] = tds[colIndex];
+								let value = tds[colIndex];
+								// 如果是name字段，移除版本号
+								if (key === 'name') {
+									value = removeVersionFromName(value);
+								}
+								rowData[key] = value;
 							}
 						}
 
 						// 处理可选的复杂类型（enum, function）
-						if (rowData.type && (rowData.type.toLowerCase().includes('enum') || rowData.type.toLowerCase().includes('function'))) {
+						if (rowData.type && (rowData.type.toLowerCase().includes('enum') || rowData.type.toLowerCase().includes('function')
+							|| rowData.type.toLowerCase().includes('array') || rowData.type.toLowerCase().includes('object'))) {
 							const typeCell = rowElement.querySelector(`td:nth-child(${headers.indexOf(fieldMapping.type) + 1})`);
 							if (typeCell) {
-								const iconButton = typeCell.querySelector(config.commonSelectors.propTypeButton);
+								const iconButton = typeCell.querySelector(config.tooltipInteraction.triggerButton);
 								if (iconButton) {
 									iconButton.click();
 									await delay(1000);
 
 									const rowRect = rowElement.getBoundingClientRect();
 									let codeEl = null;
-									const tooltips = document.querySelectorAll(config.commonSelectors.propTypeTooltip);
+									const tooltips = document.querySelectorAll(config.tooltipInteraction.tooltipContainer);
 
 									for (const tooltip of tooltips) {
 										if (tooltip.offsetParent === null || tooltip.getBoundingClientRect().height === 0) continue;
@@ -161,7 +179,7 @@ async function extractApiFromUrl(url, config, retries = 3) {
 											tooltipRect.top > rowRect.bottom + 20
 										);
 										if (isOverlapping) {
-											codeEl = tooltip.querySelector(config.commonSelectors.propTypeTooltipCode);
+											codeEl = tooltip.querySelector(config.tooltipInteraction.tooltipContent);
 											break;
 										}
 									}
@@ -170,8 +188,15 @@ async function extractApiFromUrl(url, config, retries = 3) {
 										const extractedText = codeEl.textContent.trim();
 										if (rowData.type.toLowerCase().includes('enum')) {
 											rowData.enumOptions = extractedText.split('|').map(part => part.trim().replace(/'/g, '').replace(/\(deprecated\)/g, '').trim()).filter(Boolean);
-										} else if (rowData.type.toLowerCase().includes('function')) {
+										}
+										if (rowData.type.toLowerCase().includes('function')) {
 											rowData.functionParams = extractedText;
+										}
+										if (rowData.type.toLowerCase().includes('object')) {
+											rowData.objectParams = extractedText;
+										}
+										if (rowData.type.toLowerCase().includes('array')) {
+											rowData.arrayParams = extractedText;
 										}
 									}
 

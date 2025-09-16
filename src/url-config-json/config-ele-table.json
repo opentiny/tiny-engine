@@ -1,0 +1,73 @@
+{
+  "basicInfo": {
+    "name": "h1",
+    "description": "h1 + p",
+    "version": "span.el-tag__content"
+  },
+  "commonSelectors": {
+    "tableRow": "tbody tr",
+    "tableHeader": "thead th, tr:first-child th"
+  },
+  "tooltipInteraction": {
+    "triggerButton": "button.el-button.el-tooltip__trigger",
+    "tooltipContainer": ".el-popper",
+    "tooltipContent": ".m-1 > code"
+  },
+  "components": [
+    {
+      "name": "Table",
+      "tables": {
+        "properties": {
+          "selector": "h3#table-属性 + div.vp-table",
+          "fieldMapping": {
+            "name": "属性名",
+            "description": "说明",
+            "type": "类型",
+            "default": "Default"
+          }
+        },
+        "events": {
+          "selector": "h3#table-事件 + div.vp-table",
+          "fieldMapping": {
+            "name": "事件名",
+            "description": "说明",
+            "type": "类型",
+            "functionParams": ""
+          }
+        },
+        "slots": {
+          "selector": "h3#table-插槽 + div.vp-table",
+          "fieldMapping": {
+            "name": "插槽名",
+            "description": "说明",
+            "type": "",
+            "props": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "Table-column",
+      "tables": {
+        "properties": {
+          "selector": "h3#table-column-属性 + div.vp-table",
+          "fieldMapping": {
+            "name": "属性名",
+            "description": "说明",
+            "type": "Type",
+            "default": "默认值"
+          }
+        },
+        "slots": {
+          "selector": "h3#table-column-插槽 + div.vp-table",
+          "fieldMapping": {
+            "name": "插槽名",
+            "description": "说明",
+            "type": "类型",
+            "props": ""
+          }
+        }
+      }
+    }
+  ]
+}

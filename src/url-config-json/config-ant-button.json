@@ -1,0 +1,45 @@
+{
+  "basicInfo": {
+    "name": "section.markdown > h1",
+    "description": "h1 + section.markdown > p",
+    "version": " div.ant-select-selector > span.ant-select-selection-item"
+  },
+  "commonSelectors": {
+    "tableRow": "tbody tr",
+    "tableHeader": "thead th, tr:first-child th"
+  },
+  "components": [
+    {
+      "name": "Button",
+      "tables": {
+        "properties": {
+          "selector": "section.markdown.api-container > table:nth-of-type(1)",
+          "fieldMapping": {
+            "name": "属性",
+            "description": "说明",
+            "type": "类型",
+            "default": "默认值"
+          }
+        },
+        "events": {
+          "selector": "section.markdown.api-container > table:nth-of-type(2)",
+          "fieldMapping": {
+            "name": "事件名称",
+            "description": "说明",
+            "type": "",
+            "functionParams": "回调参数"
+          }
+        },
+        "methods": {
+          "selector": "section.markdown.api-container > table:nth-of-type(3)",
+          "fieldMapping": {
+            "name": "名称",
+            "description": "描述",
+            "type": "",
+            "functionParams": ""
+          }
+        }
+      }
+    }
+  ]
+}

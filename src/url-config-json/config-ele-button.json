@@ -6,10 +6,12 @@
   },
   "commonSelectors": {
     "tableRow": "tbody tr",
-    "tableHeader": "thead th, tr:first-child th",
-    "propTypeButton": "button.el-button.el-tooltip__trigger",
-    "propTypeTooltip": ".el-popper",
-    "propTypeTooltipCode": ".m-1 > code"
+    "tableHeader": "thead th, tr:first-child th"
+  },
+  "tooltipInteraction": {
+    "triggerButton": "button.el-button.el-tooltip__trigger",
+    "tooltipContainer": ".el-popper",
+    "tooltipContent": ".m-1 > code"
   },
   "components": [
     {

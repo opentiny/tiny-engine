@@ -1,0 +1,57 @@
+{
+  "basicInfo": {
+    "name": "h1.n-h.n-h1.naive-doc-title",
+    "description": "h1.n-h.n-h1.naive-doc-title + p.n-p",
+    "version": "div.nav-end > span.n-text.nav-picker.padded"
+  },
+  "commonSelectors": {
+    "tableRow": "tbody tr",
+    "tableHeader": "thead th, tr:first-child th"
+  },
+  "components": [
+    {
+      "name": "Button",
+      "tables": {
+        "properties": {
+          "selector": "h3#Button-Props + div.md-table-wrapper",
+          "fieldMapping": {
+            "name": "名称",
+            "description": "说明",
+            "type": "类型",
+            "default": "默认值"
+          }
+        },
+        "slots": {
+          "selector": "h3#Button-Slots + div.md-table-wrapper",
+          "fieldMapping": {
+            "name": "名称",
+            "description": "参数",
+            "props": "说明"
+          }
+        }
+      }
+    },
+    {
+      "name": "ButtonGroup",
+      "tables": {
+        "properties": {
+          "selector": "h3#ButtonGroup-Props + div.md-table-wrapper",
+          "fieldMapping": {
+            "name": "名称",
+            "description": "说明",
+            "type": "类型",
+            "default": "默认值"
+          }
+        },
+        "slots": {
+          "selector": "h3#ButtonGroup-Slots + div.md-table-wrapper",
+          "fieldMapping": {
+            "name": "名称",
+            "description": "参数",
+            "props": "说明"
+          }
+        }
+      }
+    }
+  ]
+}

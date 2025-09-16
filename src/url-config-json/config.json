@@ -1,16 +1,59 @@
 {
-  "componentNameSelector": "h1",
-  "componentDescSelector": "h1 + p",
-  "versionSelector": "span.el-tag__content",
-  "tableSelector": ".vp-table",
-  "tableTitleSelector": "h2, h3, h4, h5",
-  "tableHeaderSelector": "thead th, tr:first-child th",
-  "tableRowSelector": "tbody tr, tr:not(:first-child)",
-  "propTypeButtonSelector": "button.el-button.el-tooltip__trigger",
-  "propTypeTooltipSelector": ".el-popper",
-  "propTypeTooltipCodeSelector": ".m-1 > code",
-  "skipTables": [
-    "expose",
-    "暴露"
+  "basicInfo": {
+    "name": "",
+    "description": "",
+    "version": ""
+  },
+  "commonSelectors": {
+    "tableRow": "tbody tr",
+    "tableHeader": "thead th, tr:first-child th"
+  },
+  "tooltipInteraction": {
+    "triggerButton": "",
+    "tooltipContainer": "",
+    "tooltipContent": ""
+  },
+  "components": [
+    {
+      "name": "",
+      "tables": {
+        "properties": {
+          "selector": "",
+          "fieldMapping": {
+            "name": "",
+            "description": "",
+            "type": "",
+            "default": ""
+          }
+        },
+        "events": {
+          "selector": "",
+          "fieldMapping": {
+            "name": "",
+            "description": "",
+            "type": "",
+            "functionParams": ""
+          }
+        },
+        "slots": {
+          "selector": "",
+          "fieldMapping": {
+            "name": "",
+            "description": "",
+            "type": "",
+            "props": ""
+          }
+        },
+        "methods": {
+          "selector": "",
+          "fieldMapping": {
+            "name": "",
+            "description": "",
+            "type": "",
+            "functionParams": ""
+          }
+        }
+      }
+    }
   ]
 }
