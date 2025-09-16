@@ -3,9 +3,21 @@
 ## 1、环境准备
 - **工具安装**
   
-  根据自己的linux操作系统安装docker，配置国内镜像加速，在对应目录编辑daemon.json文件镜像地址，如图
+  根据自己的linux操作系统安装docker，配置国内镜像加速，编辑/etc/docker/daemon.json文件镜像地址，如图
 
   ![](./imgs/daemon.png)
+
+  ```sh
+  {
+    "registry-mirrors": [
+      "https://docker.m.daocloud.io",
+      "https://mirror.iscas.ac.cn",
+      "https://docker.rainbond.cc",
+      "https://dockerproxy.cn",
+      "https://docker.udayun.com"	  
+      ]
+  }
+  ```
   编辑完成后重载配置重启docker
   ```sh
   sudo systemctl daemon-reload
