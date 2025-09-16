@@ -157,7 +157,7 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, defineExpose, computed, reactive, watch, useAttrs, onMounted } from 'vue'
+import { ref, computed, reactive, watch, useAttrs, onMounted } from 'vue'
 import {
   Form as TinyForm,
   FormItem as TinyFormItem,
@@ -220,19 +220,19 @@ const props = defineProps({
     type: Object
   }
 })
-
 const emit = defineEmits(['update:searchFormData', 'update:tableData', 'update:editFormData'])
 
 const formRef = ref(null)
 
 const colNumber = computed(() => 12 / props.layout)
+
 const insideColNumber = computed(() => (props.layout === 1 ? 6 : 12))
 
 const pageModel = computed(() => props.serviceModel)
 
-const formData = ref({})
+const formData = ref()
 
-const addFormData = ref({})
+const addFormData = ref()
 
 const boxVisibility = ref(false)
 
@@ -431,7 +431,7 @@ const initEditFormData = () => {
       ]
     })
   )
-  emit('update:editFormData', formData.value)
+  emit('update:editFormData', addFormData.value)
 }
 
 const resetSearchForm = () => {
@@ -478,8 +478,6 @@ watch(
   (value) => {
     if (value) {
       formData.value = props.searchFormData
-    } else {
-      initSearchFormData()
     }
   },
   { deep: true, immediate: true }
@@ -490,11 +488,22 @@ watch(
   (value) => {
     if (value) {
       addFormData.value = props.editFormData
-    } else {
-      initEditFormData()
     }
   },
   { deep: true, immediate: true }
+)
+
+watch(
+  () => props.serviceModel,
+  () => {
+    if (!formData.value) {
+      initSearchFormData()
+    }
+    if (!addFormData.value) {
+      initEditFormData()
+    }
+  },
+  { immediate: true }
 )
 
 onMounted(() => {

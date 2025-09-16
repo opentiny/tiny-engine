@@ -10,7 +10,7 @@
                 {{ item.label }}
               </div>
             </template>
-            <div v-if="item?.isModel && item.defaultValue !== null">
+            <div v-if="item.isModel && item.defaultValue !== null">
               <tiny-form label-width="100" label-position="left" :model="modelData[item.prop]">
                 <tiny-row>
                   <tiny-col
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script setup>
-import { ref, defineProps, defineEmits, defineExpose, computed, watch, reactive } from 'vue'
+import { ref, defineProps, defineExpose, computed, watch, reactive } from 'vue'
 import {
   Form as TinyForm,
   FormItem as TinyFormItem,
@@ -91,9 +91,7 @@ const props = defineProps({
   }
 })
 
-const modelData = ref({})
-
-const emit = defineEmits(['update:modelValue'])
+const modelData = ref()
 
 const formRef = ref(null)
 
@@ -205,19 +203,19 @@ watch(
   (value) => {
     if (value) {
       modelData.value = props.modelValue
-    } else {
-      initFormData()
     }
   },
   { deep: true, immediate: true }
 )
 
 watch(
-  () => modelData.value,
-  (value) => {
-    emit('update:modelValue', value)
+  () => props.serviceModel,
+  () => {
+    if (!modelData.value) {
+      initFormData()
+    }
   },
-  { deep: true }
+  { immediate: true }
 )
 
 const exposedData = {
