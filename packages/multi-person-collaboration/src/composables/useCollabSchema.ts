@@ -6,6 +6,7 @@ import {
   type Node,
   type PositionType,
   type RootNode,
+  type UpdateAttributesOperation,
   type UpdateMethodsOperation,
   type UserAwareness
 } from '../type'
@@ -85,7 +86,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     schemaModel.updatedNodeCss(styleStr, nodeId, className)
   }
 
-  // settings， 修改节点属性
+  // settings， 修改节点设置
   const updatePropsNode = (newProps: Record<string, any>, nodeId: string, overwrite: boolean) => {
     schemaModel.updatedNodeProps(newProps, nodeId, overwrite)
   }
@@ -93,6 +94,11 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   // 根节点保存 methods
   const updateMethodNode = (operation: UpdateMethodsOperation) => {
     schemaModel.updatedNodeMethods(operation)
+  }
+
+  // Attributes，修改节点属性
+  const updateAttributesNode = (operation: UpdateAttributesOperation) => {
+    schemaModel.updatedNodeAttributes(operation)
   }
 
   // 用户信息同步 方法
@@ -130,6 +136,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
     moveDownSharedNode,
     updateStyleNode,
     updatePropsNode,
-    updateMethodNode
+    updateMethodNode,
+    updateAttributesNode
   }
 }

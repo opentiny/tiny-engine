@@ -7,7 +7,8 @@ import {
   POSITION,
   type InsertOptions,
   type PageSchema,
-  type UpdateMethodsOperation
+  type UpdateMethodsOperation,
+  type UpdateAttributesOperation
 } from '../type'
 import { OperationHandler } from '../operation/operationHandler '
 
@@ -89,6 +90,11 @@ export class NodeSchemaModel {
   // methods， 添加或者更新事件
   public updatedNodeMethods(operation: UpdateMethodsOperation) {
     this.operationHandler.updatedMethods(operation)
+  }
+
+  //
+  public updatedNodeAttributes(operation: UpdateAttributesOperation) {
+    this.operationHandler.updatedAttributes(operation)
   }
 
   // insert 操作

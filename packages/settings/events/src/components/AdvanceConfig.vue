@@ -80,7 +80,7 @@ import {
   SwitchConfigurator,
   VariableConfigurator
 } from '@opentiny/tiny-engine-configurator'
-import { useProperties, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useProperties, useCanvas, useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 import { PROP_DATA_TYPE } from '@opentiny/tiny-engine-common/js/constants'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { Tooltip } from '@opentiny/vue'
@@ -185,9 +185,13 @@ export default {
 
       if (value === false || value?.type) {
         operateNode({ type: 'updateAttributes', id: schema.id, value: { condition: value } })
+        // 多人协同实现
+        useRealtimeCollab().updateAttributesNode({ type: 'condition', value, nodeId: schema.id })
       } else {
         const { condition: _schemaCondition, children, ...rest } = schema
         operateNode({ type: 'updateAttributes', id: schema.id, value: { ...rest }, overwrite: true })
+        // 多人协同实现
+        useRealtimeCollab().updateAttributesNode({ type: 'condition', value, nodeId: schema.id })
       }
 
       useCanvas().canvasApi.value.updateRect()
@@ -206,6 +210,8 @@ export default {
       }
 
       operateNode({ type: 'updateAttributes', id: schema.id, value: { loopArgs } })
+      // 多人协同实现
+      useRealtimeCollab().updateAttributesNode({ type: 'loopArgs', value: loopArgs, nodeId: schema.id })
     }
 
     const setLoop = (value) => {
@@ -217,12 +223,16 @@ export default {
         const newLoop = value?.type ? value : string2Obj(value)
 
         operateNode({ type: 'updateAttributes', id: schema.id, value: { loop: newLoop } })
+        // 多人协同实现
+        useRealtimeCollab().updateAttributesNode({ type: 'loop', value: newLoop, nodeId: schema.id })
         setLoopIndex(DEFAULT_LOOP_NAME.INDEX)
       } else {
         setLoopKey()
         const { loop: _loop, loopArgs: _loopArgs, children: _children, ...rest } = schema
 
         operateNode({ type: 'updateAttributes', id: schema.id, value: rest, overwrite: true })
+        // 多人协同实现
+        useRealtimeCollab().updateAttributesNode({ type: 'clean', nodeId: schema.id })
       }
 
       // 触发更新state
@@ -241,6 +251,8 @@ export default {
       }
 
       operateNode({ type: 'updateAttributes', id: schema.id, value: { loopArgs } })
+      // 多人协同实现
+      useRealtimeCollab().updateAttributesNode({ type: 'loopArgs', value: loopArgs, nodeId: schema.id })
     }
 
     return {

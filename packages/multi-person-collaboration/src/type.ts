@@ -106,6 +106,14 @@ export type UpdateMethodsOperation =
   | { type: 'root'; methods: Record<string, any> }
   | { type: 'node'; nodeId: string; methodsName: string; methods: Record<string, any>; params: any }
 
+export type UpdateAttributesOperation =
+  | { type: 'loop'; value: Record<string, any>; nodeId: string }
+  | { type: 'loopArgs'; value: Record<string, any>; nodeId: string }
+  | { type: 'condition'; value: boolean; nodeId: string }
+  | { type: 'clean'; nodeId: string }
+
+export type UpdateAttributesRole = 'loop' | 'loopArgs' | 'condition' | 'clean'
+
 export interface UserAwareness {
   id?: string | number
   name: string

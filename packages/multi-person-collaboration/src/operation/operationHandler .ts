@@ -4,6 +4,7 @@ import type {
   Node,
   NodeOperation,
   PageSchema,
+  UpdateAttributesOperation,
   UpdateMethodsOperation,
   UpdatePropsOperation,
   UpdateStyleOperation
@@ -175,7 +176,7 @@ export class OperationHandler {
     Object.assign(this.rootSchema, { css: strStyle })
   }
 
-  // 修改节点属性
+  // 修改节点 Props
   public updatedProps(operation: UpdatePropsOperation) {
     const { newProps, nodeId, overwrite } = operation
     let node = this.getYNode(nodeId)
@@ -232,6 +233,37 @@ export class OperationHandler {
           meta: { nodeId }
         })
       }
+    }
+  }
+
+  // 更新节点属性
+  public updatedAttributes(opertion: UpdateAttributesOperation) {
+    const { type, nodeId } = opertion
+    const targetNode = this.getYNode(nodeId)
+
+    switch (type) {
+      case 'condition': {
+        targetNode?.set('condition', opertion.value)
+        break
+      }
+      case 'loop': {
+        targetNode?.set('loop', opertion.value)
+        break
+      }
+      case 'loopArgs': {
+        targetNode?.set('loopArgs', opertion.value)
+        break
+      }
+      case 'clean': {
+        this.yDoc.transact(() => {
+          // 合并为一次操作
+          targetNode?.delete('loop')
+          targetNode?.delete('loopArgs')
+        })
+        break
+      }
+      default:
+        break
     }
   }
 

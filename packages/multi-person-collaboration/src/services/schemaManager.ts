@@ -2,7 +2,7 @@ import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import * as Y from 'yjs'
 import { NodeSchemaModel } from '../models/NodeSchemaModel'
 import { DocManager } from './docManager'
-import type { RootNode } from '../type'
+import type { RootNode, UpdateAttributesRole } from '../type'
 import { fromYjs, sanitizeSchema, toYjs } from '../utils'
 import { toRaw } from 'vue'
 import type { YjsProvider } from './providerManager'
@@ -14,6 +14,10 @@ type DiffPatch =
   | { type: 'array-delete'; path: (string | number)[]; count: number; deletedIds: string[] }
   | { type: 'text-insert'; path: (string | number)[]; index: number; text: string }
   | { type: 'text-delete'; path: (string | number)[]; index: number; length: number }
+  | { type: 'style-update'; path: (string | number)[]; css: string }
+  | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
+  | { type: 'props-update'; path: (string | number)[]; props: Record<any, any>; meta: Record<any, any> }
+  | { type: 'methods-add-root'; path: (string | number)[]; methods: Record<string, any> }
   | {
       type: 'array-swap'
       direction: 'down' | 'up'
@@ -22,15 +26,18 @@ type DiffPatch =
       targetIndex: number
       swapIndex: number
     }
-  | { type: 'style-update'; path: (string | number)[]; css: string }
-  | { type: 'class-add'; path: (string | number)[]; nodeId: string; className: string }
-  | { type: 'props-update'; path: (string | number)[]; props: Record<any, any>; meta: Record<any, any> }
-  | { type: 'methods-add-root'; path: (string | number)[]; methods: Record<string, any> }
   | {
       type: 'methods-add-node'
       path: (string | number)[]
       methods: Record<string, any>
       methodsName: string
+      nodeId: string
+    }
+  | {
+      type: 'attributes-update'
+      role: UpdateAttributesRole
+      path: (string | number)[]
+      value: boolean | Record<string, any> | undefined
       nodeId: string
     }
 
@@ -253,6 +260,7 @@ export class SchemaManager {
         if (event.target instanceof Y.Map) {
           const yMapNode = event.target
           const regex = /^on[A-Z][A-Za-z]*$/
+          const attributesKey = ['condition', 'loop', 'loopArgs', 'clean']
 
           event.changes.keys.forEach((change, key) => {
             // 软删除
@@ -314,6 +322,29 @@ export class SchemaManager {
                   path: event.path,
                   methods: newMethods
                 })
+              }
+            } else if (attributesKey.includes(key)) {
+              if (key === 'condition' || key === 'loop' || key === 'loopArgs') {
+                if (change.action === 'add' || change.action === 'update') {
+                  const targetNodeId = yMapNode.get('id')
+                  const value = yMapNode.get(key)
+                  patches.push({
+                    type: 'attributes-update',
+                    role: key,
+                    path: event.path,
+                    value,
+                    nodeId: targetNodeId
+                  })
+                } else if (change.action === 'delete' && (key === 'loop' || key === 'loopArgs')) {
+                  const targetNodeId = yMapNode.get('id')
+                  patches.push({
+                    type: 'attributes-update',
+                    role: 'clean',
+                    path: event.path,
+                    value: undefined,
+                    nodeId: targetNodeId
+                  })
+                }
               }
             } else if (regex.test(key)) {
               // 先判断非根节点 添加时间函数
@@ -476,6 +507,27 @@ export class SchemaManager {
 
           targetNode[methodsName] = methods
           useMessage().publish({ topic: 'schemaChange', data: {} })
+          break
+        }
+        case 'attributes-update': {
+          const { role, value, nodeId } = patch
+          const targetNode = useCanvas().getNode(nodeId, false)
+
+          if (role === 'condition') {
+            if (!(value as boolean)) {
+              useCanvas().operateNode({ type: 'updateAttributes', id: nodeId, value: { condition: value } })
+            } else {
+              const { condition: _schemaCondition, children, ...rest } = targetNode
+              useCanvas().operateNode({ type: 'updateAttributes', id: nodeId, value: { ...rest }, overwrite: true })
+            }
+          } else if (role === 'loop') {
+            useCanvas().operateNode({ type: 'updateAttributes', id: nodeId, value: { loop: value } })
+          } else if (role === 'loopArgs') {
+            useCanvas().operateNode({ type: 'updateAttributes', id: nodeId, value: { loopArgs: value } })
+          } else if (role === 'clean') {
+            const { loop: _loop, loopArgs: _loopArgs, children: _children, ...rest } = targetNode
+            useCanvas().operateNode({ type: 'updateAttributes', id: nodeId, value: rest, overwrite: true })
+          }
           break
         }
         default:
