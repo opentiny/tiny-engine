@@ -32,6 +32,7 @@
             <tiny-button @click="enableBatchAction = !enableBatchAction" class="action-item"> 批量操作 </tiny-button>
           </div>
         </div>
+
         <div class="source-list-wrap">
           <div v-for="item in state.sourceList" :key="item.id" class="source-list-item">
             <div class="source-image-wrap">
