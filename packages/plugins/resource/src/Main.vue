@@ -162,11 +162,12 @@ export default {
       display: none;
     }
     .svg-icon {
-      color: #808080;
+      color: var(--te-resource-manage-draggable-icon-color);
       margin-right: 4px;
     }
     &:hover {
-      background-color: #f5f5f5;
+      background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
+      color: var(--te-resource-manage-draggable-text-color);
       .item-setting {
         display: inline;
       }
@@ -174,7 +175,8 @@ export default {
   }
   .active-item {
     font-weight: 600;
-    background-color: #f5f5f5;
+    background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
+    color: var(--te-resource-manage-draggable-text-color);
   }
 }
 .plugin-resource {
