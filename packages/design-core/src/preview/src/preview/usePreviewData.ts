@@ -403,7 +403,8 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
       ]
 
       const newFiles = store.getFiles()
-      const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
 
       newFiles['app.js'] = appJsCode
       pageCode.forEach((item) => assignFiles(item, newFiles))
@@ -612,7 +613,12 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
       }, {})
       srcFiles['import-map.json'] = JSON.stringify(importMap)
       const newFiles = store.getFiles()
-      const appJsCode = processAppJsCode(newFiles['app.js'], JSON.parse(searchParams.get('styles') || '[]'))
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(
+        newFiles['app.js'],
+        JSON.parse(searchParams.get('styles') || '[]'),
+        enableTailwindCSS
+      )
       srcFiles['app.js'] = appJsCode
       srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
       srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')

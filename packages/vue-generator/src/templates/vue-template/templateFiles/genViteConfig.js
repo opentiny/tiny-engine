@@ -1,4 +1,4 @@
-export default () => {
+export default (schema, options) => {
   // 避免在构建的时候，被 process. env 替换
   const processStr = ['process', 'env']
 
@@ -7,6 +7,7 @@ export default () => {
   import path from 'path'
   import vue from '@vitejs/plugin-vue'
   import vueJsx from '@vitejs/plugin-vue-jsx'
+  ${options.enableTailwindCSS ? 'import tailwindcss from "@tailwindcss/vite"' : ''}
   
   export default defineConfig({
     resolve: {
@@ -14,7 +15,7 @@ export default () => {
         '@': path.resolve(__dirname, 'src')
       }
     },
-    plugins: [vue(), vueJsx()],
+    plugins: [vue(), vueJsx(), ${options.enableTailwindCSS ? 'tailwindcss()' : ''}],
     define: {
       '${processStr.join('.')}': { ...${processStr.join('.')} }
     },

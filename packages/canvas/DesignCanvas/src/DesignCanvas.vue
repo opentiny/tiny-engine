@@ -76,9 +76,9 @@ export default {
           return
         }
 
-        const { importMap, importStyles } = getImportMapData(deps)
+        const { importMap, importStyles, importScripts } = getImportMapData(deps)
 
-        canvasSrcDoc.value = initCanvas(importMap, importStyles).html
+        canvasSrcDoc.value = initCanvas(importMap, importStyles, importScripts).html
       }
     })
 
