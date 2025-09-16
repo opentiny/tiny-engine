@@ -5,8 +5,6 @@
   
   根据自己的linux操作系统安装docker，配置国内镜像加速，编辑/etc/docker/daemon.json文件镜像地址，如图
 
-  ![](./imgs/daemon.png)
-
   ```sh
   {
     "registry-mirrors": [
@@ -18,6 +16,9 @@
       ]
   }
   ```
+  
+  ![](./imgs/daemon.png)
+
   编辑完成后重载配置重启docker
   ```sh
   sudo systemctl daemon-reload
