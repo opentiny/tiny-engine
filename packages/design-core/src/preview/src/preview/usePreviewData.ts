@@ -340,7 +340,7 @@ interface IUsePreviewData {
   setImportMap: (importMap: Record<string, string>) => void
 }
 
-export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
+export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewData) => {
   const basicFiles = setFiles(srcFiles, 'src/Main.vue')
 
   const assignFiles = ({ panelName, panelValue, index }: IPanelType, newFiles: Record<string, string>) => {
@@ -362,15 +362,17 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     const previewType = searchParams.get('previewType')
 
     if (previewType === 'page') {
-      const { appData, metaData, importMapData } = await getBasicData(basicFiles)
+      const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
+
       previewState.currentPage = params.currentPage
       previewState.ancestors = params.ancestors
 
       // importMap 发生变化才更新 importMap
       if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
-        store.setImportMap(importMapData)
+        setImportMap(importMapData)
         previewState.importMap = importMapData
       }
+
       const blockSet = new Set()
 
       let blocks = []
@@ -389,7 +391,6 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
         blockSet
       )
       blocks = blocks.concat(currentPageBlocks)
-
       const pageCode = [
         ...getPageAncestryFiles(appData, params),
         ...(blocks || []).map((blockSchema) => {
@@ -402,27 +403,25 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
       ]
 
       const newFiles = store.getFiles()
-      const appJsCode = processAppJsCode(newFiles['app.js'], JSON.parse(searchParams.get('styles') || '[]'))
+      const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
 
       newFiles['app.js'] = appJsCode
-
-      pageCode.map(fixScriptLang).forEach((item) => assignFiles(item, newFiles))
+      pageCode.forEach((item) => assignFiles(item, newFiles))
 
       const metaFiles = generateMetaFiles(metaData)
       Object.assign(newFiles, metaFiles)
-
-      setFiles(newFiles)
+      setFiles(newFiles, 'App.vue')
     } else if (previewType === 'app') {
-      const app = searchParams.get('id')
+      const appId = searchParams.get('id')
       const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
       const importMap = await getImportMap(JSON.parse(searchParams.get('scripts') || '{}'))
-      // store.setImportMap(importMap)
+
       let appSchema
 
       const getPreGenerateInfo = async () => {
         const promises = [
-          getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${app}`),
-          fetchPageList(app)
+          getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${appId}`),
+          fetchPageList(appId)
         ]
 
         const [appData, pageList] = await Promise.all(promises)
@@ -496,6 +495,42 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
         return fileRes
       }
 
+      const buildTreeRoutes = (routes) => {
+        const tree = []
+        const routeMap = new Map()
+
+        // 首先将所有路由存入一个 Map 中，以便快速查找
+        routes.forEach((route) => {
+          routeMap.set(route.path, route)
+        })
+
+        // 递归构建树状结构
+        const buildTree = (route) => {
+          const children = routes.filter((childRoute) => {
+            return childRoute.path.startsWith(route.path) && childRoute.path !== route.path
+          })
+
+          if (children.length > 0) {
+            route.children = children.map((childRoute) => {
+              const child = { ...childRoute }
+              buildTree(child)
+              return child
+            })
+          }
+        }
+
+        // 找到所有根路由
+        routes.forEach((route) => {
+          if (!routes.some((otherRoute) => otherRoute.path !== route.path && route.path.startsWith(otherRoute.path))) {
+            const root = { ...route }
+            buildTree(root)
+            tree.push(root)
+          }
+        })
+
+        return tree
+      }
+
       const getRoutesAndImportSet = (schema) => {
         const importSet = new Set()
         const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
@@ -504,7 +539,6 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
           path: '/'
         }
         let isGetHome = false
-
         pageSchema.forEach((item) => {
           if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
             home.redirect = { name: `${item.meta.id}` }
@@ -525,12 +559,11 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
           home.redirect = { name: result[0]?.name }
         }
 
-        return { routes: [home, ...result], importSet }
+        return { routes: [home, ...buildTreeRoutes(result)], importSet }
       }
 
       const getRouterFile = (schema) => {
         const { routes, importSet } = getRoutesAndImportSet(schema)
-
         const resultStr = JSON.stringify(routes, null, 2).replace(
           /("component":\s*)"(.*?)"/g,
           (match, p1, p2) => p1 + p2
@@ -552,6 +585,20 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
           fileContent = getRouterFile(appSchema)
         } else {
           fileContent = fileContent.replace(/(from\s*')(@)(\/.*')/g, '$1.$3')
+        }
+        if (fileName === 'src/App.vue') {
+          fileContent = fileContent.replace(
+            '<router-view></router-view>',
+            `<tiny-select v-model="currentRoute" placeholder="请选择路由" render-type="tree" :tree-op="{ data: $router.options.routes.filter(item => item.path !== '/') }" text-field="path" value-field="path" @change="routeChange"></tiny-select>\n<router-view></router-view>`
+          )
+          fileContent = fileContent.replace(
+            `import { provide } from 'vue'`,
+            `import { Select as TinySelect } from '@opentiny/vue'\nimport { ref, provide, watchEffect } from 'vue'\nimport { useRoute, useRouter } from 'vue-router'`
+          )
+          fileContent = fileContent.replace(
+            `provide(I18nInjectionKey, i18n)`,
+            `const route = useRoute()\nconst router = useRouter()\nconst currentRoute = ref()\n\nwatchEffect(() => {\n\tcurrentRoute.value = route.path\n})\n\nconst routeChange = () => {\n\trouter.push(currentRoute.value)\n}\nprovide(I18nInjectionKey, i18n)`
+          )
         }
         return fileContent
       }
