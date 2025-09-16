@@ -28,16 +28,17 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.styles.BackgroundImageGradient */
 import { computed, reactive, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Input, Checkbox } from '@opentiny/vue'
 import { ColorConfigurator } from '@opentiny/tiny-engine-configurator'
 
 export default {
   components: {
     TinyInput: Input,
-    TinyCheckbox: Checkbox,
+    TinyCheckbox: Checkbox as Component,
     ColorConfigurator
   },
   props: {

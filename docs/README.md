@@ -50,6 +50,7 @@
   - [更新日志](./changelog/changelog.md)
   - [v2.7升级指南](./changelog/v2.7-upgrade-guide.md)
 - 解决方案
+  - [前端及Java服务端docker部署](./solutions/front-backend-docker-deployment.md)
   - [Java服务端部署](./solutions/server-deployment-solution-java.md)
   - [Node.js服务端部署](./solutions/server-deployment-solution.md)
   - [区块发布方案(Node.js服务端)](./solutions/block-release-solution.md)

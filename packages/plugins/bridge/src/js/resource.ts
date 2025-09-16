@@ -99,7 +99,7 @@ const TempBridge = [
 export const RESOURCE_TYPE = {
   Util: 'utils',
   Bridge: 'bridge'
-}
+} as const
 
 export const RESOURCE_CATEGORY = {
   Npm: 'npm',
@@ -206,6 +206,8 @@ export const saveResource = async (data, callback, emit) => {
       }
     }
 
+    getMetaApi(META_SERVICE.UseUtils).refreshUtils()
+
     // 更新画布工具函数环境，保证渲染最新工具类返回值, 并触发画布的强制刷新
     generateBridgeUtil(getAppId())
     useNotify({
@@ -238,6 +240,8 @@ export const deleteData = (name, callback, emit) => {
 
         return
       }
+
+      getMetaApi(META_SERVICE.UseUtils).refreshUtils()
 
       useResource().appSchemaState[state.type].splice(index, 1)
 

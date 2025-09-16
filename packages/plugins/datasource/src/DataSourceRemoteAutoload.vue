@@ -8,11 +8,12 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRemoteAutoload */
 import { reactive } from 'vue'
+import type { Component } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   props: {
     modelValue: {

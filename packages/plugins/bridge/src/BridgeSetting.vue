@@ -90,6 +90,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.bridge.BridgeSetting */
 import { computed, onMounted, reactive, ref, watchEffect, nextTick, watch } from 'vue'
+import type { Component } from 'vue'
 import {
   Input as TinyInput,
   Button as TinyButton,
@@ -133,7 +134,7 @@ export default {
     TinyInput,
     TinyButton,
     TinyFormItem,
-    TinyCheckbox,
+    TinyCheckbox: TinyCheckbox as Component,
     PluginSetting,
     MonacoEditor,
     TinyRadioGroup: RadioGroup,
@@ -275,6 +276,13 @@ export default {
     const handleChangeType = (value) => {
       setCategory(value)
     }
+
+    // 元服务上一次操作的数据为删除且删除当前编辑的数据，需要关闭当前面板
+    watch(getMetaApi(META_SERVICE.UseUtils).getLastOperation, (lastOperation) => {
+      if (lastOperation.type === 'delete' && lastOperation.id === getResource()?.id) {
+        closePanel()
+      }
+    })
 
     return {
       align,

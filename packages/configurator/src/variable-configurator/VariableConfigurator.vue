@@ -119,7 +119,7 @@
   </tiny-dialog-box>
 </template>
 
-<script>
+<script lang="ts">
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import {
   useCanvas,
@@ -136,6 +136,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 
 const { EXPRESSION_TYPE } = constants
 
@@ -176,11 +177,11 @@ export default {
   components: {
     MonacoEditor,
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinySearch: Search,
     TinySwitch: Switch,
     TinyInput: Input,
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     SvgButton,
     TinyAlert: Alert
   },

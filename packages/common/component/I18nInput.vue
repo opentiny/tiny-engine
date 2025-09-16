@@ -36,6 +36,7 @@
 
 <script lang="ts">
 import { computed, ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { useTranslate } from '@opentiny/tiny-engine-meta-register'
 import { Input, Popover } from '@opentiny/vue'
 import { IconClose } from '@opentiny/vue-icon'
@@ -46,7 +47,7 @@ export default {
   components: {
     TinyInput: Input,
     BindI18n,
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconClose: IconClose()
   },
   inheritAttrs: false,

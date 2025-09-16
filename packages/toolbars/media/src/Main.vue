@@ -86,10 +86,11 @@ import { Popover, Input, Switch } from '@opentiny/vue'
 import { IconWebPlus } from '@opentiny/vue-icon'
 import { useLayout, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     TinyInput: Input,
     TinySwitch: Switch,
     ToolbarBase

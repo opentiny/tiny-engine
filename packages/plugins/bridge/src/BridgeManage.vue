@@ -30,7 +30,7 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.bridge.BridgeManage */
-import { watchEffect, ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { Search } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty, SvgButton } from '@opentiny/tiny-engine-common'
@@ -43,8 +43,10 @@ import {
   setResource,
   setCategory,
   getType,
-  setResourceNamesByType
+  setResourceNamesByType,
+  getResource
 } from './js/resource'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -80,8 +82,27 @@ export default {
       list.value = filterResourceSearchValue(state.resourceList)
     }
 
-    watchEffect(async () => {
-      refresh(props.name)
+    watch(
+      () => props.name,
+      () => {
+        refresh(props.name)
+      },
+      { immediate: true }
+    )
+
+    const { getUpdateCount, getLastOperation } = getMetaApi(META_SERVICE.UseUtils) || { getUpdateCount: ref(0) }
+    watch(getUpdateCount, async () => {
+      await refresh(props.name)
+
+      const { id, type } = getLastOperation()
+
+      if (['add', 'update'].includes(type) && String(id) === String(getResource()?.id)) {
+        const editItem = state.resourceList.find((item) => String(item.id) === String(id))
+
+        if (editItem) {
+          setResource(editItem)
+        }
+      }
     })
 
     const add = (type) => {

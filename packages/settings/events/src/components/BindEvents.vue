@@ -75,9 +75,10 @@
   ></add-events-dialog>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.event.BindEvents */
 import { computed, reactive, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import {
   useModal,
@@ -100,8 +101,8 @@ export default {
   components: {
     BlockLinkEvent,
     BindEventsDialog,
-    TinyPopover: Popover,
-    TinyButton: Button,
+    TinyPopover: Popover as Component,
+    TinyButton: Button as Component,
     IconChevronDown: iconChevronDown(),
     SvgButton,
     AddEventsDialog

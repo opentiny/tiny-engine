@@ -430,20 +430,22 @@ mcpService.setOptions(remoteConfig)
 
 ### 高级配置
 
-```typescript
+<pre>
+<code>
 import { getMetaApi } from '@opentiny/tiny-engine-meta-register'
 
 const mcpService = getMetaApi('engine.service.mcp')
 
 const advancedConfig = {
-  proxyUrl: process.env.MCP_PROXY_URL || 'http://localhost:3000/mcp',
-  connectToAgentServer: process.env.NODE_ENV === 'production',
+  proxyUrl: process<wbr>.env.MCP_PROXY_URL || 'http://localhost:3000/mcp',
+  connectToAgentServer: process<wbr>.env.NODE_ENV === 'production',
   reconnectAttempts: 5,
   reconnectInterval: 2000
 }
 
 mcpService.setOptions(advancedConfig)
-```
+</code>
+</pre>
 
 ## 最佳实践
 

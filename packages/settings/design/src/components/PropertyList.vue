@@ -25,8 +25,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, onMounted, watch } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 import Sortable from 'sortablejs'
@@ -34,7 +35,7 @@ import store from '../store'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconHelpCircle: iconHelpCircle()
   },
   props: {

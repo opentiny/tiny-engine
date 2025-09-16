@@ -43,6 +43,7 @@
 
 <script lang="ts">
 import { reactive, watch } from 'vue'
+import type { Component } from 'vue'
 import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
 import { TALK_TYPE, MCP_TYPE, BUILD_TYPE } from './js/robotSetting'
 
@@ -50,7 +51,7 @@ export default {
   components: {
     TinyTabs: Tabs,
     TinyTabItem: TabItem,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     aiType: {

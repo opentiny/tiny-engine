@@ -19,7 +19,8 @@ export const META_SERVICE = {
   Properties: 'engine.service.properties',
   ThemeSwitch: 'engine.service.themeSwitch',
   Style: 'engine.service.style',
-  McpService: 'engine.service.mcpService'
+  McpService: 'engine.service.mcpService',
+  UseUtils: 'engine.service.useUtils'
 }
 
 export const META_APP = {

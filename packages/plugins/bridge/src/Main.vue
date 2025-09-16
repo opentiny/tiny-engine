@@ -20,13 +20,15 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.bridge.Main */
-import { ref, reactive, computed, provide } from 'vue'
+import { ref, reactive, computed, provide, onActivated, type Ref } from 'vue'
 import { PluginPanel, SvgButton } from '@opentiny/tiny-engine-common'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { RESOURCE_TYPE } from './js/resource'
 import BridgeManage from './BridgeManage.vue'
 import BridgeSetting, { openPanel, closePanel } from './BridgeSetting.vue'
 import { RESOURCE_TIP } from './js/resource'
+
+type BridgeManageInstance = InstanceType<typeof BridgeManage>
 
 /* metaComponent: engine.plugins.bridge */
 export default {
@@ -41,9 +43,9 @@ export default {
       type: Array
     }
   },
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const activedName = ref(RESOURCE_TYPE.Util)
-    const utilsRef = ref(null)
+    const utilsRef: Ref<BridgeManageInstance | null> = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
     const docsContent =
       '资源管理插件提供「工具类方法」功能，支持自定义函数和npm包引用，实现代码复用。轻松添加公共函数或第三方库，应用内全局调用，提升开发效率。'
@@ -59,13 +61,18 @@ export default {
       openPanel()
     }
 
-    const refreshList = (type) => {
-      utilsRef.value.refresh(type)
+    const refreshList = (type: string) => {
+      utilsRef.value?.refresh(type)
     }
 
-    const addResource = (type) => {
-      utilsRef.value.add(type)
+    const addResource = (type: string) => {
+      utilsRef.value?.add(type)
     }
+
+    onActivated(() => {
+      utilsRef.value?.refresh(activedName.value)
+      getMetaApi(META_SERVICE.UseUtils).refreshUtils()
+    })
 
     return {
       PLUGIN_NAME,
