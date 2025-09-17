@@ -35,7 +35,7 @@
                 name="tiny-checkbox"
                 @change="selectSource($event, item)"
               ></tiny-checkbox>
-              <div class="source-action" v-if="!enableBatchAction">
+              <div class="source-action">
                 <tiny-popover placement="bottom" :visible-arrow="false" :offset="-18" trigger="hover">
                   <div class="actions">
                     <tiny-popover
@@ -334,6 +334,7 @@ export default {
           })
             .then(() => {
               getSourceList()
+              selectedSources.value = []
             })
             .catch((error) => {
               useNotify({
