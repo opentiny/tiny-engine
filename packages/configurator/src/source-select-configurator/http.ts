@@ -19,7 +19,7 @@ export const fetchResourceListByGroupId = (resourceGroupId: number) =>
   getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource/find/${resourceGroupId}`)
 
 // 资源管理 -- 根据appId查询资源分组列表
-export const fetchResourceGroupByAppId = (appId: number) =>
+export const fetchResourceGroupByAppId = (appId?: number) =>
   getMetaApi(META_SERVICE.Http).get(
     `${baseUrl}/resource-group/${appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id}`
   )

@@ -46,9 +46,6 @@ export const deleteResource = (id: number) => getMetaApi(META_SERVICE.Http).get(
 // 资源管理 -- 获取资源详情
 export const fetchResourceDetail = (id: number) => getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource/detail/${id}`)
 
-// 资源管理 -- 查询资源分组列表
-export const fetchResourceGroupList = () => getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource-group/list`)
-
 // 资源管理 -- 根据appId查询资源分组列表
 export const fetchResourceGroupByAppId = () =>
   getMetaApi(META_SERVICE.Http).get(

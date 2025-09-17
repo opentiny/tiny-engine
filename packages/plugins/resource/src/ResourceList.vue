@@ -35,7 +35,7 @@
                 name="tiny-checkbox"
                 @change="selectSource($event, item)"
               ></tiny-checkbox>
-              <div class="source-action">
+              <div class="source-action" v-if="!enableBatchAction">
                 <tiny-popover placement="bottom" :visible-arrow="false" :offset="-18" trigger="hover">
                   <div class="actions">
                     <tiny-popover
@@ -141,17 +141,19 @@
     </tiny-dialog-box>
   </teleport>
 </template>
-<script>
+<script lang="ts">
+/* metaService: engine.plugins.resource.ResourceList */
 import { ref, reactive, computed, watch } from 'vue'
+import type { Component } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import {
-  Button,
+  Button as TinyButton,
   Divider,
   Grid,
   GridColumn,
   Input,
-  Checkbox,
-  Popover,
+  Checkbox as TinyCheckbox,
+  Popover as TinyPopover,
   DialogBox,
   Alert,
   FileUpload
@@ -184,13 +186,13 @@ export default {
   components: {
     PluginSetting,
     SvgButton,
-    TinyButton: Button,
+    TinyButton: TinyButton as Component,
     TinyDivider: Divider,
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     TinyInput: Input,
-    TinyCheckbox: Checkbox,
-    TinyPopover: Popover,
+    TinyCheckbox: TinyCheckbox as Component,
+    TinyPopover: TinyPopover as Component,
     TinyDialogBox: DialogBox,
     TinyAlert: Alert,
     TinyFileUpload: FileUpload,
@@ -224,7 +226,7 @@ export default {
           type: 'string',
           validator: ({ row }, value) => {
             return new Promise((resolve, reject) => {
-              const regex = /^[a-zA-Z0-9_\-=+(){}[\]\u4e00-\u9fa5]+\.(png|jpg|jpeg|svg|PNG|JPG|JPEG|SVG)$/i
+              const regex = /^[a-zA-Z0-9_\-=+(){}[\]\u4e00-\u9fa5]+\.(png|jpg|jpeg|svg|PNG|JPG|JPEG|SVG)$/
               if (!regex.test(value)) {
                 reject(new Error('资源名称格式错误'))
               } else if (addSourceData.value.find((item) => item._RID !== row._RID && item.name === value)) {

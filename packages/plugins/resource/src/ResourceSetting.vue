@@ -32,9 +32,11 @@
     </template>
   </plugin-setting>
 </template>
-<script>
+<script lang="ts">
+/* metaService: engine.plugins.resource.ResourceSetting */
 import { ref, reactive, computed } from 'vue'
-import { Button, Collapse, CollapseItem, Form, FormItem, Input } from '@opentiny/vue'
+import type { Component } from 'vue'
+import { Button as TinyButton, Collapse, CollapseItem, Form, FormItem, Input } from '@opentiny/vue'
 import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { createResourceGroup, updateResourceGroup } from './js/http'
@@ -65,7 +67,7 @@ export default {
   components: {
     PluginSetting,
     SvgButton,
-    TinyButton: Button,
+    TinyButton: TinyButton as Component,
     TinyCollapse: Collapse,
     TinyCollapseItem: CollapseItem,
     TinyFormItem: FormItem,
@@ -74,7 +76,7 @@ export default {
     ButtonGroup
   },
   props: {},
-  emits: ['create-group'],
+  emits: ['refreshCategory'],
   setup(props, { emit }) {
     const { PLUGIN_NAME, getPluginByLayout } = useLayout()
     const align = computed(() => getPluginByLayout(PLUGIN_NAME.Resource))
@@ -108,7 +110,7 @@ export default {
         if (state.data.id) {
           updateResourceGroup(state.data.id, { name: state.data.name, description: state.data.description })
             .then(() => {
-              emit('create-group')
+              emit('refreshCategory')
               closeResourceSettingPanel()
               useNotify({ message: '修改资源分组成功', type: 'success' })
             })
@@ -118,7 +120,7 @@ export default {
         } else {
           createResourceGroup(state.data)
             .then(() => {
-              emit('create-group')
+              emit('refreshCategory')
               closeResourceSettingPanel()
               useNotify({ message: '添加资源分组成功', type: 'success' })
             })

@@ -35,17 +35,20 @@
         <search-empty :isShow="!resourceList?.length" />
       </template>
     </plugin-panel>
-    <resource-setting @create-group="refreshCategory"></resource-setting>
+    <resource-setting @refreshCategory="refreshCategory"></resource-setting>
     <resource-list></resource-list>
   </div>
 </template>
-<script>
+<script lang="ts">
+/* metaService: engine.plugins.resource.Main */
 import { ref, reactive, provide, onMounted } from 'vue'
 import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import ResourceSetting, { openResourceSettingPanel, closeResourceSettingPanel } from './ResourceSetting.vue'
 import ResourceList, { openResourceListPanel, closeResourceListPanel } from './ResourceList.vue'
 import { fetchResourceGroupByAppId } from './js/http'
+
+/* metaComponent: engine.plugins.resource */
 export default {
   components: {
     PluginPanel,

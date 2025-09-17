@@ -6,7 +6,6 @@
       v-model="isShow"
       :visible-arrow="false"
       :popper-class="['option-popper', 'fixed-left']"
-      height="844"
     >
       <div class="source-wrap">
         <div class="source-title">
@@ -46,7 +45,7 @@
           </div>
           <div class="source-list">
             <div v-for="(item, index) in sourceList" :key="item.id" class="source-item">
-              <img :src="item.thumbnailUrl ?? item.resourceUrl" />
+              <img :src="item.thumbnailUrl || item.resourceUrl" />
               <tiny-radio
                 v-model="selectedSourceIndex"
                 @change="selectSource(index)"
@@ -77,15 +76,7 @@
 <script lang="ts">
 import { ref, watch } from 'vue'
 import type { Component } from 'vue'
-import {
-  Popover as TinyPopover,
-  Button as TinyButton,
-  Input as TinyInput,
-  Search as TinySearch,
-  Select as TinySelect,
-  Divider as TinyDivider,
-  Radio as TinyRadio
-} from '@opentiny/vue'
+import { Popover as TinyPopover, Button as TinyButton, Input, Search, Select, Divider, Radio } from '@opentiny/vue'
 import { iconClose, iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -105,12 +96,12 @@ export default {
   components: {
     TinyPopover: TinyPopover as Component,
     TinyButton: TinyButton as Component,
-    TinyInput: TinyInput as Component,
-    TinySearch: TinySearch as Component,
-    TinySelect: TinySelect as Component,
-    TinyDivider: TinyDivider as Component,
-    TinyRadio: TinyRadio as Component,
-    SearchEmpty: SearchEmpty as Component,
+    TinyInput: Input,
+    TinySearch: Search,
+    TinySelect: Select,
+    TinyDivider: Divider,
+    TinyRadio: Radio,
+    SearchEmpty,
     TinyIconClose: iconClose(),
     TinyIconSearch: iconSearch()
   },
@@ -181,7 +172,9 @@ export default {
     watch(
       () => searchWords.value,
       () => {
-        sourceList.value = sourceOriginList.value.filter((item) => item.name.includes(searchWords.value))
+        sourceList.value = sourceOriginList.value.filter((item) =>
+          item.name.toLowerCase().includes(searchWords.value.toLowerCase())
+        )
       }
     )
 
