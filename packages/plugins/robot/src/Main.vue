@@ -384,8 +384,13 @@ export default {
         }
         return
       } else {
-        if (requestData.foundationModel) {
-          requestData.foundationModel.stream = true
+        const params = {
+          label: requestData.foundationModel?.label,
+          baseUrl: requestData.foundationModel?.baseUrl,
+          model: requestData.foundationModel?.model,
+          apiKey: requestData.foundationModel?.apiKey,
+          stream: true,
+          messages: requestData.messages
         }
 
         let streamContent = ''
@@ -396,7 +401,7 @@ export default {
         await chatStream(
           {
             requestUrl: '/app-center/api/ai/chat',
-            requestData: { ...requestData.foundationModel, messages: requestData.messages }
+            requestData: params
           },
           {
             onData: (data) => {
@@ -619,7 +624,6 @@ export default {
               activeName: model.activeName,
               baseUrl: model.baseUrl,
               model: model.model,
-              maxTokens: 8192,
               apiKey: model.apiKey
             }
             singleAttachmentItems.value = []
