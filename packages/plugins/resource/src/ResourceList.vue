@@ -1,9 +1,7 @@
 <template>
   <plugin-setting v-if="isShow" :fixed-name="PLUGIN_NAME.Resource" :align="align" :title="state.title">
     <template #header>
-      <button-group>
-        <svg-button name="close" @click="cancelResourceList"></svg-button>
-      </button-group>
+      <svg-button name="close" @click="cancelResourceList"></svg-button>
     </template>
 
     <template #content>
@@ -45,7 +43,7 @@
                       :visible-arrow="false"
                       trigger="manual"
                       :content="copyTipContent"
-                      :modelValue="item.id && item.id === copySourceId"
+                      :modelValue="item?.id === copySourceId"
                     >
                       <template #reference>
                         <span @click="copySourceLink(item)">复制</span>
@@ -160,7 +158,7 @@ import {
 } from '@opentiny/vue'
 import { iconPopup } from '@opentiny/vue-icon'
 import { useLayout, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
-import { PluginSetting, ButtonGroup, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
+import { PluginSetting, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { fetchResourceListByGroupId, batchCreateResource, updateResourceGroup } from './js/http'
 
 const isShow = ref(false)
@@ -196,7 +194,6 @@ export default {
     TinyDialogBox: DialogBox,
     TinyAlert: Alert,
     TinyFileUpload: FileUpload,
-    ButtonGroup,
     SearchEmpty,
     TinyIconPopup: iconPopup()
   },
@@ -304,9 +301,7 @@ export default {
         // eslint-disable-next-line no-console
         console.error('Clipboard operation failed:', e)
       } finally {
-        setTimeout(() => {
-          copySourceId.value = ''
-        }, 2000)
+        copySourceId.value = ''
       }
     }
 

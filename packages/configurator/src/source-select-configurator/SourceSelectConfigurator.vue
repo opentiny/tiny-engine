@@ -74,9 +74,18 @@
     </tiny-popover>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { ref, watch } from 'vue'
-import { Popover, Button, Input, Search, Select, Divider, Radio } from '@opentiny/vue'
+import type { Component } from 'vue'
+import {
+  Popover as TinyPopover,
+  Button as TinyButton,
+  Input as TinyInput,
+  Search as TinySearch,
+  Select as TinySelect,
+  Divider as TinyDivider,
+  Radio as TinyRadio
+} from '@opentiny/vue'
 import { iconClose, iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -94,14 +103,14 @@ const closePopover = () => {
 
 export default {
   components: {
-    TinyPopover: Popover,
-    TinyButton: Button,
-    TinyInput: Input,
-    TinySearch: Search,
-    TinySelect: Select,
-    TinyDivider: Divider,
-    TinyRadio: Radio,
-    SearchEmpty,
+    TinyPopover: TinyPopover as Component,
+    TinyButton: TinyButton as Component,
+    TinyInput: TinyInput as Component,
+    TinySearch: TinySearch as Component,
+    TinySelect: TinySelect as Component,
+    TinyDivider: TinyDivider as Component,
+    TinyRadio: TinyRadio as Component,
+    SearchEmpty: SearchEmpty as Component,
     TinyIconClose: iconClose(),
     TinyIconSearch: iconSearch()
   },
@@ -205,7 +214,7 @@ export default {
     position: relative;
     width: 150px;
     height: 96px;
-    background-color: #f5f5f5;
+    background-color: var(--te-common-bg-container);
     img {
       width: 100%;
       height: 100%;
@@ -228,10 +237,10 @@ export default {
         width: 70px;
         height: 22px;
         line-height: 22px;
-        border: 1px solid #fff;
+        border: 1px solid var(--te-common-bg-popover);
         border-radius: 4px;
         text-align: center;
-        color: #fff;
+        color: var(--te-common-text-inverse);
         cursor: pointer;
       }
     }
@@ -305,7 +314,7 @@ export default {
         width: 120px;
         height: 78px;
         position: relative;
-        background-color: #f5f5f5;
+        background-color: var(--te-common-bg-container);
         border-radius: 2px;
 
         .tiny-radio {
@@ -334,7 +343,7 @@ export default {
           text-align: center;
           line-height: 28px;
           width: 120px;
-          color: #fff;
+          color: var(--te-common-text-inverse);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;

@@ -10,7 +10,7 @@
  *
  */
 
-/* metaService: engine.plugins.appmanage.http */
+/* metaService: engine.plugins.resource.http */
 import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const baseUrl = '/material-center/api'
@@ -66,11 +66,3 @@ export const createResourceGroup = (params: any) =>
 // 资源管理 -- 修改资源分组信息-包括删除
 export const updateResourceGroup = (id: number, params: any) =>
   getMetaApi(META_SERVICE.Http).put(`${baseUrl}/resource-group/update/${id}`, params)
-
-// 资源管理 -- 查询资源分组详情
-export const fetchResourceGroupDetail = (id: number) =>
-  getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource-group/detail/${id}`)
-
-// 资源管理 -- 删除资源分组
-export const deleteResourceGroup = (id: number) =>
-  getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource-group/delete/${id}`)

@@ -18,7 +18,7 @@
         ></svg-button>
       </template>
       <template #content>
-        <div class="resouce-list">
+        <div class="resource-list">
           <div
             v-for="item in resourceList"
             :key="item.id"
@@ -35,7 +35,7 @@
         <search-empty :isShow="!resourceList?.length" />
       </template>
     </plugin-panel>
-    <resource-setting @create-group="createCategory"></resource-setting>
+    <resource-setting @create-group="refreshCategory"></resource-setting>
     <resource-list></resource-list>
   </div>
 </template>
@@ -115,14 +115,9 @@ export default {
         })
     }
 
-    const createCategory = () => {
+    const refreshCategory = () => {
       getCategoryList()
     }
-
-    const updateCategory = (data) => {
-      resourceList.value = data
-    }
-
     const openResourceList = (data) => {
       setItemActive(data)
       openResourceListPanel(data)
@@ -140,14 +135,13 @@ export default {
       pluginPanelClosed,
       openCategoryForm,
       openResourceList,
-      createCategory,
-      updateCategory
+      refreshCategory
     }
   }
 }
 </script>
 <style lang="less" scoped>
-.resouce-list {
+.resource-list {
   margin: 8px 0;
 
   .resource-item {

@@ -10,7 +10,6 @@
  *
  */
 
-/* metaService: engine.plugins.appmanage.http */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const baseUrl = '/material-center/api'
