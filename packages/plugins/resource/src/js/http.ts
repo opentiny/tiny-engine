@@ -43,9 +43,6 @@ export const batchCreateResource = (params: any) =>
 // 资源管理 -- 删除资源
 export const deleteResource = (id: number) => getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource/delete/${id}`)
 
-// 资源管理 -- 获取资源详情
-export const fetchResourceDetail = (id: number) => getMetaApi(META_SERVICE.Http).get(`${baseUrl}/resource/detail/${id}`)
-
 // 资源管理 -- 根据appId查询资源分组列表
 export const fetchResourceGroupByAppId = () =>
   getMetaApi(META_SERVICE.Http).get(
