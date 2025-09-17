@@ -10,7 +10,8 @@
  *
  */
 import { ref } from 'vue'
-import { useCanvas, useResource, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useResource, getMergeMeta, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import completion from './completion-files/context.md?raw'
 
 const keyWords = [
   'state',
@@ -176,78 +177,43 @@ const generateBaseReference = () => {
   const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState
   const { state, methods } = useCanvas().getPageSchema()
   const currentSchema = useCanvas().getCurrentSchema()
-  let referenceContext = `以下是一些通用的协议：
-  \n常规属性如：{ width: '300px' }
-  \n1.变量引用
-  \n{ width: { type: 'JSExpression', value: 'this.state.xxx' }}
-  \n即当type为JSExpression，取其value并将value的值当做变量调用
-  \n2.方法引用
-  \n{ onClickNew: { type: 'JSFunction', value: 'function onClickNew() {}' }}
-  \n即当type为JSFunction，取其value并将value的值函数调用
-  \n以下是一些依赖，调用均以this.开头：\n`
-  if (dataSource.length) {
-    referenceContext += `数据源是定义的数据模型\nconst dataSource=${JSON.stringify(
-      dataSource
-    )}\n调用方式为： this.dataSource.xxx\n`
-  }
-  if (utils.length) {
-    referenceContext += `工具类是通用的调用方法或npm依赖
-    \nconst utils=${JSON.stringify(utils)}
-    \n调用方式为： this.utils.xxx 
-    \nutils有两种类型
-    \ntype为npm时，读取content内容，可构造如下引用，例如content中package（依赖包名）为@opentiny/vue，destructuring(解构)为true，exportName（导出组件名称）为Notify，实际引用方式是import { Notify } from '@opentiny/vue';
-    \ntype为function时，读取content内容，当content.type为JSFunction则将value视为JS方法并调用，其他可参考通用的协议\n`
-  }
-  if (globalState.length) {
-    referenceContext += `全局变量是使用pinia创建的变量\nconst stores=${JSON.stringify(
-      globalState
-    )}\n调用方式为： this.stores.xxx\n`
-  }
-  if (Object.keys(state).length) {
-    referenceContext += `js变量\nconst state=${JSON.stringify(state)}\n调用方式为： this.state.xxx\n`
-  }
-  if (Object.keys(methods).length) {
-    referenceContext += `js方法\nconst methods=${JSON.stringify(methods)}\n调用方式为： this.xxx\n`
-  }
-  referenceContext += `以上依赖中没有的，则不能调用，如utils中没有axios，则axios不能使用\n`
-  if (currentSchema) {
-    referenceContext += `以下是当前选中的组件
-    \n${JSON.stringify(currentSchema)}
-    \n请理解当前组件，componentName为组件名称，组件均为tinyVue组件，和基本html元素
-    \n该对象中的ref属性为vue组件的ref属性，如ref值为testForm，使用方式为this.$('testForm')
-    \nprops表示组件的属性，是一个对象，对应vue组件的defineProps和defineEmits中的内容
-    \nprops中以on开头的表示其传递的是方法，如onClick，其值可以参考通用协议
-    \nprops中没有以on开头的则是普通属性，如onClick，其值中满足type为JSExpression和JSFunction的可以参考通用协议\n`
-  }
+  let referenceContext = completion
+  referenceContext = referenceContext.replace('$dataSource$', JSON.stringify(dataSource))
+  referenceContext = referenceContext.replace('$utils$', JSON.stringify(utils))
+  referenceContext = referenceContext.replace('$globalState$', JSON.stringify(globalState))
+  referenceContext = referenceContext.replace('$state$', JSON.stringify(state))
+  referenceContext = referenceContext.replace('$methods$', JSON.stringify(methods))
+  referenceContext = referenceContext.replace('$currentSchema$', JSON.stringify(currentSchema))
   return referenceContext
 }
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
-  const referenceContext = generateBaseReference()
   const { modelName, apiKey, url } = getMergeMeta('engine.plugins.pagecontroller')?.options?.AIModel || {}
-  return fetch(`${url ?? 'https://agent.opentiny.design/api/v1/ai/chat/completions'}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${apiKey ?? 'sk-1234'}`
-    },
-    body: JSON.stringify({
-      model: modelName ?? 'internvl3-14b',
+  if (!modelName || !apiKey || !url) {
+    throw new Error(`"modelName","apiKey","url" cannot be empty`)
+  }
+  const referenceContext = generateBaseReference()
+  return getMetaApi(META_SERVICE.Http).post(
+    url,
+    {
+      model: modelName,
       messages: [
         {
           role: 'user',
-          content: `你是一个JavaScript代码补全器，可以使用JS和ES的语法
-          \n${referenceContext}
-          \n直接上下文如下：
-          \n${codeBeforeCursor}<cursor>${codeAfterCursor}
-          \n请从<cursor>（光标位置）处进行补全
-          \n返回代码不要包含上下文代码，不需要多余代码，注意如果是函数时，须以这种格式：function xxx() {}
-          \n如果有多个示例，只选择其中一个，不需要返回思考过程和解释`
+          content: referenceContext
+            .replace('$codeBeforeCursor$', codeBeforeCursor)
+            .replace('$codeAfterCursor$', codeAfterCursor)
         }
       ],
       stream: false
-    })
-  })
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      }
+    }
+  )
 }
 
 const initInlineCompletion = (monacoInstance, editorModel) => {
@@ -303,14 +269,8 @@ const initInlineCompletion = (monacoInstance, editorModel) => {
           // 节流操作，防止接口一直被请求
           requestAllowed.value = false
           fetchAiInlineCompletion(codeBeforeCursor, codeAfterCursor)
-            .then((response) => response.json())
             .then((res) => {
-              let insertText = res.choices[0].message.content
-                .replace(/.*\n/, '')
-                .replaceAll('```', '')
-                .replace('javascript', '')
-                .replace('typescript', '')
-                .trim()
+              let insertText = res.choices[0].message.content.trim()
               const wordContentIndex = insertText.indexOf(wordContent)
               if (wordContentIndex === -1) {
                 insertText = `${wordContent}${insertText}\n`
