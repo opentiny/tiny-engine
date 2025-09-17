@@ -16,6 +16,7 @@ const formatMessages = (messages: LLMMessage[]) => {
 
 const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {
   const bodyObj: LLMRequestBody = {
+    baseUrl: options.baseUrl,
     model: options?.model || 'deepseek-chat',
     stream: false,
     messages: toRaw(messages)

@@ -361,7 +361,8 @@ export default {
             model: selectedModel.value.model,
             headers: {
               Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
-            }
+            },
+            baseUrl: selectedModel.value.baseUrl
           })
         } catch (error) {
           const { renderContent } = messages.value.at(-1)!
@@ -618,7 +619,7 @@ export default {
               activeName: model.activeName,
               baseUrl: model.baseUrl,
               model: model.model,
-              maxTokens: model.maxTokens,
+              maxTokens: 8192,
               apiKey: model.apiKey
             }
             singleAttachmentItems.value = []
@@ -713,20 +714,18 @@ export default {
       // 开始上传
       const formData = new FormData()
       const fileData = retry ? files : files[0]
-      formData.append('modelName', String(sessionProcess.foundationModel.model))
-      formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
       formData.append('file', fileData)
 
       try {
         getMetaApi(META_SERVICE.Http)
-          .post('/app-center/api/ai/uploadFile', formData, {
+          .post('/material-center/api/resource/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then((res) => {
-            if (res?.url) {
-              imageUrl.value = res.url
+            if (res?.resourceUrl) {
+              imageUrl.value = res.resourceUrl
               singleAttachmentItems.value[0].status = 'done'
               singleAttachmentItems.value[0].isUploading = false
               singleAttachmentItems.value[0].messageType = 'success'
