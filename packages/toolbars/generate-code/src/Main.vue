@@ -38,7 +38,8 @@ import {
   getMetaApi,
   META_APP,
   getMergeMeta,
-  META_SERVICE
+  META_SERVICE,
+  useModal
 } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -364,12 +365,91 @@ export default {
           }
 
           if (pages.length) {
-            // 并发创建，忽略失败项
-            await Promise.allSettled(
-              pages.map((ps: any) =>
-                getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+            // 检查是否存在与现有页面重名（按 meta.name/fileName 比较）
+            try {
+              const existingList: any[] = await fetchPageList(appId)
+              const mapByName = new Map<string, any>()
+              existingList?.forEach?.((p: any) => {
+                if (p?.name) mapByName.set(String(p.name), p)
+              })
+
+              const getRawName = (ps: any) => (ps?.meta?.name || ps?.fileName || 'Page') as string
+              const pagesToUpdate: Array<{ ps: any; existing: any }> = []
+              const pagesToCreate: any[] = []
+              const duplicateNames: string[] = []
+
+              for (const ps of pages) {
+                const rawName = getRawName(ps)
+                const existing = mapByName.get(rawName)
+                if (existing) {
+                  pagesToUpdate.push({ ps, existing })
+                  duplicateNames.push(rawName)
+                } else {
+                  pagesToCreate.push(ps)
+                }
+              }
+
+              // 若存在重名，询问是否覆盖
+              let doOverwrite = true
+              if (duplicateNames.length) {
+                const { confirm } = useModal()
+                doOverwrite = await new Promise<boolean>((resolve) => {
+                  confirm({
+                    title: '提示',
+                    message: `检测到 ${duplicateNames.length} 个同名页面：${duplicateNames.join(
+                      ', '
+                    )}，是否覆盖？`,
+                    exec: () => resolve(true),
+                    cancel: () => resolve(false)
+                  })
+                })
+              }
+
+              const requests: Promise<any>[] = []
+              // 覆盖：对重名的使用 update 接口；取消：跳过覆盖，仅创建不重名页面
+              if (duplicateNames.length && doOverwrite) {
+                for (const { ps, existing } of pagesToUpdate) {
+                  const rawName = getRawName(ps)
+                  const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+                  const updateParams = {
+                    // 保留已有信息，覆盖必要字段
+                    ...existing,
+                    name: rawName,
+                    route: ps?.meta?.router || existing?.route || safeRoute,
+                    isPage: true,
+                    app: appId,
+                    page_content: {
+                      ...ps,
+                      fileName: ps?.fileName || rawName
+                    }
+                  }
+                  requests.push(
+                    getMetaApi(META_SERVICE.Http).post(
+                      `/app-center/api/pages/update/${existing.id}`,
+                      updateParams
+                    )
+                  )
+                }
+              }
+
+              for (const ps of pagesToCreate) {
+                requests.push(
+                  getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+                )
+              }
+
+              // 并发执行，忽略失败项
+              if (requests.length) {
+                await Promise.allSettled(requests)
+              }
+            } catch (e) {
+              // 若校验失败，则回退为原始创建逻辑
+              await Promise.allSettled(
+                pages.map((ps: any) =>
+                  getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+                )
               )
-            )
+            }
 
             // 刷新页面列表
             const { pageSettingState } = usePage()
