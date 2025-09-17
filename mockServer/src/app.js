@@ -71,18 +71,18 @@ wss.on('connection', (conn, req) => {
 
   const docName = req.url.slice(1) // 去掉开头的 '/'
   const doc = docs.get(docName)
-  if (doc) {
-    doc.on('update', (update, origin, docInstance) => {
-      console.log(`
-        ==== Yjs Server Stats (Doc Changed) ====
-        Time: ${new Date().toLocaleString()}
-        DocId: ${docName}
-        Update byteLength: ${update.byteLength}
-        Current connections: ${docInstance.conns?.size ?? 0}
-        ==========================
-      `)
-    })
-  }
+  // if (doc) {
+  //   doc.on('update', (update, origin, docInstance) => {
+  //     console.log(`
+  //       ==== Yjs Server Stats (Doc Changed) ====
+  //       Time: ${new Date().toLocaleString()}
+  //       DocId: ${docName}
+  //       Update byteLength: ${update.byteLength}
+  //       Current connections: ${docInstance.conns?.size ?? 0}
+  //       ==========================
+  //     `)
+  //   })
+  // }
 })
 
 // -------------------- 启动服务 --------------------

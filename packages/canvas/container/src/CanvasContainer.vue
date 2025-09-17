@@ -9,7 +9,6 @@
       :windowGetClickEventTarget="target"
       :resize="canvasState.type === 'absolute'"
       :multiStateLength="multiStateLength"
-      :remoteStatesLength="remoteStatesLength"
       :isMultiDragging="isMultiDragging"
       @select-slot="selectSlot"
       @setting="settingModel"
@@ -167,9 +166,10 @@ export default {
     })
 
     // 将 state 映射成带位置信息的 selection
-    const mapStateToSelection = (state) => {
-      const element = querySelectById(state.selection.id)
+    const mapStateToSelection = (state, selection) => {
+      const element = querySelectById(selection.id)
       if (!element) return null
+
       const { top, left, width, height } = getRect(element)
       return {
         ...state,
@@ -178,7 +178,8 @@ export default {
         top,
         left,
         width,
-        height
+        height,
+        selection
       }
     }
 
@@ -187,18 +188,35 @@ export default {
       if (!remoteStates.value) return []
 
       return Object.values(remoteStates.value)
-        .filter((state) => state.selection)
-        .map(mapStateToSelection)
-        .filter(Boolean)
+        .flatMap((state) => {
+          const selections = Array.isArray(state.selection) ? state.selection : [state.selection]
+
+          return selections
+            .filter(Boolean) // 去掉 null/undefined
+            .map((sel) => mapStateToSelection(state, sel))
+        })
+        .filter(Boolean) // 去掉无效结果
     })
 
     // 手动刷新远端节点位置
     const syncRemoteNode = () => {
-      syncRemoteStatesSelections.value = syncRemoteStatesSelections.value.map(mapStateToSelection).filter(Boolean)
+      syncRemoteStatesSelections.value = syncRemoteStatesSelections.value
+        .map((selState) => {
+          const element = querySelectById(selState.selection.id)
+          if (!element) return null
+          const { top, left, width, height } = getRect(element)
+          return {
+            ...selState,
+            top,
+            left,
+            width,
+            height
+          }
+        })
+        .filter(Boolean)
     }
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
-    const remoteStatesLength = computed(() => syncRemoteStatesSelections.value.length)
     const {
       startMultiDrag,
       moveMultiDrag,
@@ -597,7 +615,6 @@ export default {
       remoteStates,
       allMultiSelectedStates,
       remoteStatesSelections,
-      remoteStatesLength,
       syncRemoteStatesSelections
     }
   }

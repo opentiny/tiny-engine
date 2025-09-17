@@ -6,7 +6,8 @@
       top: selectState.top + 'px',
       left: selectState.left + 'px',
       height: selectState.height + 'px',
-      width: selectState.width + 'px'
+      width: selectState.width + 'px',
+      ...(haveRemoteState ? { border: `2px solid ${selectState.user.color}` } : {})
     }"
   >
     <div v-if="showQuickAction && !haveRemoteState" ref="labelRef" class="corner-mark-left" :style="labelStyle">
@@ -25,11 +26,17 @@
         </template>
       </TinyPopover>
     </div>
-    <div v-else-if="haveRemoteState" ref="labelRef" class="corner-mark-left" :style="labelStyle">
+    <!-- 多人协作选区 -->
+    <div
+      v-if="haveRemoteState"
+      ref="remoteRef"
+      class="corner-mark-left"
+      :style="[remoteStyle, { backgroundColor: selectState.user.color }]"
+    >
       <span> {{ selectState.user.name }} 正在编辑 </span>
     </div>
     <!-- 绝对定位画布时调节元素大小 -->
-    <template v-else>
+    <template v-if="!showQuickAction">
       <div
         :class="[showAction && 'drag-resize', 'resize-top']"
         draggable="true"
@@ -137,7 +144,7 @@ import {
   querySelectById
 } from '../container'
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
-import { Numeric, Popover } from '@opentiny/vue'
+import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
 import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
@@ -189,10 +196,6 @@ export default {
     multiStateLength: {
       type: Number,
       default: () => 0
-    },
-    remoteStatesLength: {
-      type: Numeric,
-      default: () => {}
     },
     resize: {
       type: Boolean,
@@ -270,7 +273,8 @@ export default {
     })
 
     const haveRemoteState = computed(() => {
-      return props.remoteStatesLength > 0
+      const user = props.selectState?.user
+      return user !== null && user !== undefined && Object.keys(user).length > 0
     })
 
     const showAction = computed(() => {
@@ -351,7 +355,10 @@ export default {
     )
 
     const labelRef = ref(null)
+    const remoteRef = ref(null)
+
     const labelStyle = ref('')
+    const remoteStyle = ref('')
 
     const positions = {
       LEFT: 'left',
@@ -504,12 +511,13 @@ export default {
 
       return {
         labelStyleValue: labelAlign.toStyleValue(),
-        optionStyleValue: optionAlign.toStyleValue()
+        optionStyleValue: optionAlign.toStyleValue(),
+        remoteStyleValue: labelAlign.toStyleValue()
       }
     }
 
     watchPostEffect(async () => {
-      const { left, top, width, height, doc } = props.selectState
+      const { left, top, width, height, doc } = props.selectState || props.selectState.selection
 
       // template上虽然已经判断了showQuickAction，这里再加上主要是为了watchPostEffect能够监听它，然后刷新action
       if (!showQuickAction.value) {
@@ -535,7 +543,7 @@ export default {
       const { width: optionWidth } = optionRef.value.getBoundingClientRect()
 
       // canvas容器中，iframe以及iframe之外的元素clientRect的尺寸都是缩放过的，除以scale得到原始大小
-      const { labelStyleValue, optionStyleValue } = getStyleValues(
+      const { labelStyleValue, optionStyleValue, remoteStyleValue } = getStyleValues(
         { left, top, width, height, doc },
         { width: canvasRect.width / scale, height: canvasRect.height / scale },
         labelWidth / scale,
@@ -544,6 +552,7 @@ export default {
 
       labelStyle.value = labelStyleValue
       fixStyle.value = optionStyleValue
+      remoteStyle.value = remoteStyleValue
     })
 
     return {
@@ -564,7 +573,9 @@ export default {
       isModal,
       onMousedown,
       labelStyle,
-      labelRef
+      labelRef,
+      remoteRef,
+      remoteStyle
     }
   }
 }

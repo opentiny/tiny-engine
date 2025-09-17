@@ -108,6 +108,8 @@ export const useMultiSelect = () => {
         multiSelectedStates.value = multiSelectedStates.value.concat(selectState)
       }
 
+      // 多人协作
+      useRealtimeCollab().updateUserSelection(multiSelectedStates.value)
       return !isExistNode
     }
 
