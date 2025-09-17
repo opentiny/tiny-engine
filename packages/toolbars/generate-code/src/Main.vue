@@ -87,6 +87,22 @@ export default {
     // 文件上传引用
     const fileInputRef = ref<HTMLInputElement | null>(null)
 
+    // 按页面ID切换到对应页面，确保 currentPage 与渲染一致
+    const switchToPageByName = async (name?: string) => {
+      if (!name) return
+      // 优先使用已缓存的 appId
+      const appId = state.appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+      try {
+        const list: any[] = await fetchPageList(appId)
+        const target = list?.find?.((p: any) => String(p?.name) === String(name))
+        if (target?.id) {
+          await usePage().switchPageWithConfirm?.(target.id, true)
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
     const getParams = () => {
       const { getSchema } = useCanvas()
       const params = {
@@ -439,12 +455,7 @@ export default {
             if (!chosen) {
               useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
             } else {
-              const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
-              if (isBlock()) {
-                resetBlockCanvasState({ ...pageState, pageSchema: chosen })
-              } else {
-                resetPageCanvasState({ ...pageState, pageSchema: chosen })
-              }
+              await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
               useNotify({
                 type: 'success',
                 title: '导入成功',
@@ -578,12 +589,7 @@ export default {
           const pages = state.pendingImportedPages
           const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
           if (chosen) {
-            const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
-            if (isBlock()) {
-              resetBlockCanvasState({ ...pageState, pageSchema: chosen })
-            } else {
-              resetPageCanvasState({ ...pageState, pageSchema: chosen })
-            }
+            await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
             useNotify({
               type: 'success',
               title: '导入成功',
