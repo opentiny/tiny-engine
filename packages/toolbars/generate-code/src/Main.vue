@@ -21,6 +21,14 @@
         <input ref="fileInputRef" type="file" accept=".vue,.zip" style="display: none" @change="handleFileChange" />
       </template>
     </toolbar-base>
+    <!-- 覆盖选择对话框 -->
+    <overwrite-dialog
+      :visible="state.showOverwriteDialog"
+      :duplicates="state.duplicatePages.map((d) => ({ name: d.name }))"
+      @update:visible="(v:any)=> (state.showOverwriteDialog = v)"
+      @confirm="handleOverwriteConfirm"
+      @cancel="handleOverwriteCancel"
+    />
   </div>
 </template>
 
@@ -38,20 +46,21 @@ import {
   getMetaApi,
   META_APP,
   getMergeMeta,
-  META_SERVICE,
-  useModal
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { fs } from '@opentiny/tiny-engine-utils'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
+import OverwriteDialog from './OverwriteDialog.vue'
 
 // @ts-ignore
 export default {
   components: {
     GenerateFileSelector: FileSelector as any,
-    ToolbarBase: ToolbarBase as any
+    ToolbarBase: ToolbarBase as any,
+    OverwriteDialog: OverwriteDialog as any
   },
   props: {
     options: {
@@ -67,7 +76,12 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      showOverwriteDialog: false,
+      duplicatePages: [] as Array<{ name: string; ps: any; existing: any }>,
+      toCreatePages: [] as any[],
+      pendingImportedPages: [] as any[],
+      appId: '' as any
     })
 
     // 文件上传引用
@@ -347,6 +361,8 @@ export default {
             // ignore persistence errors
           }
           const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+          // 保存 appId 供覆盖选择确认/取消时使用
+          state.appId = appId
           const buildCreateParams = (ps: any) => {
             const rawName = (ps?.meta?.name || ps?.fileName || 'Page') as string
             const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
@@ -374,7 +390,7 @@ export default {
               })
 
               const getRawName = (ps: any) => (ps?.meta?.name || ps?.fileName || 'Page') as string
-              const pagesToUpdate: Array<{ ps: any; existing: any }> = []
+              const pagesToUpdate: Array<{ ps: any; existing: any; name: string }> = []
               const pagesToCreate: any[] = []
               const duplicateNames: string[] = []
 
@@ -382,65 +398,28 @@ export default {
                 const rawName = getRawName(ps)
                 const existing = mapByName.get(rawName)
                 if (existing) {
-                  pagesToUpdate.push({ ps, existing })
+                  pagesToUpdate.push({ ps, existing, name: rawName })
                   duplicateNames.push(rawName)
                 } else {
                   pagesToCreate.push(ps)
                 }
               }
 
-              // 若存在重名，询问是否覆盖
-              let doOverwrite = true
               if (duplicateNames.length) {
-                const { confirm } = useModal()
-                doOverwrite = await new Promise<boolean>((resolve) => {
-                  confirm({
-                    title: '提示',
-                    message: `检测到 ${duplicateNames.length} 个同名页面：${duplicateNames.join(
-                      ', '
-                    )}，是否覆盖？`,
-                    exec: () => resolve(true),
-                    cancel: () => resolve(false)
-                  })
-                })
-              }
-
-              const requests: Promise<any>[] = []
-              // 覆盖：对重名的使用 update 接口；取消：跳过覆盖，仅创建不重名页面
-              if (duplicateNames.length && doOverwrite) {
-                for (const { ps, existing } of pagesToUpdate) {
-                  const rawName = getRawName(ps)
-                  const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
-                  const updateParams = {
-                    // 保留已有信息，覆盖必要字段
-                    ...existing,
-                    name: rawName,
-                    route: ps?.meta?.router || existing?.route || safeRoute,
-                    isPage: true,
-                    app: appId,
-                    page_content: {
-                      ...ps,
-                      fileName: ps?.fileName || rawName
-                    }
-                  }
-                  requests.push(
-                    getMetaApi(META_SERVICE.Http).post(
-                      `/app-center/api/pages/update/${existing.id}`,
-                      updateParams
-                    )
+                // 打开覆盖选择对话框并缓存数据，等待用户选择
+                state.duplicatePages = pagesToUpdate
+                state.toCreatePages = pagesToCreate
+                state.pendingImportedPages = pages
+                state.showOverwriteDialog = true
+              } else {
+                // 无重名，直接创建
+                await Promise.allSettled(
+                  pagesToCreate.map((ps: any) =>
+                    getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
                   )
-                }
-              }
-
-              for (const ps of pagesToCreate) {
-                requests.push(
-                  getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
                 )
-              }
-
-              // 并发执行，忽略失败项
-              if (requests.length) {
-                await Promise.allSettled(requests)
+                const { pageSettingState } = usePage()
+                await pageSettingState.updateTreeData?.()
               }
             } catch (e) {
               // 若校验失败，则回退为原始创建逻辑
@@ -449,60 +428,97 @@ export default {
                   getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
                 )
               )
+              const { pageSettingState } = usePage()
+              await pageSettingState.updateTreeData?.()
             }
-
-            // 刷新页面列表
-            const { pageSettingState } = usePage()
-            await pageSettingState.updateTreeData?.()
           }
 
-          // 3) 渲染首页或第一个页面到画布
-          const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
-          if (!chosen) {
-            useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
-          } else {
-            const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
-            if (isBlock()) {
-              resetBlockCanvasState({ ...pageState, pageSchema: chosen })
+          // 若弹出覆盖选择对话框，则先不立即渲染，等用户选择后再渲染
+          if (!state.showOverwriteDialog) {
+            const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+            if (!chosen) {
+              useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
             } else {
-              resetPageCanvasState({ ...pageState, pageSchema: chosen })
+              const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
+              if (isBlock()) {
+                resetBlockCanvasState({ ...pageState, pageSchema: chosen })
+              } else {
+                resetPageCanvasState({ ...pageState, pageSchema: chosen })
+              }
+              useNotify({
+                type: 'success',
+                title: '导入成功',
+                message: `已创建页面并加载：${chosen?.meta?.name || '页面'}`
+              })
             }
-            useNotify({
-              type: 'success',
-              title: '导入成功',
-              message: `已创建页面并加载：${chosen?.meta?.name || '页面'}`
-            })
           }
         } else {
           const text = await file.text()
           const result = await converter.convertFromString(text, file.name)
 
-          // 不直接应用到画布：创建一个新的静态页面
+          // 解析单文件页面信息
           const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
           const safeRoute = `${rawName.replace(/\s+/g, '-').toLowerCase()}`
           const fileName = result?.schema?.fileName || rawName
           const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
-          const createParams: any = {
-            name: rawName,
-            route: result?.schema?.meta?.router || safeRoute,
-            group: 'staticPages',
-            parentId: '0',
-            isPage: true,
-            app: appId,
-            page_content: {
+          // 检查是否与现有页面重名
+          try {
+            const existingList: any[] = await fetchPageList(appId)
+            const existing = existingList?.find?.((p: any) => String(p?.name) === rawName)
+
+            // 将待导入的 schema 作为 ps（与 zip 流程保持一致的数据形态）
+            const ps: any = {
               ...result.schema,
+              meta: { ...(result?.schema?.meta || {}), name: rawName },
               fileName
             }
+
+            if (existing) {
+              // 重名：弹出覆盖对话框
+              state.appId = appId
+              state.duplicatePages = [{ ps, existing, name: rawName }]
+              state.toCreatePages = []
+              state.pendingImportedPages = [ps]
+              state.showOverwriteDialog = true
+            } else {
+              // 不重名：直接创建
+              const createParams: any = {
+                name: rawName,
+                route: result?.schema?.meta?.router || safeRoute,
+                group: 'staticPages',
+                parentId: '0',
+                isPage: true,
+                app: appId,
+                page_content: {
+                  ...result.schema,
+                  fileName
+                }
+              }
+              await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
+              const { pageSettingState } = usePage()
+              await pageSettingState.updateTreeData?.()
+              useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
+            }
+          } catch (e: any) {
+            // 兜底：如果列表获取失败，按原逻辑创建
+            const createParams: any = {
+              name: rawName,
+              route: result?.schema?.meta?.router || safeRoute,
+              group: 'staticPages',
+              parentId: '0',
+              isPage: true,
+              app: appId,
+              page_content: {
+                ...result.schema,
+                fileName
+              }
+            }
+            await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
+            const { pageSettingState } = usePage()
+            await pageSettingState.updateTreeData?.()
+            useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
           }
-
-          await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
-
-          // 刷新页面列表
-          const { pageSettingState } = usePage()
-          await pageSettingState.updateTreeData?.()
-
-          useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
         }
       } catch (error: any) {
         // eslint-disable-next-line no-console
@@ -514,6 +530,89 @@ export default {
       }
     }
 
+    // 覆盖选择：确认
+    const handleOverwriteConfirm = async (selectedNames: string[]) => {
+      const { pageSettingState } = usePage()
+      try {
+        const appId = state.appId
+        const requests: Promise<any>[] = []
+        // 更新选中的重名项
+        for (const item of state.duplicatePages) {
+          if (!selectedNames.includes(item.name)) continue
+          const ps = item.ps
+          const existing = item.existing
+          const rawName = item.name
+          const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+          const updateParams: any = {
+            ...existing,
+            name: rawName,
+            route: ps?.meta?.router || existing?.route || safeRoute,
+            isPage: true,
+            app: appId,
+            page_content: { ...ps, fileName: ps?.fileName || rawName }
+          }
+          requests.push(getMetaApi(META_SERVICE.Http).post(`/app-center/api/pages/update/${existing.id}`, updateParams))
+        }
+        // 创建不重名项
+        for (const ps of state.toCreatePages) {
+          requests.push(
+            getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', {
+              name: ps?.meta?.name || ps?.fileName || 'Page',
+              route:
+                ps?.meta?.router || `/${(ps?.meta?.name || ps?.fileName || 'Page').replace(/\s+/g, '-').toLowerCase()}`,
+              group: 'staticPages',
+              parentId: '0',
+              isPage: true,
+              app: appId,
+              page_content: { ...ps, fileName: ps?.fileName || ps?.meta?.name || 'Page' }
+            })
+          )
+        }
+        if (requests.length) {
+          await Promise.allSettled(requests)
+        }
+        const hasOps = requests.length > 0
+        if (hasOps) {
+          await pageSettingState.updateTreeData?.()
+          // 用户选择后进行渲染
+          const pages = state.pendingImportedPages
+          const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+          if (chosen) {
+            const { isBlock, pageState, resetBlockCanvasState, resetPageCanvasState } = useCanvas()
+            if (isBlock()) {
+              resetBlockCanvasState({ ...pageState, pageSchema: chosen })
+            } else {
+              resetPageCanvasState({ ...pageState, pageSchema: chosen })
+            }
+            useNotify({
+              type: 'success',
+              title: '导入成功',
+              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}`
+            })
+          } else {
+            useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
+          }
+        } else {
+          // 无任何选择且无不重名项：直接跳过
+          useNotify({ type: 'info', title: '已跳过导入', message: '未选择覆盖任何页面' })
+        }
+      } finally {
+        state.showOverwriteDialog = false
+        state.duplicatePages = []
+        state.toCreatePages = []
+        state.pendingImportedPages = []
+      }
+    }
+
+    // 覆盖选择：取消
+    const handleOverwriteCancel = async () => {
+      state.showOverwriteDialog = false
+      state.duplicatePages = []
+      state.toCreatePages = []
+      state.pendingImportedPages = []
+      useNotify({ type: 'info', title: '已取消导入', message: '未创建或覆盖任何页面' })
+    }
+
     return {
       state,
       generate,
@@ -521,7 +620,9 @@ export default {
       cancel,
       triggerUpload,
       handleFileChange,
-      fileInputRef
+      fileInputRef,
+      handleOverwriteConfirm,
+      handleOverwriteCancel
     }
   }
 }
