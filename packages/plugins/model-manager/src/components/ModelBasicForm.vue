@@ -44,10 +44,19 @@ const localValue = ref(props.model)
 const ruleFormRef = ref()
 
 const rules = ref({
-  nameCn: [{ required: true, message: '必填', trigger: 'blur' }],
-  nameEn: [{ required: true, message: '必填', trigger: 'blur' }],
+  nameCn: [
+    { required: true, message: '必填', trigger: 'blur' },
+    { min: 1, max: 32, message: '长度在1-32之间', trigger: 'blur' }
+  ],
+  nameEn: [
+    { required: true, message: '必填', trigger: 'blur' },
+    { min: 1, max: 32, message: '长度在1-32之间', trigger: 'blur' }
+  ],
   version: [{ required: true, message: '必填', trigger: 'blur' }],
-  modelUrl: [{ required: true, message: '必填', trigger: 'blur' }]
+  modelUrl: [
+    { required: true, message: '必填', trigger: 'blur' },
+    { min: 1, max: 200, message: '长度在1-200之间', trigger: 'blur' }
+  ]
 })
 
 // 监听 props 变化，同步到本地（当选择不同模型时）
