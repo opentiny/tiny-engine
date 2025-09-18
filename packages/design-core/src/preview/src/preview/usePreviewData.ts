@@ -2,7 +2,15 @@ import { reactive } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
 import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { fetchMetaData, fetchAppSchema, fetchBlockSchema, getPageById, getBlockById, fetchPageHistory } from './http'
+import {
+  fetchMetaData,
+  fetchAppSchema,
+  fetchBlockSchema,
+  getPageById,
+  getBlockById,
+  fetchPageHistory,
+  fetchPageList
+} from './http'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import srcFiles from './srcFiles'
 
@@ -350,59 +358,272 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
     scripts: Record<string, string>
     styles: string[]
   }) => {
-    const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
+    const searchParams = new URLSearchParams(location.search)
+    const previewType = searchParams.get('previewType')
 
-    previewState.currentPage = params.currentPage
-    previewState.ancestors = params.ancestors
+    if (previewType === 'page') {
+      const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
 
-    // importMap 发生变化才更新 importMap
-    if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
-      setImportMap(importMapData)
-      previewState.importMap = importMapData
-    }
+      previewState.currentPage = params.currentPage
+      previewState.ancestors = params.ancestors
 
-    const blockSet = new Set()
+      // importMap 发生变化才更新 importMap
+      if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
+        setImportMap(importMapData)
+        previewState.importMap = importMapData
+      }
 
-    let blocks = []
-    const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
+      const blockSet = new Set()
 
-    if (params.ancestors?.length) {
-      const promises = params.ancestors.map((item) =>
-        getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet)
+      let blocks = []
+      const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
+
+      if (params.ancestors?.length) {
+        const promises = params.ancestors.map((item) =>
+          getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet)
+        )
+        blocks = (await Promise.all(promises)).flat()
+      }
+
+      const currentPageBlocks = await getAllNestedBlocksSchema(
+        params.currentPage?.page_content || {},
+        fetchBlockSchema,
+        blockSet
       )
-      blocks = (await Promise.all(promises)).flat()
-    }
+      blocks = blocks.concat(currentPageBlocks)
+      const pageCode = [
+        ...getPageAncestryFiles(appData, params),
+        ...(blocks || []).map((blockSchema) => {
+          return {
+            panelName: `${blockSchema.fileName}.vue`,
+            panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
+            panelType: 'vue'
+          }
+        })
+      ]
 
-    const currentPageBlocks = await getAllNestedBlocksSchema(
-      params.currentPage?.page_content || {},
-      fetchBlockSchema,
-      blockSet
-    )
-    blocks = blocks.concat(currentPageBlocks)
+      const newFiles = store.getFiles()
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
 
-    const pageCode = [
-      ...getPageAncestryFiles(appData, params),
-      ...(blocks || []).map((blockSchema) => {
-        return {
-          panelName: `${blockSchema.fileName}.vue`,
-          panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-          panelType: 'vue'
+      newFiles['app.js'] = appJsCode
+      pageCode.forEach((item) => assignFiles(item, newFiles))
+
+      const metaFiles = generateMetaFiles(metaData)
+      Object.assign(newFiles, metaFiles)
+      setFiles(newFiles, 'App.vue')
+    } else if (previewType === 'app') {
+      const appId = searchParams.get('id')
+      const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
+      const importMap = await getImportMap(JSON.parse(searchParams.get('scripts') || '{}'))
+
+      let appSchema
+
+      const getPreGenerateInfo = async () => {
+        const promises = [
+          getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${appId}`),
+          fetchPageList(appId)
+        ]
+
+        const [appData, pageList] = await Promise.all(promises)
+        const pageDetailList = pageList
+
+        // 这里需要手动传入 blockSet 的原因是多页面可能会存在重复的区块
+        const blockSet = new Set()
+        const list = pageDetailList.map((page) =>
+          getAllNestedBlocksSchema(page.page_content, fetchBlockSchema, blockSet)
+        )
+        const blocks = await Promise.allSettled(list)
+
+        const blockSchema = []
+        blocks.forEach((item) => {
+          if (item.status === 'fulfilled' && Array.isArray(item.value)) {
+            blockSchema.push(...item.value)
+          }
+        })
+
+        appSchema = {
+          dataSource: appData.dataSource,
+          utils: appData.utils,
+          i18n: appData.i18n,
+          globalState: appData.globalState,
+          // 页面 schema
+          pageSchema: pageDetailList.map((item) => {
+            const { page_content, ...meta } = item
+
+            return {
+              ...page_content,
+              meta: {
+                ...meta,
+                router: meta.route
+              }
+            }
+          }),
+          blockSchema,
+          // 物料数据
+          componentsMap: [...(appData.componentsMap || [])],
+          // 物料依赖
+          packages: [...(appData.packages || [])],
+          meta: {
+            ...(appData.meta || {})
+          }
         }
-      })
-    ]
 
-    const newFiles = store.getFiles()
-    const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
-    const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
+        const res = await generateAppCode(appSchema)
 
-    newFiles['app.js'] = appJsCode
+        const { genResult = [] } = res || {}
+        const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
+          const slash = path.endsWith('/') || path === '.' ? '' : '/'
+          let filePath = `${path}${slash}`
+          if (filePath.startsWith('./')) {
+            filePath = filePath.slice(2)
+          }
+          if (filePath.startsWith('.')) {
+            filePath = filePath.slice(1)
+          }
 
-    pageCode.forEach((item) => assignFiles(item, newFiles))
+          if (filePath.startsWith('/')) {
+            filePath = filePath.slice(1)
+          }
 
-    const metaFiles = generateMetaFiles(metaData)
-    Object.assign(newFiles, metaFiles)
+          return {
+            fileContent,
+            filePath: `${filePath}${fileName}`,
+            fileType
+          }
+        })
 
-    setFiles(newFiles, 'App.vue')
+        return fileRes
+      }
+
+      const buildTreeRoutes = (routes) => {
+        const tree = []
+        const routeMap = new Map()
+
+        // 首先将所有路由存入一个 Map 中，以便快速查找
+        routes.forEach((route) => {
+          routeMap.set(route.path, route)
+        })
+
+        // 递归构建树状结构
+        const buildTree = (route) => {
+          const children = routes.filter((childRoute) => {
+            return childRoute.path.startsWith(route.path) && childRoute.path !== route.path
+          })
+
+          if (children.length > 0) {
+            route.children = children.map((childRoute) => {
+              const child = { ...childRoute }
+              buildTree(child)
+              return child
+            })
+          }
+        }
+
+        // 找到所有根路由
+        routes.forEach((route) => {
+          if (!routes.some((otherRoute) => otherRoute.path !== route.path && route.path.startsWith(otherRoute.path))) {
+            const root = { ...route }
+            buildTree(root)
+            tree.push(root)
+          }
+        })
+
+        return tree
+      }
+
+      const getRoutesAndImportSet = (schema) => {
+        const importSet = new Set()
+        const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
+        const result = []
+        const home = {
+          path: '/'
+        }
+        let isGetHome = false
+        pageSchema.forEach((item) => {
+          if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
+            home.redirect = { name: `${item.meta.id}` }
+            isGetHome = true
+          }
+          importSet.add(
+            `import ${item.fileName} from './views${item.path ? `/${item.path}` : ''}/${item.fileName}.vue'`
+          )
+          const newNode = {
+            path: `/${item.meta.router}`,
+            component: item.fileName,
+            name: `${item.meta.id}`
+          }
+          result.push(newNode)
+        })
+        if (!isGetHome) {
+          isGetHome = true
+          home.redirect = { name: result[0]?.name }
+        }
+
+        return { routes: [home, ...buildTreeRoutes(result)], importSet }
+      }
+
+      const getRouterFile = (schema) => {
+        const { routes, importSet } = getRoutesAndImportSet(schema)
+        const resultStr = JSON.stringify(routes, null, 2).replace(
+          /("component":\s*)"(.*?)"/g,
+          (match, p1, p2) => p1 + p2
+        )
+
+        // TODO: 支持 hash 模式、history 模式
+        const importSnippet = `import { createRouter, createMemoryHistory } from 'vue-router'\n${[...importSet].join(
+          '\n'
+        )}`
+        const exportSnippet = `export default createRouter({history: createMemoryHistory(),routes })`
+
+        const routeSnippets = `const routes = ${resultStr}`
+
+        return `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
+      }
+
+      const formatCode = (fileContent, fileName) => {
+        if (fileName === 'src/router/index.js') {
+          fileContent = getRouterFile(appSchema)
+        } else {
+          fileContent = fileContent.replace(/(from\s*')(@)(\/.*')/g, '$1.$3')
+        }
+        if (fileName === 'src/App.vue') {
+          fileContent = fileContent.replace(
+            '<router-view></router-view>',
+            `<tiny-select v-model="currentRoute" placeholder="请选择路由" render-type="tree" :tree-op="{ data: $router.options.routes.filter(item => item.path !== '/') }" text-field="path" value-field="path" @change="routeChange"></tiny-select>\n<router-view></router-view>`
+          )
+          fileContent = fileContent.replace(
+            `import { provide } from 'vue'`,
+            `import { Select as TinySelect } from '@opentiny/vue'\nimport { ref, provide, watchEffect } from 'vue'\nimport { useRoute, useRouter } from 'vue-router'`
+          )
+          fileContent = fileContent.replace(
+            `provide(I18nInjectionKey, i18n)`,
+            `const route = useRoute()\nconst router = useRouter()\nconst currentRoute = ref()\n\nwatchEffect(() => {\n\tcurrentRoute.value = route.path\n})\n\nconst routeChange = () => {\n\trouter.push(currentRoute.value)\n}\nprovide(I18nInjectionKey, i18n)`
+          )
+        }
+        return fileContent
+      }
+
+      const fileRes = await getPreGenerateInfo()
+      const newFileRes = fileRes.filter((item) => item.filePath.includes('src/'))
+      const srcFiles = newFileRes.reduce((prev, item) => {
+        const fileName = item.filePath
+        prev[fileName] = formatCode(item.fileContent, fileName)
+        return prev
+      }, {})
+      srcFiles['import-map.json'] = JSON.stringify(importMap)
+      const newFiles = store.getFiles()
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(
+        newFiles['app.js'],
+        JSON.parse(searchParams.get('styles') || '[]'),
+        enableTailwindCSS
+      )
+      srcFiles['app.js'] = appJsCode
+      srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
+      srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')
+      setFiles(srcFiles, 'src/main.js')
+    }
   }
 
   const loadInitialData = async () => {

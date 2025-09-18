@@ -28,6 +28,7 @@ export { default as Block, BlockService } from '@opentiny/tiny-engine-plugin-blo
 export { default as Datasource, DataSourceService } from '@opentiny/tiny-engine-plugin-datasource'
 export { default as Robot } from '@opentiny/tiny-engine-plugin-robot'
 export { default as Resource } from '@opentiny/tiny-engine-plugin-resource'
+export { default as ModelManager } from '@opentiny/tiny-engine-plugin-model-manager'
 export { default as Props, PropertiesService, PropertyService } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'

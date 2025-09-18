@@ -11,49 +11,10 @@
  */
 
 import axios from 'axios'
-import MockAdapter from 'axios-mock-adapter'
 
 export default (config) => {
   const instance = axios.create(config)
   const defaults = {}
-  let mock
-
-  if (typeof MockAdapter.prototype.proxy === 'undefined') {
-    MockAdapter.prototype.proxy = function ({ url, config = {}, proxy, response, handleData } = {}) {
-      // eslint-disable-next-line @typescript-eslint/no-this-alias
-      let stream = this
-      const request = (proxy, any) => {
-        return (setting) => {
-          return new Promise((resolve) => {
-            config.responseType = 'json'
-            axios
-              .get(any ? proxy + setting.url + '.json' : proxy, config)
-              .then(({ data }) => {
-                if (typeof handleData === 'function') {
-                  data = handleData.call(null, data, setting)
-                }
-                resolve([200, data])
-              })
-              .catch((error) => {
-                resolve([error.response.status, error.response.data])
-              })
-          })
-        }
-      }
-
-      if (url === '*' && proxy && typeof proxy === 'string') {
-        stream = proxy === '*' ? this.onAny().passThrough() : this.onAny().reply(request(proxy, true))
-      } else {
-        if (proxy && typeof proxy === 'string') {
-          stream = this.onAny(url).reply(request(proxy))
-        } else if (typeof response === 'function') {
-          stream = this.onAny(url).reply(response)
-        }
-      }
-
-      return stream
-    }
-  }
 
   return {
     request(config) {
@@ -114,25 +75,6 @@ export default (config) => {
           return instance.interceptors.response.eject(id)
         }
       }
-    },
-    mock(config) {
-      if (!mock) {
-        mock = new MockAdapter(instance)
-      }
-
-      if (Array.isArray(config)) {
-        config.forEach((item) => {
-          mock.proxy(item)
-        })
-      }
-
-      return mock
-    },
-    disableMock() {
-      if (mock) {
-        mock.restore()
-      }
-      mock = undefined
     },
     isMock() {
       return typeof mock !== 'undefined'
