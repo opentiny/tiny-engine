@@ -18,7 +18,6 @@ const inputSchema = z.object({
 
 export const addPage = {
   name: 'add_page',
-  label: 'Add Page',
   title: '新增页面',
   order: 6,
   description:

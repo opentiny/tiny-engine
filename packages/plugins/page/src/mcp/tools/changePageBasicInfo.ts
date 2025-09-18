@@ -24,7 +24,6 @@ const inputSchema = z.object({
 
 export const changePageBasicInfo = {
   name: 'change_page_basic_info',
-  label: 'Change Page Basic Info',
   title: '修改页面基础信息',
   order: 8,
   description:
