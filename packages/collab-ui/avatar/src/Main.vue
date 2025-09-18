@@ -67,7 +67,7 @@ export default {
       name: 'Bob',
       color: '#1296db',
       email: 'opentiny@tiny-engine',
-      avatarUrl: 'https://i.pravatar.cc/150?img=2'
+      avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
     }
 
     // 远程数据

@@ -148,7 +148,7 @@ export default {
       id: 2,
       name: 'Bob',
       color: '#4ECDC4',
-      avatarUrl: 'https://i.pravatar.cc/150?img=2'
+      avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
     }
 
     // Awareness 是否完成初始化，initHook之后才能得到 remoteStates数据

@@ -88,32 +88,42 @@ export const getValueByPath = (obj: any, path: (string | number)[]): any => {
 /**
  * 递归地净化一个从 Yjs 转换而来的 schema 对象。
  * 它会移除所有内部使用的键（如事件总线、元数据等）。
+ * 同时，如果一个对象只剩下 { id }，则该对象整体移除。
  *
  * @param schema - 从 fromYjs() 得到的原始 schema 对象。
  * @param keysToFilter - 一个包含需要被移除的键名的数组。
  * @returns 一个只包含纯 UI 数据的、干净的 schema 对象。
  */
 export function sanitizeSchema(schema: any, keysToFilter: string[]): any {
-  // 如果输入不是对象或为 null，直接返回
   if (typeof schema !== 'object' || schema === null) {
     return schema
   }
 
-  // 如果是数组，则递归地净化数组中的每一个元素
   if (Array.isArray(schema)) {
-    return schema.map((item) => sanitizeSchema(item, keysToFilter))
+    return schema.map((item) => sanitizeSchema(item, keysToFilter)).filter((item) => item !== undefined)
   }
 
-  // 如果是对象，则创建一个新对象，并过滤掉不需要的键
   const sanitizedObject: { [key: string]: any } = {}
-  for (const key in schema) {
-    // 检查当前键是否在过滤列表中
-    if (keysToFilter.includes(key)) {
-      continue // 跳过这个内部键
+  const originalKeys = Object.keys(schema) // 保留原对象的键顺序
+  for (const key of originalKeys) {
+    if (keysToFilter.includes(key)) continue
+    const child = sanitizeSchema(schema[key], keysToFilter)
+    if (child !== undefined) {
+      sanitizedObject[key] = child
     }
+  }
 
-    // 递归地净化子属性
-    sanitizedObject[key] = sanitizeSchema(schema[key], keysToFilter)
+  if (
+    Object.keys(schema).length === 1 && // 原始对象只有一个键
+    'id' in schema && // 这个键是 id
+    !('id' in sanitizedObject) // 过滤后 id 不在了
+  ) {
+    return undefined
+  }
+
+  // 如果过滤后对象是空的，也直接返回 undefined（保证不会出现 {}）
+  if (Object.keys(sanitizedObject).length === 0) {
+    return undefined
   }
 
   return sanitizedObject

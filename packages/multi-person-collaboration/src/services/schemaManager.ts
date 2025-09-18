@@ -109,7 +109,7 @@ export class SchemaManager {
             const rawRemoteSchema = fromYjs(yMap)
 
             // 净化 schema
-            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted'] // 定义需要过滤的键
+            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted', 'newNode'] // 定义需要过滤的键
             const cleanSchema = sanitizeSchema(rawRemoteSchema, INTERNAL_YJS_KEYS)
 
             // 使用干净的 schema 来覆盖 UI
@@ -282,7 +282,7 @@ export class SchemaManager {
               }
             } else if (key === 'className') {
               // 新增样式，为配合 css 更新
-              if (change.action === 'add') {
+              if (change.action === 'add' || change.action === 'update') {
                 const newClassAndId = yMapNode.get('className')
                 const [className, nodeId] = (newClassAndId as string).split('_')
                 patches.push({
@@ -486,12 +486,18 @@ export class SchemaManager {
           node.props.className = className
 
           useMessage().publish({ topic: 'schemaChange', data: {} })
+
+          // const { updateRect } = useCanvas().canvasApi.value
+          // updateRect()
           break
         }
         case 'style-update': {
           const strStyle = patch.css
 
           useCanvas().updateSchema({ css: strStyle })
+
+          // const { updateRect } = useCanvas().canvasApi.value
+          // updateRect()
           break
         }
         case 'props-update': {
@@ -508,7 +514,7 @@ export class SchemaManager {
         }
         case 'methods-add-root': {
           const { methods } = patch
-          useCanvas().updateSchema({ methods })
+          useCanvas().updateSchema({ methods: methods })
           break
         }
         case 'methods-add-node': {

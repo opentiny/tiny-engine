@@ -31,7 +31,7 @@ export class NodeSchemaModel {
   }
 
   // 拖拽行为产生的节点插入
-  public insertNode({ parent, node, data }: InsertOptions, position: PositionType) {
+  public insertNode({ node, parent, data }: InsertOptions, position: PositionType) {
     let insertPos
     let insertPosFinal
 

@@ -34,7 +34,7 @@ export class OperationHandler {
 
   public insert(operation: NodeOperation) {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
-    const parentNode = this.getYNode(parentId)
+    const parentNode = parentId ? this.getYNode(parentId) : this.yMap
 
     if (!parentNode) {
       return {}
@@ -291,13 +291,25 @@ export class OperationHandler {
     if (!nodeData) return
     // 情况 1：nodeData 是数组，yNodes 是 Y.Array，用于初始化
     if (Array.isArray(nodeData) && yNode instanceof Y.Array) {
-      nodeData.forEach((childData, index) => {
-        const childYMap = yNode.get(index)
-        if (!childData?.id || !childYMap) return
+      nodeData.forEach((childData) => {
+        if (!childData?.id) return
 
-        this.yNodeMap.set(childData.id, childYMap)
+        let matchedYMap: Y.Map<any> | undefined
 
-        const grandChildren = childYMap.get('children') as Y.Array<Y.Map<any>>
+        // 遍历当前 Y.Array，找到 id 匹配的 Y.Map
+        for (let i = 0; i < yNode.length; i++) {
+          const childYMap = yNode.get(i)
+          if (childYMap.get('id') === childData.id) {
+            matchedYMap = childYMap
+            break // 找到就退出循环
+          }
+        }
+
+        if (!matchedYMap) return // 没找到就跳过
+
+        this.yNodeMap.set(childData.id, matchedYMap)
+
+        const grandChildren = matchedYMap.get('children') as Y.Array<Y.Map<any>>
         if (childData.children && grandChildren) {
           this.setYNode(childData.children, grandChildren)
         }

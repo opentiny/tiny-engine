@@ -248,7 +248,7 @@ export default ({ emit }) => {
         id: 2,
         name: 'Bob',
         color: '#4ECDC4',
-        avatarUrl: 'https://i.pravatar.cc/150?img=2'
+        avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
       }
 
       useCollabMonaco({
