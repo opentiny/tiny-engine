@@ -13,6 +13,69 @@
 - 📦 **依赖管理** - 自动处理组件依赖和包管理
 - 🎯 **类型安全** - 提供完整的TypeScript类型定义
 
+## 🎯 设计理念
+
+### 代码生成架构
+
+```
+┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
+│   Plugin    │    │  Template   │    │   Parser    │    │ Generator   │
+│   插件系统   │───▶│   模板系统    │───▶│  解析器      │───▶│  代码生成器  │
+└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
+```
+
+## 📁 项目结构
+
+```
+src/
+├── generator/          # 代码生成器核心
+│   ├── codeGenerator.js
+│   ├── generateApp.js
+│   ├── generateJsx.js
+│   ├── page.js
+│   └── parseImport.js
+├── plugins/            # 插件系统
+│   ├── formatCodePlugin.js
+│   ├── genBlockPlugin.js
+│   ├── genPagePlugin.js
+│   └── ...
+├── templates/          # 代码模板
+│   └── react-template/
+├── parser/             # DSL解析器
+├── pre-processor/      # 预处理器
+├── utils/              # 工具函数
+└── constant/           # 常量定义
+```
+
+## 开发环境
+
+```bash
+# 安装依赖
+pnpm install
+```
+
+## 🧪 测试
+
+### 运行测试
+
+```bash
+# 运行所有测试
+pnpm test
+
+# 运行特定测试
+pnpm test test/data-binding
+pnpm test test/lifecycle
+pnpm test test/formatCode
+```
+
+### 测试用例
+
+- **data-binding** - 数据双向绑定功能测试
+- **lifecycle** - 生命周期功能测试
+- **formatCode** - 代码格式化功能测试
+- **generator** - 代码生成器核心功能测试
+- **unit** - 单元测试
+
 ## 📦 安装
 
 ```bash
@@ -262,67 +325,4 @@ const generator = new CodeGenerator({
   },
   context: {}
 })
-```
-
-### 开发环境
-
-```bash
-# 安装依赖
-pnpm install
-```
-
-## 🧪 测试
-
-### 运行测试
-
-```bash
-# 运行所有测试
-pnpm test
-
-# 运行特定测试
-pnpm test test/data-binding
-pnpm test test/lifecycle
-pnpm test test/formatCode
-```
-
-### 测试用例
-
-- **data-binding** - 数据双向绑定功能测试
-- **lifecycle** - 生命周期功能测试
-- **formatCode** - 代码格式化功能测试
-- **generator** - 代码生成器核心功能测试
-- **unit** - 单元测试
-
-## 📁 项目结构
-
-```
-src/
-├── generator/          # 代码生成器核心
-│   ├── codeGenerator.js
-│   ├── generateApp.js
-│   ├── generateJsx.js
-│   ├── page.js
-│   └── parseImport.js
-├── plugins/            # 插件系统
-│   ├── formatCodePlugin.js
-│   ├── genBlockPlugin.js
-│   ├── genPagePlugin.js
-│   └── ...
-├── templates/          # 代码模板
-│   └── react-template/
-├── parser/             # DSL解析器
-├── pre-processor/      # 预处理器
-├── utils/              # 工具函数
-└── constant/           # 常量定义
-```
-
-## 🎯 设计理念
-
-### 代码生成架构
-
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Plugin    │    │  Template   │    │   Parser    │    │ Generator   │
-│   插件系统   │───▶│   模板系统   │───▶│  解析器     │───▶│  代码生成器  │
-└─────────────┘    └─────────────┘    └─────────────┘    └─────────────┘
 ```
