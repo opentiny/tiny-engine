@@ -134,12 +134,14 @@ export default {
     const getResourceData = () => {
       fetchResourceGroupByAppId()
         .then((res) => {
-          categoryData.value = res
-          categoryOptions.value = res.map((item) => ({ label: item.name, value: item.id, resources: item.resources }))
-          if (categoryOptions.value.length) {
-            sourceCategory.value = categoryOptions.value[0].value
-            sourceOriginList.value = categoryOptions.value[0].resources
-            sourceList.value = categoryOptions.value[0].resources
+          if (Array.isArray(res)) {
+            categoryData.value = res
+            categoryOptions.value = res.map((item) => ({ label: item.name, value: item.id, resources: item.resources }))
+            if (categoryOptions.value.length) {
+              sourceCategory.value = categoryOptions.value[0].value
+              sourceOriginList.value = categoryOptions.value[0].resources
+              sourceList.value = categoryOptions.value[0].resources
+            }
           }
           openPopover()
         })

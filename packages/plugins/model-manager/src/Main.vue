@@ -42,7 +42,7 @@
               </div>
             </div>
           </template>
-          <search-empty v-else />
+          <search-empty :isShow="!models.length" />
         </div>
       </template>
     </plugin-panel>
@@ -159,7 +159,7 @@ const getModelLists = async () => {
     currentPage: 1,
     pageSize: 500
   })
-  models.value = data.records
+  models.value = data.records || []
 }
 // 导出模型的sql
 const exportModel = async (id) => {

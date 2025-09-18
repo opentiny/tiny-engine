@@ -107,7 +107,9 @@ export default {
     const getCategoryList = () => {
       fetchResourceGroupByAppId()
         .then((res) => {
-          resourceList.value = res
+          if (Array.isArray(res)) {
+            resourceList.value = res
+          }
         })
         .catch((error) => {
           useNotify({

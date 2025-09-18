@@ -283,7 +283,9 @@ export default {
     const getSourceList = () => {
       fetchResourceListByGroupId(state.group.id)
         .then((res) => {
-          state.sourceList = res
+          if (Array.isArray(res)) {
+            state.sourceList = res
+          }
         })
         .catch((error) => {
           useNotify({
