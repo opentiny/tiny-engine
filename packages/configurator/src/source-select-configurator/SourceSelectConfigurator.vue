@@ -68,7 +68,7 @@
           </div>
         </div>
         <tiny-button v-else @click="getResourceData">选择资源</tiny-button>
-        <tiny-input v-model="imgSrc"></tiny-input>
+        <tiny-input v-model="imgSrc" @blur="$emit('update:modelValue', imgSrc)"></tiny-input>
       </template>
     </tiny-popover>
   </div>
