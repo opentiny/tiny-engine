@@ -12,7 +12,8 @@ export default {
         META_APP.Bridge,
         META_APP.I18n,
         META_APP.Page,
-        META_APP.State
+        META_APP.State,
+        META_APP.ModelManager
       ],
       bottom: [META_APP.Schema, META_APP.Help, META_APP.Robot]
     },

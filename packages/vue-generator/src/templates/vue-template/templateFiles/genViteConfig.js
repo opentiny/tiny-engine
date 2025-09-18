@@ -17,7 +17,7 @@ export default (schema, options) => {
     },
     plugins: [vue(), vueJsx(), ${options.enableTailwindCSS ? 'tailwindcss()' : ''}],
     define: {
-      '${processStr.join('.')}': { ...${processStr.join('.')} }
+      '${processStr.join('.')}': { }
     },
     build: {
       minify: true,

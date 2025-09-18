@@ -29,6 +29,10 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
+import BindVariableConfigurator from './bind-variable-configurator/BindVariableConfigurator.vue'
+import ModelConfigurator from './model-configurator/ModelConfigurator.vue'
+import ModelApiConfigurator from './model-api-configurator/ModelApiConfigurator.vue'
+import OperatorGroupConfigurator from './operator-group-configurator/OperatorGroupConfigurator.vue'
 import BasicTagConfigurator from './basic-tag-configurator/BasicTagConfigurator.vue'
 import ClassConfigurator from './class-configurator/ClassConfigurator.vue'
 
@@ -67,6 +71,10 @@ export {
   TableColumnsConfigurator,
   TabsGroupConfigurator,
   VariableConfigurator,
+  BindVariableConfigurator,
+  ModelConfigurator,
+  ModelApiConfigurator,
+  OperatorGroupConfigurator,
   BasicTagConfigurator,
   ClassConfigurator,
   MetaCodeEditor,

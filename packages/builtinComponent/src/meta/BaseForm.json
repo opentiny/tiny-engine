@@ -1,0 +1,1158 @@
+{
+  "component": {
+    "icon": "form",
+    "name": {
+      "zh_CN": "FormModel"
+    },
+    "component": "FormModel",
+    "schema": {
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "选择模型"
+          },
+          "description": {
+            "zh_CN": "选择模型"
+          },
+          "content": [
+            {
+              "property": "serviceModel",
+              "label": {
+                "text": {
+                  "zh_CN": "选择模型"
+                }
+              },
+              "required": false,
+              "readOnly": false,
+              "disabled": false,
+              "bindState": false,
+              "cols": 12,
+              "widget": {
+                "component": "ModelConfigurator",
+                "props": {
+                  "expand": true
+                }
+              },
+              "properties": [
+                {
+                  "label": {
+                    "zh_CN": "默认分组",
+                    "en_US": "Default Group"
+                  },
+                  "content": [
+                    {
+                      "property": "label",
+                      "type": "string",
+                      "label": {
+                        "text": {
+                          "zh_CN": "表单项标签",
+                          "en_US": "Form Item Label"
+                        }
+                      },
+                      "required": true,
+                      "bindState": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "I18nConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "表单项标签",
+                        "en_US": "Form item's label."
+                      }
+                    },
+                    {
+                      "property": "prop",
+                      "bindState": false,
+                      "disabled": true,
+                      "label": {
+                        "text": {
+                          "zh_CN": "字段名",
+                          "en_US": "Field Name"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "字段名",
+                        "en_US": "Name of the form field."
+                      }
+                    },
+                    {
+                      "property": "required",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "必填",
+                          "en_US": "Required"
+                        }
+                      },
+                      "required": false,
+                      "bindState": true,
+                      "cols": 12,
+                      "widget": {
+                        "component": "SwitchConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否必填",
+                        "en_US": "Enable required or not."
+                      }
+                    },
+                    {
+                      "property": "rules",
+                      "label": {
+                        "text": {
+                          "zh_CN": "校验规则",
+                          "en_US": "Verification Rules"
+                        }
+                      },
+                      "required": false,
+                      "bindState": true,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CodeConfigurator",
+                        "props": {
+                          "language": "json"
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "表单项校验",
+                        "en_US": "Verification for form item."
+                      }
+                    },
+                    {
+                      "property": "component",
+                      "type": "string",
+                      "required": false,
+                      "bindState": true,
+                      "cols": 12,
+                      "label": {
+                        "text": {
+                          "zh_CN": "输入类型",
+                          "en_US": "Input Type"
+                        }
+                      },
+                      "widget": {
+                        "component": "SelectConfigurator",
+                        "props": {
+                          "options": [
+                            {
+                              "label": {
+                                "zh_CN": "输入框",
+                                "en_US": "Input"
+                              },
+                              "value": "TinyInput"
+                            },
+                            {
+                              "label": {
+                                "zh_CN": "选择器",
+                                "en_US": "Select"
+                              },
+                              "value": "TinySelect"
+                            },
+                            {
+                              "label": {
+                                "zh_CN": "多选框",
+                                "en_US": "Checkbox"
+                              },
+                              "value": "TinyCheckbox"
+                            },
+                            {
+                              "label": {
+                                "zh_CN": "单选框",
+                                "en_US": "Radio"
+                              },
+                              "value": "TinyRadio"
+                            },
+                            {
+                              "label": {
+                                "zh_CN": "日期选择器",
+                                "en_US": "Date Picker"
+                              },
+                              "value": "TinyDatePicker"
+                            }
+                          ]
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "输入类型",
+                        "en_US": "Type of the input."
+                      }
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyInput",
+                  "label": {
+                    "zh_CN": "输入框",
+                    "en_US": "Input"
+                  },
+                  "content": [
+                    {
+                      "property": "type",
+                      "label": {
+                        "text": {
+                          "zh_CN": "类型"
+                        }
+                      },
+                      "widget": {
+                        "component": "SelectConfigurator",
+                        "props": {
+                          "options": [
+                            {
+                              "label": "textarea",
+                              "value": "textarea"
+                            },
+                            {
+                              "label": "text",
+                              "value": "text"
+                            },
+                            {
+                              "label": "password",
+                              "value": "password"
+                            }
+                          ]
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "设置input框的type属性"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "rows",
+                      "label": {
+                        "text": {
+                          "zh_CN": "行数"
+                        }
+                      },
+                      "widget": {
+                        "component": "NumberConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "输入框行数，只对 type='textarea' 有效"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "placeholder",
+                      "label": {
+                        "text": {
+                          "zh_CN": "占位文本"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "I18nConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "输入框占位文本"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "clearable",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "清除按钮"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否显示清除按钮"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "disabled",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinySelect",
+                  "label": {
+                    "zh_CN": "选择器",
+                    "en_US": "Select"
+                  },
+                  "content": [
+                    {
+                      "property": "placeholder",
+                      "label": {
+                        "text": {
+                          "zh_CN": "占位文本"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "输入框占位文本"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "clearable",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "清除按钮"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否显示清除按钮"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "searchable",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "下拉可搜索"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "下拉面板是否可搜索"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "disabled",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "options",
+                      "label": {
+                        "text": {
+                          "zh_CN": "选项数据"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "bindState": true,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CodeConfigurator",
+                        "props": {
+                          "language": "json"
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "配置 Select 下拉数据项"
+                      },
+                      "labelPosition": "top"
+                    },
+                    {
+                      "property": "multiple",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "多选"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否允许输入框输入或选择多个项"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyDatePicker",
+                  "label": {
+                    "zh_CN": "日期选择器",
+                    "en_US": "DatePicker"
+                  },
+                  "content": [
+                    {
+                      "property": "type",
+                      "label": {
+                        "text": {
+                          "zh_CN": "类型"
+                        }
+                      },
+                      "widget": {
+                        "component": "SelectConfigurator",
+                        "props": {
+                          "options": [
+                            {
+                              "label": "日期",
+                              "value": "date"
+                            },
+                            {
+                              "label": "日期时间",
+                              "value": "datetime"
+                            },
+                            {
+                              "label": "周",
+                              "value": "week"
+                            },
+                            {
+                              "label": "月份",
+                              "value": "month"
+                            },
+                            {
+                              "label": "年份",
+                              "value": "year"
+                            }
+                          ]
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "设置日期框的type属性"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "placeholder",
+                      "label": {
+                        "text": {
+                          "zh_CN": "占位文本"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "I18nConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "输入框占位文本"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "clearable",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "清除按钮"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否显示清除按钮"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "disabled",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "readonly",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "只读"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否只读"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "format",
+                      "type": "string",
+                      "defaultValue": "",
+                      "label": {
+                        "text": {
+                          "zh_CN": "格式化"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否只读"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "valueFormat",
+                      "type": "string",
+                      "defaultValue": "",
+                      "label": {
+                        "text": {
+                          "zh_CN": "绑定值格式化"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "value-format"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyRadio",
+                  "label": {
+                    "zh_CN": "单选框",
+                    "en_US": "Radio"
+                  },
+                  "content": [
+                    {
+                      "property": "text",
+                      "label": {
+                        "text": {
+                          "zh_CN": "文本内容"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "单选框文本内容"
+                      }
+                    },
+                    {
+                      "property": "label",
+                      "label": {
+                        "text": {
+                          "zh_CN": "选中值"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "radio 选中时的值"
+                      }
+                    },
+                    {
+                      "property": "disabled",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyCheckbox",
+                  "label": {
+                    "zh_CN": "多选框",
+                    "en_US": "Checkbox"
+                  },
+                  "content": [
+                    {
+                      "property": "disabled",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "checked",
+                      "type": "boolean",
+                      "defaultValue": false,
+                      "label": {
+                        "text": {
+                          "zh_CN": "勾选"
+                        }
+                      },
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "当前是否勾选"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "text",
+                      "label": {
+                        "text": {
+                          "zh_CN": "文本"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "InputConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "复选框的文本"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                },
+                {
+                  "componentName": "TinyNumeric",
+                  "label": {
+                    "zh_CN": "数组输入框",
+                    "en_US": "Numeric"
+                  },
+                  "content": [
+                    {
+                      "property": "placeholder",
+                      "label": {
+                        "text": {
+                          "zh_CN": "占位文本"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "I18nConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "输入框占位文本"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "allow-empty",
+                      "label": {
+                        "text": {
+                          "zh_CN": "内容可清空"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否内容可清空"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "disabled",
+                      "label": {
+                        "text": {
+                          "zh_CN": "禁用"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否禁用"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "size",
+                      "label": {
+                        "text": {
+                          "zh_CN": "尺寸"
+                        }
+                      },
+                      "required": true,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "SelectConfigurator",
+                        "props": {
+                          "options": [
+                            {
+                              "label": "medium",
+                              "value": "medium"
+                            },
+                            {
+                              "label": "small",
+                              "value": "small"
+                            },
+                            {
+                              "label": "mini",
+                              "value": "mini"
+                            }
+                          ]
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "controls",
+                      "label": {
+                        "text": {
+                          "zh_CN": "加减按钮"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "CheckBoxConfigurator",
+                        "props": {}
+                      },
+                      "description": {
+                        "zh_CN": "是否使用加减按钮"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "controls-position",
+                      "label": {
+                        "text": {
+                          "zh_CN": "加减按钮位置"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "SelectConfigurator",
+                        "props": {
+                          "options": [
+                            {
+                              "label": "左右两侧",
+                              "value": ""
+                            },
+                            {
+                              "label": "只在右侧",
+                              "value": "right"
+                            }
+                          ]
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "加减按钮位置"
+                      }
+                    },
+                    {
+                      "property": "precision",
+                      "label": {
+                        "text": {
+                          "zh_CN": "精度"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "NumberConfigurator",
+                        "props": {
+                          "allowEmpty": true
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "数值精度"
+                      },
+                      "labelPosition": "left"
+                    },
+                    {
+                      "property": "step",
+                      "label": {
+                        "text": {
+                          "zh_CN": "步长"
+                        }
+                      },
+                      "required": false,
+                      "readOnly": false,
+                      "disabled": false,
+                      "cols": 12,
+                      "widget": {
+                        "component": "NumberConfigurator",
+                        "props": {
+                          "allowEmpty": true
+                        }
+                      },
+                      "description": {
+                        "zh_CN": "步长"
+                      },
+                      "labelPosition": "left"
+                    }
+                  ]
+                }
+              ],
+              "labelPosition": "top"
+            },
+            {
+              "property": "modelApis",
+              "label": {
+                "text": {
+                  "zh_CN": "绑定模型方法"
+                }
+              },
+              "required": false,
+              "readOnly": false,
+              "disabled": false,
+              "bindState": false,
+              "cols": 12,
+              "widget": {
+                "component": "ModelApiConfigurator",
+                "props": {}
+              },
+              "labelPosition": "top"
+            }
+          ]
+        },
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "content": [
+            {
+              "property": "layout",
+              "label": {
+                "text": {
+                  "zh_CN": "表单布局",
+                  "en_US": "From Layout"
+                }
+              },
+              "required": true,
+              "bindState": false,
+              "cols": 12,
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": {
+                        "zh_CN": "一列布局",
+                        "en_US": "One-column Layout"
+                      },
+                      "value": 1
+                    },
+                    {
+                      "label": {
+                        "zh_CN": "两列布局",
+                        "en_US": "Two-column Layout"
+                      },
+                      "value": 2
+                    },
+                    {
+                      "label": {
+                        "zh_CN": "三列布局",
+                        "en_US": "Three-column Layout"
+                      },
+                      "value": 3
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "zh_CN": "设置表单布局",
+                "en_US": "Set the form layout."
+              }
+            },
+            {
+              "property": "size",
+              "label": {
+                "text": {
+                  "zh_CN": "尺寸"
+                }
+              },
+              "required": false,
+              "readOnly": false,
+              "disabled": false,
+              "cols": 12,
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": "medium",
+                      "value": "medium"
+                    },
+                    {
+                      "label": "small",
+                      "value": "small"
+                    },
+                    {
+                      "label": "mini",
+                      "value": "mini"
+                    }
+                  ]
+                }
+              },
+              "description": {
+                "zh_CN": "输入框尺寸。该属性的可选值为 medium / small / mini"
+              },
+              "labelPosition": "left"
+            },
+            {
+              "property": "disabled",
+              "type": "boolean",
+              "defaultValue": false,
+              "label": {
+                "text": {
+                  "zh_CN": "禁用",
+                  "en_US": "Disabled"
+                }
+              },
+              "required": false,
+              "bindState": true,
+              "cols": 12,
+              "widget": {
+                "component": "SwitchConfigurator",
+                "props": {}
+              },
+              "description": {
+                "zh_CN": "是否禁用",
+                "en_US": "Enable Disabled or not."
+              }
+            },
+            {
+              "property": "viewOnly",
+              "label": {
+                "text": {
+                  "zh_CN": "只读",
+                  "en_US": "Readonly"
+                }
+              },
+              "required": false,
+              "bindState": true,
+              "cols": 12,
+              "widget": {
+                "component": "SwitchConfigurator",
+                "props": {}
+              },
+              "description": {
+                "zh_CN": "控制编辑态、查看态",
+                "en_US": "Control the editing and viewing states."
+              }
+            },
+            {
+              "property": "modelValue",
+              "label": {
+                "text": {
+                  "zh_CN": "表单数据绑定变量",
+                  "en_US": "Binding Variables For Form Data"
+                }
+              },
+              "required": false,
+              "readOnly": false,
+              "disabled": false,
+              "cols": 12,
+              "widget": {
+                "component": "BindVariableConfigurator",
+                "props": {
+                  "defaultValue": []
+                }
+              },
+              "description": {
+                "zh_CN": "为表单数据绑定变量",
+                "en_US": "Binding Variables For Form Data."
+              }
+            }
+          ]
+        }
+      ],
+      "events": {
+        "onUpdate:modelValue": {
+          "label": {
+            "zh_CN": "绑定值改变时触发",
+            "en_US": "Binding changed Triggered"
+          },
+          "description": {
+            "zh_CN": "绑定值改变时触发",
+            "en_US": "Triggered when the value of the binding changes."
+          },
+          "type": "event",
+          "functionInfo": {
+            "params": [
+              {
+                "name": "value",
+                "type": "array",
+                "defaultValue": [],
+                "description": {
+                  "zh_CN": "双向绑定值",
+                  "en_US": "Binding value."
+                }
+              }
+            ],
+            "returns": {}
+          }
+        }
+      }
+    },
+    "configure": {
+      "loop": false,
+      "condition": true,
+      "isContainer": false,
+      "isModal": false,
+      "nestingRule": {
+        "childWhitelist": [],
+        "parentWhitelist": ""
+      }
+    }
+  },
+  "snippet": {
+    "name": {
+      "zh_CN": "表单模型",
+      "en_US": "FormModel"
+    },
+    "icon": "form",
+    "screenshot": "",
+    "snippetName": "FormModel",
+    "schema": {
+      "componentName": "FormModel",
+      "props": {}
+    }
+  }
+}

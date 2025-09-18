@@ -32,6 +32,10 @@ export default {
     options: {
       type: Object,
       default: () => ({})
+    },
+    trigger: {
+      type: String,
+      default: 'hover'
     }
   },
   emits: ['click-api'],
@@ -39,7 +43,8 @@ export default {
     const state = reactive({
       icon: computed(() => props.icon),
       content: computed(() => props.content),
-      options: computed(() => props.options)
+      options: computed(() => props.options),
+      trigger: computed(() => props.trigger)
     })
 
     const click = () => {

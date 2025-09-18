@@ -10,8 +10,8 @@
  *
  */
 
-import axios from './axios'
-import config from './config'
+import axios from '@/http/axios.js'
+import config from '@/http/config.js'
 
 export default (dataHandler) => {
   const http = axios(config)

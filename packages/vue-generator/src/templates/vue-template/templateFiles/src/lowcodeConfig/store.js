@@ -1,4 +1,4 @@
-import * as useDefinedStores from '@/stores'
+import * as useDefinedStores from '@/stores/index.js'
 
 const useStores = () => {
   const stores = {}

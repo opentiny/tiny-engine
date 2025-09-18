@@ -62,6 +62,7 @@
     "@opentiny/tiny-engine-plugin-state": "workspace:*",
     "@opentiny/tiny-engine-plugin-tree": "workspace:*",
     "@opentiny/tiny-engine-plugin-tutorial": "workspace:*",
+    "@opentiny/tiny-engine-plugin-model-manager": "workspace:*",
     "@opentiny/tiny-engine-setting-design": "workspace:*",
     "@opentiny/tiny-engine-setting-events": "workspace:*",
     "@opentiny/tiny-engine-setting-props": "workspace:*",

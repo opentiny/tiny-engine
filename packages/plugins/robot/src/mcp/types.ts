@@ -41,6 +41,7 @@ export interface RobotMessage {
 }
 
 export interface LLMRequestBody {
+  baseUrl?: string
   model?: string
   stream: boolean
   messages: LLMMessage[]

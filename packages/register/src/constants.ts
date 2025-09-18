@@ -68,6 +68,8 @@ export const META_APP = {
   Schema: 'engine.plugins.schema',
   // 新手帮助/帮助文档
   Help: 'engine.plugins.editorhelp',
+  // 模型管理插件
+  ModelManager: 'engine.plugins.modelmanager',
   // 属性设置面板
   Props: 'engine.setting.props',
   // 样式设置面板

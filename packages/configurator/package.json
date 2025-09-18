@@ -24,11 +24,13 @@
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",
     "@opentiny/vue-icon": "^3.20.0",
+    "@opentiny/vue-renderless": "^3.20.0",
     "vue": "^3.4.15"
   },
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-plugin-i18n": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@vue/shared": "^3.3.4",
     "monaco-editor": "0.51.0",
