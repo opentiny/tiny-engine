@@ -188,17 +188,14 @@ const generateBaseReference = () => {
 }
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
-  const { modelName, url, baseUrl } = getMergeMeta('engine.plugins.pagecontroller')?.options?.AIModel || {}
+  const { modelName, baseUrl } = getMergeMeta('engine.plugins.pagecontroller')?.options?.AIModel || {}
   const apiKey = import.meta.env.VITE_API_TPKEN
-  if (!modelName || !apiKey) {
-    throw new Error(`"modelName" & "apiKey" cannot be empty`)
-  }
-  if (!url && !baseUrl) {
-    throw new Error(`"url" or "baseUrl" cannot be empty`)
+  if (!modelName || !apiKey || !baseUrl) {
+    throw new Error(`"modelName" & "apiKey" & "baseUrl" cannot be empty`)
   }
   const referenceContext = generateBaseReference()
   return getMetaApi(META_SERVICE.Http).post(
-    url || `${baseUrl}/chat/completions`,
+    `${baseUrl}/chat/completions`,
     {
       model: modelName,
       messages: [
