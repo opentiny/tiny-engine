@@ -8,7 +8,7 @@ export default {
   options: {
     enableAICompletion: true,
     AIModel: {
-      modelName: 'internvl3-14b',
+      modelName: 'qwen3-8b',
       baseUrl: 'https://agent.opentiny.design/api/v1/ai',
       url: ''
     }
