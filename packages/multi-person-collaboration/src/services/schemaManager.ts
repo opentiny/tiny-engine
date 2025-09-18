@@ -77,11 +77,16 @@ export class SchemaManager {
 
   // 获取或创建指定 docName 的 NodeSchemaModel 实例
   public createSchema(docName: string, provider: YjsProvider): NodeSchemaModel {
+    // 优先从缓存获取实例，确保幂等性
+    if (this.nodeSchemaModelMap.has(docName)) {
+      return this.nodeSchemaModelMap.get(docName)!
+    }
+
     const docManager = DocManager.getInstance()
     const ydoc = docManager.getOrCreateDoc(docName)
 
     if (!ydoc) {
-      throw Error(`获取或创建指定 ${docName} 的 NodeSchemaModel 实例失败，未找到对应 ydoc`)
+      throw new Error(`获取或创建指定 ${docName} 的 ydoc 实例失败`)
     }
 
     const pageSchema = toRaw(useCanvas().getPageSchema())
@@ -91,47 +96,48 @@ export class SchemaManager {
       yMap = ydoc.getMap<any>(ROOT_SCHEMA_MAP)
       this.schemaMap.set(docName, yMap)
 
-      // 在注册监听器之前，设置初始同步未完成
+      // 标记初始同步未完成
       this.initialSyncDone.set(docName, false)
 
-      // 初始化监听器
-      this.initObserver(docName, yMap)
-      this.setupEventListeners(docName)
-
       if (provider) {
-        provider.on('sync', (isSynced: boolean) => {
-          if (isSynced) {
-            // 当 provider 第一次同步完成时
+        const handleInitialSync = (isSynced: boolean) => {
+          if (!isSynced) return
+
+          // 确保这个处理器只执行一次
+          provider.off('sync', handleInitialSync)
+
+          if (this.initialSyncDone.get(docName)) return
+
+          if (yMap!.size === 0) {
+            // 远端无数据 → 用本地 schema 初始化
             // eslint-disable-next-line no-console
-            console.log(`[${docName}] Initial sync complete. Applying full schema to UI.`)
-
-            // 安全时间点，用 Yjs 的权威数据完全覆盖 UI
-            const rawRemoteSchema = fromYjs(yMap)
-
-            // 净化 schema
-            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted', 'newNode'] // 定义需要过滤的键
+            console.log(`[${docName}] Remote empty. Using local schema to initialize yMap.`)
+            ydoc.transact(() => {
+              toYjs(yMap!, pageSchema)
+            }, IGNORE_OBSERVER_ORIGIN)
+          } else {
+            // 远端有数据 → 用远端覆盖 UI
+            // eslint-disable-next-line no-console
+            console.log(`[${docName}] Remote has data. Importing remote schema to UI.`)
+            const rawRemoteSchema = fromYjs(yMap!)
+            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted', 'newNode']
             const cleanSchema = sanitizeSchema(rawRemoteSchema, INTERNAL_YJS_KEYS)
-
-            // 使用干净的 schema 来覆盖 UI
             useCanvas().importSchema(cleanSchema)
-
-            // 标记初始同步已完成
-            this.initialSyncDone.set(docName, true)
           }
-        })
-      }
 
-      // 冷启动：第一次启动，远端无数据 -> 用本地初始化
-      if (yMap.size === 0) {
-        ydoc.transact(() => {
-          toYjs(yMap!, toRaw(useCanvas().getPageSchema()))
-        }, IGNORE_OBSERVER_ORIGIN)
+          // 标记初始同步完成
+          this.initialSyncDone.set(docName, true)
+        }
+
+        provider.on('sync', handleInitialSync)
       }
-    } else {
-      this.initObserver(docName, yMap)
-      this.setupEventListeners(docName)
     }
 
+    // 确保监听器幂等（假设内部做了防重复处理）
+    this.initObserver(docName, yMap)
+    this.setupEventListeners(docName)
+
+    // 创建并缓存 NodeSchemaModel 实例
     const nodeSchemaModel = new NodeSchemaModel(yMap, pageSchema as RootNode, docName)
     this.nodeSchemaModelMap.set(docName, nodeSchemaModel)
 
