@@ -441,13 +441,10 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
     console.log(`✅ 高优先级文件已找到所有API，跳过低优先级`);
   }
 
-  // 标注优先级
-  const high1Set = new Set(highPriorityFiles.filter(file => !file.includes(".vue.d.ts")));
+  // 【核心修改】移除优先级标识，仅返回纯相对路径
   const formatWithPriority = (filePath) => {
-    const relativePath = path.relative(baseDir, filePath);
-    const isHigh1 = high1Set.has(filePath);
-    const isHigh2 = filePath.includes(".vue.d.ts");
-    return isHigh1 ? `${relativePath} [高1]` : isHigh2 ? `${relativePath} [高2]` : `${relativePath} [低]`;
+    // 直接返回文件相对于基准目录的路径，不添加任何优先级标签
+    return path.relative(baseDir, filePath);
   };
 
   return {
@@ -486,44 +483,242 @@ async function analyzeComponentApiMap(componentDir) {
 }
 
 /**
+ * 辅助函数：获取组件根目录下的所有index文件（排除.map后缀）
+ * @param {string} componentDir - 组件根目录
+ * @returns {string[]} index文件绝对路径列表
+ */
+function getRootIndexFiles(componentDir) {
+  try {
+    if (!fs.existsSync(componentDir)) return [];
+
+    // 仅读取组件根目录下的文件（不递归）
+    const rootFiles = fs.readdirSync(componentDir, { withFileTypes: true })
+      .filter(entry => entry.isFile()) // 只保留文件
+      .map(entry => path.join(componentDir, entry.name))
+      .filter(filePath => {
+        const fileName = path.basename(filePath);
+        // 匹配以index.开头，且后缀不是.map的文件（如index.mjs、index.js、index.d.ts）
+        return fileName.startsWith("index.") && !fileName.endsWith(".map");
+      });
+
+    if (rootFiles.length > 0) {
+      console.log(`📌 组件根目录下找到 ${rootFiles.length} 个index文件：`);
+      rootFiles.forEach(file => console.log(`  - ${path.relative(componentDir, file)}`));
+    } else {
+      console.warn(`⚠️ 组件根目录下未找到index文件`);
+    }
+
+    return rootFiles;
+  } catch (error) {
+    console.error("❌ 获取index文件失败:", error.message);
+    return [];
+  }
+}
+
+/**
+ * 辅助函数：读取文件内容（带容错处理）
+ * @param {string} filePath - 纯文件路径（无优先级标注）
+ * @param {string} baseDir - 组件根目录（用于校验路径合法性）
+ * @returns {string} 文件内容（读取失败返回空字符串）
+ */
+function readFileWithFallback(filePath, baseDir) {
+  try {
+    // 无需再提取纯路径，直接使用传入的路径
+    const absolutePath = path.isAbsolute(filePath) 
+      ? filePath 
+      : path.join(baseDir, filePath);
+    
+    if (!absolutePath.startsWith(baseDir) || !fs.existsSync(absolutePath)) {
+      console.warn(`⚠️ 文件不存在或超出目录范围：${absolutePath}`);
+      return "";
+    }
+
+    // 读取文件内容
+    return fs.readFileSync(absolutePath, "utf-8");
+  } catch (error) {
+    console.error(`❌ 读取文件失败 ${filePath}：`, error.message);
+    return "";
+  }
+}
+
+/**
+ * 辅助函数：保存拼接后的内容到文件（用于调试）
+ * @param {string} content - 拼接后的总内容
+ * @param {string} [saveDir] - 保存目录
+ * @returns {string} 保存的文件路径
+ */
+function saveConcatContentToFile(content, saveDir = '../npm-api-file-content') {
+  const absoluteSaveDir = path.isAbsolute(saveDir)
+    ? saveDir
+    : path.join(__dirname, saveDir);
+
+  // 确保目录存在
+  if (!fs.existsSync(absoluteSaveDir)) {
+    fs.mkdirSync(absoluteSaveDir, { recursive: true });
+  }
+
+  // 生成唯一文件名（组件目录名 + 时间戳）
+  const timestamp = Date.now();
+  const fileName = `npm_api_concat_${timestamp}.txt`;
+  const saveFilePath = path.join(absoluteSaveDir, fileName);
+
+  // 写入文件
+  fs.writeFileSync(saveFilePath, content, 'utf-8');
+  console.log(`✅ 拼接内容已保存到：${saveFilePath}`);
+
+  return saveFilePath;
+}
+
+/**
+ * 筛选组件API文件并拼接内容（按组件聚合非空API信息及文件源码）
+ * @param {string} componentDir - 组件根目录
+ * @returns {Promise<{combinedContent: string, componentNames: string[], savedPath: string}>}
+ *  - combinedContent: 拼接后的总内容
+ *  - componentNames: 识别到的组件名称列表
+ *  - savedPath: 拼接内容的保存路径
+ */
+async function filterAndConcatApiNpmFiles(componentDir) {
+  // 1. 前置校验：目录有效性
+  if (!componentDir) {
+    throw new Error("请提供组件源码目录路径");
+  }
+  if (!fs.existsSync(componentDir)) {
+    throw new Error(`组件目录不存在：${componentDir}`);
+  }
+  console.log(`\n📌 开始执行组件API文件筛选与内容拼接：${componentDir}`);
+
+  // 2. 调用主分析函数获取API结果
+  console.log("1/3 🔍 正在分析组件API定义文件...");
+  const apiResults = await analyzeComponentApiMap(componentDir);
+  if (!apiResults || apiResults.length === 0) {
+    throw new Error("未获取到组件API分析结果");
+  }
+  const componentNames = apiResults.map(result => result.component);
+  console.log(`✅ 分析完成，共识别到 ${componentNames.length} 个组件：${componentNames.join(", ")}`);
+
+  // 获取组件根目录的index文件
+  const rootIndexFiles = getRootIndexFiles(componentDir);
+
+  // 3. 遍历结果拼接内容（仅保留非空的Props/Emits/Slots）
+  console.log("\n2/3 📄 正在拼接API文件内容...");
+  let combinedContent = `# Vue组件库API文件内容聚合（组件目录：${path.basename(componentDir)}）\n\n`;
+
+  // 拼接index文件内容（放在最前面，便于大模型优先识别入口信息）
+  if (rootIndexFiles.length > 0) {
+    combinedContent += `## 组件入口文件（index系列文件）\n`;
+    rootIndexFiles.forEach((indexFile, idx) => {
+      const relativePath = path.relative(componentDir, indexFile);
+      const fileContent = readFileWithFallback(indexFile, componentDir);
+      combinedContent += `\n--- 入口文件 ${idx + 1}：${relativePath} ---\n`;
+      combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
+    });
+    combinedContent += `\n========================================\n\n`;
+  }
+
+  // 拼接各组件的Props/Emits/Slots文件
+  apiResults.forEach((result, index) => {
+    const { component, props, emits, slots } = result;
+
+    // 组件分隔符
+    combinedContent += `===== ${index + 1}. 组件：${component} =====\n`;
+
+    // 处理Props（非空则拼接）
+    if (props.length > 0) {
+      combinedContent += `\n【Props定义文件】（共 ${props.length} 个）\n`;
+      props.forEach((propFile, idx) => {
+        const fileContent = readFileWithFallback(propFile, componentDir);
+        combinedContent += `\n--- 第 ${idx + 1} 个：${propFile} ---\n`;
+        combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
+      });
+    }
+
+    // 处理Emits（非空则拼接）
+    if (emits.length > 0) {
+      combinedContent += `\n【Emits定义文件】（共 ${emits.length} 个）\n`;
+      emits.forEach((emitFile, idx) => {
+        const fileContent = readFileWithFallback(emitFile, componentDir);
+        combinedContent += `\n--- 第 ${idx + 1} 个：${emitFile} ---\n`;
+        combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
+      });
+    }
+
+    // 处理Slots（非空则拼接）
+    if (slots.length > 0) {
+      combinedContent += `\n【Slots定义文件】（共 ${slots.length} 个）\n`;
+      slots.forEach((slotFile, idx) => {
+        const fileContent = readFileWithFallback(slotFile, componentDir);
+        combinedContent += `\n--- 第 ${idx + 1} 个：${slotFile} ---\n`;
+        combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
+      });
+    }
+
+    // 组件结束分隔符
+    combinedContent += `\n========================================\n\n`;
+  });
+
+  // 4. 保存拼接结果（用于调试）
+  console.log(`✅ 内容拼接完成（总长度：${combinedContent.length} 字符）`);
+  const savedPath = saveConcatContentToFile(combinedContent);
+
+  // 5. 返回结果
+  return {
+    combinedContent,    // 拼接后的总内容（供大模型使用）
+    componentNames,     // 识别到的组件名称列表
+    savedPath           // 拼接内容的本地保存路径
+  };
+}
+
+/**
  * 命令行入口
  */
 async function main() {
   const componentDir = process.argv[2];
   if (!componentDir) {
-    console.error("用法：node component-api-mapper.js <组件目录路径>");
+    console.error("用法1：分析API文件分布");
+    console.error("node component-api-mapper.js <组件目录路径>");
     console.error("示例：node component-api-mapper.js D:\\element-plus\\es\\components\\select");
+    console.error("用法2：筛选并拼接API文件内容");
+    console.error("node component-npm-file-filter.js <组件目录路径> concat");
     process.exit(1);
   }
 
   try {
-    const apiResults = await analyzeComponentApiMap(componentDir);
+    // 若传入第3个参数为 "concat"，则执行拼接逻辑
+    if (process.argv[3] === "concat") {
+      const { combinedContent, componentNames, savedPath } = await filterAndConcatApiNpmFiles(componentDir);
+      console.log(`\n🎉 拼接任务完成！`);
+      console.log(`- 涉及组件：${componentNames.join(", ")}`);
+      console.log(`- 内容长度：${combinedContent.length} 字符`);
+      console.log(`- 保存路径：${savedPath}`);
+    } else {
+      const apiResults = await analyzeComponentApiMap(componentDir);
 
-    // 输出最终结果
-    console.log("\n" + "=".repeat(100));
-    console.log(`📊 组件API定义文件分析结果（优先级：高1 > 高2 > 低）`);
-    console.log(`   高1：入口+导入/导出名称含组件关键词的核心文件及依赖`);
-    console.log(`   高2：.vue.d.ts文件（slot优先）`);
-    console.log(`   低：其他符合条件的文件`);
-    console.log("=".repeat(100));
-
-    apiResults.forEach((result, index) => {
-      console.log(`\n${index + 1}. 组件：${result.component}`);
-      console.log(`   📋 Props定义文件（${result.props.length}个）：`);
-      result.props.length > 0
-        ? result.props.forEach(p => console.log(`     - ${p}`))
-        : console.log("     - 未找到");
-
-      console.log(`   📢 Emits定义文件（${result.emits.length}个）：`);
-      result.emits.length > 0
-        ? result.emits.forEach(e => console.log(`     - ${e}`))
-        : console.log("     - 未找到");
-
-      console.log(`   🧩 Slots定义文件（${result.slots.length}个）：`);
-      result.slots.length > 0
-        ? result.slots.forEach(s => console.log(`     - ${s}`))
-        : console.log("     - 未找到");
-    });
+      // 输出最终结果
+      console.log("\n" + "=".repeat(100));
+      console.log(`📊 组件API定义文件分析结果（优先级：高1 > 高2 > 低）`);
+      console.log(`   高1：入口+导入/导出名称含组件关键词的核心文件及依赖`);
+      console.log(`   高2：.vue.d.ts文件（slot优先）`);
+      console.log(`   低：其他符合条件的文件`);
+      console.log("=".repeat(100));
+  
+      apiResults.forEach((result, index) => {
+        console.log(`\n${index + 1}. 组件：${result.component}`);
+        console.log(`   📋 Props定义文件（${result.props.length}个）：`);
+        result.props.length > 0
+          ? result.props.forEach(p => console.log(`     - ${p}`))
+          : console.log("     - 未找到");
+  
+        console.log(`   📢 Emits定义文件（${result.emits.length}个）：`);
+        result.emits.length > 0
+          ? result.emits.forEach(e => console.log(`     - ${e}`))
+          : console.log("     - 未找到");
+  
+        console.log(`   🧩 Slots定义文件（${result.slots.length}个）：`);
+        result.slots.length > 0
+          ? result.slots.forEach(s => console.log(`     - ${s}`))
+          : console.log("     - 未找到");
+      });
+    }
   } catch (error) {
     console.error("\n❌ 分析失败:", error.message);
     process.exit(1);
@@ -537,5 +732,6 @@ if (require.main === module) {
 module.exports = {
   analyzeComponentApiMap,
   splitFilesByPriority,
-  aggregateComponentApiByPriority
+  aggregateComponentApiByPriority,
+  filterAndConcatApiNpmFiles
 };

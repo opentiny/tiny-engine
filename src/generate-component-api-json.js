@@ -8,7 +8,8 @@ const path = require("path");
 require("dotenv").config({ path: "../.env" });
 const { OpenAI } = require("openai");
 // 导入上一个脚本的核心分析函数
-const { analyzeComponentApiFiles } = require("./component-api-file-filter.js");
+const { filterAndConcatApiCodeFiles } = require("./component-code-file-filter.js");
+const { filterAndConcatApiNpmFiles } = require("./component-npm-file-filter");
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -16,81 +17,6 @@ const client = new OpenAI({
   baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
   timeout: 600000, // 10分钟超时
 });
-
-/**
- * 保存文件内容到指定目录
- * @param {string} content - 要保存的文件内容
- * @param {string} [saveDir='../code-file-content'] - 保存的目录，默认为上级目录下的 code-file-content
- * @returns {string} 保存的文件路径
- */
-function saveContentToFile(content, saveDir = '../code-file-content') {
-  // 解析为绝对路径（基于当前脚本所在目录）
-  const absoluteSaveDir = path.isAbsolute(saveDir)
-    ? saveDir
-    : path.join(__dirname, saveDir);
-
-  // 确保目录存在
-  if (!fs.existsSync(absoluteSaveDir)) {
-    fs.mkdirSync(absoluteSaveDir, { recursive: true });
-  }
-
-  // 生成唯一文件名（时间戳 + 随机数）
-  const timestamp = Date.now();
-  const randomNum = Math.floor(Math.random() * 1000);
-  const fileName = `code_content_${timestamp}_${randomNum}.txt`;
-  const saveFilePath = path.join(absoluteSaveDir, fileName);
-
-  // 写入文件
-  fs.writeFileSync(saveFilePath, content, 'utf-8');
-  console.log(`✅ 已将内容保存到：${saveFilePath}`);
-
-  return saveFilePath;
-}
-
-/**
- * 读取筛选出的API文件内容，拼接为总字符串（包含文件路径标识）
- * @param {Array<{filePath: string, fileName: string}>} filteredFiles - 筛选出的API文件列表
- * @param {string} componentDir - 组件根目录（用于拼接文件绝对路径）
- * @returns {string} 包含所有文件路径和内容的总字符串
- */
-function readAndConcatFiles(filteredFiles, componentDir) {
-  if (!Array.isArray(filteredFiles) || filteredFiles.length === 0) {
-    throw new Error("没有需要分析的API文件");
-  }
-
-  let totalContent = "以下是Element Plus组件的API相关文件内容，包含文件路径和源码：\n\n";
-
-  filteredFiles.forEach((file, index) => {
-    // 拼接文件绝对路径
-    const absolutePath = path.isAbsolute(file.filePath)
-      ? file.filePath
-      : path.join(componentDir, file.filePath);
-
-    if (!fs.existsSync(absolutePath)) {
-      console.warn(`⚠️ 文件 ${absolutePath} 不存在，跳过读取`);
-      return;
-    }
-
-    // 读取文件内容
-    const fileContent = fs.readFileSync(absolutePath, "utf-8");
-
-    // 用分隔符标识不同文件，明确标注相对路径（便于大模型定位信息来源）
-    totalContent += `===== 第 ${index + 1} 个文件 - 相对路径：${file.filePath} =====\n`;
-    totalContent += `文件内容：\n${fileContent}\n\n`;
-  });
-
-  // 截取前20000字符（避免超出大模型上下文限制，可根据模型能力调整）
-  // const maxLength = 20000;
-  // if (totalContent.length > maxLength) {
-  //   console.log(`ℹ️  总内容过长（${totalContent.length} 字符），截取前 ${maxLength} 字符`);
-  //   totalContent = totalContent.slice(0, maxLength) + "\n\n（注：内容已截断，仅展示前20000字符）";
-  // }
-
-  // 保存文件拼接内容，用于调试
-  const savedPath = saveContentToFile(totalContent);
-
-  return totalContent;
-}
 
 /**
  * 清理大模型返回内容并提取标准JSON字符串
@@ -375,11 +301,11 @@ function saveApiJsonToFile(componentName, apiJson, baseDir = "../code-to-api-jso
 /**
  * 遍历组件API数组，为每个元素单独保存为JSON文件
  * @param {Array<Object>} apiArray - 组件API数组（每个元素含name、description、components字段）
- * @param {string} [baseDir='../code-to-api-json-log-2'] - 保存的基础目录（默认上级目录的code-to-api-json-log-2）
+ * @param {string} [baseDir] - 保存的基础目录
  * @returns {Array<string>} 所有生成文件的绝对路径列表
  * @throws {Error} 若输入不是数组或数组元素格式错误，抛出错误
  */
-function saveApiArrayToFiles(apiArray, baseDir = '../code-to-api-json-log-2') {
+function saveApiArrayToFiles(apiArray, baseDir) {
   // 1. 校验输入是否为数组
   if (!Array.isArray(apiArray)) {
     throw new Error("输入必须是组件API数组，无法保存文件");
@@ -431,40 +357,57 @@ function saveApiArrayToFiles(apiArray, baseDir = '../code-to-api-json-log-2') {
 
   return savedFilePaths;
 }
+
 /**
  * 主函数：串联筛选文件→读取内容→大模型分析→生成JSON
- * @param {string} componentDir - 组件根目录（用户输入）
- * @param {string} [outputPath="../code-to-api-json-log-2"] - 输出JSON文件路径
+ * @param {string} componentDir - 组件根目录
+ * @param {string} [sourceType="code"] - 来源类型，可选值："code"或"npm"
+ * @param {string} [outputPath] - 输出JSON文件路径
  * @returns {Promise<Object>} 最终的结构化API JSON
  */
-async function generateComponentApiJson(componentDir, outputPath = "../code-to-api-json-log-2") {
+async function generateComponentApiJson(componentDir, sourceType = "code", outputPath = "../code-to-api-json-log-2") {
+  // 函数实现保持不变...
   try {
-    // 1. 第一步：调用上一个脚本的函数，筛选出API文件
-    console.log("1/3 🔍 正在筛选组件的API相关文件...");
-    const { filteredFiles } = await analyzeComponentApiFiles(componentDir);
-    if (filteredFiles.length === 0) {
-      throw new Error("未筛选出任何包含API信息的文件");
+    if (!["code", "npm"].includes(sourceType)) {
+      throw new Error(`无效的来源类型: ${sourceType}，必须是"code"或"npm"`);
     }
-    console.log(`✅ 筛选完成，共找到 ${filteredFiles.length} 个API文件：`);
-    filteredFiles.forEach((file, index) => console.log(`  ${index + 1}. ${file.filePath}`));
 
-    // 2. 第二步：读取所有筛选文件的内容，拼接为总字符串
-    console.log("\n2/3 📄 正在读取并拼接文件内容...");
-    const componentName = path.basename(componentDir)
-      .replace(/^(\w)/, (match) => match.toUpperCase());
-    const combinedContent = readAndConcatFiles(filteredFiles, componentDir);
-    console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
+    let combinedContent, componentInfo;
+    
+    console.log(`1/3 🔍 正在从${sourceType === 'code' ? '源码' : 'NPM包'}筛选并拼接API文件...`);
+    if (sourceType === "code") {
+      const result = await filterAndConcatApiCodeFiles(componentDir);
+      combinedContent = result.combinedContent;
+      componentInfo = {
+        type: "single",
+        name: result.componentName
+      };
+    } else {
+      const result = await filterAndConcatApiNpmFiles(componentDir);
+      combinedContent = result.combinedContent;
+      componentInfo = {
+        type: "multiple",
+        names: result.componentNames
+      };
+    }
 
-    // 3. 第三步：调用大模型综合分析，生成结构化JSON
-    console.log("\n3/3 🤖 正在生成结构化API JSON...");
+    if (!combinedContent || combinedContent.length === 0) {
+      throw new Error("API文件内容拼接为空，无法生成JSON");
+    }
+
+    console.log("\n2/3 🤖 正在生成结构化API JSON...");
     const finalApiJson = await generateApiJsonWithLLM(combinedContent);
 
-    // 4. 第四步：保存文件（使用调整后的函数处理新数组结构）
     const saveDir = outputPath;
     const savedPaths = saveApiArrayToFiles(finalApiJson, saveDir);
 
-    // 5. 输出结果日志
-    console.log(`\n🎉 结构化API文件生成完成！共成功保存 ${savedPaths.length} 个组件文件：`);
+    console.log(`\n🎉 结构化API文件生成完成！`);
+    if (componentInfo.type === "single") {
+      console.log(`- 组件名称：${componentInfo.name}`);
+    } else {
+      console.log(`- 识别到组件：${componentInfo.names.join(", ")}`);
+    }
+    console.log(`- 共成功保存 ${savedPaths.length} 个文件：`);
     savedPaths.forEach((path, index) => console.log(`  ${index + 1}. ${path}`));
 
     return finalApiJson;
@@ -473,22 +416,32 @@ async function generateComponentApiJson(componentDir, outputPath = "../code-to-a
     process.exit(1);
   }
 }
+
 /**
  * 命令行执行入口
  */
 async function main() {
-  // 接收命令行参数：组件根目录、[输出路径]
-  const componentDir = process.argv[2];
-  const outputPath = process.argv[3] || "../code-to-api-json-log-2";
+  // 调整参数顺序：[来源类型] <组件根目录> [输出路径]
+  const sourceType = process.argv[2] || "code"; // 来源类型作为第一个参数
+  const componentDir = process.argv[3];         // 组件目录作为第二个参数
+  const outputPath = process.argv[4] || "../code-to-api-json-log-2";
 
   if (!componentDir) {
     console.error("请提供组件源码根目录路径，例如：");
-    console.error("node generate-component-api-json.js D:\\OSPP\\element-plus\\packages\\components\\form");
+    console.error("node generate-component-api-json.js [来源类型(code|npm)] <组件目录> [输出路径]");
+    console.error("示例1: node generate-component-api-json.js code ./components/form");
+    console.error("示例2: node generate-component-api-json.js npm ./npm-components/select ./output");
+    process.exit(1);
+  }
+
+  // 验证来源类型有效性
+  if (!["code", "npm"].includes(sourceType)) {
+    console.error(`无效的来源类型: ${sourceType}，必须是"code"或"npm"`);
     process.exit(1);
   }
 
   // 执行主流程
-  await generateComponentApiJson(componentDir, outputPath);
+  await generateComponentApiJson(componentDir, sourceType, outputPath);
 }
 
 // 命令行直接运行时执行主函数
@@ -499,6 +452,5 @@ if (require.main === module) {
 // 对外导出核心函数（支持其他模块调用）
 module.exports = {
   generateComponentApiJson,
-  readAndConcatFiles,
   generateApiJsonWithLLM
 };

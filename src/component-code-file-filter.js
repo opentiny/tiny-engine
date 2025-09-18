@@ -150,6 +150,102 @@ async function analyzeComponentApiFiles(componentDir) {
 }
 
 /**
+ * 读取筛选出的API文件内容，拼接为总字符串（包含文件路径标识）
+ * @param {Array<{filePath: string, fileName: string}>} filteredFiles - 筛选出的API文件列表
+ * @param {string} componentDir - 组件根目录（用于拼接文件绝对路径）
+ * @returns {string} 包含所有文件路径和内容的总字符串
+ */
+function readAndConcatFiles(filteredFiles, componentDir) {
+  if (!Array.isArray(filteredFiles) || filteredFiles.length === 0) {
+    throw new Error("没有需要分析的API文件");
+  }
+
+  let totalContent = "以下是Element Plus组件的API相关文件内容，包含文件路径和源码：\n\n";
+
+  filteredFiles.forEach((file, index) => {
+    // 拼接文件绝对路径
+    const absolutePath = path.isAbsolute(file.filePath)
+      ? file.filePath
+      : path.join(componentDir, file.filePath);
+
+    if (!fs.existsSync(absolutePath)) {
+      console.warn(`⚠️ 文件 ${absolutePath} 不存在，跳过读取`);
+      return;
+    }
+
+    // 读取文件内容
+    const fileContent = fs.readFileSync(absolutePath, "utf-8");
+
+    // 用分隔符标识不同文件，明确标注相对路径（便于大模型定位信息来源）
+    totalContent += `===== 第 ${index + 1} 个文件 - 相对路径：${file.filePath} =====\n`;
+    totalContent += `文件内容：\n${fileContent}\n\n`;
+  });
+
+  // 保存文件拼接内容，用于调试
+  const savedPath = saveContentToFile(totalContent);
+
+  return totalContent;
+}
+
+/**
+ * 保存文件内容到指定目录
+ * @param {string} content - 要保存的文件内容
+ * @param {string} [saveDir='../code-file-content'] - 保存的目录，默认为上级目录下的 code-file-content
+ * @returns {string} 保存的文件路径
+ */
+function saveContentToFile(content, saveDir = '../code-file-content') {
+  // 解析为绝对路径（基于当前脚本所在目录）
+  const absoluteSaveDir = path.isAbsolute(saveDir)
+    ? saveDir
+    : path.join(__dirname, saveDir);
+
+  // 确保目录存在
+  if (!fs.existsSync(absoluteSaveDir)) {
+    fs.mkdirSync(absoluteSaveDir, { recursive: true });
+  }
+
+  // 生成唯一文件名（时间戳 + 随机数）
+  const timestamp = Date.now();
+  const randomNum = Math.floor(Math.random() * 1000);
+  const fileName = `code_content_${timestamp}_${randomNum}.txt`;
+  const saveFilePath = path.join(absoluteSaveDir, fileName);
+
+  // 写入文件
+  fs.writeFileSync(saveFilePath, content, 'utf-8');
+  console.log(`✅ 已将内容保存到：${saveFilePath}`);
+
+  return saveFilePath;
+}
+
+/**
+ * 筛选API文件并拼接内容的组合函数
+ * @param {string} componentDir - 组件根目录
+ * @returns {Promise<{filteredFiles: Array, combinedContent: string, componentName: string}>}
+ */
+async function filterAndConcatApiCodeFiles(componentDir) {
+  console.log("🔍 正在筛选组件的API相关文件...");
+  const { filteredFiles } = await analyzeComponentApiFiles(componentDir);
+  if (filteredFiles.length === 0) {
+    throw new Error("未筛选出任何包含API信息的文件");
+  }
+  console.log(`✅ 筛选完成，共找到 ${filteredFiles.length} 个API文件：`);
+  filteredFiles.forEach((file, index) => console.log(`  ${index + 1}. ${file.filePath}`));
+
+  // 读取所有筛选文件的内容，拼接为总字符串
+  console.log("\n📄 正在读取并拼接文件内容...");
+  const componentName = path.basename(componentDir)
+    .replace(/^(\w)/, (match) => match.toUpperCase());
+  const combinedContent = readAndConcatFiles(filteredFiles, componentDir);
+  console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
+  
+  return {
+    filteredFiles,
+    combinedContent,
+    componentName
+  };
+}
+
+/**
  * 主流程 - 命令行执行入口
  */
 async function main() {
@@ -199,5 +295,8 @@ if (require.main === module) {
 module.exports = {
   analyzeComponentApiFiles,
   getAllFiles,
-  checkFileWithLLM
+  checkFileWithLLM,
+  filterAndConcatApiCodeFiles,
+  readAndConcatFiles,
+  saveContentToFile
 };

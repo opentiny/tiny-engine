@@ -79,10 +79,11 @@ function saveSchemaToFile(schema, subComponentName) {
  * 单个子组件API转tinyEngine schema（内部函数，不直接导出）
  * @param {object} apiObj - 单个子组件的API对象
  * @param {string} model - 大模型名称
+ * @param {Array<string>} relatedSubComponents - 所有关联的子组件名称列表
  * @param {boolean} save - 是否保存到文件
  * @returns {Promise<object>} 包含子组件名和schema的对象
  */
-async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", save = true) {
+async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", relatedSubComponents = [], save = true) {
   const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
   console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
 
@@ -100,11 +101,9 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 
 ### 前置检查：输入信息验证
 **必需输入**：从网页提取的组件 API 信息，包含以下核心字段：
-- \`component\`：组件名称（如 "Button"）
-- \`version\`：组件版本（如 "2.3.4"）
-- \`description\`：组件描述
+- \`name\`：组件名称（如 "Button"）
 - \`components\`：子组件集合（如主组件、Group 组件），每个子组件包含：
-  - \`properties\`：属性数组（含 name、description、type、default、enumOptions 等）
+  - （可选）\`properties\`：属性数组（含 name、description、type、default、enumOptions 等）
   - （可选）\`slots\`：插槽数组（含 name、description 等）
   - （可选）\`events\`：事件数组（含 name、description、parameters 等）
 - （可选）\`notes\`：组件备注（含废弃说明、使用提示等）
@@ -126,11 +125,11 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
   - 若 \`notes\` 中有明确图标提示（如 "图标使用 'calendar'"），则优先使用该值（保持原大小写）
 - \`group\`：根据组件库识别，如 element - plus 组件填 "element - plus"
 - \`category\`：根据组件库识别，如 element - plus 组件填 "element - plus"
-- \`description\`：直接使用输入的 \`description\` 值
+- \`description\`：直接使用输入的 \`description\` 值，否则根据组件信息自行识别
 - \`tags\`：从 \`description\` 提取核心关键词（如 "按钮"→["操作","交互"]）
 - \`keywords\`：同 \`tags\`，补充组件名英文（如 ["Button","按钮","操作"]）
 - \`doc_url\`：直接使用输入的 \`url\` 值，否则默认为空
-- \`version\`：直接使用输入的 \`version\` 值
+- \`version\`：直接使用输入的 \`version\` 值，否则默认为空
 - \`devMode\`：固定为 "proCode"
 
 #### 2. \`npm\` 对象构建
@@ -257,6 +256,8 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
       - 基础组件（如 ElButton、ElInput）：通过 props 配置业务常用属性（如按钮 type、输入框 placeholder），通过 children 承载文本或辅助组件（如按钮嵌套 Text 组件）。
       - 容器 / 复合组件（如 ElTable、ElForm）：可单独配置 props（如表格用 data/columns 定义数据与列）、单独配置 children（如表单嵌套 ElFormItem），或两者结合，优先匹配组件原生主流用法。
       - **父-子依赖组件（重点）**：若组件为“容器型父组件”，且存在“必须依赖的子组件”（无则无法正常使用），则 **必须在 schema.children 中包含对应子组件**，禁止用 Text 组件替代。
+        - **关联子组件信息**：当前组件的所有关联子组件为：${relatedSubComponents.join(", ")}。
+        - 构造 schema.children 时，若“容器型父组件”需嵌套子组件，**优先从上述关联子组件中选择**（如 ElTabs 需嵌套 ElTabPane、ElSelect 需嵌套 ElOption）。
     
     - **父-子依赖组件的识别标准**（满足任一即可判定）：
       1. **名称关联性**：父组件名称与子组件名称存在明显从属关系（如 ElTabs ↔ ElTabPane、ElSelect ↔ ElOption、ElDropdown ↔ ElDropdownItem）；
@@ -1304,7 +1305,7 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
     console.log(`子组件[${subComponentName}]：parsedSchema 类型 = ${typeof parsedSchema}`);
     console.log(`子组件[${subComponentName}]：parsedSchema 是数组 = ${Array.isArray(parsedSchema)}`);
 
-    // -------------------------- 优化：强制处理数组为单个对象 --------------------------
+    // 强制处理数组为单个对象
     let validSchema = null;
     if (Array.isArray(parsedSchema)) {
       console.log(`子组件[${subComponentName}]：检测到数组格式（长度=${parsedSchema.length}），开始处理`);
@@ -1398,6 +1399,15 @@ async function batchConvertToTinyEngineSchema(
     throw new Error("输入必须是非空的API对象数组（来自extractApiFromUrl）");
   }
 
+  // 收集所有关联子组件名称
+  const allSubComponentNames = new Set();
+  apiArray.forEach(apiObj => {
+    const subCompName = Object.keys(apiObj.components)[0];
+    if (subCompName) allSubComponentNames.add(subCompName);
+  });
+  const relatedSubComponents = Array.from(allSubComponentNames);
+  console.log(`已收集所有关联子组件（共${relatedSubComponents.length}个）：${relatedSubComponents.join(", ")}`);
+
   // 校验并发数（避免非法值，最小1，最大建议不超过10）
   const validConcurrentLimit = Math.max(1, Math.min(concurrentLimit, 10));
   console.log(`\n=== 开始批量转换 ===`);
@@ -1425,7 +1435,7 @@ async function batchConvertToTinyEngineSchema(
       const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
       try {
         console.log(`[批次${batchNumber}] 开始转换子组件：${subComponentName}`);
-        const result = await convertSingleSubComponent(apiObj, model, save);
+        const result = await convertSingleSubComponent(apiObj, model, relatedSubComponents, save);
         console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
         return result; // 成功结果（含subComponentName、schema等）
       } catch (error) {
@@ -1463,8 +1473,8 @@ async function batchConvertToTinyEngineSchema(
 }
 
 /**
- * 解析命令行参数（新增--config支持）
- * @returns {Object} 包含解析后的参数（url, componentDir, outputPath, configPath）
+ * 解析命令行参数（新增--sourceType支持）
+ * @returns {Object} 包含解析后的参数（url, componentDir, outputPath, configPath, sourceType）
  */
 function parseCommandLineArgs() {
   const args = process.argv.slice(2);
@@ -1485,8 +1495,12 @@ function parseCommandLineArgs() {
         result.outputPath = args[i + 1];
         i++;
         break;
-      case '--config': // 新增：解析配置文件路径
+      case '--config':
         result.configPath = args[i + 1];
+        i++;
+        break;
+      case '--sourceType': // 新增：解析来源类型参数
+        result.sourceType = args[i + 1];
         i++;
         break;
       default:
@@ -1501,11 +1515,22 @@ function parseCommandLineArgs() {
     process.exit(1);
   }
 
+  // 验证：文件夹模式必须提供sourceType
+  if (result.componentDir) {
+    // 设置默认值为code，同时验证有效性
+    result.sourceType = result.sourceType || 'code';
+    if (!['code', 'npm'].includes(result.sourceType)) {
+      console.error(`无效的sourceType: ${result.sourceType}，必须是"code"或"npm"`);
+      console.log('示例：node convertor.js --dir ./components/button --sourceType code');
+      process.exit(1);
+    }
+  }
+
   // 验证：无有效参数时提示用法
   if (!result.url && !result.componentDir) {
-    console.error('请提供 URL（需配合 --config）或组件文件夹路径作为参数！');
+    console.error('请提供 URL（需配合 --config）或组件文件夹路径（需配合 --sourceType）作为参数！');
     console.log('用法1（URL 爬取）: node convertor.js --url https://xxx --config ./config.json');
-    console.log('用法2（文件夹生成）: node convertor.js --dir ./components/button [--output ./output]');
+    console.log('用法2（文件夹生成）: node convertor.js --dir ./components/button --sourceType [code|npm] [--output ./output]');
     process.exit(1);
   }
 
@@ -1527,12 +1552,12 @@ function parseCommandLineArgs() {
 /**
  * 主函数（支持两种方式获取子组件数组）
  * 方式1：通过URL爬取 - 用法: node convertor.js --url https://xxx --config ./config.json
- * 方式2：通过组件文件夹生成 - 用法: node convertor.js --dir ./components/button [--output ./output]
+ * 方式2：通过组件文件夹生成 - 用法: node convertor.js --sourceType [code|npm] --dir ./components/button [--output ./output]
  */
 async function main() {
   try {
     // 解析命令行参数
-    const { url, componentDir, outputPath, configPath } = parseCommandLineArgs();
+    const { url, componentDir, outputPath, configPath, sourceType } = parseCommandLineArgs();
 
     let apiArray;
 
@@ -1540,15 +1565,14 @@ async function main() {
     if (url) {
       // 方式1：URL 爬取（需读取配置文件）
       console.log(`开始爬取 URL: ${url}`);
-      // 读取并解析配置文件
       const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      // 传递 config 到爬取函数
       apiArray = await extractApiFromUrl(url, config); 
       console.log(`爬取完成：共 ${apiArray.length} 个子组件`);
     } else if (componentDir) {
-      // 方式2：组件文件夹生成
-      console.log(`开始处理组件文件夹: ${componentDir}`);
-      apiArray = await generateComponentApiJson(componentDir, outputPath);
+      // 方式2：组件文件夹生成（传入sourceType参数）
+      console.log(`开始处理组件文件夹: ${componentDir}（来源类型：${sourceType}）`);
+      // 调用时传入sourceType参数，对应generateComponentApiJson的参数顺序：componentDir, sourceType, outputPath
+      apiArray = await generateComponentApiJson(componentDir, sourceType, outputPath);
 
       if (!Array.isArray(apiArray) || apiArray.length === 0) {
         throw new Error("生成的API数组为空或格式不正确");
