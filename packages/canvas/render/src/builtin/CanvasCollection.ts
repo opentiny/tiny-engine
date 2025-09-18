@@ -183,7 +183,7 @@ return new Promise((resolve, reject) => {
 this.dataSourceMap.${sourceName}.load().then((res) => {
   // 如果按照数据源面板的建议格式编写dataHandler
   // 那么dataSourceMap的res格式应该是：{ code: string, msg: string, data: {items: any[], total: number} }
-  resolve({ result: res?.data?.items ||  res?.data, page: { total: res?.data?.total || res?.total || res.data.length } });
+  resolve({ result: res?.data?.items || res?.data?.data || res?.data, page: { total: res?.data?.total || res?.data?.data?.length || res?.data?.length } });
 });
 });
 }`
