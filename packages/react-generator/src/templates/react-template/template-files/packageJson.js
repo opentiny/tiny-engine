@@ -17,17 +17,16 @@ export default (schema) => {
       // '@opentiny/react': 'latest',
       // '@opentiny/react-icon': 'latest',
       axios: 'latest',
-      antd: 'latest',
       'axios-mock-adapter': '^1.19.0',
       react: '^18.3.1',
       'react-dom': '^18.3.1',
       'react-router-dom': '^6.27.0',
-      '@vitejs/plugin-react': 'latest',
-      "@ant-design/icons": "^6.0.0",
-      "antd": "5.0.0",
+      '@vitejs/plugin-react': '^3.1.0',
+      '@ant-design/icons': '^6.0.0',
+      antd: '5.0.0'
     },
     devDependencies: {
-      vite: '^4.3.7'
+      vite: '^4.5.5'
     }
   }
 
