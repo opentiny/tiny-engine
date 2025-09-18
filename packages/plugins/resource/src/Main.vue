@@ -48,7 +48,6 @@ import ResourceSetting, { openResourceSettingPanel, closeResourceSettingPanel } 
 import ResourceList, { openResourceListPanel, closeResourceListPanel } from './ResourceList.vue'
 import { fetchResourceGroupByAppId } from './js/http'
 
-/* metaComponent: engine.plugins.resource */
 export default {
   components: {
     PluginPanel,

@@ -76,7 +76,7 @@
 <script lang="ts">
 import { ref, watch } from 'vue'
 import type { Component } from 'vue'
-import { Popover as TinyPopover, Button as TinyButton, Input, Search, Select, Divider, Radio } from '@opentiny/vue'
+import { Popover as TinyPopover, TinyButton, Input, Search, Select, Divider, Radio } from '@opentiny/vue'
 import { iconClose, iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -99,7 +99,7 @@ export default {
     TinyInput: Input,
     TinySearch: Search,
     TinySelect: Select,
-    TinyDivider: Divider,
+    TinyDivider: Divider as Component,
     TinyRadio: Radio,
     SearchEmpty,
     TinyIconClose: iconClose(),

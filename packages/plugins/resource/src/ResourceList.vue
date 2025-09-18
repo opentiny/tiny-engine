@@ -147,7 +147,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import type { Component } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import {
-  Button as TinyButton,
+  TinyButton,
   Divider,
   Grid,
   GridColumn,
@@ -187,7 +187,7 @@ export default {
     PluginSetting,
     SvgButton,
     TinyButton: TinyButton as Component,
-    TinyDivider: Divider,
+    TinyDivider: Divider as Component,
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     TinyInput: Input,
@@ -496,7 +496,7 @@ export default {
   align-items: start;
   .resource-description {
     padding: 8px 0;
-    color: #808080;
+    color: var(--te-resource-manage-tip-text-color);
   }
 
   .action-wrap {
@@ -536,7 +536,7 @@ export default {
       .source-image-wrap {
         width: 185px;
         height: 120px;
-        background-color: #f5f5f5;
+        background-color: var(--te-resource-manage-draggable-row-bg-color-hover);
         transition: unset;
         position: relative;
 
@@ -563,7 +563,7 @@ export default {
           text-align: left;
           line-height: 28px;
           width: 185px;
-          color: #fff;
+          color: var(--te-resource-manage-button-text-color);
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -589,7 +589,7 @@ export default {
             background-color: rgba(0, 0, 0, 0.2);
 
             svg {
-              fill: #fff;
+              fill: var(--te-resource-manage-button-text-color);
             }
           }
         }

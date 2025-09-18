@@ -36,7 +36,7 @@
 /* metaService: engine.plugins.resource.ResourceSetting */
 import { ref, reactive, computed } from 'vue'
 import type { Component } from 'vue'
-import { Button as TinyButton, Collapse, CollapseItem, Form, FormItem, Input } from '@opentiny/vue'
+import { TinyButton, Collapse, CollapseItem, Form, FormItem, Input } from '@opentiny/vue'
 import { useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { PluginSetting, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { createResourceGroup, updateResourceGroup } from './js/http'
