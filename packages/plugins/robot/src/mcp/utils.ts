@@ -53,7 +53,7 @@ export const serializeError = (err: unknown): string => {
 }
 
 const formatToolResult = (
-  toolResult: string | { type: 'text'; content: unknown } | Array<{ type: 'text'; content: unknown }>
+  toolResult: string | { type: 'text'; text: string } | Array<{ type: 'text'; text: string }>
 ) => {
   let result: any = toolResult
   if (Array.isArray(result) && result.length === 1) {
