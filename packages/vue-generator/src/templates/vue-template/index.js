@@ -4,7 +4,7 @@ import getPackageJson from './templateFiles/packageJson'
 import gitIgnoreFile from './templateFiles/.gitignore?raw'
 import entryHTMLFile from './templateFiles/index.html?raw'
 import logoImage from './templateFiles/public/favicon.ico'
-import mainJSFile from './templateFiles/src/main.js?raw'
+import mainJSFile from './templateFiles/src/main.js'
 import appVueFile from './templateFiles/src/App.vue?raw'
 import bridgeFile from './templateFiles/src/lowcodeConfig/bridge.js?raw'
 import dataSourceFile from './templateFiles/src/lowcodeConfig/dataSource.js?raw'
@@ -13,6 +13,7 @@ import lowcodeStoreFile from './templateFiles/src/lowcodeConfig/store.js?raw'
 import axiosFile from './templateFiles/src/http/axios.js?raw'
 import axiosConfigFile from './templateFiles/src/http/config.js?raw'
 import httpEntryFile from './templateFiles/src/http/index.js?raw'
+import styleCSSFile from './templateFiles/src/style.css?raw'
 
 /**
  * 模板写入动态内容
@@ -79,7 +80,7 @@ const base64ToBlob = (base64Data) => {
  * get project template
  * @returns
  */
-export function generateTemplate(schema) {
+export function generateTemplate(schema, options) {
   const res = [
     {
       fileType: 'md',
@@ -91,13 +92,13 @@ export function generateTemplate(schema) {
       fileType: 'js',
       fileName: 'vite.config.js',
       path: '.',
-      fileContent: genViteConfig(schema)
+      fileContent: genViteConfig(schema, options)
     },
     {
       fileType: 'json',
       fileName: 'package.json',
       path: '.',
-      fileContent: getPackageJson(schema)
+      fileContent: getPackageJson(schema, options)
     },
     {
       fileName: '.gitignore',
@@ -114,7 +115,7 @@ export function generateTemplate(schema) {
       fileType: 'js',
       fileName: 'main.js',
       path: './src',
-      fileContent: getTemplate(schema, mainJSFile)
+      fileContent: getTemplate(schema, mainJSFile(options))
     },
     {
       fileType: 'vue',
@@ -165,6 +166,15 @@ export function generateTemplate(schema) {
       fileContent: httpEntryFile
     }
   ]
+
+  if (options?.enableTailwindCSS) {
+    res.push({
+      fileType: 'css',
+      fileName: 'style.css',
+      path: './src',
+      fileContent: styleCSSFile
+    })
+  }
 
   try {
     const faviconData = base64ToBlob(logoImage)

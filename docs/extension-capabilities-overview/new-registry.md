@@ -271,6 +271,47 @@ export default {
 更多高级特性，请参考 [注册表高级配置](./new-registry-advanced.md)。
 
 
+## Tailwind CSS 支持
+
+TinyEngine 自 v2.9 起支持在注册表中通过 `engine.config.enableTailwindCSS` 开关启用 Tailwind CSS（默认开启）。
+
+### 开关配置
+
+```javascript
+// registry.js
+export default {
+  'engine.config': {
+    // ...其他配置
+    enableTailwindCSS: true // 开启（默认即为 true）；设为 false 可关闭
+  }
+}
+```
+
+### 启用后的行为
+
+- 预览态：自动按需加载 `@tailwindcss/browser`，使画布/预览中可直接使用 Tailwind 原子类。
+- 出码生成：生成的应用将自动完成以下配置（基于 Tailwind CSS v4 零配置方案）：
+  - 在依赖中添加 `tailwindcss`，并在开发依赖中添加 `@tailwindcss/vite`；
+  - 在 Vite 配置中注册 `tailwindcss()` 插件；
+  - 生成 `src/style.css`，内容包含 `@import "tailwindcss";`；
+  - 在 `src/main.js` 自动引入 `./style.css`。
+
+以上步骤由引擎/出码器自动完成，无需手动干预。
+
+### 关闭 Tailwind
+
+当配置为 `enableTailwindCSS: false` 时：
+
+- 预览态不会加载 `@tailwindcss/browser`；
+- 出码时不会注入与 Tailwind 相关的依赖、Vite 插件及样式文件导入。
+
+### 注意事项
+
+- 预览依赖解析：内置 import-map 已包含 `@tailwindcss/browser` 映射；如使用自定义 CDN/离线环境，请确保该映射可用。
+- 自定义样式：可在生成的 `src/style.css` 中追加自定义样式，或在项目中新增样式文件后自行引入。
+- 运行时渲染：如果您自定义了运行时渲染引擎，请确保在运行时渲染中增加对 Tailwind CSS 的支持。
+
+
 ## Vite 配置要求
 
 **重要说明⚠️**：为了使注册表的 tree-shaking 功能正常工作，您需要在 `vite.config.js` 中配置 `registryPath` 参数，指向您的注册表文件路径。

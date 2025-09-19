@@ -1,11 +1,12 @@
 <template>
   <tiny-popover
-    trigger="hover"
+    :trigger="trigger"
     :open-delay="1000"
     popper-class="toolbar-right-popover"
     append-to-body
     :content="content"
   >
+    <slot></slot>
     <template #reference>
       <span class="icon">
         <span class="icon-hides" v-bind="$attrs">
@@ -36,6 +37,10 @@ export default {
     options: {
       type: Object,
       default: () => ({})
+    },
+    trigger: {
+      type: String,
+      default: 'hover'
     }
   }
 }

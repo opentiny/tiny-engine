@@ -2209,6 +2209,27 @@ export const BUILTIN_COMPONENTS_MAP = [
     package: '@opentiny/tiny-engine-builtin-component',
     version: '^2.0.0',
     destructuring: true
+  },
+  {
+    componentName: 'FormModel',
+    exportName: 'FormModel',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
+  },
+  {
+    componentName: 'TableModel',
+    exportName: 'TableModel',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
+  },
+  {
+    componentName: 'PageModel',
+    exportName: 'PageModel',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
   }
 ]
 

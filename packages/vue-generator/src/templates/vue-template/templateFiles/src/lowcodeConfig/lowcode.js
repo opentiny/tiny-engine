@@ -13,10 +13,10 @@
 import { getCurrentInstance, nextTick, provide, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { I18nInjectionKey } from 'vue-i18n'
-import dataSourceMap from './dataSource'
-import * as utils from '../utils'
-import * as bridge from './bridge'
-import { useStores } from './store'
+import dataSourceMap from '@/lowcodeConfig/dataSource.js'
+import * as utils from '@/utils.js'
+import * as bridge from '@/lowcodeConfig/bridge.js'
+import { useStores } from '@/lowcodeConfig/store.js'
 
 export const lowcodeWrap = (props, context) => {
   const global = {}

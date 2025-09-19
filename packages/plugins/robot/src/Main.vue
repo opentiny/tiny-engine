@@ -124,7 +124,14 @@ import {
   type Component
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useRobot, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useRobot,
+  useHistory,
+  useCanvas,
+  useModal,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
@@ -322,6 +329,7 @@ export default {
             const newValue = JSON.parse(match[1])
             // 使用 applyPatch 修改 Schema
             const result = newValue.reduce(jsonpatch.applyReducer, currentJson)
+            useHistory().addHistory()
 
             sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
             sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
@@ -361,7 +369,8 @@ export default {
             model: robotSettingState.selectedModel.model,
             headers: {
               Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
-            }
+            },
+            baseUrl: robotSettingState.selectedModel.baseUrl
           })
         } catch (error) {
           const { renderContent } = messages.value.at(-1)!
@@ -383,8 +392,13 @@ export default {
         }
         return
       } else {
-        if (requestData.foundationModel) {
-          requestData.foundationModel.stream = true
+        const params = {
+          label: requestData.foundationModel?.label,
+          baseUrl: requestData.foundationModel?.baseUrl,
+          model: requestData.foundationModel?.model,
+          apiKey: requestData.foundationModel?.apiKey,
+          stream: true,
+          messages: requestData.messages
         }
 
         let streamContent = ''
@@ -395,7 +409,7 @@ export default {
         await chatStream(
           {
             requestUrl: '/app-center/api/ai/chat',
-            requestData: { ...requestData.foundationModel, messages: requestData.messages }
+            requestData: params
           },
           {
             onData: (data) => {
@@ -715,20 +729,18 @@ export default {
       // 开始上传
       const formData = new FormData()
       const fileData = retry ? files : files[0]
-      formData.append('modelName', String(sessionProcess.foundationModel.model))
-      formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
       formData.append('file', fileData)
 
       try {
         getMetaApi(META_SERVICE.Http)
-          .post('/app-center/api/ai/uploadFile', formData, {
+          .post('/material-center/api/resource/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then((res) => {
-            if (res?.url) {
-              imageUrl.value = res.url
+            if (res?.resourceUrl) {
+              imageUrl.value = res.resourceUrl
               singleAttachmentItems.value[0].status = 'done'
               singleAttachmentItems.value[0].isUploading = false
               singleAttachmentItems.value[0].messageType = 'success'

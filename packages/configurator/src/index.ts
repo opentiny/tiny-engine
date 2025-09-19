@@ -29,6 +29,13 @@ import SwitchConfigurator from './switch-configurator/SwitchConfigurator.vue'
 import TableColumnsConfigurator from './table-columns-configurator/TableColumnsConfigurator.vue'
 import TabsGroupConfigurator from './tabs-group-configurator/TabsGroupConfigurator.vue'
 import VariableConfigurator from './variable-configurator/VariableConfigurator.vue'
+import BindVariableConfigurator from './bind-variable-configurator/BindVariableConfigurator.vue'
+import ModelConfigurator from './model-configurator/ModelConfigurator.vue'
+import ModelApiConfigurator from './model-api-configurator/ModelApiConfigurator.vue'
+import OperatorGroupConfigurator from './operator-group-configurator/OperatorGroupConfigurator.vue'
+import BasicTagConfigurator from './basic-tag-configurator/BasicTagConfigurator.vue'
+import ClassConfigurator from './class-configurator/ClassConfigurator.vue'
+import SourceSelectConfigurator from './source-select-configurator/SourceSelectConfigurator.vue'
 
 import { I18nInput, MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import './styles/vars.less'
@@ -65,6 +72,13 @@ export {
   TableColumnsConfigurator,
   TabsGroupConfigurator,
   VariableConfigurator,
+  BindVariableConfigurator,
+  ModelConfigurator,
+  ModelApiConfigurator,
+  OperatorGroupConfigurator,
+  BasicTagConfigurator,
+  ClassConfigurator,
+  SourceSelectConfigurator,
   MetaCodeEditor,
   I18nInput as I18nConfigurator,
   MetaCodeEditor as CodeConfigurator,

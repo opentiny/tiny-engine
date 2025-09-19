@@ -44,3 +44,5 @@ export const getPageById = async (id) => getMetaApi(META_SERVICE.Http).get(`/app
 export const getBlockById = async (id) => getMetaApi(META_SERVICE.Http).get(`/material-center/api/block/detail/${id}`)
 export const fetchPageHistory = (pageId) =>
   getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/histories?page=${pageId}`)
+
+export const fetchPageList = (appId) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/list/${appId}`)
