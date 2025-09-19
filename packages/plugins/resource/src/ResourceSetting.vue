@@ -90,7 +90,7 @@ export default {
         {
           type: 'string',
           validator: (rule, value, callback) => {
-            const regex = /^[a-zA-Z0-9_\-\u4e00-\u9fa5]+$/
+            const regex = /^[\w\-\u4e00-\u9fa5]+$/
             if (!regex.test(value)) {
               callback(new Error('分组名称只能包含中文、英文、数字、下划线、中划线等字符'))
             } else {
