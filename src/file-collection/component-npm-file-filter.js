@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../.env" });
 const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
@@ -211,7 +211,7 @@ function getAllCoreFilesFromEntry(entryPath, componentDir, keywords) {
 function processImportExport(name, importPath, entryDir, componentDir, keywords, coreFiles) {
   // 判断1：导入/导出名称是否包含任一关键词（不区分大小写）
   const nameLower = name.toLowerCase();
-  const nameHasKeyword = Array.from(keywords).some(keyword => 
+  const nameHasKeyword = Array.from(keywords).some(keyword =>
     nameLower.includes(keyword)
   );
   if (!nameHasKeyword) return;
@@ -524,10 +524,10 @@ function getRootIndexFiles(componentDir) {
 function readFileWithFallback(filePath, baseDir) {
   try {
     // 无需再提取纯路径，直接使用传入的路径
-    const absolutePath = path.isAbsolute(filePath) 
-      ? filePath 
+    const absolutePath = path.isAbsolute(filePath)
+      ? filePath
       : path.join(baseDir, filePath);
-    
+
     if (!absolutePath.startsWith(baseDir) || !fs.existsSync(absolutePath)) {
       console.warn(`⚠️ 文件不存在或超出目录范围：${absolutePath}`);
       return "";
@@ -542,40 +542,11 @@ function readFileWithFallback(filePath, baseDir) {
 }
 
 /**
- * 辅助函数：保存拼接后的内容到文件（用于调试）
- * @param {string} content - 拼接后的总内容
- * @param {string} [saveDir] - 保存目录
- * @returns {string} 保存的文件路径
- */
-function saveConcatContentToFile(content, saveDir = '../npm-api-file-content') {
-  const absoluteSaveDir = path.isAbsolute(saveDir)
-    ? saveDir
-    : path.join(__dirname, saveDir);
-
-  // 确保目录存在
-  if (!fs.existsSync(absoluteSaveDir)) {
-    fs.mkdirSync(absoluteSaveDir, { recursive: true });
-  }
-
-  // 生成唯一文件名（组件目录名 + 时间戳）
-  const timestamp = Date.now();
-  const fileName = `npm_api_concat_${timestamp}.txt`;
-  const saveFilePath = path.join(absoluteSaveDir, fileName);
-
-  // 写入文件
-  fs.writeFileSync(saveFilePath, content, 'utf-8');
-  console.log(`✅ 拼接内容已保存到：${saveFilePath}`);
-
-  return saveFilePath;
-}
-
-/**
  * 筛选组件API文件并拼接内容（按组件聚合非空API信息及文件源码）
  * @param {string} componentDir - 组件根目录
  * @returns {Promise<{combinedContent: string, componentNames: string[], savedPath: string}>}
  *  - combinedContent: 拼接后的总内容
  *  - componentNames: 识别到的组件名称列表
- *  - savedPath: 拼接内容的保存路径
  */
 async function filterAndConcatApiNpmFiles(componentDir) {
   // 1. 前置校验：目录有效性
@@ -656,15 +627,12 @@ async function filterAndConcatApiNpmFiles(componentDir) {
     combinedContent += `\n========================================\n\n`;
   });
 
-  // 4. 保存拼接结果（用于调试）
   console.log(`✅ 内容拼接完成（总长度：${combinedContent.length} 字符）`);
-  const savedPath = saveConcatContentToFile(combinedContent);
 
-  // 5. 返回结果
+  // 4. 返回结果
   return {
     combinedContent,    // 拼接后的总内容（供大模型使用）
-    componentNames,     // 识别到的组件名称列表
-    savedPath           // 拼接内容的本地保存路径
+    componentNames     // 识别到的组件名称列表
   };
 }
 
@@ -683,14 +651,16 @@ async function main() {
   }
 
   try {
-    // 若传入第3个参数为 "concat"，则执行拼接逻辑
+    // // 命令行第3个参数（"concat"）用于区分两种运行模式
+    // 模式1：带"concat"参数 - 筛选并拼接API文件内容（供后续处理）
     if (process.argv[3] === "concat") {
-      const { combinedContent, componentNames, savedPath } = await filterAndConcatApiNpmFiles(componentDir);
+      const { combinedContent, componentNames } = await filterAndConcatApiNpmFiles(componentDir);
       console.log(`\n🎉 拼接任务完成！`);
       console.log(`- 涉及组件：${componentNames.join(", ")}`);
       console.log(`- 内容长度：${combinedContent.length} 字符`);
-      console.log(`- 保存路径：${savedPath}`);
-    } else {
+    }
+    // 模式2：无"concat"参数 - 分析API文件分布（供调试/查看）
+    else {
       const apiResults = await analyzeComponentApiMap(componentDir);
 
       // 输出最终结果
@@ -700,19 +670,19 @@ async function main() {
       console.log(`   高2：.vue.d.ts文件（slot优先）`);
       console.log(`   低：其他符合条件的文件`);
       console.log("=".repeat(100));
-  
+
       apiResults.forEach((result, index) => {
         console.log(`\n${index + 1}. 组件：${result.component}`);
         console.log(`   📋 Props定义文件（${result.props.length}个）：`);
         result.props.length > 0
           ? result.props.forEach(p => console.log(`     - ${p}`))
           : console.log("     - 未找到");
-  
+
         console.log(`   📢 Emits定义文件（${result.emits.length}个）：`);
         result.emits.length > 0
           ? result.emits.forEach(e => console.log(`     - ${e}`))
           : console.log("     - 未找到");
-  
+
         console.log(`   🧩 Slots定义文件（${result.slots.length}个）：`);
         result.slots.length > 0
           ? result.slots.forEach(s => console.log(`     - ${s}`))

@@ -5,7 +5,7 @@
 
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../.env" });
 const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
@@ -181,40 +181,7 @@ function readAndConcatFiles(filteredFiles, componentDir) {
     totalContent += `文件内容：\n${fileContent}\n\n`;
   });
 
-  // 保存文件拼接内容，用于调试
-  const savedPath = saveContentToFile(totalContent);
-
   return totalContent;
-}
-
-/**
- * 保存文件内容到指定目录
- * @param {string} content - 要保存的文件内容
- * @param {string} [saveDir='../code-file-content'] - 保存的目录，默认为上级目录下的 code-file-content
- * @returns {string} 保存的文件路径
- */
-function saveContentToFile(content, saveDir = '../code-file-content') {
-  // 解析为绝对路径（基于当前脚本所在目录）
-  const absoluteSaveDir = path.isAbsolute(saveDir)
-    ? saveDir
-    : path.join(__dirname, saveDir);
-
-  // 确保目录存在
-  if (!fs.existsSync(absoluteSaveDir)) {
-    fs.mkdirSync(absoluteSaveDir, { recursive: true });
-  }
-
-  // 生成唯一文件名（时间戳 + 随机数）
-  const timestamp = Date.now();
-  const randomNum = Math.floor(Math.random() * 1000);
-  const fileName = `code_content_${timestamp}_${randomNum}.txt`;
-  const saveFilePath = path.join(absoluteSaveDir, fileName);
-
-  // 写入文件
-  fs.writeFileSync(saveFilePath, content, 'utf-8');
-  console.log(`✅ 已将内容保存到：${saveFilePath}`);
-
-  return saveFilePath;
 }
 
 /**
@@ -297,6 +264,5 @@ module.exports = {
   getAllFiles,
   checkFileWithLLM,
   filterAndConcatApiCodeFiles,
-  readAndConcatFiles,
-  saveContentToFile
+  readAndConcatFiles
 };

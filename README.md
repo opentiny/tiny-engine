@@ -1,3 +1,18 @@
+项目目录：
+src/
+├── file-collection/          # 1. 文件收集层：从源码/NPM包收集API相关文件
+│   ├── component-code-file-filter.js  # 从组件源码收集文件
+│   └── component-npm-file-filter.js   # 从NPM包收集文件
+├── api-generation/           # 2. API生成层：生成“组件API结构化JSON数组”
+│   ├── file-based-api-generator.js    # （原generate-component-api-json.js）从文件生成API
+│   └── web-based-api-generator.js       # （原generic-api-crawler.js）从网页爬取生成API
+├── schema-conversion/        # 3. Schema转换层：将API转为物料Schema
+│   └── convertor.js
+├── post-processing/          # 4. 后处理层：对生成的Schema做后续加工
+│   ├── post-process-schemas.js
+│   └── multi-component-handlers/  # 后处理的子模块（保持原有结构）
+└── utils/                    # （可选）通用工具层：抽离公共工具函数（如文件操作、日志）
+
 1. 安装必要的依赖：
    npm init -y
    npm install langchain puppeteer openai dotenv

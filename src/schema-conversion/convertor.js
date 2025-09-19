@@ -2,10 +2,6 @@ require('dotenv').config({ path: '../.env' });
 const { OpenAI } = require("openai");
 const fs = require('fs');
 const path = require('path');
-const { postProcessSchemas } = require('./post-process-schemas');
-const { extractElementPlusApiFromUrl } = require('./element-api-crawler');
-const { extractApiFromUrl } = require('./generic-api-crawler');
-const { generateComponentApiJson } = require('./generate-component-api-json');
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -15,79 +11,17 @@ const client = new OpenAI({
 });
 
 /**
- * 将生成的schema保存到项目根目录的schema-log文件夹
- * @param {string} schema - 大模型返回的schema字符串（可能包含```json标识）
- * @param {string} subComponentName - 子组件名（用于文件名区分）
- */
-function saveSchemaToFile(schema, subComponentName) {
-  try {
-    let cleanedSchema = schema.trim();
-    const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
-    const match = cleanedSchema.match(codeBlockRegex);
-
-    if (match && match[2]) {
-      cleanedSchema = match[2].trim();
-      console.log(`子组件[${subComponentName}]：已移除代码块标识`);
-    } else {
-      console.log(`子组件[${subComponentName}]：未检测到代码块标识`);
-    }
-
-    if (!cleanedSchema) {
-      throw new Error(`子组件[${subComponentName}]：清理后schema为空`);
-    }
-
-    // 解析schema为JSON
-    let parsedSchema;
-    try {
-      parsedSchema = JSON.parse(cleanedSchema);
-      console.log(`子组件[${subComponentName}]：schema解析成功`);
-    } catch (parseError) {
-      const errorLogPath = path.join(__dirname, `../schema-log/parse-error-${subComponentName}-${new Date().getTime()}.json`);
-      fs.writeFileSync(errorLogPath, cleanedSchema, 'utf8');
-      throw new Error(`子组件[${subComponentName}]：schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
-    }
-
-    // 定义保存目录
-    const schemaDir = path.join(__dirname, '../schema-log');
-    if (!fs.existsSync(schemaDir)) {
-      fs.mkdirSync(schemaDir, { recursive: true });
-      console.log(`已创建schema保存目录：${schemaDir}`);
-    }
-
-    // 生成文件名（含子组件名）
-    const timestamp = new Date().getTime();
-    const components = Array.isArray(parsedSchema) ? parsedSchema : [parsedSchema];
-
-    components.forEach((componentSchema, index) => {
-      const componentName = componentSchema.component
-        ? componentSchema.component.replace(/[^a-zA-Z0-9]/g, '-')
-        : `${subComponentName}-unknown-${index}`;
-
-      const fileName = `${componentName}-${timestamp}.json`;
-      const filePath = path.join(schemaDir, fileName);
-      const content = JSON.stringify(componentSchema, null, 2);
-      fs.writeFileSync(filePath, content, 'utf8');
-      console.log(`子组件[${subComponentName}]：schema已保存至：${filePath}`);
-    });
-
-  } catch (error) {
-    console.error(`保存子组件[${subComponentName}] schema失败：${error.message}`);
-  }
-}
-
-/**
- * 单个子组件API转tinyEngine schema（内部函数，不直接导出）
+ * 初始化任务上下文并构建Prompt
  * @param {object} apiObj - 单个子组件的API对象
- * @param {string} model - 大模型名称
- * @param {Array<string>} relatedSubComponents - 所有关联的子组件名称列表
- * @param {boolean} save - 是否保存到文件
- * @returns {Promise<object>} 包含子组件名和schema的对象
+ * @param {Array<string>} relatedSubComponents - 关联子组件列表
+ * @returns {object} 包含子组件名和Prompt消息的对象
  */
-async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B", relatedSubComponents = [], save = true) {
+function initContextAndBuildPrompt(apiObj, relatedSubComponents) {
+  // 只解析一次子组件名，避免重复计算
   const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
   console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
 
-  console.log(`[任务${subComponentName} Prompt构建] 开始组装system和user指令（含组件API数据）`);
+  console.log(`[任务${subComponentName} Prompt构建] 开始组装指令（含组件API数据）`);
   const messages = [
     {
       role: "system",
@@ -1242,129 +1176,245 @@ async function convertSingleSubComponent(apiObj, model = process.env.OPENAI_MODE
 组件API内容: ${JSON.stringify(apiObj, null, 2)}`
     }
   ];
-  // console.log(`[任务${subComponentName} Prompt构建完成] 指令总长度（字符数）：${JSON.stringify(messages).length}`);
-  console.log(`[任务${subComponentName} API调用准备] 即将向模型${model}发起请求`);
 
-  // 记录开始时间（毫秒级时间戳）
+  return { subComponentName, messages };
+}
+
+/**
+ * 调用OpenAI模型，含耗时统计
+ * @param {Array<{role: string, content: string}>} messages - Prompt消息
+ * @param {string} model - 模型名称
+ * @param {string} subComponentName - 子组件名（用于日志）
+ * @returns {Promise<{schemaText: string, duration: number}>} 模型响应 + 耗时（秒）
+ */
+async function callOpenAIModel(messages, model, subComponentName) {
+  // 记录开始时间
   const taskStartTime = Date.now();
-  const taskStartISO = new Date(taskStartTime).toISOString(); // 可读性更好的ISO时间
+  const taskStartISO = new Date(taskStartTime).toISOString();
   console.log(`[任务${subComponentName}] 开始执行 | 时间：${taskStartISO} | 时间戳：${taskStartTime}`);
 
-  // 调用OpenAI API
+  // 调用API
+  console.log(`[任务${subComponentName} API调用] 向模型${model}发起请求`);
   const completion = await client.chat.completions.create({
     model: model,
     messages,
     temperature: 0.2,
-    // max_tokens: 16384,
     max_tokens: 65536,
-    // stream: true
   });
-
-  console.log("[任务${subComponentName}] 正在等待大模型生成...")
-  const schemaText = completion.choices[0].message.content;
 
   // 记录结束时间
   const taskEndTime = Date.now();
   const taskEndISO = new Date(taskEndTime).toISOString();
-  const duration = (taskEndTime - taskStartTime) / 1000; // 耗时（秒）
+  const duration = (taskEndTime - taskStartTime) / 1000;
   console.log(`[任务${subComponentName}] 执行完成 | 时间：${taskEndISO} | 耗时：${duration.toFixed(2)}秒`);
 
-  console.log(`[任务${subComponentName} 响应结果] 生成的schema文本长度（字符数）：${schemaText.length}`);
+  const schemaText = completion.choices[0].message.content;
+  console.log(`[任务${subComponentName} 响应] 生成文本长度：${schemaText.length} 字符`);
+  return { schemaText, duration };
+}
 
-  let parsedSchema = null;
-  let success = false;
+/**
+ * 清理文本中的代码块标识（如```json）
+ * @param {string} text - 待清理的文本
+ * @returns {string} 清理后的纯文本
+ */
+function cleanCodeBlock(text) {
+  const trimmedText = text.trim();
+  const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
+  const match = trimmedText.match(codeBlockRegex);
+  return match && match[2] ? match[2].trim() : trimmedText;
+}
 
-  // 保存文件
-  if (save) {
-    // console.log(`[任务${subComponentName} 文件保存] 开始调用saveSchemaToFile，保存内容长度：${schemaText.length}字符`);
-    saveSchemaToFile(schemaText, subComponentName);
+/**
+ * 清理响应文本（移除代码块标识）
+ * @param {string} schemaText - 模型返回的原始文本
+ * @param {string} subComponentName - 子组件名（用于日志）
+ * @returns {string} 清理后的文本
+ */
+function cleanSchemaResponse(schemaText, subComponentName) {
+  const cleanedSchema = cleanCodeBlock(schemaText);
+  if (cleanedSchema !== schemaText.trim()) {
+    console.log(`[任务${subComponentName} 清理] 移除代码块标识 | 清理后长度：${cleanedSchema.length}`);
+  } else {
+    console.log(`[任务${subComponentName} 清理] 未检测到代码块标识，直接使用原始文本`);
   }
 
-  // 数据清理日志：记录清理过程（是否移除代码块标识）
-  // console.log(`[任务${subComponentName} 数据清理] 开始处理schema文本（移除可能的代码块标识）`);
+  if (!cleanedSchema) {
+    throw new Error(`清理后schema为空`);
+  }
+  return cleanedSchema;
+}
 
-  // 清理并解析schema（确保返回JSON对象）
+/**
+ * 解析JSON并校验Schema完整性
+ * @param {string} cleanedText - 清理后的文本
+ * @param {string} subComponentName - 子组件名（用于日志/错误）
+ * @param {string} schemaLogDir - 日志存储目录
+ * @returns {object} 校验后的schema + 成功标识
+ */
+function parseAndValidateSchema(
+  cleanedText, 
+  subComponentName,
+  schemaLogDir = path.resolve(__dirname, '../../schema-log')
+) {
+  let parsedSchema = JSON.parse(cleanedText);
+  console.log(`[任务${subComponentName} 解析] 类型：${typeof parsedSchema} | 数组：${Array.isArray(parsedSchema)}`);
+
+  // 处理数组格式（强制转为单个对象）
+  let validSchema = null;
+  if (Array.isArray(parsedSchema)) {
+    const validItems = parsedSchema.filter(item => item?.component && item?.schema);
+    if (validItems.length === 0) {
+      throw new Error(`数组中无有效schema（需包含component和schema字段）`);
+    } else if (validItems.length === 1) {
+      validSchema = validItems[0];
+      console.log(`[任务${subComponentName} 解析] 数组转单个对象成功`);
+    } else {
+      validSchema = validItems[0];
+      console.warn(`⚠️  任务${subComponentName}：输入单个组件却返回${validItems.length}个schema（取第一个）`);
+      // 保存异常日志
+      const warnLogPath = path.join(schemaLogDir, `warn-multi-schema-${subComponentName}-${Date.now()}.json`);
+      fs.writeFileSync(warnLogPath, JSON.stringify(validItems, null, 2), 'utf8');
+    }
+  } else {
+    // 非数组：校验核心字段
+    if (!parsedSchema?.component || !parsedSchema?.schema) {
+      throw new Error(`缺少核心字段（component + schema）`);
+    }
+    validSchema = parsedSchema;
+  }
+
+  // 最终校验
+  if (!validSchema?.schema) {
+    throw new Error(`最终schema缺少核心schema字段`);
+  }
+  return { validSchema, success: true };
+}
+
+/**
+ * 单个子组件API转tinyEngine schema
+ * @param {object} apiObj - 单个子组件的API对象
+ * @param {string} model - 大模型名称
+ * @param {Array<string>} relatedSubComponents - 所有关联的子组件名称列表
+ * @param {boolean} save - 是否保存到文件
+ * @param {string} schemaLogDir - 日志文件存储目录
+ * @returns {Promise<object>} 包含子组件名和schema的对象
+ */
+async function convertSingleSubComponent(
+  apiObj,
+  model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
+  relatedSubComponents = [],
+  save = true,
+  schemaLogDir = path.resolve(__dirname, '../../schema-log')
+) {
+  let schemaText = null; // 保存原始响应文本，供错误时使用
   try {
-    let cleanedSchema = schemaText.trim();
-    const codeBlockRegex = /^```(json|javascript|js|)\s*([\s\S]*?)\s*```$/i;
-    const match = cleanedSchema.match(codeBlockRegex);
+    // 1. 初始化上下文 + 构建Prompt
+    const { subComponentName, messages } = initContextAndBuildPrompt(apiObj, relatedSubComponents);
 
-    // if (match && match[2]) cleanedSchema = match[2].trim();
-    if (match && match[2]) {
-      cleanedSchema = match[2].trim();
-      console.log(`[任务${subComponentName} 数据清理成功] 检测到JSON代码块标识，已移除 | 清理后长度：${cleanedSchema.length}`);
-    } else {
-      console.log(`[任务${subComponentName} 数据清理] 未检测到代码块标识，直接使用原始文本`);
-    }
-    if (!cleanedSchema) {
-      throw new Error(`子组件[${subComponentName}]：清理后schema为空`);
-    }
+    // 2. 调用大模型
+    const { schemaText: rawText } = await callOpenAIModel(messages, model, subComponentName);
+    schemaText = rawText; // 暂存原始文本，供错误处理使用
 
-    parsedSchema = JSON.parse(cleanedSchema);
-    // 新增日志：打印 parsedSchema 的类型和结构
-    console.log(`子组件[${subComponentName}]：parsedSchema 类型 = ${typeof parsedSchema}`);
-    console.log(`子组件[${subComponentName}]：parsedSchema 是数组 = ${Array.isArray(parsedSchema)}`);
+    // 3. 清理响应文
+    const cleanedText = cleanSchemaResponse(schemaText, subComponentName);
 
-    // 强制处理数组为单个对象
-    let validSchema = null;
-    if (Array.isArray(parsedSchema)) {
-      console.log(`子组件[${subComponentName}]：检测到数组格式（长度=${parsedSchema.length}），开始处理`);
+    // 4. 解析并校验Schema
+    const { validSchema, success } = parseAndValidateSchema(cleanedText, subComponentName, schemaLogDir);
 
-      // 1. 过滤数组中有效子元素（必须包含component和schema字段，符合单组件输入预期）
-      const validItems = parsedSchema.filter(item => item?.component && item?.schema);
-
-      if (validItems.length === 0) {
-        // 无有效元素：直接抛出错误
-        throw new Error(`子组件[${subComponentName}]：数组中无有效schema（需包含component和schema字段）`);
-      } else if (validItems.length === 1) {
-        // 仅1个有效元素：提取为单个对象（符合输入预期）
-        validSchema = validItems[0];
-        console.log(`子组件[${subComponentName}]：数组中仅1个有效元素，已提取为单个schema对象`);
-      } else {
-        // 多个有效元素：属于异常情况（输入单个组件却返回多组件）
-        // 取第一个有效元素作为主schema，同时告警提示异常
-        validSchema = validItems[0];
-        console.warn(`⚠️  子组件[${subComponentName}]：输入单个组件却返回${validItems.length}个有效schema（异常），已默认取第一个元素`);
-        // 可选：记录异常到日志文件（便于后续排查大模型Prompt问题）
-        const warnLogPath = path.join(__dirname, `../schema-log/warn-multi-schema-${subComponentName}-${new Date().getTime()}.json`);
-        fs.writeFileSync(warnLogPath, JSON.stringify(validItems, null, 2), 'utf8');
-        console.warn(`⚠️  异常详情已保存至：${warnLogPath}`);
-      }
-    } else {
-      // 非数组格式：直接校验核心字段（component + schema）
-      if (!parsedSchema?.component || !parsedSchema?.schema) {
-        throw new Error(`子组件[${subComponentName}]：schema缺少核心字段（需同时包含component和schema）`);
-      }
-      validSchema = parsedSchema;
-      console.log(`子组件[${subComponentName}]：非数组格式，核心字段校验通过`);
+    // 5. 按需保存文件（校验成功后再保存）
+    if (save && success) {
+      saveSchemaToFile(validSchema, subComponentName, false, schemaLogDir);
     }
 
-    // -------------------------- 校验最终schema的完整性 --------------------------
-    if (validSchema?.schema) {
-      console.log(`子组件[${subComponentName}]：最终schema包含核心schema字段，结构正常`);
-    } else {
-      throw new Error(`子组件[${subComponentName}]：最终schema缺少核心schema字段，无法使用`);
+    console.log(`[任务${subComponentName}]：转换完成`);
+    return {
+      subComponentName,
+      schema: validSchema,
+      rawSchemaText: schemaText,
+      success: success
+    };
+
+  } catch (error) {
+    // 错误处理：保存原始文本（供调试）
+    const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
+    if (schemaText && save) {
+      console.log(`调试：准备保存错误日志，schemaText类型=${typeof schemaText}`);
+      saveSchemaToFile(schemaText, subComponentName, true, schemaLogDir); // 标记为错误日志
     }
+    console.error(`[任务${subComponentName}] 转换失败：${error.message}`);
 
-    // 更新为处理后的有效schema（确保是单个对象）
-    parsedSchema = validSchema;
-
-    success = true;
-  } catch (parseError) {
-    // console.warn(`子组件[${subComponentName}]：schema文本解析为JSON失败，返回原始文本`, parseError.message);
-    // parsedSchema = schemaText; // 解析失败时返回原始文本，便于后续调试
-    const errorLogPath = path.join(__dirname, `../schema-log/parse-error-${subComponentName}-${new Date().getTime()}.json`);
-    fs.writeFileSync(errorLogPath, cleanedSchema, 'utf8');
-    throw new Error(`子组件[${subComponentName}]：schema解析失败: ${parseError.message}，原始内容已保存至${errorLogPath}`);
+    return {
+      subComponentName,
+      schema: null,
+      rawSchemaText: schemaText,
+      success: false,
+      error: error.message
+    };
   }
+}
 
-  console.log(`[任务${subComponentName}]：转换完成`);
-  return {
-    subComponentName,
-    schema: parsedSchema, // 返回解析后的JSON对象（或原始文本）
-    rawSchemaText: schemaText, // 额外返回原始文本，便于追溯,
-    success: success
-  };
+/**
+ * 将生成的schema保存到指定目录
+ * @param {object|string} schema - 校验后的schema对象 或 原始文本（仅错误时）
+ * @param {string} subComponentName - 子组件名（用于文件名区分）
+ * @param {boolean} isError - 是否为错误日志（true时保存原始文本）
+ * @param {string} schemaLogDir - 日志存储目录
+ */
+function saveSchemaToFile(
+  schema,
+  subComponentName,
+  isError = false,
+  schemaLogDir = path.resolve(__dirname, '../../schema-log')
+) {
+  try {
+    let cleanedSchema, parsedSchema;
+
+    // 错误日志：直接保存原始文本（无需解析）
+    if (isError) {
+      parsedSchema = { error: "解析失败，此为原始文本" };
+      // 关键修复：根据schema类型转为字符串
+      if (typeof schema === 'object' && schema !== null) {
+        // 如果是对象（比如错误对象），序列化为JSON字符串
+        cleanedSchema = JSON.stringify(schema, null, 2);
+      } else {
+        // 如果是字符串/其他类型，直接转为字符串
+        cleanedSchema = String(schema);
+      }
+    }
+    // 正常保存：处理校验后的schema对象
+    else {
+      if (typeof schema !== "object") {
+        throw new Error("正常保存时，schema必须是对象");
+      }
+      parsedSchema = schema;
+      cleanedSchema = JSON.stringify(parsedSchema, null, 2); // 直接序列化对象
+    }
+
+    // 定义保存目录
+    const schemaDir = path.resolve(schemaLogDir); // 确保绝对路径
+    if (!fs.existsSync(schemaDir)) {
+      fs.mkdirSync(schemaDir, { recursive: true });
+      console.log(`已创建schema保存目录：${schemaDir}`);
+    }
+
+    // 生成文件名（含子组件名+类型标识）
+    const timestamp = new Date().getTime();
+    const fileType = isError ? "error-raw" : "valid-schema";
+    const componentName = parsedSchema.component
+      ? parsedSchema.component.replace(/[^a-zA-Z0-9]/g, '-')
+      : `${subComponentName}-unknown`;
+    const fileName = `${fileType}-${componentName}-${timestamp}.json`;
+    const filePath = path.join(schemaDir, fileName);
+
+    // 写入文件
+    fs.writeFileSync(filePath, cleanedSchema, 'utf8');
+    const logType = isError ? "错误原始文本" : "有效schema";
+    console.log(`子组件[${subComponentName}]：${logType}已保存至：${filePath}`);
+
+  } catch (error) {
+    console.error(`保存子组件[${subComponentName}] 文件失败：${error.message}`);
+  }
 }
 
 /**
@@ -1383,20 +1433,22 @@ function splitIntoBatches(array, batchSize) {
 
 /**
  * 批量转换API数组为tinyEngine schema数组（改进：支持分批并行处理）
- * @param {Array} apiArray - extractApiFromUrl返回的子组件API对象数组
+ * @param {Array} apiArray - api-generation返回的子组件API对象数组
  * @param {string} model - 大模型名称（可选，默认用环境变量）
  * @param {boolean} save - 是否保存到文件（可选，默认true）
  * @param {number} concurrentLimit - 并发数上限（可选，默认3，支持环境变量配置）
+ * @param {string} schemaLogDir - 日志文件存储目录
  * @returns {Promise<Array>} 子组件schema结果数组（每个元素含子组件名、schema对象、原始文本）
  */
 async function batchConvertToTinyEngineSchema(
   apiArray,
   model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
   save = true,
-  concurrentLimit = 5 // 新增：并发数配置
+  concurrentLimit = 5,
+  schemaLogDir = path.resolve(__dirname, '../../schema-log')
 ) {
   if (!Array.isArray(apiArray) || apiArray.length === 0) {
-    throw new Error("输入必须是非空的API对象数组（来自extractApiFromUrl）");
+    throw new Error("输入必须是非空的API对象数组");
   }
 
   // 收集所有关联子组件名称
@@ -1435,7 +1487,7 @@ async function batchConvertToTinyEngineSchema(
       const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
       try {
         console.log(`[批次${batchNumber}] 开始转换子组件：${subComponentName}`);
-        const result = await convertSingleSubComponent(apiObj, model, relatedSubComponents, save);
+        const result = await convertSingleSubComponent(apiObj, model, relatedSubComponents, save, schemaLogDir);
         console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
         return result; // 成功结果（含subComponentName、schema等）
       } catch (error) {
@@ -1472,145 +1524,7 @@ async function batchConvertToTinyEngineSchema(
   return conversionResults;
 }
 
-/**
- * 解析命令行参数（新增--sourceType支持）
- * @returns {Object} 包含解析后的参数（url, componentDir, outputPath, configPath, sourceType）
- */
-function parseCommandLineArgs() {
-  const args = process.argv.slice(2);
-  const result = {};
-
-  // 遍历解析参数
-  for (let i = 0; i < args.length; i++) {
-    switch (args[i]) {
-      case '--url':
-        result.url = args[i + 1];
-        i++;
-        break;
-      case '--dir':
-        result.componentDir = args[i + 1];
-        i++;
-        break;
-      case '--output':
-        result.outputPath = args[i + 1];
-        i++;
-        break;
-      case '--config':
-        result.configPath = args[i + 1];
-        i++;
-        break;
-      case '--sourceType': // 新增：解析来源类型参数
-        result.sourceType = args[i + 1];
-        i++;
-        break;
-      default:
-        console.warn(`忽略未知参数: ${args[i]}`);
-    }
-  }
-
-  // 验证：URL 模式必须提供配置文件
-  if (result.url && !result.configPath) {
-    console.error('通过 --url 爬取时，必须使用 --config 指定配置文件路径！');
-    console.log('示例：node convertor.js --url https://xxx --config ./your-config.json');
-    process.exit(1);
-  }
-
-  // 验证：文件夹模式必须提供sourceType
-  if (result.componentDir) {
-    // 设置默认值为code，同时验证有效性
-    result.sourceType = result.sourceType || 'code';
-    if (!['code', 'npm'].includes(result.sourceType)) {
-      console.error(`无效的sourceType: ${result.sourceType}，必须是"code"或"npm"`);
-      console.log('示例：node convertor.js --dir ./components/button --sourceType code');
-      process.exit(1);
-    }
-  }
-
-  // 验证：无有效参数时提示用法
-  if (!result.url && !result.componentDir) {
-    console.error('请提供 URL（需配合 --config）或组件文件夹路径（需配合 --sourceType）作为参数！');
-    console.log('用法1（URL 爬取）: node convertor.js --url https://xxx --config ./config.json');
-    console.log('用法2（文件夹生成）: node convertor.js --dir ./components/button --sourceType [code|npm] [--output ./output]');
-    process.exit(1);
-  }
-
-  // 验证：配置文件存在性
-  if (result.configPath && !fs.existsSync(result.configPath)) {
-    console.error(`指定的配置文件不存在: ${result.configPath}`);
-    process.exit(1);
-  }
-
-  // 验证：组件文件夹存在性
-  if (result.componentDir && !fs.existsSync(result.componentDir)) {
-    console.error(`指定的组件文件夹不存在: ${result.componentDir}`);
-    process.exit(1);
-  }
-
-  return result;
-}
-
-/**
- * 主函数（支持两种方式获取子组件数组）
- * 方式1：通过URL爬取 - 用法: node convertor.js --url https://xxx --config ./config.json
- * 方式2：通过组件文件夹生成 - 用法: node convertor.js --sourceType [code|npm] --dir ./components/button [--output ./output]
- */
-async function main() {
-  try {
-    // 解析命令行参数
-    const { url, componentDir, outputPath, configPath, sourceType } = parseCommandLineArgs();
-
-    let apiArray;
-
-    // 1. 根据参数类型获取子组件数组
-    if (url) {
-      // 方式1：URL 爬取（需读取配置文件）
-      console.log(`开始爬取 URL: ${url}`);
-      const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-      apiArray = await extractApiFromUrl(url, config); 
-      console.log(`爬取完成：共 ${apiArray.length} 个子组件`);
-    } else if (componentDir) {
-      // 方式2：组件文件夹生成（传入sourceType参数）
-      console.log(`开始处理组件文件夹: ${componentDir}（来源类型：${sourceType}）`);
-      // 调用时传入sourceType参数，对应generateComponentApiJson的参数顺序：componentDir, sourceType, outputPath
-      apiArray = await generateComponentApiJson(componentDir, sourceType, outputPath);
-
-      if (!Array.isArray(apiArray) || apiArray.length === 0) {
-        throw new Error("生成的API数组为空或格式不正确");
-      }
-      console.log(`组件API生成完成：共 ${apiArray.length} 个子组件`);
-    } else {
-      throw new Error("未提供有效的URL或组件文件夹路径");
-    }
-
-    // 2. 批量转换
-    const conversionResults = await batchConvertToTinyEngineSchema(apiArray);
-
-    // 3. 输出转换结果
-    console.log('\n--- 转换结果明细 ---');
-    conversionResults.forEach((item, index) => {
-      const status = item.success === false ? '❌ 失败' : '✅ 成功';
-      const msg = item.success === false ? `| 原因：${item.error}` : '';
-      console.log(`[${index + 1}] 子组件[${item.subComponentName}]：${status} ${msg}`);
-    });
-
-    // 4. 后续处理
-    console.log('\n--- 开始后续处理 ---');
-    const finalResults = postProcessSchemas(conversionResults);
-    console.log('\n--- 批量转换全部完成 ---');
-    return finalResults;
-
-  } catch (error) {
-    console.error(`整体流程失败: ${error.message}`);
-  }
-}
-
-
-// 命令行直接运行时执行主函数
-if (require.main === module) {
-  main();
-}
-
-// 对外导出批量转换函数（原单个转换函数可按需导出，此处优先暴露核心批量函数）
+// 对外导出批量转换函数
 module.exports = {
   batchConvertToTinyEngineSchema,
   convertSingleSubComponent // 可选导出，供调试单个子组件转换

@@ -16,7 +16,7 @@ const client = new OpenAI({
 const NO_PROCESS_RAW = new Set([
   "Button", "ButtonGroup", "button-group", "Checkbox", "checkbox-group",
   "Radio", "radio-button", "Cascader Panel", "Tag", "CheckTag",
-  "Statistic", "Countdown", "Image Viewer", "Select"
+  "Statistic", "Countdown", "Image Viewer", "Image"
 ]);
 
 const MERGE_TABLE_RAW = new Set([
@@ -30,7 +30,8 @@ const REMOVE_SNIPPET_RAW = new Set([
   "Collapse Item", "collapse-item", "DescriptionsItem", "descriptions-item",
   "SkeletonItem", "Timeline-Item", "BreadcrumbItem", "Dropdown-Menu",
   "Dropdown-Item", "TourStep", "AnchorLink", "Step", "Tab-pane",
-  "Tab-nav", "Row", "Col", "Option Group", "option-group", "Option"
+  "Tab-nav", "Row", "Col", "Option Group", "option-group", "Option",
+  "SubMenu", "Menu-Item", "MenuItemGroup", "Header", "Aside", "Main", "Footer"
 ]);
 
 const PARENT_COMPONENTS_RAW = new Set([
@@ -95,9 +96,10 @@ function createStandardizedMap(originalSet) {
 /**
  * 后续处理主函数：接收转换结果，按规则处理后保存
  * @param {Array} conversionResults - batchConvertToTinyEngineSchema 的返回结果
+ * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  * @returns {Array} 处理后的结果（或原始结果，若校验不通过）
  */
-async function postProcessSchemas(conversionResults) {
+async function postProcessSchemas(conversionResults, outputDir) {
   // 1. 校验是否全部转换成功
   const successCount = conversionResults.filter(r => r.success !== false).length;
   const totalCount = conversionResults.length;
@@ -124,13 +126,13 @@ async function postProcessSchemas(conversionResults) {
   // 3. 按结果数量分支处理
   if (validResults.length === 1) {
     console.log("✅ 结果数量为1，无需额外处理，直接保存");
-    saveProcessedSchemas(validResults);
+    saveProcessedSchemas(validResults, outputDir);
     return conversionResults;
   } else if (validResults.length > 1) {
     console.log("🔍 结果数量>1，开始分类处理");
     const processed = processMultiResults(validResults);
 
-    saveProcessedSchemas(processed);
+    saveProcessedSchemas(processed, outputDir);
     console.log("✅ 所有结果后处理完毕，保存到文件");
 
     return processed;
@@ -253,10 +255,11 @@ function processMultiResults(validResults) {
 /**
  * 统一保存处理后的 schema 到文件
  * @param {Array} processedResults - 处理后的结果数组（含 subComponentName 和 schema）
+ * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  */
-function saveProcessedSchemas(processedResults) {
+function saveProcessedSchemas(processedResults, outputDir) {
   processedResults.forEach(item => {
-    saveSchemaToFile(item.schema, item.subComponentName);
+    saveSchemaToFile(item.schema, item.subComponentName, outputDir);
   });
 }
 
@@ -264,12 +267,13 @@ function saveProcessedSchemas(processedResults) {
  * 封装保存逻辑（与原函数保持一致）
  * @param {Object|Array} schema - 已解析的JSON对象或对象数组 
  * @param {string} subComponentName - 子组件名（用于文件名区分）
+ * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  */
-function saveSchemaToFile(schema, subComponentName) {
+function saveSchemaToFile(schema, subComponentName, outputDir) {
   try {
     if (!schema) throw new Error("schema 为空");
 
-    const schemaDir = path.join(__dirname, '../post-process-log');
+    const schemaDir = path.resolve(outputDir);
     if (!fs.existsSync(schemaDir)) {
       fs.mkdirSync(schemaDir, { recursive: true });
       console.log(`已创建目录：${schemaDir}`);
@@ -292,79 +296,6 @@ function saveSchemaToFile(schema, subComponentName) {
   } catch (err) {
     console.error(`子组件[${subComponentName}] 保存失败：${err.message}`);
   }
-}
-
-/**
- * 读取 JSON 文件（回调式异步实现，适配普通版本 fs）
- * @param {string} filePath - 文件路径（支持相对/绝对路径）
- * @returns {Promise<object>} JSON 解析后的对象
- */
-async function readJsonFile(filePath) {
-  const resolvedPath = path.resolve(process.cwd(), filePath);
-
-  // 用 Promise 包裹回调逻辑，保持外部调用方式不变（仍支持 await）
-  return new Promise((resolve, reject) => {
-    // 普通版本 fs.readFile：参数为「路径 + 编码 + 回调函数」
-    fs.readFile(resolvedPath, 'utf8', (err, content) => {
-      if (err) {
-        // 读取失败：打印错误并退出进程
-        console.error(`❌ 读取文件 ${resolvedPath} 失败:`, err.message);
-        process.exit(1);
-      }
-      try {
-        // 解析 JSON 并返回结果
-        const jsonData = JSON.parse(content);
-        resolve(jsonData);
-      } catch (parseErr) {
-        // JSON 解析失败：打印错误并退出进程
-        console.error(`❌ 解析文件 ${resolvedPath} 的 JSON 失败:`, parseErr.message);
-        process.exit(1);
-      }
-    });
-  });
-}
-
-// 命令行直接调用示例（可选，也可通过模块导入使用）
-if (require.main === module) {
-  // 定义要读取的文件路径（可根据实际情况修改）
-  const tableFilePath = '../schema-log/ElTable-1756438316438.json';
-  const columnFilePath = '../schema-log/ElTableColumn-1756438016036.json';
-  const tableV2FilePath = '../schema-log/ElTableV2-1756302838069.json';
-  const v2columnFilePath = '../schema-log/ElColumn-1756302716795.json';
-  const descriptionsItemPath = '../schema-log/ElDescriptionsItem-1755254976983.json';
-  const linkPath = '../schema-log/ElLink-1756182017746.json';
-
-  // 异步读取所有需要的文件并构建 conversionResults
-  async function run() {
-    try {
-      // 1. 读取 Table 的 schema（从指定文件）
-      const tableSchema = await readJsonFile(tableFilePath);
-      const columnSchema = await readJsonFile(columnFilePath);
-      const tableV2Schema = await readJsonFile(tableV2FilePath);
-      const v2columnSchema = await readJsonFile(v2columnFilePath);
-      const descriptionsItemSchema = await readJsonFile(descriptionsItemPath);
-      const linkSchema = await readJsonFile(linkPath);
-
-      // 2. 构建 conversionResults 结构，与原有逻辑兼容
-      const conversionResults = [
-        { subComponentName: "Table", schema: tableSchema, success: true },
-        { subComponentName: "Table-column", schema: columnSchema, success: true },
-        // { subComponentName: "TableV2", schema: tableV2Schema, success: true },
-        // { subComponentName: "Column", schema: v2columnSchema, success: true },
-        // { subComponentName: "DescriptionsItem", schema: descriptionsItemSchema, success: true },
-        // { subComponentName: "Link", schema: linkSchema, success: true }
-      ];
-
-      // 3. 执行后续处理
-      await postProcessSchemas(conversionResults);
-    } catch (error) {
-      console.error("❌ 命令行执行失败:", error.message);
-      process.exit(1);
-    }
-  }
-
-  // 启动执行
-  run();
 }
 
 // 导出函数，供其他脚本调用

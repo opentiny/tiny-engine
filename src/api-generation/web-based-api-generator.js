@@ -32,19 +32,7 @@ function saveApiResult(result, subComponentName) {
 	}
 }
 
-// ---------------- 2. 核心爬取函数 (重构) ----------------
-
-/**
- * 移除名称字符串末尾的数字版本号（支持带v前缀、后缀的版本格式）
- * @param {string} name - 可能包含版本号的名称字符串（如 "scroll 2.9.0"、"button v1.2.3-beta"）
- * @returns {string} 移除版本号后的纯名称字符串（如 "scroll"、"button"）
- */
-function removeVersionFromName(name) {
-	// 正则匹配版本号模式：空格 + 可选v + 数字.数字.数字 + 可选后缀（如-beta）
-	const versionRegex = /\s+v?\d+\.\d+\.\d+[-\w]*/i;
-	return name.replace(versionRegex, '').trim();
-}
-
+// ---------------- 2. 核心爬取函数 ----------------
 /**
  * 爬取组件API信息的主函数
  * @param {string} url 组件文档页面URL
@@ -81,6 +69,13 @@ async function extractApiFromUrl(url, config, retries = 3) {
 		await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
 
 		const result = await page.evaluate(async (config) => {
+
+			// 移除名称字符串末尾的数字版本号（支持带v前缀、后缀的版本格式）（如 "scroll 2.9.0"=>"scroll"、"button v1.2.3-beta"=>"button"）
+			function removeVersionFromName(name) {
+				// 正则匹配版本号模式：空格 + 可选v + 数字.数字.数字 + 可选后缀（如-beta）
+				const versionRegex = /\s+v?\d+\.\d+\.\d+[-\w]*/i;
+				return name.replace(versionRegex, '').trim();
+			}
 			function delay(ms) {
 				return new Promise(resolve => setTimeout(resolve, ms));
 			}
@@ -234,10 +229,10 @@ async function extractApiFromUrl(url, config, retries = 3) {
 		});
 
 		console.log(`成功提取 ${finalResult.name} 的API信息，共${subComponentApiArray.length}个子组件`);
-		subComponentApiArray.forEach(apiObj => {
-			const subKey = Object.keys(apiObj.components)[0];
-			saveApiResult(apiObj, subKey);
-		});
+		// subComponentApiArray.forEach(apiObj => {
+		// 	const subKey = Object.keys(apiObj.components)[0];
+		// 	saveApiResult(apiObj, subKey);
+		// });
 
 		return subComponentApiArray;
 

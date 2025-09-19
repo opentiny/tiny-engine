@@ -5,11 +5,11 @@
 
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config({ path: "../../.env" });
 const { OpenAI } = require("openai");
 // 导入上一个脚本的核心分析函数
-const { filterAndConcatApiCodeFiles } = require("./component-code-file-filter.js");
-const { filterAndConcatApiNpmFiles } = require("./component-npm-file-filter");
+const { filterAndConcatApiCodeFiles } = require("../file-collection/component-code-file-filter.js");
+const { filterAndConcatApiNpmFiles } = require("../file-collection/component-npm-file-filter.js");
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -53,7 +53,7 @@ function cleanAndExtractJson(responseText) {
 /**
  * 调用大模型综合分析所有文件内容，生成结构化API JSON
  * @param {string} combinedContent - 所有文件的拼接内容（含路径标识）
- * @returns {Promise<Object>} 结构化的组件API数据
+ * @returns {Promise<Array<Object>>} 组件 API 数组，每个元素是一个组件的完整 JSON 对象
  */
 async function generateApiJsonWithLLM(combinedContent) {
   // 新增：校验OpenAI客户端配置
@@ -362,11 +362,9 @@ function saveApiArrayToFiles(apiArray, baseDir) {
  * 主函数：串联筛选文件→读取内容→大模型分析→生成JSON
  * @param {string} componentDir - 组件根目录
  * @param {string} [sourceType="code"] - 来源类型，可选值："code"或"npm"
- * @param {string} [outputPath] - 输出JSON文件路径
  * @returns {Promise<Object>} 最终的结构化API JSON
  */
-async function generateComponentApiJson(componentDir, sourceType = "code", outputPath = "../code-to-api-json-log-2") {
-  // 函数实现保持不变...
+async function generateComponentApiJson(componentDir, sourceType = "code") {
   try {
     if (!["code", "npm"].includes(sourceType)) {
       throw new Error(`无效的来源类型: ${sourceType}，必须是"code"或"npm"`);
@@ -398,17 +396,12 @@ async function generateComponentApiJson(componentDir, sourceType = "code", outpu
     console.log("\n2/3 🤖 正在生成结构化API JSON...");
     const finalApiJson = await generateApiJsonWithLLM(combinedContent);
 
-    const saveDir = outputPath;
-    const savedPaths = saveApiArrayToFiles(finalApiJson, saveDir);
-
-    console.log(`\n🎉 结构化API文件生成完成！`);
+    console.log(`\n🎉 结构化API生成完成！`);
     if (componentInfo.type === "single") {
       console.log(`- 组件名称：${componentInfo.name}`);
     } else {
       console.log(`- 识别到组件：${componentInfo.names.join(", ")}`);
     }
-    console.log(`- 共成功保存 ${savedPaths.length} 个文件：`);
-    savedPaths.forEach((path, index) => console.log(`  ${index + 1}. ${path}`));
 
     return finalApiJson;
   } catch (error) {
@@ -424,13 +417,12 @@ async function main() {
   // 调整参数顺序：[来源类型] <组件根目录> [输出路径]
   const sourceType = process.argv[2] || "code"; // 来源类型作为第一个参数
   const componentDir = process.argv[3];         // 组件目录作为第二个参数
-  const outputPath = process.argv[4] || "../code-to-api-json-log-2";
 
   if (!componentDir) {
     console.error("请提供组件源码根目录路径，例如：");
-    console.error("node generate-component-api-json.js [来源类型(code|npm)] <组件目录> [输出路径]");
+    console.error("node generate-component-api-json.js [来源类型(code|npm)] <组件目录>");
     console.error("示例1: node generate-component-api-json.js code ./components/form");
-    console.error("示例2: node generate-component-api-json.js npm ./npm-components/select ./output");
+    console.error("示例2: node generate-component-api-json.js npm ./npm-components/select");
     process.exit(1);
   }
 
@@ -441,7 +433,7 @@ async function main() {
   }
 
   // 执行主流程
-  await generateComponentApiJson(componentDir, sourceType, outputPath);
+  await generateComponentApiJson(componentDir, sourceType);
 }
 
 // 命令行直接运行时执行主函数
