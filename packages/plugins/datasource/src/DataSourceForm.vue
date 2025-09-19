@@ -210,12 +210,14 @@ export default {
     }
 
     const save = async () => {
-      try {
-        // await validate() 如果验证不通过会抛出异常，而不是返回 false
-        await getServiceForm().validate()
-      } catch (error) {
-        activeTabChange('remote')
-        return
+      if (state.dataSource.data.type === 'remote') {
+        try {
+          // await validate() 如果验证不通过会抛出异常，而不是返回 false
+          await getServiceForm().validate()
+        } catch (error) {
+          activeTabChange('remote')
+          return
+        }
       }
       getDataSourceName().validate(async (valid) => {
         if (valid) {
