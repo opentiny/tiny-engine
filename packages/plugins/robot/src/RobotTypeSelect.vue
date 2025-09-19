@@ -45,7 +45,7 @@
 import { reactive, watch } from 'vue'
 import type { Component } from 'vue'
 import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
-import { TALK_TYPE, MCP_TYPE, BUILD_TYPE } from './js/robotSetting'
+import { useRobot } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -56,11 +56,12 @@ export default {
   props: {
     aiType: {
       type: String,
-      default: TALK_TYPE
+      default: 'talk'
     }
   },
   emits: ['typeChange'],
   setup(props, { emit }) {
+    const { TALK_TYPE, MCP_TYPE, BUILD_TYPE } = useRobot()
     const state = reactive({
       activeNameTabs: props.aiType || TALK_TYPE
     })

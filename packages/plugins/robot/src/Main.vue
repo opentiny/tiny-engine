@@ -25,7 +25,7 @@
             >
               <robot-setting-popover
                 v-if="showPopover"
-                :typeValue="selectedModel"
+                :typeValue="robotSettingState.selectedModel"
                 @changeType="changeModel"
                 @close="closePanel"
               ></robot-setting-popover>
@@ -73,7 +73,9 @@
               :clearable="true"
               :showWordLimit="true"
               :allowFiles="
-                singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model) && aiType === BUILD_TYPE
+                singleAttachmentItems.length < 1 &&
+                VISUAL_MODEL.includes(robotSettingState.selectedModel.model) &&
+                aiType === BUILD_TYPE
               "
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
@@ -122,7 +124,7 @@ import {
   type Component
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { useRobot, useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
@@ -138,17 +140,6 @@ import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import { utils } from '@opentiny/tiny-engine-utils'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import {
-  getBlockContent,
-  initBlockList,
-  getAIModelOptions,
-  defaultSelectedModel,
-  isValidFastJsonPatch,
-  VISUAL_MODEL,
-  TALK_TYPE,
-  MCP_TYPE,
-  BUILD_TYPE
-} from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
 import { chatStream, checkComponentNameExists } from './js/utils'
@@ -190,6 +181,17 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
+    const {
+      getBlockContent,
+      initBlockList,
+      getAIModelOptions,
+      isValidFastJsonPatch,
+      VISUAL_MODEL,
+      TALK_TYPE,
+      MCP_TYPE,
+      BUILD_TYPE,
+      robotSettingState
+    } = useRobot()
     const { pageState, importSchema, setSaved } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
@@ -201,7 +203,6 @@ export default {
     const connectedFailed = ref(false)
     const inputContent = ref('')
     const inProcesing = ref(false)
-    const selectedModel = ref(defaultSelectedModel)
     const { confirm } = useModal()
     const showPopover = ref(false)
     const searchContent = ref('')
@@ -226,7 +227,7 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                ...selectedModel.value
+                ...robotSettingState.selectedModel
               },
               messages: [],
               displayMessages: [], // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -357,9 +358,9 @@ export default {
           requestLoading.value = true
           await scrollContent()
           await sendMcpRequest(messages.value, {
-            model: selectedModel.value.model,
+            model: robotSettingState.selectedModel.model,
             headers: {
-              Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
+              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
             }
           })
         } catch (error) {
@@ -451,7 +452,7 @@ export default {
             }
           },
           {
-            Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
+            Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
           }
         )
       }
@@ -557,7 +558,7 @@ export default {
 
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
-      selectedModel.value = {
+      robotSettingState.selectedModel = {
         ...JSON.parse(aiSession)?.foundationModel
       }
       aiType.value = JSON.parse(aiSession)?.aiType
@@ -607,17 +608,19 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.baseUrl !== model.baseUrl || selectedModel.value !== model.model) {
+      if (
+        robotSettingState.selectedModel.baseUrl !== model.baseUrl ||
+        robotSettingState.selectedModel !== model.model
+      ) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = {
+            robotSettingState.selectedModel = {
               label: model.label || model.model,
               activeName: model.activeName,
               baseUrl: model.baseUrl,
               model: model.model,
-              maxTokens: model.maxTokens,
               apiKey: model.apiKey
             }
             singleAttachmentItems.value = []
@@ -627,11 +630,11 @@ export default {
         })
       }
       if (
-        selectedModel.value.apiKey !== model.apiKey &&
-        selectedModel.value.baseUrl === model.baseUrl &&
-        selectedModel.value.model === model.model
+        robotSettingState.selectedModel.apiKey !== model.apiKey &&
+        robotSettingState.selectedModel.baseUrl === model.baseUrl &&
+        robotSettingState.selectedModel.model === model.model
       ) {
-        selectedModel.value.apiKey = model.apiKey
+        robotSettingState.selectedModel.apiKey = model.apiKey
         changeApiKey()
       }
     }
@@ -796,7 +799,7 @@ export default {
       inputContent,
       connectedFailed,
       AIModelOptions,
-      selectedModel,
+      robotSettingState,
       showPopover,
       fullscreen,
       welcomeIcon,
