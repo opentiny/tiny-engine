@@ -32,78 +32,90 @@ export class OperationHandler {
     this.yDoc = docManager.getOrCreateDoc(docName)
   }
 
-  public insert(operation: NodeOperation) {
+  public insert(operation: NodeOperation): { current: Node; previous?: undefined } {
     const { parentId, newNodeData, position, referTargetNodeId } = operation
+    // 父元素不存在，则默认为根节点
     const parentNode = parentId ? this.getYNode(parentId) : this.yMap
 
     if (!parentNode) {
-      return {}
+      // eslint-disable-next-line no-console
+      console.warn(`[Insert Operation] Parent node with ID "${parentId}" not found in schema. Aborting.`)
+      return { current: newNodeData }
     }
 
-    let yChildren = parentNode.get('children') as Y.Array<Y.Map<any>>
-    if (!yChildren) {
-      yChildren = new Y.Array()
-      parentNode.set('children', yChildren)
-    }
-
-    let referenceNode = null
-    if (referTargetNodeId) {
-      referenceNode = this.getYNode(referTargetNodeId)
-      if (!referenceNode) {
-        throw new Error(`Yjs Reference node with ID ${referTargetNodeId} not found`)
+    // 在一个事务中执行所有的 Yjs 修改，以保证原子性
+    this.yDoc.transact(() => {
+      // 获取或创建父节点的 'children' Y.Array
+      let yChildren = parentNode.get('children') as Y.Array<Y.Map<any>>
+      if (!yChildren) {
+        yChildren = new Y.Array()
+        parentNode.set('children', yChildren)
       }
-    }
 
-    // 查找参考节点
-    let index = yChildren.toArray().findIndex((node) => node.get('id') === referTargetNodeId)
+      // 将纯净的、普通的 JavaScript 对象 newNodeData 转换为 Y.Map
+      const yNewNode = new Y.Map()
+      toYjs(yNewNode, newNodeData)
 
-    // 转化为 YMap
-    const yNode = new Y.Map<any>()
-    const yNewNode = new Y.Map()
+      // 查找参考节点在 'children' 数组中的索引
+      const index = yChildren.toArray().findIndex((node) => node.get('id') === referTargetNodeId)
 
-    yNode.set('newNode', yNewNode)
-
-    toYjs(yNewNode, newNodeData)
-
-    // 元信息，用于帮助接收 yMap 变动的客户端进行 UI 更新
-    const yMetaMap = new Y.Map()
-    yNode.set('meta', yMetaMap)
-
-    yMetaMap.set('position', position)
-    yMetaMap.set('referTargetNodeId', referTargetNodeId)
-    yMetaMap.set('parentId', parentId)
-
-    // 根据 position 插入
-    switch (position) {
-      case 'before':
-        index = index === -1 ? 0 : index
-        yChildren.insert(index, [yNode])
-        break
-      case 'out':
-        if (referenceNode) {
-          const childrenNode = Array.isArray(referenceNode) ? [...referenceNode] : [referenceNode]
-          yNode.get('newNode').set('children', childrenNode)
-
-          yChildren.get(index).set('_node_deleted', true)
-          yChildren.insert(index, [yNode])
+      // 根据 'position' 策略，将新节点插入到 'children' 数组的正确位置
+      switch (position) {
+        case 'before': {
+          yChildren.insert(index === -1 ? 0 : index, [yNewNode])
+          break
         }
-        break
-      case 'replace':
-        if (index !== -1) {
-          yChildren.get(index).set('_node_deleted', true)
-          yChildren.insert(index, [yNode])
+        case 'out': {
+          const referenceNode = this.getYNode(referTargetNodeId)
+          if (referenceNode) {
+            const childrenOfReference = referenceNode.get('children')
+            // 如果被包裹的节点有子节点，需要将其子节点也一并带过来
+            if (childrenOfReference instanceof Y.Array) {
+              yNewNode.set('children', childrenOfReference.clone())
+            }
+            // 将被包裹的就节点标记为删除
+            yChildren.get(index)?.set('_node_deleted', true)
+            yChildren.insert(index, [yNewNode])
+          }
+          break
         }
-        break
-      case 'bottom':
-        yChildren.insert(index + 1, [yNode])
-        break
-      default:
-        index = index === -1 ? yChildren.length : index + 1
-        yChildren.insert(index, [yNode])
-        break
-    }
+        case 'replace': {
+          if (index !== -1) {
+            // 将被替换的旧节点标记为删除
+            yChildren.get(index)?.set('_node_deleted', true)
+            yChildren.insert(index, [yNewNode])
+          }
+          break
+        }
+        case 'bottom': {
+          yChildren.insert(index + 1, [yNewNode])
+          break
+        }
+        default: {
+          yChildren.insert(index === -1 ? yChildren.length : index + 1, [yNewNode])
+          break
+        }
+      }
 
-    this.setYNode(newNodeData, yNewNode)
+      // 更新内部的 nodeId -> Y.Map 快速访问映射，以包含这个新节点
+      this.setYNode(newNodeData, yNewNode)
+
+      // 通过事件总线发布操作意图，获取或创建专门用于事件通信的 Y.Map
+      const eventsMap = this.yDoc.getMap('__app_events__')
+
+      const eventPayload = {
+        op: 'insert',
+        parentId,
+        newNodeData,
+        position,
+        referTargetNodeId,
+        timestamp: Date.now()
+      }
+
+      // 使用唯一 ID 发布事件，以便于追踪和删除
+      const eventId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+      eventsMap.set(eventId, eventPayload)
+    }, 'local-insert-operation')
 
     return {
       current: newNodeData,
@@ -111,10 +123,10 @@ export class OperationHandler {
     }
   }
 
-  // 软删除，不去直接删除存在的节点，
-  // 设置 _node_deleted 属性来标记一些已经被删除节点
+  // 处理节点的软删除操作
+  // 它会在目标节点的 Y.Map 上设置 '_node_deleted: true' 标志，
+  // 并通过 '事件总线' 发布一个 'delete' 操作意图。
   public remove(operation: DeleteOperation) {
-    // 获取 Y.Doc 实例，准备开启一个事务
     const { id } = operation
 
     // 找到要标记的节点
@@ -125,7 +137,30 @@ export class OperationHandler {
       return {}
     }
 
-    targetNode.set('_node_deleted', true)
+    // 将 Y.Map 转换回普通 JS 对象，以便在返回和事件负载中使用
+    const previousNodeData = targetNode.toJSON() as Node
+
+    // 开启事务保证原子性
+    this.yDoc.transact(() => {
+      // 在目标节点上设置软删除标志，防止幽灵事件
+      targetNode.set('_node_deleted', true)
+
+      // 获取事件总线
+      const eventsMap = this.yDoc.getMap('__app_events__')
+
+      // 准备事件负载
+      const eventPayload = {
+        op: 'delete',
+        deletedNodeId: id,
+        // TODO: 可以在负载中包含被删除前的数据，便于远程客户端做一些高级处理（如 "恢复" 功能）
+        previousNodeData,
+        timestamp: Date.now()
+      }
+
+      // 使用唯一 ID 发布事件
+      const eventId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
+      eventsMap.set(eventId, eventPayload)
+    }, 'local-delete-operation')
 
     return {
       current: undefined,
@@ -329,30 +364,9 @@ export class OperationHandler {
   }
 
   // 根据 id 获取 Y.Map 节点
-  public getYNode(id: string): Y.Map<any> | undefined {
+  public getYNode(id: string | undefined): Y.Map<any> | undefined {
+    if (!id) return undefined
     return this.yNodeMap.get(id)
-  }
-
-  // 递归地从 yNodeMap 中删除一个节点及其所有后代节点。
-  private recursivelyDeleteFromMap(nodeId: string): void {
-    const nodeToDelete = this.getYNode(nodeId)
-
-    if (nodeToDelete) {
-      const children = nodeToDelete.get('children') as Y.Array<Y.Map<any>> | undefined
-      if (children instanceof Y.Array) {
-        children.toArray().forEach((child) => {
-          if (child instanceof Y.Map) {
-            const childId = child.get('id')
-            if (childId) {
-              this.recursivelyDeleteFromMap(childId)
-            }
-          }
-        })
-      }
-    }
-
-    // 最后，删除当前节点自身的引用
-    this.yNodeMap.delete(nodeId)
   }
 
   // 交换 yArray 两个相邻子项的位置，并使用“事件总线”模式广播操作意图

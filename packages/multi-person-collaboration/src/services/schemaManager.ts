@@ -10,8 +10,14 @@ import { IGNORE_OBSERVER_ORIGIN, ROOT_SCHEMA_MAP } from '../config'
 
 type DiffPatch =
   | { type: 'add' | 'update' | 'delete'; path: (string | number)[]; value?: any }
-  | { type: 'array-insert'; path: (string | number)[]; items: any[] }
-  | { type: 'array-delete'; path: (string | number)[]; count: number; deletedIds: string[] }
+  | {
+      type: 'array-insert'
+      parentId: string
+      newNodeData: any
+      position: string
+      referTargetNodeId: string
+    }
+  | { type: 'array-delete'; deletedId: string; previousNodeData: any }
   | { type: 'text-insert'; path: (string | number)[]; index: number; text: string }
   | { type: 'text-delete'; path: (string | number)[]; index: number; length: number }
   | { type: 'style-update'; path: (string | number)[]; css: string }
@@ -170,7 +176,8 @@ export class SchemaManager {
     }
   }
 
-  // 设置一个专门的监听器来处理来自“事件总线”的自定义操作,处理无法被监听器很好处理的事件
+  // 设置一个专门的监听器来处理来自“事件总线”的自定义操作
+  // 处理无法被 initObserver 监听器很好处理的事件
   public setupEventListeners(docName: string): void {
     // 解绑旧的监听器，防止重复
     if (this.eventListeners.has(docName)) {
@@ -197,6 +204,24 @@ export class SchemaManager {
               schemaId: payload.schemeId,
               targetIndex: payload.targetIndex,
               swapIndex: payload.swapIndex
+            }
+
+            this.applyPatches(docName, [patch])
+          } else if (payload && payload.op === 'insert') {
+            const patch: DiffPatch = {
+              type: 'array-insert',
+              parentId: payload.parentId,
+              newNodeData: payload.newNodeData,
+              position: payload.position,
+              referTargetNodeId: payload.referTargetNodeId
+            }
+
+            this.applyPatches(docName, [patch])
+          } else if (payload && payload.op === 'delete') {
+            const patch: DiffPatch = {
+              type: 'array-delete',
+              deletedId: payload.deletedNodeId,
+              previousNodeData: payload.previousNodeData
             }
 
             this.applyPatches(docName, [patch])
@@ -254,15 +279,9 @@ export class SchemaManager {
         return
       }
 
-      // 在所有事件处理前，中心化地读取一次 meta 信息
-      const deletedNodes = (transaction.meta.get('deletedNodes') || []) as any[]
-      let deletedNodesConsumed = 0 // 用于追踪 meta 信息是否已被消费
-
       const patches: DiffPatch[] = []
 
       for (const event of events) {
-        const basePath = event.path ?? []
-
         // Map 变更
         if (event.target instanceof Y.Map) {
           const yMapNode = event.target
@@ -270,23 +289,7 @@ export class SchemaManager {
           const attributesKey = ['condition', 'loop', 'loopArgs', 'clean']
 
           event.changes.keys.forEach((change, key) => {
-            // 软删除
-            if (key === '_node_deleted') {
-              // 删除逻辑
-              if (change?.action === 'add' || change?.action === 'update') {
-                if (yMapNode.get('_node_deleted') === true) {
-                  const nodeId = yMapNode.get('id')
-                  if (nodeId) {
-                    patches.push({
-                      type: 'array-delete',
-                      path: event.path,
-                      count: 1,
-                      deletedIds: [nodeId]
-                    })
-                  }
-                }
-              }
-            } else if (key === 'className') {
+            if (key === 'className') {
               // 新增样式，为配合 css 更新
               if (change.action === 'add' || change.action === 'update') {
                 const newClassAndId = yMapNode.get('className')
@@ -378,59 +381,6 @@ export class SchemaManager {
             }
           })
         }
-
-        // Array 变更
-        if (event.target instanceof Y.Array) {
-          let index = 0
-          const deltas = (event as Y.YArrayEvent<any>).changes.delta
-          const yArray = event.target // 获取被修改的Y.Array 实例
-
-          for (const d of deltas) {
-            if (d.retain) {
-              index += d.retain
-            }
-
-            if (d.delete) {
-              const patch: DiffPatch = {
-                type: 'array-delete',
-                path: [...basePath, index],
-                count: d.delete,
-                deletedIds: []
-              }
-              // 只有当 meta 中有未被消费的 deletedNodes 时，才进行附加
-              if (deletedNodes.length > deletedNodesConsumed) {
-                // 从已消费的位置开始，切片出本次 delete 操作对应的节点信息
-                const relevantDeletedNodes = deletedNodes.slice(deletedNodesConsumed, deletedNodesConsumed + d.delete)
-
-                patch.deletedIds = relevantDeletedNodes.map((n) => n.id)
-                deletedNodesConsumed += d.delete
-              }
-
-              patches.push(patch)
-            }
-
-            if (d.insert) {
-              const insertCount = d.insert.length
-
-              // 从 event.target (即 yArray) 的当前状态中，切片出新插入的、内容完整的项目
-              const insertedYjsItems = yArray.slice(index, index + insertCount)
-              const items = insertedYjsItems.map((yjsItem) => fromYjs(yjsItem))
-
-              patches.push({
-                type: 'array-insert',
-                path: [...basePath, index],
-                items
-              })
-
-              if (insertedYjsItems.length > 0) {
-                // eslint-disable-next-line no-console
-                console.log('===insert yjsItem[0].toJSON() (from target)===', insertedYjsItems[0].toJSON())
-              }
-
-              index += insertCount
-            }
-          }
-        }
       }
 
       if (patches.length) {
@@ -452,23 +402,19 @@ export class SchemaManager {
     for (const patch of patches) {
       switch (patch.type) {
         case 'array-insert': {
-          patch.items.forEach((item) => {
-            useCanvas().operateNode({
-              type: 'insert',
-              parentId: item.meta.parentId,
-              newNodeData: item.newNode,
-              position: item.meta.position,
-              referTargetNodeId: item.meta.referTargetNodeId
-            })
+          useCanvas().operateNode({
+            type: 'insert',
+            parentId: patch.parentId,
+            newNodeData: patch.newNodeData,
+            position: patch.position,
+            referTargetNodeId: patch.referTargetNodeId
           })
           break
         }
         case 'array-delete': {
-          patch.deletedIds.forEach((item) => {
-            useCanvas().operateNode({
-              type: 'delete',
-              id: item
-            })
+          useCanvas().operateNode({
+            type: 'delete',
+            id: patch.deletedId
           })
           break
         }
@@ -492,18 +438,12 @@ export class SchemaManager {
           node.props.className = className
 
           useMessage().publish({ topic: 'schemaChange', data: {} })
-
-          // const { updateRect } = useCanvas().canvasApi.value
-          // updateRect()
           break
         }
         case 'style-update': {
           const strStyle = patch.css
 
           useCanvas().updateSchema({ css: strStyle })
-
-          // const { updateRect } = useCanvas().canvasApi.value
-          // updateRect()
           break
         }
         case 'props-update': {

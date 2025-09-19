@@ -99,6 +99,12 @@ export function sanitizeSchema(schema: any, keysToFilter: string[]): any {
     return schema
   }
 
+  // 如果对象被标记为软删除，则直接将整个对象过滤掉
+  // 这是最优先的检查，因为如果节点被删除，就无需再处理它的子节点或属性
+  if (schema._node_deleted === true) {
+    return undefined // 返回 undefined，让上层调用者 (Array.filter) 将其移除
+  }
+
   if (Array.isArray(schema)) {
     return schema.map((item) => sanitizeSchema(item, keysToFilter)).filter((item) => item !== undefined)
   }
