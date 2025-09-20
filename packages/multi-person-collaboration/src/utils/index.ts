@@ -94,7 +94,7 @@ export const getValueByPath = (obj: any, path: (string | number)[]): any => {
  * @param keysToFilter - 一个包含需要被移除的键名的数组。
  * @returns 一个只包含纯 UI 数据的、干净的 schema 对象。
  */
-export function sanitizeSchema(schema: any, keysToFilter: string[]): any {
+export function sanitizeSchema(schema: any, keysToFilter?: string[]): any {
   if (typeof schema !== 'object' || schema === null) {
     return schema
   }
@@ -112,7 +112,7 @@ export function sanitizeSchema(schema: any, keysToFilter: string[]): any {
   const sanitizedObject: { [key: string]: any } = {}
   const originalKeys = Object.keys(schema) // 保留原对象的键顺序
   for (const key of originalKeys) {
-    if (keysToFilter.includes(key)) continue
+    if (keysToFilter?.includes(key)) continue
     const child = sanitizeSchema(schema[key], keysToFilter)
     if (child !== undefined) {
       sanitizedObject[key] = child

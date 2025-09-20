@@ -191,11 +191,38 @@ export class OperationHandler {
     const targetIndex = childrenArray.toArray().findIndex((node) => node.get('id') === targetId)
     if (targetIndex === -1) return
 
-    const swapIndex = direction === 'up' ? targetIndex - 1 : targetIndex + 1
-    if (swapIndex < 0 || swapIndex >= childrenArray.length) return
+    let swapIndex = direction === 'up' ? targetIndex - 1 : targetIndex + 1
+
+    // 判断 swapIndex 索引所在的节点是否是已删除节点
+    while (swapIndex >= 0 && swapIndex < childrenArray.length) {
+      const swapNode = childrenArray.get(swapIndex)
+      const isDelete = swapNode.get('_node_deleted') === true || swapNode.get('_node_deleted') === 'true'
+
+      if (!isDelete) {
+        // 不是被删除节点，停止循环
+        break
+      }
+
+      // 如果是被删除节点，则继续往前找或往后找
+      swapIndex = direction === 'up' ? swapIndex - 1 : swapIndex + 1
+    }
+
+    if (swapIndex < 0 || swapIndex >= childrenArray.length) {
+      // eslint-disable-next-line no-console
+      console.warn(`[Move] No valid swap target found for direction: ${direction}`)
+      return
+    }
 
     // 调用交换函数
-    this.swapYArrayElements(childrenArray, targetIndex, swapIndex, parentId, targetId, direction)
+    this.swapYArrayElements(
+      childrenArray,
+      targetIndex,
+      swapIndex,
+      parentId,
+      targetId,
+      childrenArray.get(swapIndex).get('id'),
+      direction
+    )
   }
 
   // 修改节点样式
@@ -376,6 +403,7 @@ export class OperationHandler {
     index2: number,
     parentId: string | undefined,
     schemaId: string,
+    swapId: string,
     direction: 'down' | 'up'
   ): void {
     if (index1 === index2 || index1 < 0 || index2 < 0 || index1 >= yarray.length || index2 >= yarray.length) {
@@ -393,6 +421,7 @@ export class OperationHandler {
       direction,
       parentId,
       schemaId,
+      swapId,
       targetIndex: index1,
       swapIndex: index2,
       timestamp: Date.now()

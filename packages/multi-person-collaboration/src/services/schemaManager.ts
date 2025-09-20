@@ -6,7 +6,7 @@ import type { RootNode, UpdateAttributesRole } from '../type'
 import { fromYjs, sanitizeSchema, toYjs } from '../utils'
 import { toRaw } from 'vue'
 import type { YjsProvider } from './providerManager'
-import { IGNORE_OBSERVER_ORIGIN, ROOT_SCHEMA_MAP } from '../config'
+import { IGNORE_OBSERVER_ORIGIN, INTERNAL_YJS_KEYS, ROOT_SCHEMA_MAP } from '../config'
 
 type DiffPatch =
   | { type: 'add' | 'update' | 'delete'; path: (string | number)[]; value?: any }
@@ -27,11 +27,9 @@ type DiffPatch =
   | { type: 'methods-delete'; path: (string | number)[]; nodeId: string; methodsName: string }
   | {
       type: 'array-swap'
-      direction: 'down' | 'up'
       parentId: string | undefined
       schemaId: string
-      targetIndex: number
-      swapIndex: number
+      swapId: string
     }
   | {
       type: 'methods-add-node'
@@ -126,7 +124,6 @@ export class SchemaManager {
             // eslint-disable-next-line no-console
             console.log(`[${docName}] Remote has data. Importing remote schema to UI.`)
             const rawRemoteSchema = fromYjs(yMap!)
-            const INTERNAL_YJS_KEYS = ['meta', '_methods_deleted', '_node_deleted', 'newNode']
             const cleanSchema = sanitizeSchema(rawRemoteSchema, INTERNAL_YJS_KEYS)
             useCanvas().importSchema(cleanSchema)
           }
@@ -199,13 +196,10 @@ export class SchemaManager {
           if (payload && payload.op === 'move') {
             const patch: DiffPatch = {
               type: 'array-swap',
-              direction: payload.direction,
               parentId: payload.parentId,
-              schemaId: payload.schemeId,
-              targetIndex: payload.targetIndex,
-              swapIndex: payload.swapIndex
+              schemaId: payload.schemaId,
+              swapId: payload.swapId
             }
-
             this.applyPatches(docName, [patch])
           } else if (payload && payload.op === 'insert') {
             const patch: DiffPatch = {
@@ -422,10 +416,15 @@ export class SchemaManager {
           const parentNode = patch.parentId ? useCanvas().getNode(patch.parentId, false) : useCanvas().getPageSchema()
           const childrenArray: any[] = parentNode.children
 
-          if (patch.targetIndex > -1 && patch.swapIndex < childrenArray.length) {
-            ;[childrenArray[patch.targetIndex], childrenArray[patch.swapIndex]] = [
-              childrenArray[patch.swapIndex],
-              childrenArray[patch.targetIndex]
+          // 通过 Id 找到需要交换位置两个节点的索引
+          const targetIndex = childrenArray.findIndex((node) => node.id === patch.schemaId)
+          const swapIndex = childrenArray.findIndex((node) => node.id === patch.swapId)
+
+          // 交换位置
+          if (targetIndex > -1 && swapIndex < childrenArray.length) {
+            ;[childrenArray[targetIndex], childrenArray[swapIndex]] = [
+              childrenArray[swapIndex],
+              childrenArray[targetIndex]
             ]
           }
 
