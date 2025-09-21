@@ -1,7 +1,9 @@
-require('dotenv').config({ path: '../.env' });
+const path = require('path');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
 const { OpenAI } = require("openai");
 const fs = require('fs');
-const path = require('path');
 
 // 初始化OpenAI客户端
 const client = new OpenAI({

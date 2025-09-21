@@ -4,8 +4,11 @@
  */
 
 const fs = require("fs");
-const path = require("path");
-require("dotenv").config({ path: "../../.env" });
+const path = require('path');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
+
 const { OpenAI } = require("openai");
 // 导入上一个脚本的核心分析函数
 const { filterAndConcatApiCodeFiles } = require("../file-collection/component-code-file-filter.js");
@@ -420,9 +423,9 @@ async function main() {
 
   if (!componentDir) {
     console.error("请提供组件源码根目录路径，例如：");
-    console.error("node generate-component-api-json.js [来源类型(code|npm)] <组件目录>");
-    console.error("示例1: node generate-component-api-json.js code ./components/form");
-    console.error("示例2: node generate-component-api-json.js npm ./npm-components/select");
+    console.error("node file-based-api-generator.js [来源类型(code|npm)] <组件目录>");
+    console.error("示例1: node file-based-api-generator.js code ./components/form");
+    console.error("示例2: node file-based-api-generator.js npm ./npm-components/select");
     process.exit(1);
   }
 

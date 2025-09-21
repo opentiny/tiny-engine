@@ -257,7 +257,7 @@ if (require.main === module) {
 	const [url, configPath] = process.argv.slice(2);
 	if (!url || !configPath) {
 		console.error('请提供组件URL和配置文件路径，示例：');
-		console.error('node generic-api-crawler.js "https://element-plus.org/zh-CN/component/button.html" "./refined-element-plus-config.json"');
+		console.error('node web-based-api-generator.js "https://element-plus.org/zh-CN/component/button" "./refined-element-plus-config.json"');
 		process.exit(1);
 	}
 

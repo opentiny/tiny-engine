@@ -4,8 +4,11 @@
  */
 
 const fs = require("fs");
-const path = require("path");
-require("dotenv").config({ path: "../../.env" });
+const path = require('path');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
+
 const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
@@ -218,7 +221,7 @@ async function filterAndConcatApiCodeFiles(componentDir) {
 async function main() {
   const targetDir = process.argv[2];
   if (!targetDir) {
-    console.error("请提供组件源码文件夹路径，例如： node component-api-analyzer.js D:\\OSPP\\element-plus\\packages\\components\\form");
+    console.error("请提供组件源码文件夹路径，例如： node component-code-file-filter.js D:\\OSPP\\element-plus\\packages\\components\\form");
     process.exit(1);
   }
 

@@ -13,6 +13,36 @@ src/
 │   └── multi-component-handlers/  # 后处理的子模块（保持原有结构）
 └── utils/                    # （可选）通用工具层：抽离公共工具函数（如文件操作、日志）
 
+
+LowCode-Material-Import/
+├─ .env                  # 新增：后端服务配置（端口、CORS等）
+├─ server/               # 新增：后端服务核心目录
+│  ├─ index.js           # 后端入口（初始化Express、注册路由）
+│  ├─ routes/            # 路由定义
+│  │  └─ material.js    # 物料导入相关路由
+│  ├─ controllers/       # 控制器（接口逻辑处理）
+│  │  └─ materialController.js # 物料导入核心逻辑
+│  ├─ middlewares/       # 中间件
+│  │  ├─ errorHandler.js # 全局错误处理
+│  │  └─ paramsValidator.js # 参数验证
+│  └─ utils/             # 服务端工具
+│     └─ taskManager.js  # 任务状态管理（追踪流程进度）
+├─ api-generation/       # 原有：API生成模块（不变）
+│  ├─ file-based-api-generator.js
+│  └─ web-based-api-generator.js
+├─ file-collection/      # 原有：文件收集模块（不变）
+│  ├─ component-code-file-filter.js
+│  └─ component-npm-file-filter.js
+├─ post-processing/      # 原有：后处理模块（不变）
+│  ├─ post-process-schemas.js
+│  └─ multi-component-handlers/
+│     ├─ merge-table-columns.js
+│     └─ remove-item-snippets.js
+└─ schema-conversion/    # 原有：Schema转换模块（不变）
+   ├─ cli.js             # 移除命令行入口逻辑（保留工具函数导出）
+   └─ convertor.js
+
+
 1. 安装必要的依赖：
    npm init -y
    npm install langchain puppeteer openai dotenv

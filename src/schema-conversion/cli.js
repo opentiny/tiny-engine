@@ -1,6 +1,8 @@
-require('dotenv').config({ path: '../.env' });
-const fs = require('fs');
 const path = require('path');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
+const fs = require('fs');
 const { postProcessSchemas } = require('../post-processing/post-process-schemas');
 const { extractApiFromUrl } = require('../api-generation/web-based-api-generator');
 const { generateComponentApiJson } = require('../api-generation/file-based-api-generator');
@@ -305,5 +307,6 @@ if (require.main === module) {
 module.exports = {
   main,
   parseCommandLineArgs,
-  saveApiJsonToFile
+  saveApiJsonToFile,
+  saveApiArrayToFiles
 };

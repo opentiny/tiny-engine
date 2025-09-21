@@ -1,6 +1,9 @@
 const fs = require("fs");
-const path = require("path");
-require("dotenv").config({ path: "../../.env" });
+const path = require('path');
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
+
 const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
@@ -643,8 +646,8 @@ async function main() {
   const componentDir = process.argv[2];
   if (!componentDir) {
     console.error("用法1：分析API文件分布");
-    console.error("node component-api-mapper.js <组件目录路径>");
-    console.error("示例：node component-api-mapper.js D:\\element-plus\\es\\components\\select");
+    console.error("node component-npm-file-filter.js <组件目录路径>");
+    console.error("示例：node component-npm-file-filter.js D:\\element-plus\\es\\components\\select");
     console.error("用法2：筛选并拼接API文件内容");
     console.error("node component-npm-file-filter.js <组件目录路径> concat");
     process.exit(1);

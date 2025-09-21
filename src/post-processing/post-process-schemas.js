@@ -1,6 +1,9 @@
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config({ path: '../.env' });
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../.env')
+});
+
 const { OpenAI } = require("openai");
 const { mergeTableColumns } = require('./multi-component-handlers/merge-table-columns');
 const { removeItemSnippets } = require('./multi-component-handlers/remove-item-snippets');
