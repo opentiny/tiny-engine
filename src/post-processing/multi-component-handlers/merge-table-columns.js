@@ -13,7 +13,7 @@ async function readJsonFile(filePath) {
     return JSON.parse(content);
   } catch (error) {
     console.error(`❌ 读取文件 ${resolvedPath} 失败:`, error.message);
-    process.exit(1);
+    throw error;
   }
 }
 

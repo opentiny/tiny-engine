@@ -1,10 +1,22 @@
 const { extractApiFromUrl } = require('../../src/api-generation/web-based-api-generator');
-const { generateComponentApiJson } = require('../../src/api-generation/file-based-api-generator');
+const { generateComponentApiJson,
+  generateComponentApiFromUploadedNpmFiles,
+  generateComponentApiFromUploadedCodeFiles
+} = require('../../src/api-generation/file-based-api-generator');
 const { batchConvertToTinyEngineSchema } = require('../../src/schema-conversion/convertor');
 const { postProcessSchemas } = require('../../src/post-processing/post-process-schemas');
 const { saveApiArrayToFiles } = require('../../src/schema-conversion/cli');
 const { createTask, updateTask, getTask, TASK_STATUS } = require('../utils/taskManager');
 const path = require('path');
+
+const multer = require('multer'); // 处理文件上传的中间件
+const { v4: uuidv4 } = require('uuid'); // 生成临时文件名（可选）
+
+// 配置multer临时存储（仅内存存储，避免磁盘写入）
+const upload = multer({
+  storage: multer.memoryStorage(), // 文件暂存到内存
+  limits: { fileSize: 50 * 1024 * 1024 }, // 限制单文件100MB
+});
 
 /**
  * 创建物料导入任务
@@ -43,12 +55,80 @@ async function createImportTask(req, res, next) {
 }
 
 /**
+ * 新增：创建文件上传导入任务（支持code和npm类型）
+ * @param {Request} req - 包含上传的文件和表单参数
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ */
+async function createFileImportTask(req, res, next) {
+  try {
+    // 1. 校验上传文件和参数
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        code: 400,
+        message: '请上传至少一个组件文件',
+        success: false
+      });
+    }
+    const { sourceType, config: configStr, outputDir, schemaLogDir, apiLogDir } = req.body;
+    if (!sourceType || !['code', 'npm'].includes(sourceType)) {
+      return res.status(400).json({
+        code: 400,
+        message: 'sourceType必须为"code"或"npm"',
+        success: false
+      });
+    }
+
+    // 2. 创建任务并初始化状态
+    const taskParams = {
+      sourceType,
+      config: configStr,
+      outputDir,
+      schemaLogDir,
+      apiLogDir,
+      files: req.files.map(f => ({ originalname: f.originalname, buffer: f.buffer })) // 保留文件信息
+    };
+    const taskId = createTask(taskParams);
+    updateTask(taskId, {
+      status: TASK_STATUS.PROCESSING,
+      step: {
+        name: 'init',
+        message: `文件上传任务创建成功（类型：${sourceType}），开始处理`
+      }
+    });
+
+    // 3. 异步执行核心流程（不阻塞响应）
+    processImportTask(taskId, taskParams).catch(err => {
+      console.error(`文件上传任务${taskId}执行失败：`, err);
+    });
+
+    // 4. 立即返回taskId给前端
+    res.status(200).json({
+      code: 200,
+      message: '文件上传任务创建成功，可通过taskId查询进度',
+      taskId,
+      success: true
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
  * 核心流程执行函数（异步）
  * @param {string} taskId 
  * @param {object} params 
  */
 async function processImportTask(taskId, params) {
-  const { url, componentDir, config: configStr, sourceType, outputDir, schemaLogDir, apiLogDir } = params;
+  const {
+    url,
+    files, // 仅保留文件上传
+    config: configStr,
+    sourceType,
+    outputDir,
+    schemaLogDir,
+    apiLogDir
+  } = params;
   let apiArray;
 
   try {
@@ -75,24 +155,34 @@ async function processImportTask(taskId, params) {
           message: `URL爬取完成，共${apiArray.length}个子组件`
         }
       });
-    } else if (componentDir) {
-      // 途径2：源码/NPM导入
+    } else if (files && files.length > 0) {
+      // 途径2：文件上传（code或npm类型）
       updateTask(taskId, {
         progress: 20,
         step: {
-          name: 'generateApi',
-          message: `开始处理${sourceType}类型组件：${componentDir}`
+          name: 'generateApiFromFiles',
+          message: `开始处理${sourceType}类型上传文件（共${files.length}个）`
         }
       });
-      apiArray = await generateComponentApiJson(componentDir, sourceType);
-      if (!Array.isArray(apiArray) || apiArray.length === 0) {
-        throw new Error('生成的API数组为空或格式不正确');
+
+      // 根据sourceType调用对应的生成函数
+      if (sourceType === 'code') {
+        apiArray = await generateComponentApiFromUploadedCodeFiles(files);
+      } else if (sourceType === 'npm') {
+        apiArray = await generateComponentApiFromUploadedNpmFiles(files);
+      } else {
+        throw new Error(`不支持的文件上传类型：${sourceType}`);
       }
+
+      if (!Array.isArray(apiArray) || apiArray.length === 0) {
+        throw new Error('文件上传生成的API数组为空或格式不正确');
+      }
+
       updateTask(taskId, {
         progress: 40,
         step: {
-          name: 'generateApi',
-          message: `API生成完成，共${apiArray.length}个子组件`
+          name: 'generateApiFromFiles',
+          message: `文件上传API生成完成，共${apiArray.length}个子组件`
         }
       });
     }
@@ -211,15 +301,15 @@ function parseAndValidateConfig(configStr) {
     }
 
     if (!isValid) {
-      const errorMsg = type === 'array' 
-        ? `必须是非空数组` 
+      const errorMsg = type === 'array'
+        ? `必须是非空数组`
         : `必须是${type}类型且非空`;
       throw new Error(`❌ config.${key} ${errorMsg}（${desc}）`);
     }
   }
 
   // 4. 验证components内部字段（确保每个组件有name和tables）
-  const invalidComp = config.components.find(comp => 
+  const invalidComp = config.components.find(comp =>
     !comp.name || !comp.tables || typeof comp.tables !== 'object'
   );
   if (invalidComp) {
@@ -262,5 +352,7 @@ function getTaskStatus(req, res, next) {
 
 module.exports = {
   createImportTask,
-  getTaskStatus
+  createFileImportTask,
+  getTaskStatus,
+  upload
 };

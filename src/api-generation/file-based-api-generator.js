@@ -11,8 +11,8 @@ require('dotenv').config({
 
 const { OpenAI } = require("openai");
 // 导入上一个脚本的核心分析函数
-const { filterAndConcatApiCodeFiles } = require("../file-collection/component-code-file-filter.js");
-const { filterAndConcatApiNpmFiles } = require("../file-collection/component-npm-file-filter.js");
+const { filterAndConcatApiCodeFiles, filterAndConcatUploadedApiCodeFiles } = require("../file-collection/component-code-file-filter.js");
+const { filterAndConcatApiNpmFiles, filterAndConcatUploadedApiNpmFiles } = require("../file-collection/component-npm-file-filter.js");
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
@@ -261,8 +261,12 @@ async function generateApiJsonWithLLM(combinedContent) {
     return apiData;
   } catch (error) {
     console.error("❌ 大模型生成API JSON失败：", error.message);
-    // throw new Error("API JSON生成失败，请检查大模型配置或文件内容");
-    console.error("📜 大模型完整原始返回：", rawResponse || "无返回内容");
+    if (typeof rawResponse !== 'undefined') {
+      console.error("📜 大模型完整原始返回：", rawResponse);
+    } else {
+      console.error("📜 大模型未返回内容（错误发生在请求前）");
+    }
+    throw error;
   }
 }
 
@@ -365,7 +369,7 @@ function saveApiArrayToFiles(apiArray, baseDir) {
  * 主函数：串联筛选文件→读取内容→大模型分析→生成JSON
  * @param {string} componentDir - 组件根目录
  * @param {string} [sourceType="code"] - 来源类型，可选值："code"或"npm"
- * @returns {Promise<Object>} 最终的结构化API JSON
+ * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
  */
 async function generateComponentApiJson(componentDir, sourceType = "code") {
   try {
@@ -399,6 +403,8 @@ async function generateComponentApiJson(componentDir, sourceType = "code") {
     console.log("\n2/3 🤖 正在生成结构化API JSON...");
     const finalApiJson = await generateApiJsonWithLLM(combinedContent);
 
+    const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
+
     console.log(`\n🎉 结构化API生成完成！`);
     if (componentInfo.type === "single") {
       console.log(`- 组件名称：${componentInfo.name}`);
@@ -406,10 +412,94 @@ async function generateComponentApiJson(componentDir, sourceType = "code") {
       console.log(`- 识别到组件：${componentInfo.names.join(", ")}`);
     }
 
-    return finalApiJson;
+    return apiArray;
   } catch (error) {
     console.error("\n❌ 生成组件API JSON失败：", error.message);
-    process.exit(1);
+    throw error;
+  }
+}
+
+/**
+ * 新增：处理前端上传文件的入口函数
+ * @param {Array<{originalname: string, buffer: Buffer}>} uploadedFiles - 前端上传的文件列表
+ * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
+ */
+async function generateComponentApiFromUploadedCodeFiles(uploadedFiles) {
+  try {
+    console.log(`1/3 📥 正在处理上传的${uploadedFiles.length}个文件...`);
+    
+    // 1. 调用 component-code-file-filter 中的筛选+拼接函数
+    const result = await filterAndConcatUploadedApiCodeFiles(uploadedFiles, 3);
+    const { combinedContent, componentName, tempDir } = result;
+
+    if (!combinedContent || combinedContent.length === 0) {
+      throw new Error("上传文件内容拼接为空，无法生成JSON");
+    }
+
+    // 2. 复用原有大模型生成逻辑
+    console.log("\n2/3 🤖 正在生成结构化API JSON...");
+    const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
+
+    // 3. 生成完成后清理临时目录
+    try {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+      console.log(`✅ 已清理临时目录: ${tempDir}`);
+    } catch (cleanupError) {
+      console.warn(`⚠️ 临时目录清理失败: ${cleanupError.message}，请手动清理：${tempDir}`);
+    }
+
+    // 4. 输出结果日志
+    console.log(`\n🎉 结构化API生成完成！`);
+    console.log(`- 组件名称：${componentName}`);
+
+    return apiArray;
+  } catch (error) {
+    console.error("\n❌ 生成上传文件的API JSON失败：", error.message);
+    throw error;
+  }
+}
+
+/**
+ * 新增：处理前端上传的npm包文件，生成API JSON
+ * @param {Array<{originalname: string, buffer: Buffer}>} uploadedFiles - 前端上传的npm包文件列表
+ * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
+ */
+async function generateComponentApiFromUploadedNpmFiles(uploadedFiles) {
+  try {
+    console.log(`1/3 📥 正在处理上传的npm包文件（共${uploadedFiles.length}个）...`);
+    
+    // 1. 调用npm包的筛选+拼接函数（上传文件版）
+    const result = await filterAndConcatUploadedApiNpmFiles(uploadedFiles);
+    const { combinedContent, componentNames, tempDir } = result;
+
+    if (!combinedContent || combinedContent.length === 0) {
+      // 拼接失败，清理临时目录
+      fs.rmSync(tempDir, { recursive: true, force: true });
+      throw new Error("npm包文件内容拼接为空，无法生成JSON");
+    }
+
+    // 2. 复用大模型生成逻辑（与code类型一致）
+    console.log("\n2/3 🤖 正在生成npm包组件的结构化API JSON...");
+    const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
+
+    // 3. 生成完成后清理临时目录
+    try {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+      console.log(`✅ 已清理npm包临时目录: ${tempDir}`);
+    } catch (cleanupError) {
+      console.warn(`⚠️ npm包临时目录清理失败: ${cleanupError.message}，请手动清理：${tempDir}`);
+    }
+
+    // 4. 输出结果日志
+    console.log(`\n🎉 npm包组件API生成完成！`);
+    console.log(`- 识别到组件：${componentNames.join(", ")}`);
+
+    return apiArray;
+  } catch (error) {
+    console.error("\n❌ 生成上传npm包的API JSON失败：", error.message);
+    throw error;
   }
 }
 
@@ -446,6 +536,8 @@ if (require.main === module) {
 
 // 对外导出核心函数（支持其他模块调用）
 module.exports = {
+  generateApiJsonWithLLM,
   generateComponentApiJson,
-  generateApiJsonWithLLM
+  generateComponentApiFromUploadedCodeFiles, // code类型上传入口
+  generateComponentApiFromUploadedNpmFiles, // 新增：npm类型上传入口
 };

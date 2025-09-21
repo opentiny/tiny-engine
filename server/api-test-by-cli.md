@@ -167,3 +167,24 @@ Invoke-WebRequest -Uri "http://localhost:3001/api/material/import" `
     "apiLogDir": "../raw-api-log",
     "schemaLogDir": "../schema-log"
   }'
+
+
+<!-- 文件上传 code -->
+# 单文件上传示例
+Invoke-WebRequest -Uri "http://localhost:3001/api/material/import/file" `
+  -Method Post `
+  -Headers @{"Content-Type" = "multipart/form-data"} `
+  -Form @{
+    "files" = Get-Item "D:\OSPP\element-plus\packages\components\breadcrumb\src\breadcrumb.ts"
+    "sourceType" = "code"
+  }
+
+# 多文件上传示例（注意：PowerShell 中需为每个文件单独指定键名，且键名需一致）
+Invoke-WebRequest -Uri "http://localhost:3001/api/material/import/file" `
+  -Method Post `
+  -Headers @{"Content-Type" = "multipart/form-data"} `
+  -Form @{
+    "files" = Get-Item "D:\OSPP\element-plus\packages\components\breadcrumb\src\breadcrumb.ts"
+    "files" = Get-Item "D:\OSPP\element-plus\packages\components\breadcrumb\src\breadcrumb.vue"
+    "sourceType" = "code"
+  }

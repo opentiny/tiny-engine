@@ -1,9 +1,10 @@
+const os = require('os');
 const fs = require("fs");
 const path = require('path');
 require('dotenv').config({
   path: path.resolve(__dirname, '../../.env')
 });
-
+const { v4: uuidv4 } = require('uuid');
 const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
@@ -20,6 +21,29 @@ const IMPORT_DECLARATION_PATTERN = /import\s+(?:\{.*?\s+as\s+)?(\w+)\s*from\s+'(
 const EXPORT_DECLARATION_PATTERN = /export\s+{\s*([^}]+?)\s*}\s+from\s+'([^']+)'/g;
 // 匹配withInstall赋值语句中的原始组件名
 const WITH_INSTALL_PATTERN = /const\s+\w+\s*=\s*with(?:Install|NoopInstall)\s*\(\s*(\w+)\s*,?.*?\)/g;
+
+/**
+ * 处理前端上传的文件，保存到服务器临时目录并重建目录结构
+ * @param {Array<{originalname: string, buffer: Buffer}>} files - 前端上传的文件列表（含相对路径）
+ * @returns {string} 临时目录路径
+ */
+function saveUploadedFilesToTempDir(files) {
+  // 创建服务器临时目录（如 /tmp/npm-component-xxxxxx，加npm前缀区分）
+  const tempDir = path.join(os.tmpdir(), `npm-component-${Date.now()}-${uuidv4().replace(/-/g, '')}`);
+  fs.mkdirSync(tempDir, { recursive: true });
+
+  // 遍历文件，按相对路径保存到临时目录
+  files.forEach(file => {
+    // file.originalname 是前端传递的相对路径（如 "index.mjs"、"src/select.vue"）
+    const filePath = path.join(tempDir, file.originalname);
+    // 确保父目录存在（如创建 src 目录）
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    // 写入文件内容
+    fs.writeFileSync(filePath, file.buffer);
+  });
+
+  return tempDir; // 返回临时目录路径，供后续分析使用
+}
 
 /**
  * 1. 递归获取组件文件夹下所有文件（按规则跳过）
@@ -554,7 +578,7 @@ function readFileWithFallback(filePath, baseDir) {
 async function filterAndConcatApiNpmFiles(componentDir) {
   // 1. 前置校验：目录有效性
   if (!componentDir) {
-    throw new Error("请提供组件源码目录路径");
+    throw new Error("请提供组件npm目录路径");
   }
   if (!fs.existsSync(componentDir)) {
     throw new Error(`组件目录不存在：${componentDir}`);
@@ -640,6 +664,39 @@ async function filterAndConcatApiNpmFiles(componentDir) {
 }
 
 /**
+ * 新增：筛选npm包API文件并拼接内容的组合函数（上传文件版）
+ * @param {Array<{originalname: string, buffer: Buffer}>} uploadedFiles - 前端上传的npm包文件列表
+ * @returns {Promise<{combinedContent: string, componentNames: string[], tempDir: string}>}
+ */
+async function filterAndConcatUploadedApiNpmFiles(uploadedFiles) {
+  if (!uploadedFiles || uploadedFiles.length === 0) {
+    throw new Error("未上传任何npm包文件，无法筛选API信息");
+  }
+
+  // 1. 保存上传文件到临时目录
+  const tempDir = saveUploadedFilesToTempDir(uploadedFiles);
+  console.log(`📥 npm包上传文件已保存到临时目录：${tempDir}`);
+
+  // 2. 校验临时目录中是否存在npm包核心入口文件（index.mjs，npm类型必需）
+  const entryPath = path.join(tempDir, "index.mjs");
+  if (!fs.existsSync(entryPath)) {
+    // 筛选失败，先清理临时目录
+    fs.rmSync(tempDir, { recursive: true, force: true });
+    throw new Error("上传的npm包文件缺少核心入口文件 index.mjs，请确保上传完整的组件文件夹内容");
+  }
+
+  // 3. 复用原有npm包筛选拼接逻辑（直接传入临时目录路径，原有逻辑完全兼容）
+  console.log("🔍 开始筛选npm包的API相关文件...");
+  const result = await filterAndConcatApiNpmFiles(tempDir);
+
+  // 4. 返回结果（包含临时目录路径供外部清理）
+  return {
+    ...result, // 继承原有结果（combinedContent、componentNames）
+    tempDir    // 新增：临时目录路径
+  };
+}
+
+/**
  * 命令行入口
  */
 async function main() {
@@ -706,5 +763,6 @@ module.exports = {
   analyzeComponentApiMap,
   splitFilesByPriority,
   aggregateComponentApiByPriority,
-  filterAndConcatApiNpmFiles
+  filterAndConcatApiNpmFiles,
+  filterAndConcatUploadedApiNpmFiles
 };

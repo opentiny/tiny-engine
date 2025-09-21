@@ -1,52 +1,77 @@
 const { TASK_STATUS } = require('../utils/taskManager');
 
 /**
- * 验证物料导入参数
+ * 验证「URL爬取」导入参数（已移除本地目录校验）
  * @param {Request} req 
  * @param {Response} res 
  * @param {NextFunction} next 
  */
 function validateImportParams(req, res, next) {
   try {
-    const { url, componentDir, config, sourceType } = req.body;
-    const importTypes = [];
+    const { url, config } = req.body;
 
-    // 校验导入途径（至少一种）
-    if (url) importTypes.push('url');
-    if (componentDir) importTypes.push('source/npm');
-    if (importTypes.length === 0) {
+    // 仅保留URL爬取一种途径，强制校验url和config
+    if (!url) {
       return res.status(400).json({
         code: 400,
-        message: '必须提供一种导入途径：url 或 componentDir',
+        message: 'URL导入途径必须提供 url 参数',
         success: false
       });
     }
-    if (importTypes.length > 1) {
+    if (!config) {
       return res.status(400).json({
         code: 400,
-        message: '只能提供一种导入途径：url 或 componentDir',
+        message: 'URL导入途径必须提供 config 参数（解析配置）',
         success: false
       });
     }
 
-    // 校验URL途径必填参数
-    if (url && !config) {
+    // 补全默认路径参数
+    req.body = {
+      url,
+      config,
+      outputDir: req.body.outputDir || process.env.DEFAULT_OUTPUT_DIR,
+      schemaLogDir: req.body.schemaLogDir || process.env.DEFAULT_SCHEMA_LOG_DIR,
+      apiLogDir: req.body.apiLogDir || process.env.DEFAULT_API_LOG_DIR
+    };
+
+    next();
+  } catch (error) {
+    res.status(400).json({
+      code: 400,
+      message: `URL参数验证失败：${error.message}`,
+      success: false
+    });
+  }
+}
+
+/**
+ * 验证「文件上传」导入参数
+ * @param {Request} req 
+ * @param {Response} res 
+ * @param {NextFunction} next 
+ */
+function validateFileImportParams(req, res, next) {
+  try {
+    // 1. 校验上传文件
+    if (!req.files || req.files.length === 0) {
       return res.status(400).json({
         code: 400,
-        message: 'URL导入途径必须提供 config 参数',
+        message: '文件上传途径必须提供至少一个文件',
         success: false
       });
     }
 
-    // 校验源码/NPM途径必填参数
-    if (componentDir && !sourceType) {
+    // 2. 校验sourceType
+    const { sourceType } = req.body;
+    if (!sourceType) {
       return res.status(400).json({
         code: 400,
-        message: '源码/NPM导入途径必须提供 sourceType 参数（code 或 npm）',
+        message: '文件上传途径必须提供 sourceType 参数（code 或 npm）',
         success: false
       });
     }
-    if (componentDir && !['code', 'npm'].includes(sourceType)) {
+    if (!['code', 'npm'].includes(sourceType)) {
       return res.status(400).json({
         code: 400,
         message: 'sourceType 必须为 "code" 或 "npm"',
@@ -54,28 +79,25 @@ function validateImportParams(req, res, next) {
       });
     }
 
-    // 校验路径参数（可选，前端未传则用默认值）
-    const { outputDir, schemaLogDir, apiLogDir } = req.body;
+    // 3. 补全默认路径参数
     req.body = {
-      url: url || null,
-      componentDir: componentDir || null,
-      config: config || null,
-      sourceType: sourceType || null,
-      outputDir: outputDir || process.env.DEFAULT_OUTPUT_DIR,
-      schemaLogDir: schemaLogDir || process.env.DEFAULT_SCHEMA_LOG_DIR,
-      apiLogDir: apiLogDir || process.env.DEFAULT_API_LOG_DIR
+      sourceType,
+      outputDir: req.body.outputDir || process.env.DEFAULT_OUTPUT_DIR,
+      schemaLogDir: req.body.schemaLogDir || process.env.DEFAULT_SCHEMA_LOG_DIR,
+      apiLogDir: req.body.apiLogDir || process.env.DEFAULT_API_LOG_DIR
     };
 
     next();
   } catch (error) {
     res.status(400).json({
       code: 400,
-      message: `参数验证失败：${error.message}`,
+      message: `文件上传参数验证失败：${error.message}`,
       success: false
     });
   }
 }
 
 module.exports = {
-  validateImportParams
+  validateImportParams,
+  validateFileImportParams
 };
