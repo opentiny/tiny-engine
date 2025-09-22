@@ -623,7 +623,7 @@ export default {
     const changeModel = (model) => {
       if (
         robotSettingState.selectedModel.baseUrl !== model.baseUrl ||
-        robotSettingState.selectedModel !== model.model
+        robotSettingState.selectedModel.model !== model.model
       ) {
         confirm({
           title: '切换AI大模型',
