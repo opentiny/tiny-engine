@@ -237,9 +237,14 @@ LowCode-Material-Import/
 
 
 ## 网页url爬取 - config json对象配置说明
-项目需要通过配置文件定义网页爬取规则，请按照以下模板创建 `config` 对象。
 
-### 配置模板
+### 一、核心用途
+统一爬取规则，实现 “配置即规则”，无需修改爬虫核心代码即可适配不同网页。
+精准映射网页 DOM 结构与目标数据字段，支持属性、事件、插槽、方法等组件信息的提取。
+兼容悬浮提示（Tooltip）等交互元素的内容抓取，提升数据完整性。
+
+### 二、配置模板（可直接复制使用）
+```json
 {
   "basicInfo": {
     "name": "填写配置名称或页面标题的DOM选择器（如'h1'）",
@@ -247,20 +252,20 @@ LowCode-Material-Import/
     "version": "填写版本信息的DOM选择器（如'.version'）"
   },
   "commonSelectors": {
-    "tableRow": "tbody tr", // 表格行通用选择器（默认无需修改）
-    "tableHeader": "thead th, tr:first-child th" // 表头通用选择器（默认无需修改）
+    "tableRow": "tbody tr", // 表格行通用选择器（默认适配大多数表格，无需修改）
+    "tableHeader": "thead th, tr:first-child th" // 表头通用选择器（兼容thead或首行表头）
   },
   "tooltipInteraction": {
-    "triggerButton": "填写触发悬浮提示的元素选择器（如'button.tooltip-btn'，无则留空）",
-    "tooltipContainer": "填写悬浮提示容器选择器（如'.tooltip-box'，无则留空）",
-    "tooltipContent": "填写悬浮提示内容选择器（如'.tooltip-text'，无则留空）"
+    "triggerButton": "填写触发悬浮提示的元素选择器（如'button.el-tooltip__trigger'，无则留空）",
+    "tooltipContainer": "填写悬浮提示容器选择器（如'.el-popper'，无则留空）",
+    "tooltipContent": "填写悬浮提示内容选择器（如'.m-1 > code'，无则留空）"
   },
   "components": [
     {
       "name": "填写组件名称（如'Button'）",
       "tables": {
         "properties": {
-          "selector": "填写属性表格的DOM选择器（如'h3#props + table'）",
+          "selector": "填写属性表格的DOM选择器（如'h3#button-attributes + div.vp-table'）",
           "fieldMapping": {
             "name": "填写表格中'属性名'对应的列名（如'属性'）",
             "description": "填写表格中'说明'对应的列名（如'描述'）",
@@ -269,7 +274,7 @@ LowCode-Material-Import/
           }
         },
         "events": {
-          "selector": "填写事件表格的DOM选择器（如'h3#events + table'）",
+          "selector": "填写事件表格的DOM选择器（如'h3#button-events + div.vp-table'）",
           "fieldMapping": {
             "name": "填写表格中'事件名'对应的列名（如'事件'）",
             "description": "填写表格中'说明'对应的列名（如'触发时机'）",
@@ -278,7 +283,7 @@ LowCode-Material-Import/
           }
         },
         "slots": {
-          "selector": "填写插槽表格的DOM选择器（如'h3#slots + table'）",
+          "selector": "填写插槽表格的DOM选择器（如'h3#button-slots + div.vp-table'）",
           "fieldMapping": {
             "name": "填写表格中'插槽名'对应的列名（如'插槽'）",
             "description": "填写表格中'说明'对应的列名（如'用途'）",
@@ -287,7 +292,7 @@ LowCode-Material-Import/
           }
         },
         "methods": {
-          "selector": "填写方法表格的DOM选择器（如'h3#methods + table'）",
+          "selector": "填写方法表格的DOM选择器（如'h3#button-methods + div.vp-table'）",
           "fieldMapping": {
             "name": "填写表格中'方法名'对应的列名（如'方法'）",
             "description": "填写表格中'说明'对应的列名（如'功能'）",
@@ -297,15 +302,18 @@ LowCode-Material-Import/
         }
       }
     }
-    // 可复制上方组件配置块，添加更多组件
+    // 新增组件：复制上方组件配置块，删除无需的表格类型（如无methods则删除methods对象）
     // ,{
     //   "name": "第二个组件名称（如'Input'）",
-    //   ...
+    //   "tables": { ... }
     // }
   ]
 }
+```
 
-### 配置示例（element plus的按钮组件）
+### 三、配置示例（Element Plus 按钮组件）
+以下为针对 Element Plus Button & ButtonGroup 组件文档 的实际配置，可直接参考适配其他组件：
+```json
 {
   "basicInfo": {
     "name": "h1",
@@ -341,6 +349,7 @@ LowCode-Material-Import/
             "description": "说明"
           }
         }
+        // 无events和methods表格，故删除对应配置
       }
     },
     {
@@ -355,7 +364,7 @@ LowCode-Material-Import/
             "default": "默认值"
           }
         },
-        "events": {
+        "slots": {
           "selector": "h3#buttongroup-slots + div.vp-table",
           "fieldMapping": {
             "name": "事件名",
@@ -363,7 +372,9 @@ LowCode-Material-Import/
             "subLabel": "子标签"
           }
         }
+        // 无slots和methods表格，故删除对应配置
       }
     }
   ]
 }
+```
