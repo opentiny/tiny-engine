@@ -14,8 +14,8 @@ const { OpenAI } = require("openai");
 
 // 初始化OpenAI客户端
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY_SF || "",
-  baseURL: process.env.OPENAI_BASE_URL_SF || "https://api.openai.com/v1",
+  apiKey: process.env.OPENAI_API_KEY || "",
+  baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
   timeout: 600000, // 10分钟超时
 });
 
@@ -81,7 +81,7 @@ ${content}
     ];
 
     const completion = await client.chat.completions.create({
-      model: process.env.OPENAI_MODEL_SF || "Qwen/Qwen3-32B",
+      model: process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
       messages: promptMessages,
       temperature: 0.2,
       max_tokens: 65536,
