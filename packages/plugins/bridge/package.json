@@ -26,7 +26,9 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
-    "@opentiny/tiny-engine-meta-register": "workspace:*"
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

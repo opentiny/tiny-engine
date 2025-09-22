@@ -63,6 +63,7 @@
 
 <script lang="ts">
 import { computed } from 'vue'
+import type { Component } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { useResource } from '@opentiny/tiny-engine-meta-register'
 import MetaListItem from './MetaListItem.vue'
@@ -70,7 +71,7 @@ import MetaListItem from './MetaListItem.vue'
 export default {
   components: {
     MetaListItem,
-    VueDraggableNext
+    VueDraggableNext: VueDraggableNext as Component
   },
   props: {
     draggable: {

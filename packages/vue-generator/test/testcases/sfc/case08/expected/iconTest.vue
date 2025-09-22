@@ -22,22 +22,19 @@ import { IconEdit, IconMore, IconCustom } from '@opentiny/vue-icon'
 import * as vue from 'vue'
 import { defineProps, defineEmits } from 'vue'
 import { I18nInjectionKey } from 'vue-i18n'
+
 const TinyIconEdit = IconEdit()
 const TinyIconMore = IconMore()
 const TinyIconCustom = IconCustom()
 const props = defineProps({})
+
 const emit = defineEmits([])
 const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
-const wrap = lowcodeWrap(props, {
-  emit
-})
-wrap({
-  stores
-})
+const wrap = lowcodeWrap(props, { emit })
+wrap({ stores })
+
 const state = vue.reactive({})
-wrap({
-  state
-})
+wrap({ state })
 </script>
 <style scoped>
 .page-base-style {

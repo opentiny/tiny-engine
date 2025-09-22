@@ -94,9 +94,13 @@ export function getImportMapData(canvasDeps = { scripts: [], styles: [] }) {
   }
 
   const importStyles = [...blockRequire.importStyles, ...canvasDeps.styles]
+  const customEnableTailWindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+  const tailwindURL = getImportUrl('@tailwindcss/browser')
+  const importScripts = customEnableTailWindCSS && tailwindURL ? [tailwindURL] : []
 
   return {
     importMap,
-    importStyles
+    importStyles,
+    importScripts
   }
 }

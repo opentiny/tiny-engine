@@ -479,15 +479,16 @@
                     "bindState": true,
                     "label": {
                       "text": {
-                        "zh_CN": "src路径"
+                        "zh_CN": "资源选择"
                       }
                     },
                     "cols": 12,
                     "rules": [],
                     "widget": {
-                      "component": "InputConfigurator",
+                      "component": "SourceSelectConfigurator",
                       "props": {}
-                    }
+                    },
+                    "labelPosition": "top"
                   }
                 ]
               }

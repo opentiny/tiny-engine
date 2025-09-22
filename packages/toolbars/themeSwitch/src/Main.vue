@@ -38,9 +38,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.toolbars.themeSwitch.Main */
 import { computed, ref } from 'vue'
+import type { Component } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyRadioGroup, TinyPopover } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
@@ -49,7 +50,7 @@ export default {
   components: {
     ToolbarBase,
     TinyRadioGroup,
-    TinyPopover
+    TinyPopover: TinyPopover as Component
   },
   props: {
     options: {

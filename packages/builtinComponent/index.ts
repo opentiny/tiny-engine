@@ -4,4 +4,7 @@ export { default as CanvasRowColContainer } from './src/components/CanvasRowColC
 export { default as CanvasFlexBox } from './src/components/CanvasFlexBox.vue'
 export { default as CanvasSection } from './src/components/CanvasSection.vue'
 export { default as CanvasNavigation } from './src/components/CanvasNavigation.vue'
+export { default as FormModel } from './src/components/BaseForm.vue'
+export { default as TableModel } from './src/components/BaseTable.vue'
+export { default as PageModel } from './src/components/BasePage.vue'
 export { default as meta } from './src/meta'

@@ -34,6 +34,7 @@
       "@opentiny/tiny-engine-plugin-script": ["packages/plugins/script/index"],
       "@opentiny/tiny-engine-plugin-state": ["packages/plugins/state/index"],
       "@opentiny/tiny-engine-plugin-tree": ["packages/plugins/tree/index"],
+      "@opentiny/tiny-engine-plugin-model-manager": ["packages/plugins/model-manager/index"],
       "@opentiny/tiny-engine-setting-events": ["packages/settings/events/index"],
       "@opentiny/tiny-engine-setting-props": ["packages/settings/props/index"],
       "@opentiny/tiny-engine-setting-styles": ["packages/settings/styles/index"],
@@ -51,8 +52,7 @@
       "@opentiny/tiny-engine-toolbar-save": ["packages/toolbars/save/index"],
       "@opentiny/tiny-engine-toolbar-theme-switch": ["packages/toolbars/themeSwitch/index"],
       "@opentiny/tiny-engine-toolbar-view-setting": ["packages/toolbars/view-setting/index"],
-      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
-      "@opentiny/tiny-engine-webcomponent-core": ["packages/webcomponent/src/lib"]
+      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"]
     }
   },
   "include": ["packages/**/*"],

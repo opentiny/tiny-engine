@@ -43,8 +43,9 @@
   </tiny-select>
 </template>
 
-<script>
+<script lang="ts">
 import { computed, reactive, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Select, Option, OptionGroup, Tooltip } from '@opentiny/vue'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 
@@ -52,7 +53,7 @@ export default {
   components: {
     TinySelect: Select,
     TinyOption: Option,
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     TinyOptionGroup: OptionGroup
   },
   props: {

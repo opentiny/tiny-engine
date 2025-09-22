@@ -39,6 +39,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.appmanage.PageInputOutput */
 import { ref, watchEffect, computed } from 'vue'
+import type { Component } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { MetaCodeEditor } from '@opentiny/tiny-engine-common'
 import { usePage, useNotify } from '@opentiny/tiny-engine-meta-register'
@@ -46,7 +47,7 @@ import { usePage, useNotify } from '@opentiny/tiny-engine-meta-register'
 export default {
   components: {
     MetaCodeEditor,
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   setup() {
     const inputValue = ref('')

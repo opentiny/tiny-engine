@@ -255,6 +255,8 @@ const getQueryParams = (params = {}, isHistory = false) => {
     query += `&history=${params.history}`
   }
 
+  query += `&previewType=${params.previewType}`
+
   return query
 }
 

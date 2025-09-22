@@ -1,11 +1,12 @@
 <template>
   <div class="toolbar-save toolbar-helpGuid">
-    <toolbar-base
-      content="预览页面"
-      :icon="options.icon?.default || options?.icon"
-      :options="options"
-      @click-api="preview"
-    >
+    <toolbar-base content="预览页面" :icon="options.icon?.default || options?.icon" :options="options" trigger="click">
+      <template #button>
+        <div class="toolbar-preview-item">
+          <span @click="preview('page')">页面预览</span>
+          <span @click="preview('app')">应用预览</span>
+        </div>
+      </template>
     </toolbar-base>
   </div>
 </template>
@@ -28,7 +29,7 @@ export default {
     }
   },
   setup() {
-    const preview = async () => {
+    const preview = async (previewType: string) => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
 
       try {
@@ -55,11 +56,10 @@ export default {
           type: 'warning',
           message: '请先创建页面'
         })
-
         return
       }
 
-      previewPage()
+      previewPage({ previewType })
 
       if (typeof afterPreview === 'function') {
         try {
@@ -79,3 +79,15 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+.toolbar-preview-item {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+
+  span {
+    cursor: pointer;
+  }
+}
+</style>

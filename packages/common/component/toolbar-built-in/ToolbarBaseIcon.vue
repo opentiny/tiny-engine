@@ -1,11 +1,12 @@
 <template>
   <tiny-popover
-    trigger="hover"
+    :trigger="trigger"
     :open-delay="1000"
     popper-class="toolbar-right-popover"
     append-to-body
     :content="content"
   >
+    <slot></slot>
     <template #reference>
       <span class="icon">
         <span class="icon-hides" v-bind="$attrs">
@@ -18,10 +19,11 @@
 </template>
 <script lang="ts">
 import { Popover } from '@opentiny/vue'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyPopover: Popover
+    TinyPopover: Popover as Component
   },
   props: {
     icon: {
@@ -35,6 +37,10 @@ export default {
     options: {
       type: Object,
       default: () => ({})
+    },
+    trigger: {
+      type: String,
+      default: 'hover'
     }
   }
 }

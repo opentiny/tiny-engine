@@ -4,6 +4,9 @@ import CanvasRowColContainer from './CanvasRowColContainer.json'
 import CanvasFlexBox from './CanvasFlexBox.json'
 import CanvasSection from './CanvasSection.json'
 import CanvasNavigation from './CanvasNavigation.json'
+import BaseForm from './BaseForm.json'
+import BaseTable from './BaseTable.json'
+import BasePage from './BasePage.json'
 
 export default {
   components: [
@@ -12,7 +15,10 @@ export default {
     CanvasRowColContainer.component,
     CanvasFlexBox.component,
     CanvasSection.component,
-    CanvasNavigation.component
+    CanvasNavigation.component,
+    BaseForm.component,
+    BaseTable.component,
+    BasePage.component
   ],
   snippets: [
     {
@@ -28,6 +34,13 @@ export default {
         zh_CN: '高级元素'
       },
       children: [CanvasNavigation.snippet]
+    },
+    {
+      group: 'model',
+      label: {
+        zh_CN: '模型组件'
+      },
+      children: [BaseForm.snippet, BaseTable.snippet, BasePage.snippet]
     }
   ]
 }

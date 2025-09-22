@@ -81,6 +81,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.state.Main */
 import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
+import type { Component } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
@@ -106,7 +107,7 @@ import { validateMonacoEditorData } from './js/common'
 export default {
   components: {
     TinySearch: Search,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     DataSourceList,
     CreateVariable,
     CloseIcon,

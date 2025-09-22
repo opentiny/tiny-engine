@@ -40,6 +40,8 @@ import {
   Block,
   Datasource,
   Robot,
+  Resource,
+  ModelManager,
   Props,
   Events,
   Styles,
@@ -128,7 +130,8 @@ export default {
         icon: 'dark',
         oppositeTheme: 'light'
       }
-    ]
+    ],
+    enableTailwindCSS: true
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
@@ -160,7 +163,9 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.resource'] === false ? null : Resource,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.modelmanager'] === false ? null : ModelManager
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,

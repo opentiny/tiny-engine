@@ -2,15 +2,16 @@
   <tiny-checkbox v-model="checked" @change="change"></tiny-checkbox>
 </template>
 
-<script>
+<script lang="ts">
 /* metaService: engine.setting.props.CheckValue */
 import { ref, watchEffect } from 'vue'
+import type { Component } from 'vue'
 import { Checkbox } from '@opentiny/vue'
 import { useProperties } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
-    TinyCheckbox: Checkbox
+    TinyCheckbox: Checkbox as Component
   },
   inheritAttrs: false,
   props: {
