@@ -1,3 +1,4 @@
+import { onMounted } from 'vue'
 import { PORT } from '../config'
 import type { UserAwareness } from '../type'
 import { useAwareness } from './useAwareness'
@@ -54,6 +55,14 @@ export function useCollabCursor(options: UserCollabCursorOptions) {
 
   const mouseDownHandler = () => updateCursorPressedState(true)
   const mouseUpHandler = () => updateCursorPressedState(false)
+
+  onMounted(() => {
+    updateLocalStateField('cursor', {
+      x: -1, // 使用一个屏幕外的值作为初始位置
+      y: -1,
+      pressed: false
+    })
+  })
 
   return {
     remoteCursors: remoteStates,

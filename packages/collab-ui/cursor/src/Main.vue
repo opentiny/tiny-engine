@@ -8,7 +8,7 @@
         <div
           class="custom-cursor"
           :class="{
-            active: !cursor.state.cursor.pressed,
+            active: !pressedMap[cursor.clientId],
             outside: cursor.position.isOutside
           }"
           :style="{ transform: `rotate(${cursor.position.rotation}deg)` }"
@@ -49,6 +49,12 @@ import { useViewport } from './composables/useViewport'
 
 export default {
   name: 'Cursor',
+  props: {
+    iframe: {
+      type: Object,
+      default: () => {}
+    }
+  },
   setup() {
     const currentUser = {
       id: 'user-2',
@@ -67,12 +73,12 @@ export default {
 
     const processedCursors = computed(() => {
       return Object.entries(collabState.remoteCursors).map(([clientId, state]) => {
-        if (!state.cursor) {
-          return { clientId, state, position: {} }
-        }
+        if (!state.cursor) return { clientId, state, position: {} }
 
+        // 假设 state.cursor.x/y 是全局坐标
         const { x: pageX, y: pageY } = state.cursor
 
+        // 本地视口范围
         const viewLeft = viewport.scrollX
         const viewRight = viewport.scrollX + viewport.width
         const viewTop = viewport.scrollY
@@ -80,7 +86,7 @@ export default {
 
         const isInside = pageX >= viewLeft && pageX <= viewRight && pageY >= viewTop && pageY <= viewBottom
 
-        let position = {}
+        let position
         if (isInside) {
           position = {
             x: pageX - viewport.scrollX,
@@ -105,15 +111,22 @@ export default {
           }
         }
 
-        return {
-          clientId,
-          state,
-          position
-        }
+        return { clientId, state, position }
       })
     })
+
+    // 映射表：clientId -> pressed
+    const pressedMap = computed(() => {
+      return processedCursors.value.reduce((map, cursor) => {
+        map[cursor.clientId] = cursor?.state?.cursor?.pressed ?? false
+        return map
+      }, {})
+    })
+
     return {
-      processedCursors
+      processedCursors,
+      pressedMap,
+      viewport
     }
   }
 }
