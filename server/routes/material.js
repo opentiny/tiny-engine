@@ -9,9 +9,6 @@ const { upload } = require('../controllers/materialController');
  * @apiDescription 仅支持URL爬取一种途径（已移除本地目录导入）
  * @apiParam {string} url URL爬取途径：组件文档URL（必填）
  * @apiParam {object} config URL途径必填：爬取配置（如选择器）
- * @apiParam {string} [outputDir] 可选：物料输出目录（默认./output）
- * @apiParam {string} [schemaLogDir] 可选：Schema日志目录（默认./schema-log）
- * @apiParam {string} [apiLogDir] 可选：API日志目录（默认./raw-api-log）
  * @apiSuccess {string} code 200
  * @apiSuccess {string} message 任务创建成功
  * @apiSuccess {string} taskId 任务ID（用于查询状态）
@@ -38,9 +35,6 @@ router.get('/status/:taskId', materialController.getTaskStatus);
  * @apiDescription 支持通过文件上传导入组件源码或NPM包
  * @apiParam {file} files 必选：上传的文件列表（支持多文件，字段名固定为"files"）
  * @apiParam {string} sourceType 必选：文件类型（code 或 npm）
- * @apiParam {string} [outputDir] 可选：物料输出目录（默认./output）
- * @apiParam {string} [schemaLogDir] 可选：Schema日志目录（默认./schema-log）
- * @apiParam {string} [apiLogDir] 可选：API日志目录（默认./raw-api-log）
  * @apiSuccess {string} code 200
  * @apiSuccess {string} message 任务创建成功
  * @apiSuccess {string} taskId 任务ID（用于查询状态）
@@ -65,9 +59,6 @@ router.get('/docs', (req, res) => {
     <ul>
       <li>url: 必选，URL爬取途径的文档地址</li>
       <li>config: 必选，URL爬取的解析配置（如选择器规则）</li>
-      <li>outputDir: 可选，物料输出目录（默认./output）</li>
-      <li>schemaLogDir: 可选，Schema日志目录（默认./schema-log）</li>
-      <li>apiLogDir: 可选，API日志目录（默认./raw-api-log）</li>
     </ul>
 
     <h2>2. 文件上传导入任务</h2>
@@ -78,9 +69,6 @@ router.get('/docs', (req, res) => {
     <ul>
       <li>files: 必选，上传的文件列表（支持多文件，字段名固定为"files"）</li>
       <li>sourceType: 必选，文件类型（code 或 npm）</li>
-      <li>outputDir: 可选，物料输出目录（默认./output）</li>
-      <li>schemaLogDir: 可选，Schema日志目录（默认./schema-log）</li>
-      <li>apiLogDir: 可选，API日志目录（默认./raw-api-log）</li>
     </ul>
 
     <h2>3. 查询任务状态</h2>

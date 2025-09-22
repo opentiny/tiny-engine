@@ -1,6 +1,6 @@
 const path = require('path');
 require('dotenv').config({ 
-  path: path.resolve(__dirname, '../.env') // 从 server/ 目录向上一级（根目录）查找 .env
+  path: path.resolve(__dirname, '../.env')
 });
 
 const express = require('express');

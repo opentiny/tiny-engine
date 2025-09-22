@@ -29,10 +29,7 @@ function validateImportParams(req, res, next) {
     // 补全默认路径参数
     req.body = {
       url,
-      config,
-      outputDir: req.body.outputDir || process.env.DEFAULT_OUTPUT_DIR,
-      schemaLogDir: req.body.schemaLogDir || process.env.DEFAULT_SCHEMA_LOG_DIR,
-      apiLogDir: req.body.apiLogDir || process.env.DEFAULT_API_LOG_DIR
+      config
     };
 
     next();
@@ -79,12 +76,9 @@ function validateFileImportParams(req, res, next) {
       });
     }
 
-    // 3. 补全默认路径参数
+    // 3. 补全参数
     req.body = {
-      sourceType,
-      outputDir: req.body.outputDir || process.env.DEFAULT_OUTPUT_DIR,
-      schemaLogDir: req.body.schemaLogDir || process.env.DEFAULT_SCHEMA_LOG_DIR,
-      apiLogDir: req.body.apiLogDir || process.env.DEFAULT_API_LOG_DIR
+      sourceType
     };
 
     next();

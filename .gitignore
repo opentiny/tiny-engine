@@ -49,23 +49,6 @@ node_modules/
 .vscode-test
 
 log/
-extracted-html/
-dataset/
-json-test-log/
-api-log/
 schema-log/
-src/backend/log
-post-process-log/
-node_modules/
-code-to-material-output/
-code-file-content/
-code-to-api-json-log/
-code-to-api-json-log-2/
-src\api-log
-npm-to-api-json-log/
-code-to-api-json-log-3/
-url-to-api-log/
-npm-api-file-content/
-complete-schema-log/
 raw-api-log/
 output-log/

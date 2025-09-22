@@ -8,6 +8,7 @@ const { postProcessSchemas } = require('../../src/post-processing/post-process-s
 const { saveApiArrayToFiles } = require('../../src/schema-conversion/cli');
 const { createTask, updateTask, getTask, TASK_STATUS } = require('../utils/taskManager');
 const path = require('path');
+const fs = require('fs');
 
 const multer = require('multer'); // 处理文件上传的中间件
 const { v4: uuidv4 } = require('uuid'); // 生成临时文件名（可选）
@@ -15,18 +16,50 @@ const { v4: uuidv4 } = require('uuid'); // 生成临时文件名（可选）
 // 配置multer临时存储（仅内存存储，避免磁盘写入）
 const upload = multer({
   storage: multer.memoryStorage(), // 文件暂存到内存
-  limits: { fileSize: 50 * 1024 * 1024 }, // 限制单文件100MB
+  limits: { fileSize: 50 * 1024 * 1024 }, // 限制单文件50MB
 });
 
 /**
- * 创建物料导入任务
+ * 获取有效的默认路径（优先环境变量，次选兜底路径，确保绝对路径）
+ * @param {string} envKey - 环境变量键名
+ * @param {string} fallback - 兜底路径（相对于项目根目录）
+ * @returns {string} 绝对路径
+ */
+function getValidDefaultPath(envKey, fallback) {
+  // 1. 优先取环境变量，无则用兜底
+  const rawPath = process.env[envKey] || fallback;
+  // 2. 转换为绝对路径（基于项目根目录）
+  const absolutePath = path.resolve(__dirname, '../../', rawPath);
+  // 3. 若目录不存在则自动创建
+  if (!fs.existsSync(absolutePath)) {
+    fs.mkdirSync(absolutePath, { recursive: true });
+    console.log(`📁 自动创建默认目录：${absolutePath}`);
+  }
+  return absolutePath;
+}
+
+/**
+ * 创建物料导入任务（URL爬取）
  * @param {Request} req 
  * @param {Response} res 
  * @param {NextFunction} next 
  */
 async function createImportTask(req, res, next) {
   try {
-    const taskParams = req.body;
+    const { url, config: configStr } = req.body;
+
+    const defaultPaths = {
+      outputDir: getValidDefaultPath('DEFAULT_OUTPUT_DIR', 'output-log'),
+      schemaLogDir: getValidDefaultPath('DEFAULT_SCHEMA_LOG_DIR', 'schema-log'),
+      apiLogDir: getValidDefaultPath('DEFAULT_API_LOG_DIR', 'raw-api-log')
+    };
+
+    const taskParams = {
+      ...defaultPaths,
+      url,
+      config: configStr
+    };
+
     // 创建任务并初始化状态
     const taskId = createTask(taskParams);
     updateTask(taskId, {
@@ -70,7 +103,8 @@ async function createFileImportTask(req, res, next) {
         success: false
       });
     }
-    const { sourceType, config: configStr, outputDir, schemaLogDir, apiLogDir } = req.body;
+
+    const { sourceType, config: configStr } = req.body;
     if (!sourceType || !['code', 'npm'].includes(sourceType)) {
       return res.status(400).json({
         code: 400,
@@ -79,15 +113,20 @@ async function createFileImportTask(req, res, next) {
       });
     }
 
-    // 2. 创建任务并初始化状态
+    const defaultPaths = {
+      outputDir: getValidDefaultPath('DEFAULT_OUTPUT_DIR', 'output-log'),
+      schemaLogDir: getValidDefaultPath('DEFAULT_SCHEMA_LOG_DIR', 'schema-log'),
+      apiLogDir: getValidDefaultPath('DEFAULT_API_LOG_DIR', 'raw-api-log')
+    };
+
     const taskParams = {
+      ...defaultPaths, // 合并后端默认路径
       sourceType,
       config: configStr,
-      outputDir,
-      schemaLogDir,
-      apiLogDir,
       files: req.files.map(f => ({ originalname: f.originalname, buffer: f.buffer })) // 保留文件信息
     };
+
+    // 创建任务并初始化状态
     const taskId = createTask(taskParams);
     updateTask(taskId, {
       status: TASK_STATUS.PROCESSING,
@@ -143,7 +182,7 @@ async function processImportTask(taskId, params) {
         }
       });
 
-      // \调用封装函数解析校验config
+      // 调用封装函数解析校验config
       const config = parseAndValidateConfig(configStr);
 
       // 解析通过后执行爬取
@@ -316,7 +355,6 @@ function parseAndValidateConfig(configStr) {
     const invalidReason = !invalidComp.name ? '缺少name字段' : '缺少tables对象';
     throw new Error(`❌ config.components中存在无效组件：${JSON.stringify(invalidComp)}（${invalidReason}）`);
   }
-
 
   return config;
 }
