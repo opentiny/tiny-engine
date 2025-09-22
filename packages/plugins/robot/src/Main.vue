@@ -25,7 +25,6 @@
             >
               <robot-setting-popover
                 v-if="showPopover"
-                :typeValue="robotSettingState.selectedModel"
                 @changeType="changeModel"
                 @close="closePanel"
               ></robot-setting-popover>
@@ -635,6 +634,7 @@ export default {
               activeName: model.activeName,
               baseUrl: model.baseUrl,
               model: model.model,
+              completeModel: model.completeModel,
               apiKey: model.apiKey
             }
             singleAttachmentItems.value = []

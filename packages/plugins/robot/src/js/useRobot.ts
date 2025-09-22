@@ -33,14 +33,18 @@ const AIModelOptions = [
       { label: 'qwen-max', value: 'qwen-max' },
       { label: 'qwen-turbo', value: 'qwen-turbo' },
       { label: 'qwen-long', value: 'qwen-long' },
+      { label: 'deepseek-r1', value: 'deepseek-r1' },
+      { label: 'deepseek-v3', value: 'deepseek-v3' }
+    ],
+    completeModel: [
       { label: 'qwen2.5-14b-instruct', value: 'qwen2.5-14b-instruct' },
       { label: 'qwen2.5-7b-instruct', value: 'qwen2.5-7b-instruct' },
       { label: 'qwen2.5-coder-7b-instruct', value: 'qwen2.5-coder-7b-instruct' },
       { label: 'qwen2.5-omni', value: 'qwen2.5-omni' },
       { label: 'qwen3-14b', value: 'qwen3-14b' },
       { label: 'qwen3-8b', value: 'qwen3-8b' },
-      { label: 'deepseek-r1', value: 'deepseek-r1' },
-      { label: 'deepseek-v3', value: 'deepseek-v3' }
+      { label: 'deepseek-r1-distill-qwen-1.5b', value: 'deepseek-r1-distill-qwen-1.5b' },
+      { label: 'deepseek-r1-distill-qwen-32b', value: 'deepseek-r1-distill-qwen-32b' }
     ]
   },
   {
@@ -48,9 +52,7 @@ const AIModelOptions = [
     value: 'https://api.deepseek.com/v1',
     model: [
       { label: 'deepseek-chat', value: 'deepseek-chat' },
-      { label: 'deepseek-reasoner', value: 'deepseek-reasoner' },
-      { label: 'deepseek-r1-distill-qwen-1.5b', value: 'deepseek-r1-distill-qwen-1.5b' },
-      { label: 'deepseek-r1-distill-qwen-32b', value: 'deepseek-r1-distill-qwen-32b' }
+      { label: 'deepseek-reasoner', value: 'deepseek-reasoner' }
     ]
   },
   {
@@ -75,7 +77,7 @@ const robotSettingState = reactive({
     activeName: EXISTING_MODELS,
     baseUrl: getAIModelOptions()[0].value,
     model: getAIModelOptions()[0].model[0].value,
-    maxTokens: getAIModelOptions()[0].model[0].maxTokens,
+    completeModel:  getAIModelOptions()[0].completeModel[0]?.value || '',
     apiKey: ''
   }
 })

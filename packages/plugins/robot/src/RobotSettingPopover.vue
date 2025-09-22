@@ -19,6 +19,13 @@
               placeholder="请选择"
             ></tiny-select>
           </tiny-form-item>
+          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+            <tiny-select
+              v-model="state.existFormData.completeModel"
+              :options="state.completeModelOptions"
+              placeholder="请选择"
+            ></tiny-select>
+          </tiny-form-item>
           <tiny-form-item prop="apiKey" label-width="150px">
             <template #label>
               大模型API Key
@@ -48,6 +55,13 @@
           </tiny-form-item>
           <tiny-form-item prop="model" label="模型名称" label-width="150px">
             <tiny-input class="filedName" v-model="state.customizeFormData.model" placeholder="请输入"></tiny-input>
+          </tiny-form-item>
+          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+            <tiny-input
+              class="filedName"
+              v-model="state.customizeFormData.completeModel"
+              placeholder="请输入"
+            ></tiny-input>
           </tiny-form-item>
           <tiny-form-item prop="apiKey" label-width="150px">
             <template #label>
@@ -97,14 +111,8 @@ export default {
     TinyTabItem,
     TinyAlert
   },
-  props: {
-    typeValue: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   setup(props, { emit }) {
-    const { EXISTING_MODELS, CUSTOMIZE, getAIModelOptions } = useRobot()
+    const { EXISTING_MODELS, CUSTOMIZE, getAIModelOptions, robotSettingState } = useRobot()
     const robotSettingExistForm = ref(null)
     const robotSettingCustomizeForm = ref(null)
     const apiKeyTip =
@@ -114,22 +122,24 @@ export default {
     const state = reactive({
       activeName: EXISTING_MODELS,
       modelOptions: [],
+      completeModelOptions: [],
       existFormData: {
         label: '',
         baseUrl: '',
         model: '',
+        completeModel: '',
         apiKey: ''
       },
       customizeFormData: {
         baseUrl: '',
         model: '',
+        completeModel: '',
         apiKey: ''
       }
     })
 
     const customizeFormRules = {
       baseUrl: [{ required: true, message: '必填', trigger: 'blur' }],
-      model: [{ required: true, message: '必填', trigger: 'blur' }],
       apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
     }
 
@@ -141,8 +151,10 @@ export default {
       state.existFormData.apiKey = ''
       const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
       state.modelOptions = options?.model
+      state.completeModelOptions = options?.completeModel || []
       state.existFormData.label = options?.label
-      state.existFormData.model = state.modelOptions[0]?.value
+      state.existFormData.model = state.modelOptions[0]?.value || ''
+      state.existFormData.completeModel = state.completeModelOptions[0]?.value || ''
     }
 
     const confirm = () => {
@@ -161,6 +173,14 @@ export default {
           return
         }
 
+        robotSettingState.selectedModel.completeModel = formData.completeModel
+        localStorage.setItem(
+          'AICompleteModel',
+          JSON.stringify({
+            existModel: state.existFormData.completeModel,
+            customizeModel: state.customizeFormData.completeModel
+          })
+        )
         emit('changeType', {
           activeName: state.activeName,
           ...formData
@@ -170,7 +190,8 @@ export default {
     }
 
     const initFormData = () => {
-      const initModel = props.typeValue
+      const smallModel = JSON.parse(localStorage.getItem('AICompleteModel')) || null
+      const initModel = robotSettingState.selectedModel
       const data = {
         baseUrl: initModel.baseUrl,
         model: initModel.model,
@@ -181,13 +202,18 @@ export default {
       if (state.activeName === EXISTING_MODELS) {
         state.existFormData = {
           label: initModel.label,
+          completeModel: smallModel?.existModel ? smallModel.existModel : initModel.completeModel,
           ...data
         }
         const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
         state.modelOptions = options?.model
+        state.completeModelOptions = options?.completeModel || []
       }
       if (state.activeName === CUSTOMIZE) {
-        state.customizeFormData = data
+        state.customizeFormData = { ...data }
+        state.customizeFormData.completeModel = smallModel?.customizeModel
+          ? smallModel.customizeModel
+          : initModel.completeModel
       }
     }
 
