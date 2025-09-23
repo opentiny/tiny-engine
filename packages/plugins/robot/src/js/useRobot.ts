@@ -18,25 +18,21 @@ import meta from '../../meta'
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
 const VISUAL_MODEL = ['qwen-vl-max', 'qwen-vl-plus']
-const TALK_TYPE = 'talk'
-const MCP_TYPE = 'mcp'
-const BUILD_TYPE = 'build'
+const AI_MODES = { Builder: 'builder', Chat: 'chat' }
 
 const AIModelOptions = [
   {
     label: '阿里云百炼',
     value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     model: [
-      { label: 'qwen-vl-max', value: 'qwen-vl-max' },
-      { label: 'qwen-vl-plus', value: 'qwen-vl-plus' },
+      { label: 'qwen-vl-max', value: 'qwen-vl-max', ability: ['visual'] },
+      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', ability: ['visual'] },
       { label: 'qwen-plus', value: 'qwen-plus' },
       { label: 'qwen-max', value: 'qwen-max' },
       { label: 'qwen-turbo', value: 'qwen-turbo' },
       { label: 'qwen-long', value: 'qwen-long' },
       { label: 'deepseek-r1', value: 'deepseek-r1' },
-      { label: 'deepseek-v3', value: 'deepseek-v3' }
-    ],
-    completeModel: [
+      { label: 'deepseek-v3', value: 'deepseek-v3' },
       { label: 'qwen2.5-14b-instruct', value: 'qwen2.5-14b-instruct' },
       { label: 'qwen2.5-7b-instruct', value: 'qwen2.5-7b-instruct' },
       { label: 'qwen2.5-coder-7b-instruct', value: 'qwen2.5-coder-7b-instruct' },
@@ -77,7 +73,7 @@ const robotSettingState = reactive({
     activeName: EXISTING_MODELS,
     baseUrl: getAIModelOptions()[0].value,
     model: getAIModelOptions()[0].model[0].value,
-    completeModel:  getAIModelOptions()[0].completeModel[0]?.value || '',
+    completeModel: getAIModelOptions()[0].model[0].value || '',
     apiKey: ''
   }
 })
@@ -181,9 +177,7 @@ export default () => {
     EXISTING_MODELS,
     CUSTOMIZE,
     VISUAL_MODEL,
-    TALK_TYPE,
-    MCP_TYPE,
-    BUILD_TYPE,
+    AI_MODES,
     AIModelOptions,
     getAIModelOptions,
     robotSettingState,

@@ -3,7 +3,13 @@
     <div class="header">设置</div>
     <tiny-tabs tab-style="button-card" class="full-width-tabs" v-model="state.activeName">
       <tiny-tab-item title="可选模型" :name="EXISTING_MODELS">
-        <tiny-form ref="robotSettingExistForm" label-position="top" :model="state.existFormData" validate-type="text">
+        <tiny-form
+          :rules="existFormRules"
+          ref="robotSettingExistForm"
+          label-position="top"
+          :model="state.existFormData"
+          validate-type="text"
+        >
           <tiny-form-item prop="baseUrl" label="大模型平台" label-width="150px">
             <tiny-select
               v-model="state.existFormData.baseUrl"
@@ -22,7 +28,7 @@
           <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
             <tiny-select
               v-model="state.existFormData.completeModel"
-              :options="state.completeModelOptions"
+              :options="state.modelOptions"
               placeholder="请选择"
             ></tiny-select>
           </tiny-form-item>
@@ -122,7 +128,6 @@ export default {
     const state = reactive({
       activeName: EXISTING_MODELS,
       modelOptions: [],
-      completeModelOptions: [],
       existFormData: {
         label: '',
         baseUrl: '',
@@ -143,6 +148,10 @@ export default {
       apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
     }
 
+    const existFormRules = {
+      apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
+    }
+
     const closePanel = () => {
       emit('close')
     }
@@ -151,10 +160,9 @@ export default {
       state.existFormData.apiKey = ''
       const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
       state.modelOptions = options?.model
-      state.completeModelOptions = options?.completeModel || []
       state.existFormData.label = options?.label
       state.existFormData.model = state.modelOptions[0]?.value || ''
-      state.existFormData.completeModel = state.completeModelOptions[0]?.value || ''
+      state.existFormData.completeModel = state.modelOptions[0]?.value || ''
     }
 
     const confirm = () => {
@@ -207,7 +215,6 @@ export default {
         }
         const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
         state.modelOptions = options?.model
-        state.completeModelOptions = options?.completeModel || []
       }
       if (state.activeName === CUSTOMIZE) {
         state.customizeFormData = { ...data }
@@ -227,6 +234,7 @@ export default {
       robotSettingCustomizeForm,
       state,
       customizeFormRules,
+      existFormRules,
       confirm,
       closePanel,
       changeBaseUrl,

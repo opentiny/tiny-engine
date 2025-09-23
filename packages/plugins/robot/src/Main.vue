@@ -71,11 +71,7 @@
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="
-                singleAttachmentItems.length < 1 &&
-                VISUAL_MODEL.includes(robotSettingState.selectedModel.model) &&
-                aiType === BUILD_TYPE
-              "
+              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === AI_MODES['Builder']"
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
@@ -95,7 +91,7 @@
               </template>
               <template #footer-left>
                 <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
-                <mcp-server :position="mcpDrawerPosition" v-if="aiType === TALK_TYPE"></mcp-server>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === AI_MODES['Chat']"></mcp-server>
               </template>
             </tr-sender>
           </template>
@@ -193,9 +189,7 @@ export default {
       getAIModelOptions,
       isValidFastJsonPatch,
       VISUAL_MODEL,
-      TALK_TYPE,
-      MCP_TYPE,
-      BUILD_TYPE,
+      AI_MODES,
       robotSettingState
     } = useRobot()
     const { pageState, importSchema, setSaved } = useCanvas()
@@ -217,7 +211,7 @@ export default {
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果。'
-    const aiType = ref(TALK_TYPE)
+    const aiType = ref(AI_MODES['Chat'])
     const chatContainerRef = ref(null)
     const showTeleport = ref(false)
     const { deepClone, string2Obj, reactiveObj2String: obj2String } = utils
@@ -267,7 +261,7 @@ export default {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       let firstContent = firstMessage.content
-      if (aiType.value === BUILD_TYPE) {
+      if (aiType.value === AI_MODES['Builder']) {
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
             item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
@@ -277,7 +271,7 @@ export default {
           return item
         })
       }
-      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
         firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
       }
 
@@ -320,7 +314,7 @@ export default {
     // 处理响应
     const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }, currentJson) => {
       try {
-        if (aiType.value === BUILD_TYPE) {
+        if (aiType.value === AI_MODES['Builder']) {
           const regex = /```json([\s\S]*?)```/
           const match = chatMessage?.content.match(regex)
 
@@ -344,7 +338,7 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         }
-        if (aiType.value === TALK_TYPE) {
+        if (aiType.value === AI_MODES['Chat']) {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
           messages.value[messages.value.length - 1].content = chatMessage?.content
@@ -360,7 +354,7 @@ export default {
     // 发送流式请求
     const sendStreamRequest = async () => {
       const requestData = getSendSeesionProcess()
-      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
         try {
           requestLoading.value = true
           await scrollContent()
@@ -506,7 +500,7 @@ export default {
           text
         }
       ]
-      if (singleAttachmentItems.value.length > 0 && aiType.value === BUILD_TYPE) {
+      if (singleAttachmentItems.value.length > 0 && aiType.value === AI_MODES['Builder']) {
         content.push({
           type: 'image_url',
           image_url: {
@@ -536,7 +530,7 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        if (!sessionProcess?.messages?.length && aiType.value !== TALK_TYPE) {
+        if (!sessionProcess?.messages?.length && aiType.value !== AI_MODES['Chat']) {
           sessionProcess?.messages.push({
             role: 'system',
             content: [
@@ -552,7 +546,7 @@ export default {
         messages.value.push(message)
         sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
-        if (aiType.value === BUILD_TYPE && (!searchContent.value || !sessionProcess.messages?.length)) {
+        if (aiType.value === AI_MODES['Builder'] && (!searchContent.value || !sessionProcess.messages?.length)) {
           await search(realContent)
         }
 
@@ -574,7 +568,7 @@ export default {
       robotSettingState.selectedModel = {
         ...JSON.parse(aiSession)?.foundationModel
       }
-      aiType.value = JSON.parse(aiSession)?.aiType
+      aiType.value = JSON.parse(aiSession)?.aiType || aiType.value
     }
 
     const initChat = () => {
@@ -802,6 +796,12 @@ export default {
       }
     })
 
+    const isVisualModel = () => {
+      const platform = AIModelOptions.find((option) => option.value === robotSettingState.selectedModel.baseUrl)
+      const modelAbility = platform.model.find((item) => item.value === robotSettingState.selectedModel.model)
+      return modelAbility?.ability?.includes('visual') || false
+    }
+
     return {
       chatContainerRef,
       robotVisible,
@@ -824,9 +824,7 @@ export default {
       MarkdownRenderer,
       requestLoading,
       aiType,
-      TALK_TYPE,
-      MCP_TYPE,
-      BUILD_TYPE,
+      AI_MODES,
       showTeleport,
       sendContent,
       endContent,
@@ -841,6 +839,7 @@ export default {
       handleSingleFileRemove,
       handleSingleFileRetry,
       typeChange,
+      isVisualModel,
       contentRenderers,
       mcpDrawerPosition
     }

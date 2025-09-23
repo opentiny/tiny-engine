@@ -1,7 +1,7 @@
 <template>
   <div class="button-wrapper">
     <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
-      <tiny-tab-item class="json-tab" :name="TALK_TYPE">
+      <tiny-tab-item class="json-tab" :name="AI_MODES['Chat']">
         <template #title>
           <tiny-tooltip effect="light" content="对话">
             <template #content>
@@ -19,7 +19,7 @@
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
-      <tiny-tab-item :name="BUILD_TYPE">
+      <tiny-tab-item :name="AI_MODES['Builder']">
         <template #title>
           <tiny-tooltip effect="light" content="智能搭建">
             <template #content>
@@ -56,14 +56,14 @@ export default {
   props: {
     aiType: {
       type: String,
-      default: 'talk'
+      default: 'chat'
     }
   },
   emits: ['typeChange'],
   setup(props, { emit }) {
-    const { TALK_TYPE, MCP_TYPE, BUILD_TYPE } = useRobot()
+    const { AI_MODES } = useRobot()
     const state = reactive({
-      activeNameTabs: props.aiType || TALK_TYPE
+      activeNameTabs: props.aiType || AI_MODES['Chat']
     })
 
     const handleTabChange = (value) => {
@@ -80,9 +80,7 @@ export default {
 
     return {
       state,
-      TALK_TYPE,
-      MCP_TYPE,
-      BUILD_TYPE
+      AI_MODES
     }
   }
 }
