@@ -195,15 +195,15 @@ const generateBaseReference = () => {
 }
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
-  const { model, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
-  if (!model || !apiKey || !baseUrl) {
-    throw new Error(`"modelName" & "apiKey" & "baseUrl" cannot be empty`)
+  const { completeModel, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
+  if (!completeModel || !apiKey || !baseUrl) {
+    throw new Error(`"model" & "apiKey" & "baseUrl" cannot be empty`)
   }
   const referenceContext = generateBaseReference()
   return getMetaApi(META_SERVICE.Http).post(
     `${baseUrl}/chat/completions`,
     {
-      model,
+      model: completeModel,
       messages: [
         {
           role: 'user',
