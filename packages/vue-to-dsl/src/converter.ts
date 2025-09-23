@@ -586,4 +586,188 @@ export class VueToDslConverter {
     const schema = await this.convertAppDirectory(appRoot)
     return schema
   }
+
+  async convertAppFromDirectory(files: FileList): Promise<any> {
+    const fileArray = Array.from(files)
+
+    // Filter out node_modules
+    const relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
+
+    const readText = async (file: File) => {
+      return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = () => reject(reader.error)
+        reader.readAsText(file)
+      })
+    }
+
+    // 1) Pages: src/views/**/*.vue
+    const vueFiles = relevantFiles.filter(
+      (file) => file.webkitRelativePath.includes('src/views/') && file.name.endsWith('.vue')
+    )
+    const pageSchemas: any[] = []
+    for (const vf of vueFiles) {
+      const code = await readText(vf)
+      if (!code) continue
+      const base = vf.name || 'Page.vue'
+      const fileName = base.replace(/\.vue$/i, '')
+      const res = await this.convertFromString(code, fileName)
+      if (res.schema) pageSchemas.push(res.schema)
+    }
+
+    // 2) i18n
+    let i18n: any = { en_US: {}, zh_CN: {} }
+    try {
+      const enFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/i18n/en_US.json'))
+      const zhFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/i18n/zh_CN.json'))
+      const en = enFile ? await readText(enFile) : '{}'
+      const zh = zhFile ? await readText(zhFile) : '{}'
+      i18n = { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
+    } catch {
+      // keep defaults
+    }
+
+    // 3) utils from src/utils.js
+    const utils: any[] = []
+    try {
+      const utilsFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/utils.js'))
+      if (utilsFile) {
+        const code = await readText(utilsFile)
+        const importRegex = /import\s+(?:{\s*([\w,\s]+)\s*}|([\w$]+))\s+from\s+['"]([^'"]+)['"]/g
+        const imports: Array<{ local: string; source: string; destructuring: boolean }> = []
+        let m: RegExpExecArray | null
+        while ((m = importRegex.exec(code))) {
+          const named = m[1]
+          const def = m[2]
+          const source = m[3]
+          if (named) {
+            named
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+              .forEach((n) => imports.push({ local: n, source, destructuring: true }))
+          } else if (def) {
+            imports.push({ local: def, source, destructuring: false })
+          }
+        }
+        const exportRegex = /export\s*{([^}]+)}/
+        const expMatch = code.match(exportRegex)
+        const exported = expMatch
+          ? expMatch[1]
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : []
+        for (const name of exported) {
+          const found = imports.find((imp) => imp.local === name)
+          if (found) {
+            utils.push({
+              name,
+              type: 'npm',
+              content: {
+                type: 'JSFunction',
+                value: '',
+                package: found.source,
+                destructuring: found.destructuring,
+                exportName: name
+              }
+            })
+          } else {
+            utils.push({ name, type: 'function', content: { type: 'JSFunction', value: '' } })
+          }
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // 4) dataSource
+    const dataSource: any = { list: [] }
+    try {
+      const dsFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/lowcodeConfig/dataSource.json'))
+      if (dsFile) {
+        const dsRaw = await readText(dsFile)
+        const dsJson = JSON.parse(dsRaw)
+        if (Array.isArray(dsJson.list)) dataSource.list = dsJson.list
+      }
+    } catch {
+      // ignore
+    }
+
+    // 5) globalState from src/stores/*.js
+    const storeFiles = relevantFiles.filter(
+      (f) => f.webkitRelativePath.includes('src/stores/') && f.name.endsWith('.js')
+    )
+    const globalState: any[] = []
+    for (const sf of storeFiles) {
+      try {
+        const code = await readText(sf)
+        if (!code || !/defineStore\s*\(/.test(code)) continue
+        const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
+        const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
+        const entry: any = { id: idMatch ? idMatch[1] : sf.name.replace(/\.[^.]+$/, '') }
+        if (stateMatch) {
+          try {
+            const objText = stateMatch[1]
+            const stateObj = Function(`return (${objText})`)()
+            entry.state = stateObj
+          } catch {
+            entry.state = {}
+          }
+        } else {
+          continue
+        }
+        if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
+          globalState.push(entry)
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    // 6) router enrichment
+    try {
+      const routerFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/router/index.js'))
+      if (routerFile) {
+        const rcode = await readText(routerFile)
+        const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
+        const homeName = homeMatch ? homeMatch[1] : ''
+        const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
+        const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
+        const routeRegex =
+          /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
+        let m: RegExpExecArray | null
+        while ((m = routeRegex.exec(rclean)))
+          routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
+        const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
+        for (const e of routeEntries) {
+          const base = (e.importPath.split('/').pop() || '').replace(/\.vue$/i, '')
+          byFile[base] = { routeName: e.routeName, routePath: e.routePath, isHome: e.routeName === homeName }
+        }
+        for (const ps of pageSchemas) {
+          const fileName = ps?.fileName
+          if (!fileName) continue
+          const info = byFile[fileName]
+          if (!info) continue
+          ps.meta = ps.meta || {}
+          ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
+          ps.meta.isPage = true
+          ps.meta.isHome = !!info.isHome
+        }
+      }
+    } catch {
+      // ignore
+    }
+
+    // 7) Assemble app schema
+    const appSchema = generateAppSchema(pageSchemas, {
+      i18n,
+      utils,
+      dataSource,
+      globalState
+    })
+
+    return appSchema
+  }
 }
