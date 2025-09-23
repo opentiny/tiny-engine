@@ -589,9 +589,7 @@ export class VueToDslConverter {
 
   async convertAppFromDirectory(files: FileList): Promise<any> {
     const fileArray = Array.from(files)
-
-    // Filter out node_modules
-    const relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
+    let relevantFiles = []
 
     const readText = async (file: File) => {
       return new Promise<string>((resolve, reject) => {
@@ -600,6 +598,58 @@ export class VueToDslConverter {
         reader.onerror = () => reject(reader.error)
         reader.readAsText(file)
       })
+    }
+
+    const createGitignoreFilter = (gitignoreContent: string) => {
+      const lines = gitignoreContent
+        .split('\n')
+        .map((l) => l.trim())
+        .filter((l) => l && !l.startsWith('#'))
+      const patterns = lines.map((line) => {
+        const isNegative = line.startsWith('!')
+        const pattern = isNegative ? line.slice(1) : line
+
+        // Convert gitignore pattern to regex
+        const regexString = pattern
+          .replace(/([.+?^${}()|[\]\\])/g, '\\$1') // Escape special chars
+          .replace(/\/\*\*$/, '/.*') // '/**' at the end
+          .replace(/\*\*/g, '.*') // '**'
+          .replace(/\*/g, '[^/]*') // '*'
+          .replace(/\?/g, '[^/]') // '?'
+
+        // Handle directory matching
+        if (regexString.endsWith('/')) {
+          return { regex: new RegExp(`^${regexString}`), isNegative }
+        }
+
+        return { regex: new RegExp(`^${regexString}(/.*)?$`), isNegative }
+      })
+
+      return (path: string) => {
+        let isIgnored = false
+        for (const { regex, isNegative } of patterns) {
+          if (regex.test(path)) {
+            isIgnored = !isNegative
+          }
+        }
+        return !isIgnored
+      }
+    }
+
+    const gitignoreFile = fileArray.find((file) => file.webkitRelativePath.endsWith('/.gitignore'))
+
+    if (gitignoreFile) {
+      const gitignoreContent = await readText(gitignoreFile)
+      const rootDir = gitignoreFile.webkitRelativePath.split('/')[0]
+      const filter = createGitignoreFilter(gitignoreContent)
+
+      relevantFiles = fileArray.filter((file) => {
+        const relativePath = file.webkitRelativePath.slice(rootDir.length + 1)
+        return relativePath && filter(relativePath)
+      })
+    } else {
+      // Filter out node_modules
+      relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
     }
 
     // 1) Pages: src/views/**/*.vue
@@ -738,8 +788,7 @@ export class VueToDslConverter {
         const routeRegex =
           /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
         let m: RegExpExecArray | null
-        while ((m = routeRegex.exec(rclean)))
-          routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
+        while ((m = routeRegex.exec(rclean))) routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
         const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
         for (const e of routeEntries) {
           const base = (e.importPath.split('/').pop() || '').replace(/\.vue$/i, '')
