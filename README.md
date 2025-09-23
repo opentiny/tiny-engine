@@ -1,7 +1,6 @@
 <p align="center">
   <a href="https://opentiny.design/tiny-engine" target="_blank" rel="noopener noreferrer">
     <img alt="Logo" src="logo.svg" width="200">
-
   </a>
 </p>
 
