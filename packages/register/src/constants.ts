@@ -66,6 +66,8 @@ export const META_APP = {
   State: 'engine.plugins.state',
   // 页面 schema 插件
   Schema: 'engine.plugins.schema',
+  // 资源管理 插件
+  Resource: 'engine.plugins.resource',
   // 新手帮助/帮助文档
   Help: 'engine.plugins.editorhelp',
   // 模型管理插件

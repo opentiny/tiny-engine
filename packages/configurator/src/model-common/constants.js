@@ -6,18 +6,18 @@ export const typeComponentsMap = {
       options: [
         {
           label: '是',
-          value: true,
+          value: true
         },
         {
           label: '否',
-          value: false,
-        },
+          value: false
+        }
       ]
-    },
+    }
   },
-  Date: { component: 'TinyDatePicker', props: { format: 'yyyy-MM-dd', valueFormat: 'yyyy-MM-dd' }},
+  Date: { component: 'TinyDatePicker', props: { format: 'yyyy-MM-dd', valueFormat: 'yyyy-MM-dd' } },
   Number: { component: 'TinyNumeric' },
   Enum: {
     component: 'TinySelect'
-  },
-};
+  }
+}

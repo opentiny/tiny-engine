@@ -52,6 +52,25 @@ export const serializeError = (err: unknown): string => {
   }
 }
 
+const formatToolResult = (
+  toolResult: string | { type: 'text'; text: string } | Array<{ type: 'text'; text: string }>
+) => {
+  let result: any = toolResult
+  if (Array.isArray(result) && result.length === 1) {
+    result = result[0]
+  }
+
+  if (typeof result === 'object' && result.type === 'text' && result.text) {
+    result = result.text
+  }
+
+  if (typeof result === 'string') {
+    return result
+  }
+
+  return JSON.stringify(result)
+}
+
 const handleToolCall = async (
   res: LLMResponse,
   tools: RequestTool[],
@@ -99,8 +118,7 @@ const handleToolCall = async (
         toolCallResult = serializeError(error)
       }
       toolMessages.push({
-        type: 'text',
-        content: toolCallResult,
+        content: formatToolResult(toolCallResult),
         role: 'tool',
         tool_call_id: tool.id
       })
