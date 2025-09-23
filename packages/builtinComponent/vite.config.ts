@@ -28,7 +28,7 @@ export default defineConfig({
       formats: ['es']
     },
     rollupOptions: {
-      external: ['vue']
+      external: ['vue', '@opentiny/vue', '@opentiny/vue-icon', '@opentiny/vue-renderless']
     }
   }
 })
