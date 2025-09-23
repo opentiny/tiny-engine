@@ -65,8 +65,8 @@ MCP工具管理面板允许用户：
         label: 'DeepSeek',
         value: 'https://api.deepseek.com/v1',
         model: [
-          { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
-          { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
+          { label: 'deepseek-chat', value: 'deepseek-chat'},
+          { label: 'deepseek-reasoner', value: 'deepseek-reasoner'}
         ]
       }
     ]
