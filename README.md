@@ -1,6 +1,10 @@
 <p align="center">
   <a href="https://opentiny.design/tiny-engine" target="_blank" rel="noopener noreferrer">
-    <img alt="OpenTiny Logo" src="logo.svg" height="100" style="max-width:100%;">
+    <picture>
+      <source srcset="logo-dark.svg" media="(prefers-color-scheme: dark)">
+      <source srcset="logo.svg" media="(prefers-color-scheme: light)">
+      <img alt="OpenTiny Logo" src="logo.svg" height="100" style="max-width:100%;">
+    </picture>
   </a>
 </p>
 
