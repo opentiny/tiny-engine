@@ -10,7 +10,14 @@
  *
  */
 import { ref } from 'vue'
-import { useCanvas, useResource, getMergeMeta, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useResource,
+  useRobot,
+  getMergeMeta,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import completion from './completion-files/context.md?raw'
 
 const keyWords = [
@@ -188,16 +195,15 @@ const generateBaseReference = () => {
 }
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
-  const { modelName, baseUrl } = getMergeMeta('engine.plugins.pagecontroller')?.options?.AIModel || {}
-  const apiKey = import.meta.env.VITE_API_TPKEN
-  if (!modelName || !apiKey || !baseUrl) {
+  const { model, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
+  if (!model || !apiKey || !baseUrl) {
     throw new Error(`"modelName" & "apiKey" & "baseUrl" cannot be empty`)
   }
   const referenceContext = generateBaseReference()
   return getMetaApi(META_SERVICE.Http).post(
     `${baseUrl}/chat/completions`,
     {
-      model: modelName,
+      model,
       messages: [
         {
           role: 'user',
