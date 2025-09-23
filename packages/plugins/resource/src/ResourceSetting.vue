@@ -89,15 +89,13 @@ export default {
         { min: 1, max: 32, message: '长度在1-32之间', trigger: 'blur' },
         {
           type: 'string',
-          validator: (value) => {
-            return new Promise((resolve, reject) => {
-              const regex = /^[a-zA-Z0-9_\-\u4e00-\u9fa5]+$/i
-              if (!regex.test(value)) {
-                reject(new Error('分组名称只能包含中文、英文、数字、下划线、中划线等字符'))
-              } else {
-                resolve()
-              }
-            })
+          validator: (rule, value, callback) => {
+            const regex = /^[\w\-\u4e00-\u9fa5]+$/
+            if (!regex.test(value)) {
+              callback(new Error('分组名称只能包含中文、英文、数字、下划线、中划线等字符'))
+            } else {
+              callback()
+            }
           }
         }
       ]
