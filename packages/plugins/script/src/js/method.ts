@@ -11,14 +11,13 @@
  */
 
 /* metaService: engine.plugins.pagecontroller.js-method */
-import { ref, reactive, onActivated, nextTick, onDeactivated } from 'vue'
+import { ref, reactive, onActivated, nextTick, watch } from 'vue'
 import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { string2Ast, ast2String, insertName, formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { lint } from '@opentiny/tiny-engine-common/js/linter'
 import { isFunction } from '@opentiny/vue-renderless/grid/static'
 import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
-import { useCollabMonaco } from '@opentiny/tiny-engine-multi-person-collaboration'
 
 const { SCHEMA_DATA_TYPE } = constants
 
@@ -30,11 +29,7 @@ const state = reactive({
   editorSelection: null,
   completionProvider: null,
   // 记录当前是否已经有弹窗，防止使用 ctrl + s 的时候重复弹窗
-  hasErrorPopup: false,
-  ydoc: null,
-  yText: null, // 用于存储 yText 实例
-  binding: null, // 用于存储 binding 实例
-  ytextObserver: null // 用于存储 observer 函数
+  hasErrorPopup: false
 })
 
 const monaco = ref(null)
@@ -66,12 +61,12 @@ const getScriptString = () => {
   return script
 }
 
-const change = () => {
-  // const lineBreakPattern = /\r\n/g
+const change = (value) => {
+  const lineBreakPattern = /\r\n/g
   // 使用 prettier 格式化之后，换行符会变成 \n
   // monaco 传入的 value 在 window下，换行符会变成 \r\n
   // 对比需要抹平换行符带来的差异
-  // state.isChanged = value.replace(lineBreakPattern, '\n') !== state.script.replace(lineBreakPattern, '\n')
+  state.isChanged = value.replace(lineBreakPattern, '\n') !== state.script.replace(lineBreakPattern, '\n')
 
   if (!monaco.value) {
     return
@@ -122,8 +117,7 @@ const saveMethods = async () => {
     return false
   }
 
-  // 从 Yjs 获取权威内容
-  const editorContent = state.ydoc.getText('monaco-code').toString()
+  const editorContent = monaco.value.getEditor().getValue()
   const ast = string2Ast(editorContent)
   const newMethods = {}
 
@@ -157,10 +151,10 @@ const saveMethods = async () => {
   useCanvas().setSaved(false)
 
   // 这里需要先置空，再设置回来真正的值, 目的是让 monaco 感知到变化, 更新内容。
-  // const newScript = getScriptString()
+  const newScript = getScriptString()
   state.script = ''
   await nextTick()
-  state.script = editorContent
+  state.script = newScript
   state.isChanged = false
 
   useNotify({
@@ -196,6 +190,7 @@ const setEditorSelection = () => {
   }
 
   const editor = monaco.value.getEditor()
+
   editor.setSelection(state.editorSelection)
   editor.focus()
 
@@ -238,98 +233,31 @@ export const highlightMethod = (name) => {
 }
 
 export default ({ emit }) => {
-  // watch(getScriptString, (newScript) => {
-  //   state.script = newScript
-  // })
+  watch(getScriptString, (newScript) => {
+    state.script = newScript
+  })
 
   onActivated(() => {
     nextTick(() => {
-      // state.script = getScriptString()
+      state.script = getScriptString()
       monaco.value?.focus()
       window.dispatchEvent(new Event('resize'))
 
-      // 当前用户
-      const currentUser = {
-        id: 2,
-        name: 'Bob',
-        color: '#4ECDC4',
-        avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
-      }
+      // TODO: bug过多，耦合度过高
+      // const currentUser = {
+      //   id: 2,
+      //   name: 'Bob',
+      //   color: '#4ECDC4',
+      //   avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
+      // }
 
-      // 获取 editor 实例
-      const editor = monaco.value?.getEditor()
-      if (!editor) {
-        // eslint-disable-next-line no-console
-        console.error('Editor instance not found in onActivated')
-        return
-      }
-
-      const { yText, ydoc, binding, provider } = useCollabMonaco({
-        currentUser,
-        editorRef: editor,
-        roomId: 'monaco-yjs',
-        fieldName: 'monaco-code'
-      })
-
-      state.ydoc = ydoc
-      state.yText = yText
-      state.binding = binding
-
-      // 将核心初始化逻辑封装成一个函数
-      const initializeContent = () => {
-        const initialContentFromSchema = getScriptString()
-        const yTextContent = yText.toString()
-
-        if (yText.length === 0) {
-          if (initialContentFromSchema) {
-            yText.insert(0, initialContentFromSchema)
-          }
-        } else if (yTextContent !== initialContentFromSchema) {
-          ydoc.transact(() => {
-            yText.delete(0, yText.length)
-            yText.insert(0, initialContentFromSchema)
-          })
-        }
-
-        state.script = yText.toString()
-        state.isChanged = false
-      }
-
-      // 同时处理“事件”和“状态”
-      if (provider.value?.synced) {
-        // a. 如果 provider 已经同步了，立即执行初始化
-        initializeContent()
-      } else {
-        // b. 如果 provider 还未同步，则监听一次 sync 事件
-        provider.value?.once('sync', (isSynced: boolean) => {
-          if (isSynced) {
-            initializeContent()
-          }
-        })
-      }
-
-      // 监听 yText 变化来更新 isChange 状态
-      const ytextObserver = () => {
-        const savedScript = state.script // state.script 作为“已保存状态”的快照
-        const currentContent = yText.toString()
-        const lineBreakPattern = /\r\n/g
-        state.isChanged = currentContent.replace(lineBreakPattern, '\n') !== savedScript.replace(lineBreakPattern, '\n')
-      }
-
-      yText.observe(ytextObserver)
+      // useCollabMonaco({
+      //   currentUser,
+      //   editorRef: monaco,
+      //   roomId: 'monaco-yjs',
+      //   fieldName: 'monaco-code'
+      // })
     })
-  })
-
-  onDeactivated(() => {
-    if (state.binding) {
-      state.binding.destroy()
-      state.binding = null
-    }
-
-    if (state.yText && state.ytextObserver) {
-      state.yText.unobserve(state.ytextObserver)
-      state.ytextObserver = null
-    }
   })
 
   return {
