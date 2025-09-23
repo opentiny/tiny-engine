@@ -1,7 +1,7 @@
 import { toRaw } from 'vue'
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import type { ResourceItem, ResourceTemplateItem, IState } from './type'
-import type { RegisteredResource, ReadResourceCallback } from '@modelcontextprotocol/sdk/server/mcp.d.ts'
+import type { RegisteredResource, ReadResourceCallback } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { ResourceTemplate } from '@modelcontextprotocol/sdk/server/mcp.js'
 
 const logger = console
@@ -130,6 +130,12 @@ export const removeResource = (state: IState, uri: string) => {
     logger.error('error when remove resource', uri, e)
   } finally {
     map.delete(uri)
+
+    try {
+      state.server?.sendResourceListChanged()
+    } catch (e) {
+      logger.error('error when sendResourceListChanged after removeResource', e)
+    }
   }
 }
 
@@ -151,14 +157,20 @@ export const updateResource = (state: IState, uri: string, updates?: UpdateResou
 
   if (Object.prototype.hasOwnProperty.call(updates, 'uri')) {
     const newUri = updates.uri as string | null | undefined
-    try {
-      map.delete(uri)
-      if (typeof newUri === 'string' && newUri) {
+    if (typeof newUri === 'string' && newUri && newUri !== uri) {
+      try {
+        map.delete(uri)
         map.set(newUri, inst)
+      } catch (e) {
+        logger.error('error when migrate resourceInstanceMap key', uri, '->', newUri, e)
       }
-    } catch (e) {
-      logger.error('error when migrate resourceInstanceMap key', uri, '->', newUri, e)
     }
+  }
+
+  try {
+    state.server?.sendResourceListChanged()
+  } catch (e) {
+    logger.error('error when sendResourceListChanged after updateResource', e)
   }
 }
 
