@@ -10,40 +10,37 @@
         ></generate-file-selector>
       </template>
     </toolbar-base>
-    <toolbar-base
-      class="ml-8"
-      content="导入文件"
-      :icon="options.icon?.upload || options?.icon"
-      :options="options"
-      @click-api="() => triggerUpload(false)"
-    >
-      <template #default>
-        <input
-          ref="fileInputRef"
-          type="file"
-          accept=".vue,.zip,application/zip"
-          style="display: none"
-          @change="handleFileChange"
-        />
+    <tiny-popover placement="bottom" trigger="hover" popper-class="option-popper">
+      <template #reference>
+        <toolbar-base class="ml-8" content="导入" :icon="options.icon?.upload || options?.icon" :options="options" />
       </template>
-    </toolbar-base>
-    <toolbar-base
-      class="ml-8"
-      content="导入目录"
-      :icon="options.icon?.upload || options?.icon"
-      :options="options"
-      @click-api="() => triggerUpload(true)"
-    >
-      <template #default>
-        <input
-          ref="directoryInputRef"
-          type="file"
-          webkitdirectory
-          style="display: none"
-          @change="handleFileChange"
-        />
-      </template>
-    </toolbar-base>
+      <div class="option-list">
+        <div class="option-item" @click="() => triggerUpload('file')">Vue 文件</div>
+        <div class="option-item" @click="() => triggerUpload('directory')">项目目录</div>
+        <div class="option-item" @click="() => triggerUpload('zip')">项目压缩包</div>
+      </div>
+    </tiny-popover>
+    <input
+      ref="fileInputRef"
+      type="file"
+      accept=".vue"
+      style="display: none"
+      @change="handleFileChange"
+    />
+    <input
+      ref="directoryInputRef"
+      type="file"
+      webkitdirectory
+      style="display: none"
+      @change="handleFileChange"
+    />
+    <input
+      ref="zipInputRef"
+      type="file"
+      accept=".zip,application/zip"
+      style="display: none"
+      @change="handleFileChange"
+    />
     <!-- 覆盖选择对话框 -->
     <overwrite-dialog
       :visible="state.showOverwriteDialog"
@@ -77,13 +74,15 @@ import { fetchMetaData, fetchPageList, fetchBlockSchema } from './http'
 import FileSelector from './FileSelector.vue'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
+import { TinyPopover } from '@opentiny/vue'
 
 // @ts-ignore
 export default {
   components: {
     GenerateFileSelector: FileSelector as any,
     ToolbarBase: ToolbarBase as any,
-    OverwriteDialog: OverwriteDialog as any
+    OverwriteDialog: OverwriteDialog as any,
+    TinyPopover: TinyPopover as any
   },
   props: {
     options: {
@@ -111,6 +110,8 @@ export default {
     const fileInputRef = ref<HTMLInputElement | null>(null)
     // 目录上传引用
     const directoryInputRef = ref<HTMLInputElement | null>(null)
+    // zip压缩包上传引用
+    const zipInputRef = ref<HTMLInputElement | null>(null)
 
     // 按页面ID切换到对应页面，确保 currentPage 与渲染一致
     const switchToPageByName = async (name?: string) => {
@@ -334,11 +335,13 @@ export default {
     }
 
     // 触发隐藏文件上传
-    const triggerUpload = (isFolder = false) => {
-      if (isFolder) {
-        directoryInputRef.value?.click()
-      } else {
+    const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
+      if (type === 'file') {
         fileInputRef.value?.click()
+      } else if (type === 'directory') {
+        directoryInputRef.value?.click()
+      } else if (type === 'zip') {
+        zipInputRef.value?.click()
       }
     }
 
@@ -380,6 +383,7 @@ export default {
         // 清空 input 以便可重复选择同一文件
         if (fileInputRef.value) fileInputRef.value.value = ''
         if (directoryInputRef.value) directoryInputRef.value.value = ''
+        if (zipInputRef.value) zipInputRef.value.value = ''
       }
     }
 
@@ -677,6 +681,7 @@ export default {
       handleFileChange,
       fileInputRef,
       directoryInputRef,
+      zipInputRef,
       handleOverwriteConfirm,
       handleOverwriteCancel
     }
@@ -687,6 +692,32 @@ export default {
 .toolbar-helpGuid {
   display: inline-flex;
   align-items: center;
+}
+
+.option-popper {
+  background-color: var(--ti-lowcode-toolbar-bg, #fff);
+  border: 1px solid var(--ti-lowcode-toolbar-border-color, #e5e7eb);
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+
+  .option-list {
+    display: flex;
+    flex-direction: column;
+
+    .option-item {
+      padding: 8px 8px;
+      cursor: pointer;
+      border-radius: 4px;
+      color: var(--ti-lowcode-toolbar-icon-color, #333);
+      transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+
+      &:hover {
+        background-color: var(--ti-lowcode-toolbar-hover-bg, #f3f4f6);
+        color: var(--ti-lowcode-toolbar-icon-color-hover, #1989fa);
+      }
+    }
+  }
 }
 
 .toolbar-generate {
