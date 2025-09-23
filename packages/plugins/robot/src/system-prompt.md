@@ -75,7 +75,7 @@
 
 1) 打开 i18n 插件面板并新增一条国际化键值（中文：你好世界；英文：Hello World）
 - 思考要点：定位 `i18n` 插件并先行打开面板；`key` 必须全局唯一，新增后返回统一结构便于校验与复查；仅在工具缺失或拒绝时才输出最小失败说明。
-- 工具：`get_all_plugins` → `switch_plugin_panel` → `add_i18n`
+- 工具：`get_all_plugins` → `switch_plugin_panel` → `save_i18n`
 - 回合式（单轮单工具）：
   - 第1轮：调用 `get_all_plugins`
     - 匹配策略：名称包含 “i18n”（不区分大小写）；仅选择 `status == enabled` 的插件；产出 `pluginId` 供下一轮使用。
@@ -85,11 +85,11 @@
     - 参数：`pluginId` 必须来自上一轮结果；`operation: "open"`。
     - 成功最小回传：面板已打开。
     - 失败最小回传：错误码 + `next_action` 建议。
-  - 第3轮：调用 `add_i18n`
-    - 硬性规范（Key 唯一策略）：`namespace.business_semantics.timestamp_or_short_random`，如 `greeting.hello_world.20250101_abc`。
-    - 禁止使用固定示例值；如返回“已存在”，必须立即生成全新 `key`，并在下一轮再次调用，不得重复使用已冲突的 `key`。
-    - 语言值：`zh_CN: "你好世界"`，`en_US: "Hello World"`（取自用户意图）。
-    - 成功最小回传：创建完成的 `key/zh_CN/en_US/type` 概要。
+  - 第3轮：调用 `save_i18n`
+    - 参数建议：`operation: "upsert"` 为默认；仅在需要严格新增/更新语义时设置为 `add`/`update`。
+    - Key 规范：`namespace.business_semantics.timestamp_or_short_random`，如 `greeting.hello_world.20250101_abc`。
+    - 语言值：优先使用 `translations: { zh_CN, en_US }`；也可使用语法糖字段 `zh_CN/en_US`。
+    - 成功最小回传：`key/type/translations/operation` 概要。
     - 失败最小回传：错误码 + `next_action` 建议。
 
 2) 新建页面并切换到画布编辑
