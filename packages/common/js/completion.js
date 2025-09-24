@@ -197,11 +197,11 @@ const generateBaseReference = () => {
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
   const { completeModel, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
   if (!completeModel || !apiKey || !baseUrl) {
-    throw new Error(`"model" & "apiKey" & "baseUrl" cannot be empty`)
+    return
   }
   const referenceContext = generateBaseReference()
   return getMetaApi(META_SERVICE.Http).post(
-    `${baseUrl}/chat/completions`,
+    '/app-center/api/chat/completions',
     {
       model: completeModel,
       messages: [
@@ -212,6 +212,7 @@ const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
             .replace('$codeAfterCursor$', codeAfterCursor)
         }
       ],
+      baseUrl,
       stream: false
     },
     {
