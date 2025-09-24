@@ -185,7 +185,7 @@ const deleteApi = (evidence = { id: modelData.value?.id }) => {
 
 const initFormData = () => {
   modelData.value = Object.fromEntries(
-    (formModel.value.parameters || []).map((item) => {
+    (formModel.value?.parameters || []).map((item) => {
       return [
         item.prop,
         item?.isModel
