@@ -196,7 +196,8 @@ const {
   branchDialogVisible,
   branchTargetCommit,
   newBranchName,
-  commitDialogVisible
+  commitDialogVisible,
+  close
 })
 
 const { formatDate, formatTime, getCommitTypePrefix, getCommitTypeClass, getConnectorClass } = useVersionControlUtils({

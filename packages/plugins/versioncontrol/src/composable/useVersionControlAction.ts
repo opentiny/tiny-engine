@@ -1,6 +1,7 @@
 import { versionManager } from '../js'
 import type { DisplayCommit } from './uesVersionControlData'
 import { useUtils } from './useUtils'
+import { useCanvas, useModal, useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export function useVersionControlActions(
   emit: (event: string, ...args: any[]) => void,
@@ -22,7 +23,8 @@ export function useVersionControlActions(
     branchDialogVisible,
     branchTargetCommit,
     newBranchName,
-    commitDialogVisible
+    commitDialogVisible,
+    close
   }: any
 ) {
   const { transformCommit } = useUtils()
@@ -106,10 +108,24 @@ export function useVersionControlActions(
   }
 
   const revertToCommit = (commit: DisplayCommit) => {
-    if (confirm(`确定要回滚到提交 ${commit.hash.slice(0, 7)} 吗？这将撤销所有后续更改。`)) {
-      alert(`已回滚到提交 ${commit.hash.slice(0, 7)}。 (模拟操作)`)
-      // 实际操作中会调用后端API执行回滚
-    }
+    const { confirm } = useModal()
+    confirm({
+      title: '提示',
+      message: `请确认是否回归到 "${commit.message}" 这个提交，这将覆盖你的所有更改`,
+      exec() {
+        versionManager.commitRepository.findById(commit.id).then((val) => {
+          useCanvas().importSchema(val.schema)
+
+          close()
+
+          useNotify({
+            type: 'success',
+            message: '版本回退成功！'
+          })
+        })
+      },
+      cancel() {}
+    })
   }
 
   const compareWithCurrent = () => {
