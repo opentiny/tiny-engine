@@ -1,5 +1,5 @@
 <template>
-  <div class="version-control-container">
+  <div class="version-control-container plugin-version-control">
     <version-header
       v-model:currentBranch="currentBranch"
       v-model:searchQuery="searchQuery"
@@ -210,7 +210,7 @@ const { formatDate, formatTime, getCommitTypePrefix, getCommitTypeClass, getConn
 .version-control-container {
   width: 50vw;
   height: 100%;
-  background-color: var(--ti-lowcode-plugin-version-control-bg, #ffffff);
+  background-color: #ffffff;
   box-shadow: 6px 0px 3px 0px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
