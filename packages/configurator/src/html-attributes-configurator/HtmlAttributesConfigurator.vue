@@ -94,7 +94,7 @@ export default {
 
     const rules = {
       key: [
-        { required: true, message: '名称必填', tigger: 'blur' },
+        { required: true, message: '名称必填', trigger: 'blur' },
         { max: 20, message: '长度不大于20', trigger: 'change' }
       ],
       value: [{ max: 200, message: '长度不大于200', trigger: 'change' }]
