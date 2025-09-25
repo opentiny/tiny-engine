@@ -362,12 +362,11 @@ LowCode-Material-Import/
         "slots": {
           "selector": "h3#buttongroup-slots + div.vp-table",
           "fieldMapping": {
-            "name": "事件名",
-            "description": "说明",
-            "subLabel": "子标签"
+            "name": "插槽名",
+            "description": "说明"
           }
         }
-        // 无slots和methods表格，故删除对应配置
+        // 无events和methods表格，故删除对应配置
       }
     }
   ]
