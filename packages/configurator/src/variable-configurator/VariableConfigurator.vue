@@ -70,6 +70,7 @@
                 :value="state.variable"
                 :options="editorOptions"
                 @editorDidMount="editorDidMount"
+                @change="editorChange"
               ></monaco-editor>
               <div v-if="isDataSource" class="datasource-poll-wrap">
                 <tiny-tooltip
@@ -112,7 +113,7 @@
         <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
         <div class="right">
           <tiny-button @click="cancel">取 消</tiny-button>
-          <tiny-button type="info" @click="confirm">确 定</tiny-button>
+          <tiny-button type="info" :disabled="confirmDisabled" @click="confirm">确 定</tiny-button>
         </div>
       </div>
     </template>
@@ -259,6 +260,8 @@ export default {
 
     const isDataSource = computed(() => state.active === CONSTANTS.DATASOUCE)
 
+    const confirmDisabled = computed(() => !state.variable)
+
     // 每次弹窗打开时都记录下绑定变量的旧值，用来判断保存按钮状态
     watch(
       () => state.isVisible,
@@ -269,6 +272,10 @@ export default {
         }
       }
     )
+
+    const editorChange = (value) => {
+      state.variable = value
+    }
 
     const bindKey = computed(() => props.modelValue?.value?.replace?.('this.state.', '') || '')
 
@@ -542,7 +549,9 @@ export default {
     }
 
     return {
+      confirmDisabled,
       editorDidMount,
+      editorChange,
       editorOptions,
       variableClick,
       remove,

@@ -96,7 +96,6 @@ export default {
       const translateChild = (data) => {
         data.forEach((item) => {
           item.show = pageState.nodesStatus[item.id] !== false
-          item.showEye = !item.show
           const child = item.children
           if (Array.isArray(child)) {
             translateChild(item.children)
@@ -151,8 +150,8 @@ export default {
     }
 
     const showNode = (data) => {
-      data.show = !data.show
-      pageState.nodesStatus[data.id] = data.show
+      pageState.nodesStatus[data.id] = !(pageState.nodesStatus[data.id] !== false)
+      data.show = pageState.nodesStatus[data.id]
 
       const { getRenderer, clearSelect } = useCanvas().canvasApi.value
 

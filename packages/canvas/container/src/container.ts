@@ -481,7 +481,18 @@ export const updateRect = (id?: string) => {
   const isBodySelected = !selectState.componentName && selectState.width > 0
 
   if (id || isBodySelected) {
-    setTimeout(() => setSelectRect(id))
+    const element = querySelectById(id) || getDocument().body
+    const duration = window.getComputedStyle(element).getPropertyValue('transition-duration')
+    let waitTime = 300
+    if (duration) {
+      const unit = duration.slice(-2)
+      if (unit === 'ms') {
+        waitTime = parseFloat(duration)
+      } else {
+        waitTime = parseFloat(duration) * 1000
+      }
+    }
+    setTimeout(() => setSelectRect(id), waitTime)
   } else {
     clearSelect()
   }
