@@ -68,10 +68,10 @@
               class="footer-sender"
               ref="senderRef"
               v-model="inputContent"
-              placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
+              placeholder="请输入您的问题"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === AI_MODES['Builder']"
+              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === AI_MODES.Agent"
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
@@ -91,7 +91,7 @@
               </template>
               <template #footer-left>
                 <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
-                <mcp-server :position="mcpDrawerPosition" v-if="aiType === AI_MODES['Chat']"></mcp-server>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === AI_MODES.Chat"></mcp-server>
               </template>
             </tr-sender>
           </template>
@@ -106,18 +106,7 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.robot.Main */
-import {
-  ref,
-  onMounted,
-  watchEffect,
-  type CSSProperties,
-  h,
-  resolveComponent,
-  computed,
-  watch,
-  nextTick,
-  type Component
-} from 'vue'
+import { ref, onMounted, type CSSProperties, h, resolveComponent, computed, watch, nextTick, type Component } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
 import {
   useRobot,
@@ -152,9 +141,9 @@ import LoadingRenderer from './mcp/LoadingRenderer.vue'
 import { sendMcpRequest, serializeError } from './mcp/utils'
 import type { RobotMessage } from './mcp/types'
 import RobotTypeSelect from './RobotTypeSelect.vue'
-import McpIconComponent from './icon-prompt/mcp-icon.vue'
-import PageIconComponent from './icon-prompt/page-icon.vue'
-import StudyIconComponent from './icon-prompt/study-icon.vue'
+import McpIconComponent from './icons/mcp-icon.vue'
+import PageIconComponent from './icons/page-icon.vue'
+import StudyIconComponent from './icons/study-icon.vue'
 import { jsonrepair } from 'jsonrepair'
 
 export default {
@@ -183,19 +172,11 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const {
-      getBlockContent,
-      initBlockList,
-      getAIModelOptions,
-      isValidFastJsonPatch,
-      VISUAL_MODEL,
-      AI_MODES,
-      robotSettingState
-    } = useRobot()
+    const { getBlockContent, initBlockList, getAIModelOptions, isValidFastJsonPatch, AI_MODES, robotSettingState } =
+      useRobot()
     const { pageState, importSchema, setSaved } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
-    const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
     let sessionProcess = null
     const messages = ref<RobotMessage[]>([])
@@ -211,14 +192,11 @@ export default {
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果。'
-    const aiType = ref(AI_MODES['Chat'])
+    const aiType = ref(AI_MODES.Agent)
     const chatContainerRef = ref(null)
     const showTeleport = ref(false)
     const { deepClone, string2Obj, reactiveObj2String: obj2String } = utils
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
-    watchEffect(() => {
-      avatarUrl.value = 'img/defaultAvator.png'
-    })
 
     const setContextSession = () => {
       localStorage.setItem(
@@ -261,7 +239,7 @@ export default {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       let firstContent = firstMessage.content
-      if (aiType.value === AI_MODES['Builder']) {
+      if (aiType.value === AI_MODES.Agent) {
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
             item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
@@ -271,7 +249,7 @@ export default {
           return item
         })
       }
-      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES.Chat) {
         firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
       }
 
@@ -314,7 +292,7 @@ export default {
     // 处理响应
     const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }, currentJson) => {
       try {
-        if (aiType.value === AI_MODES['Builder']) {
+        if (aiType.value === AI_MODES.Agent) {
           const regex = /```json([\s\S]*?)```/
           const match = chatMessage?.content.match(regex)
 
@@ -338,7 +316,7 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         }
-        if (aiType.value === AI_MODES['Chat']) {
+        if (aiType.value === AI_MODES.Chat) {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
           messages.value[messages.value.length - 1].content = chatMessage?.content
@@ -354,14 +332,14 @@ export default {
     // 发送流式请求
     const sendStreamRequest = async () => {
       const requestData = getSendSeesionProcess()
-      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES.Chat) {
         try {
           requestLoading.value = true
           await scrollContent()
           await sendMcpRequest(messages.value, {
             model: robotSettingState.selectedModel.model,
             headers: {
-              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
+              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN || ''}`
             },
             baseUrl: robotSettingState.selectedModel.baseUrl
           })
@@ -459,7 +437,7 @@ export default {
             }
           },
           {
-            Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
+            Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN || ''}`
           }
         )
       }
@@ -500,7 +478,7 @@ export default {
           text
         }
       ]
-      if (singleAttachmentItems.value.length > 0 && aiType.value === AI_MODES['Builder']) {
+      if (singleAttachmentItems.value.length > 0 && aiType.value === AI_MODES.Agent) {
         content.push({
           type: 'image_url',
           image_url: {
@@ -530,7 +508,7 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        if (!sessionProcess?.messages?.length && aiType.value !== AI_MODES['Chat']) {
+        if (!sessionProcess?.messages?.length && aiType.value !== AI_MODES.Chat) {
           sessionProcess?.messages.push({
             role: 'system',
             content: [
@@ -546,7 +524,7 @@ export default {
         messages.value.push(message)
         sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
-        if (aiType.value === AI_MODES['Builder'] && (!searchContent.value || !sessionProcess.messages?.length)) {
+        if (aiType.value === AI_MODES.Agent && (!searchContent.value || !sessionProcess.messages?.length)) {
           await search(realContent)
         }
 
@@ -805,7 +783,6 @@ export default {
     return {
       chatContainerRef,
       robotVisible,
-      avatarUrl,
       chatWindowOpened,
       activeMessages,
       inputContent,
@@ -819,7 +796,6 @@ export default {
       currentSchema,
       showPreview,
       singleAttachmentItems,
-      VISUAL_MODEL,
       promptItems,
       MarkdownRenderer,
       requestLoading,
@@ -880,6 +856,7 @@ export default {
     --tr-container-width: 400px;
     position: relative;
     height: 100%;
+    border: 1px solid var(--te-layout-common-border-color);
     .tr-container__dragging-bar {
       display: none;
     }

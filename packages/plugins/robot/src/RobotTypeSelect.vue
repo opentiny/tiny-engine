@@ -1,39 +1,39 @@
 <template>
   <div class="button-wrapper">
     <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
-      <tiny-tab-item class="json-tab" :name="AI_MODES['Chat']">
+      <tiny-tab-item :name="AI_MODES.Agent">
         <template #title>
-          <tiny-tooltip effect="light" content="对话">
-            <template #content>
-              <div class="tip-cantainer">
-                <div>
-                  <svg-icon name="chat" class="tip-common_icon"></svg-icon>
-                </div>
-                <div class="tips">
-                  <div class="tip-header">对话</div>
-                  <div class="tip-content">回答日常问题或在开始任务前进行对话。</div>
-                </div>
-              </div>
-            </template>
-            <svg-icon name="chat" class="plugin-common_icon"></svg-icon>
-          </tiny-tooltip>
-        </template>
-      </tiny-tab-item>
-      <tiny-tab-item :name="AI_MODES['Builder']">
-        <template #title>
-          <tiny-tooltip effect="light" content="智能搭建">
+          <tiny-tooltip effect="light">
             <template #content>
               <div class="tip-cantainer">
                 <div>
                   <svg-icon name="intelligent-construction" class="tip-common_icon"></svg-icon>
                 </div>
                 <div class="tips">
-                  <div class="tip-header">智能搭建</div>
-                  <div class="tip-content">根据描述文案自动搭建对应的页面。</div>
+                  <div class="tip-header">Agent</div>
+                  <div class="tip-content">根据描述文案或图片自动搭建对应的页面。</div>
                 </div>
               </div>
             </template>
             <svg-icon name="intelligent-construction" class="plugin-common_icon"></svg-icon>
+          </tiny-tooltip>
+        </template>
+      </tiny-tab-item>
+      <tiny-tab-item class="json-tab" :name="AI_MODES.Chat">
+        <template #title>
+          <tiny-tooltip effect="light">
+            <template #content>
+              <div class="tip-cantainer">
+                <div>
+                  <svg-icon name="chat" class="tip-common_icon"></svg-icon>
+                </div>
+                <div class="tips">
+                  <div class="tip-header">Chat</div>
+                  <div class="tip-content">回答日常问题或在开始任务前进行对话。</div>
+                </div>
+              </div>
+            </template>
+            <svg-icon name="chat" class="plugin-common_icon"></svg-icon>
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
@@ -55,15 +55,14 @@ export default {
   },
   props: {
     aiType: {
-      type: String,
-      default: 'chat'
+      type: String
     }
   },
   emits: ['typeChange'],
   setup(props, { emit }) {
     const { AI_MODES } = useRobot()
     const state = reactive({
-      activeNameTabs: props.aiType || AI_MODES['Chat']
+      activeNameTabs: props.aiType || AI_MODES.Agent
     })
 
     const handleTabChange = (value) => {

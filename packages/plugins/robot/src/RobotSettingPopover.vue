@@ -25,7 +25,17 @@
               placeholder="请选择"
             ></tiny-select>
           </tiny-form-item>
-          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+          <tiny-form-item prop="completeModel" label-width="150px">
+            <template #label>
+              补全模型名称
+              <tiny-tooltip
+                effect="light"
+                content="页面JS插件代码补全使用的AI模型。建议选择小模型以实现更快的补全速度，例如8b或14b。"
+                placement="top"
+              >
+                <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
+              </tiny-tooltip>
+            </template>
             <tiny-select
               v-model="state.existFormData.completeModel"
               :options="state.modelOptions"
@@ -62,7 +72,17 @@
           <tiny-form-item prop="model" label="模型名称" label-width="150px">
             <tiny-input class="filedName" v-model="state.customizeFormData.model" placeholder="请输入"></tiny-input>
           </tiny-form-item>
-          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+          <tiny-form-item prop="completeModel" label-width="150px">
+            <template #label>
+              补全模型名称
+              <tiny-tooltip
+                effect="light"
+                content="页面JS插件代码补全使用的AI模型。建议选择小模型以实现更快的补全速度，例如8b或14b。"
+                placement="top"
+              >
+                <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
+              </tiny-tooltip>
+            </template>
             <tiny-input
               class="filedName"
               v-model="state.customizeFormData.completeModel"

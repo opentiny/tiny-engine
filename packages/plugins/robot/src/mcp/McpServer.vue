@@ -6,11 +6,12 @@
   </div>
   <div class="robot-mcp-server-picker">
     <mcp-server-picker
+      title="扩展"
+      installedTabTitle="已添加的MCP服务"
       :popup-config="props.position"
       v-model:visible="visible"
       v-model:activeCount="activeCount"
       :installed-plugins="installedPlugins"
-      :market-plugins="marketPlugins"
       :show-market-tab="false"
       @plugin-expand="handlePluginExpand"
       @plugin-add="updateMcpServerStatus"
@@ -44,7 +45,6 @@ const props = withDefaults(
 
 const {
   inUseMcpServers: installedPlugins,
-  mcpServers: marketPlugins,
   refreshMcpServerTools,
   updateMcpServerToolStatus,
   updateMcpServerStatus
