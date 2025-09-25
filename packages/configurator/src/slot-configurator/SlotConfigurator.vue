@@ -186,7 +186,7 @@ export default {
 .e__switch-core::after {
   content: '';
   position: absolute;
-  top: 1px;
+  top: 2px;
   left: 1px;
   border-radius: 100%;
   transition: all 0.3s;

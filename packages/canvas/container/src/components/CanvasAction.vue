@@ -252,6 +252,7 @@ export default {
 
     const hide = () => {
       getRenderer().setCondition(getCurrent().schema?.id, false)
+      useCanvas().pageState.nodesStatus[getCurrent().schema?.id] = false
       updateRect()
     }
 
