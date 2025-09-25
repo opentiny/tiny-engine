@@ -17,8 +17,7 @@ import meta from '../../meta'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
-const VISUAL_MODEL = ['qwen-vl-max', 'qwen-vl-plus']
-const AI_MODES = { Builder: 'builder', Chat: 'chat' }
+const AI_MODES = { Agent: 'agent', Chat: 'chat' }
 
 const AIModelOptions = [
   {
@@ -176,7 +175,6 @@ export default () => {
   return {
     EXISTING_MODELS,
     CUSTOMIZE,
-    VISUAL_MODEL,
     AI_MODES,
     AIModelOptions,
     getAIModelOptions,

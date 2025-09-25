@@ -11,8 +11,6 @@ const ENGINE_MCP_SERVER: PluginInfo = {
   added: true
 }
 
-const mcpServers = ref<PluginInfo[]>([ENGINE_MCP_SERVER])
-
 const inUseMcpServers = ref<PluginInfo[]>([{ ...ENGINE_MCP_SERVER, enabled: true, expanded: true, tools: [] }])
 
 const updateServerTools = (serverId: string, tools: PluginTool[]) => {
@@ -68,12 +66,6 @@ const updateEngineServer = (engineServer: PluginInfo, enabled: boolean) => {
   })
 }
 
-// TODO: 连接MCP Server
-const connectMcpServer = (_server: PluginInfo) => {}
-
-// TODO: 断开连接
-const disconnectMcpServer = (_server: PluginInfo) => {}
-
 const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
   // 市场添加状态修改
   server.added = added
@@ -91,15 +83,11 @@ const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
       await updateEngineTools()
       updateEngineServer(newServer, added)
     }
-    // TODO: 连接MCP Server
-    connectMcpServer(newServer)
   } else {
     const index = inUseMcpServers.value.findIndex((p) => p.id === server.id)
     if (index > -1) {
       updateEngineServer(inUseMcpServers.value[index], added)
       inUseMcpServers.value.splice(index, 1)
-      // TODO: 断开连接
-      disconnectMcpServer(server)
     }
   }
 }
@@ -110,9 +98,6 @@ const updateMcpServerToolStatus = (currentServer: PluginInfo, toolId: string, en
     tool.enabled = enabled
     if (currentServer.id === ENGINE_MCP_SERVER.id) {
       updateEngineServerToolStatus(toolId, enabled)
-    } else {
-      // TODO: 更新MCP Server的Tool状态
-      // 获取 tool 实例调用 enableTool 或 disableTool
     }
   }
 }
@@ -134,7 +119,6 @@ const getLLMTools = async () => {
 
 export default function useMcpServer() {
   return {
-    mcpServers,
     inUseMcpServers,
     refreshMcpServerTools,
     updateMcpServerStatus,
