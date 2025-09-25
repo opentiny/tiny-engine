@@ -20,11 +20,6 @@
 
         <commit-category-select v-model="selectedOptions" placeholder="请选择多个选项" />
 
-        <div class="form-group">
-          <label for="schemaContent" class="form-label">Schema 内容 (JSON):</label>
-          <monaco-editor ref="container" class="form-schema" :value="state.pageData" :options="options" />
-        </div>
-
         <div class="form-actions">
           <button type="submit" :disabled="isLoading" class="submit-button">
             {{ isLoading ? '提交中...' : '创建提交' }}
@@ -41,7 +36,6 @@ import { ref, onMounted, reactive } from 'vue'
 import { useUtils } from '../composable/useUtils'
 import { versionManager } from '../js'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { utils } from '@opentiny/tiny-engine-utils'
 import CommitCategorySelect from './CommitCategorySelect.vue'
 
@@ -49,7 +43,6 @@ const { reactiveObj2String: obj2String, string2Obj } = utils
 
 export default {
   components: {
-    MonacoEditor: VueMonaco,
     CommitCategorySelect
   },
   props: {

@@ -367,7 +367,7 @@ const insertInner = ({ node, data }: Omit<InsertOptions, 'parent'>, position: st
   })
 
   // 多人协作同步
-  useRealtimeCollab().insertSharedNode({ node, parent: node, data }, POSITION.TOP)
+  useRealtimeCollab().insertSharedNode({ node, parent: node, data }, position)
 }
 
 export const removeNode = (id: string) => {

@@ -5,7 +5,10 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage"
   },
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -36,7 +39,11 @@
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "vite": "^5.4.2",
-    "@types/diff-match-patch": "^1.0.36"
+    "@types/diff-match-patch": "^1.0.36",
+    "vitest": "^2.1.4",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^24.1.1",
+    "@testing-library/jest-dom": "^6.6.3"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",

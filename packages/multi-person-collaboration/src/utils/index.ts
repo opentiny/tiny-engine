@@ -7,11 +7,13 @@ const UNDEFINED_PLACEHOLDER = '__undefined__'
  * @param target Y.Map 或 Y.Array
  * @param obj 要转换的对象
  */
+// toYjs 函数优化后的版本
+
 export function toYjs(target: Y.Map<any> | Y.Array<any>, obj: any) {
   if (Array.isArray(obj)) {
-    // target 必须是 Y.Array
-    if (!(target instanceof Y.Array)) throw new Error('Expected Y.Array for array input')
-
+    if (!(target instanceof Y.Array)) {
+      throw new Error('Expected Y.Array as target for array input')
+    }
     obj.forEach((item) => {
       if (item === undefined) {
         target.push([UNDEFINED_PLACEHOLDER])
@@ -21,7 +23,8 @@ export function toYjs(target: Y.Map<any> | Y.Array<any>, obj: any) {
         const childArr = new Y.Array()
         toYjs(childArr, item)
         target.push([childArr])
-      } else if (typeof item === 'object') {
+      } else if (typeof item === 'object' && item !== null) {
+        // 明确排除 null
         const childMap = new Y.Map()
         toYjs(childMap, item)
         target.push([childMap])
@@ -29,10 +32,10 @@ export function toYjs(target: Y.Map<any> | Y.Array<any>, obj: any) {
         target.push([item])
       }
     })
-  } else if (obj && typeof obj === 'object') {
-    // target 必须是 Y.Map
-    if (!(target instanceof Y.Map)) throw new Error('Expected Y.Map for object input')
-
+  } else if (typeof obj === 'object' && obj !== null) {
+    if (!(target instanceof Y.Map)) {
+      throw new Error('Expected Y.Map as target for object input')
+    }
     Object.entries(obj).forEach(([key, val]) => {
       if (val === undefined) {
         target.set(key, UNDEFINED_PLACEHOLDER)
@@ -40,17 +43,19 @@ export function toYjs(target: Y.Map<any> | Y.Array<any>, obj: any) {
         target.set(key, null)
       } else if (Array.isArray(val)) {
         const yArr = new Y.Array()
-        target.set(key, yArr) // 先 set 到父节点
-        toYjs(yArr, val) // 再递归写入
-      } else if (typeof val === 'object') {
+        target.set(key, yArr)
+        toYjs(yArr, val)
+      } else if (typeof val === 'object' && val !== null) {
+        // 明确排除 null
         const yMap = new Y.Map()
-        target.set(key, yMap) // 先 set 到父节点
+        target.set(key, yMap)
         toYjs(yMap, val)
       } else {
         target.set(key, val)
       }
     })
   }
+  // 注意：如果 obj 不是对象或数组（如 string, number），函数将静默地不做任何事。这是符合预期的。
 }
 
 // 将 Yjs Map 转回普通对象（递归）
@@ -70,19 +75,6 @@ export function fromYjs(value: any): any {
   } else {
     return value
   }
-}
-
-/**
- * 根据 fullpath 从嵌套对象/数组中取值
- * @param obj 根对象（普通 JSON 或 Y.Map.toJSON() 的结果）
- * @param path fullpath，如 ["children", 1, "props", "title"]
- * @returns 对应的值，如果不存在则返回 undefined
- */
-export const getValueByPath = (obj: any, path: (string | number)[]): any => {
-  return path.reduce((acc, key) => {
-    if (acc) return undefined // 避免继续取值报错
-    return acc[key]
-  }, obj)
 }
 
 /**

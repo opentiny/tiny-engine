@@ -21,7 +21,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -38,15 +39,17 @@
     "@opentiny/tiny-engine-canvas": "workspace:*",
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*",
-    "monaco-editor": "0.51.0"
+    "@opentiny/tiny-engine-utils": "workspace:*"
   },
   "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "glob": "^10.0.0",
     "lib0": "^0.2.85",
     "lodash-es": "^4.17.21",
     "mitt": "^3.0.1",
     "uuid": "^9.0.1",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
     "vite": "^5.4.2",
     "vitest": "^1.4.0",
     "vue": "^3.4.21",

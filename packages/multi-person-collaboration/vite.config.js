@@ -24,7 +24,7 @@ export default defineConfig({
   build: {
     sourcemap: true,
     lib: {
-      entry: path.resolve(__dirname, '.src/index.ts'),
+      entry: path.resolve(__dirname, 'src/index.ts'),
       name: 'tiny-engine-multi-person-collaboration',
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']

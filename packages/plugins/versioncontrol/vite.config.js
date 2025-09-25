@@ -35,5 +35,14 @@ export default defineConfig({
       },
       external: ['vue', /@opentiny\/tiny-engine.*/, /@opentiny\/vue.*/]
     }
+  },
+  // Vitest 配置
+  test: {
+    globals: true, // 让 describe/it/expect 全局可用
+    environment: 'jsdom', // 模拟浏览器环境
+    // setupFiles: './tests/setup.ts', // 可选：初始化文件
+    coverage: {
+      reporter: ['text', 'json', 'html'] // 覆盖率报告
+    }
   }
 })

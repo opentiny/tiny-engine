@@ -64,8 +64,10 @@ export function useYjs(roomId: string, options?: UseYjsOptions): UseYjsReturn {
       }
     })
 
-    // 刷新时调用 清理函数
-    window.addEventListener('beforeunload', cleanup)
+    // 只在浏览器环境才监听 window
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', cleanup)
+    }
   } else {
     // eslint-disable-next-line no-console
     console.warn('useYjs: No provider options provided. Yjs will operate in offline mode.')
