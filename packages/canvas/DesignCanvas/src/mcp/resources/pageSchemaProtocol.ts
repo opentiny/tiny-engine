@@ -24,7 +24,7 @@ export const pageSchemaResources = [
     title: '页面 Schema 协议',
     description: 'TinyEngine 页面 Schema 字段说明、用途、约束与最佳实践',
     mimeType: 'text/markdown',
-    annotations: { audience: ['assistant'], priority: 0.95 },
+    annotations: { audience: ['assistant', 'user'], priority: 0.95 },
     readCallback: async () => ({
       contents: [
         {
@@ -47,7 +47,7 @@ export const pageSchemaResourceTemplates = [
     title: '页面 Schema 协议（分节）',
     description: '按章节读取页面 Schema 协议内容',
     mimeType: 'text/markdown',
-    annotations: { audience: ['assistant'], priority: 0.95 },
+    annotations: { audience: ['assistant', 'user'], priority: 0.95 },
     variables: [
       {
         name: 'section',

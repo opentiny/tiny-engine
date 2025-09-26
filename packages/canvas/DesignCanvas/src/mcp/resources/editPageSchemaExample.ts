@@ -7,9 +7,10 @@ const EDIT_EXAMPLE_SECTION_TITLES: Record<string, string> = {
   css: 'CSS 示例',
   lifeCycles: 'LifeCycles 示例',
   methods: 'Methods 示例',
-  schema: '整页 Schema 示例',
-  codegen: '出码示例',
-  'do-dont': 'Do & Don’t'
+  schema: 'Schema 整体操作示例',
+  case: '实战案例：创建一个动态表单页面',
+  'do-dont': "Do & Don't 最佳实践",
+  faq: '常见问题解答'
 }
 
 // 根资源：编辑页面 Schema 的示例（整份文档）
@@ -20,7 +21,7 @@ export const editExamplesResources = [
     title: '编辑页面 Schema 的示例',
     description: '围绕 edit_page_schema 工具的结构化示例与注意事项',
     mimeType: 'text/markdown',
-    annotations: { audience: ['assistant'], priority: 0.85 },
+    annotations: { audience: ['assistant', 'user'], priority: 0.85 },
     readCallback: async () => ({
       contents: [
         {
@@ -43,7 +44,7 @@ export const editExamplesResourceTemplates = [
     title: '编辑页面 Schema 的示例（分节）',
     description: '按章节读取 edit_page_schema 的示例',
     mimeType: 'text/markdown',
-    annotations: { audience: ['assistant'], priority: 0.85 },
+    annotations: { audience: ['assistant', 'user'], priority: 0.85 },
     variables: [
       {
         name: 'section',
