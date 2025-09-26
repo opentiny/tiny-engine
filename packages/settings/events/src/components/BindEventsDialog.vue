@@ -184,12 +184,12 @@ export default {
       }
     }
 
-    const activePagePlugin = () => {
+    const activePagePlugin = (name) => {
       activePlugin(PLUGIN_NAME.Page).then(() => {
         // 确认js面板渲染完成之后再对目标函数进行高亮处理
         nextTick(() => {
           if (highlightMethod) {
-            highlightMethod(state.bindMethodInfo?.name)
+            highlightMethod(name)
           }
         })
       })
@@ -231,7 +231,7 @@ export default {
 
       saveMethod?.(method)
 
-      activePagePlugin()
+      activePagePlugin(name)
       close()
     }
 
