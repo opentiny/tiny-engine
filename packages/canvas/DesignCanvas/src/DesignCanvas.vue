@@ -287,7 +287,8 @@ export default {
         getBlockByName: useMaterial().getBlockByName,
         useModal,
         useMessage,
-        useNotify
+        useNotify,
+        enableTailwindCSS: getMergeMeta('engine.config')?.enableTailwindCSS
       },
       isBlock,
       getMoveDragBarState,

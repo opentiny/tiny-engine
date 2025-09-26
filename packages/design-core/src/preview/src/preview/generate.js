@@ -163,6 +163,7 @@ export const processAppJsCode = (code, cssList, enableTailwindCSS) => {
 
   if (enableTailwindCSS && !code.includes('@tailwindcss/browser')) {
     res += `\nimport('@tailwindcss/browser')\n`
+    res += `\nenableTailwindCSS()\n`
   }
 
   return res
