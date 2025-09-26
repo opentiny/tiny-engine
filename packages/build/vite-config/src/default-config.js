@@ -90,9 +90,7 @@ const getDefaultConfig = (engineConfig) => {
       }
     },
     define: {
-      process: {
-        env: {}
-      }
+      'process.env': {}
     },
     build: {
       commonjsOptions: {

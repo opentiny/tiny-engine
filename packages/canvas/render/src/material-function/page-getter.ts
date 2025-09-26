@@ -33,7 +33,7 @@ export function initStyle(key: string, content: string) {
   }
 
   handleScopedCss(key, content).then((scopedCss) => {
-    styleSheet.innerHTML = scopedCss.css
+    styleSheet.textContent = scopedCss.css
   })
 }
 
