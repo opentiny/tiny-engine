@@ -10,6 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "adm-zip": "^0.5.16",
+    "ant-design-vue": "^4.2.6",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "element-plus": "^2.11.1",

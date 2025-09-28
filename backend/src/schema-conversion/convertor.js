@@ -1344,15 +1344,7 @@ async function convertSingleSubComponent(
       console.log(`调试：准备保存错误日志，schemaText类型=${typeof schemaText}`);
       saveSchemaToFile(schemaText, subComponentName, true, schemaLogDir); // 标记为错误日志
     }
-    console.error(`[任务${subComponentName}] 转换失败：${error.message}`);
-
-    return {
-      subComponentName,
-      schema: null,
-      rawSchemaText: schemaText,
-      success: false,
-      error: error.message
-    };
+    throw new Error(`[任务${subComponentName}] 转换失败：${error.message}`);
   }
 }
 
@@ -1415,7 +1407,7 @@ function saveSchemaToFile(
     console.log(`子组件[${subComponentName}]：${logType}已保存至：${filePath}`);
 
   } catch (error) {
-    console.error(`保存子组件[${subComponentName}] 文件失败：${error.message}`);
+    throw new Error(`保存子组件[${subComponentName}] 文件失败：${error.message}`);
   }
 }
 
@@ -1493,14 +1485,7 @@ async function batchConvertToTinyEngineSchema(
         console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
         return result; // 成功结果（含subComponentName、schema等）
       } catch (error) {
-        console.error(`[批次${batchNumber}] 转换失败：${subComponentName} | 原因：${error.message}`);
-        // 失败结果（保持与原有结构一致，便于汇总）
-        return {
-          subComponentName,
-          success: false,
-          error: error.message,
-          schema: null
-        };
+        throw new Error(`[批次${batchNumber}] 转换失败：${subComponentName} | 原因：${error.message}`);
       }
     });
 

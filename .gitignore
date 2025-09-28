@@ -48,7 +48,5 @@ node_modules/
 # Stores VSCode versions used for testing VSCode extensions
 .vscode-test
 
-log/
-schema-log/
-raw-api-log/
-output-log/
+frontend/
+frontend-new/

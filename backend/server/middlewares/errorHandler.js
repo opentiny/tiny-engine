@@ -8,19 +8,6 @@ const { TASK_STATUS, updateTask } = require('../utils/taskManager');
  * @param {NextFunction} next 
  */
 function errorHandler(err, req, res, next) {
-  // 若有taskId，更新任务状态为失败
-  const { taskId } = req.body;
-  if (taskId) {
-    updateTask(taskId, {
-      status: TASK_STATUS.FAILED,
-      error: {
-        message: err.message,
-        stack: process.env.NODE_ENV === 'development' ? err.stack : ''
-      },
-      progress: 100
-    });
-  }
-
   // 格式化错误响应
   res.status(err.statusCode || 500).json({
     code: err.statusCode || 500,

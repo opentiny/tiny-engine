@@ -120,9 +120,11 @@ function getTask(taskId) {
     steps: task.steps, // 此时steps格式已统一，可正常序列化
     result: task.result,
     error: task.error,
-    createTime: task.createTime
+    createTime: task.createTim,
     // 过滤params字段：避免其中的复杂对象导致序列化异常
-    // params: task.params  // 若前端需要params，需单独处理（如只保留简单字段）
+    params: {
+      importType: task.params.importType // 仅返回类型，避免敏感/复杂数据
+    }
   }));
 
   // 打印返回给前端的steps数组，验证是否完整

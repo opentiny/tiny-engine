@@ -18,7 +18,7 @@ app.use(cors({
   methods: ['GET', 'POST'],
   credentials: true
 }));
-app.use(express.json({ limit: '10mb' })); // 支持较大的config参数
+app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // 注册路由

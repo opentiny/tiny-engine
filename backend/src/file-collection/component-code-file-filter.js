@@ -5,6 +5,7 @@
 
 const fs = require("fs");
 const os = require('os');
+const AdmZip = require('adm-zip');
 const path = require('path');
 require('dotenv').config({
   path: path.resolve(__dirname, '../../.env')
@@ -194,6 +195,48 @@ function saveUploadedFilesToTempDir(files) {
 }
 
 /**
+ * 解压zip压缩包到临时目录
+ * @param {Buffer} zipBuffer - 压缩包二进制数据
+ * @returns {string} 解压后的临时目录路径
+ */
+function extractZipToTempDir(zipBuffer) {
+  try {
+    // 创建临时目录（与文件上传复用同一命名规则）
+    const tempDir = path.join(os.tmpdir(), `code-component-${Date.now()}-${uuidv4().replace(/-/g, '')}`);
+    fs.mkdirSync(tempDir, { recursive: true });
+
+    // 初始化zip实例并解压（自动重建目录结构）
+    const zip = new AdmZip(zipBuffer);
+    zip.extractAllTo(tempDir, true); // true：覆盖已存在的文件/目录
+
+    console.log(`📦 压缩包已解压到临时目录：${tempDir}`);
+    return tempDir;
+  } catch (error) {
+    throw new Error(`压缩包解压失败：${error.message}`);
+  }
+}
+
+/**
+ * 保存单个上传文件到临时目录
+ * @param {Buffer} fileBuffer - 单个文件的二进制数据
+ * @param {string} fileName - 文件名（含扩展名，如 "button.vue"）
+ * @returns {string} 临时目录路径（文件所在目录）
+ */
+function saveSingleFileToTempDir(fileBuffer, fileName) {
+  // 创建临时目录
+  const tempDir = path.join(os.tmpdir(), `code-component-${Date.now()}-${uuidv4().replace(/-/g, '')}`);
+  fs.mkdirSync(tempDir, { recursive: true });
+
+  // 拼接文件绝对路径（临时目录下直接存放该文件）
+  const filePath = path.join(tempDir, fileName);
+  // 写入文件内容
+  fs.writeFileSync(filePath, fileBuffer);
+
+  console.log(`📥 单个文件已保存到临时目录：${filePath}`);
+  return tempDir; // 返回文件所在的临时目录
+}
+
+/**
  * 读取筛选出的API文件内容，拼接为总字符串（包含文件路径标识）
  * @param {Array<{filePath: string, fileName: string}>} filteredFiles - 筛选出的API文件列表
  * @param {string} componentDir - 组件根目录（用于拼接文件绝对路径）
@@ -204,7 +247,7 @@ function readAndConcatFiles(filteredFiles, componentDir) {
     throw new Error("没有需要分析的API文件");
   }
 
-  let totalContent = "以下是Element Plus组件的API相关文件内容，包含文件路径和源码：\n\n";
+  let totalContent = "以下是组件的API相关文件内容，包含文件路径和源码：\n\n";
 
   filteredFiles.forEach((file, index) => {
     // 拼接文件绝对路径
@@ -229,7 +272,7 @@ function readAndConcatFiles(filteredFiles, componentDir) {
 }
 
 /**
- * 筛选API文件并拼接内容的组合函数
+ * 筛选API文件并拼接内容的组合函数（本地目录版）
  * @param {string} componentDir - 组件目录（本地目录或临时目录）
  * @returns {Promise<{filteredFiles: Array, combinedContent: string, componentName: string, tempDir: string}>}
  */
@@ -257,47 +300,72 @@ async function filterAndConcatApiCodeFiles(componentDir) {
 }
 
 /**
- * 新增：筛选API文件并拼接内容的组合函数（上传文件版）
- * @param {Array<{originalname: string, buffer: Buffer}>} uploadedFiles - 前端上传的文件列表
+ * 处理前端上传的单个文件或压缩包，筛选API文件并拼接内容
+ * @param {Object} uploadData - 上传数据对象
+ * @param {Buffer} uploadData.data - 核心数据：单个文件或压缩包的二进制数据
+ * @param {string} uploadData.type - 上传类型："single"（单个文件）、"zip"（压缩包）
+ * @param {string} uploadData.fileName - 原始文件名（含扩展名，如 "button.vue"、"form.zip"）
  * @param {number} [concurrency=3] - 并行分析并发数
  * @returns {Promise<{filteredFiles: Array, combinedContent: string, componentName: string, tempDir: string}>}
  */
-async function filterAndConcatUploadedApiCodeFiles(uploadedFiles, concurrency = 3) {
-  if (!uploadedFiles || uploadedFiles.length === 0) {
-    throw new Error("未上传任何文件，无法筛选API信息");
+async function filterAndConcatUploadedApiSource(uploadData, concurrency = 3) {
+  let tempDir = null; // 临时目录，用于后续清理
+  try {
+    // 1. 基础参数校验
+    if (!uploadData || !uploadData.data || !uploadData.type || !uploadData.fileName) {
+      throw new Error("上传数据不完整：需包含 data（二进制）、type（类型）、fileName（文件名）");
+    }
+    if (!["single", "zip"].includes(uploadData.type)) {
+      throw new Error(`无效的上传类型: ${uploadData.type}，仅支持 "single"（单个文件）或 "zip"（压缩包）`);
+    }
+
+    // 2. 根据上传类型处理数据，生成临时目录
+    if (uploadData.type === "single") {
+      // 处理单个文件
+      tempDir = saveSingleFileToTempDir(uploadData.data, uploadData.fileName);
+    } else {
+      // 处理压缩包
+      tempDir = extractZipToTempDir(uploadData.data);
+    }
+
+    // 3. 复用本地目录的筛选逻辑（统一处理临时目录）
+    console.log(`🔍 正在筛选上传${uploadData.type === 'single' ? '文件' : '压缩包'}中的API相关文件...`);
+    const { filteredFiles } = await analyzeComponentApiFiles(tempDir, concurrency);
+    if (filteredFiles.length === 0) {
+      throw new Error(`未从上传${uploadData.type === 'single' ? '文件' : '压缩包'}中筛选出任何包含API信息的文件`);
+    }
+    console.log(`✅ 筛选完成，共找到 ${filteredFiles.length} 个API文件：`);
+    filteredFiles.forEach((file, index) => console.log(`  ${index + 1}. ${file.filePath}`));
+
+    // 4. 读取并拼接文件内容
+    console.log("\n📄 正在读取并拼接文件内容...");
+    // 生成组件名：单个文件取文件名（去扩展名），压缩包取临时目录名
+    let componentName;
+    if (uploadData.type === "single") {
+      componentName = path.basename(uploadData.fileName, path.extname(uploadData.fileName))
+        .replace(/^(\w)/, (match) => match.toUpperCase());
+    } else {
+      componentName = path.basename(tempDir)
+        .replace(/^code-component-\d+-/, '') // 移除临时目录前缀
+        .replace(/^(\w)/, (match) => match.toUpperCase()) || "ZipComponent";
+    }
+    const combinedContent = readAndConcatFiles(filteredFiles, tempDir);
+    console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
+
+    return {
+      filteredFiles,
+      combinedContent,
+      componentName,
+      tempDir // 返回临时目录供外部清理
+    };
+  } catch (error) {
+    // 异常时清理临时目录
+    if (tempDir && fs.existsSync(tempDir)) {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+      console.log(`⚠️  异常后已清理临时目录: ${tempDir}`);
+    }
+    throw error;
   }
-
-  // 1. 保存上传文件到临时目录
-  const tempDir = saveUploadedFilesToTempDir(uploadedFiles);
-  console.log(`📥 上传文件已保存到临时目录：${tempDir}`);
-
-  // 2. 复用本地目录的筛选逻辑
-  console.log("🔍 正在筛选上传文件中的API相关文件...");
-  const { filteredFiles } = await analyzeComponentApiFiles(tempDir, concurrency);
-  if (filteredFiles.length === 0) {
-    // 筛选失败仍清理临时目录
-    fs.rmSync(tempDir, { recursive: true, force: true });
-    throw new Error("未从上传文件中筛选出任何包含API信息的文件");
-  }
-  console.log(`✅ 筛选完成，共找到 ${filteredFiles.length} 个API文件：`);
-  filteredFiles.forEach((file, index) => console.log(`  ${index + 1}. ${file.filePath}`));
-
-  // 3. 复用拼接逻辑（在本文件内完成，符合需求）
-  console.log("\n📄 正在读取并拼接上传文件内容...");
-  // 组件名取上传文件的根目录名（或第一个文件的父目录名）
-  const firstFilePath = uploadedFiles[0].originalname;
-  const componentName = path.basename(path.dirname(firstFilePath))
-    .replace(/^(\w)/, (match) => match.toUpperCase()) || "UploadedComponent";
-  const combinedContent = readAndConcatFiles(filteredFiles, tempDir);
-  console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
-
-  // 返回临时目录路径，供外部清理
-  return {
-    filteredFiles,
-    combinedContent,
-    componentName,
-    tempDir
-  };
 }
 
 /**
@@ -352,7 +420,7 @@ module.exports = {
   getAllFiles,
   checkFileWithLLM,
   filterAndConcatApiCodeFiles,
-  filterAndConcatUploadedApiCodeFiles,
+  filterAndConcatUploadedApiSource,
   readAndConcatFiles,
   saveUploadedFilesToTempDir
 };

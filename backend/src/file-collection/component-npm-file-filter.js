@@ -1,5 +1,6 @@
 const os = require('os');
 const fs = require("fs");
+const { execSync } = require('child_process');
 const path = require('path');
 require('dotenv').config({
   path: path.resolve(__dirname, '../../.env')
@@ -14,36 +15,113 @@ const client = new OpenAI({
   timeout: 600000, // 10分钟超时
 });
 
-// 正则表达式
+// 匹配 "export { 组件名A, 组件名B };" / "export { 组件名A as 组件A别名 };"形式
 const EXPORT_COMPONENTS_PATTERN = /export\s+{\s*([^}]+?)\s*};/;
-// 新增：匹配导入/导出语句中的名称和路径（核心修改）
+// 匹配 "export default withInstall(组件名);" 形式
+const EXPORT_DEFAULT_WITH_INSTALL_PATTERN = /export\s+default\s+with(?:Install|NoopInstall)\s*\(\s*(\w+)\s*\)/;
+// 匹配 "export default 组件名;" 形式
+const EXPORT_DEFAULT_DIRECT_PATTERN = /export\s+default\s+(\w+)\s*;/;
+// 匹配导入/导出语句中的名称和路径
 const IMPORT_DECLARATION_PATTERN = /import\s+(?:\{.*?\s+as\s+)?(\w+)\s*from\s+'([^']+)'/g;
 const EXPORT_DECLARATION_PATTERN = /export\s+{\s*([^}]+?)\s*}\s+from\s+'([^']+)'/g;
 // 匹配withInstall赋值语句中的原始组件名
 const WITH_INSTALL_PATTERN = /const\s+\w+\s*=\s*with(?:Install|NoopInstall)\s*\(\s*(\w+)\s*,?.*?\)/g;
 
 /**
- * 处理前端上传的文件，保存到服务器临时目录并重建目录结构
- * @param {Array<{originalname: string, buffer: Buffer}>} files - 前端上传的文件列表（含相对路径）
- * @returns {string} 临时目录路径
+ * 🆕 新增函数：在node_modules中查找组件的源代码目录。
+ * 通过递归遍历 node_modules/<packageName> 寻找包含 index（任意后缀）的组件目录。
+ * @param {string} packageName - npm包名 (如: element-plus)
+ * @param {string} componentName - 组件名 (如: affix)
+ * @returns {string} 找到的组件目录绝对路径
+ * @throws {Error} 如果找不到对应的组件目录
  */
-function saveUploadedFilesToTempDir(files) {
-  // 创建服务器临时目录（如 /tmp/npm-component-xxxxxx，加npm前缀区分）
-  const tempDir = path.join(os.tmpdir(), `npm-component-${Date.now()}-${uuidv4().replace(/-/g, '')}`);
-  fs.mkdirSync(tempDir, { recursive: true });
+function findComponentDirectory(packageName, componentName) {
+  console.log(`\n🔍 正在 node_modules 中查找组件目录...`);
+  // 假设 node_modules 在后端根目录的父级或同级，我们从当前文件向上两级查找。
+  const projectRoot = path.resolve(__dirname, '../../');
+  const nodeModulesPath = path.join(projectRoot, 'node_modules');
 
-  // 遍历文件，按相对路径保存到临时目录
-  files.forEach(file => {
-    // file.originalname 是前端传递的相对路径（如 "index.mjs"、"src/select.vue"）
-    const filePath = path.join(tempDir, file.originalname);
-    // 确保父目录存在（如创建 src 目录）
-    fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    // 写入文件内容
-    fs.writeFileSync(filePath, file.buffer);
-  });
+  if (!fs.existsSync(nodeModulesPath)) {
+    throw new Error(`Node Modules目录不存在: ${nodeModulesPath}`);
+  }
 
-  return tempDir; // 返回临时目录路径，供后续分析使用
+  const packagePath = path.join(nodeModulesPath, packageName);
+  if (!fs.existsSync(packagePath)) {
+    throw new Error(`Npm 包未安装或路径错误: ${packagePath}`);
+  }
+
+  // 目标组件名的通用匹配（忽略大小写，并支持 ElAffix → Affix 的匹配）
+  const targetComponentLower = componentName.toLowerCase();
+
+  let foundPath = null;
+  const visited = new Set();
+
+  // 递归查找函数
+  function traverse(currentPath) {
+    if (foundPath) return; // 找到即停止
+    if (visited.has(currentPath)) return;
+    visited.add(currentPath);
+
+    try {
+      const entries = fs.readdirSync(currentPath, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const fullPath = path.join(currentPath, entry.name);
+
+        // 限制搜索深度，防止无限递归
+        const relativeToPackage = path.relative(packagePath, fullPath);
+        if (relativeToPackage.split(path.sep).length > 6) {
+          continue;
+        }
+
+        if (entry.isDirectory()) {
+          // 仅在当前目录的子目录中进行递归，跳过不需要的目录（如 .git, node_modules等）
+          if (['.git', 'node_modules', 'typings', 'test'].includes(entry.name.toLowerCase())) {
+            continue;
+          }
+
+          // 检查当前目录是否为目标组件目录
+          // 1. 检查目录名是否包含组件名 (如: 'Affix')
+          const isComponentDir = entry.name.toLowerCase().includes(targetComponentLower);
+
+          if (isComponentDir) {
+            // 2. 检查目录内是否有核心入口文件（任意后缀的index文件）
+            // 读取目录下所有文件，判断是否存在以index开头的文件
+            const dirFiles = fs.readdirSync(fullPath, { withFileTypes: true });
+            const hasIndexFile = dirFiles.some(file =>
+              file.isFile() &&
+              path.basename(file.name, path.extname(file.name)).toLowerCase() === 'index'
+            );
+
+            if (hasIndexFile) {
+              foundPath = fullPath;
+              console.log(`✅ 成功定位组件目录: ${path.relative(nodeModulesPath, fullPath)}`);
+              return;
+            }
+          }
+
+          // 递归遍历
+          traverse(fullPath);
+          if (foundPath) return;
+
+        }
+      }
+    } catch (error) {
+      // 忽略读取权限或非预期文件系统错误
+      console.warn(`⚠️ 无法访问目录 ${path.relative(packagePath, currentPath)}: ${error.message}`);
+    }
+  }
+
+  // 从 packagePath 开始搜索 (如: node_modules/element-plus)
+  traverse(packagePath);
+
+  if (!foundPath) {
+    throw new Error(`在 ${packageName} 中未找到组件 ${componentName} 的源代码目录。`);
+  }
+
+  return foundPath;
 }
+
 
 /**
  * 1. 递归获取组件文件夹下所有文件（按规则跳过）
@@ -91,22 +169,44 @@ function extractSubComponents(entryPath) {
     }
 
     const content = fs.readFileSync(entryPath, "utf-8");
-    const match = content.match(EXPORT_COMPONENTS_PATTERN);
-    if (!match || !match[1]) {
-      console.warn("⚠️ 未找到子组件导出语句");
-      return [];
+    const componentSet = new Set();
+
+    // 1. 处理原有命名空间导出（export { A, B };）
+    const namespaceMatch = content.match(EXPORT_COMPONENTS_PATTERN);
+    if (namespaceMatch && namespaceMatch[1]) {
+      namespaceMatch[1].split(",").forEach((item) => {
+        const [componentName] = item.trim().split("as");
+        const cleanName = componentName.trim();
+        if (cleanName && !cleanName.includes("default")) {
+          componentSet.add(cleanName);
+        }
+      });
     }
 
-    const componentSet = new Set();
-    match[1].split(",").forEach((item) => {
-      const [componentName] = item.trim().split("as");
-      const cleanName = componentName.trim();
-      if (cleanName && !cleanName.includes("default")) {
-        componentSet.add(cleanName);
+    // 🔴 新增2：处理 "export default withInstall(组件名);"
+    const withInstallMatch = content.match(EXPORT_DEFAULT_WITH_INSTALL_PATTERN);
+    if (withInstallMatch && withInstallMatch[1]) {
+      const componentName = withInstallMatch[1].trim();
+      if (componentName) {
+        componentSet.add(componentName);
       }
-    });
+    }
 
+    // 🔴 新增3：处理 "export default 组件名;"
+    const directDefaultMatch = content.match(EXPORT_DEFAULT_DIRECT_PATTERN);
+    if (directDefaultMatch && directDefaultMatch[1]) {
+      const componentName = directDefaultMatch[1].trim();
+      if (componentName) {
+        componentSet.add(componentName);
+      }
+    }
+
+    // 输出结果
     const components = Array.from(componentSet);
+    if (components.length === 0) {
+      console.warn("⚠️ 未找到任何子组件导出语句");
+      return [];
+    }
     console.log(`✅ 识别到子组件: ${components.join(", ")}`);
     return components;
   } catch (error) {
@@ -163,15 +263,15 @@ function extractComponentKeywords(entryPath) {
  */
 function getComponentHigh1Files(componentDir) {
   const high1 = new Set();
-  const entryPath = path.join(componentDir, "index.mjs");
-
-  // 1. 加入入口文件
-  if (fs.existsSync(entryPath)) {
-    high1.add(entryPath);
-  } else {
+  const indexFiles = getRootIndexFiles(componentDir);
+  if (indexFiles.length === 0) {
     console.warn("⚠️ 入口文件不存在，无法提取核心文件");
     return high1;
   }
+  const entryPath = indexFiles[0]; // 取第一个有效index文件（非.d.ts）
+
+  high1.add(entryPath);
+  console.log(`📌 选定入口文件：${path.relative(componentDir, entryPath)}`);
 
   // 2. 提取组件关键词（筛选核心文件的依据）
   const componentKeywords = extractComponentKeywords(entryPath);
@@ -468,7 +568,7 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
     console.log(`✅ 高优先级文件已找到所有API，跳过低优先级`);
   }
 
-  // 【核心修改】移除优先级标识，仅返回纯相对路径
+  // 移除优先级标识，仅返回纯相对路径
   const formatWithPriority = (filePath) => {
     // 直接返回文件相对于基准目录的路径，不添加任何优先级标签
     return path.relative(baseDir, filePath);
@@ -488,9 +588,11 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
 async function analyzeComponentApiMap(componentDir) {
   if (!fs.existsSync(componentDir)) throw new Error(`目录不存在: ${componentDir}`);
 
-  const entryPath = path.join(componentDir, "index.mjs");
+  const indexFiles = getRootIndexFiles(componentDir);
+  if (indexFiles.length === 0) throw new Error("未找到入口文件（index.*，已排除.d.ts），无法提取子组件");
+
+  const entryPath = indexFiles[0]; // 取第一个有效index文件
   const subComponents = extractSubComponents(entryPath);
-  if (subComponents.length === 0) throw new Error("未识别到任何子组件");
 
   // 拆分优先级后二次过滤低优先级（排除高1）
   const { high2, lowPriority: tempLow } = splitFilesByPriority(componentDir);
@@ -524,15 +626,18 @@ function getRootIndexFiles(componentDir) {
       .map(entry => path.join(componentDir, entry.name))
       .filter(filePath => {
         const fileName = path.basename(filePath);
-        // 匹配以index.开头，且后缀不是.map的文件（如index.mjs、index.js、index.d.ts）
-        return fileName.startsWith("index.") && !fileName.endsWith(".map");
+        const fileBaseName = path.basename(fileName, path.extname(fileName)).toLowerCase();
+        // 1. 基础名是index 2. 排除.map和.d.ts后缀
+        return fileBaseName === 'index' &&
+          !fileName.endsWith(".map") &&
+          !fileName.endsWith(".d.ts");
       });
 
     if (rootFiles.length > 0) {
-      console.log(`📌 组件根目录下找到 ${rootFiles.length} 个index文件：`);
+      console.log(`📌 组件根目录下找到 ${rootFiles.length} 个有效index文件：`);
       rootFiles.forEach(file => console.log(`  - ${path.relative(componentDir, file)}`));
     } else {
-      console.warn(`⚠️ 组件根目录下未找到index文件`);
+      console.warn(`⚠️ 组件根目录下未找到有效index文件（排除了.d.ts和.map后缀）`);
     }
 
     return rootFiles;
@@ -664,35 +769,52 @@ async function filterAndConcatApiNpmFiles(componentDir) {
 }
 
 /**
- * 新增：筛选npm包API文件并拼接内容的组合函数（上传文件版）
- * @param {Array<{originalname: string, buffer: Buffer}>} uploadedFiles - 前端上传的npm包文件列表
- * @returns {Promise<{combinedContent: string, componentNames: string[], tempDir: string}>}
+ * 根据npm包名和组件名，查找本地node_modules目录并执行筛选和拼接。
+ * @param {string} packageName - npm包名 (如: element-plus)
+ * @param {string} componentName - 组件名 (如: affix)
+ * @returns {Promise<{combinedContent: string, componentNames: string[], componentDir: string}>}
  */
-async function filterAndConcatUploadedApiNpmFiles(uploadedFiles) {
-  if (!uploadedFiles || uploadedFiles.length === 0) {
-    throw new Error("未上传任何npm包文件，无法筛选API信息");
+async function filterAndConcatNpmApiByPackage(packageName, componentName) {
+  if (!packageName || !componentName) {
+    throw new Error("请输入npm包名和组件名");
   }
 
-  // 1. 保存上传文件到临时目录
-  const tempDir = saveUploadedFilesToTempDir(uploadedFiles);
-  console.log(`📥 npm包上传文件已保存到临时目录：${tempDir}`);
+  // 1. 查找组件的本地目录（不存在则自动安装）
+  let componentDir;
+  const projectRoot = path.resolve(__dirname, '../../'); // backend根目录（node_modules所在位置）
+  const nodeModulesPath = path.join(projectRoot, 'node_modules');
+  const packagePath = path.join(nodeModulesPath, packageName);
 
-  // 2. 校验临时目录中是否存在npm包核心入口文件（index.mjs，npm类型必需）
-  const entryPath = path.join(tempDir, "index.mjs");
-  if (!fs.existsSync(entryPath)) {
-    // 筛选失败，先清理临时目录
-    fs.rmSync(tempDir, { recursive: true, force: true });
-    throw new Error("上传的npm包文件缺少核心入口文件 index.mjs，请确保上传完整的组件文件夹内容");
+  // 🔴 新增：检查包是否存在，不存在则自动安装
+  if (!fs.existsSync(packagePath)) {
+    console.log(`⚠️ 未在 ${nodeModulesPath} 中找到包 ${packageName}，开始自动安装...`);
+    try {
+      // 执行npm install命令（在backend根目录下安装，--save-dev可根据需求改为--save）
+      execSync(`npm install ${packageName} --save-dev`, {
+        cwd: projectRoot, // 执行目录：backend根目录（确保node_modules在此目录下）
+        stdio: 'inherit'  // 输出安装日志到控制台，便于用户查看进度
+      });
+      console.log(`✅ 包 ${packageName} 安装成功！`);
+    } catch (installError) {
+      throw new Error(`❌ 包 ${packageName} 安装失败：${installError.message}\n请检查网络连接或npm权限后重试`);
+    }
   }
 
-  // 3. 复用原有npm包筛选拼接逻辑（直接传入临时目录路径，原有逻辑完全兼容）
-  console.log("🔍 开始筛选npm包的API相关文件...");
-  const result = await filterAndConcatApiNpmFiles(tempDir);
+  // 2. 安装完成后（或已存在），查找组件目录
+  try {
+    componentDir = findComponentDirectory(packageName, componentName);
+  } catch (findError) {
+    throw new Error(`查找组件目录失败：${findError.message}`);
+  }
 
-  // 4. 返回结果（包含临时目录路径供外部清理）
+  // 3. 复用原有npm包筛选拼接逻辑
+  console.log("🔍 正在筛选和拼接API相关文件...");
+  const result = await filterAndConcatApiNpmFiles(componentDir);
+
+  // 4. 返回结果（包含组件目录路径）
   return {
-    ...result, // 继承原有结果（combinedContent、componentNames）
-    tempDir    // 新增：临时目录路径
+    ...result, // 继承原有结果（combinedContent, componentNames）
+    componentDir // 新增：组件目录路径
   };
 }
 
@@ -700,60 +822,91 @@ async function filterAndConcatUploadedApiNpmFiles(uploadedFiles) {
  * 命令行入口
  */
 async function main() {
-  const componentDir = process.argv[2];
-  if (!componentDir) {
-    console.error("用法1：分析API文件分布");
-    console.error("node component-npm-file-filter.js <组件目录路径>");
-    console.error("示例：node component-npm-file-filter.js D:\\element-plus\\es\\components\\select");
-    console.error("用法2：筛选并拼接API文件内容");
-    console.error("node component-npm-file-filter.js <组件目录路径> concat");
+  // 命令行参数现在支持两种模式：
+  // 1. 旧模式（直接指定目录）：node component-npm-file-filter.js <组件目录路径> [concat]
+  // 2. 新模式（指定包名和组件名）：node component-npm-file-filter.js --npm <包名> <组件名>
+
+  if (process.argv.length < 3) {
+    console.error("用法1（调试）：node component-npm-file-filter.js <组件目录路径> [concat]");
+    console.error("用法2（生产）：node component-npm-file-filter.js --npm <包名> <组件名>");
+    console.error("示例：node component-npm-file-filter.js --npm element-plus affix");
     process.exit(1);
   }
 
+  let componentDir = process.argv[2];
+
   try {
-    // // 命令行第3个参数（"concat"）用于区分两种运行模式
-    // 模式1：带"concat"参数 - 筛选并拼接API文件内容（供后续处理）
-    if (process.argv[3] === "concat") {
-      const { combinedContent, componentNames } = await filterAndConcatApiNpmFiles(componentDir);
+    if (componentDir === "--npm") {
+      const packageName = process.argv[3];
+      const componentName = process.argv[4];
+
+      if (!packageName || !componentName) {
+        console.error("❌ 缺少npm包名或组件名。");
+        process.exit(1);
+      }
+
+      const result = await filterAndConcatNpmApiByPackage(packageName, componentName);
+
+      // 调试：保存到文件
+      const outputFileName = `${packageName}-${componentName}-api-result.txt`;
+      const currentDir = process.cwd();
+      const outputPath = path.join(currentDir, outputFileName);
+
+      // 写入文件
+      fs.writeFileSync(outputPath, result.combinedContent, 'utf-8');
+
       console.log(`\n🎉 拼接任务完成！`);
-      console.log(`- 涉及组件：${componentNames.join(", ")}`);
-      console.log(`- 内容长度：${combinedContent.length} 字符`);
-    }
-    // 模式2：无"concat"参数 - 分析API文件分布（供调试/查看）
-    else {
-      const apiResults = await analyzeComponentApiMap(componentDir);
+      console.log(`- 组件目录：${result.componentDir}`);
+      console.log(`- 涉及组件：${result.componentNames.join(", ")}`);
+      console.log(`- 内容长度：${result.combinedContent.length} 字符`);
+      console.log(`- 结果已保存至：${outputPath}`);
 
-      // 输出最终结果
-      console.log("\n" + "=".repeat(100));
-      console.log(`📊 组件API定义文件分析结果（优先级：高1 > 高2 > 低）`);
-      console.log(`   高1：入口+导入/导出名称含组件关键词的核心文件及依赖`);
-      console.log(`   高2：.vue.d.ts文件（slot优先）`);
-      console.log(`   低：其他符合条件的文件`);
-      console.log("=".repeat(100));
+    } else {
+      // 旧模式：直接传入目录
+      const isConcatMode = process.argv[3] === "concat";
 
-      apiResults.forEach((result, index) => {
-        console.log(`\n${index + 1}. 组件：${result.component}`);
-        console.log(`   📋 Props定义文件（${result.props.length}个）：`);
-        result.props.length > 0
-          ? result.props.forEach(p => console.log(`     - ${p}`))
-          : console.log("     - 未找到");
+      if (isConcatMode) {
+        const { combinedContent, componentNames } = await filterAndConcatApiNpmFiles(componentDir);
+        console.log(`\n🎉 拼接任务完成！`);
+        console.log(`- 涉及组件：${componentNames.join(", ")}`);
+        console.log(`- 内容长度：${combinedContent.length} 字符`);
+      } else {
+        // 模式2：无"concat"参数 - 分析API文件分布（供调试/查看）
+        const apiResults = await analyzeComponentApiMap(componentDir);
 
-        console.log(`   📢 Emits定义文件（${result.emits.length}个）：`);
-        result.emits.length > 0
-          ? result.emits.forEach(e => console.log(`     - ${e}`))
-          : console.log("     - 未找到");
+        // 输出最终结果 (保持不变)
+        console.log("\n" + "=".repeat(100));
+        console.log(`📊 组件API定义文件分析结果（优先级：高1 > 高2 > 低）`);
+        console.log(`   高1：入口+导入/导出名称含组件关键词的核心文件及依赖`);
+        console.log(`   高2：.vue.d.ts文件（slot优先）`);
+        console.log(`   低：其他符合条件的文件`);
+        console.log("=".repeat(100));
 
-        console.log(`   🧩 Slots定义文件（${result.slots.length}个）：`);
-        result.slots.length > 0
-          ? result.slots.forEach(s => console.log(`     - ${s}`))
-          : console.log("     - 未找到");
-      });
+        apiResults.forEach((result, index) => {
+          console.log(`\n${index + 1}. 组件：${result.component}`);
+          console.log(`   📋 Props定义文件（${result.props.length}个）：`);
+          result.props.length > 0
+            ? result.props.forEach(p => console.log(`     - ${p}`))
+            : console.log("     - 未找到");
+
+          console.log(`   📢 Emits定义文件（${result.emits.length}个）：`);
+          result.emits.length > 0
+            ? result.emits.forEach(e => console.log(`     - ${e}`))
+            : console.log("     - 未找到");
+
+          console.log(`   🧩 Slots定义文件（${result.slots.length}个）：`);
+          result.slots.length > 0
+            ? result.slots.forEach(s => console.log(`     - ${s}`))
+            : console.log("     - 未找到");
+        });
+      }
     }
   } catch (error) {
     console.error("\n❌ 分析失败:", error.message);
     process.exit(1);
   }
 }
+
 
 if (require.main === module) {
   main();
@@ -764,5 +917,5 @@ module.exports = {
   splitFilesByPriority,
   aggregateComponentApiByPriority,
   filterAndConcatApiNpmFiles,
-  filterAndConcatUploadedApiNpmFiles
+  filterAndConcatNpmApiByPackage // 主流程函数
 };
