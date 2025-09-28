@@ -263,7 +263,7 @@ export default {
 
     const isDataSource = computed(() => state.active === CONSTANTS.DATASOUCE)
 
-    const confirmDisabled = computed(() => !state.variable)
+    const confirmDisabled = computed(() => !state.variable?.trim())
 
     // 每次弹窗打开时都记录下绑定变量的旧值，用来判断保存按钮状态
     watch(
