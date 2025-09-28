@@ -2,18 +2,29 @@
   <div class="build-loading-renderer">
     <img src="../assets/loading.webp" alt="loading" />
     <div class="build-loading-renderer-content">
-      <div class="build-loading-renderer-content-header">深度思考中，请稍等片刻</div>
-      <div class="build-loading-renderer-content-body">{{ content }}</div>
+      <div class="build-loading-renderer-content-header">页面生成中，请稍等片刻</div>
+      <div class="build-loading-renderer-content-body">{{ renderContent }}</div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
+import { computed } from 'vue'
+
 export default {
   props: {
     content: {
       type: String,
       required: true
+    }
+  },
+  setup(props) {
+    const renderContent = computed(() => {
+      return props.content.slice(-30)
+    })
+
+    return {
+      renderContent
     }
   }
 }

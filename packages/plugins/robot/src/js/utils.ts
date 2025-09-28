@@ -42,3 +42,25 @@ export const checkComponentNameExists = (data: any) => {
 
   return true
 }
+
+export const processSSEStream = (data,handler) => {
+  const lines = data.split('\n')
+
+  for (const line of lines) {
+    if (line.startsWith('data: ')) {
+      const dataStr = line.substring(6).trim()
+
+      // 检查结束标记
+      if (dataStr === '[DONE]') {
+        handler.onDone()
+
+        return
+      }
+
+      if (dataStr) {
+        const data = JSON.parse(dataStr)
+        handler.onData(data)
+      }
+    }
+  }
+}

@@ -147,7 +147,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import RobotSettingPopover from './RobotSettingPopover.vue'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
-import { checkComponentNameExists } from './js/utils'
+import { checkComponentNameExists, processSSEStream } from './js/utils'
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
@@ -419,67 +419,54 @@ export default {
               const currentResponse = progressEvent.currentTarget.responseText
               const newData = currentResponse.substring(lastResponseLength)
               lastResponseLength = currentResponse.length
-              const lines = newData.split('\n')
+              processSSEStream(newData, {
+                onData: (data) => {
+                  const choice = data.choices?.[0]
+                  if (choice && choice.delta.content) {
+                    if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                      messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+                    }
+                    if (streamContent !== messages.value[messages.value.length - 1].content) {
+                      messages.value[messages.value.length - 1].content = ''
+                    }
+                    streamContent += choice.delta.content
+                    messages.value.at(-1)!.renderContent = [{ type: 'loading', content: streamContent }]
+                    const currentTime = Date.now()
+                    if (currentTime - lastExecutionTime > throttleDelay) {
+                      try {
+                        const repaired = jsonrepair(streamContent)
+                        const parsedJson = JSON.parse(repaired)
+                        const result = parsedJson.reduce((acc, patch) => {
+                          return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
+                        }, currentJson)
+                        const editorValue = string2Obj(obj2String(result))
 
-              for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                  const dataStr = line.substring(6).trim()
-
-                  // 检查结束标记
-                  if (dataStr === '[DONE]') {
-                    requestLoading.value = false
-                    delete messages.value.at(-1)!.renderContent
-                    handleResponse(
-                      {
-                        id: chatId,
-                        chatMessage: {
-                          role: 'assistant',
-                          content: streamContent || '没有返回内容',
-                          name: 'AI'
+                        if (editorValue && checkComponentNameExists(result)) {
+                          setSchema(result)
                         }
-                      },
-                      currentJson
-                    )
-                    return
-                  }
-                  // 尝试解析JSON
-                  if (dataStr) {
-                    const data = JSON.parse(dataStr)
-                    const choice = data.choices?.[0]
-                    if (choice && choice.delta.content) {
-                      if (
-                        messages.value.length === 0 ||
-                        messages.value[messages.value.length - 1].role !== 'assistant'
-                      ) {
-                        messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+                      } catch (error) {
+                        // error
                       }
-                      if (streamContent !== messages.value[messages.value.length - 1].content) {
-                        messages.value[messages.value.length - 1].content = ''
-                      }
-                      streamContent += choice.delta.content
-                      messages.value.at(-1)!.renderContent = [{ type: 'loading', content: streamContent }]
-                      const currentTime = Date.now()
-                      if (currentTime - lastExecutionTime > throttleDelay) {
-                        try {
-                          const repaired = jsonrepair(streamContent)
-                          const parsedJson = JSON.parse(repaired)
-                          const result = parsedJson.reduce((acc, patch) => {
-                            return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
-                          }, currentJson)
-                          const editorValue = string2Obj(obj2String(result))
-
-                          if (editorValue && checkComponentNameExists(result)) {
-                            setSchema(result)
-                          }
-                        } catch (error) {
-                          // error
-                        }
-                        lastExecutionTime = currentTime
-                      }
+                      lastExecutionTime = currentTime
                     }
                   }
+                },
+                onDone: () => {
+                  requestLoading.value = false
+                  delete messages.value.at(-1)!.renderContent
+                  handleResponse(
+                    {
+                      id: chatId,
+                      chatMessage: {
+                        role: 'assistant',
+                        content: streamContent || '没有返回内容',
+                        name: 'AI'
+                      }
+                    },
+                    currentJson
+                  )
                 }
-              }
+              })
             }
           })
           .catch((error) => {
