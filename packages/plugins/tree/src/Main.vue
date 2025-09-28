@@ -155,13 +155,13 @@ export default {
     const showNode = (event, data) => {
       pageState.nodesStatus[data.id] = !(pageState.nodesStatus[data.id] !== false)
       data.show = pageState.nodesStatus[data.id]
-      const { getRenderer, selectNode } = useCanvas().canvasApi.value
+      const { getRenderer, clearSelect } = useCanvas().canvasApi.value
 
       getRenderer().setCondition(data.id, data.show)
 
       if (!data.show) {
-        event.stopPropagation()
-        selectNode('body', 'clickTree')
+        event?.stopPropagation()
+        clearSelect()
       }
     }
 

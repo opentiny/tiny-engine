@@ -87,6 +87,7 @@ export default {
       footData.value = useCanvas().getNodePath(node?.id)
       pageState.currentSchema = {}
       pageState.properties = null
+      useProperties().getProps(null, null)
     }
 
     const isBlock = useCanvas().isBlock

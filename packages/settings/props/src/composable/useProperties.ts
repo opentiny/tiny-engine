@@ -110,6 +110,8 @@ const getProps = (schema: Schema, parent: Schema) => {
     getSlotSwitch(propGroups, metaSchema?.slots)
     useCanvas().pageState.properties = mergeProps(toRaw(props), propGroups)
   } else if (!schema) {
+    // 清除选择节点后，重置pageState中组件的属性
+    // 后续需要改造
     useCanvas().pageState.properties = {}
   }
 

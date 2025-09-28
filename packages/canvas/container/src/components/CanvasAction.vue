@@ -252,10 +252,10 @@ export default {
 
     const hide = () => {
       if (getCurrent().schema?.id) {
-        const { selectNode } = useCanvas().canvasApi.value
+        const { clearSelect } = useCanvas().canvasApi.value
         getRenderer().setCondition(getCurrent().schema.id, false)
         useCanvas().pageState.nodesStatus[getCurrent().schema.id] = false
-        selectNode('body')
+        clearSelect()
       }
       updateRect()
     }
