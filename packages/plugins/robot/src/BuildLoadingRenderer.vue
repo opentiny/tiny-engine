@@ -8,13 +8,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
-const props = defineProps({
-  content: {
-    type: String,
-    required: true
+<script lang="ts">
+export default {
+  props: {
+    content: {
+      type: String,
+      required: true
+    }
   }
-})
+}
 </script>
 
 <style lang="less">
