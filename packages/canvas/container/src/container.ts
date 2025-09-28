@@ -486,8 +486,7 @@ export const updateRect = (id?: string) => {
     const duration = window.getComputedStyle(element).getPropertyValue('transition-duration')
     let waitTime = 0
     if (duration) {
-      const unit = duration.slice(-2)
-      if (unit === 'ms') {
+      if (duration.endsWith('ms')) {
         waitTime = parseFloat(duration)
       } else {
         waitTime = parseFloat(duration) * 1000
@@ -828,7 +827,6 @@ export const dragMove = (event: DragEvent, isHover: boolean) => {
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 export const selectNode = async (id: string, type?: string, isMultiple = false) => {
   const { node } = useCanvas().getNodeWithParentById(id) || {}
-
   let element = querySelectById(id)
 
   if (element && node) {
@@ -837,7 +835,6 @@ export const selectNode = async (id: string, type?: string, isMultiple = false) 
   }
 
   const nodeIsSelected = setSelectRect(id, element, { isMultiple, type, schema: node })
-
   // 执行setSelectRect之后再去判断multiSelectedStates的长度
   if (multiSelectedStates.value.length === 1) {
     const { schema: node, parent, type } = multiSelectedStates.value[0]
@@ -863,6 +860,7 @@ export const selectNode = async (id: string, type?: string, isMultiple = false) 
   if (multiSelectedStates.value.length === 1) {
     const { schema: node, parent, type, id } = multiSelectedStates.value[0]
     canvasState.emit('selected', node, parent, type, id)
+
     return node
   } else {
     canvasState.emit('selected')

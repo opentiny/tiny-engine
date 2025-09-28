@@ -31,7 +31,7 @@
                 :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'"
                 @click="showNode($event, row.rawData)"
               ></svg-icon>
-              <svg-icon name="delete" @click="delNode(row.rawData)"></svg-icon>
+              <svg-icon name="delete" @mouseup="delNode(row.rawData)"></svg-icon>
             </template>
           </div>
         </template>
@@ -155,14 +155,13 @@ export default {
     const showNode = (event, data) => {
       pageState.nodesStatus[data.id] = !(pageState.nodesStatus[data.id] !== false)
       data.show = pageState.nodesStatus[data.id]
-
-      const { getRenderer, clearSelect } = useCanvas().canvasApi.value
+      const { getRenderer, selectNode } = useCanvas().canvasApi.value
 
       getRenderer().setCondition(data.id, data.show)
 
       if (!data.show) {
         event.stopPropagation()
-        clearSelect()
+        selectNode('body', 'clickTree')
       }
     }
 
