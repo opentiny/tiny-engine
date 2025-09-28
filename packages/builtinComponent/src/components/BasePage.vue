@@ -11,7 +11,7 @@
         :size="pageState?.size"
       >
         <tiny-row>
-          <tiny-col :span="colNumber" v-for="(item, index) in pageModel.parameters" :key="index">
+          <tiny-col :span="colNumber" v-for="(item, index) in pageModel?.parameters" :key="index">
             <tiny-form-item :prop="item.prop">
               <template #label>
                 <div class="custom-label" v-auto-tip>
@@ -104,7 +104,7 @@
           :size="pageState?.size"
         >
           <tiny-row>
-            <tiny-col :span="colNumber" v-for="(item, index) in pageModel.parameters" :key="index">
+            <tiny-col :span="colNumber" v-for="(item, index) in pageModel?.parameters" :key="index">
               <tiny-form-item :prop="item.prop">
                 <template #label>
                   <div class="custom-label" v-auto-tip>

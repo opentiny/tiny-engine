@@ -51,8 +51,7 @@ export default {
         'Slot', // 插槽（区块插槽需要）
         'RouterView', // 路由视图（子页面需要，不建议隐藏）
         'RouterLink', // 路由链接
-        'Navigation', // 导航条
-        'NavigationV', // 纵向导航条
+        'CanvasNavigation', // 导航条
         'Collection' // 数据源容器（数据源功能依赖，不建议隐藏）
       ]
     }

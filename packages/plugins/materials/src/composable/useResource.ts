@@ -119,6 +119,7 @@ const initBlock = async (blockId: string) => {
 const initPageOrBlock = async () => {
   const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const pagePluginApi = getMetaApi(META_APP.AppManage)
+  const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
 
   if (pageId) {
     const data = await pagePluginApi.getPageById(pageId)
@@ -132,10 +133,13 @@ const initPageOrBlock = async () => {
     return
   }
 
-  // url 没有 pageid 或 blockid，到页面首页或第一页
+  // url 没有 pageid 或 blockid，到当前用户有权限查看的第一页或页面首页
   const pageInfo = appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
     appSchemaState.pageTree.find(
-      (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
+      (page) =>
+        page.componentName === COMPONENT_NAME.Page &&
+        page?.meta?.group !== 'publicPages' &&
+        globalState.userInfo.id === page.meta.occupier.id
     ) || {
       page_content: {
         componentName: COMPONENT_NAME.Page

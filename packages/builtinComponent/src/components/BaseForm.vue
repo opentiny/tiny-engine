@@ -3,7 +3,7 @@
     <div class="placeholder-layer" v-if="!formModel || !formModel?.id">请选择表单模型</div>
     <tiny-form v-else ref="formRef" label-width="120" label-position="left" :model="modelData" v-bind="$attrs">
       <tiny-row>
-        <tiny-col :span="colNumber" v-for="(item, index) in formModel.parameters" :key="index">
+        <tiny-col :span="colNumber" v-for="(item, index) in formModel?.parameters" :key="index">
           <tiny-form-item :prop="item.prop">
             <template #label>
               <div class="custom-label" v-auto-tip>

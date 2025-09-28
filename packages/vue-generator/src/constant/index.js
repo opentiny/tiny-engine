@@ -2211,6 +2211,13 @@ export const BUILTIN_COMPONENTS_MAP = [
     destructuring: true
   },
   {
+    componentName: 'CanvasNavigation',
+    exportName: 'CanvasNavigation',
+    package: '@opentiny/tiny-engine-builtin-component',
+    version: '^2.0.0',
+    destructuring: true
+  },
+  {
     componentName: 'FormModel',
     exportName: 'FormModel',
     package: '@opentiny/tiny-engine-builtin-component',

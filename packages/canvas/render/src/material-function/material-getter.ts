@@ -8,6 +8,7 @@ import {
   CanvasRowColContainer,
   CanvasFlexBox,
   CanvasSection,
+  CanvasNavigation,
   FormModel,
   TableModel,
   PageModel
@@ -45,7 +46,8 @@ export const Mapper = {
   TableModel,
   PageModel,
   RouterView: CanvasRouterView,
-  RouterLink: CanvasRouterLink
+  RouterLink: CanvasRouterLink,
+  CanvasNavigation
 }
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]

@@ -110,7 +110,9 @@
 
     <template #footer>
       <div class="bind-dialog-footer">
-        <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
+        <tiny-button type="danger" plain :disabled="modelValue?.type !== 'JSExpression'" @click="remove"
+          >移除绑定</tiny-button
+        >
         <div class="right">
           <tiny-button @click="cancel">取 消</tiny-button>
           <tiny-button type="info" :disabled="confirmDisabled" @click="confirm">确 定</tiny-button>
