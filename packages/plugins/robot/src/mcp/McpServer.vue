@@ -25,7 +25,7 @@
 import { onMounted, ref } from 'vue'
 import { McpServerPicker, type PluginInfo, type PopupConfig } from '@opentiny/tiny-robot'
 import { IconPlugin } from '@opentiny/tiny-robot-svgs'
-import useMcpServer from './useMcp'
+import useMcpServer from '../composables/useMcp'
 
 const activeCount = ref(1)
 

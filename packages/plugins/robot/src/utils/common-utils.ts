@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import useMcpServer from './useMcp'
+import useMcpServer from '../composables/useMcp'
 import type { LLMMessage, RobotMessage } from './types'
 import type { LLMRequestBody, LLMResponse, ReponseToolCall, RequestOptions, RequestTool } from './types'
 import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
@@ -7,10 +7,12 @@ import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 let requestOptions: RequestOptions = {}
 
 // 格式化LLM输入messages消息
-const formatMessages = (messages: LLMMessage[]) => {
-  return messages.map((message) => ({
+export const formatMessages = (messages: LLMMessage[]) => {
+  return toRaw(messages).map((message) => ({
     role: message.role,
-    content: message.content
+    content: message.content,
+    ...(message.tool_calls ? { tool_calls: message.tool_calls } : {}),
+    ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {})
   }))
 }
 
