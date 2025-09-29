@@ -133,7 +133,7 @@ const initPageOrBlock = async () => {
     return
   }
 
-  // url 没有 pageid 或 blockid，到当前用户有权限查看的第一页(如果没有则停留在第一页)或页面首页
+  // url 没有 pageid 或 blockid，到当前用户自己创建的页面顺位第一页，如果没有则停留在全部公共页面顺位第一页或者页面首页
   const pageInfo = appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
     appSchemaState.pageTree.find((page) => {
       if (page.componentName === COMPONENT_NAME.Page && globalState.userInfo.id === page.meta.occupier.id) {
