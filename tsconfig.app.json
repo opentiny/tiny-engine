@@ -18,6 +18,8 @@
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],
       "@opentiny/tiny-engine-canvas": ["packages/canvas/index"],
       "@opentiny/tiny-engine-canvas/*": ["packages/canvas/*"],
+      "@opentiny/tiny-engine-runtime-renderer": ["packages/runtime-renderer/index"],
+      "@opentiny/tiny-engine-runtime-renderer/*": ["packages/runtime-renderer/*"],
       "@opentiny/tiny-engine-common": ["packages/common/index"],
       "@opentiny/tiny-engine-common/*": ["packages/common/*"],
       "@opentiny/tiny-engine-i18n-host": ["packages/i18n/src/lib"],
