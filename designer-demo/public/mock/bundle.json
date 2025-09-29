@@ -176,7 +176,7 @@
             "zh_CN": "柱状图"
           },
           "component": "TinyHuichartsHistogram",
-          "icon": "line",
+          "icon": "bar",
           "description": "柱状图",
           "docUrl": "",
           "screenshot": "",
