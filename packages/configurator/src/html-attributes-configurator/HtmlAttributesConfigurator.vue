@@ -1,6 +1,6 @@
 <template>
   <div class="attr-header">
-    <span class="header-title">自定义属性</span>
+    <span class="header-title">原生属性</span>
     <tiny-popover
       v-model="state.visible"
       placement="bottom"
@@ -11,11 +11,18 @@
     >
       <div class="attr-form">
         <icon-close class="icon-close" @click="closePopover"></icon-close>
-        <tiny-form label-position="left" label-width="53px">
-          <tiny-form-item label="name">
+        <tiny-form
+          ref="attrFormRef"
+          :model="state.formData"
+          :rules="rules"
+          validate-type="text"
+          label-position="left"
+          label-width="53px"
+        >
+          <tiny-form-item label="name" prop="key">
             <tiny-input v-model="state.formData.key"></tiny-input>
           </tiny-form-item>
-          <tiny-form-item label="value">
+          <tiny-form-item label="value" prop="value">
             <tiny-input v-model="state.formData.value"></tiny-input>
           </tiny-form-item>
           <div class="footer">
@@ -83,6 +90,16 @@ export default {
     const attrs = ref([])
     const properties = ['style']
 
+    const attrFormRef = ref()
+
+    const rules = {
+      key: [
+        { required: true, message: '名称必填', trigger: 'blur' },
+        { max: 20, message: '长度不大于20', trigger: 'change' }
+      ],
+      value: [{ max: 200, message: '长度不大于200', trigger: 'change' }]
+    }
+
     watchEffect(() => {
       if (!useProperties().getSchema()?.props) {
         return
@@ -143,24 +160,29 @@ export default {
     }
 
     const save = () => {
-      state.visible = false
-      const data = {}
-      let index = -1
+      attrFormRef.value.validate((valid) => {
+        if (!valid) {
+          return
+        }
+        state.visible = false
+        const data = {}
+        let index = -1
 
-      if (state.currentAttr.id) {
-        index = attrs.value.findIndex((item) => item.id === state.currentAttr.id)
-        data.id = state.currentAttr.id
-        state.currentAttr = {}
-      } else {
-        data.id = utils.guid()
-        index = attrs.value.length
-      }
+        if (state.currentAttr.id) {
+          index = attrs.value.findIndex((item) => item.id === state.currentAttr.id)
+          data.id = state.currentAttr.id
+          state.currentAttr = {}
+        } else {
+          data.id = utils.guid()
+          index = attrs.value.length
+        }
 
-      data.text = `${state.formData.key} = '${state.formData.value}'`
-      data.data = { key: state.formData.key, value: state.formData.value }
+        data.text = `${state.formData.key} = '${state.formData.value}'`
+        data.data = { key: state.formData.key, value: state.formData.value }
 
-      attrs.value.splice(index, 1, data)
-      updateSchema()
+        attrs.value.splice(index, 1, data)
+        updateSchema()
+      })
     }
 
     const edit = (attr) => {
@@ -186,7 +208,9 @@ export default {
     }
 
     return {
+      attrFormRef,
       state,
+      rules,
       cancel,
       save,
       attrs,

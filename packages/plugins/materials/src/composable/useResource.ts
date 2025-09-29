@@ -119,6 +119,7 @@ const initBlock = async (blockId: string) => {
 const initPageOrBlock = async () => {
   const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const pagePluginApi = getMetaApi(META_APP.AppManage)
+  const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
 
   if (pageId) {
     const data = await pagePluginApi.getPageById(pageId)
@@ -132,15 +133,14 @@ const initPageOrBlock = async () => {
     return
   }
 
-  // url 没有 pageid 或 blockid，到页面首页或第一页
-  const pageInfo = appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
+  // url 没有 pageid 或 blockid，到当前用户锁定的页面顺位第一位，如果没有则停留在页面首页 或者 全部公共页面顺位第一页
+  const pageInfo = appSchemaState.pageTree.find(
+    (page) => page.componentName === COMPONENT_NAME.Page && globalState.userInfo.id === page.meta.occupier.id
+  ) ||
+    appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
     appSchemaState.pageTree.find(
       (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
-    ) || {
-      page_content: {
-        componentName: COMPONENT_NAME.Page
-      }
-    }
+    ) || { page_content: { componentName: COMPONENT_NAME.Page } }
 
   if (pageInfo.meta?.id) {
     // 这里重新请求一遍页面详情数据，是因为 appSchemaState 的页面信息存在字段转换，比如 route 被转换成了 router 字段，导致调用页面保存接口的时候报错
