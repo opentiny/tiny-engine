@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-layout",
-  "version": "2.7.3",
+  "version": "2.7.4-alpha.0",
   "scripts": {
     "build": "vite build"
   },
