@@ -133,18 +133,14 @@ const initPageOrBlock = async () => {
     return
   }
 
-  // url 没有 pageid 或 blockid，到当前用户锁定的页面顺位第一位，如果没有则停留在全部公共页面顺位第一页或者页面首页
-  const pageInfo = appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
-    appSchemaState.pageTree.find((page) => {
-      if (page.componentName === COMPONENT_NAME.Page && globalState.userInfo.id === page.meta.occupier.id) {
-        return true
-      }
-      return page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
-    }) || {
-      page_content: {
-        componentName: COMPONENT_NAME.Page
-      }
-    }
+  // url 没有 pageid 或 blockid，到当前用户锁定的页面顺位第一位，如果没有则停留在页面首页 或者 全部公共页面顺位第一页
+  const pageInfo = appSchemaState.pageTree.find(
+    (page) => page.componentName === COMPONENT_NAME.Page && globalState.userInfo.id === page.meta.occupier.id
+  ) ||
+    appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
+    appSchemaState.pageTree.find(
+      (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
+    ) || { page_content: { componentName: COMPONENT_NAME.Page } }
 
   if (pageInfo.meta?.id) {
     // 这里重新请求一遍页面详情数据，是因为 appSchemaState 的页面信息存在字段转换，比如 route 被转换成了 router 字段，导致调用页面保存接口的时候报错
