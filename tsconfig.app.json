@@ -44,6 +44,7 @@
       "@opentiny/tiny-engine-toolbar-generate-code": ["packages/toolbars/generate-code/index"],
       "@opentiny/tiny-engine-toolbar-lang": ["packages/toolbars/lang/index"],
       "@opentiny/tiny-engine-toolbar-lock": ["packages/toolbars/lock/index"],
+      "@opentiny/tiny-engine-toolbar-runtime-deploy": ["packages/toolbars/runtime-deploy/index"],
       "@opentiny/tiny-engine-toolbar-logo": ["packages/toolbars/logo/index"],
       "@opentiny/tiny-engine-toolbar-media": ["packages/toolbars/media/index"],
       "@opentiny/tiny-engine-toolbar-preview": ["packages/toolbars/preview/index"],

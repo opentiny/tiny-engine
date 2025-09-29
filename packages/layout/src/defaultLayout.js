@@ -26,6 +26,7 @@ export default {
     right: [
       [META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
       [META_APP.Preview],
+      [META_APP.RuntimeDeploy],
       [META_APP.GenerateCode, META_APP.Save]
     ],
     collapse: [

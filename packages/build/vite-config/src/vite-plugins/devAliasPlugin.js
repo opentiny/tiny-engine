@@ -46,6 +46,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-redoundo': path.resolve(basePath, 'packages/toolbars/redoundo/index.ts'),
     '@opentiny/tiny-engine-toolbar-clean': path.resolve(basePath, 'packages/toolbars/clean/index.ts'),
     '@opentiny/tiny-engine-toolbar-theme-switch': path.resolve(basePath, 'packages/toolbars/themeSwitch/index.ts'),
+    '@opentiny/tiny-engine-toolbar-runtime-deploy': path.resolve(basePath, 'packages/toolbars/runtime-deploy/index.ts'),
     '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.ts'),
     '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.ts'),
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.ts'),

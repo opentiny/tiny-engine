@@ -78,6 +78,7 @@
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",
     "@opentiny/tiny-engine-toolbar-media": "workspace:*",
     "@opentiny/tiny-engine-toolbar-preview": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-runtime-deploy": "workspace:*",
     "@opentiny/tiny-engine-toolbar-redoundo": "workspace:*",
     "@opentiny/tiny-engine-toolbar-refresh": "workspace:*",
     "@opentiny/tiny-engine-toolbar-save": "workspace:*",
