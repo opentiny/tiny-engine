@@ -30,11 +30,11 @@ export const getGlobalState = {
       }
     }
 
-    const { getGlobalState, getGlobalStateById } = apis
+    const { getGlobalState: listGlobalState, getGlobalStateById } = apis
 
     try {
       if (!id) {
-        const list = getGlobalState()
+        const list = listGlobalState()
         return {
           content: [
             {
