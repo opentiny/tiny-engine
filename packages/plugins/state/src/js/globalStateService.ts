@@ -9,7 +9,7 @@ interface IGlobalState {
   actions: Record<string, any>
 }
 
-const globalState = computed(() => useResource().appSchemaState.globalState)
+const globalState = computed(() => useResource().appSchemaState.globalState || [])
 
 const getGlobalState = () => globalState.value
 
@@ -22,13 +22,16 @@ const deleteGlobalState = async (id: string) => {
     return
   }
 
-  storeList.splice(index, 1)
+  const newStoreList = storeList.filter((store) => store.id !== id)
   const { id: appId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-  const res = await updateGlobalStateHttp(appId, { global_state: storeList })
+  const res = await updateGlobalStateHttp(appId, { global_state: newStoreList })
 
+  let updatedStoreList = newStoreList
   if (Array.isArray(res.global_state)) {
-    useResource().appSchemaState.globalState = res.global_state
+    updatedStoreList = res.global_state
   }
+
+  useResource().appSchemaState.globalState = updatedStoreList
 
   return res
 }
@@ -43,13 +46,16 @@ const updateGlobalState = async (data: IGlobalState) => {
     throw new Error(`globalState ${id} not found 全局应用状态 ${id} 不存在`)
   }
 
-  storeList[index] = data
+  const newStoreList = storeList.map((store) => (store.id === id ? data : store))
   const { id: appId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-  const res = await updateGlobalStateHttp(appId, { global_state: storeList })
+  const res = await updateGlobalStateHttp(appId, { global_state: newStoreList })
+  let updatedStoreList = newStoreList
 
   if (Array.isArray(res.global_state)) {
-    useResource().appSchemaState.globalState = res.global_state
+    updatedStoreList = res.global_state
   }
+
+  useResource().appSchemaState.globalState = updatedStoreList
 
   return res
 }
@@ -63,13 +69,17 @@ const addGlobalState = async (data: IGlobalState) => {
     throw new Error('globalState id conflict 全局应用状态名冲突')
   }
 
-  storeList.push(data)
+  const newStoreList = [...storeList, data]
   const { id: appId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-  const res = await updateGlobalStateHttp(appId, { global_state: storeList })
+  const res = await updateGlobalStateHttp(appId, { global_state: newStoreList })
+
+  let updatedStoreList = newStoreList
 
   if (Array.isArray(res.global_state)) {
-    useResource().appSchemaState.globalState = res.global_state
+    updatedStoreList = res.global_state
   }
+
+  useResource().appSchemaState.globalState = updatedStoreList
 
   return res
 }

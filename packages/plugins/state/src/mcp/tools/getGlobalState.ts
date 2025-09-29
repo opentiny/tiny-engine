@@ -12,7 +12,25 @@ export const getGlobalState = {
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args || {}
-    const { getGlobalState, getGlobalStateById } = getMetaApi(META_SERVICE.GlobalStateService)
+    const apis = getMetaApi(META_SERVICE.GlobalStateService)
+
+    if (!apis) {
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              error: 'SERVICE_UNAVAILABLE',
+              message: 'GlobalStateService not registered'
+            })
+          }
+        ]
+      }
+    }
+
+    const { getGlobalState, getGlobalStateById } = apis
 
     try {
       if (!id) {

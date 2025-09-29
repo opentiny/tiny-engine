@@ -12,7 +12,25 @@ export const deleteGlobalState = {
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id } = args
-    const { getGlobalStateById, deleteGlobalState } = getMetaApi(META_SERVICE.GlobalStateService)
+    const apis = getMetaApi(META_SERVICE.GlobalStateService)
+
+    if (!apis) {
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              error: 'SERVICE_UNAVAILABLE',
+              message: 'GlobalStateService not registered'
+            })
+          }
+        ]
+      }
+    }
+
+    const { getGlobalStateById, deleteGlobalState: removeGlobalState } = apis
 
     try {
       const item = getGlobalStateById(id)
@@ -39,7 +57,7 @@ export const deleteGlobalState = {
         }
       }
 
-      await deleteGlobalState(id)
+      await removeGlobalState(id)
       return {
         content: [
           {

@@ -339,7 +339,7 @@ export default {
           useNotify({ message: '保存失败!', type: 'error' })
         }
       } else {
-        updateOrAddGlobalState()
+        await updateOrAddGlobalState()
       }
     }
 

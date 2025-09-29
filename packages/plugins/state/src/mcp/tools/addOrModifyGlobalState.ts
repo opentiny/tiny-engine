@@ -72,7 +72,25 @@ export const addOrModifyGlobalState = {
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     const { id, state, getters, actions } = args
-    const { getGlobalStateById, addGlobalState, updateGlobalState } = getMetaApi(META_SERVICE.GlobalStateService)
+    const apis = getMetaApi(META_SERVICE.GlobalStateService)
+
+    if (!apis) {
+      return {
+        content: [
+          {
+            isError: true,
+            type: 'text',
+            text: JSON.stringify({
+              status: 'error',
+              error: 'SERVICE_UNAVAILABLE',
+              message: 'GlobalStateService not registered'
+            })
+          }
+        ]
+      }
+    }
+
+    const { getGlobalStateById, addGlobalState, updateGlobalState } = apis
 
     try {
       const exists = Boolean(getGlobalStateById(id))
