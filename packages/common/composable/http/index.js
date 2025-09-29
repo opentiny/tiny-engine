@@ -60,6 +60,13 @@ export default defineService({
     post: (...args) => http?.post(...args),
     request: (...args) => http?.request(...args),
     put: (...args) => http?.put(...args),
-    delete: (...args) => http?.delete(...args)
+    delete: (...args) => http?.delete(...args),
+    stream: (config) => {
+      const streamConfig = {
+        responseType: 'stream',
+        ...config
+      }
+      return http?.request(streamConfig)
+    }
   })
 })

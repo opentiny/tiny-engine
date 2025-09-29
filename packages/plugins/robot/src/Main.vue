@@ -55,7 +55,10 @@
                 @item-click="handlePromptItemClick"
               ></tr-prompts>
             </div>
-            <tr-bubble-provider :content-renderers="contentRenderers" v-else>
+            <tr-bubble-provider
+              :content-renderers="aiType === AI_MODES['Chat'] ? contentRenderers : buildContentRenderers"
+              v-else
+            >
               <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
             </tr-bubble-provider>
           </div>
@@ -144,11 +147,12 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import RobotSettingPopover from './RobotSettingPopover.vue'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
-import { chatStream, checkComponentNameExists } from './js/utils'
+import { checkComponentNameExists, processSSEStream } from './js/utils'
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import LoadingRenderer from './mcp/LoadingRenderer.vue'
+import BuildLoadingRenderer from './BuildLoadingRenderer.vue'
 import { sendMcpRequest, serializeError } from './mcp/utils'
 import type { RobotMessage } from './mcp/types'
 import RobotTypeSelect from './RobotTypeSelect.vue'
@@ -395,73 +399,85 @@ export default {
         }
 
         let streamContent = ''
+        let lastResponseLength = 0
         const chatId = Date.now().toString()
         const currentJson = deepClone(pageState.pageSchema)
         let lastExecutionTime = 0
         const throttleDelay = 3000
-        await chatStream(
-          {
-            requestUrl: '/app-center/api/ai/chat',
-            requestData: params
-          },
-          {
-            onData: (data) => {
-              const choice = data.choices?.[0]
-              if (choice && choice.delta.content) {
-                if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
-                  messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
-                }
-                if (streamContent !== messages.value[messages.value.length - 1].content) {
-                  messages.value[messages.value.length - 1].content = ''
-                }
-                streamContent += choice.delta.content
-                messages.value[messages.value.length - 1].content += choice.delta.content
-                const currentTime = Date.now()
-                if (currentTime - lastExecutionTime > throttleDelay) {
-                  try {
-                    const repaired = jsonrepair(streamContent)
-                    const parsedJson = JSON.parse(repaired)
-                    const result = parsedJson.reduce((acc, patch) => {
-                      return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
-                    }, currentJson)
-                    const editorValue = string2Obj(obj2String(result))
-
-                    if (editorValue && checkComponentNameExists(result)) {
-                      setSchema(result)
+        requestLoading.value = true
+        getMetaApi(META_SERVICE.Http)
+          .stream({
+            method: 'POST',
+            url: '/app-center/api/ai/chat',
+            data: params,
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'text/event-stream',
+              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
+            },
+            onDownloadProgress: (progressEvent) => {
+              const currentResponse = progressEvent.currentTarget.responseText
+              const newData = currentResponse.substring(lastResponseLength)
+              lastResponseLength = currentResponse.length
+              processSSEStream(newData, {
+                onData: (data) => {
+                  const choice = data.choices?.[0]
+                  if (choice && choice.delta.content) {
+                    if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                      messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
                     }
-                  } catch (error) {
-                    // error
-                  }
-                  lastExecutionTime = currentTime
-                }
-              }
-            },
-            onError: (error) => {
-              messages.value[messages.value.length - 1].content = '连接失败'
-              localStorage.removeItem('aiChat')
-              inProcesing.value = false
-              connectedFailed.value = false
-              // eslint-disable-next-line no-console
-              console.error('Stream error:', error)
-            },
-            onDone: () => {
-              handleResponse(
-                {
-                  id: chatId,
-                  chatMessage: {
-                    role: 'assistant',
-                    content: streamContent || '没有返回内容',
-                    name: 'AI'
+                    if (streamContent !== messages.value[messages.value.length - 1].content) {
+                      messages.value[messages.value.length - 1].content = ''
+                    }
+                    streamContent += choice.delta.content
+                    messages.value.at(-1)!.renderContent = [{ type: 'loading', content: streamContent }]
+                    const currentTime = Date.now()
+                    if (currentTime - lastExecutionTime > throttleDelay) {
+                      try {
+                        const repaired = jsonrepair(streamContent)
+                        const parsedJson = JSON.parse(repaired)
+                        const result = parsedJson.reduce((acc, patch) => {
+                          return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
+                        }, currentJson)
+                        const editorValue = string2Obj(obj2String(result))
+
+                        if (editorValue && checkComponentNameExists(result)) {
+                          setSchema(result)
+                        }
+                      } catch (error) {
+                        // error
+                      }
+                      lastExecutionTime = currentTime
+                    }
                   }
                 },
-                currentJson
-              )
+                onDone: () => {
+                  requestLoading.value = false
+                  delete messages.value.at(-1)!.renderContent
+                  handleResponse(
+                    {
+                      id: chatId,
+                      chatMessage: {
+                        role: 'assistant',
+                        content: streamContent || '没有返回内容',
+                        name: 'AI'
+                      }
+                    },
+                    currentJson
+                  )
+                }
+              })
             }
-          },
-          {
-            Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
-          }
-        )
+          })
+          .catch((error) => {
+            messages.value[messages.value.length - 1].content = '连接失败'
+            localStorage.removeItem('aiChat')
+            requestLoading.value = false
+            inProcesing.value = false
+            connectedFailed.value = false
+            // eslint-disable-next-line no-console
+            console.error('Stream error:', error)
+          })
       }
     }
 
@@ -785,6 +801,10 @@ export default {
       loading: LoadingRenderer
     }
 
+    const buildContentRenderers: Record<string, Component> = {
+      loading: BuildLoadingRenderer
+    }
+
     const mcpDrawerPosition = computed(() => {
       return {
         type: 'fixed',
@@ -841,7 +861,8 @@ export default {
       typeChange,
       isVisualModel,
       contentRenderers,
-      mcpDrawerPosition
+      mcpDrawerPosition,
+      buildContentRenderers
     }
   }
 }
