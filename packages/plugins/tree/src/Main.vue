@@ -27,7 +27,10 @@
               row.label
             }}</span>
             <template v-if="row.id !== 'body'">
-              <svg-icon :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon
+                :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'"
+                @click="showNode($event, row.rawData)"
+              ></svg-icon>
               <svg-icon name="delete" @mouseup="delNode(row.rawData)"></svg-icon>
             </template>
           </div>
@@ -156,7 +159,10 @@ export default {
       const { getRenderer, clearSelect } = useCanvas().canvasApi.value
 
       getRenderer().setCondition(data.id, data.show)
-      clearSelect()
+      if (!data.show) {
+        event?.stopPropagation()
+        clearSelect()
+      }
     }
 
     const delNode = (data) => {

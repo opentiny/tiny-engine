@@ -466,6 +466,41 @@ const setSelectRect = (
   )
 }
 
+const getElementDurationTime = (elementId?: string) => {
+  const element = elementId ? querySelectById(elementId) : getDocument().body
+  const durationTime = window.getComputedStyle(element).getPropertyValue('transition-duration')
+  const delayTime = window.getComputedStyle(element).getPropertyValue('transition-delay')
+  const transition = window.getComputedStyle(element).getPropertyValue('transition')
+  let delayArray: string[] = []
+  if (transition) {
+    const delayRegex = /([0-9]+(\.[0-9]+)?)(s|ms|S|MS)/
+    const transitions = transition.split(',')
+    transitions.forEach((item) => {
+      const parts = item.trim().split(' ')
+      delayArray = delayArray.concat(parts)
+    })
+    delayArray = delayArray.filter((delay) => delayRegex.test(delay))
+  }
+
+  if (durationTime) {
+    delayArray.push(durationTime)
+  }
+
+  if (delayTime) {
+    delayArray.push(delayTime)
+  }
+
+  const delayTimes: any[] = delayArray.map((item) => {
+    const unit = item.slice(-2)
+    if (unit === 'ms') {
+      return parseFloat(item)
+    } else {
+      return parseFloat(item) * 1000
+    }
+  })
+  return delayTimes.length ? Math.max(...delayTimes) : 300
+}
+
 export const updateRect = (id?: string) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
@@ -481,17 +516,7 @@ export const updateRect = (id?: string) => {
   const isBodySelected = !selectState.componentName && selectState.width > 0
 
   if (id || isBodySelected) {
-    const element = querySelectById(id) || getDocument().body
-    const duration = window.getComputedStyle(element).getPropertyValue('transition-duration')
-    let waitTime = 300
-    if (duration) {
-      const unit = duration.slice(-2)
-      if (unit === 'ms') {
-        waitTime = parseFloat(duration)
-      } else {
-        waitTime = parseFloat(duration) * 1000
-      }
-    }
+    const waitTime = getElementDurationTime(id)
     setTimeout(() => setSelectRect(id), waitTime)
   } else {
     clearSelect()
