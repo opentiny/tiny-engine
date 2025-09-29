@@ -133,18 +133,36 @@ const initPageOrBlock = async () => {
     return
   }
 
-  // url 没有 pageid 或 blockid，到当前用户锁定的页面顺位第一位，如果没有则停留在页面首页 或者 全部公共页面顺位第一页
-  const pageInfo = appSchemaState.pageTree.find(
-    (page) => page.componentName === COMPONENT_NAME.Page && globalState.userInfo.id === page.meta.occupier.id
-  ) ||
-    appSchemaState.pageTree.find((page) => page?.meta?.isHome) ||
-    appSchemaState.pageTree.find(
+  // url 没有 pageid 或 blockid，页面打开顺序：可访问主页 -> 可访问的第一个页面 -> 不可访问首页 -> 不可访问全页面顺位第一页
+  const getPageInfo = () => {
+    // 页面是否被他人锁定
+    const isPageOccupierd = (page) => {
+      return page.meta?.occupier && page.meta?.occupier.id === globalState.userInfo.id
+    }
+    // 首页
+    const homePage = appSchemaState.pageTree.find((page) => page?.meta?.isHome)
+    // 顺位首个页面
+    const firstPage = appSchemaState.pageTree.find(
       (page) => page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages'
-    ) || {
+    )
+    // 顺位首个可访问页面
+    const firstUnoccupiedPage = appSchemaState.pageTree.find(
+      (page) =>
+        page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages' && !isPageOccupierd(page)
+    )
+    // 空页面
+    const emptyPage = {
       page_content: {
         componentName: COMPONENT_NAME.Page
       }
     }
+    // 可访问主页
+    if (homePage && !isPageOccupierd(homePage)) {
+      return homePage
+    }
+    return firstUnoccupiedPage || homePage || firstPage || emptyPage
+  }
+  const pageInfo = getPageInfo()
 
   if (pageInfo.meta?.id) {
     // 这里重新请求一遍页面详情数据，是因为 appSchemaState 的页面信息存在字段转换，比如 route 被转换成了 router 字段，导致调用页面保存接口的时候报错
