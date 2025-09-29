@@ -270,6 +270,11 @@ export default {
     display: grid;
     grid-template-columns: 3fr auto;
 
+    .item-content {
+      word-wrap: break-word;
+      white-space: normal;
+      word-break: break-all;
+    }
     .item-controller {
       display: grid;
       column-gap: 3px;
