@@ -221,15 +221,22 @@ onMounted(async () => {
   .operations-setting {
     font-size: 20px;
   }
-  @media (min-width: 1280px) {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  @media (min-width: 1080px) {
     :deep(.robot-chat-container-content) {
-      width: 1280px;
+      width: 1080px;
       margin: 0 auto;
     }
-    :deep(.footer-sender) {
-      width: 1280px;
+    :deep(.tiny-sender) {
+      width: 1080px;
       margin: 0 auto;
       padding: 20px 15px;
+    }
+    :deep(.tr-prompts) {
+      padding: 0px 136px;
     }
   }
 }

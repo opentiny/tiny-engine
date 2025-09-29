@@ -1,12 +1,18 @@
 <template>
-  <tr-container v-if="robotVisible" v-model:fullscreen="fullscreen" v-model:show="robotVisible" class="tiny-container">
+  <tr-container
+    v-if="robotVisible"
+    v-model:fullscreen="fullscreen"
+    v-model:show="robotVisible"
+    title=""
+    class="tiny-container"
+  >
     <template #operations>
       <slot name="operations"></slot>
       <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
       <span style="display: inline-flex; line-height: 0; position: relative">
         <tr-icon-button :icon="IconHistory" size="28" svgSize="20" @click="showHistory = true" />
         <div v-show="showHistory" class="tr-history-container">
-          <div><h3 style="padding: 0px 12px 10px">历史对话</h3></div>
+          <div><h3 style="padding-left: 12px">历史对话</h3></div>
           <tr-icon-button
             :icon="IconClose"
             size="28"
@@ -55,7 +61,7 @@
           :showWordLimit="true"
           :maxLength="4000"
           @submit="handleSendMessage"
-          @cancel="abortRequest"
+          @cancel="handleAbortRequest"
           :allowFiles="singleAttachmentItems.length < 1 && allowFiles"
           uploadTooltip="支持上传1张图片"
           @files-selected="handleSingleFilesSelected"
@@ -103,7 +109,7 @@ import LoadingRenderer from '../mcp/LoadingRenderer.vue'
 import MarkdownRenderer from '../mcp/MarkdownRenderer.vue'
 import { serializeError } from '../utils/common-utils'
 
-const { promptItems, allowFiles } = defineProps({
+const { promptItems, allowFiles, bubbleRenderers } = defineProps({
   promptItems: {
     type: Array as PropType<PromptProps[]>,
     default: () => []
@@ -111,6 +117,10 @@ const { promptItems, allowFiles } = defineProps({
   allowFiles: {
     type: Boolean,
     default: false
+  },
+  bubbleRenderers: {
+    type: Object as PropType<Record<string, Component>>,
+    default: () => ({})
   }
 })
 
@@ -202,12 +212,12 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
   return h(resolveComponent('svg-icon'), { name, style: { fontSize: '32px', ...style } })
 }
 const aiAvatar = getSvgIcon('AI')
-const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
 const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
 
 const contentRenderers: Record<string, Component> = {
   markdown: MarkdownRenderer,
-  loading: LoadingRenderer
+  loading: LoadingRenderer,
+  ...bubbleRenderers
 }
 
 const roles: Record<string, BubbleRoleConfig> = {
@@ -219,7 +229,7 @@ const roles: Record<string, BubbleRoleConfig> = {
   },
   user: {
     placement: 'end',
-    avatar: userAvatar,
+    // avatar: userAvatar,
     contentRenderer: MarkdownRenderer
   },
   system: {
@@ -285,6 +295,11 @@ const handleSendMessage = async (content: string) => {
   }
 }
 
+const handleAbortRequest = () => {
+  abortRequest()
+  messages.value.at(-1)!.renderContent.push({ type: 'text', content: '对话已取消' })
+}
+
 const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
   handleSendMessage(item.description)
 }
@@ -319,17 +334,36 @@ defineExpose({
   background-color: white;
   padding: 16px;
   border-radius: 16px;
+  --tr-history-group-space-y: 0px;
+  :deep(.tr-history) {
+    height: calc(100% - 36px);
+    overflow-y: auto;
+  }
+}
+
+@container tiny-container (max-width: 640px) {
+  .tr-bubble-list {
+    --tr-bubble-max-width: 100%;
+    :deep(.tr-bubble__avatar) {
+      display: none;
+    }
+  }
 }
 
 .tiny-container {
   top: 0px;
+  container-name: tiny-container;
   container-type: inline-size;
+  --tv-size-scrollbar-width: 4px;
+  &.fullscreen {
+    --tv-size-scrollbar-width: 0px;
+    --tv-size-scrollbar-height: 0px;
+  }
   :deep(.tr-welcome__title-wrapper) {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  container-type: inline-size;
 
   &.tr-container.tr-container {
     --tr-container-width: 400px;
@@ -384,6 +418,18 @@ defineExpose({
       }
       tr:hover {
         background-color: #e6f7ff;
+      }
+    }
+    :deep([data-role='user']) {
+      --tr-bubble-content-bg: var(--tr-color-primary-light);
+    }
+  }
+
+  &.fullscreen {
+    :deep([data-role='assistant']) {
+      --tr-bubble-content-bg: transparent;
+      .tr-bubble__content {
+        padding: 8px 0 0;
       }
     }
   }
