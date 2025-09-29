@@ -17,6 +17,7 @@
     "@opentiny/vue-common": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}~3.20${fileDelimiter}/dist3/tiny-vue-common.mjs",
     "@opentiny/vue-locale": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}~3.20${fileDelimiter}/dist3/tiny-vue-locale.mjs",
     "@opentiny/vue-renderless/": "${VITE_CDN_DOMAIN}/@opentiny/vue-renderless${versionDelimiter}~3.20${fileDelimiter}/",
+    "@opentiny/vue-huicharts": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}~3.22${fileDelimiter}/dist3/tiny-vue-huicharts.mjs",
     "echarts": "${VITE_CDN_DOMAIN}/echarts${versionDelimiter}5.4.1${fileDelimiter}/dist/echarts.esm.js",
     "@tailwindcss/browser": "${VITE_CDN_DOMAIN}/@tailwindcss/browser${versionDelimiter}^4${fileDelimiter}/dist/index.global.js"
   },
