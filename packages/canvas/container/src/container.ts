@@ -468,37 +468,30 @@ const setSelectRect = (
 
 const getElementDurationTime = (elementId?: string) => {
   const element = elementId ? querySelectById(elementId) : getDocument().body
-  const durationTime = window.getComputedStyle(element).getPropertyValue('transition-duration')
-  const delayTime = window.getComputedStyle(element).getPropertyValue('transition-delay')
-  const transition = window.getComputedStyle(element).getPropertyValue('transition')
-  let delayArray: string[] = []
-  if (transition) {
-    const delayRegex = /([0-9]+(\.[0-9]+)?)(s|ms|S|MS)/
-    const transitions = transition.split(',')
-    transitions.forEach((item) => {
-      const parts = item.trim().split(' ')
-      delayArray = delayArray.concat(parts)
+  const transitionDuration = window.getComputedStyle(element).getPropertyValue('transition-duration')
+  const transitionDelay = window.getComputedStyle(element).getPropertyValue('transition-delay')
+  let delayTime = 0
+  const getMaxMillisecondNumber = (arr: string[]) => {
+    const millisecondNumber = arr.map((item) => {
+      const unit = item.slice(-2)
+      if (unit === 'ms') {
+        return parseFloat(item)
+      } else {
+        return parseFloat(item) * 1000
+      }
     })
-    delayArray = delayArray.filter((delay) => delayRegex.test(delay))
+    return millisecondNumber.length ? Math.max(...millisecondNumber) : 0
+  }
+  if (transitionDuration) {
+    const transitionDurations = transitionDuration.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDurations)
   }
 
-  if (durationTime) {
-    delayArray.push(durationTime)
+  if (transitionDelay) {
+    const transitionDelays = transitionDelay.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDelays)
   }
-
-  if (delayTime) {
-    delayArray.push(delayTime)
-  }
-
-  const delayTimes: any[] = delayArray.map((item) => {
-    const unit = item.slice(-2)
-    if (unit === 'ms') {
-      return parseFloat(item)
-    } else {
-      return parseFloat(item) * 1000
-    }
-  })
-  return delayTimes.length ? Math.max(...delayTimes) : 300
+  return delayTime === 0 ? 300 : delayTime
 }
 
 export const updateRect = (id?: string) => {
