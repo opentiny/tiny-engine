@@ -87,6 +87,8 @@ export default {
       footData.value = useCanvas().getNodePath(node?.id)
       pageState.currentSchema = {}
       pageState.properties = null
+      // 删除节点后，重置pageState中组件的属性
+      // 后续需要改造
       useProperties().getProps(null, null)
     }
 
