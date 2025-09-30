@@ -11,11 +11,21 @@
  */
 
 import { createApp } from 'vue'
+import { useAppSchema } from './src/composables/useAppSchema'
+import { createAppRouter } from './src/router'
 import App from './src/App.vue'
 
 // 初始化运行时渲染器
 export const initRuntimeRenderer = async () => {
+  const searchParams = new URLSearchParams(location.search)
+  const appId = searchParams.get('id')
+  const { fetchAppSchema, fetchBlocks } = useAppSchema()
+  await fetchAppSchema(appId || '')
+  await fetchBlocks()
+  const router = await createAppRouter()
+
   const app = createApp(App)
-  app.mount('#app')
+  app.use(router).mount('#app')
+
   return app
 }

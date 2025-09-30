@@ -17,6 +17,7 @@ import { PageLifecycleWrapper } from './LifecycleWrapper.ts'
 import { setPageCss } from './page-function/css-handler.ts'
 import { useState } from './page-function/state'
 import useContext from './useContext.ts'
+import { useRouter, useRoute } from 'vue-router'
 import { useAppSchema } from '../composables/useAppSchema'
 import type { PageContent as Schema } from '../types/schema'
 
@@ -40,6 +41,8 @@ export default defineComponent({
       return JSON.parse(JSON.stringify(page))
     })
 
+    const route = useRoute()
+    const router = useRouter()
     const { context, setContext, getContext } = useContext()
     const reset = (obj: Record<string, any>) => {
       Object.keys(obj).forEach((key) => delete obj[key])
@@ -72,7 +75,9 @@ export default defineComponent({
       const newSchema = JSON.parse(JSON.stringify(data))
 
       const context = {
-        state
+        state,
+        route,
+        router
       }
       // 此处提升很重要，因为setState、initProps也会触发画布重新渲染，所以需要提升上下文环境的设置时间
       setContext(context, true)
