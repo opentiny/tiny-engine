@@ -137,7 +137,7 @@ const initPageOrBlock = async () => {
   const getPageInfo = () => {
     // 页面是否被他人锁定
     const isPageOccupierdByOthers = (page) => {
-      return page.meta?.occupier?.id !== globalState.userInfo.id
+      return page.meta?.occupier && page.meta.occupier.id !== globalState.userInfo.id
     }
     // 首页
     const homePage = appSchemaState.pageTree.find((page) => page?.meta?.isHome)
