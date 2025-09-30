@@ -14,11 +14,12 @@ let provider: OpenAICompatibleProvider | null = null
 const { robotSettingState } = useRobot()
 
 const beforeRequest = async (requestParams: any) => {
-  const tools = (await useMcp().getLLMTools()) || []
-  if (!requestParams.tools && tools.length) {
+  const isAgentMode = config.apiUrl === '/app-center/api/ai/chat'
+  const tools = (await useMcp().listTools()) || []
+  if (!requestParams.tools && tools.length && !isAgentMode) {
     Object.assign(requestParams, { tools })
   }
-  if (config.apiUrl === '/app-center/api/ai/chat') {
+  if (isAgentMode) {
     requestParams.apiKey = robotSettingState.selectedModel.apiKey
   }
   requestParams.baseUrl = robotSettingState.selectedModel.baseUrl

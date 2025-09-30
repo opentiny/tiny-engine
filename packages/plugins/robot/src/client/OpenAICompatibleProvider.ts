@@ -7,6 +7,8 @@ import type {
 import { BaseModelProvider, handleSSEStream } from '@opentiny/tiny-robot-kit'
 import { toRaw } from 'vue'
 import { formatMessages } from '../utils/common-utils'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { processSSEStream } from '../js/utils'
 
 type ProviderConfig = Omit<AIModelConfig, 'provider' | 'providerImplementation'>
 
@@ -78,6 +80,47 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
    * @param handler 流式响应处理器
    */
   async chatStream(request: ChatCompletionRequest, handler: StreamHandler): Promise<void> {
+    const { signal, ...options } = request.options || {}
+
+    try {
+      // 验证请求参数
+      const messages = formatMessages(toRaw(request.messages))
+
+      const requestData = await this.beforeRequest({
+        model: request.options?.model || this.config.defaultModel || this.defaultModel,
+        messages,
+        ...options,
+        stream: true
+      })
+
+      let lastResponseLength = 0
+      const requestOptions = {
+        method: 'POST',
+        url: this.baseURL,
+        data: requestData,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream'
+        },
+        onDownloadProgress: (progressEvent: { currentTarget: { responseText: any } }) => {
+          const currentResponse = progressEvent.currentTarget.responseText
+          const newData = currentResponse.substring(lastResponseLength)
+          lastResponseLength = currentResponse.length
+          processSSEStream(newData, handler)
+        }
+        // signal
+      }
+      if (this.apiKey) {
+        Object.assign(requestOptions.headers, { Authorization: `Bearer ${this.apiKey}` })
+      }
+      await getMetaApi(META_SERVICE.Http).stream(requestOptions)
+    } catch (error: unknown) {
+      if (signal?.aborted) return
+      handler.onError(error)
+    }
+  }
+
+  async chatStreamWithFetch(request: ChatCompletionRequest, handler: StreamHandler): Promise<void> {
     const { signal, ...options } = request.options || {}
 
     try {
