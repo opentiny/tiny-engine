@@ -136,8 +136,8 @@ const initPageOrBlock = async () => {
   // url 没有 pageid 或 blockid，页面打开顺序：可访问主页 -> 可访问的第一个页面 -> 不可访问首页 -> 不可访问全页面顺位第一页
   const getPageInfo = () => {
     // 页面是否被他人锁定
-    const isPageOccupierd = (page) => {
-      return page.meta?.occupier && page.meta?.occupier.id === globalState.userInfo.id
+    const isPageOccupierdByOthers = (page) => {
+      return page.meta?.occupier?.id !== globalState.userInfo.id
     }
     // 首页
     const homePage = appSchemaState.pageTree.find((page) => page?.meta?.isHome)
@@ -148,7 +148,9 @@ const initPageOrBlock = async () => {
     // 顺位首个可访问页面
     const firstUnoccupiedPage = appSchemaState.pageTree.find(
       (page) =>
-        page.componentName === COMPONENT_NAME.Page && page?.meta?.group !== 'publicPages' && !isPageOccupierd(page)
+        page.componentName === COMPONENT_NAME.Page &&
+        page?.meta?.group !== 'publicPages' &&
+        !isPageOccupierdByOthers(page)
     )
     // 空页面
     const emptyPage = {
@@ -157,7 +159,7 @@ const initPageOrBlock = async () => {
       }
     }
     // 可访问主页
-    if (homePage && !isPageOccupierd(homePage)) {
+    if (homePage && !isPageOccupierdByOthers(homePage)) {
       return homePage
     }
     return firstUnoccupiedPage || homePage || firstPage || emptyPage
