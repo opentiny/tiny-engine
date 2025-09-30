@@ -16,6 +16,7 @@ import { createAppRouter } from './src/router'
 import { createPinia } from 'pinia'
 import { createStores, generateStoresConfig } from './src/stores'
 import App from './src/App.vue'
+import i18n from '@opentiny/tiny-engine-i18n-host'
 
 // 初始化运行时渲染器
 export const initRuntimeRenderer = async () => {
@@ -31,7 +32,7 @@ export const initRuntimeRenderer = async () => {
   const stores = createStores(storesConfig, pinia)
 
   const app = createApp(App)
-  app.use(pinia).use(router).mount('#app')
+  app.use(pinia).use(router).use(i18n).mount('#app')
 
   app.provide('stores', stores)
   return app

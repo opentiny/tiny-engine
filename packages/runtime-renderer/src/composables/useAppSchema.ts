@@ -1,6 +1,7 @@
 import { ref, computed, readonly } from 'vue'
-import type { AppSchema, Util, BlockItem, BlockContent } from '../types/schema'
+import type { AppSchema, Util, BlockItem, BlockContent, I18nConfig } from '../types/schema'
 import { initUtils } from '../app-function/utils'
+import i18n from '@opentiny/tiny-engine-i18n-host'
 
 const appSchema = ref<AppSchema | null>(null)
 const isLoading = ref(false)
@@ -25,9 +26,19 @@ export function useAppSchema() {
     document.head.appendChild(style)
   }
 
+  const initializeI18n = (i18nConfig: I18nConfig) => {
+    if (!i18nConfig) return
+    Object.entries(i18nConfig).forEach(([loc, msgs]) => {
+      i18n.global.mergeLocaleMessage(loc, msgs as any)
+    })
+  }
+
   // 初始化应用配置
   const initializeAppConfig = async (schema: AppSchema) => {
     if (!schema?.data) return
+
+    // 初始化国际化
+    initializeI18n(schema.data.i18n)
 
     // 初始化工具函数
     initializeUtils(schema.data.utils)
