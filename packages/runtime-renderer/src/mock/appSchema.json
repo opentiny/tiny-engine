@@ -1,0 +1,5222 @@
+{
+  "data": {
+    "bridge": [],
+    "componentsMap": [
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElInput",
+        "componentName": "ElInput",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElDatePicker",
+        "componentName": "ElDatePicker",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElButton",
+        "componentName": "ElButton",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElForm",
+        "componentName": "ElForm",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElFormItem",
+        "componentName": "ElFormItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElTable",
+        "componentName": "ElTable",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "element-plus",
+        "destructuring": true,
+        "exportName": "ElTableColumn",
+        "componentName": "ElTableColumn",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "CarouselItem",
+        "componentName": "TinyCarouselItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Carousel",
+        "componentName": "TinyCarousel",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "a",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "[h1, h2, h3, h4, h5, h6]",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "p",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "input",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "video",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "Img",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "button",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "table",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "td",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "form",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": null,
+        "destructuring": false,
+        "exportName": null,
+        "componentName": "label",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "ButtonGroup",
+        "componentName": "TinyButtonGroup",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Row",
+        "componentName": "TinyRow",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Layout",
+        "componentName": "TinyLayout",
+        "version": "3.20.0",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Form",
+        "componentName": "TinyForm",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "FormItem",
+        "componentName": "TinyFormItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Col",
+        "componentName": "TinyCol",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Button",
+        "componentName": "TinyButton",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Input",
+        "componentName": "TinyInput",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Radio",
+        "componentName": "TinyRadio",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Select",
+        "componentName": "TinySelect",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Switch",
+        "componentName": "TinySwitch",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Search",
+        "componentName": "TinySearch",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Checkbox",
+        "componentName": "TinyCheckbox",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "CheckboxButton",
+        "componentName": "TinyCheckboxButton",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "CheckboxGroup",
+        "componentName": "TinyCheckboxGroup",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "DialogBox",
+        "componentName": "TinyDialogBox",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Tabs",
+        "componentName": "TinyTabs",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "TabItem",
+        "componentName": "TinyTabItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Breadcrumb",
+        "componentName": "TinyBreadcrumb",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "BreadcrumbItem",
+        "componentName": "TinyBreadcrumbItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Collapse",
+        "componentName": "TinyCollapse",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "CollapseItem",
+        "componentName": "TinyCollapseItem",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Grid",
+        "componentName": "TinyGrid",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "TinyGridColumn",
+        "componentName": "TinyGridColumn",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Pager",
+        "componentName": "TinyPager",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Popeditor",
+        "componentName": "TinyPopeditor",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Tree",
+        "componentName": "TinyTree",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "TimeLine",
+        "componentName": "TinyTimeLine",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Tooltip",
+        "componentName": "TinyTooltip",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Popover",
+        "componentName": "TinyPopover",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "DatePicker",
+        "componentName": "TinyDatePicker",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "Numeric",
+        "componentName": "TinyNumeric",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "package": "@opentiny/vue",
+        "destructuring": true,
+        "exportName": "TinyTransfer",
+        "componentName": "TinyTransfer",
+        "version": "",
+        "npmrc": null
+      },
+      {
+        "path": "",
+        "destructuring": false,
+        "componentName": "Group1Test1",
+        "version": "1.0.8",
+        "dependencies": {
+          "scripts": [
+            {
+              "package": "@opentiny/vue",
+              "components": {
+                "TinyButton": "Button"
+              }
+            }
+          ],
+          "styles": []
+        }
+      },
+      {
+        "path": "",
+        "destructuring": false,
+        "componentName": "Group1Test2",
+        "version": "1.0.3",
+        "dependencies": {
+          "scripts": [
+            {
+              "components": {}
+            },
+            {
+              "package": "@opentiny/vue",
+              "components": {
+                "TinyButton": "Button"
+              }
+            }
+          ],
+          "styles": []
+        }
+      }
+    ],
+    "componentsTree": [
+      {
+        "children": [
+          {
+            "componentName": "div",
+            "props": {
+              "style": "padding-bottom: 10px; padding-top: 10px;"
+            },
+            "id": "2b2cabf0",
+            "children": [
+              {
+                "componentName": "TinyTimeLine",
+                "props": {
+                  "active": "2",
+                  "data": [
+                    {
+                      "name": "基础配置"
+                    },
+                    {
+                      "name": "网络配置"
+                    },
+                    {
+                      "name": "高级配置"
+                    },
+                    {
+                      "name": "确认配置"
+                    }
+                  ],
+                  "horizontal": true,
+                  "style": "border-radius: 0px;"
+                },
+                "id": "dd764b17"
+              }
+            ]
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+            },
+            "id": "30c94cc8",
+            "children": [
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "计费模式"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButtonGroup",
+                        "props": {
+                          "data": [
+                            {
+                              "text": "包年/包月",
+                              "value": "1"
+                            },
+                            {
+                              "text": "按需计费",
+                              "value": "2"
+                            }
+                          ],
+                          "modelValue": "1"
+                        },
+                        "id": "a8d84361"
+                      }
+                    ],
+                    "id": "9f39f3e7"
+                  },
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "区域"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButtonGroup",
+                        "props": {
+                          "data": [
+                            {
+                              "text": "乌兰察布二零一",
+                              "value": "1"
+                            }
+                          ],
+                          "modelValue": "1",
+                          "style": "border-radius: 0px; margin-right: 10px;"
+                        },
+                        "id": "c97ccd99"
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "温馨提示：页面左上角切换区域",
+                          "style": "background-color: [object Event]; color: #8a8e99; font-size: 12px;"
+                        },
+                        "id": "20923497"
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "不同区域的云服务产品之间内网互不相通；请就近选择靠近您业务的区域，可减少网络时延，提高访问速度",
+                          "style": "display: block; color: #8a8e99; border-radius: 0px; font-size: 12px;"
+                        },
+                        "id": "54780a26"
+                      }
+                    ],
+                    "id": "4966384d"
+                  },
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "可用区",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButtonGroup",
+                        "props": {
+                          "data": [
+                            {
+                              "text": "可用区1",
+                              "value": "1"
+                            },
+                            {
+                              "text": "可用区2",
+                              "value": "2"
+                            },
+                            {
+                              "text": "可用区3",
+                              "value": "3"
+                            }
+                          ],
+                          "modelValue": "1"
+                        },
+                        "id": "6184481b"
+                      }
+                    ],
+                    "id": "690837bf"
+                  }
+                ],
+                "id": "b6a425d4"
+              }
+            ]
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+            },
+            "children": [
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "CPU架构"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButtonGroup",
+                        "props": {
+                          "data": [
+                            {
+                              "text": "x86计算",
+                              "value": "1"
+                            },
+                            {
+                              "text": "鲲鹏计算",
+                              "value": "2"
+                            }
+                          ],
+                          "modelValue": "1"
+                        },
+                        "id": "7d33ced7"
+                      }
+                    ],
+                    "id": "05ed5a79"
+                  },
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "区域"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "display: flex; justify-content: flex-start; align-items: center;"
+                        },
+                        "id": "606edf78",
+                        "children": [
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; align-items: center; margin-right: 10px;"
+                            },
+                            "id": "f3f98246",
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "vCPUs",
+                                  "style": "width: 80px;"
+                                },
+                                "id": "c287437e"
+                              },
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ]
+                                },
+                                "id": "4c43286b"
+                              }
+                            ]
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; align-items: center; margin-right: 10px;"
+                            },
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "内存",
+                                  "style": "width: 80px; border-radius: 0px;"
+                                },
+                                "id": "38b8fa1f"
+                              },
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ]
+                                },
+                                "id": "cd33328e"
+                              }
+                            ],
+                            "id": "2b2c678f"
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; align-items: center;"
+                            },
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "规格名称",
+                                  "style": "width: 80px;"
+                                },
+                                "id": "d3eb6352"
+                              },
+                              {
+                                "componentName": "TinySearch",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "输入关键词"
+                                },
+                                "id": "21cb9282"
+                              }
+                            ],
+                            "id": "b8e0f35c"
+                          }
+                        ]
+                      },
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "border-radius: 0px;"
+                        },
+                        "id": "5000c83e",
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "通用计算型",
+                                  "value": "1"
+                                },
+                                {
+                                  "text": "通用计算增强型",
+                                  "value": "2"
+                                },
+                                {
+                                  "text": "内存优化型",
+                                  "value": "3"
+                                },
+                                {
+                                  "text": "内存优化型",
+                                  "value": "4"
+                                },
+                                {
+                                  "text": "磁盘增强型",
+                                  "value": "5"
+                                },
+                                {
+                                  "text": "超高I/O型",
+                                  "value": "6"
+                                },
+                                {
+                                  "text": "GPU加速型",
+                                  "value": "7"
+                                }
+                              ],
+                              "modelValue": "1",
+                              "style": "border-radius: 0px; margin-top: 12px;"
+                            },
+                            "id": "b8724703"
+                          },
+                          {
+                            "componentName": "TinyGrid",
+                            "props": {
+                              "editConfig": {
+                                "trigger": "click",
+                                "mode": "cell",
+                                "showStatus": true
+                              },
+                              "columns": [
+                                {
+                                  "type": "radio",
+                                  "width": 60
+                                },
+                                {
+                                  "field": "employees",
+                                  "title": "规格名称"
+                                },
+                                {
+                                  "field": "created_date",
+                                  "title": "vCPUs | 内存(GiB)",
+                                  "sortable": true
+                                },
+                                {
+                                  "field": "city",
+                                  "title": "CPU",
+                                  "sortable": true
+                                },
+                                {
+                                  "title": "基准 / 最大带宽\t",
+                                  "sortable": true
+                                },
+                                {
+                                  "title": "内网收发包",
+                                  "sortable": true
+                                }
+                              ],
+                              "data": [
+                                {
+                                  "id": "1",
+                                  "name": "GFD科技有限公司",
+                                  "city": "福州",
+                                  "employees": 800,
+                                  "created_date": "2014-04-30 00:56:00",
+                                  "boole": false
+                                },
+                                {
+                                  "id": "2",
+                                  "name": "WWW科技有限公司",
+                                  "city": "深圳",
+                                  "employees": 300,
+                                  "created_date": "2016-07-08 12:36:22",
+                                  "boole": true
+                                }
+                              ],
+                              "style": "margin-top: 12px; border-radius: 0px;",
+                              "auto-resize": true
+                            },
+                            "id": "77701c25"
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "margin-top: 12px; border-radius: 0px;"
+                            },
+                            "id": "3339838b",
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "当前规格",
+                                  "style": "width: 150px; display: inline-block;"
+                                },
+                                "id": "203b012b"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "通用计算型 | Si2.large.2 | 2vCPUs | 4 GiB",
+                                  "style": "font-weight: 700;"
+                                },
+                                "id": "87723f52"
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "657fb2fc"
+                  }
+                ],
+                "id": "d19b15cf"
+              }
+            ],
+            "id": "9991228b"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+            },
+            "children": [
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "镜像",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButtonGroup",
+                        "props": {
+                          "data": [
+                            {
+                              "text": "公共镜像",
+                              "value": "1"
+                            },
+                            {
+                              "text": "私有镜像",
+                              "value": "2"
+                            },
+                            {
+                              "text": "共享镜像",
+                              "value": "3"
+                            }
+                          ],
+                          "modelValue": "1"
+                        },
+                        "id": "922b14cb"
+                      },
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "display: flex; margin-top: 12px; border-radius: 0px;"
+                        },
+                        "id": "6b679524",
+                        "children": [
+                          {
+                            "componentName": "TinySelect",
+                            "props": {
+                              "modelValue": "",
+                              "placeholder": "请选择",
+                              "options": [
+                                {
+                                  "value": "1",
+                                  "label": "黄金糕"
+                                },
+                                {
+                                  "value": "2",
+                                  "label": "双皮奶"
+                                }
+                              ],
+                              "style": "width: 170px; margin-right: 10px;"
+                            },
+                            "id": "4851fff7"
+                          },
+                          {
+                            "componentName": "TinySelect",
+                            "props": {
+                              "modelValue": "",
+                              "placeholder": "请选择",
+                              "options": [
+                                {
+                                  "value": "1",
+                                  "label": "黄金糕"
+                                },
+                                {
+                                  "value": "2",
+                                  "label": "双皮奶"
+                                }
+                              ],
+                              "style": "width: 340px;"
+                            },
+                            "id": "a7183eb7"
+                          }
+                        ]
+                      },
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin-top: 12px;"
+                        },
+                        "id": "57aee314",
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "请注意操作系统的语言类型。",
+                              "style": "color: #e37d29;"
+                            },
+                            "id": "56d36c27"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "e3b02436"
+                  }
+                ],
+                "id": "59aebf2b"
+              }
+            ],
+            "id": "87ff7b99"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+            },
+            "children": [
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "系统盘",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "display: flex;"
+                        },
+                        "id": "cddba5b8",
+                        "children": [
+                          {
+                            "componentName": "TinySelect",
+                            "props": {
+                              "modelValue": "",
+                              "placeholder": "请选择",
+                              "options": [
+                                {
+                                  "value": "1",
+                                  "label": "黄金糕"
+                                },
+                                {
+                                  "value": "2",
+                                  "label": "双皮奶"
+                                }
+                              ],
+                              "style": "width: 200px; margin-right: 10px;"
+                            },
+                            "id": "a97fbe15"
+                          },
+                          {
+                            "componentName": "TinyInput",
+                            "props": {
+                              "placeholder": "请输入",
+                              "modelValue": "",
+                              "style": "width: 120px; margin-right: 10px;"
+                            },
+                            "id": "1cde4c0f"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "GiB   \nIOPS上限240，IOPS突发上限5,000",
+                              "style": "color: #575d6c; font-size: 12px;"
+                            },
+                            "id": "2815d82d"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "50239a3a"
+                  }
+                ],
+                "id": "e8582986"
+              },
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyFormItem",
+                    "props": {
+                      "label": "数据盘",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "margin-top: 12px; display: flex;"
+                        },
+                        "id": "728c9825",
+                        "children": [
+                          {
+                            "componentName": "Icon",
+                            "props": {
+                              "style": "margin-right: 10px; width: 16px; height: 16px;",
+                              "name": "IconPanelMini"
+                            },
+                            "id": "fded6930"
+                          },
+                          {
+                            "componentName": "TinySelect",
+                            "props": {
+                              "modelValue": "",
+                              "placeholder": "请选择",
+                              "options": [
+                                {
+                                  "value": "1",
+                                  "label": "黄金糕"
+                                },
+                                {
+                                  "value": "2",
+                                  "label": "双皮奶"
+                                }
+                              ],
+                              "style": "width: 200px; margin-right: 10px;"
+                            },
+                            "id": "62734e3f"
+                          },
+                          {
+                            "componentName": "TinyInput",
+                            "props": {
+                              "placeholder": "请输入",
+                              "modelValue": "",
+                              "style": "width: 120px; margin-right: 10px;"
+                            },
+                            "id": "667c7926"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "GiB   \nIOPS上限600，IOPS突发上限5,000",
+                              "style": "color: #575d6c; font-size: 12px; margin-right: 10px;"
+                            },
+                            "id": "e7bc36d6"
+                          },
+                          {
+                            "componentName": "TinyInput",
+                            "props": {
+                              "placeholder": "请输入",
+                              "modelValue": "",
+                              "style": "width: 120px;"
+                            },
+                            "id": "1bd56dc0"
+                          }
+                        ],
+                        "loop": {
+                          "type": "JSExpression",
+                          "value": "this.state.dataDisk"
+                        }
+                      },
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "display: flex; margin-top: 12px; border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Icon",
+                            "props": {
+                              "name": "IconPlus",
+                              "style": "width: 16px; height: 16px; margin-right: 10px;"
+                            },
+                            "id": "65c89f2b"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "增加一块数据盘",
+                              "style": "font-size: 12px; border-radius: 0px; margin-right: 10px;"
+                            },
+                            "id": "cb344071"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "您还可以挂载 21 块磁盘（云硬盘）",
+                              "style": "color: #8a8e99; font-size: 12px;"
+                            },
+                            "id": "80eea996"
+                          }
+                        ],
+                        "id": "e9e530ab"
+                      }
+                    ],
+                    "id": "078e03ef"
+                  }
+                ],
+                "id": "ccef886e"
+              }
+            ],
+            "id": "0fb7bd74"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "style": "border-width: 1px; border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
+            },
+            "children": [
+              {
+                "componentName": "TinyForm",
+                "props": {
+                  "labelWidth": "80px",
+                  "labelPosition": "top",
+                  "inline": false,
+                  "label-position": "left ",
+                  "label-width": "150px",
+                  "style": "border-radius: 0px;"
+                },
+                "children": [],
+                "id": "21ed4475"
+              },
+              {
+                "componentName": "TinyRow",
+                "props": {
+                  "style": "border-radius: 0px; height: 100%;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyCol",
+                    "props": {
+                      "span": "8"
+                    },
+                    "id": "b9d051a5",
+                    "children": [
+                      {
+                        "componentName": "TinyRow",
+                        "props": {
+                          "style": "border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyCol",
+                            "props": {
+                              "span": "5",
+                              "style": "display: flex;"
+                            },
+                            "id": "02352776",
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "购买量",
+                                  "style": "margin-right: 10px;"
+                                },
+                                "id": "0cd9ed5c"
+                              },
+                              {
+                                "componentName": "TinyInput",
+                                "props": {
+                                  "placeholder": "请输入",
+                                  "modelValue": "",
+                                  "style": "width: 120px; margin-right: 10px;"
+                                },
+                                "id": "2f9cf442"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "台"
+                                },
+                                "id": "facd4481"
+                              }
+                            ]
+                          },
+                          {
+                            "componentName": "TinyCol",
+                            "props": {
+                              "span": "7"
+                            },
+                            "id": "82b6c659",
+                            "children": [
+                              {
+                                "componentName": "div",
+                                "props": {},
+                                "id": "9cd65874",
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "配置费用",
+                                      "style": "font-size: 12px;"
+                                    },
+                                    "id": "b5a0a0da"
+                                  },
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "¥1.5776",
+                                      "style": "padding-left: 10px; padding-right: 10px; color: #de504e;"
+                                    },
+                                    "id": "d9464214"
+                                  },
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "/小时",
+                                      "style": "font-size: 12px;"
+                                    },
+                                    "id": "af7cc5e6"
+                                  }
+                                ]
+                              },
+                              {
+                                "componentName": "div",
+                                "props": {},
+                                "id": "89063830",
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "参考价格，具体扣费请以账单为准。",
+                                      "style": "font-size: 12px; border-radius: 0px;"
+                                    },
+                                    "id": "d8995fbc"
+                                  },
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "了解计费详情",
+                                      "style": "font-size: 12px; color: #344899;"
+                                    },
+                                    "id": "b383c3e2"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "id": "94fc0e43"
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "TinyCol",
+                    "props": {
+                      "span": "4",
+                      "style": "display: flex; flex-direction: row-reverse; border-radius: 0px; height: 100%; justify-content: flex-start; align-items: center;"
+                    },
+                    "id": "10b73009",
+                    "children": [
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": "下一步: 网络配置",
+                          "type": "danger",
+                          "style": "max-width: unset;"
+                        },
+                        "id": "0b584011"
+                      }
+                    ]
+                  }
+                ],
+                "id": "d414a473"
+              }
+            ],
+            "id": "e8ec029b"
+          }
+        ],
+        "css": "body {\r\n  background-color:#eef0f5 ;\r\n  margin-bottom: 80px;\r\n}",
+        "componentName": "Page",
+        "fileName": "createVm",
+        "lifeCycles": null,
+        "meta": {
+          "app": 1,
+          "gmt_create": "2024-10-16 23:31:48",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2024-10-16 23:31:48",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "createVm",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "createVm",
+          "siteId": "1",
+          "page_content": {
+            "state": {
+              "dataDisk": [1, 2, 3]
+            },
+            "methods": {},
+            "componentName": "Page",
+            "css": "body {\r\n  background-color:#eef0f5 ;\r\n  margin-bottom: 80px;\r\n}",
+            "props": {},
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "padding-bottom: 10px; padding-top: 10px;"
+                },
+                "id": "2b2cabf0",
+                "children": [
+                  {
+                    "componentName": "TinyTimeLine",
+                    "props": {
+                      "active": "2",
+                      "data": [
+                        {
+                          "name": "基础配置"
+                        },
+                        {
+                          "name": "网络配置"
+                        },
+                        {
+                          "name": "高级配置"
+                        },
+                        {
+                          "name": "确认配置"
+                        }
+                      ],
+                      "horizontal": true,
+                      "style": "border-radius: 0px;"
+                    },
+                    "id": "dd764b17"
+                  }
+                ]
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+                },
+                "id": "30c94cc8",
+                "children": [
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "计费模式"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "包年/包月",
+                                  "value": "1"
+                                },
+                                {
+                                  "text": "按需计费",
+                                  "value": "2"
+                                }
+                              ],
+                              "modelValue": "1"
+                            },
+                            "id": "a8d84361"
+                          }
+                        ],
+                        "id": "9f39f3e7"
+                      },
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "区域"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "乌兰察布二零一",
+                                  "value": "1"
+                                }
+                              ],
+                              "modelValue": "1",
+                              "style": "border-radius: 0px; margin-right: 10px;"
+                            },
+                            "id": "c97ccd99"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "温馨提示：页面左上角切换区域",
+                              "style": "background-color: [object Event]; color: #8a8e99; font-size: 12px;"
+                            },
+                            "id": "20923497"
+                          },
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "不同区域的云服务产品之间内网互不相通；请就近选择靠近您业务的区域，可减少网络时延，提高访问速度",
+                              "style": "display: block; color: #8a8e99; border-radius: 0px; font-size: 12px;"
+                            },
+                            "id": "54780a26"
+                          }
+                        ],
+                        "id": "4966384d"
+                      },
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "可用区",
+                          "style": "border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "可用区1",
+                                  "value": "1"
+                                },
+                                {
+                                  "text": "可用区2",
+                                  "value": "2"
+                                },
+                                {
+                                  "text": "可用区3",
+                                  "value": "3"
+                                }
+                              ],
+                              "modelValue": "1"
+                            },
+                            "id": "6184481b"
+                          }
+                        ],
+                        "id": "690837bf"
+                      }
+                    ],
+                    "id": "b6a425d4"
+                  }
+                ]
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "CPU架构"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "x86计算",
+                                  "value": "1"
+                                },
+                                {
+                                  "text": "鲲鹏计算",
+                                  "value": "2"
+                                }
+                              ],
+                              "modelValue": "1"
+                            },
+                            "id": "7d33ced7"
+                          }
+                        ],
+                        "id": "05ed5a79"
+                      },
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "区域"
+                        },
+                        "children": [
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; justify-content: flex-start; align-items: center;"
+                            },
+                            "id": "606edf78",
+                            "children": [
+                              {
+                                "componentName": "div",
+                                "props": {
+                                  "style": "display: flex; align-items: center; margin-right: 10px;"
+                                },
+                                "id": "f3f98246",
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "vCPUs",
+                                      "style": "width: 80px;"
+                                    },
+                                    "id": "c287437e"
+                                  },
+                                  {
+                                    "componentName": "TinySelect",
+                                    "props": {
+                                      "modelValue": "",
+                                      "placeholder": "请选择",
+                                      "options": [
+                                        {
+                                          "value": "1",
+                                          "label": "黄金糕"
+                                        },
+                                        {
+                                          "value": "2",
+                                          "label": "双皮奶"
+                                        }
+                                      ]
+                                    },
+                                    "id": "4c43286b"
+                                  }
+                                ]
+                              },
+                              {
+                                "componentName": "div",
+                                "props": {
+                                  "style": "display: flex; align-items: center; margin-right: 10px;"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "内存",
+                                      "style": "width: 80px; border-radius: 0px;"
+                                    },
+                                    "id": "38b8fa1f"
+                                  },
+                                  {
+                                    "componentName": "TinySelect",
+                                    "props": {
+                                      "modelValue": "",
+                                      "placeholder": "请选择",
+                                      "options": [
+                                        {
+                                          "value": "1",
+                                          "label": "黄金糕"
+                                        },
+                                        {
+                                          "value": "2",
+                                          "label": "双皮奶"
+                                        }
+                                      ]
+                                    },
+                                    "id": "cd33328e"
+                                  }
+                                ],
+                                "id": "2b2c678f"
+                              },
+                              {
+                                "componentName": "div",
+                                "props": {
+                                  "style": "display: flex; align-items: center;"
+                                },
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "规格名称",
+                                      "style": "width: 80px;"
+                                    },
+                                    "id": "d3eb6352"
+                                  },
+                                  {
+                                    "componentName": "TinySearch",
+                                    "props": {
+                                      "modelValue": "",
+                                      "placeholder": "输入关键词"
+                                    },
+                                    "id": "21cb9282"
+                                  }
+                                ],
+                                "id": "b8e0f35c"
+                              }
+                            ]
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "border-radius: 0px;"
+                            },
+                            "id": "5000c83e",
+                            "children": [
+                              {
+                                "componentName": "TinyButtonGroup",
+                                "props": {
+                                  "data": [
+                                    {
+                                      "text": "通用计算型",
+                                      "value": "1"
+                                    },
+                                    {
+                                      "text": "通用计算增强型",
+                                      "value": "2"
+                                    },
+                                    {
+                                      "text": "内存优化型",
+                                      "value": "3"
+                                    },
+                                    {
+                                      "text": "内存优化型",
+                                      "value": "4"
+                                    },
+                                    {
+                                      "text": "磁盘增强型",
+                                      "value": "5"
+                                    },
+                                    {
+                                      "text": "超高I/O型",
+                                      "value": "6"
+                                    },
+                                    {
+                                      "text": "GPU加速型",
+                                      "value": "7"
+                                    }
+                                  ],
+                                  "modelValue": "1",
+                                  "style": "border-radius: 0px; margin-top: 12px;"
+                                },
+                                "id": "b8724703"
+                              },
+                              {
+                                "componentName": "TinyGrid",
+                                "props": {
+                                  "editConfig": {
+                                    "trigger": "click",
+                                    "mode": "cell",
+                                    "showStatus": true
+                                  },
+                                  "columns": [
+                                    {
+                                      "type": "radio",
+                                      "width": 60
+                                    },
+                                    {
+                                      "field": "employees",
+                                      "title": "规格名称"
+                                    },
+                                    {
+                                      "field": "created_date",
+                                      "title": "vCPUs | 内存(GiB)",
+                                      "sortable": true
+                                    },
+                                    {
+                                      "field": "city",
+                                      "title": "CPU",
+                                      "sortable": true
+                                    },
+                                    {
+                                      "title": "基准 / 最大带宽\t",
+                                      "sortable": true
+                                    },
+                                    {
+                                      "title": "内网收发包",
+                                      "sortable": true
+                                    }
+                                  ],
+                                  "data": [
+                                    {
+                                      "id": "1",
+                                      "name": "GFD科技有限公司",
+                                      "city": "福州",
+                                      "employees": 800,
+                                      "created_date": "2014-04-30 00:56:00",
+                                      "boole": false
+                                    },
+                                    {
+                                      "id": "2",
+                                      "name": "WWW科技有限公司",
+                                      "city": "深圳",
+                                      "employees": 300,
+                                      "created_date": "2016-07-08 12:36:22",
+                                      "boole": true
+                                    }
+                                  ],
+                                  "style": "margin-top: 12px; border-radius: 0px;",
+                                  "auto-resize": true
+                                },
+                                "id": "77701c25"
+                              },
+                              {
+                                "componentName": "div",
+                                "props": {
+                                  "style": "margin-top: 12px; border-radius: 0px;"
+                                },
+                                "id": "3339838b",
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "当前规格",
+                                      "style": "width: 150px; display: inline-block;"
+                                    },
+                                    "id": "203b012b"
+                                  },
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "通用计算型 | Si2.large.2 | 2vCPUs | 4 GiB",
+                                      "style": "font-weight: 700;"
+                                    },
+                                    "id": "87723f52"
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ],
+                        "id": "657fb2fc"
+                      }
+                    ],
+                    "id": "d19b15cf"
+                  }
+                ],
+                "id": "9991228b"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "镜像",
+                          "style": "border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "TinyButtonGroup",
+                            "props": {
+                              "data": [
+                                {
+                                  "text": "公共镜像",
+                                  "value": "1"
+                                },
+                                {
+                                  "text": "私有镜像",
+                                  "value": "2"
+                                },
+                                {
+                                  "text": "共享镜像",
+                                  "value": "3"
+                                }
+                              ],
+                              "modelValue": "1"
+                            },
+                            "id": "922b14cb"
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; margin-top: 12px; border-radius: 0px;"
+                            },
+                            "id": "6b679524",
+                            "children": [
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ],
+                                  "style": "width: 170px; margin-right: 10px;"
+                                },
+                                "id": "4851fff7"
+                              },
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ],
+                                  "style": "width: 340px;"
+                                },
+                                "id": "a7183eb7"
+                              }
+                            ]
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "margin-top: 12px;"
+                            },
+                            "id": "57aee314",
+                            "children": [
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "请注意操作系统的语言类型。",
+                                  "style": "color: #e37d29;"
+                                },
+                                "id": "56d36c27"
+                              }
+                            ]
+                          }
+                        ],
+                        "id": "e3b02436"
+                      }
+                    ],
+                    "id": "59aebf2b"
+                  }
+                ],
+                "id": "87ff7b99"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "border-width: 1px; border-style: solid; border-radius: 4px; border-color: #fff; padding-top: 10px; padding-bottom: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; margin-bottom: 10px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "系统盘",
+                          "style": "border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex;"
+                            },
+                            "id": "cddba5b8",
+                            "children": [
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ],
+                                  "style": "width: 200px; margin-right: 10px;"
+                                },
+                                "id": "a97fbe15"
+                              },
+                              {
+                                "componentName": "TinyInput",
+                                "props": {
+                                  "placeholder": "请输入",
+                                  "modelValue": "",
+                                  "style": "width: 120px; margin-right: 10px;"
+                                },
+                                "id": "1cde4c0f"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "GiB   \nIOPS上限240，IOPS突发上限5,000",
+                                  "style": "color: #575d6c; font-size: 12px;"
+                                },
+                                "id": "2815d82d"
+                              }
+                            ]
+                          }
+                        ],
+                        "id": "50239a3a"
+                      }
+                    ],
+                    "id": "e8582986"
+                  },
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyFormItem",
+                        "props": {
+                          "label": "数据盘",
+                          "style": "border-radius: 0px;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "margin-top: 12px; display: flex;"
+                            },
+                            "id": "728c9825",
+                            "children": [
+                              {
+                                "componentName": "Icon",
+                                "props": {
+                                  "style": "margin-right: 10px; width: 16px; height: 16px;",
+                                  "name": "IconPanelMini"
+                                },
+                                "id": "fded6930"
+                              },
+                              {
+                                "componentName": "TinySelect",
+                                "props": {
+                                  "modelValue": "",
+                                  "placeholder": "请选择",
+                                  "options": [
+                                    {
+                                      "value": "1",
+                                      "label": "黄金糕"
+                                    },
+                                    {
+                                      "value": "2",
+                                      "label": "双皮奶"
+                                    }
+                                  ],
+                                  "style": "width: 200px; margin-right: 10px;"
+                                },
+                                "id": "62734e3f"
+                              },
+                              {
+                                "componentName": "TinyInput",
+                                "props": {
+                                  "placeholder": "请输入",
+                                  "modelValue": "",
+                                  "style": "width: 120px; margin-right: 10px;"
+                                },
+                                "id": "667c7926"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "GiB   \nIOPS上限600，IOPS突发上限5,000",
+                                  "style": "color: #575d6c; font-size: 12px; margin-right: 10px;"
+                                },
+                                "id": "e7bc36d6"
+                              },
+                              {
+                                "componentName": "TinyInput",
+                                "props": {
+                                  "placeholder": "请输入",
+                                  "modelValue": "",
+                                  "style": "width: 120px;"
+                                },
+                                "id": "1bd56dc0"
+                              }
+                            ],
+                            "loop": {
+                              "type": "JSExpression",
+                              "value": "this.state.dataDisk"
+                            }
+                          },
+                          {
+                            "componentName": "div",
+                            "props": {
+                              "style": "display: flex; margin-top: 12px; border-radius: 0px;"
+                            },
+                            "children": [
+                              {
+                                "componentName": "Icon",
+                                "props": {
+                                  "name": "IconPlus",
+                                  "style": "width: 16px; height: 16px; margin-right: 10px;"
+                                },
+                                "id": "65c89f2b"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "增加一块数据盘",
+                                  "style": "font-size: 12px; border-radius: 0px; margin-right: 10px;"
+                                },
+                                "id": "cb344071"
+                              },
+                              {
+                                "componentName": "Text",
+                                "props": {
+                                  "text": "您还可以挂载 21 块磁盘（云硬盘）",
+                                  "style": "color: #8a8e99; font-size: 12px;"
+                                },
+                                "id": "80eea996"
+                              }
+                            ],
+                            "id": "e9e530ab"
+                          }
+                        ],
+                        "id": "078e03ef"
+                      }
+                    ],
+                    "id": "ccef886e"
+                  }
+                ],
+                "id": "0fb7bd74"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "border-width: 1px; border-style: solid; border-color: #ffffff; padding-top: 10px; padding-left: 10px; padding-right: 10px; box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px; background-color: #fff; position: fixed; inset: auto 0% 0% 0%; height: 80px; line-height: 80px; border-radius: 0px;"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyForm",
+                    "props": {
+                      "labelWidth": "80px",
+                      "labelPosition": "top",
+                      "inline": false,
+                      "label-position": "left ",
+                      "label-width": "150px",
+                      "style": "border-radius: 0px;"
+                    },
+                    "children": [],
+                    "id": "21ed4475"
+                  },
+                  {
+                    "componentName": "TinyRow",
+                    "props": {
+                      "style": "border-radius: 0px; height: 100%;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": "8"
+                        },
+                        "id": "b9d051a5",
+                        "children": [
+                          {
+                            "componentName": "TinyRow",
+                            "props": {
+                              "style": "border-radius: 0px;"
+                            },
+                            "children": [
+                              {
+                                "componentName": "TinyCol",
+                                "props": {
+                                  "span": "5",
+                                  "style": "display: flex;"
+                                },
+                                "id": "02352776",
+                                "children": [
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "购买量",
+                                      "style": "margin-right: 10px;"
+                                    },
+                                    "id": "0cd9ed5c"
+                                  },
+                                  {
+                                    "componentName": "TinyInput",
+                                    "props": {
+                                      "placeholder": "请输入",
+                                      "modelValue": "",
+                                      "style": "width: 120px; margin-right: 10px;"
+                                    },
+                                    "id": "2f9cf442"
+                                  },
+                                  {
+                                    "componentName": "Text",
+                                    "props": {
+                                      "text": "台"
+                                    },
+                                    "id": "facd4481"
+                                  }
+                                ]
+                              },
+                              {
+                                "componentName": "TinyCol",
+                                "props": {
+                                  "span": "7"
+                                },
+                                "id": "82b6c659",
+                                "children": [
+                                  {
+                                    "componentName": "div",
+                                    "props": {},
+                                    "id": "9cd65874",
+                                    "children": [
+                                      {
+                                        "componentName": "Text",
+                                        "props": {
+                                          "text": "配置费用",
+                                          "style": "font-size: 12px;"
+                                        },
+                                        "id": "b5a0a0da"
+                                      },
+                                      {
+                                        "componentName": "Text",
+                                        "props": {
+                                          "text": "¥1.5776",
+                                          "style": "padding-left: 10px; padding-right: 10px; color: #de504e;"
+                                        },
+                                        "id": "d9464214"
+                                      },
+                                      {
+                                        "componentName": "Text",
+                                        "props": {
+                                          "text": "/小时",
+                                          "style": "font-size: 12px;"
+                                        },
+                                        "id": "af7cc5e6"
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "componentName": "div",
+                                    "props": {},
+                                    "id": "89063830",
+                                    "children": [
+                                      {
+                                        "componentName": "Text",
+                                        "props": {
+                                          "text": "参考价格，具体扣费请以账单为准。",
+                                          "style": "font-size: 12px; border-radius: 0px;"
+                                        },
+                                        "id": "d8995fbc"
+                                      },
+                                      {
+                                        "componentName": "Text",
+                                        "props": {
+                                          "text": "了解计费详情",
+                                          "style": "font-size: 12px; color: #344899;"
+                                        },
+                                        "id": "b383c3e2"
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ],
+                            "id": "94fc0e43"
+                          }
+                        ]
+                      },
+                      {
+                        "componentName": "TinyCol",
+                        "props": {
+                          "span": "4",
+                          "style": "display: flex; flex-direction: row-reverse; border-radius: 0px; height: 100%; justify-content: flex-start; align-items: center;"
+                        },
+                        "id": "10b73009",
+                        "children": [
+                          {
+                            "componentName": "TinyButton",
+                            "props": {
+                              "text": "下一步: 网络配置",
+                              "type": "danger",
+                              "style": "max-width: unset;"
+                            },
+                            "id": "0b584011"
+                          }
+                        ]
+                      }
+                    ],
+                    "id": "d414a473"
+                  }
+                ],
+                "id": "e8ec029b"
+              }
+            ],
+            "fileName": "createVm"
+          },
+          "id": 1,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {},
+        "props": {},
+        "state": {
+          "dataDisk": [1, 2, 3]
+        }
+      },
+      {
+        "children": [
+          {
+            "componentName": "div",
+            "props": {
+              "style": "text-align: center; padding: 8px 12px; box-shadow: 0 0 4px #0003;",
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "to": {
+                    "name": "9"
+                  },
+                  "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+                },
+                "children": [
+                  {
+                    "componentName": "Icon",
+                    "props": {
+                      "name": "IconPublicHome",
+                      "style": "margin-top: 3px;"
+                    },
+                    "id": "2143f42d"
+                  },
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "/fivea"
+                    },
+                    "id": "11324214"
+                  }
+                ],
+                "id": "66622445"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "to": {
+                    "name": "10"
+                  },
+                  "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+                },
+                "children": [
+                  {
+                    "componentName": "Icon",
+                    "props": {
+                      "name": "IconTaskCooperation",
+                      "style": "margin-top: 3px;"
+                    },
+                    "id": "25553142"
+                  },
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "/fiveb"
+                    },
+                    "id": "22525242"
+                  }
+                ],
+                "id": "56426524"
+              }
+            ],
+            "id": "4267e3f2"
+          },
+          {
+            "componentName": "RouterView",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [],
+            "id": "42524344"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "Tfive",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-09-16 14:38:32",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-09-16 14:38:32",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "Tfive",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "Tfive",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "text-align: center; padding: 8px 12px; box-shadow: 0 0 4px #0003;",
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": {
+                        "name": "9"
+                      },
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconPublicHome",
+                          "style": "margin-top: 3px;"
+                        },
+                        "id": "2143f42d"
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "/fivea"
+                        },
+                        "id": "11324214"
+                      }
+                    ],
+                    "id": "66622445"
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "to": {
+                        "name": "10"
+                      },
+                      "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Icon",
+                        "props": {
+                          "name": "IconTaskCooperation",
+                          "style": "margin-top: 3px;"
+                        },
+                        "id": "25553142"
+                      },
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "/fiveb"
+                        },
+                        "id": "22525242"
+                      }
+                    ],
+                    "id": "56426524"
+                  }
+                ],
+                "id": "4267e3f2"
+              },
+              {
+                "componentName": "RouterView",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "42524344"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {
+              "textTvie": {
+                "text": "Tfive"
+              }
+            },
+            "methods": {},
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "Tfive",
+            "id": "body"
+          },
+          "id": 8,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {},
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {
+          "textTvie": {
+            "text": "Tfive"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "componentName": "Group1Test2",
+            "props": {
+              "className": "block-base-style"
+            },
+            "componentType": "Block",
+            "children": [],
+            "id": "c4866555"
+          },
+          {
+            "componentName": "Group1Test1",
+            "props": {
+              "className": "block-base-style"
+            },
+            "componentType": "Block",
+            "children": [],
+            "id": "24622349"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "Tfour",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-08-29 17:59:23",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-08-29 17:59:23",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "tfour",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "Tfour",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "Group1Test2",
+                "props": {
+                  "className": "block-base-style"
+                },
+                "componentType": "Block",
+                "children": [],
+                "id": "c4866555"
+              },
+              {
+                "componentName": "Group1Test1",
+                "props": {
+                  "className": "block-base-style"
+                },
+                "componentType": "Block",
+                "children": [],
+                "id": "24622349"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {},
+            "methods": {},
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "Tfour",
+            "id": "body"
+          },
+          "id": 6,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {},
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {}
+      },
+      {
+        "children": [
+          {
+            "componentName": "ElDatePicker",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [],
+            "id": "e5239a66"
+          },
+          {
+            "componentName": "ElForm",
+            "children": [
+              {
+                "componentName": "ElFormItem",
+                "props": {
+                  "label": "账号",
+                  "prop": "account"
+                },
+                "children": [
+                  {
+                    "componentName": "ElInput",
+                    "props": {
+                      "modelValue": "",
+                      "placeholder": "请输入账号"
+                    },
+                    "id": "33253586"
+                  }
+                ],
+                "id": "5c745f66"
+              },
+              {
+                "componentName": "ElFormItem",
+                "props": {
+                  "label": "密码",
+                  "prop": "password"
+                },
+                "children": [
+                  {
+                    "componentName": "ElInput",
+                    "props": {
+                      "modelValue": "",
+                      "placeholder": "请输入密码",
+                      "type": "password"
+                    },
+                    "id": "e5654633"
+                  }
+                ],
+                "id": "42145465"
+              },
+              {
+                "componentName": "ElFormItem",
+                "props": {},
+                "children": [
+                  {
+                    "componentName": "ElButton",
+                    "props": {
+                      "type": "primary",
+                      "style": "margin-right: 10px"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "提交"
+                        },
+                        "id": "35376252"
+                      }
+                    ],
+                    "id": "f51fbc69"
+                  },
+                  {
+                    "componentName": "ElButton",
+                    "props": {
+                      "type": "primary"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "重置"
+                        },
+                        "id": "49346333"
+                      }
+                    ],
+                    "id": "24245522"
+                  }
+                ],
+                "id": "56fa5244"
+              }
+            ],
+            "props": {
+              "className": "component-base-style"
+            },
+            "id": "1d554376"
+          },
+          {
+            "componentName": "RouterLink",
+            "props": {
+              "className": "component-base-style",
+              "to": {
+                "name": "3"
+              }
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "text": "ttwo"
+                },
+                "id": "392555b2"
+              }
+            ],
+            "id": "5d9a6439"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "Tone",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-08-27 00:50:18",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-08-27 00:50:18",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "tone",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "Tone",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "ElDatePicker",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "e5239a66"
+              },
+              {
+                "componentName": "ElForm",
+                "children": [
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {
+                      "label": "账号",
+                      "prop": "account"
+                    },
+                    "children": [
+                      {
+                        "componentName": "ElInput",
+                        "props": {
+                          "modelValue": "",
+                          "placeholder": "请输入账号"
+                        },
+                        "id": "33253586"
+                      }
+                    ],
+                    "id": "5c745f66"
+                  },
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {
+                      "label": "密码",
+                      "prop": "password"
+                    },
+                    "children": [
+                      {
+                        "componentName": "ElInput",
+                        "props": {
+                          "modelValue": "",
+                          "placeholder": "请输入密码",
+                          "type": "password"
+                        },
+                        "id": "e5654633"
+                      }
+                    ],
+                    "id": "42145465"
+                  },
+                  {
+                    "componentName": "ElFormItem",
+                    "props": {},
+                    "children": [
+                      {
+                        "componentName": "ElButton",
+                        "props": {
+                          "type": "primary",
+                          "style": "margin-right: 10px"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "提交"
+                            },
+                            "id": "35376252"
+                          }
+                        ],
+                        "id": "f51fbc69"
+                      },
+                      {
+                        "componentName": "ElButton",
+                        "props": {
+                          "type": "primary"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "重置"
+                            },
+                            "id": "49346333"
+                          }
+                        ],
+                        "id": "24245522"
+                      }
+                    ],
+                    "id": "56fa5244"
+                  }
+                ],
+                "props": {
+                  "className": "component-base-style"
+                },
+                "id": "1d554376"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "3"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "ttwo"
+                    },
+                    "id": "392555b2"
+                  }
+                ],
+                "id": "5d9a6439"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {},
+            "methods": {
+              "onClickNew1": {
+                "type": "JSFunction",
+                "value": "function onClickNew1(event) {\n  console.log('123456')\n  this.state.state1.button++\n  console.log(this.state.state1.button)\n}\n"
+              }
+            },
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "Tone",
+            "id": "body"
+          },
+          "id": 2,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {
+          "onClickNew1": {
+            "type": "JSFunction",
+            "value": "function onClickNew1(event) {\n  console.log('123456')\n  this.state.state1.button++\n  console.log(this.state.state1.button)\n}\n"
+          }
+        },
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {}
+      },
+      {
+        "children": [
+          {
+            "componentName": "Collection",
+            "props": {
+              "className": "component-base-style",
+              "dataSource": 1
+            },
+            "children": [
+              {
+                "componentName": "TinyGrid",
+                "props": {
+                  "editConfig": {
+                    "trigger": "click",
+                    "mode": "cell",
+                    "showStatus": true
+                  },
+                  "columns": [
+                    {
+                      "title": "姓名",
+                      "field": "2"
+                    },
+                    {
+                      "title": "序号",
+                      "field": "1"
+                    }
+                  ],
+                  "className": "component-base-style",
+                  "fetchData": {
+                    "type": "JSExpression",
+                    "value": "{ api: this.getTableData536be324 }"
+                  },
+                  "pager": {
+                    "attrs": {
+                      "currentPage": 1,
+                      "pageSize": 50,
+                      "pageSizes": [10, 20, 50],
+                      "total": 0,
+                      "layout": "sizes,total, prev, pager, next, jumper"
+                    }
+                  }
+                },
+                "children": [],
+                "id": "33675561"
+              }
+            ],
+            "id": "536be324"
+          },
+          {
+            "componentName": "RouterLink",
+            "props": {
+              "className": "component-base-style",
+              "to": {
+                "name": "2"
+              }
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "text": "/tone:测试element-plus组件渲染 "
+                },
+                "id": "c5361165",
+                "children": []
+              }
+            ],
+            "id": "52344241"
+          },
+          {
+            "componentName": "RouterLink",
+            "props": {
+              "className": "component-base-style",
+              "to": {
+                "name": "6"
+              }
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "text": "/tfour: 测试两个区块同时渲染"
+                },
+                "id": "7336d695"
+              }
+            ],
+            "id": "222c2483"
+          },
+          {
+            "componentName": "RouterLink",
+            "props": {
+              "className": "component-base-style",
+              "to": {
+                "name": "1"
+              }
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "text": "/createVm"
+                },
+                "id": "51666233"
+              }
+            ],
+            "id": "33632634"
+          },
+          {
+            "componentName": "RouterLink",
+            "props": {
+              "className": "component-base-style",
+              "to": {
+                "name": "10"
+              }
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "text": "tfive/fiveb嵌套路由"
+                },
+                "id": "45545223"
+              }
+            ],
+            "id": "45462c3c"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "className": "component-base-style",
+                  "text": "路由至tzero进行多项测试",
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.onClickNew"
+                  }
+                },
+                "children": [],
+                "id": "45324446"
+              }
+            ],
+            "id": "36665265"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "Ttwo",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-08-27 10:40:28",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": true,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-08-27 10:40:28",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "ttwo",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "Ttwo",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "Collection",
+                "props": {
+                  "className": "component-base-style",
+                  "dataSource": 1
+                },
+                "children": [
+                  {
+                    "componentName": "TinyGrid",
+                    "props": {
+                      "editConfig": {
+                        "trigger": "click",
+                        "mode": "cell",
+                        "showStatus": true
+                      },
+                      "columns": [
+                        {
+                          "title": "姓名",
+                          "field": "2"
+                        },
+                        {
+                          "title": "序号",
+                          "field": "1"
+                        }
+                      ],
+                      "className": "component-base-style",
+                      "fetchData": {
+                        "type": "JSExpression",
+                        "value": "{ api: this.getTableData536be324 }"
+                      },
+                      "pager": {
+                        "attrs": {
+                          "currentPage": 1,
+                          "pageSize": 50,
+                          "pageSizes": [10, 20, 50],
+                          "total": 0,
+                          "layout": "sizes,total, prev, pager, next, jumper"
+                        }
+                      }
+                    },
+                    "children": [],
+                    "id": "33675561"
+                  }
+                ],
+                "id": "536be324"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "2"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "/tone:测试element-plus组件渲染 "
+                    },
+                    "id": "c5361165",
+                    "children": []
+                  }
+                ],
+                "id": "52344241"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "6"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "/tfour: 测试两个区块同时渲染"
+                    },
+                    "id": "7336d695"
+                  }
+                ],
+                "id": "222c2483"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "1"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "/createVm"
+                    },
+                    "id": "51666233"
+                  }
+                ],
+                "id": "33632634"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "10"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "tfive/fiveb嵌套路由"
+                    },
+                    "id": "45545223"
+                  }
+                ],
+                "id": "45462c3c"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "className": "component-base-style",
+                      "text": "路由至tzero进行多项测试",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickNew"
+                      }
+                    },
+                    "children": [],
+                    "id": "45324446"
+                  }
+                ],
+                "id": "36665265"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {
+              "state1": {
+                "button": 1
+              }
+            },
+            "methods": {
+              "onClickNew": {
+                "type": "JSFunction",
+                "value": "function onClickNew(event) {\n  this.router.push('/tzero')\n}\n"
+              },
+              "getTableData536be324": {
+                "type": "JSFunction",
+                "value": "function getTableData536be324({ page, sort, sortBy, filters }) {\n  /**\n   * @param {Object} sort 排序数据\n   * @param {Array} sortBy 排序方式\n   * @param {Object} page 分页数据\n   * @param {Array} filters 筛选数据\n   * @returns {Object} 返回一个promise对象，并且resolve格式为{ result: Array, page: { total: Number } }\n   */\n  return new Promise((resolve, reject) => {\n    this.dataSourceMap.tableTest1.load().then((res) => {\n      // 如果按照数据源面板的建议格式编写dataHandler\n      // 那么dataSourceMap的res格式应该是：{ code: string, msg: string, data: {items: any[], total: number} }\n      resolve({ result: res.data.items, page: { total: res.data.total } })\n    })\n  })\n}\n"
+              },
+              "onClickNew1": {
+                "type": "JSFunction",
+                "value": "function onClickNew1(event) {\n  this.state.button++\n}\n"
+              }
+            },
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "Ttwo",
+            "id": "body"
+          },
+          "id": 3,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {
+          "onClickNew": {
+            "type": "JSFunction",
+            "value": "function onClickNew(event) {\n  this.router.push('/tzero')\n}\n"
+          },
+          "getTableData536be324": {
+            "type": "JSFunction",
+            "value": "function getTableData536be324({ page, sort, sortBy, filters }) {\n  /**\n   * @param {Object} sort 排序数据\n   * @param {Array} sortBy 排序方式\n   * @param {Object} page 分页数据\n   * @param {Array} filters 筛选数据\n   * @returns {Object} 返回一个promise对象，并且resolve格式为{ result: Array, page: { total: Number } }\n   */\n  return new Promise((resolve, reject) => {\n    this.dataSourceMap.tableTest1.load().then((res) => {\n      // 如果按照数据源面板的建议格式编写dataHandler\n      // 那么dataSourceMap的res格式应该是：{ code: string, msg: string, data: {items: any[], total: number} }\n      resolve({ result: res.data.items, page: { total: res.data.total } })\n    })\n  })\n}\n"
+          },
+          "onClickNew1": {
+            "type": "JSFunction",
+            "value": "function onClickNew1(event) {\n  this.state.button++\n}\n"
+          }
+        },
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {
+          "state1": {
+            "button": 1
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "h1",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": "test-page-0",
+                "id": "32628545"
+              }
+            ],
+            "id": "64416324"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "[utils测试]",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "d32123e2"
+              },
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "className": "component-base-style",
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.testUtils"
+                  },
+                  "text": "测试function和npm包的导入"
+                },
+                "children": [],
+                "id": "15662591"
+              }
+            ],
+            "id": "644ba646"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "[state测试]：点击增加button计数",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "1e5366a5"
+              },
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "text": {
+                    "type": "JSExpression",
+                    "value": "this.state.state1.deep.deepButton"
+                  },
+                  "className": "component-base-style",
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.onClickNew"
+                  }
+                },
+                "children": [],
+                "id": "45a53354"
+              },
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "className": "component-base-style",
+                  "text": "点击抛出错误",
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.onClickNew1"
+                  }
+                },
+                "children": [],
+                "id": "36141245"
+              }
+            ],
+            "id": "4355544e"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "页面state1的getter测试",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "3463e661"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.state.state1.name"
+                      },
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "45212416"
+                  }
+                ],
+                "id": "65313356"
+              }
+            ],
+            "id": "553d1e44"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "[stores测试]：在函数中调用actions",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "326f2132"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "stores的state点击计数器button"
+                    },
+                    "children": [],
+                    "id": "55593d53"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.stores.ttest1.button"
+                      },
+                      "className": "component-base-style",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickNewStoresButton"
+                      }
+                    },
+                    "children": [],
+                    "id": "5524246f"
+                  }
+                ],
+                "id": "651c5121"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "在getters中定义的doubleButton"
+                    },
+                    "children": [],
+                    "id": "f342463a"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.stores.ttest1.doubleButton"
+                      },
+                      "className": "component-base-style",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickGetters"
+                      }
+                    },
+                    "children": [],
+                    "id": "59445645"
+                  }
+                ],
+                "id": "226463d3"
+              }
+            ],
+            "id": "a2424415"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "[路由测试]",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "3c11e664"
+              },
+              {
+                "componentName": "RouterLink",
+                "props": {
+                  "className": "component-base-style",
+                  "to": {
+                    "name": "8"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "text": "路由到嵌套路由Tfive，默认跳转页为Tfive/fiveA"
+                    },
+                    "id": "5251f652"
+                  }
+                ],
+                "id": "5fd536d8"
+              }
+            ],
+            "id": "21af6265"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": "[国际化测试]："
+                },
+                "children": [],
+                "id": "25661983"
+              },
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": {
+                    "type": "JSExpression",
+                    "value": "t('lowcode.26831252')"
+                  }
+                },
+                "children": [],
+                "id": "32254462"
+              }
+            ],
+            "id": "25144234"
+          },
+          {
+            "componentName": "Collection",
+            "props": {
+              "className": "component-base-style",
+              "dataSource": 1
+            },
+            "children": [
+              {
+                "componentName": "TinyGrid",
+                "props": {
+                  "editConfig": {
+                    "trigger": "click",
+                    "mode": "cell",
+                    "showStatus": true
+                  },
+                  "className": "component-base-style",
+                  "fetchData": {
+                    "type": "JSExpression",
+                    "value": "{ api: this.getTableData41564366 }"
+                  },
+                  "columns": [
+                    {
+                      "title": "姓名",
+                      "field": "2"
+                    },
+                    {
+                      "title": "序号",
+                      "field": "1"
+                    }
+                  ],
+                  "pager": {
+                    "attrs": {
+                      "currentPage": 1,
+                      "pageSize": 50,
+                      "pageSizes": [10, 20, 50],
+                      "total": 0,
+                      "layout": "sizes,total, prev, pager, next, jumper"
+                    }
+                  }
+                },
+                "children": [],
+                "id": "54659464"
+              }
+            ],
+            "id": "41564366"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": "[远程数据源测试]"
+                },
+                "children": [],
+                "id": "562b6e54"
+              },
+              {
+                "componentName": "TinySwitch",
+                "props": {
+                  "modelValue": {
+                    "type": "JSExpression",
+                    "value": "this.state.datasourceRemoteTest.success",
+                    "model": true
+                  },
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "7f57662f"
+              },
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": "是否存在页面id为7的页面"
+                },
+                "children": [],
+                "id": "72296416"
+              }
+            ],
+            "id": "24125532"
+          },
+          {
+            "componentName": "div",
+            "props": {
+              "className": "component-base-style"
+            },
+            "children": [
+              {
+                "componentName": "TinyButton",
+                "props": {
+                  "text": {
+                    "type": "JSExpression",
+                    "value": "this.state.state1.deep.deepButton"
+                  },
+                  "className": "component-base-style",
+                  "onClick": {
+                    "type": "JSExpression",
+                    "value": "this.onClickNew2"
+                  }
+                },
+                "children": [],
+                "id": "612645a7"
+              },
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "className": "component-base-style",
+                  "text": "打印数据源.load()方法返回结果"
+                },
+                "children": [],
+                "id": "2826635a"
+              }
+            ],
+            "id": "1e5292df"
+          },
+          {
+            "componentName": "Collection",
+            "props": {
+              "className": "component-base-style",
+              "dataSource": 2
+            },
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": {
+                    "type": "JSExpression",
+                    "value": "this.state.datasourceRemoteTest.code"
+                  },
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "22325335",
+                "loop": {
+                  "type": "JSExpression",
+                  "value": "this.state.loop7286563f"
+                }
+              }
+            ],
+            "id": "7286563f"
+          },
+          {
+            "componentName": "Group1Test2",
+            "props": {
+              "className": "block-base-style"
+            },
+            "componentType": "Block",
+            "children": [],
+            "id": "46333445"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "Tzero",
+        "lifeCycles": {
+          "setup": {
+            "type": "JSFunction",
+            "value": "function setup({\n  props,\n  state,\n  watch,\n  onMounted\n}) {\n  console.log('[setup]');\n\n  /** start-datasourceTableTest1 设计器生成的代码，为了避免出现问题，请勿修改 */\n  this.dataSourceMap.tableTest1.load().then(res => {\n    state.datasourceTableTest1 = res?.data?.items || res?.data || res;\n  });\n  /** end-datasourceTableTest1 */\n\n  /** start-datasourceRemoteTest 设计器生成的代码，为了避免出现问题，请勿修改 */\n  this.dataSourceMap.remoteTest.load().then(res => {\n    state.datasourceRemoteTest = res?.data?.items || res?.data || res;\n  });\n  /** end-datasourceRemoteTest */\n\n  /** start-datasourceLocalhost 设计器生成的代码，为了避免出现问题，请勿修改 */\n  state.intervalIdLocalhost = setInterval(() => {\n    this.dataSourceMap.localhost.load().then(res => {\n      state.datasourceLocalhost = res?.data?.items || res?.data || res\n    })\n  }, 5000);\n  /** end-datasourceLocalhost */\n  \n  return 0\n}"
+          },
+          "onBeforeMount": {
+            "type": "JSFunction",
+            "value": "function onBeforeMount() {\r\n  console.log('[onBeforeMount]')\r\n  return 0\r\n} "
+          },
+          "onMounted": {
+            "type": "JSFunction",
+            "value": "function onMounted() {\r\n    console.log('[onMounted]')\r\n    return 0\r\n} "
+          },
+          "onUpdated": {
+            "type": "JSFunction",
+            "value": "function onUpdated() {\r\n  console.log('[onUpdated]')\r\n} "
+          },
+          "onBeforeUpdate": {
+            "type": "JSFunction",
+            "value": "function onBeforeUpdate() { \r\n  console.log('onBeforeUpdated')\r\n} "
+          },
+          "onBeforeUnmount": {
+            "type": "JSFunction",
+            "value": "function onBeforeUnmount() { \r\n    console.log('onBeforeUnmounted')\r\n} "
+          },
+          "onUnmounted": {
+            "type": "JSFunction",
+            "value": "function onUnmounted() {\n  console.log('onUnmounted')\n\n  /** start-datasourceRemoteTest 设计器生成的代码，为了避免出现问题，请勿修改 */\n  clearInterval(this.state.intervalIdRemoteTest);\n  /** end-datasourceRemoteTest */\n\n      /** start-datasourceLocalhost 设计器生成的代码，为了避免出现问题，请勿修改 */\n      clearInterval(state.intervalIdLocalhost);\n      /** end-datasourceLocalhost */}"
+          },
+          "onErrorCaptured": {
+            "type": "JSFunction",
+            "value": "function onErrorCaptured(err) {\r\n  console.error(err)\r\n  console.log('[onErrorCaptured]')\r\n  return false\r\n} "
+          },
+          "onActivated": {
+            "type": "JSFunction",
+            "value": "function onActivated() { \r\n  console.log('[onActivated]')\r\n} "
+          },
+          "onDeactivated": {
+            "type": "JSFunction",
+            "value": "function onDeactivated() { \r\n  console.log('[onDeactivated]')\r\n} "
+          }
+        },
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-08-28 19:27:25",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-08-28 19:27:25",
+          "parentId": "0",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "tzero",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "Tzero",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style",
+              "firstname": "",
+              "lastname": ""
+            },
+            "lifeCycles": {
+              "setup": {
+                "type": "JSFunction",
+                "value": "function setup({\n  props,\n  state,\n  watch,\n  onMounted\n}) {\n  console.log('[setup]');\n\n  /** start-datasourceTableTest1 设计器生成的代码，为了避免出现问题，请勿修改 */\n  this.dataSourceMap.tableTest1.load().then(res => {\n    state.datasourceTableTest1 = res?.data?.items || res?.data || res;\n  });\n  /** end-datasourceTableTest1 */\n\n  /** start-datasourceRemoteTest 设计器生成的代码，为了避免出现问题，请勿修改 */\n  this.dataSourceMap.remoteTest.load().then(res => {\n    state.datasourceRemoteTest = res?.data?.items || res?.data || res;\n  });\n  /** end-datasourceRemoteTest */\n\n  /** start-datasourceLocalhost 设计器生成的代码，为了避免出现问题，请勿修改 */\n  state.intervalIdLocalhost = setInterval(() => {\n    this.dataSourceMap.localhost.load().then(res => {\n      state.datasourceLocalhost = res?.data?.items || res?.data || res\n    })\n  }, 5000);\n  /** end-datasourceLocalhost */\n  \n  return 0\n}"
+              },
+              "onBeforeMount": {
+                "type": "JSFunction",
+                "value": "function onBeforeMount() {\r\n  console.log('[onBeforeMount]')\r\n  return 0\r\n} "
+              },
+              "onMounted": {
+                "type": "JSFunction",
+                "value": "function onMounted() {\r\n    console.log('[onMounted]')\r\n    return 0\r\n} "
+              },
+              "onUpdated": {
+                "type": "JSFunction",
+                "value": "function onUpdated() {\r\n  console.log('[onUpdated]')\r\n} "
+              },
+              "onBeforeUpdate": {
+                "type": "JSFunction",
+                "value": "function onBeforeUpdate() { \r\n  console.log('onBeforeUpdated')\r\n} "
+              },
+              "onBeforeUnmount": {
+                "type": "JSFunction",
+                "value": "function onBeforeUnmount() { \r\n    console.log('onBeforeUnmounted')\r\n} "
+              },
+              "onUnmounted": {
+                "type": "JSFunction",
+                "value": "function onUnmounted() {\n  console.log('onUnmounted')\n\n  /** start-datasourceRemoteTest 设计器生成的代码，为了避免出现问题，请勿修改 */\n  clearInterval(this.state.intervalIdRemoteTest);\n  /** end-datasourceRemoteTest */\n\n      /** start-datasourceLocalhost 设计器生成的代码，为了避免出现问题，请勿修改 */\n      clearInterval(state.intervalIdLocalhost);\n      /** end-datasourceLocalhost */}"
+              },
+              "onErrorCaptured": {
+                "type": "JSFunction",
+                "value": "function onErrorCaptured(err) {\r\n  console.error(err)\r\n  console.log('[onErrorCaptured]')\r\n  return false\r\n} "
+              },
+              "onActivated": {
+                "type": "JSFunction",
+                "value": "function onActivated() { \r\n  console.log('[onActivated]')\r\n} "
+              },
+              "onDeactivated": {
+                "type": "JSFunction",
+                "value": "function onDeactivated() { \r\n  console.log('[onDeactivated]')\r\n} "
+              }
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "h1",
+                    "props": {
+                      "className": "component-base-style"
+                    },
+                    "children": "test-page-0",
+                    "id": "32628545"
+                  }
+                ],
+                "id": "64416324"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "[utils测试]",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "d32123e2"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "className": "component-base-style",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.testUtils"
+                      },
+                      "text": "测试function和npm包的导入"
+                    },
+                    "children": [],
+                    "id": "15662591"
+                  }
+                ],
+                "id": "644ba646"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "[state测试]：点击增加button计数",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "1e5366a5"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.state.state1.deep.deepButton"
+                      },
+                      "className": "component-base-style",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickNew"
+                      }
+                    },
+                    "children": [],
+                    "id": "45a53354"
+                  },
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "className": "component-base-style",
+                      "text": "点击抛出错误",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickNew1"
+                      }
+                    },
+                    "children": [],
+                    "id": "36141245"
+                  }
+                ],
+                "id": "4355544e"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "div",
+                    "props": {
+                      "className": "component-base-style"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "text": "页面state1的getter测试",
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "3463e661"
+                      },
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": {
+                            "type": "JSExpression",
+                            "value": "this.state.state1.name"
+                          },
+                          "className": "component-base-style"
+                        },
+                        "children": [],
+                        "id": "45212416"
+                      }
+                    ],
+                    "id": "65313356"
+                  }
+                ],
+                "id": "553d1e44"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "[stores测试]：在函数中调用actions",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "326f2132"
+                  },
+                  {
+                    "componentName": "div",
+                    "props": {
+                      "className": "component-base-style"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "className": "component-base-style",
+                          "text": "stores的state点击计数器button"
+                        },
+                        "children": [],
+                        "id": "55593d53"
+                      },
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": {
+                            "type": "JSExpression",
+                            "value": "this.stores.ttest1.button"
+                          },
+                          "className": "component-base-style",
+                          "onClick": {
+                            "type": "JSExpression",
+                            "value": "this.onClickNewStoresButton"
+                          }
+                        },
+                        "children": [],
+                        "id": "5524246f"
+                      }
+                    ],
+                    "id": "651c5121"
+                  },
+                  {
+                    "componentName": "div",
+                    "props": {
+                      "className": "component-base-style"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "style": "display: inline-block;",
+                          "className": "component-base-style",
+                          "text": "在getters中定义的doubleButton"
+                        },
+                        "children": [],
+                        "id": "f342463a"
+                      },
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": {
+                            "type": "JSExpression",
+                            "value": "this.stores.ttest1.doubleButton"
+                          },
+                          "className": "component-base-style",
+                          "onClick": {
+                            "type": "JSExpression",
+                            "value": "this.onClickGetters"
+                          }
+                        },
+                        "children": [],
+                        "id": "59445645"
+                      }
+                    ],
+                    "id": "226463d3"
+                  }
+                ],
+                "id": "a2424415"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": "[路由测试]",
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "3c11e664"
+                  },
+                  {
+                    "componentName": "RouterLink",
+                    "props": {
+                      "className": "component-base-style",
+                      "to": {
+                        "name": "8"
+                      }
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "路由到嵌套路由Tfive，默认跳转页为Tfive/fiveA"
+                        },
+                        "id": "5251f652"
+                      }
+                    ],
+                    "id": "5fd536d8"
+                  }
+                ],
+                "id": "21af6265"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "[国际化测试]："
+                    },
+                    "children": [],
+                    "id": "25661983"
+                  },
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "t('lowcode.26831252')"
+                      }
+                    },
+                    "children": [],
+                    "id": "32254462"
+                  }
+                ],
+                "id": "25144234"
+              },
+              {
+                "componentName": "Collection",
+                "props": {
+                  "className": "component-base-style",
+                  "dataSource": 1
+                },
+                "children": [
+                  {
+                    "componentName": "TinyGrid",
+                    "props": {
+                      "editConfig": {
+                        "trigger": "click",
+                        "mode": "cell",
+                        "showStatus": true
+                      },
+                      "className": "component-base-style",
+                      "fetchData": {
+                        "type": "JSExpression",
+                        "value": "{ api: this.getTableData41564366 }"
+                      },
+                      "columns": [
+                        {
+                          "title": "姓名",
+                          "field": "2"
+                        },
+                        {
+                          "title": "序号",
+                          "field": "1"
+                        }
+                      ],
+                      "pager": {
+                        "attrs": {
+                          "currentPage": 1,
+                          "pageSize": 50,
+                          "pageSizes": [10, 20, 50],
+                          "total": 0,
+                          "layout": "sizes,total, prev, pager, next, jumper"
+                        }
+                      }
+                    },
+                    "children": [],
+                    "id": "54659464"
+                  }
+                ],
+                "id": "41564366"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "[远程数据源测试]"
+                    },
+                    "children": [],
+                    "id": "562b6e54"
+                  },
+                  {
+                    "componentName": "TinySwitch",
+                    "props": {
+                      "modelValue": {
+                        "type": "JSExpression",
+                        "value": "this.state.datasourceRemoteTest.success",
+                        "model": true
+                      },
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "7f57662f"
+                  },
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "是否存在页面id为7的页面"
+                    },
+                    "children": [],
+                    "id": "72296416"
+                  }
+                ],
+                "id": "24125532"
+              },
+              {
+                "componentName": "div",
+                "props": {
+                  "className": "component-base-style"
+                },
+                "children": [
+                  {
+                    "componentName": "TinyButton",
+                    "props": {
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.state.state1.deep.deepButton"
+                      },
+                      "className": "component-base-style",
+                      "onClick": {
+                        "type": "JSExpression",
+                        "value": "this.onClickNew2"
+                      }
+                    },
+                    "children": [],
+                    "id": "612645a7"
+                  },
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "className": "component-base-style",
+                      "text": "打印数据源.load()方法返回结果"
+                    },
+                    "children": [],
+                    "id": "2826635a"
+                  }
+                ],
+                "id": "1e5292df"
+              },
+              {
+                "componentName": "Collection",
+                "props": {
+                  "className": "component-base-style",
+                  "dataSource": 2
+                },
+                "children": [
+                  {
+                    "componentName": "Text",
+                    "props": {
+                      "style": "display: inline-block;",
+                      "text": {
+                        "type": "JSExpression",
+                        "value": "this.state.datasourceRemoteTest.code"
+                      },
+                      "className": "component-base-style"
+                    },
+                    "children": [],
+                    "id": "22325335",
+                    "loop": {
+                      "type": "JSExpression",
+                      "value": "this.state.loop7286563f"
+                    }
+                  }
+                ],
+                "id": "7286563f"
+              },
+              {
+                "componentName": "Group1Test2",
+                "props": {
+                  "className": "block-base-style"
+                },
+                "componentType": "Block",
+                "children": [],
+                "id": "46333445"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {
+              "state1": {
+                "defaultValue": {
+                  "name": "",
+                  "len1": "",
+                  "len2": "",
+                  "button": 1,
+                  "switch": true,
+                  "deep": {
+                    "deepButton": 1
+                  }
+                },
+                "accessor": {
+                  "getter": {
+                    "type": "JSFunction",
+                    "value": "function getter() {\r\n  this.state.state1.name=`${this.state.state2.firstname} ${this.state.state2.lastname}`\r\n}"
+                  },
+                  "setter": {
+                    "type": "JSFunction",
+                    "value": "function setter() {\r\n}"
+                  }
+                }
+              },
+              "state2": {
+                "firstname": "F-name",
+                "lastname": "L-name"
+              },
+              "datasourceTableTest1": [
+                {
+                  "1": 1,
+                  "2": "张三"
+                }
+              ],
+              "datasourceRemoteTest": [],
+              "loopb6f43413": [],
+              "loop7286563f": [],
+              "datasourceLocalhost": []
+            },
+            "methods": {
+              "onClickNew": {
+                "type": "JSFunction",
+                "value": "function onClickNew(event) {\n  this.state.state1.deep.deepButton++\n  console.log(`[count_button]${this.state.state1.deep.deepButton}`)\n}\n"
+              },
+              "onClickNewStoresButton": {
+                "type": "JSFunction",
+                "value": "function onClickNewStoresButton(event) {\n  this.stores.ttest1.increcement()\n}\n"
+              },
+              "getTableData41564366": {
+                "type": "JSFunction",
+                "value": "function getTableData41564366({ page, sort, sortBy, filters }) {\n  /**\n   * @param {Object} sort 排序数据\n   * @param {Array} sortBy 排序方式\n   * @param {Object} page 分页数据\n   * @param {Array} filters 筛选数据\n   * @returns {Object} 返回一个promise对象，并且resolve格式为{ result: Array, page: { total: Number } }\n   */\n  return new Promise((resolve, reject) => {\n    this.dataSourceMap.tableTest1.load().then((res) => {\n      // 如果按照数据源面板的建议格式编写dataHandler\n      // 那么dataSourceMap的res格式应该是：{ code: string, msg: string, data: {items: any[], total: number} }\n      resolve({ result: res.data.items, page: { total: res.data.total } })\n    })\n  })\n}\n"
+              },
+              "onClickNew1": {
+                "type": "JSFunction",
+                "value": "function onClickNew1(event) {\n  throw Error('模拟错误测试')\n}\n"
+              },
+              "onClickNew2": {
+                "type": "JSFunction",
+                "value": "function onClickNew2(event) {\n  this.state.state1.deep.deepButton++\n  console.log('onClickNew2执行')\n  console.log('this.dataSourceMap.tableTest1.load()', this.dataSourceMap.tableTest1.load())\n  console.log('this.dataSourceMap.remoteTest.load()', this.dataSourceMap.remoteTest.load())\n  console.log('this.state.datasourceRemoteTest.code', this.state.datasourceRemoteTest.code)\n}\n"
+              },
+              "onClickGetters": {
+                "type": "JSFunction",
+                "value": "function onClickGetters(event) {\n  this.stores.ttest1.consoleTest()\n  console.log(`this.stores.ttest1.button: ${this.stores.ttest1.button}`)\n  console.log(`this.stores.ttest1.doubleButton: ${this.stores.ttest1.doubleButton}`)\n}\n"
+              },
+              "testUtils": {
+                "type": "JSFunction",
+                "value": "function testUtils(event) {\n  const numbers = [2, 1, 2, 3, 3, 4, 5, 4]\n  console.log('original numbers: ', numbers)\n  const uniqueNumbers = this.utils.uniq(numbers)\n  console.log('numbers handled by uniq() which is exported from lodash: ', uniqueNumbers)\n  this.utils.testFunction()\n  console.log('this.utils.axios', this.utils.axios)\n}\n"
+              }
+            },
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "Tzero",
+            "id": "body"
+          },
+          "id": 5,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {
+          "onClickNew": {
+            "type": "JSFunction",
+            "value": "function onClickNew(event) {\n  this.state.state1.deep.deepButton++\n  console.log(`[count_button]${this.state.state1.deep.deepButton}`)\n}\n"
+          },
+          "onClickNewStoresButton": {
+            "type": "JSFunction",
+            "value": "function onClickNewStoresButton(event) {\n  this.stores.ttest1.increcement()\n}\n"
+          },
+          "getTableData41564366": {
+            "type": "JSFunction",
+            "value": "function getTableData41564366({ page, sort, sortBy, filters }) {\n  /**\n   * @param {Object} sort 排序数据\n   * @param {Array} sortBy 排序方式\n   * @param {Object} page 分页数据\n   * @param {Array} filters 筛选数据\n   * @returns {Object} 返回一个promise对象，并且resolve格式为{ result: Array, page: { total: Number } }\n   */\n  return new Promise((resolve, reject) => {\n    this.dataSourceMap.tableTest1.load().then((res) => {\n      // 如果按照数据源面板的建议格式编写dataHandler\n      // 那么dataSourceMap的res格式应该是：{ code: string, msg: string, data: {items: any[], total: number} }\n      resolve({ result: res.data.items, page: { total: res.data.total } })\n    })\n  })\n}\n"
+          },
+          "onClickNew1": {
+            "type": "JSFunction",
+            "value": "function onClickNew1(event) {\n  throw Error('模拟错误测试')\n}\n"
+          },
+          "onClickNew2": {
+            "type": "JSFunction",
+            "value": "function onClickNew2(event) {\n  this.state.state1.deep.deepButton++\n  console.log('onClickNew2执行')\n  console.log('this.dataSourceMap.tableTest1.load()', this.dataSourceMap.tableTest1.load())\n  console.log('this.dataSourceMap.remoteTest.load()', this.dataSourceMap.remoteTest.load())\n  console.log('this.state.datasourceRemoteTest.code', this.state.datasourceRemoteTest.code)\n}\n"
+          },
+          "onClickGetters": {
+            "type": "JSFunction",
+            "value": "function onClickGetters(event) {\n  this.stores.ttest1.consoleTest()\n  console.log(`this.stores.ttest1.button: ${this.stores.ttest1.button}`)\n  console.log(`this.stores.ttest1.doubleButton: ${this.stores.ttest1.doubleButton}`)\n}\n"
+          },
+          "testUtils": {
+            "type": "JSFunction",
+            "value": "function testUtils(event) {\n  const numbers = [2, 1, 2, 3, 3, 4, 5, 4]\n  console.log('original numbers: ', numbers)\n  const uniqueNumbers = this.utils.uniq(numbers)\n  console.log('numbers handled by uniq() which is exported from lodash: ', uniqueNumbers)\n  this.utils.testFunction()\n  console.log('this.utils.axios', this.utils.axios)\n}\n"
+          }
+        },
+        "props": {
+          "className": "page-base-style",
+          "firstname": "",
+          "lastname": ""
+        },
+        "state": {
+          "state1": {
+            "defaultValue": {
+              "name": "",
+              "len1": "",
+              "len2": "",
+              "button": 1,
+              "switch": true,
+              "deep": {
+                "deepButton": 1
+              }
+            },
+            "accessor": {
+              "getter": {
+                "type": "JSFunction",
+                "value": "function getter() {\r\n  this.state.state1.name=`${this.state.state2.firstname} ${this.state.state2.lastname}`\r\n}"
+              },
+              "setter": {
+                "type": "JSFunction",
+                "value": "function setter() {\r\n}"
+              }
+            }
+          },
+          "state2": {
+            "firstname": "F-name",
+            "lastname": "L-name"
+          },
+          "datasourceTableTest1": [
+            {
+              "1": 1,
+              "2": "张三"
+            }
+          ],
+          "datasourceRemoteTest": [],
+          "loopb6f43413": [],
+          "loop7286563f": [],
+          "datasourceLocalhost": []
+        }
+      },
+      {
+        "children": [
+          {
+            "componentName": "Text",
+            "props": {
+              "style": "display: inline-block;",
+              "text": "This is page A（默认路由页面）",
+              "className": "component-base-style"
+            },
+            "children": [],
+            "id": "622454f3"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "FiveA",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-09-16 14:39:19",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-09-16 14:39:19",
+          "parentId": "8",
+          "occupierBy": "1",
+          "isDefault": true,
+          "router": "fivea",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "FiveA",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "This is page A（默认路由页面）",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "622454f3"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {
+              "textFivea": {
+                "text": "fivea"
+              }
+            },
+            "methods": {},
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "FiveA",
+            "id": "body"
+          },
+          "id": 9,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {},
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {
+          "textFivea": {
+            "text": "fivea"
+          }
+        }
+      },
+      {
+        "children": [
+          {
+            "componentName": "Text",
+            "props": {
+              "style": "display: inline-block;",
+              "text": "This is page B",
+              "className": "component-base-style"
+            },
+            "children": [],
+            "id": "4262d6e5"
+          }
+        ],
+        "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+        "componentName": "Page",
+        "fileName": "FiveB",
+        "lifeCycles": {},
+        "meta": {
+          "app": 1,
+          "gmt_create": "2025-09-18 17:53:38",
+          "lastUpdatedBy": "1",
+          "creator": "1",
+          "rootElement": false,
+          "contentBlocks": [],
+          "isHome": false,
+          "occupier": {
+            "id": "1",
+            "createdBy": "1",
+            "lastUpdatedBy": "1",
+            "tenantId": "1",
+            "siteId": "1",
+            "username": "开发者",
+            "email": "developer@lowcode.com",
+            "isAdmin": true,
+            "created_at": "2024-10-16 23:28:41",
+            "updated_at": "2024-10-16 23:28:41"
+          },
+          "gmt_modified": "2025-09-18 17:53:38",
+          "parentId": "8",
+          "occupierBy": "1",
+          "isDefault": false,
+          "router": "fiveb",
+          "depth": 0,
+          "tenantId": "1",
+          "name": "FiveB",
+          "page_content": {
+            "componentName": "Page",
+            "css": ".page-base-style {\n  padding: 24px;background: #FFFFFF;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}\n",
+            "props": {
+              "className": "page-base-style"
+            },
+            "lifeCycles": {},
+            "children": [
+              {
+                "componentName": "Text",
+                "props": {
+                  "style": "display: inline-block;",
+                  "text": "This is page B",
+                  "className": "component-base-style"
+                },
+                "children": [],
+                "id": "4262d6e5"
+              }
+            ],
+            "dataSource": {
+              "list": []
+            },
+            "state": {},
+            "methods": {},
+            "utils": [],
+            "bridge": [],
+            "inputs": [],
+            "outputs": [],
+            "fileName": "FiveB",
+            "id": "body"
+          },
+          "id": 10,
+          "isPage": true,
+          "group": "staticPages"
+        },
+        "methods": {},
+        "props": {
+          "className": "page-base-style"
+        },
+        "state": {}
+      }
+    ],
+    "config": {
+      "targetRootID": "app",
+      "sdkVersion": "1.0.3",
+      "historyMode": "hash"
+    },
+    "constants": "",
+    "css": "",
+    "dataSource": {
+      "dataHandler": {
+        "type": "JSFunction",
+        "value": "function dataHanlder(res){\n return res;\n}"
+      },
+      "list": [
+        {
+          "id": 1,
+          "tenantId": "1",
+          "renterId": null,
+          "siteId": null,
+          "name": "tableTest1",
+          "data": {
+            "columns": [
+              {
+                "name": "2",
+                "title": "姓名",
+                "field": "2",
+                "type": "string",
+                "format": {
+                  "required": false,
+                  "stringType": "",
+                  "min": 0,
+                  "max": 10,
+                  "dateTime": false
+                }
+              },
+              {
+                "name": "1",
+                "title": "序号",
+                "field": "1",
+                "type": "number",
+                "format": {
+                  "required": false,
+                  "stringType": "",
+                  "min": 0,
+                  "max": 10,
+                  "dateTime": false
+                }
+              }
+            ],
+            "data": [
+              {
+                "1": 1,
+                "2": "张三",
+                "_id": "14553521"
+              }
+            ],
+            "type": "remote"
+          },
+          "tpl": null,
+          "app": 1,
+          "platformId": 1,
+          "description": null,
+          "created_by": "1",
+          "last_updated_by": "1",
+          "created_at": "2025-08-31 21:25:54",
+          "updated_at": "2025-08-31 21:25:54"
+        },
+        {
+          "id": 2,
+          "tenantId": "1",
+          "renterId": null,
+          "siteId": null,
+          "name": "localhost",
+          "data": {
+            "columns": [
+              {
+                "name": "data",
+                "title": "",
+                "field": "data",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "code",
+                "title": "",
+                "field": "code",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "message",
+                "title": "",
+                "field": "message",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "error",
+                "title": "",
+                "field": "error",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "errMsg",
+                "title": "",
+                "field": "errMsg",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "success",
+                "title": "",
+                "field": "success",
+                "type": "string",
+                "format": {}
+              }
+            ],
+            "data": [],
+            "type": "remote",
+            "options": {
+              "method": "GET",
+              "uri": "http://localhost:9090/app-center/v1/api/apps/schema/1"
+            },
+            "dataHandler": {
+              "type": "JSFunction",
+              "value": "function dataHandler(res){\n  return res\n}"
+            },
+            "willFetch": {
+              "type": "JSFunction",
+              "value": "function willFetch(option) {\n  return option\n}"
+            },
+            "shouldFetch": {
+              "type": "JSFunction",
+              "value": "function shouldFetch(option) {\n  return true \n}"
+            },
+            "errorHandler": {
+              "type": "JSFunction",
+              "value": "function errorHandler(err) {\n  return Promise.reject(err)\n}"
+            }
+          },
+          "tpl": null,
+          "app": 1,
+          "platformId": 1,
+          "description": null,
+          "created_by": "1",
+          "last_updated_by": "1",
+          "created_at": "2025-09-01 17:22:14",
+          "updated_at": "2025-09-01 17:22:14"
+        },
+        {
+          "id": 3,
+          "tenantId": "1",
+          "renterId": null,
+          "siteId": null,
+          "name": "remoteTest",
+          "data": {
+            "columns": [
+              {
+                "name": "data",
+                "title": "",
+                "field": "data",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "code",
+                "title": "",
+                "field": "code",
+                "type": "number",
+                "format": {}
+              },
+              {
+                "name": "message",
+                "title": "",
+                "field": "message",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "error",
+                "title": "",
+                "field": "error",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "errMsg",
+                "title": "",
+                "field": "errMsg",
+                "type": "string",
+                "format": {}
+              },
+              {
+                "name": "success",
+                "title": "",
+                "field": "success",
+                "type": "string",
+                "format": {}
+              }
+            ],
+            "data": [
+              {
+                "_id": "14b63435"
+              }
+            ],
+            "type": "remote",
+            "options": {
+              "method": "GET",
+              "uri": "http://localhost:9090/app-center/api/pages/detail/2"
+            },
+            "dataHandler": {
+              "type": "JSFunction",
+              "value": "function dataHandler(res){\n  return res\n}"
+            },
+            "willFetch": {
+              "type": "JSFunction",
+              "value": "function willFetch(option) {\n  return option\n}"
+            },
+            "shouldFetch": {
+              "type": "JSFunction",
+              "value": "function shouldFetch(option) {\n  return true \n}"
+            },
+            "errorHandler": {
+              "type": "JSFunction",
+              "value": "function errorHandler(err) {\n  return Promise.reject(err)\n}"
+            }
+          },
+          "tpl": null,
+          "app": 1,
+          "platformId": 1,
+          "description": null,
+          "created_by": "1",
+          "last_updated_by": "1",
+          "created_at": "2025-09-01 17:41:03",
+          "updated_at": "2025-09-01 17:41:03"
+        }
+      ]
+    },
+    "i18n": {
+      "en_US": {
+        "lowcode.26831252": "International"
+      },
+      "zh_CN": {
+        "lowcode.26831252": "国际化"
+      }
+    },
+    "meta": {
+      "appId": "1",
+      "branch": "develop",
+      "creator": "1",
+      "description": "demo应用",
+      "name": "portal-app",
+      "gitGroup": null,
+      "globalState": [
+        {
+          "id": "test2",
+          "state": {
+            "name1": "xxx1"
+          },
+          "getters": {
+            "count": {
+              "type": "JSFunction",
+              "value": "function count() {}"
+            }
+          },
+          "actions": {
+            "actions": {
+              "type": "JSFunction",
+              "value": "function actions() {}"
+            }
+          }
+        },
+        {
+          "id": "test3",
+          "state": {
+            "name1": "xxx"
+          },
+          "getters": {
+            "count": {
+              "type": "JSFunction",
+              "value": "function count() {}"
+            }
+          },
+          "actions": {
+            "actions": {
+              "type": "JSFunction",
+              "value": "function actions() {}"
+            }
+          }
+        },
+        {
+          "id": "test4",
+          "state": {
+            "region": "",
+            "scenario": "all",
+            "productId": "",
+            "planId": "",
+            "addEvs": false,
+            "addHss": false,
+            "addCbr": false,
+            "period": {
+              "value": 1,
+              "unit": "month"
+            },
+            "amount": 1
+          },
+          "getters": {},
+          "actions": {}
+        },
+        {
+          "id": "test1",
+          "state": {
+            "name1": "xxx"
+          },
+          "getters": {
+            "count": {
+              "type": "JSFunction",
+              "value": "function count() {}"
+            }
+          },
+          "actions": {
+            "actions": {
+              "type": "JSFunction",
+              "value": "function actions() {}"
+            }
+          }
+        },
+        {
+          "id": "ttest1",
+          "state": {
+            "button": 1,
+            "text": "text",
+            "count": 1
+          },
+          "getters": {
+            "doubleButton": {
+              "type": "JSFunction",
+              "value": "function doubleButton() {\n  return this.button * 2;\n}"
+            }
+          },
+          "actions": {
+            "increcement": {
+              "type": "JSFunction",
+              "value": "function increcement() {\n  console.log(this.button);\n  this.button++;\n  console.log('123456');\n}"
+            },
+            "consoleTest": {
+              "type": "JSFunction",
+              "value": "function consoleTest() {\n  this.button++;\n  console.log('!!!!consoleTest!!!!!');\n}"
+            }
+          }
+        },
+        {
+          "id": "ttest2",
+          "state": {
+            "button2": 20
+          },
+          "getters": {},
+          "actions": {}
+        },
+        {
+          "id": "ttest3",
+          "state": {
+            "cartItems": [
+              {
+                "id": 1,
+                "name": "无线耳机",
+                "price": 999,
+                "quantity": 1,
+                "isDiscount": true
+              },
+              {
+                "id": 2,
+                "name": "机械键盘",
+                "price": 499,
+                "quantity": 2,
+                "isDiscount": false
+              }
+            ],
+            "user": {
+              "isVIP": true
+            }
+          },
+          "getters": {},
+          "actions": {}
+        }
+      ],
+      "projectName": null,
+      "tenant": null,
+      "gmtCreate": "2024-10-16 23:27:10",
+      "gmtModified": "2024-10-16 23:27:10",
+      "isDemo": null
+    },
+    "utils": [
+      {
+        "name": "axios",
+        "type": "npm",
+        "content": {
+          "package": "axios",
+          "version": "",
+          "exportName": "axios",
+          "subName": "",
+          "destructuring": false,
+          "main": "",
+          "cdnLink": "https://unpkg.com/axios@1.0.0/dist/esm/axios.js"
+        }
+      },
+      {
+        "name": "testFunction",
+        "type": "function",
+        "content": {
+          "type": "JSFunction",
+          "value": "function testFunction(){\r\n  console.log(\"utils11111111\")\r\n}"
+        }
+      },
+      {
+        "name": "uniq",
+        "type": "npm",
+        "content": {
+          "package": "lodash",
+          "version": "",
+          "exportName": "uniq",
+          "subName": "",
+          "destructuring": true,
+          "main": "",
+          "cdnLink": "https://esm.sh/lodash-es@4.17.21"
+        }
+      }
+    ],
+    "version": "",
+    "packages": [
+      {
+        "name": "TinyVue组件库",
+        "version": "3.20.0",
+        "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/~3.20/files/dist3/tiny-vue-pc.mjs",
+        "css": "https://registry.npmmirror.com/@opentiny/vue-theme/~3.20/files/index.css",
+        "others": {},
+        "package": "@opentiny/vue"
+      },
+      {
+        "name": "element-plus组件库",
+        "version": "2.4.2",
+        "script": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.full.mjs",
+        "css": "https://registry.npmmirror.com/element-plus/2.4.2/files/dist/index.css",
+        "others": {},
+        "package": "element-plus"
+      }
+    ]
+  },
+  "code": "200",
+  "message": "操作成功",
+  "error": null,
+  "errMsg": null,
+  "success": true
+}
