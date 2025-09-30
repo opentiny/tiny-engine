@@ -1,10 +1,21 @@
 import { ref, computed, readonly } from 'vue'
-import type { AppSchema, BlockItem, BlockContent } from '../types/schema'
+import type { AppSchema, Util, BlockItem, BlockContent } from '../types/schema'
+import { initUtils } from '../app-function/utils'
 
 const appSchema = ref<AppSchema | null>(null)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 export function useAppSchema() {
+  // 初始化工具函数
+  const initializeUtils = async (utils: Util[]) => {
+    try {
+      await initUtils(utils)
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('工具函数初始化失败:', error)
+    }
+  }
+
   // 注入全局CSS
   const injectGlobalCSS = (css: string) => {
     if (!css) return
@@ -17,6 +28,9 @@ export function useAppSchema() {
   // 初始化应用配置
   const initializeAppConfig = async (schema: AppSchema) => {
     if (!schema?.data) return
+
+    // 初始化工具函数
+    initializeUtils(schema.data.utils)
 
     // 注入全局CSS
     injectGlobalCSS(schema.data.css)
