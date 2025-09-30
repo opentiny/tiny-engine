@@ -20,6 +20,7 @@ import useContext from './useContext.ts'
 import { useRouter, useRoute } from 'vue-router'
 import { useAppSchema } from '../composables/useAppSchema'
 import type { PageContent as Schema } from '../types/schema'
+import dataSourceMap from '../app-function/dataSource.ts'
 
 interface Props {
   pageId: number
@@ -79,7 +80,8 @@ export default defineComponent({
         state,
         route,
         router,
-        stores
+        stores,
+        dataSourceMap
       }
       // 此处提升很重要，因为setState、initProps也会触发画布重新渲染，所以需要提升上下文环境的设置时间
       setContext(context, true)
