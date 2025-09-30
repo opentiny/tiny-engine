@@ -471,7 +471,6 @@ export default {
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open,
       docsUrl,
       docsContent,
       onMouseLeaveVariable,
