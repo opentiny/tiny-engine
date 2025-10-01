@@ -54,7 +54,7 @@ function createTask(params) {
  * @returns {boolean} 是否更新成功（任务存在则返回true）
  */
 function updateTask(taskId, updates) {
-  console.log(`[updateTask 调用] 任务${taskId} | 传入参数：`, JSON.stringify(updates));
+  // console.log(`[updateTask 调用] 任务${taskId} | 传入参数：`, JSON.stringify(updates));
 
   // 1. 校验任务是否存在
   const task = taskStore.get(taskId);

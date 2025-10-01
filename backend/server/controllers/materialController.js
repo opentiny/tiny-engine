@@ -1,5 +1,5 @@
 const { extractApiFromUrl } = require('../../src/api-generation/web-table-based-api-generator');
-const { 
+const {
   generateComponentApiFromUploadedSource,
   generateComponentApiFromNpmPackage
 } = require('../../src/api-generation/file-based-api-generator');
@@ -7,9 +7,10 @@ const { batchConvertToTinyEngineSchema } = require('../../src/schema-conversion/
 const { postProcessSchemas } = require('../../src/post-processing/post-process-schemas');
 const { saveApiArrayToFiles } = require('../../src/schema-conversion/cli');
 const { createTask, updateTask, getTask, TASK_STATUS } = require('../utils/taskManager');
+const { bulkCreateMaterials } = require('../db/dao/materialDao');
+const { dbReadyPromise } = require('../db/index');
 const path = require('path');
 const fs = require('fs');
-
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
@@ -17,6 +18,13 @@ const { v4: uuidv4 } = require('uuid');
 const upload = multer({
   storage: multer.memoryStorage(),
   limits: { fileSize: 50 * 1024 * 1024 }, // 50MB上限
+});
+
+// 验证数据库是否初始化完成
+dbReadyPromise.then(() => {
+  console.log('✅ 数据库已初始化完成，DAO 方法可正常调用');
+}).catch(err => {
+  console.error('❌ 数据库初始化失败（DAO 方法不可用）:', err.message);
 });
 
 /**
@@ -160,10 +168,48 @@ async function createImportTask(req, res, next) {
       }
     });
 
-    // 5. 异步执行核心流程（不阻塞响应）
-    processImportTask(taskId, taskParams).catch(err => {
-      console.error(`[${importType}] 任务${taskId}执行失败：`, err);
-    });
+    // 5. 异步执行核心流程（添加数据库存储逻辑）
+    processImportTask(taskId, taskParams)
+      .then(async (schemaOnlyResults) => {
+        try {
+          // 数据库写入逻辑包裹在独立 try/catch 中
+          if (Array.isArray(schemaOnlyResults) && schemaOnlyResults.length > 0) {
+            // 1. 修复 source 字段的变量作用域问题（之前提到的隐患）
+            let source;
+            if (importType === 'url') {
+              source = req.body.url?.trim(); // 直接从 req.body 取，避免作用域问题
+            } else if (importType === 'npm') {
+              source = req.body.packageName?.trim();
+            } else if (importType === 'code' && req.files?.length > 0) {
+              source = req.files[0].originalname;
+            }
+
+            // 2. 构造物料数据
+            const materials = schemaOnlyResults.map((schema, index) => ({
+              taskId,
+              importType,
+              source: source || 'unknown',
+              // 组件名：优先从 schema 中取，若没有则用索引+默认名
+              componentName: schema.name?.zh_CN || schema.component || `Component-${index + 1}`,
+              content: schema, // 直接将处理后的 schema 作为 content 存入
+              status: 'active'
+            }));
+
+            // 3. 批量写入数据库
+            await bulkCreateMaterials(materials);
+            console.log(`✅ [任务${taskId}] 物料已保存到数据库，共${materials.length}条`);
+          } else {
+            console.log(`ℹ️ [任务${taskId}] 无有效物料数据，跳过数据库写入`);
+          }
+        } catch (dbError) {
+          // 👇 新增：打印数据库写入失败的错误
+          console.error(`❌ [任务${taskId}] 数据库写入失败:`, dbError.message);
+          console.error(`❌ [任务${taskId}] 数据库错误堆栈:`, dbError.stack);
+        }
+      })
+      .catch(err => {
+        console.error(`❌ [任务${taskId}] 核心流程失败:`, err.message);
+      });
 
     // 6. 返回任务ID给前端
     res.status(200).json({
@@ -305,7 +351,16 @@ async function processImportTask(taskId, params) {
     // 5. 物料后续处理（共用逻辑）
     const finalResults = await postProcessSchemas(conversionResults, outputDir);
 
-    // 6. 更新成功状态
+    // 过滤数组，只提取每个项的schema字段
+    const schemaOnlyResults = finalResults.map(item => {
+      // 确保item存在且包含schema字段，避免解构报错
+      if (item && item.schema) {
+        return item.schema;
+      }
+      return null;
+    }).filter(Boolean);
+
+    // 6. 更新任务状态
     updateTask(taskId, {
       status: TASK_STATUS.SUCCESS,
       progress: 100,
@@ -318,12 +373,15 @@ async function processImportTask(taskId, params) {
         successCount: conversionResults.filter(r => r.success).length,
         failCount: conversionResults.filter(r => !r.success).length,
         outputDir: path.resolve(outputDir),
-        finalSchemas: finalResults // 最终物料JSON数组
+        finalSchemas: schemaOnlyResults // 最终物料JSON数组
       }
     });
+
+    return schemaOnlyResults;
   } catch (error) {
     console.error(`[任务${taskId}] 执行失败：`, error.message, '堆栈：', error.stack);
     try {
+      // 更新任务状态
       updateTask(taskId, {
         status: TASK_STATUS.FAILED,
         progress: 100,
