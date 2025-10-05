@@ -41,7 +41,7 @@ export function useAppSchema() {
     initializeI18n(schema.data.i18n)
 
     // 初始化工具函数
-    initializeUtils(schema.data.utils)
+    await initializeUtils(schema.data.utils)
 
     // 注入全局CSS
     injectGlobalCSS(schema.data.css)
@@ -54,8 +54,18 @@ export function useAppSchema() {
 
     try {
       const response = await fetch(`/app-center/v1/api/apps/schema/${appId}`)
-      appSchema.value = await response.json()
 
+      if (!response.ok) {
+        throw new Error(`加载应用Schema失败: HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const data = await response.json()
+
+      if (!data?.data) {
+        throw new Error('应用Schema数据无效')
+      }
+
+      appSchema.value = data
       // 解析并初始化应用级配置
       await initializeAppConfig(appSchema.value)
     } catch (err) {
@@ -69,38 +79,53 @@ export function useAppSchema() {
 
   // 拉取区块schema
   const fetchBlocks = async () => {
-    const response = await fetch('/material-center/api/blocks')
-    const blockJSON = await response.json()
-    const blocks: BlockItem[] = blockJSON.data || []
+    try {
+      const response = await fetch('/material-center/api/blocks')
 
-    // 转换为组件映射格式
-    const blocksMap: Record<
-      string,
-      {
-        schema: BlockContent
-        meta: {
-          id: number
-          label: string
-          framework: string
-          version: string
-        }
+      if (!response.ok) {
+        throw new Error(`加载区块Schema失败: HTTP ${response.status}: ${response.statusText}`)
       }
-    > = {}
-    blocks.forEach((block) => {
-      if (block.content) {
-        blocksMap[block.label] = {
-          schema: block.content,
+
+      const blockJSON = await response.json()
+
+      if (!Array.isArray(blockJSON?.data)) {
+        throw new Error('区块Schema数据无效')
+      }
+
+      const blocks: BlockItem[] = blockJSON.data || []
+
+      // 转换为组件映射格式
+      const blocksMap: Record<
+        string,
+        {
+          schema: BlockContent
           meta: {
-            id: block.id,
-            label: block.label,
-            framework: block.framework,
-            version: block.version
+            id: number
+            label: string
+            framework: string
+            version: string
           }
         }
-      }
-    })
+      > = {}
+      blocks.forEach((block) => {
+        if (block.content) {
+          blocksMap[block.label] = {
+            schema: block.content,
+            meta: {
+              id: block.id,
+              label: block.label,
+              framework: block.framework,
+              version: block.version
+            }
+          }
+        }
+      })
 
-    window.blocks = blocksMap
+      window.blocks = blocksMap
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('加载区块Schema失败:', error)
+    }
   }
 
   // 获取页面列表

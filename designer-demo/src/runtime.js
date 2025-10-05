@@ -12,7 +12,13 @@
 import { initRuntimeRenderer } from '@opentiny/tiny-engine-runtime-renderer'
 
 async function startApp() {
-  await initRuntimeRenderer()
+  try { 
+    await initRuntimeRenderer()
+  }
+  catch (error) { 
+    //eslint-disable-next-line no-console
+    console.error('Failed to initialize runtime renderer:',error)
+  }
 }
 
 startApp()

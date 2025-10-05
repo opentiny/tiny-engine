@@ -22,8 +22,13 @@ import i18n from '@opentiny/tiny-engine-i18n-host'
 export const initRuntimeRenderer = async () => {
   const searchParams = new URLSearchParams(location.search)
   const appId = searchParams.get('id')
+
+  if (!appId) {
+    throw new Error('Missing required "id" query parameter')
+  }
+
   const { fetchAppSchema, fetchBlocks } = useAppSchema()
-  await fetchAppSchema(appId || '')
+  await fetchAppSchema(appId)
   await fetchBlocks()
   const router = await createAppRouter()
 

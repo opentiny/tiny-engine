@@ -58,8 +58,13 @@ export async function initUtils(utils: Util[] = []) {
         console.error(`加载 npm 包 ${util.name} 失败:`, error)
       }
     } else if (util.type === 'function') {
-      const content = util.content as fnContent
-      utilValues.set(util.name, parseJSFunction(content))
+      try {
+        const content = util.content as fnContent
+        utilValues.set(util.name, parseJSFunction(content))
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`加载函数 ${util.name} 错误:`, error)
+      }
     }
   }
   initialized = true
