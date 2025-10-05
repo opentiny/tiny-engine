@@ -24,7 +24,7 @@ const getQueryParams = () => {
   return query
 }
 
-export const deployPage = async () => {
+export const deployPage = () => {
   const href = window.location.href.split('?')[0] || './'
   const query = getQueryParams()
 

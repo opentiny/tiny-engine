@@ -69,8 +69,8 @@ export const createBlockContext = () => {
   }
 }
 
-export const getBlockContext = (schema: Schema) => {
+export const getBlockContext = async (schema: Schema) => {
   const blockContext = createBlockContext()
-  blockContext.setSchema(schema)
+  await blockContext.setSchema(schema)
   return blockContext.getContext()
 }

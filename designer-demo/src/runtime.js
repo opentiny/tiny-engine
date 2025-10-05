@@ -12,7 +12,7 @@
 import { initRuntimeRenderer } from '@opentiny/tiny-engine-runtime-renderer'
 
 async function startApp() {
-  initRuntimeRenderer()
+  await initRuntimeRenderer()
 }
 
 startApp()
