@@ -28,7 +28,8 @@ async function loadNpmUtil(util: Util) {
   const key = `${c.package}@${c.version || ''}`
   let mod = npmCache.get(key)
   if (!mod) {
-    const url = c.cdnLink || (c.version ? `https://unpkg.com/${pkg}@${c.version}` : `https://unpkg.com/${pkg}`)
+    const url =
+      c.cdnLink || (c.version ? `https://unpkg.com/${c.package}@${c.version}` : `https://unpkg.com/${c.package}`)
     mod = await import(/* @vite-ignore */ url)
     npmCache.set(key, mod)
   }
