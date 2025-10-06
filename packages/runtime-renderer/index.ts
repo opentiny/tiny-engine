@@ -37,8 +37,8 @@ export const initRuntimeRenderer = async () => {
   const stores = createStores(storesConfig, pinia)
 
   const app = createApp(App)
+  app.provide('stores', stores)
   app.use(pinia).use(router).use(i18n).mount('#app')
 
-  app.provide('stores', stores)
   return app
 }
