@@ -20,8 +20,12 @@ const getQueryParams = () => {
   const platform = getMergeMeta('engine.config')?.platformId
   const appId = paramsMap.get('id')
 
-  let query = `id=${appId}&tenant=${tenant}&platform=${platform}`
-  return query
+  const params = new URLSearchParams()
+  if (appId) params.set('id', appId)
+  if (tenant) params.set('tenant', tenant)
+  if (platform) params.set('platform', platform)
+
+  return params.toString()
 }
 
 export const deployPage = () => {
@@ -34,7 +38,7 @@ export const deployPage = () => {
   let openUrl = ''
   openUrl = customDeployUrl
     ? typeof customDeployUrl === 'function'
-      ? customDeployUrl(defaultDeployUrl, query)
+      ? String(customDeployUrl(defaultDeployUrl, query) || defaultDeployUrl)
       : `${customDeployUrl}?${query}`
     : `${defaultDeployUrl}?${query}`
 
