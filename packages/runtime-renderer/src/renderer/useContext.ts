@@ -25,8 +25,6 @@ interface UseContextReturn {
 export default (): UseContextReturn => {
   const context = shallowReactive<Context>({})
 
-  // 从大纲树控制隐藏
-
   const setContext = (ctx: Context, clear?: boolean) => {
     if (clear) {
       Object.keys(context).forEach((key) => delete context[key])
