@@ -36,7 +36,7 @@ async function createRouterConfig() {
       }
 
       if (isChildRoute) {
-        const parentId = parseInt(page.meta.parentId)
+        const parentId = parseInt(page.meta.parentId, 10)
         const parentRoute = routesConfig.find((r) => r.meta?.pageId === parentId)
         if (parentRoute) {
           parentRoute.children = parentRoute.children || []
@@ -48,6 +48,11 @@ async function createRouterConfig() {
             parentRoute.redirect = parentRoute.meta.defaultPath
           }
           return
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(
+            `父路由未找到: 页面 "${page.meta.name}" (ID: ${page.meta.id}) 引用的父路由 ID ${parentId} 不存在`
+          )
         }
       } else {
         routesConfig.push(routeConfigCurrent)
