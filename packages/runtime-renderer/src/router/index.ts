@@ -53,6 +53,9 @@ async function createRouterConfig() {
           console.error(
             `父路由未找到: 页面 "${page.meta.name}" (ID: ${page.meta.id}) 引用的父路由 ID ${parentId} 不存在`
           )
+          // 将孤立的子路由作为顶级路由添加,确保其仍可访问
+          routeConfigCurrent.path = `/${page.meta.router}`
+          routesConfig.push(routeConfigCurrent)
         }
       } else {
         routesConfig.push(routeConfigCurrent)
