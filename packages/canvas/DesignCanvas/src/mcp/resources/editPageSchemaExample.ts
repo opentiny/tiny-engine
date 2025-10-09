@@ -3,14 +3,12 @@ import { pickSectionByHeading } from './utils'
 
 // 分节枚举与标题映射（左侧为模板入参 section，右侧为文档中的中文/英文二级标题）
 const EDIT_EXAMPLE_SECTION_TITLES: Record<string, string> = {
-  state: 'State 示例',
-  css: 'CSS 示例',
-  lifeCycles: 'LifeCycles 示例',
-  methods: 'Methods 示例',
-  schema: 'Schema 整体操作示例',
-  case: '实战案例：创建一个动态表单页面',
-  'do-dont': "Do & Don't 最佳实践",
-  faq: '常见问题解答'
+  overview: '概述',
+  state: 'State',
+  css: 'CSS',
+  lifeCycles: 'LifeCycles',
+  methods: 'Methods',
+  schema: 'Schema'
 }
 
 // 根资源：编辑页面 Schema 的示例（整份文档）

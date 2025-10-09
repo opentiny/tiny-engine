@@ -10,9 +10,9 @@
 
 ---
 
-## State 示例
+## State
 
-### 基础操作：添加、更新和删除状态
+### 示例1: 基础操作：添加、更新和删除状态
 
 **场景**：管理页面的状态变量
 
@@ -24,7 +24,11 @@
     "add": {
       "companyName": "",
       "userCount": 0,
-      "isLoading": false
+      "isLoading": false,
+      "theme": {
+        "type": "JSExpression",
+        "value": "props.dark ? 'dark' : 'light'"
+      }
     },
     "update": {
       "buttons": [
@@ -42,7 +46,28 @@
 - `update`：仅当键已存在时更新其值
 - `remove`：删除指定的状态变量（传入键名数组）
 
-### 高级用法：计算属性和访问器
+### 示例2: 使用 replace 策略完整替换 state：
+
+```json
+{
+  "section": "state",
+  "strategy": "replace",
+  "state": {
+    "all": {
+      "isLoading": false,
+      "currentPage": 1,
+      "tableData": [],
+      "searchKeyword": "",
+      "theme": {
+        "type": "JSExpression",
+        "value": "this.props.theme || 'light'"
+      }
+    }
+  }
+}
+```
+
+### 示例3: 高级用法：计算属性和访问器
 
 **场景**：创建具有自动计算能力的状态
 
@@ -52,12 +77,14 @@
   "strategy": "merge",
   "state": {
     "add": {
+      "firstName": "",
+      "lastName": "",
       "fullName": {
         "defaultValue": "",
         "accessor": {
           "getter": {
             "type": "JSFunction",
-            "value": "function getter(){ return `${this.props.firstName} ${this.props.lastName}` }"
+            "value": "function getter(){ this.state.fullName = `${this.state.firstName} ${this.state.lastName}` }"
           },
           "setter": {
             "type": "JSFunction",
@@ -67,7 +94,7 @@
       },
       "totalPrice": {
         "type": "JSExpression",
-        "value": "this.state.quantity * this.state.unitPrice",
+        "value": "this.props.quantity * this.props.unitPrice",
         "computed": true
       }
     }
@@ -126,51 +153,12 @@
 
 ---
 
-## CSS 示例
+## CSS
 
-### 样式系统说明
+### 示例1: 添加全局样式
 
-TinyEngine支持三种样式方式：
-1. **全局样式**：通过CSS字符串定义，影响整个页面
-2. **Tailwind CSS**：直接使用Tailwind实用类，快速设置样式
-3. **组件样式类**：自定义CSS类，通过className绑定到组件
-
-### 重要原则：样式修改的最佳实践
-
-**不推荐方式（仅在必要时使用）**：
-```json
-// ⚠️ 不推荐：直接修改组件的style属性（相当于行内样式）
-{
-  "id": "component_id",
-  "props": {
-    "style": "color: red; font-size: 16px;"
-  }
-}
-// 注：行内样式难以维护和复用，仅在动态样式或特殊场景下使用
-```
-
-**推荐方式（优先使用）**：
-```
-步骤1：通过 edit_page_schema 添加CSS类
-步骤2：通过 change_node_props 设置className
-```
-
-### 样式修改方式对比
-
-| 方式 | 使用场景 | 优缺点 |
-|------|---------|--------|
-| **className + CSS类**（推荐） | 通用样式、可复用样式、主题样式 | ✅ 易维护、可复用、支持伪类<br>❌ 需要预定义 |
-| **Tailwind CSS类** | 快速开发、响应式设计 | ✅ 快速便捷、原子化<br>❌ 类名较长 |
-| **style属性**（行内样式） | 动态样式、一次性样式、JS计算样式 | ✅ 直接、动态<br>❌ 优先级高、难复用 |
-
-**使用原则**：
-1. 优先使用 className + CSS 类（可维护性最好）
-2. 快速原型可用 Tailwind CSS
-3. 仅在必要时使用 style 属性（如动态计算的样式值）
-
-### 添加全局样式（merge策略）
-
-**场景**：为页面添加新样式，保留现有样式
+适用场景：追加样式。不修改原来的样式。
+合并策略：在末尾追加。
 
 ```json
 {
@@ -180,106 +168,73 @@ TinyEngine支持三种样式方式：
 }
 ```
 
-**注意事项**：
-- merge策略在现有CSS末尾追加，记得添加换行符
-- 添加清晰的注释说明样式用途
-- 避免使用过于通用的选择器
+### 示例2: 修改、替换样式
 
-### 修改公共样式（谨慎操作）
-
-**场景**：修改component-base-style等影响所有组件的样式
-
-```json
-{
-  "section": "css",
-  "strategy": "merge",
-  "css": "\n/* ⚠️ 警告：此样式影响所有组件 */\n.component-base-style { \n  font-family: 'PingFang SC', sans-serif;\n  line-height: 1.5;\n  /* 仅修改必要的基础属性 */\n}"
-}
-```
-
-**重要警告**：
-- `component-base-style`是所有组件的基础样式
-- 修改会影响页面上的**所有组件**
-- 建议仅修改字体、行高等基础属性
-- 避免设置具体的尺寸、颜色等属性
-
-### 使用Tailwind CSS类（推荐）
-
-**场景**：快速为组件添加响应式、实用的样式
-
-**限制说明**：当前仅支持在组件的 `className`/`class` 中直接书写 Tailwind 的原子类（utility classes），暂不支持在 `css` 字段中使用 Tailwind 的 functions 与 directives（如 `theme()`, `color()`, `@apply`, `@layer`, `@screen` 等）。
-
-**将样式类直接绑定到组件**（使用 `change_node_props`）
-```json
-{
-  "id": "component_id",
-  "props": {
-    "className": "bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow mb-4",
-    "class": "px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-  }
-}
-```
-
-**常用Tailwind类示例**：
-- 布局：`flex`, `grid`, `container`, `mx-auto`
-- 间距：`p-4`, `m-2`, `px-6`, `my-8`
-- 颜色：`bg-gray-100`, `text-blue-600`, `border-red-500`
-- 响应式：`sm:w-full`, `md:flex`, `lg:grid-cols-3`
-- 状态：`hover:bg-gray-100`, `focus:ring-2`, `disabled:opacity-50`
-
-### 完整示例：创建卡片组件样式（className 优先）
-
-**场景**：为卡片组件创建完整的样式系统（通过 Tailwind utility 类）
-
-**步骤：应用到组件结构**
-```javascript
-// 父容器
-change_node_props({
-  id: "card_container_id",
-  props: {
-    className: "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer"
-  }
-})
-
-// 头部
-change_node_props({
-  id: "card_header_id",
-  props: {
-    className: "px-6 py-4 border-b border-gray-200"
-  }
-})
-
-// 内容区
-change_node_props({
-  id: "card_body_id",
-  props: {
-    className: "p-6"
-  }
-})
-```
-
-### 替换全部样式（高风险操作）
-
-**场景**：完全重建页面样式系统
+适用场景：修改、替换样式。
+合并策略：替换 schema 中的 css 字段为传入的新值。
 
 ```json
 {
   "section": "css",
   "strategy": "replace",
-  "css": "/* 新的样式系统（纯 CSS，不使用 Tailwind 指令） */\n.page-wrapper { min-height: 100vh; background-color: #f9fafb; }\n.content { max-width: 80rem; margin-left: auto; margin-right: auto; padding-left: 1rem; padding-right: 1rem; }"
+  "css": "\n/* 页面容器样式 */\n.page-container { padding: 24px; background: #f2f2f2; }\n\n/* 自定义组件样式 */\n.custom-title { font-size: 18px; color: #1890ff; margin-bottom: 12px; }\n.custom-card { border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }"
 }
 ```
 
-**危险警告**：
-- replace会**删除所有现有样式**
-- 使用前必须先调用`get_page_schema`备份当前CSS
-- 可能导致页面样式完全崩溃
-- 建议仅在重构时使用
+### 示例3: 使用 change_node_props 工具 修改 props 的 style 属性修改样式。
+
+使用场景：相当于行内样式，优先级高于 css 样式，建议仅在特殊场景使用。（⚠️ 不推荐所有样式都通过 style 属性修改，应该尽量使用 className 和 css 样式）
+
+```json
+{
+  "id": "component_id",
+  "props": {
+    "style": "color: red; font-size: 16px;"
+  }
+}
+```
+
+### 完整示例1: 直接绑定 tailwind 样式到 className 属性。（推荐）
+
+> TinyEngine 支持 tailwind，可以快捷添加 tailwind 使用的原子类名到 className 属性上，实现样式的快速修改。
+
+```json
+
+{
+  "id": "card_container_id",
+  "props": {
+    "className": "bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-lg transition-all duration-200 cursor-pointer"
+  }
+}
+```
+
+### 完整示例2：创建卡片组件样式
+
+1. 通过 `edit_page_schema` 工具 添加 css 样式。
+
+```json
+{
+  "section": "css",
+  "strategy": "merge",
+  "css": "\n/* 卡片组件样式 */\n.card { \n  border: 1px solid #e0e0e0; \n  border-radius: 8px; \n  padding: 16px; \n  box-shadow: 0 4px 8px rgba(0,0,0,0.1); \n}\n\n/* 头部样式 */\n.card-header { \n  font-size: 18px; \n  color: #333; \n  margin-bottom: 12px; \n}\n\n/* 内容区样式 */\n.card-body { \n  font-size: 14px; \n  color: #666; \n}\n"
+}
+```
+
+2. 通过 `change_node_props` 工具 设置 className。
+
+```json
+{
+  "id": "card_container_id",
+  "props": {
+    "className": "card"
+  }
+}
+```
 
 ### CSS最佳实践
 
 **推荐做法**：
-1. **使用Tailwind优先**：利用内置的实用类快速开发
+1. **使用Tailwind优先**：利用Tailwind内置的实用类快速开发
 2. **语义化命名**：使用描述性的类名如`.user-card`而非`.card1`
 3. **模块化组织**：相关样式放在一起，添加清晰注释
 4. **渐进式修改**：使用merge策略逐步添加样式
@@ -287,73 +242,19 @@ change_node_props({
 **需要注意**：
 1. **谨慎覆盖基础样式**：修改component-base-style影响全局
 2. **记得绑定className**：添加新类后必须绑定到组件
-3. **避免过度嵌套**：超过3层的CSS选择器嵌套影响性能
-4. **优先使用设计系统**：Tailwind的颜色系统优于硬编码
-5. **注意避免过度转义**: 不应该使用 `\\n`，应该使用 `\n` 换行。
-6. **合理选择样式方式**：
+3. **合理选择样式方式**：
    - 通用样式 → className + CSS
    - 动态样式 → style属性（如JS计算值）
    - 快速原型 → Tailwind CSS
 
-### 样式绑定完整流程
-
-```
-1. 定义样式类（通过edit_page_schema添加CSS）
-   ↓
-2. 应用到组件（通过change_node_props设置className）
-   ↓
-3. 验证效果（检查组件是否正确应用样式）
-```
-
-**标准操作示例：为按钮添加自定义样式（className 直接写 utility 类）**
-
-```json
-{
-  "id": "button_id",
-  "props": {
-    "className": "px-6 py-3 text-white rounded-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transform hover:scale-105 transition-all"
-  }
-}
-```
-
-### 分批短文本追加（merge，多次）
-
-**场景**：需要追加较多全局 CSS 时，避免一次提交过长的 `css` 字段导致 JSON 字符串未闭合。
-
-**约定**：
-1. 每次 `css` 保持在 2–4KB 以内。
-2. 末尾添加换行符，便于在已有 CSS 后安全追加。
-3. 将大段样式拆成多次 `strategy: "merge"` 的调用。
-
-**示例（两段追加）：**
-```json
-{
-  "section": "css",
-  "strategy": "merge",
-  "css": "\n/* part-1: layout */\n.page-container { padding: 24px; background: #f5f5f5; }\n"
-}
-```
-
-```json
-{
-  "section": "css",
-  "strategy": "merge",
-  "css": "\n/* part-2: components */\n.custom-card { border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }\n.custom-title { font-size: 24px; color: #1890ff; margin-bottom: 16px; }\n"
-}
-```
-
-### 调用稳健性建议
-
-1. **优先使用 className 写 Tailwind utility 类**，无需在 `css` 字段写指令。
-2. **仅在必要时使用短文本 CSS**；长样式请分批多次 `merge` 追加。
-3. **为 `css` 追加结尾换行**，保证在已有样式后正确拼接。
-4. **避免一次性长 JSON 字符串**，保持参数结构简短、扁平。
-
 ---
 
-## Methods 示例
+## Methods
 
-### 添加与替换方法
+### 示例1: 替换方法
+
+适用场景：将原有的 methods 中的所有方法删除，然后替换为新的方法。
+合并策略：替换 schema 中的 methods 字段为传入的新值。
 
 ```json
 {
@@ -366,6 +267,11 @@ change_node_props({
   }
 }
 ```
+
+### 示例2: 添加、更新、移除方法
+
+适用场景：添加、更新、移除方法。
+合并策略：添加、更新、移除方法。
 
 ```json
 {
@@ -385,9 +291,9 @@ change_node_props({
 
 ---
 
-## LifeCycles 示例
+## LifeCycles
 
-### 增删改生命周期
+### 示例1: 添加、更新、移除生命周期
 
 ```json
 {
@@ -405,11 +311,30 @@ change_node_props({
 }
 ```
 
+### 示例2: 替换生命周期
+
+适用场景：替换生命周期。
+合并策略：替换 schema 中的 lifeCycles 字段为传入的新值。
+
+```json
+{
+  "section": "lifeCycles",
+  "strategy": "replace",
+  "lifeCycles": {
+    "all": { "mounted": { "type": "JSFunction", "value": "function mounted(){ console.log('mounted') }" } }
+  }
+}
+```
+
 ---
 
-## Schema 整体操作示例
+## Schema
 
-### 顶层浅并（merge，仅允许部分顶层键）
+### 示例1: 编辑完整的 schema
+
+适用场景：
+- 编辑 schema 中的 children 字段，并且涉及大量修改。（少量节点的精准修改，推荐使用 `change_node_props`、`add_node`、`delete_node` 等工具）
+- 编辑 schema 中的其他字段，并且涉及大量修改。比如大量修改 state、methods、lifeCycles 等字段。
 
 ```json
 {
@@ -417,24 +342,26 @@ change_node_props({
   "strategy": "merge",
   "schema": {
     "props": { "title": "Dashboard" },
-    "fileName": "DashboardPage"
-  }
-}
-```
-
-### 整量替换（replace，高风险）
-
-```json
-{
-  "section": "schema",
-  "strategy": "replace",
-  "schema": {
-    "css": "",
-    "state": {},
-    "methods": {},
-    "lifeCycles": {},
-    "props": {},
-    "children": []
+    "css": "\n/* 页面容器样式 */\n.page-container { padding: 24px; background: #f2f2f2; }\n\n/* 自定义组件样式 */\n.custom-title { font-size: 18px; color: #1890ff; margin-bottom: 12px; }\n.custom-card { border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }",
+    "state": {
+      "userCount": 0,
+      "isLoading": false,
+    },
+    "methods": {
+      "onClick": { "type": "JSFunction", "value": "function onClick(){ console.log('clicked') }" }
+    },
+    "lifeCycles": {
+      "mounted": { "type": "JSFunction", "value": "function mounted(){ console.log('mounted') }" }
+    },
+    "children": [
+      {
+        "id": "card_container_id",
+        "componentName": "Card",
+        "props": {
+          "title": "Card Title"
+        }
+      }
+    ]
   }
 }
 ```

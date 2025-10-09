@@ -5,15 +5,12 @@ import { pickSectionByHeading } from './utils'
 // 注意：这些映射用于在原始 markdown 文本中定位对应章节，务必与文档内标题保持一致
 const PAGE_SCHEMA_SECTION_TITLES: Record<string, string> = {
   overview: '概览',
-  fields: '字段',
+  structure: 'structure',
   state: 'State',
   css: 'CSS',
   lifeCycles: 'LifeCycles',
   methods: 'Methods',
-  children: 'Children',
-  'schema-merge': 'Schema 合并策略',
-  pitfalls: '常见陷阱',
-  faq: 'FAQ'
+  children: 'Children'
 }
 
 // 根资源：页面 Schema 协议（整份文档）
