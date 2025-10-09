@@ -39,8 +39,10 @@ export default defineComponent({
     const { getPageById } = useAppSchema()
 
     const currentSchema = computed(() => {
-      const page = getPageById(props.pageId)?.meta?.page_content // 通过 pageId 获取最新的页面对象
-      return JSON.parse(JSON.stringify(page))
+      const page = getPageById(props.pageId) // 通过 pageId 获取最新的页面对象
+      const pageContent = page?.meta?.page_content
+      if (!pageContent) return null
+      return JSON.parse(JSON.stringify(pageContent))
     })
 
     const route = useRoute()
@@ -102,9 +104,9 @@ export default defineComponent({
     // 监听 schema 变化
     watch(
       () => currentSchema.value,
-      async () => {
-        const schema = currentSchema.value
-        if (!schema || !Object.keys(schema).length) return
+      async (schema) => {
+        if (!schema) return
+        if (Object.keys(schema).length === 0) return
         await setSchema(schema)
       },
       { immediate: true }
