@@ -466,6 +466,34 @@ const setSelectRect = (
   )
 }
 
+const getElementDurationTime = (elementId?: string) => {
+  const element = elementId ? querySelectById(elementId) : getDocument().body
+  const transitionDuration = window.getComputedStyle(element).getPropertyValue('transition-duration')
+  const transitionDelay = window.getComputedStyle(element).getPropertyValue('transition-delay')
+  let delayTime = 0
+  const getMaxMillisecondNumber = (arr: string[]) => {
+    const millisecondNumber = arr.map((item) => {
+      const unit = item.slice(-2)
+      if (unit === 'ms') {
+        return parseFloat(item)
+      } else {
+        return parseFloat(item) * 1000
+      }
+    })
+    return millisecondNumber.length ? Math.max(...millisecondNumber) : 0
+  }
+  if (transitionDuration) {
+    const transitionDurations = transitionDuration.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDurations)
+  }
+
+  if (transitionDelay) {
+    const transitionDelays = transitionDelay.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDelays)
+  }
+  return delayTime === 0 ? 300 : delayTime
+}
+
 export const updateRect = (id?: string) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
@@ -481,7 +509,8 @@ export const updateRect = (id?: string) => {
   const isBodySelected = !selectState.componentName && selectState.width > 0
 
   if (id || isBodySelected) {
-    setTimeout(() => setSelectRect(id))
+    const waitTime = getElementDurationTime(id)
+    setTimeout(() => setSelectRect(id), waitTime)
   } else {
     clearSelect()
   }
