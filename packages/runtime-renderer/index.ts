@@ -38,6 +38,17 @@ export const initRuntimeRenderer = async () => {
 
   const app = createApp(App)
   app.provide('stores', stores)
+
+  // 全局错误处理（防止 scheduler 被打断）
+  app.config.errorHandler = (err, instance, info) => {
+    // eslint-disable-next-line no-console
+    console.error('[GlobalErrorHandler]', err, info)
+    if ((err as any)?.stack) {
+      // eslint-disable-next-line no-console
+      console.error('[GlobalErrorHandler stack]', (err as any).stack)
+    }
+  }
+
   app.use(pinia).use(router).use(i18n).mount('#app')
 
   return app
