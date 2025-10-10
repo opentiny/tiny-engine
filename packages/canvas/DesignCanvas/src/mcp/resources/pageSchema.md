@@ -323,3 +323,144 @@ export interface Node {
   ]
 }
 ```
+
+## Props 绑定与特殊协议
+
+节点的属性值支持类型：
+- `Literal` 字面量
+- `JSExpression` 表达式
+- `JSResource` 资源
+- `i18n` 国际化
+
+### v-model/modelValue 绑定
+
+1. v-model 绑定:
+
+```json
+{
+  "props": {
+    "modelValue": {
+      "type": "JSExpression",
+      "value": "this.state.inputValue",
+      "model": true
+    }
+  }
+}
+```
+
+等效 vue :
+
+```javascript
+<MyInput v-model="state.inputValue">
+```
+
+2. 带参数的 v-model 绑定:
+
+```json
+{
+  "props": {
+    "modelValue": {
+      "type": "JSExpression",
+      "value": "this.state.inputValue",
+      "model": {
+        "prop": "visible"
+      }
+    }
+  }
+}
+```
+
+等效 vue :
+
+```javascript
+<MyInput v-model:visible="state.inputValue">
+```
+
+3. modelValue 与 onUpdate:modelValue 绑定:
+
+```json
+{
+  "props": {
+    "modelValue": {
+      "type": "JSExpression",
+      "value": "this.state.inputValue"
+    },
+    "onUpdate:modelValue": {
+      "type": "JSExpression",
+      "value": "this.handleUpdateModelValue"
+    }
+  }
+}
+```
+
+等效 vue :
+
+```javascript
+<MyInput v-model="state.inputValue" @update:modelValue="handleUpdateModelValue">
+```
+
+### i18n 绑定
+
+1. i18n 绑定:
+
+```json
+{
+  "props": {
+    "i18n": {
+      "type": "i18n",
+      "key": "lowcode.example",
+      "params": {
+        "name": {
+          "type": "JSExpression",
+          "value": "this.state.userName"
+        }
+      }
+    }
+  }
+}
+```
+
+等效 vue :
+
+```javascript
+<MyButton :text="t('lowcode.example', { name: state.userName })">
+```
+
+### 函数绑定
+
+1. 函数绑定:
+
+**正确示例**：(绑定 method 方法名)
+```json
+{
+  "props": {
+    "onClick": {
+      "type": "JSExpression",
+      "value": "this.handleClick"
+    },
+    "onBlur": {
+      "type": "JSExpression",
+      "value": "this.handleBlur",
+      "params": ["row.id"]
+    }
+  }
+}
+```
+
+等效 vue :
+
+```javascript
+<MyButton @click="handleClick" @blur="(...eventArgs) => handleBlur(eventArgs, row.id)">
+```
+
+**错误示例**：(禁止使用)
+```json
+{
+  "props": {
+    "onClick": {
+      "type": "JSFunction",
+      "value": "function handleClick() { console.log('example') }"
+    }
+  }
+}
+```
