@@ -1,11 +1,3 @@
-// 定义全局类型声明
-declare global {
-  interface Window {
-    TinyComponentLibs: Record<string, any>
-    TinyLowcodeComponent: Record<string, any>
-  }
-}
-
 // 定义组件配置接口
 interface ComponentConfig {
   destructuring?: boolean
