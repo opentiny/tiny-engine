@@ -10,7 +10,7 @@
  *
  */
 
-import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
@@ -59,4 +59,11 @@ export const runtimeDeploy = async () => {
   }
 
   runtimeWindow = window.open(openUrl, 'tiny-engine-runtime')
+  if (!runtimeWindow) {
+    useNotify({
+      type: 'error',
+      title: '运行时窗口打开失败',
+      message: '请检查浏览器是否允许新窗口打开'
+    })
+  }
 }
