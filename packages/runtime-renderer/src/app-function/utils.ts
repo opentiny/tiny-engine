@@ -48,16 +48,24 @@ export async function initUtils(utils: Util[] = []) {
     return
   }
   loading = true
+  try {
+    const npmUtils = utils.filter((util) => util.type === 'npm')
+    const functionUtils = utils.filter((util) => util.type === 'function')
 
-  for (const util of utils) {
-    if (util.type === 'npm') {
-      try {
-        await loadNpmUtil(util)
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(`加载 npm 包 ${util.name} 失败:`, error)
-      }
-    } else if (util.type === 'function') {
+    // 并行加载npm包
+    await Promise.all(
+      npmUtils.map(async (util) => {
+        try {
+          await loadNpmUtil(util)
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error(`加载 npm 包 ${util.name} 错误:`, error)
+        }
+      })
+    )
+
+    // 处理funtion类型的utils
+    for (const util of functionUtils) {
       try {
         const content = util.content as fnContent
         utilValues.set(util.name, parseJSFunction(content))
@@ -66,9 +74,10 @@ export async function initUtils(utils: Util[] = []) {
         console.error(`加载函数 ${util.name} 错误:`, error)
       }
     }
+  } finally {
+    initialized = true
+    loading = false
   }
-  initialized = true
-  loading = false
 }
 
 export function getUtilsAll() {
