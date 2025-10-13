@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-plugin-page",
-  "version": "2.8.1",
+  "version": "2.8.2",
   "publishConfig": {
     "access": "public"
   },
