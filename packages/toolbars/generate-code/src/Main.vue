@@ -42,7 +42,7 @@ export default {
       default: () => ({})
     }
   },
-  setup() {
+  setup(props) {
     const { isBlock, getCurrentPage } = useCanvas()
     const { getCurrentBlock } = useBlock()
 
@@ -181,7 +181,9 @@ export default {
         }
       }
 
-      const res = await generateAppCode(appSchema)
+      const res = await (props.options?.generateAppCode
+        ? props.options.generateAppCode(appSchema)
+        : generateAppCode(appSchema))
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
