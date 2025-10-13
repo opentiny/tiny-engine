@@ -186,7 +186,7 @@ export default {
     }
   },
   emits: ['close-chat'],
-  setup() {
+  setup(props) {
     const {
       getBlockContent,
       initBlockList,
@@ -268,9 +268,9 @@ export default {
       if (aiType.value === AI_MODES['Builder']) {
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
-            item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
-              pageState.pageSchema
-            )}`
+            item.text = `[指令] ${props.options?.prompts ? props.options?.prompts : PROMPTS}\n[知识] ${
+              searchContent.value
+            }\n[当前schema] ${JSON.stringify(pageState.pageSchema)}`
           }
           return item
         })
