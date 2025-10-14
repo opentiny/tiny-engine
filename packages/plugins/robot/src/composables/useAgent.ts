@@ -4,7 +4,7 @@ import * as jsonpatch from 'fast-json-patch'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
 import useRobot from '../js/useRobot'
-// import SvgICons from '@opentiny/vue-icon'
+import SvgICons from '@opentiny/vue-icon'
 
 const { string2Obj, reactiveObj2String: obj2String } = utils
 import { useThrottleFn } from '@vueuse/core'
@@ -20,11 +20,22 @@ const setSchema = async (schema: object) => {
   setSaved(false)
 }
 
+const fixInvalidIconComponent = (data: any) => {
+  if (data.componentName === 'Icon' && data.props?.name && !SvgICons[data.props.name as keyof typeof SvgICons]) {
+    data.props.name = 'IconWarning'
+  }
+
+  if (data.children && Array.isArray(data.children)) {
+    data.children.forEach((child: any) => fixInvalidIconComponent(child))
+  }
+}
+
 const updateStreamCanvasPageSchema = (streamContent: string, currentPageSchema: object) => {
   try {
     const repaired = jsonrepair(streamContent)
     const parsedJson = JSON.parse(repaired)
     const result = parsedJson.reduce((acc: object, patch: any) => {
+      fixInvalidIconComponent(patch.value)
       return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
     }, currentPageSchema)
     const editorValue = string2Obj(obj2String(result))
@@ -60,8 +71,8 @@ export const updateCanvasPageSchema = (streamContent: string, currentJson: objec
   try {
     const schemaPatch = JSON.parse(content)
     if (isValidFastJsonPatch(schemaPatch)) {
-      // const result = schemaPatch.reduce(jsonpatch.applyReducer, currentJson)
       const result = schemaPatch.reduce((acc: object, patch: any) => {
+        fixInvalidIconComponent(patch.value)
         return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
       }, currentJson)
       setSchema(result)
