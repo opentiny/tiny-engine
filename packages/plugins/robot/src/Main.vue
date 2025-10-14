@@ -56,7 +56,7 @@
               ></tr-prompts>
             </div>
             <tr-bubble-provider
-              :content-renderers="aiType === AI_MODES['Chat'] ? contentRenderers : buildContentRenderers"
+              :content-renderers="aiType === CHAT_MODE['Chat'] ? contentRenderers : buildContentRenderers"
               v-else
             >
               <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
@@ -74,7 +74,7 @@
               placeholder="请输入您的问题"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === AI_MODES.Agent"
+              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === CHAT_MODE.Agent"
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
@@ -94,7 +94,7 @@
               </template>
               <template #footer-left>
                 <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
-                <mcp-server :position="mcpDrawerPosition" v-if="aiType === AI_MODES.Chat"></mcp-server>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === CHAT_MODE.Chat"></mcp-server>
               </template>
             </tr-sender>
           </template>
@@ -142,7 +142,7 @@ import useMcpServer from './composables/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import LoadingRenderer from './mcp/LoadingRenderer.vue'
 import BuildLoadingRenderer from './BuildLoadingRenderer.vue'
-import { sendMcpRequest, serializeError } from './mcp/utils'
+import { sendMcpRequest, serializeError } from './utils/common-utils'
 import type { RobotMessage } from './mcp/types'
 import RobotTypeSelect from './components/RobotTypeSelect.vue'
 import McpIconComponent from './icons/mcp-icon.vue'
@@ -176,7 +176,7 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
-    const { getBlockContent, initBlockList, getAIModelOptions, isValidFastJsonPatch, AI_MODES, robotSettingState } =
+    const { getBlockContent, initBlockList, getAIModelOptions, isValidFastJsonPatch, CHAT_MODE, robotSettingState } =
       useRobot()
     const { pageState, importSchema, setSaved } = useCanvas()
     const AIModelOptions = getAIModelOptions()
@@ -196,7 +196,7 @@ export default {
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果。'
-    const aiType = ref(AI_MODES.Agent)
+    const aiType = ref(CHAT_MODE.Agent)
     const chatContainerRef = ref(null)
     const showTeleport = ref(false)
     const { deepClone, string2Obj, reactiveObj2String: obj2String } = utils
@@ -243,7 +243,7 @@ export default {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       let firstContent = firstMessage.content
-      if (aiType.value === AI_MODES.Agent) {
+      if (aiType.value === CHAT_MODE.Agent) {
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
             item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
@@ -253,7 +253,7 @@ export default {
           return item
         })
       }
-      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES.Chat) {
+      if (useMcpServer().isToolsEnabled && aiType.value === CHAT_MODE.Chat) {
         firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
       }
 
@@ -296,7 +296,7 @@ export default {
     // 处理响应
     const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }, currentJson) => {
       try {
-        if (aiType.value === AI_MODES.Agent) {
+        if (aiType.value === CHAT_MODE.Agent) {
           const regex = /```json([\s\S]*?)```/
           const match = chatMessage?.content.match(regex)
 
@@ -320,7 +320,7 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         }
-        if (aiType.value === AI_MODES.Chat) {
+        if (aiType.value === CHAT_MODE.Chat) {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
           messages.value[messages.value.length - 1].content = chatMessage?.content
@@ -336,7 +336,7 @@ export default {
     // 发送流式请求
     const sendStreamRequest = async () => {
       const requestData = getSendSeesionProcess()
-      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES.Chat) {
+      if (useMcpServer().isToolsEnabled && aiType.value === CHAT_MODE.Chat) {
         try {
           requestLoading.value = true
           await scrollContent()
@@ -494,7 +494,7 @@ export default {
           text
         }
       ]
-      if (singleAttachmentItems.value.length > 0 && aiType.value === AI_MODES.Agent) {
+      if (singleAttachmentItems.value.length > 0 && aiType.value === CHAT_MODE.Agent) {
         content.push({
           type: 'image_url',
           image_url: {
@@ -524,7 +524,7 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        if (!sessionProcess?.messages?.length && aiType.value !== AI_MODES.Chat) {
+        if (!sessionProcess?.messages?.length && aiType.value !== CHAT_MODE.Chat) {
           sessionProcess?.messages.push({
             role: 'system',
             content: [
@@ -540,7 +540,7 @@ export default {
         messages.value.push(message)
         sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
-        if (aiType.value === AI_MODES.Agent && (!searchContent.value || !sessionProcess.messages?.length)) {
+        if (aiType.value === CHAT_MODE.Agent && (!searchContent.value || !sessionProcess.messages?.length)) {
           await search(realContent)
         }
 
@@ -589,7 +589,7 @@ export default {
         size: 'large'
       })
 
-      await initBlockList()
+      await initBlockList?.()
       loadingInstance.close()
       initChat()
     })
@@ -820,7 +820,7 @@ export default {
       MarkdownRenderer,
       requestLoading,
       aiType,
-      AI_MODES,
+      CHAT_MODE,
       showTeleport,
       sendContent,
       endContent,

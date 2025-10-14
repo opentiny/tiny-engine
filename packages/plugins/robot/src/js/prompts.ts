@@ -1,3 +1,19 @@
+import agentPrompt from '../agent-prompt.md?raw'
+
+export const getAgentSystemPrompt = (currentPageSchema: object, referenceContext: string) =>
+  `
+${agentPrompt}
+
+**[当前页面Schema]**
+\`\`\`json
+${JSON.stringify(currentPageSchema, null, 2)}
+\`\`\`
+
+**[参考知识]**
+${referenceContext || ''}
+
+`.trim()
+
 export const PROMPTS = `
 # 静默JSON生成指令
 你是一个严格的JSON Patch生成器，必须且只能输出如下格式的内容：

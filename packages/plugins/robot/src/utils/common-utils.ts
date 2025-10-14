@@ -8,12 +8,15 @@ let requestOptions: RequestOptions = {}
 
 // 格式化LLM输入messages消息
 export const formatMessages = (messages: LLMMessage[]) => {
-  return toRaw(messages).map((message) => ({
-    role: message.role,
-    content: message.content,
-    ...(message.tool_calls ? { tool_calls: message.tool_calls } : {}),
-    ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {})
-  }))
+  const validMessageFilter = (message: LLMMessage) => message.content || message.tool_calls || message.tool_call_id
+  return toRaw(messages)
+    .filter(validMessageFilter)
+    .map((message) => ({
+      role: message.role,
+      content: message.content,
+      ...(message.tool_calls ? { tool_calls: message.tool_calls } : {}),
+      ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {})
+    }))
 }
 
 const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {

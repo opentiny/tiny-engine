@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue'
 import type { PluginInfo, PluginTool } from '@opentiny/tiny-robot'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import type { McpListToolsResponse, McpTool, RequestTool } from '../mcp/types'
+import type { McpTool, RequestTool } from '../mcp/types'
 
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',
@@ -108,9 +108,8 @@ const refreshMcpServerTools = () => {
 
 let llmTools: RequestTool[] | null = null
 
-const listTools = async (): Promise<McpListToolsResponse> => {
+const listTools = async (): Promise<RequestTool[]> => {
   const mcpTools = await getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.listTools()
-  llmTools = convertMCPToOpenAITools(mcpTools?.tools || [])
   return mcpTools
 }
 
@@ -118,9 +117,8 @@ const callTool = async (toolId: string, args: Record<string, unknown>) =>
   getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.callTool({ name: toolId, arguments: args }) || {}
 
 const getLLMTools = async () => {
-  if (!llmTools) {
-    await listTools()
-  }
+  const mcpTools = await getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.listTools()
+  llmTools = convertMCPToOpenAITools(mcpTools?.tools || [])
   return llmTools
 }
 

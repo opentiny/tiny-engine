@@ -12,6 +12,11 @@ import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
 import useMcpServer from './useMcp'
 import { client } from '../client'
+import { handleStreamData, updateCanvasPageSchema } from './useAgent'
+import { utils } from '@opentiny/tiny-engine-utils'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+
+const { deepClone } = utils
 
 type Message = ChatMessage & {
   renderContent: BubbleContentItem[]
@@ -32,12 +37,19 @@ const removeLoading = (messages: ChatMessage[], name?: string) => {
   }
 }
 
+let chatStatus = STATUS.INIT
+let pageSchema = null
+
 const events: UseMessageOptions['events'] = {
   onReceiveData: (data: ChatCompletionStreamResponse, messages, preventDefault) => {
     preventDefault()
     const choice = data.choices?.[0]
     if (!choice) {
       return
+    }
+    if (chatStatus !== STATUS.STREAMING) {
+      chatStatus = STATUS.STREAMING
+      pageSchema = deepClone(useCanvas().pageState.pageSchema)
     }
     const lastMessage = messages.value.at(-1)
     if (choice.delta.reasoning_content || choice.delta.content || choice.delta.tool_calls?.length) {
@@ -46,16 +58,19 @@ const events: UseMessageOptions['events'] = {
     handleDeltaReasoning(choice, lastMessage) // eslint-disable-line
     handleDeltaContent(choice, lastMessage) // eslint-disable-line
     handleDeltaToolCalls(choice, lastMessage) // eslint-disable-line
+
+    handleStreamData(lastMessage.content, pageSchema)
   },
   onFinish(finishReason, { messages, messageState }, preventDefault) {
     preventDefault()
-
+    const lastMessage = messages.value.at(-1)
     if (finishReason === 'tool_calls') {
-      const lastMessage = messages.value.at(-1)
       handleToolCall(lastMessage.tool_calls, messages.value) // eslint-disable-line
     } else if (finishReason !== 'abort' && messageState.status !== STATUS.ABORTED) {
       messageState.status = STATUS.FINISHED
+      updateCanvasPageSchema(lastMessage.content, pageSchema, messages.value)
     }
+    chatStatus = messageState.status
   }
 }
 

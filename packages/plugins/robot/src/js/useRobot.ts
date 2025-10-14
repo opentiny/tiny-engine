@@ -11,13 +11,15 @@
  */
 
 /* metaService: engine.plugins.robot.useRobot */
-import { reactive } from 'vue'
-import { getOptions, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { reactive, ref } from 'vue'
+import { getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
-const AI_MODES = { Agent: 'agent', Chat: 'chat' }
+const CHAT_MODE = { Agent: 'agent', Chat: 'chat' }
+
+const aiMode = ref(CHAT_MODE.Agent)
 
 const AIModelOptions = [
   {
@@ -31,7 +33,7 @@ const AIModelOptions = [
       { label: 'qwen-turbo', value: 'qwen-turbo' },
       { label: 'qwen-long', value: 'qwen-long' },
       { label: 'deepseek-r1', value: 'deepseek-r1' },
-      { label: 'deepseek-v3', value: 'deepseek-v3' },
+      { label: 'deepseek-v3', value: 'deepseek-v3', ability: ['tools'] },
       { label: 'qwen2.5-14b-instruct', value: 'qwen2.5-14b-instruct' },
       { label: 'qwen2.5-7b-instruct', value: 'qwen2.5-7b-instruct' },
       { label: 'qwen2.5-coder-7b-instruct', value: 'qwen2.5-coder-7b-instruct' },
@@ -49,15 +51,6 @@ const AIModelOptions = [
       { label: 'deepseek-chat', value: 'deepseek-chat' },
       { label: 'deepseek-reasoner', value: 'deepseek-reasoner' }
     ]
-  },
-  {
-    label: '月之暗面',
-    value: 'https://api.moonshot.cn/v1',
-    model: [
-      { label: 'moonshot-v1-8k', value: 'moonshot-v1-8k' },
-      { label: 'moonshot-v1-32k', value: 'moonshot-v1-32k' },
-      { label: 'moonshot-v1-128k', value: 'moonshot-v1-128k' }
-    ]
   }
 ]
 
@@ -66,67 +59,35 @@ const getAIModelOptions = () => {
   return aiRobotOptions.length ? aiRobotOptions : AIModelOptions
 }
 
+const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
+
+const saveRobotSettingState = (state: object) => {
+  localStorage.setItem(SETTING_STORAGE_KEY, JSON.stringify(state))
+}
+
+const loadRobotSettingState = () => {
+  const items = localStorage.getItem(SETTING_STORAGE_KEY) || '{}'
+  try {
+    return JSON.parse(items)
+  } catch (error) {
+    return items
+  }
+}
+
+const { activeName, existModel, customizeModel } = loadRobotSettingState() || {}
+
+const storageSettingState = (activeName === EXISTING_MODELS ? existModel : customizeModel) || {}
+
 const robotSettingState = reactive({
   selectedModel: {
-    label: getAIModelOptions()[0].label,
-    activeName: EXISTING_MODELS,
-    baseUrl: getAIModelOptions()[0].value,
-    model: getAIModelOptions()[0].model[0].value,
-    completeModel: getAIModelOptions()[0].model[0].value || '',
-    apiKey: ''
+    label: storageSettingState.label || getAIModelOptions()[0].label,
+    activeName: activeName || EXISTING_MODELS,
+    baseUrl: storageSettingState.baseUrl || getAIModelOptions()[0].value,
+    model: storageSettingState.model || getAIModelOptions()[0].model[0].value,
+    completeModel: storageSettingState.completeModel || getAIModelOptions()[0].model[0].value || '',
+    apiKey: storageSettingState.apiKey || ''
   }
 })
-
-// 这里存放的是aichat的响应式数据
-const state = reactive({
-  blockList: [],
-  blockContent: ''
-})
-
-const getBlocks = () => state.blockList || []
-
-const setBlocks = (blocks) => {
-  state.blockList = blocks
-}
-
-const getBlockContent = () => state.blockContent || ''
-
-const transformBlockNameToElement = (label) => {
-  const elementName = label.replace(/[A-Z]/g, (letter, index) => {
-    return index === 0 ? letter.toLowerCase() : `_${letter.toLowerCase()}`
-  })
-  return `<${elementName}>`
-}
-
-// 拼接blockContent，在ai初始时引入区块。
-const setBlockContent = (list = getBlocks()) => {
-  const blockList = list.slice(0, 200) // 为了尽量避免每个请求的message内容过大，限制block的个数避免超出字节要求
-  const blockMessages = blockList.map((item) => {
-    const blockElementName = transformBlockNameToElement(item.label)
-    return `${blockElementName}名称是${item.label}`
-  })
-  const content = blockMessages?.join(';')
-  if (content) {
-    state.blockContent = `在提问之前，我希望你记住以下自定义的前端组件：${content}。接下来我开始问出第一个问题：`
-  } else {
-    state.blockContent = ''
-  }
-}
-
-const initBlockList = async () => {
-  if (state.blockList?.length) {
-    return
-  }
-  const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
-  try {
-    const list = await getMetaApi(META_SERVICE.Http).get('/material-center/api/blocks', { params: { appId } })
-    setBlocks(list)
-    setBlockContent(list)
-  } catch (err) {
-    // 捕获错误
-    throw new Error('获取block列表失败', { cause: err })
-  }
-}
 
 const isValidOperation = (operation) => {
   const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
@@ -173,19 +134,15 @@ const isValidFastJsonPatch = (patch) => {
 
 export default () => {
   return {
+    saveRobotSettingState,
+    loadRobotSettingState,
     EXISTING_MODELS,
     CUSTOMIZE,
-    AI_MODES,
+    CHAT_MODE,
+    aiMode,
     AIModelOptions,
     getAIModelOptions,
     robotSettingState,
-    state,
-    getBlocks,
-    setBlocks,
-    getBlockContent,
-    transformBlockNameToElement,
-    setBlockContent,
-    initBlockList,
     isValidOperation,
     isValidFastJsonPatch
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="button-wrapper">
     <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
-      <tiny-tab-item :name="AI_MODES.Agent">
+      <tiny-tab-item :name="CHAT_MODE.Agent">
         <template #title>
           <tiny-tooltip effect="light">
             <template #content>
@@ -19,7 +19,7 @@
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
-      <tiny-tab-item class="json-tab" :name="AI_MODES.Chat">
+      <tiny-tab-item class="json-tab" :name="CHAT_MODE.Chat">
         <template #title>
           <tiny-tooltip effect="light">
             <template #content>
@@ -60,15 +60,16 @@ export default {
   },
   emits: ['typeChange'],
   setup(props, { emit }) {
-    const { AI_MODES } = useRobot()
+    const { CHAT_MODE } = useRobot()
     const state = reactive({
-      activeNameTabs: props.aiType || AI_MODES.Agent
+      activeNameTabs: props.aiType || CHAT_MODE.Agent
     })
 
     const handleTabChange = (value) => {
       emit('typeChange', value)
     }
 
+    // TODO: 这里不需要watch监听，直接用modelChange方法监听activeNameTabs的变化
     // 使用watch监听activeNameTabs的变化
     watch(
       () => state.activeNameTabs,
@@ -79,7 +80,7 @@ export default {
 
     return {
       state,
-      AI_MODES
+      CHAT_MODE
     }
   }
 }

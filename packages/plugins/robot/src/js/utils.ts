@@ -43,24 +43,33 @@ export const checkComponentNameExists = (data: any) => {
   return true
 }
 
-export const processSSEStream = (data,handler) => {
-  const lines = data.split('\n')
+export const processSSEStream = (data: string, handler: StreamHandler) => {
+  let finishReason: string | undefined
+  let latestFinishReason: string | undefined
+  const lines = data.split('\n\n')
+  lines.pop()
 
   for (const line of lines) {
-    if (line.startsWith('data: ')) {
-      const dataStr = line.substring(6).trim()
-
-      // 检查结束标记
-      if (dataStr === '[DONE]') {
-        handler.onDone()
-
-        return
+    if (line.trim() === '') continue
+    if (line.trim() === 'data: [DONE]') {
+      if (latestFinishReason) {
+        finishReason = latestFinishReason
       }
+      handler.onDone(finishReason)
+      continue
+    }
 
-      if (dataStr) {
-        const data = JSON.parse(dataStr)
-        handler.onData(data)
-      }
+    try {
+      // 解析SSE消息
+      const dataMatch = line.match(/^data: (.+)$/m)
+      if (!dataMatch) continue
+
+      const data = JSON.parse(dataMatch[1])
+      handler.onData(data)
+      latestFinishReason = data.choices?.[0]?.finish_reason || undefined
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error parsing SSE message:', error, line)
     }
   }
 }

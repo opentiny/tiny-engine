@@ -93,6 +93,74 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
         stream: true
       })
 
+      const requestOptions = {
+        method: 'POST',
+        url: this.baseURL,
+        data: requestData,
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/event-stream',
+          Authorization: `Bearer ${this.apiKey}`
+        },
+        adapter: async (config) => {
+          let url = config.url
+          if (!url.startsWith('http') && config.baseURL) {
+            url = new URL(url, config.baseURL).href
+          }
+          const fetchResponse = await fetch(url, {
+            method: config.method.toUpperCase(),
+            headers: config.headers,
+            body: JSON.stringify(requestData),
+            signal: config.signal
+          })
+
+          if (!fetchResponse.ok) {
+            const errorText = await fetchResponse.text()
+            throw new Error(`HTTP error! status: ${fetchResponse.status}, details: ${errorText}`)
+          }
+
+          try {
+            await handleSSEStream(fetchResponse, handler, config.signal)
+          } catch (error) {
+            const logger = console
+            logger.error('axios fetch error', error)
+          }
+
+          return {
+            data: { response: {} },
+            status: fetchResponse.status,
+            statusText: fetchResponse.statusText,
+            headers: fetchResponse.headers,
+            config: config
+          }
+        },
+        signal
+      }
+      await getMetaApi(META_SERVICE.Http).request(requestOptions)
+    } catch (error: unknown) {
+      if (signal?.aborted) return
+      handler.onError(error)
+    }
+  }
+  /**
+   * 发送流式聊天请求并通过处理器处理响应
+   * @param request 聊天请求参数
+   * @param handler 流式响应处理器
+   */
+  async chatStreamWithAxios(request: ChatCompletionRequest, handler: StreamHandler): Promise<void> {
+    const { signal, ...options } = request.options || {}
+
+    try {
+      // 验证请求参数
+      const messages = formatMessages(toRaw(request.messages))
+
+      const requestData = await this.beforeRequest({
+        model: request.options?.model || this.config.defaultModel || this.defaultModel,
+        messages,
+        ...options,
+        stream: true
+      })
+
       let lastResponseLength = 0
       const requestOptions = {
         method: 'POST',
@@ -107,8 +175,8 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
           const newData = currentResponse.substring(lastResponseLength)
           lastResponseLength = currentResponse.length
           processSSEStream(newData, handler)
-        }
-        // signal
+        },
+        signal
       }
       if (this.apiKey) {
         Object.assign(requestOptions.headers, { Authorization: `Bearer ${this.apiKey}` })

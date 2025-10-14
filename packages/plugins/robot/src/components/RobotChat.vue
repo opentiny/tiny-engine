@@ -45,7 +45,7 @@
         ></tr-prompts>
       </div>
       <tr-bubble-provider v-else :content-renderers="contentRenderers">
-        <tr-bubble-list :items="messages" :roles="roles" auto-scroll> </tr-bubble-list>
+        <tr-bubble-list :items="messages" :roles="roles" auto-scroll class="robot-bubble-list"> </tr-bubble-list>
       </tr-bubble-provider>
     </div>
 
@@ -98,15 +98,27 @@ import {
   TrIconButton,
   TrPrompts,
   TrSender,
-  TrWelcome
+  TrWelcome,
+  TrAttachments
 } from '@opentiny/tiny-robot'
 import { type ChatMessage, type Conversation, GeneratingStatus } from '@opentiny/tiny-robot-kit'
 import { IconHistory, IconNewSession, IconClose } from '@opentiny/tiny-robot-svgs'
-import { type Component, type CSSProperties, h, nextTick, onMounted, type PropType, ref, resolveComponent } from 'vue'
+import {
+  type Component,
+  computed,
+  type CSSProperties,
+  h,
+  nextTick,
+  onMounted,
+  type PropType,
+  ref,
+  resolveComponent
+} from 'vue'
 import { Notify } from '@opentiny/vue'
 import useChat from '../composables/useChat'
 import LoadingRenderer from '../mcp/LoadingRenderer.vue'
 import MarkdownRenderer from '../mcp/MarkdownRenderer.vue'
+import ImgRenderer from '../mcp/ImgRenderer.vue'
 import { serializeError } from '../utils/common-utils'
 
 const { promptItems, allowFiles, bubbleRenderers } = defineProps({
@@ -186,6 +198,7 @@ const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
       singleAttachmentItems.value[0].status = 'done'
       singleAttachmentItems.value[0].isUploading = false
       singleAttachmentItems.value[0].messageType = 'success'
+      singleAttachmentItems.value[0].url = resourceUrl
     } else {
       singleAttachmentItems.value[0].status = 'error'
       singleAttachmentItems.value[0].isUploading = false
@@ -214,11 +227,12 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
 
-const contentRenderers: Record<string, Component> = {
+const contentRenderers = computed(() => ({
   markdown: MarkdownRenderer,
   loading: LoadingRenderer,
+  img: ImgRenderer,
   ...bubbleRenderers
-}
+}))
 
 const roles: Record<string, BubbleRoleConfig> = {
   assistant: {
@@ -229,8 +243,8 @@ const roles: Record<string, BubbleRoleConfig> = {
   },
   user: {
     placement: 'end',
-    // avatar: userAvatar,
-    contentRenderer: MarkdownRenderer
+    contentRenderer: MarkdownRenderer,
+    customContentField: 'renderContent'
   },
   system: {
     hidden: true
@@ -240,6 +254,7 @@ const showHistory = ref(false)
 
 const handleHistoryItemClick = (item: Conversation) => {
   switchConversation(item.id)
+  showHistory.value = false
 }
 
 const handleHistoryItemAction = (action: { id: string }, item: Conversation) => {
@@ -264,14 +279,46 @@ const handleSendMessage = async (content: string) => {
     role: 'user',
     content: messageContent
   }
+  const files = singleAttachmentItems.value.filter((item) => item.status === 'done')
+  if (files.length > 0) {
+    const fileMessages: ChatMessage[] = files.map((file) => ({
+      role: 'user',
+      content: '',
+      renderContent: [
+        {
+          type: 'img',
+          content: file.url
+        }
+      ]
+    }))
+    messages.value.push(...fileMessages)
+    userMessage.content = files
+      .map((item) => ({
+        type: 'image_url',
+        image_url: {
+          url: item.url
+        }
+      }))
+      .concat({
+        type: 'text',
+        text: messageContent
+      })
+    userMessage.renderContent = [
+      {
+        type: 'text',
+        content: messageContent
+      }
+    ]
+  }
   messages.value.push(userMessage)
   inputMessage.value = ''
+  singleAttachmentItems.value = []
   try {
     nextTick(() => {
       const assistantMessage: ChatMessage = {
         role: 'assistant',
         content: '',
-        renderContent: [{ type: 'loading', content: 'user-message-loading' }]
+        renderContent: [{ type: 'loading' }]
       }
       messages.value.push(assistantMessage)
     })
@@ -285,7 +332,7 @@ const handleSendMessage = async (content: string) => {
       updateTitle(conversationState.currentId, contentStr.substring(0, 20))
     }
   } catch (error) {
-    removeLoading(messages.value, 'user-message-loading')
+    removeLoading(messages.value)
     const lastMessage = messages.value[messages.value.length - 1]
     if (lastMessage) {
       lastMessage.renderContent.push({ type: 'text', content: serializeError(error) })
@@ -297,7 +344,7 @@ const handleSendMessage = async (content: string) => {
 
 const handleAbortRequest = () => {
   abortRequest()
-  messages.value.at(-1)!.renderContent.push({ type: 'text', content: '对话已取消' })
+  messages.value.at(-1)!.aborted = true
 }
 
 const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
@@ -366,7 +413,7 @@ defineExpose({
   }
 
   &.tr-container.tr-container {
-    --tr-container-width: 400px;
+    --tr-container-width: 420px;
     background-color: #f8f8f8;
     position: relative;
     height: 100%;
@@ -489,6 +536,13 @@ defineExpose({
   display: none;
 }
 
+:deep(.tr-bubble) {
+  .tr-bubble__content:has(> .tr-bubble__content-items > [class*='img-renderer-container']) {
+    padding: 0px;
+    background-color: transparent;
+  }
+}
+
 :deep(.tiny-sender) {
   margin: 20px;
   .tiny-sender__footer-slot.tiny-sender__bottom-row {
@@ -518,5 +572,9 @@ defineExpose({
       margin-left: 10px;
     }
   }
+}
+
+.robot-bubble-list {
+  height: 100%;
 }
 </style>
