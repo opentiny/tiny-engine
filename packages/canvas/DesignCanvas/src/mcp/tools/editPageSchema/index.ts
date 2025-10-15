@@ -4,6 +4,7 @@ import { editLifeCycleOrMethod } from './editLifeCycleOrMethod'
 import { editState } from './editState'
 import { editCSS } from './editCSS'
 import { ERROR_CODES, nextActionGetSchema } from './utils'
+import editPageSchemaExampleMd from './editPageSchemaExample.md?raw'
 
 // 定义函数单元的 zod 结构，用于 lifecycle 与 methods（统一 { type: 'JSFunction', value } 形态）
 const funcTypeSchema = z
@@ -241,64 +242,7 @@ const validateRequiredField = (args: z.infer<typeof inputSchema>) => {
 export const EditPageSchema = {
   name: 'edit_page_schema',
   title: '编辑页面schema',
-  description: `编辑 TinyEngine 低代码画布中当前页面的 schema。
-
-【支持的部分】
-支持五个部分：schema、css、lifeCycles、methods 和 state。
-使用策略 "replace" 进行整体替换，或使用 "merge" 进行部分更新（add/update/remove）。
-
-【必读文档资源】
-在使用本工具前，强烈建议先通过 read_resources 工具读取以下文档以确保正确操作：
-
-1. 页面 Schema 协议文档（数据结构和约束）：
-   - 完整读取：{ "uri": "tinyengine://docs/page-schema" }
-   - 分节读取：{ "uriTemplate": "tinyengine://docs/page-schema/{section}", "variables": { "section": "对应分节名" } }
-
-2. 编辑示例文档（实战案例和最佳实践）：
-   - 完整读取：{ "uri": "tinyengine://docs/edit-page-schema-examples" }
-   - 分节读取：{ "uriTemplate": "tinyengine://docs/edit-page-schema-examples/{section}", "variables": { "section": "对应分节名" } }
-
-【按 section 读取对应文档分节】
-根据你要操作的 section，建议读取以下分节（使用 read_resources 工具）：
-
-• section='state':
-  协议文档分节: { "section": "state" }
-  示例文档分节: { "section": "state" }
-
-• section='css':
-  协议文档分节: { "section": "css" }
-  示例文档分节: { "section": "css" }
-
-• section='lifeCycles':
-  协议文档分节: { "section": "lifeCycles" }
-  示例文档分节: { "section": "lifeCycles" }
-
-• section='methods':
-  协议文档分节: { "section": "methods" }
-  示例文档分节: { "section": "methods" }
-
-• section='schema':
-  协议文档分节: { "section": "structure" }
-  示例文档分节: { "section": "schema" }
-
-【遇到错误或疑问时】
-• 建议先读取完整协议文档了解整体结构
-• 根据操作的 section 读取对应分节即可
-
-【使用建议】
-• 首次使用：建议先读取完整协议文档了解整体结构，或读取对应 section 的示例快速上手
-• 日常使用：根据操作的 section 读取对应分节即可（性能更优）
-• 不确定当前结构：先调用 "get_page_schema" 工具查看现有结构
-
-【关键提示】
-• lifeCycles 和 methods 需要 { type: "JSFunction", value: string } 形式的函数单元
-• state 接受普通值以及 JSResource/JSExpression/computed/accessor（getter/setter）结构
-• css 使用 "merge" 时会将给定的 CSS 字符串追加到末尾
-• 对于细粒度的节点树变更（children 结构），建议使用节点工具如 "add_node" 或 "change_node_props"
-
-【重要警告】
-此工具始终作用于画布中当前打开的页面。
-"replace" 策略会覆盖现有内容，使用前请务必先读取协议文档了解影响范围。`,
+  description: editPageSchemaExampleMd,
   inputSchema: inputSchema.shape,
   callback: async (args: z.infer<typeof inputSchema>) => {
     try {
