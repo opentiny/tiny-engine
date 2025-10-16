@@ -8,7 +8,7 @@ import {
   selectSpecificNode,
   EditPageSchema
 } from './tools'
-import resourcesExport from './resources'
+// import resourcesExport from './resources'
 
 export default {
   tools: [
@@ -20,7 +20,8 @@ export default {
     changeNodeProps,
     selectSpecificNode,
     EditPageSchema
-  ],
-  resources: resourcesExport.resources,
-  resourceTemplates: resourcesExport.resourceTemplates
+  ]
+  // TODO: 当前效果不佳，后续优化（大模型不会主动发现资源、读取资源）
+  // resources: resourcesExport.resources,
+  // resourceTemplates: resourcesExport.resourceTemplates
 }
