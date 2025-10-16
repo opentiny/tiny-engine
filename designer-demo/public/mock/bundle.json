@@ -4,6 +4,507 @@
     "materials": {
       "components": [
         {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "折线图"
+          },
+          "component": "TinyHuichartsLine",
+          "icon": "line",
+          "description": "折线图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsLine",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "折线图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框改变后的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onInput": {
+                "label": {
+                  "zh_CN": "输入值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框输入的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onUpdate:modelValue": {
+                "label": {
+                  "zh_CN": "双向绑定的值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "双向绑定的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "prefix": {
+                "label": {
+                  "zh_CN": "前置内容"
+                }
+              },
+              "suffix": {
+                "label": {
+                  "zh_CN": "后置内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "柱状图"
+          },
+          "component": "TinyHuichartsHistogram",
+          "icon": "bar",
+          "description": "柱状图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsHistogram",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "柱状图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框改变后的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onInput": {
+                "label": {
+                  "zh_CN": "输入值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框输入的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onUpdate:modelValue": {
+                "label": {
+                  "zh_CN": "双向绑定的值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "双向绑定的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "prefix": {
+                "label": {
+                  "zh_CN": "前置内容"
+                }
+              },
+              "suffix": {
+                "label": {
+                  "zh_CN": "后置内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "圆盘图"
+          },
+          "component": "TinyHuichartsPie",
+          "icon": "pie",
+          "description": "圆盘图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsPie",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "圆盘图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onChange": {
+                "label": {
+                  "zh_CN": "值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框改变后的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onInput": {
+                "label": {
+                  "zh_CN": "输入值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "输入框输入的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onUpdate:modelValue": {
+                "label": {
+                  "zh_CN": "双向绑定的值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "在 Input 输入值改变时触发"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "string",
+                      "defaultValue": "",
+                      "description": {
+                        "zh_CN": "双向绑定的值"
+                      }
+                    }
+                  ],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "prefix": {
+                "label": {
+                  "zh_CN": "前置内容"
+                }
+              },
+              "suffix": {
+                "label": {
+                  "zh_CN": "后置内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
           "id": 1,
           "version": "2.4.2",
           "name": {
@@ -14744,6 +15245,135 @@
           ]
         },
         {
+          "group": "chart",
+          "label": {
+            "zh_CN": "图表类型"
+          },
+          "children": [
+            {
+              "name": {
+                "zh_CN": "折线图"
+              },
+              "icon": "line",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsLine",
+              "schema": {
+                "componentName": "TinyHuichartsLine",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "padding": [50, 30, 50, 20],
+                    "legend": {
+                      "show": true,
+                      "icon": "line"
+                    },
+                    "data": [
+                      { "Month": "Jan", "Domestics": 33, "Abroad": 37 },
+                      { "Month": "Feb", "Domestics": 27, "Abroad": 39 },
+                      { "Month": "Mar", "Domestics": 31, "Abroad": 20 },
+                      { "Month": "Apr", "Domestics": 30, "Abroad": 15 },
+                      { "Month": "May", "Domestics": 37, "Abroad": 13 },
+                      { "Month": "Jun", "Domestics": 36, "Abroad": 17 },
+                      { "Month": "Jul", "Domestics": 42, "Abroad": 22 },
+                      { "Month": "Aug", "Domestics": 22, "Abroad": 12 },
+                      { "Month": "Sep", "Domestics": 17, "Abroad": 30 },
+                      { "Month": "Oct", "Domestics": 40, "Abroad": 33 },
+                      { "Month": "Nov", "Domestics": 42, "Abroad": 22 },
+                      { "Month": "Dec", "Domestics": 32, "Abroad": 11 }
+                    ],
+                    "xAxis": {
+                      "data": "Month"
+                    },
+                    "yAxis": {
+                      "name": "Percentage(%)"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "柱状图"
+              },
+              "icon": "bar",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsHistogram",
+              "schema": {
+                "componentName": "TinyHuichartsHistogram",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "padding": [50, 30, 50, 20],
+                    "data": [
+                      { "Month": "Jan", "Domestic": 33, "Abroad": 1 },
+                      { "Month": "Feb", "Domestic": 27, "Abroad": 39 },
+                      { "Month": "Mar", "Domestic": 31, "Abroad": 20 },
+                      { "Month": "Apr", "Domestic": 30, "Abroad": 15 },
+                      { "Month": "May", "Domestic": 37, "Abroad": 1 },
+                      { "Month": "Jun", "Domestic": 36, "Abroad": 17 },
+                      { "Month": "Jul", "Domestic": 42, "Abroad": 22 },
+                      { "Month": "Aug", "Domestic": 22, "Abroad": 12 },
+                      { "Month": "Sep", "Domestic": 17, "Abroad": 30 },
+                      { "Month": "Oct", "Domestic": 40, "Abroad": 33 },
+                      { "Month": "Nov", "Domestic": 42, "Abroad": 22 },
+                      { "Month": "Dec", "Domestic": 32, "Abroad": 1 }
+                    ],
+                    "xAxis": {
+                      "data": "Month"
+                    },
+                    "yAxis": {
+                      "name": "Percentage(%)"
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "圆盘图"
+              },
+              "icon": "pie",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsPie",
+              "schema": {
+                "componentName": "TinyHuichartsPie",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "label": {
+                      "show": true,
+                      "line": true,
+                      "labelHtml": "{a|}{b|{b}:}{c|{d}%}",
+                      "rich": {
+                        "a": {
+                          "width": 12,
+                          "height": 12,
+                          "backgroundColor": {
+                            "image": "./image/charts/pie/ic_jiantou_hong.svg"
+                          }
+                        },
+                        "b": {
+                          "padding": [2, 4, 0, 0]
+                        },
+                        "c": {
+                          "fontWeight": "bold",
+                          "padding": [2, 0, 0, 0]
+                        }
+                      }
+                    },
+                    "data": [
+                      { "value": 100, "name": "VPC" },
+                      { "value": 90, "name": "IM" },
+                      { "value": 49, "name": "EIP" },
+                      { "value": 14, "name": "SG" }
+                    ]
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
           "group": "element-plus",
           "label": {
             "zh_CN": "Element Plus组件"
@@ -14920,6 +15550,13 @@
         }
       ],
       "packages": [
+        {
+          "name": "TinyVueHuicharts组件库",
+          "package": "@opentiny/vue-huicharts",
+          "version": "3.22.0",
+          "destructuring": true,
+          "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+        },
         {
           "name": "TinyVue组件库",
           "package": "@opentiny/vue",

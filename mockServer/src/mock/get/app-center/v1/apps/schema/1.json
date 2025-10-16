@@ -2058,6 +2058,27 @@
         "version": "2.4.2"
       },
       {
+        "componentName": "TinyHuichartsLine",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsLine",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsHistogram",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsHistogram",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsPie",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsPie",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "PortalHome",
         "main": "common/components/home",
         "destructuring": false,

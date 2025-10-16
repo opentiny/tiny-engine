@@ -415,7 +415,7 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
     } else if (previewType === 'app') {
       const appId = searchParams.get('id')
       const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
-      const importMap = await getImportMap(JSON.parse(searchParams.get('scripts') || '{}'))
+      const { importMapData: importMap } = await getBasicData(basicFiles, params.scripts)
 
       let appSchema
 
@@ -614,11 +614,7 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
       srcFiles['import-map.json'] = JSON.stringify(importMap)
       const newFiles = store.getFiles()
       const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
-      const appJsCode = processAppJsCode(
-        newFiles['app.js'],
-        JSON.parse(searchParams.get('styles') || '[]'),
-        enableTailwindCSS
-      )
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
       srcFiles['app.js'] = appJsCode
       srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
       srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')

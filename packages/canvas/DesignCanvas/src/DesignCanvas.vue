@@ -87,6 +87,9 @@ export default {
       footData.value = useCanvas().getNodePath(node?.id)
       pageState.currentSchema = {}
       pageState.properties = null
+      // 删除节点后，重置pageState中组件的属性
+      // 后续需要改造
+      useProperties().getProps(null, null)
     }
 
     const isBlock = useCanvas().isBlock
@@ -106,9 +109,9 @@ export default {
           empty: () => '应用下暂无页面，需新建页面后体验画布功能',
           release: (type) => `当前${componentType[type]}未锁定，点击右上角 “锁定” 图标后编辑${componentType[type]}`,
           lock: (type) =>
-            `当前${componentType[type]}被 ${pageInfo?.username || ''} 锁定，如需编辑请先联系他解锁文件，然后再锁定该${
+            `当前${componentType[type]}被 ${pageInfo?.username || ''} 锁定，您可以创建新页面，如需编辑请先联系他解锁${
               componentType[type]
-            }后编辑！`
+            }，然后再锁定该${componentType[type]}后编辑！`
         }
 
         const renderMsg = message[pageStatus.state](pageSchema.componentName)

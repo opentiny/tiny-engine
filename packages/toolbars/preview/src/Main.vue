@@ -1,6 +1,6 @@
 <template>
   <div class="toolbar-save toolbar-helpGuid">
-    <toolbar-base content="预览页面" :icon="options.icon?.default || options?.icon" :options="options" trigger="click">
+    <toolbar-base content="预览页面" :icon="options.icon?.default || options?.icon" :options="options" trigger="hover">
       <template #button>
         <div class="toolbar-preview-item">
           <span @click="preview('page')">页面预览</span>
