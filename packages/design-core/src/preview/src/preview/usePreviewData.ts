@@ -360,10 +360,9 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
   }) => {
     const searchParams = new URLSearchParams(location.search)
     const previewType = searchParams.get('previewType')
+    const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
 
     if (previewType === 'page') {
-      const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
-
       previewState.currentPage = params.currentPage
       previewState.ancestors = params.ancestors
 
@@ -415,7 +414,6 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
     } else if (previewType === 'app') {
       const appId = searchParams.get('id')
       const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
-      const { importMapData: importMap } = await getBasicData(basicFiles, params.scripts)
 
       let appSchema
 
@@ -611,7 +609,7 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
         prev[fileName] = formatCode(item.fileContent, fileName)
         return prev
       }, {})
-      srcFiles['import-map.json'] = JSON.stringify(importMap)
+      srcFiles['import-map.json'] = JSON.stringify(importMapData)
       const newFiles = store.getFiles()
       const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
       const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
