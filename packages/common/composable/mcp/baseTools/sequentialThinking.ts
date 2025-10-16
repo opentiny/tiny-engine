@@ -1,3 +1,4 @@
+// https://github.com/modelcontextprotocol/servers/tree/main/src/sequentialthinking
 import { z } from 'zod'
 
 const inputSchema = z.object({
