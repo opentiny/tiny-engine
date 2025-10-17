@@ -261,16 +261,20 @@ export default {
     // 在每一次发送请求之前，都把提示词，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
-    const getSendSeesionProcess = () => {
+    const getSendSeesionProcess = async () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       let firstContent = firstMessage.content
       if (aiType.value === AI_MODES['Builder']) {
+        const res = await getMetaApi(META_SERVICE.Http).get('/material-center/api/resource/list')
+        const imageArr = res.map((item) => item.resourceUrl)
+        const imageStr = imageArr.length ? `[图片资源] ${imageArr}` : ''
+
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
             item.text = `[指令] ${props.options?.prompts ? props.options?.prompts : PROMPTS}\n[知识] ${
               searchContent.value
-            }\n[当前schema] ${JSON.stringify(pageState.pageSchema)}`
+            }\n[当前schema] ${JSON.stringify(pageState.pageSchema)}\n${imageStr}`
           }
           return item
         })
@@ -326,6 +330,7 @@ export default {
             const newValue = JSON.parse(match[1])
             // 使用 applyPatch 修改 Schema
             const result = newValue.reduce(jsonpatch.applyReducer, currentJson)
+            setSchema(result)
             useHistory().addHistory()
 
             sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
@@ -357,7 +362,7 @@ export default {
     const requestLoading = ref(false)
     // 发送流式请求
     const sendStreamRequest = async () => {
-      const requestData = getSendSeesionProcess()
+      const requestData = await getSendSeesionProcess()
       if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
         try {
           requestLoading.value = true
