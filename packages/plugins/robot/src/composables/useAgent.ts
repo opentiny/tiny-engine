@@ -6,17 +6,12 @@ import { useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
 import useRobot from '../js/useRobot'
 import SvgICons from '@opentiny/vue-icon'
 
-const { string2Obj, reactiveObj2String: obj2String } = utils
+const { string2Obj, reactiveObj2String: obj2String, deepClone } = utils
 import { useThrottleFn } from '@vueuse/core'
 
-const setSchema = async (schema: object) => {
-  const { pageState, importSchema, setSaved } = useCanvas()
-  const value = {
-    ...pageState.pageSchema,
-    ...schema,
-    componentName: pageState.pageSchema.componentName
-  }
-  importSchema(value)
+const setSchema = (schema: object) => {
+  const { importSchema, setSaved } = useCanvas()
+  importSchema(schema)
   setSaved(false)
 }
 
@@ -30,21 +25,26 @@ const fixInvalidIconComponent = (data: any) => {
   }
 }
 
-const updateStreamCanvasPageSchema = (streamContent: string, currentPageSchema: object) => {
+const updateStreamCanvasPageSchema = async (streamContent: string, currentPageSchema: object) => {
   try {
     const repaired = jsonrepair(streamContent)
     const parsedJson = JSON.parse(repaired)
+    const latestPatch = parsedJson.at(-1)
+    if (latestPatch?.path && !latestPatch.path.startsWith('/children')) {
+      parsedJson.pop()
+    }
     const result = parsedJson.reduce((acc: object, patch: any) => {
       fixInvalidIconComponent(patch.value)
       return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
-    }, currentPageSchema)
+    }, deepClone(currentPageSchema))
     const editorValue = string2Obj(obj2String(result))
 
     if (editorValue && checkComponentNameExists(result)) {
       setSchema(result)
     }
   } catch (error) {
-    // error
+    const logger = console
+    logger.error('updateStreamCanvasPageSchema error', error)
   }
 }
 
@@ -74,7 +74,10 @@ export const updateCanvasPageSchema = (streamContent: string, currentJson: objec
       const result = schemaPatch.reduce((acc: object, patch: any) => {
         fixInvalidIconComponent(patch.value)
         return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
-      }, currentJson)
+      }, deepClone(currentJson))
+      const logger = console
+      logger.log('current schema:', deepClone(currentJson))
+      logger.log('new Schema:', result)
       setSchema(result)
       useHistory().addHistory()
 
@@ -82,6 +85,8 @@ export const updateCanvasPageSchema = (streamContent: string, currentJson: objec
       messages.at(-1).renderContent.at(-1).schema = result
     }
   } catch (error) {
+    const logger = console
+    logger.error('updateCanvasPageSchema error', error)
     messages.at(-1).renderContent.at(-1).status = 'failed'
   }
 }

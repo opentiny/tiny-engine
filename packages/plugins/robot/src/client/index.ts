@@ -29,7 +29,7 @@ const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
   }
 }
 
-const search = async (content: string) => {
+export const search = async (content: string) => {
   let result = ''
   const MAX_SEARCH_LENGTH = 8000
   try {
@@ -57,11 +57,11 @@ const beforeRequest = async (requestParams: any) => {
   }
   if (isAgentMode) {
     requestParams.apiKey = robotSettingState.selectedModel.apiKey
-    let referenceContext = ''
-    if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
-      referenceContext = await search(requestParams.messages?.at(-1)?.content)
-    }
-    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext))
+    // let referenceContext = ''
+    // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
+    //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
+    // }
+    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, ''))
   }
   requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
   requestParams.model = robotSettingState.selectedModel.model

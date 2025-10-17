@@ -120,6 +120,7 @@ import LoadingRenderer from '../mcp/LoadingRenderer.vue'
 import MarkdownRenderer from '../mcp/MarkdownRenderer.vue'
 import ImgRenderer from '../mcp/ImgRenderer.vue'
 import { serializeError } from '../utils/common-utils'
+import { initDebugWindow } from '../composables/debug'
 
 const { promptItems, allowFiles, bubbleRenderers } = defineProps({
   promptItems: {
@@ -353,6 +354,7 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
 onMounted(() => {
   createConversation()
+  initDebugWindow()
 })
 
 defineExpose({

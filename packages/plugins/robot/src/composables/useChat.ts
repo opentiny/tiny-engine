@@ -71,6 +71,7 @@ const events: UseMessageOptions['events'] = {
       updateCanvasPageSchema(lastMessage.content, pageSchema, messages.value)
     }
     chatStatus = messageState.status
+    pageSchema = null
   }
 }
 
