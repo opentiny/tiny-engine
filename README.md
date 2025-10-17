@@ -160,10 +160,9 @@ LowCode-Material-Import/
 │   │   └── schema-conversion/# 物料协议对接（TinyEngine格式）
 │   └── package.json      # 后端依赖配置
 ├── frontend/             # 前端可视化项目
-│   ├── .env              # 前端环境变量
 │   ├── index.html        # 前端入口HTML
 │   ├── package.json      # 前端依赖配置
-│   ├── README.md         # 前端项目说明
+│   ├── package-lock.json # 前端依赖版本锁定
 │   ├── vite.config.js    # 前端构建配置（跨域代理、端口）
 │   ├── public/           # 静态资源
 │   └── src/              # 前端源代码
