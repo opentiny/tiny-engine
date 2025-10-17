@@ -1,15 +1,14 @@
 // backend/server/db/models/Material.js
 const { EntitySchema } = require('typeorm');
 
-// 必须通过 EntitySchema 显式定义元数据
 const MaterialSchema = new EntitySchema({
-  name: 'Material', // 模型名称（必须与后续 getRepository 传入的名称一致）
-  tableName: 'materials', // 数据库表名
+  name: 'Material',
+  tableName: 'materials',
   columns: {
     id: {
       type: 'int',
       primary: true,
-      generated: true, // 自动递增主键
+      generated: true,
     },
     taskId: {
       type: 'varchar',
@@ -18,10 +17,9 @@ const MaterialSchema = new EntitySchema({
       comment: '生成该物料的任务ID',
     },
     importType: {
-      type: 'varchar',
-      length: 10,
+      type: 'enum',
+      enum: ['url', 'code', 'npm'],
       nullable: false,
-      enum: ['url', 'code', 'npm'], // 枚举限制
       comment: '导入类型',
     },
     source: {
@@ -42,22 +40,20 @@ const MaterialSchema = new EntitySchema({
       comment: '物料结构化数据',
     },
     status: {
-      type: 'varchar',
-      length: 10,
+      type: 'enum',
+      enum: ['active', 'inactive'], 
       default: 'active',
-      enum: ['active', 'inactive'],
       comment: '物料状态（软删除标记）',
     },
     createdAt: {
       type: 'datetime',
-      createDate: true, // 自动生成创建时间
+      createDate: true,
     },
     updatedAt: {
       type: 'datetime',
-      updateDate: true, // 自动生成更新时间
+      updateDate: true,
     },
   },
 });
 
-// 必须导出 EntitySchema 实例（而非普通对象）
 module.exports = MaterialSchema;

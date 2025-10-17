@@ -13,5 +13,15 @@ export default defineConfig({
     alias: {
       '@': path.resolve(__dirname, 'src') // 使用 path.resolve
     }
+  },
+  server: {
+    proxy: {
+      // 匹配所有以 "/api" 开头的请求路径
+      '/api': {
+        target: 'http://localhost:3001', // 后端服务地址（需与后端启动端口一致）
+        changeOrigin: true, // 开启跨域（虚拟主机站点需要）
+        ws: true, // 支持WebSocket
+      }
+    }
   }
 })

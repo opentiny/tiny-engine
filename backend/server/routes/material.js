@@ -35,47 +35,153 @@ router.post('/import', upload.any(), validateImportParams, materialController.cr
  */
 router.get('/status/:taskId', materialController.getTaskStatus);
 
+// 保存物料到数据库（供前端“保存到物料库”调用）
 /**
- * @api {GET} /api/material/docs 接口文档
- * @apiDescription 三种导入途径的参数说明
+ * @api {POST} /api/material/save 手动保存物料到数据库
+ * @apiDescription 接收前端传递的物料数组，批量保存到数据库
+ * @apiBody {array} materials 物料数组（必填）
+ * @apiBody {string} materials[0].componentName 组件名（必填）
+ * @apiBody {string} materials[0].importType 导入类型（url/npm/code，必填）
+ * @apiBody {string} materials[0].source 来源（URL/NPM包名/文件名，必填）
+ * @apiBody {object} materials[0].content 物料完整内容（必填，即后端返回的finalSchemas项）
+ * @apiSuccess {number} savedCount 成功保存的物料数量
+ * @apiSuccess {boolean} success true
  */
+router.post('/save', materialController.saveMaterials);
+
 router.get('/docs', (req, res) => {
   res.send(`
-    <h1>物料导入接口文档</h1>
-    <h2>统一导入入口（唯一接口）</h2>
-    <p>POST /api/material/import</p>
-    <p>Content-Type: 按类型区分（JSON或multipart/form-data）</p>
-    <p>支持途径：URL爬取、源码文件上传、NPM包信息提交</p>
-    
-    <h3>1. 必传公共参数</h3>
-    <ul>
-      <li>importType: 字符串，必选，值为"url"、"code"或"npm"</li>
-    </ul>
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+      <meta charset="UTF-8">
+      <title>物料管理系统API接口文档</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 20px; }
+        h1, h2, h3, h4 { margin-top: 20px; }
+        ul { margin: 10px 0; }
+        li { margin: 5px 0; }
+        code { background-color: #f5f5f5; padding: 2px 4px; border-radius: 2px; }
+        pre { background-color: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+      </style>
+    </head>
+    <body>
+      <h1>物料管理系统API接口文档</h1>
 
-    <h3>2. 各类型专属参数</h3>
-    <h4>（1）URL爬取（importType="url"）</h4>
-    <p>Content-Type: application/json</p>
-    <ul>
-      <li>url: 字符串，必选，组件文档URL（如https://element-plus.org/zh-CN/component/button.html）</li>
-      <li>tableSelector: 字符串，必选，表格CSS选择器（如.vp-table、#api-table）</li>
-    </ul>
+      <h2>一、物料导入与任务管理接口（前缀：<code>http://localhost:3001/api/material</code>）</h2>
 
-    <h4>（2）源码文件上传（importType="code"）</h4>
-    <p>Content-Type: multipart/form-data</p>
-    <ul>
-      <li>files: 文件，必选，单个文件（支持源码文件或ZIP压缩包，字段名固定为"files"）</li>
-    </ul>
+      <h3>1. 创建物料导入任务（统一入口）</h3>
+      <p><strong>请求方式：</strong> POST</p>
+      <p><strong>接口路径：</strong> <code>/import</code></p>
+      <p><strong>Content-Type：</strong></p>
+      <ul>
+        <li>url/npm类型：<code>application/json</code></li>
+        <li>code类型：<code>multipart/form-data</code></li>
+      </ul>
+      <p><strong>必填公共参数：</strong></p>
+      <ul>
+        <li><code>importType</code>：字符串，必选，值为<code>"url"</code>、<code>"code"</code>或<code>"npm"</code></li>
+      </ul>
+      <p><strong>各类型专属必填参数：</strong></p>
+      <ul>
+        <li>url类型：<code>url</code>（组件文档URL）、<code>tableSelector</code>（表格CSS选择器）</li>
+        <li>code类型：<code>files</code>（单个文件/ZIP，字段名固定）</li>
+        <li>npm类型：<code>packageName</code>（NPM包名）、<code>componentName</code>（组件名）</li>
+      </ul>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "message": "任务创建成功", "taskId": "task-123456" }</pre>
 
-    <h4>（3）NPM包信息提交（importType="npm"）</h4>
-    <p>Content-Type: application/json</p>
-    <ul>
-      <li>packageName: 字符串，必选，NPM包名（如element-plus、vue）</li>
-      <li>componentName: 字符串，必选，组件名（如button、input）</li>
-    </ul>
+      <h3>2. 查询任务状态</h3>
+      <p><strong>请求方式：</strong> GET</p>
+      <p><strong>接口路径：</strong> <code>/status/:taskId</code></p>
+      <p><strong>路径参数：</strong> <code>taskId</code>（创建任务返回的ID，必填）</p>
+      <p><strong>响应示例（成功）：</strong></p>
+      <pre>{
+  "code": 200, "success": true, "taskId": "task-123456",
+  "status": "success", "progress": 100,
+  "steps": [{"step": "初始化", "status": "success"}],
+  "result": { "finalSchemas": [/* 物料JSON */] }
+}</pre>
 
-    <h3>3. 查询任务状态</h3>
-    <p>GET /api/material/status/:taskId</p>
-    <p>参数：taskId 任务ID（创建任务时返回）</p>
+      <h3>3. 保存物料到数据库</h3>
+      <p><strong>请求方式：</strong> POST</p>
+      <p><strong>接口路径：</strong> <code>/save</code></p>
+      <p><strong>Content-Type：</strong> <code>application/json</code></p>
+      <p><strong>必填参数（Body）：</strong></p>
+      <ul>
+        <li><code>materials</code>：物料数组（必填）</li>
+        <li><code>materials[].componentName</code>：组件名（必填）</li>
+        <li><code>materials[].importType</code>：导入类型（必填）</li>
+        <li><code>materials[].source</code>：来源（URL/包名/文件名，必填）</li>
+        <li><code>materials[].content</code>：物料完整内容（必填）</li>
+      </ul>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "savedCount": 1, "message": "物料保存成功" }</pre>
+
+      <h3>4. 获取接口文档（当前接口）</h3>
+      <p><strong>请求方式：</strong> GET</p>
+      <p><strong>接口路径：</strong> <code>/docs</code></p>
+      <p><strong>说明：</strong> 返回当前HTML格式的完整接口说明</p>
+
+
+      <h2>二、物料基础管理接口（前缀：<code>http://localhost:3001/api/materials</code>）</h2>
+
+      <h3>1. 获取物料列表</h3>
+      <p><strong>请求方式：</strong> GET</p>
+      <p><strong>接口路径：</strong> <code>/</code></p>
+      <p><strong>查询参数：</strong></p>
+      <ul>
+        <li><code>importType</code>：字符串，可选，导入类型（精确匹配）</li>
+        <li><code>componentName</code>：字符串，可选，组件名（精确匹配）</li>
+        <li><code>keyword</code>：字符串，可选，内容关键词（模糊匹配）</li>
+        <li><code>page</code>：数字，可选，页码（默认1）</li>
+        <li><code>limit</code>：数字，可选，每页数量（默认20，1-100）</li>
+      </ul>
+      <p><strong>响应示例：</strong></p>
+      <pre>{
+  "code": 200, "success": true,
+  "rows": [/* 物料列表 */],
+  "totalCount": 10, "currentPage": 1, "pageSize": 20
+}</pre>
+
+      <h3>2. 获取去重组件名</h3>
+      <p><strong>请求方式：</strong> GET</p>
+      <p><strong>接口路径：</strong> <code>/component-names</code></p>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "componentNames": ["Button", "Input"] }</pre>
+
+      <h3>3. 获取单个物料详情</h3>
+      <p><strong>请求方式：</strong> GET</p>
+      <p><strong>接口路径：</strong> <code>/:id</code></p>
+      <p><strong>路径参数：</strong> <code>id</code>（物料ID，数字，必填）</p>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "data": { "id": 1, "componentName": "Button", "content": {} } }</pre>
+
+      <h3>4. 更新物料</h3>
+      <p><strong>请求方式：</strong> PUT</p>
+      <p><strong>接口路径：</strong> <code>/:id</code></p>
+      <p><strong>Content-Type：</strong> <code>application/json</code></p>
+      <p><strong>路径参数：</strong> <code>id</code>（物料ID，数字，必填）</p>
+      <p><strong>必填参数（Body）：</strong> <code>content</code>（物料内容JSON，必填）</p>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "affectedCount": 1, "message": "更新成功" }</pre>
+
+      <h3>5. 批量删除物料</h3>
+      <p><strong>请求方式：</strong> DELETE</p>
+      <p><strong>接口路径：</strong> <code>/batch</code></p>
+      <p><strong>Content-Type：</strong> <code>application/json</code></p>
+      <p><strong>必填参数（Body）：</strong> <code>ids</code>（物料ID数组，数字类型，必填）</p>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "affectedCount": 2, "message": "成功删除2个物料" }</pre>
+
+      <h3>6. 删除单个物料</h3>
+      <p><strong>请求方式：</strong> DELETE</p>
+      <p><strong>接口路径：</strong> <code>/:id</code></p>
+      <p><strong>路径参数：</strong> <code>id</code>（物料ID，数字，必填）</p>
+      <p><strong>响应示例：</strong></p>
+      <pre>{ "code": 200, "success": true, "affectedCount": 1, "message": "彻底删除成功" }</pre>
+    </body>
+    </html>
   `);
 });
 

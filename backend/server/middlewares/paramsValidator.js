@@ -66,7 +66,7 @@ function validateImportParams(req, res, next) {
         break;
       }
 
-      // 类型3：NPM包提交（需packageName + componentName，无需文件）
+      // 类型3：NPM包提交（需packageName + componentName）
       case 'npm': {
         const { packageName, componentName } = req.body;
         // 校验包名
@@ -106,5 +106,5 @@ function validateImportParams(req, res, next) {
 }
 
 module.exports = {
-  validateImportParams // 仅导出统一校验函数，替代原两个独立函数
+  validateImportParams
 };

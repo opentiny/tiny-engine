@@ -17,7 +17,7 @@ const { v4: uuidv4 } = require('uuid');
 // 配置multer临时存储（仅内存存储）
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB上限
+  limits: { fileSize: 50 * 1024 * 1024 }, 
 });
 
 // 验证数据库是否初始化完成
@@ -28,7 +28,7 @@ dbReadyPromise.then(() => {
 });
 
 /**
- * 获取有效的默认路径（工具函数，不变）
+ * 获取有效的默认路径
  */
 function getValidDefaultPath(envKey, fallback) {
   const rawPath = process.env[envKey] || fallback;
@@ -170,43 +170,6 @@ async function createImportTask(req, res, next) {
 
     // 5. 异步执行核心流程（添加数据库存储逻辑）
     processImportTask(taskId, taskParams)
-      .then(async (schemaOnlyResults) => {
-        try {
-          // 数据库写入逻辑包裹在独立 try/catch 中
-          if (Array.isArray(schemaOnlyResults) && schemaOnlyResults.length > 0) {
-            // 1. 修复 source 字段的变量作用域问题（之前提到的隐患）
-            let source;
-            if (importType === 'url') {
-              source = req.body.url?.trim(); // 直接从 req.body 取，避免作用域问题
-            } else if (importType === 'npm') {
-              source = req.body.packageName?.trim();
-            } else if (importType === 'code' && req.files?.length > 0) {
-              source = req.files[0].originalname;
-            }
-
-            // 2. 构造物料数据
-            const materials = schemaOnlyResults.map((schema, index) => ({
-              taskId,
-              importType,
-              source: source || 'unknown',
-              // 组件名：优先从 schema 中取，若没有则用索引+默认名
-              componentName: schema.name?.zh_CN || schema.component || `Component-${index + 1}`,
-              content: schema, // 直接将处理后的 schema 作为 content 存入
-              status: 'active'
-            }));
-
-            // 3. 批量写入数据库
-            await bulkCreateMaterials(materials);
-            console.log(`✅ [任务${taskId}] 物料已保存到数据库，共${materials.length}条`);
-          } else {
-            console.log(`ℹ️ [任务${taskId}] 无有效物料数据，跳过数据库写入`);
-          }
-        } catch (dbError) {
-          // 👇 新增：打印数据库写入失败的错误
-          console.error(`❌ [任务${taskId}] 数据库写入失败:`, dbError.message);
-          console.error(`❌ [任务${taskId}] 数据库错误堆栈:`, dbError.stack);
-        }
-      })
       .catch(err => {
         console.error(`❌ [任务${taskId}] 核心流程失败:`, err.message);
       });
@@ -422,9 +385,78 @@ function getTaskStatus(req, res, next) {
   }
 }
 
-// 导出接口（仅保留统一入口）
+/**
+ * 保存物料到数据库
+ * @param {Request} req - 前端传递的物料数组（req.body.materials）
+ * @param {Response} res - 返回保存结果
+ * @param {NextFunction} next - 错误传递
+ */
+async function saveMaterials(req, res, next) {
+  try {
+    // 1. 等待数据库初始化完成（确保DAO可用）
+    await dbReadyPromise;
+
+    // 2. 提取并校验前端传递的物料数组
+    const { materials } = req.body;
+    if (!Array.isArray(materials) || materials.length === 0) {
+      return res.status(400).json({
+        code: 400,
+        success: false,
+        message: '请传递有效的物料数组（非空数组）'
+      });
+    }
+
+    // 3. 校验物料数组中每个项的必填字段
+    const validMaterials = [];
+    for (const mat of materials) {
+      // 必填字段校验：componentName、importType、content 必须存在
+      if (!mat.componentName || !mat.importType || !mat.content) {
+        console.warn(`⚠️ 跳过无效物料（缺少必填字段）：${JSON.stringify(mat)}`);
+        continue;
+      }
+      // 格式化物料数据（适配Material实体字段）
+      validMaterials.push({
+        taskId: mat.taskId || 'manual-save', // 手动保存时可自定义taskId
+        importType: mat.importType, // 前端传递的导入类型（url/npm/code）
+        source: mat.source || 'unknown', // 前端传递的来源（URL/NPM包名/文件名）
+        componentName: mat.componentName, // 前端传递的组件名
+        chineseName: mat.chineseName || '', // 前端传递的中文名称（可选）
+        content: mat.content, // 前端传递的完整物料内容（后端生成的finalSchemas项）
+        status: 'active', // 固定为活跃状态
+        createdAt: new Date(), // 创建时间
+        updatedAt: new Date() // 更新时间
+      });
+    }
+
+    // 4. 无有效物料时返回提示
+    if (validMaterials.length === 0) {
+      return res.status(400).json({
+        code: 400,
+        success: false,
+        message: '所有物料均缺少必填字段（componentName/importType/content）'
+      });
+    }
+
+    // 5. 调用DAO批量保存到数据库
+    const savedMaterials = await bulkCreateMaterials(validMaterials);
+
+    // 6. 返回成功结果
+    res.status(200).json({
+      code: 200,
+      success: true,
+      message: `成功保存${savedMaterials.length}个物料到数据库`,
+      savedCount: savedMaterials.length, // 成功保存的数量
+      savedIds: savedMaterials.map(mat => mat.id) // 返回保存后的物料ID（可选）
+    });
+  } catch (error) {
+    console.error(`❌ 手动保存物料失败:`, error.message);
+    next(error); // 异常交给全局错误处理
+  }
+}
+
 module.exports = {
-  createImportTask,  // 统一导入入口
+  createImportTask,
   getTaskStatus,
-  upload             // multer中间件（用于文件上传）
+  saveMaterials,
+  upload
 };

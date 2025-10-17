@@ -1,75 +1,57 @@
 // backend/server/db/dao/materialDao.js
-const { dbReadyPromise } = require('../index'); // 只导入 Promise，不直接读 AppDataSource
+const { dbReadyPromise } = require('../index');
+const Material = require('../models/Material'); 
+const { getRepository } = require('typeorm');
 
-// 🌟 关键：等待数据库初始化完成后，再获取仓库（只初始化一次）
 let materialRepository;
+
+/**
+ * 物料实体的 TypeORM Repository 单例（确保数据库连接后初始化）
+ * @returns {Promise<import("typeorm").Repository<Material>>} 
+ */
 async function getMaterialRepository() {
   if (!materialRepository) {
-    // 等待数据库初始化完成
     await dbReadyPromise;
-    // 初始化完成后，从 AppDataSource 获取仓库
     const { AppDataSource } = require('../index');
-    // 必须与 MaterialSchema 中的 "name: 'Material'" 一致
     materialRepository = AppDataSource.getRepository('Material');
   }
   return materialRepository;
 }
 
-// 以下所有 DAO 方法均改为先等待仓库初始化
 /**
- * 保存物料
+ * 保存单个物料到数据库
+ * @param {Partial<Material>} materialData - 物料数据（包含物料实体的部分/全部属性）
+ * @returns {Promise<Material>} 保存后的完整物料实体（含自动生成的 ID 等）
  */
 async function createMaterial(materialData) {
-  const repo = await getMaterialRepository(); // 先等待仓库
+  const repo = await getMaterialRepository();
   const material = repo.create(materialData);
   return await repo.save(material);
 }
 
 /**
- * 批量保存物料
+ * 批量保存物料（通过事务保证数据一致性）
+ * @param {Partial<Material>[]} materials - 待批量保存的物料数据数组
+ * @returns {Promise<Material[]>} 批量保存后的物料实体数组
  */
 async function bulkCreateMaterials(materials) {
-  // 1. 等待仓库初始化 + 获取数据源和 sqlDb
+  // 1. 等待仓库初始化
   await getMaterialRepository();
-  const { AppDataSource, sqlDb } = require('../index'); // 导入 sqlDb
-  const fs = require('fs'); // 确保引入 fs 模块
-  const { dbPath } = require('../index'); // 若 dbPath 未导出，需先在 db/index.js 导出
+  const { AppDataSource } = require('../index');
 
-  // 2. 显式事务：确保数据写入内存
+  // 2. 显式事务：确保数据一致性
   const savedMaterials = await AppDataSource.transaction(async (manager) => {
     const result = await manager.save('Material', materials);
-    console.log(`🔍 DAO调试：事务提交成功，共保存 ${result.length} 条物料数据`);
-    // 事务内验证：立即查询内存中的数据，确认写入成功
-    const count = await manager.count('Material', { where: { taskId: materials[0].taskId } });
-    console.log(`🔍 DAO调试：内存中物料数量=${count}（应与保存数量一致）`);
     return result;
   });
-
-  // 3. 核心修复：手动导出内存数据并写入文件（绕开 onUpdate）
-  try {
-    console.log(`🔍 手动持久化：开始导出 sql.js 内存数据`);
-    // 导出内存中的数据库（包含所有数据）
-    const dbData = sqlDb.export();
-    // 验证导出数据有效性（正常应 > 100 字节）
-    if (dbData.length < 100) {
-      throw new Error(`导出数据无效，长度=${dbData.length} bytes`);
-    }
-    console.log(`🔍 手动持久化：导出数据长度=${dbData.length} bytes`);
-    // 写入文件（覆盖旧文件）
-    fs.writeFileSync(dbPath, Buffer.from(dbData));
-    // 验证文件大小
-    const stats = fs.statSync(dbPath);
-    console.log(`✅ 手动持久化成功！文件路径=${dbPath}，大小=${stats.size} bytes`);
-  } catch (manualErr) {
-    // console.error(`❌ 手动持久化失败：`, manualErr.message);
-    // console.error(`❌ 手动持久化错误栈：`, manualErr.stack);
-  }
 
   return savedMaterials;
 }
 
 /**
- * 根据ID查询物料
+ * 根据 ID 查询物料详情
+ * @param {number} id - 物料 ID
+ * @returns {Promise<Material | null>} 物料实体（不存在时返回 null）
  */
 async function getMaterialById(id) {
   const repo = await getMaterialRepository();
@@ -77,38 +59,63 @@ async function getMaterialById(id) {
 }
 
 /**
- * 根据条件查询物料列表
+ * 分页查询物料（支持精确条件 + 模糊关键词）
+ * @param {object} exactQuery 精确匹配的条件（如 importType/componentName）
+ * @param {string} keyword 模糊匹配的关键词（匹配 content 字段）
+ * @param {number} page 页码
+ * @param {number} limit 每页数量
+ * @returns {Promise<{ rows: Material[], count: number }>}
  */
-async function getMaterials(query = {}, page = 1, limit = 20) {
-  const repo = await getMaterialRepository();
-  const skip = (page - 1) * limit;
-  const [rows, count] = await repo.findAndCount({
-    where: query,
-    skip,
-    take: limit,
-    order: { createdAt: 'DESC' },
-  });
+async function getMaterials(exactQuery, keyword, page, limit) {
+  // 等待数据库初始化完成
+  await dbReadyPromise;
+  const { AppDataSource } = require('../index'); // 获取已初始化的数据源
+
+  // 从已初始化的数据源创建查询构建器
+  const queryBuilder = AppDataSource.createQueryBuilder(Material, 'material')
+    .where('material.status = :status', { status: exactQuery.status });
+
+  // 追加「精确匹配」条件
+  if (exactQuery.importType) {
+    queryBuilder.andWhere('material.importType = :importType', { importType: exactQuery.importType });
+  }
+  if (exactQuery.componentName) {
+    queryBuilder.andWhere('material.componentName = :componentName', { componentName: exactQuery.componentName });
+  }
+
+  // 追加「模糊关键词」条件（对 content 字段转字符串后模糊匹配）
+  if (keyword) {
+    queryBuilder.andWhere('CAST(material.content AS CHAR) LIKE :keyword', { keyword: `%${keyword}%` });
+  }
+
+  // 分页配置
+  queryBuilder.skip((page - 1) * limit)
+    .take(limit);
+
+  // 执行查询并返回结果
+  const [rows, count] = await queryBuilder.getManyAndCount();
   return { rows, count };
 }
 
+
 /**
- * 更新物料
+ * 更新物料（仅支持修改允许的字段，如 content）
+ * @param {number} id - 要更新的物料 ID
+ * @param {object} updates - 要更新的字段集合（例如：{ content: newContent }）
+ * @returns {Promise<number>} 数据库实际受影响的行数
  */
 async function updateMaterial(id, updates) {
   const repo = await getMaterialRepository();
-  await repo.update(id, updates);
-  return 1;
+  // 执行更新并获取结果（TypeORM 的 UpdateResult 包含 affected 字段）
+  const updateResult = await repo.update(id, updates);
+  // 返回实际受影响的行数
+  return updateResult.affected;
 }
 
 /**
- * 软删除物料
- */
-async function softDeleteMaterial(id) {
-  return await updateMaterial(id, { status: 'inactive' });
-}
-
-/**
- * 彻底删除物料
+ * 彻底删除物料（从数据库物理删除）
+ * @param {number} id - 要彻底删除的物料 ID
+ * @returns {Promise<number>} 受影响的行数（成功时固定返回 1）
  */
 async function deleteMaterial(id) {
   const repo = await getMaterialRepository();
@@ -116,12 +123,44 @@ async function deleteMaterial(id) {
   return 1;
 }
 
+/**
+ * 批量彻底删除物料（从数据库物理删除）
+ * @param {number[]} ids - 要彻底删除的物料ID数组
+ * @returns {Promise<number>} 数据库实际受影响的行数
+ */
+async function batchDeleteMaterials(ids) {
+  const repo = await getMaterialRepository();
+  const deleteResult = await repo.delete(ids);
+  return deleteResult.affected;
+}
+
+/**
+ * 查询所有去重的 componentName（仅活跃状态物料）
+ * @returns {Promise<string[]>} 去重后的组件名数组
+ */
+async function getDistinctComponentNames() {
+  // 确保数据库已初始化
+  await dbReadyPromise;
+  const { AppDataSource } = require('../index');
+
+  // 使用 QueryBuilder 执行「去重查询」
+  const rawResults = await AppDataSource.createQueryBuilder(Material, 'material')
+    .select('material.componentName')
+    .distinct(true)
+    .where('material.status = :status', { status: 'active' })
+    .getRawMany();
+
+  return rawResults.map(item => item.material_componentName);
+}
+
+
 module.exports = {
   createMaterial,
   bulkCreateMaterials,
   getMaterialById,
   getMaterials,
   updateMaterial,
-  softDeleteMaterial,
-  deleteMaterial
+  deleteMaterial,
+  batchDeleteMaterials,
+  getDistinctComponentNames
 };

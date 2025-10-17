@@ -54,48 +54,32 @@ function createTask(params) {
  * @returns {boolean} 是否更新成功（任务存在则返回true）
  */
 function updateTask(taskId, updates) {
-  // console.log(`[updateTask 调用] 任务${taskId} | 传入参数：`, JSON.stringify(updates));
-
-  // 1. 校验任务是否存在
+  // 校验任务是否存在
   const task = taskStore.get(taskId);
   if (!task) {
     console.error(`[updateTask] ❌ 任务不存在 | taskId: ${taskId}`);
     return false;
   }
 
-  // 2. 打印更新前状态（便于调试对比）
-  console.log(
-    `[updateTask] 任务${taskId} 更新前 | 状态: ${task.status} | 进度: ${task.progress}%`
-  );
-
-  // 3. 先合并基础字段（status、progress、result、error）
   // 仅更新传入的字段，未传入则保留原值
   if (updates.status !== undefined) task.status = updates.status;
   if (updates.progress !== undefined) task.progress = updates.progress;
   if (updates.result !== undefined) task.result = updates.result;
   if (updates.error !== undefined) task.error = updates.error;
 
-  // 4. 单独处理步骤（若传入step，则添加到steps数组）
-  // 核心修改：将 stepName 改为 name，统一字段名
+  // 单独处理步骤
   if (updates.step && typeof updates.step === 'object') {
     const newStep = {
-      name: updates.step.name || 'unknown-step', // 改为 name 字段，前端更易识别
-      status: updates.step.status || task.status, // 步骤状态（默认继承当前任务状态）
-      message: updates.step.message || '无描述', // 步骤描述（必填）
+      name: updates.step.name || 'unknown-step',
+      status: updates.step.status || task.status, // 步骤状态
+      message: updates.step.message || '无描述', // 步骤描述
       timestamp: new Date().toISOString() // 步骤执行时间
     };
-    // 推入步骤数组（不重复，不覆盖）
     task.steps.push(newStep);
-    console.log(`[updateTask] 任务${taskId} 新增步骤 | ${newStep.name}: ${newStep.message}`);
   }
 
-  // 5. 保存更新后的任务到内存
+  // 保存更新后的任务到内存
   taskStore.set(taskId, task);
-
-  // 6. 打印更新后状态（便于调试确认）
-  console.log(
-    `[updateTask] 任务${taskId} 更新后 | 状态: ${task.status} | 进度: ${task.progress}% | 累计步骤: ${task.steps.length}个`
-  );
 
   return true;
 }
@@ -112,23 +96,20 @@ function getTask(taskId) {
     return null;
   }
 
-  // 深拷贝：避免外部修改原始数据，同时处理序列化问题
+  // 深拷贝
   const taskCopy = JSON.parse(JSON.stringify({
     taskId: task.taskId,
     status: task.status,
     progress: task.progress,
-    steps: task.steps, // 此时steps格式已统一，可正常序列化
+    steps: task.steps, 
     result: task.result,
     error: task.error,
     createTime: task.createTim,
-    // 过滤params字段：避免其中的复杂对象导致序列化异常
     params: {
-      importType: task.params.importType // 仅返回类型，避免敏感/复杂数据
+      importType: task.params.importType
     }
   }));
 
-  // 打印返回给前端的steps数组，验证是否完整
-  console.log(`[getTask] 任务${taskId}返回steps:`, JSON.stringify(taskCopy.steps));
   return taskCopy;
 }
 
