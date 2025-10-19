@@ -19,7 +19,7 @@ async function createRouterConfig() {
       const routeConfigCurrent = {
         path: isChildRoute ? page.meta.router : `/${page.meta.router}`,
         name: `${page.meta.id}`,
-        component: () => import('../components/PageRenderer.vue'), // 懒加载，避免过早引入RenderMain
+        component: async () => (await import('../components/PageRenderer.ts')).default, // 懒加载，避免过早引入RenderMain
         props: { pageId: page.meta.id }, // 静态对象，避免路由嵌套时被覆盖
         children: [],
         meta: {
