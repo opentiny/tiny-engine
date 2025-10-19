@@ -10,7 +10,22 @@
  *
  */
 
-import { h, provide, inject, defineComponent } from 'vue'
+import {
+  h,
+  provide,
+  inject,
+  defineComponent,
+  onBeforeMount,
+  onMounted,
+  onBeforeUpdate,
+  onUpdated,
+  onBeforeUnmount,
+  onUnmounted,
+  onErrorCaptured,
+  onActivated,
+  onDeactivated
+} from 'vue'
+import { Notify } from '@opentiny/vue'
 import { isHTMLTag, hyphenate } from '@vue/shared'
 import TinyVue from '@opentiny/vue'
 import { getBlockContext } from './page-function/blockContext'
@@ -316,6 +331,7 @@ const getChildren = (schema, mergeScope, context, renderComponent) => {
 
 function renderComponent(schema, scope, parent) {
   const { componentName, loop, loopArgs, condition } = schema
+  //console.log('renderComponent', schema)
 
   // 处理数据源和表格fetchData的映射关系
   generateCollection(schema)
@@ -354,6 +370,26 @@ function renderComponent(schema, scope, parent) {
   return loopList?.length ? loopList.map(renderElement) : renderElement(undefined, 0)
 }
 
+// 执行用户定义的生命周期函数
+const executeUserLifecycle = (hookName: string, lifeCycleConfig: JSFunction | undefined, context: any) => {
+  if (!lifeCycleConfig || lifeCycleConfig.type !== 'JSFunction') {
+    return
+  }
+
+  try {
+    const fn = parseData(lifeCycleConfig, {}, context)
+    if (typeof fn === 'function') {
+      fn.call(context, context)
+    }
+  } catch (error) {
+    Notify({
+      type: 'warning',
+      title: `${hookName} 生命周期执行失败`,
+      message: (error as any)?.message || `${hookName} 生命周期函数执行报错，请检查语法`
+    })
+  }
+}
+
 export const renderer = defineComponent({
   name: 'renderer',
   props: {
@@ -363,6 +399,81 @@ export const renderer = defineComponent({
   },
   setup(props) {
     provide('schema', props.schema)
+
+    const context = inject('pageContext')
+    const lifeCycles = props.parent?.lifeCycles
+
+    // 注入生命周期钩子
+    if (lifeCycles?.setup) {
+      executeUserLifecycle('setup', lifeCycles?.setup, context)
+    }
+
+    if (lifeCycles?.onBeforeMount) {
+      onBeforeMount(() => {
+        executeUserLifecycle('onBeforeMount', lifeCycles.onBeforeMount, context)
+      })
+    }
+
+    if (lifeCycles?.onMounted) {
+      onMounted(() => {
+        executeUserLifecycle('onMounted', lifeCycles.onMounted, context)
+      })
+    }
+
+    if (lifeCycles?.onBeforeUpdate) {
+      onBeforeUpdate(() => {
+        executeUserLifecycle('onBeforeUpdate', lifeCycles.onBeforeUpdate, context)
+      })
+    }
+
+    if (lifeCycles?.onUpdated) {
+      onUpdated(() => {
+        executeUserLifecycle('onUpdated', lifeCycles.onUpdated, context)
+      })
+    }
+
+    if (lifeCycles?.onBeforeUnmount) {
+      onBeforeUnmount(() => {
+        executeUserLifecycle('onBeforeUnmount', lifeCycles.onBeforeUnmount, context)
+      })
+    }
+
+    if (lifeCycles?.onUnmounted) {
+      onUnmounted(() => {
+        executeUserLifecycle('onUnmounted', lifeCycles.onUnmounted, context)
+      })
+    }
+
+    if (lifeCycles?.onErrorCaptured) {
+      onErrorCaptured((error, instance, info) => {
+        try {
+          const fn = parseData(lifeCycles.onErrorCaptured, {}, context)
+          if (typeof fn === 'function') {
+            const result = fn.call(context, error, instance, info)
+            return result === false
+          }
+        } catch (userError) {
+          Notify({
+            type: 'warning',
+            title: 'onErrorCaptured 生命周期执行失败',
+            message: (userError as any)?.message || 'onErrorCaptured 生命周期函数执行报错，请检查语法'
+          })
+        }
+        return true
+      })
+    }
+
+    if (lifeCycles?.onActivated) {
+      onActivated(() => {
+        executeUserLifecycle('onActivated', lifeCycles.onActivated, context)
+      })
+    }
+
+    if (lifeCycles?.onDeactivated) {
+      onDeactivated(() => {
+        executeUserLifecycle('onDeactivated', lifeCycles.onDeactivated, context)
+      })
+    }
   },
   render() {
     const context = inject('pageContext')
