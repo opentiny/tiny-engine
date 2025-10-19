@@ -37,7 +37,6 @@ import {
   CanvasSection
 } from '@opentiny/tiny-engine-builtin-component'
 import {
-  CanvasBox,
   CanvasIcon,
   CanvasText,
   CanvasSlot,
@@ -55,10 +54,8 @@ const customElements = {}
 const Mapper = {
   Icon: CanvasIcon,
   Text: CanvasText,
-  div: CanvasBox,
   Slot: CanvasSlot,
   slot: CanvasSlot,
-  Template: CanvasBox,
   Img: CanvasImg,
   CanvasRow,
   CanvasCol,
@@ -86,6 +83,10 @@ export const getComponent = (name) => {
   const component = Mapper[name] || getNative(name) || customElements[name]
   if (component) {
     return component
+  }
+
+  if (name === 'Template') {
+    return 'div'
   }
 
   // 如果是 HTML 标签，直接返回
