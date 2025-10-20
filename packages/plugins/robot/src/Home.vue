@@ -91,19 +91,20 @@ const mcpDrawerPosition = computed(() => {
 
 const promptItems: PromptProps[] = [
   {
+    label: '页面搭建场景',
+    description: '在当前页面中生成一个满意度调查表单',
+    icon: h(PageIconComponent),
+    badge: 'NEW'
+  },
+  {
     label: 'MCP工具',
     description: '帮我查询当前的页面列表',
     icon: h(McpIconComponent),
     badge: 'NEW'
   },
   {
-    label: '页面搭建场景',
-    description: '给当前页面中添加一个问卷调查表单',
-    icon: h(PageIconComponent)
-  },
-  {
-    label: '学习/知识型场景',
-    description: 'Vue3 和 React 有什么区别？',
+    label: '日常开发问答',
+    description: '如何实现前端节流与防抖？',
     icon: h(StudyIconComponent)
   }
 ]

@@ -12,7 +12,7 @@ import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
 import useMcpServer from './useMcp'
 import { client } from '../client'
-import { handleStreamData, updateCanvasPageSchema } from './useAgent'
+import { updatePageSchema } from './useAgent'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 
@@ -59,7 +59,7 @@ const events: UseMessageOptions['events'] = {
     handleDeltaContent(choice, lastMessage) // eslint-disable-line
     handleDeltaToolCalls(choice, lastMessage) // eslint-disable-line
 
-    handleStreamData(lastMessage.content, pageSchema)
+    updatePageSchema(lastMessage.content, pageSchema)
   },
   onFinish(finishReason, { messages, messageState }, preventDefault) {
     preventDefault()
@@ -68,7 +68,15 @@ const events: UseMessageOptions['events'] = {
       handleToolCall(lastMessage.tool_calls, messages.value) // eslint-disable-line
     } else if (finishReason !== 'abort' && messageState.status !== STATUS.ABORTED) {
       messageState.status = STATUS.FINISHED
-      updateCanvasPageSchema(lastMessage.content, pageSchema, messages.value)
+      updatePageSchema(lastMessage.content, pageSchema, true).then(({ schema: newSchema }) => {
+        // TODO: isError时让AI继续修复
+        if (newSchema) {
+          messages.value.at(-1).renderContent.at(-1).status = 'success'
+          messages.value.at(-1).renderContent.at(-1).schema = newSchema
+        } else {
+          messages.value.at(-1).renderContent.at(-1).status = 'failed'
+        }
+      })
     }
     chatStatus = messageState.status
     pageSchema = null
