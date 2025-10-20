@@ -2,7 +2,7 @@ import { ref, computed, readonly } from 'vue'
 import type { AppSchema, Util, BlockItem, BlockContent, I18nConfig, ComponentMap, PackageConfig } from '../types/schema'
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import { addStyle, getComponents, loadPackageDependencys } from '../app-function/nativeComponents'
+import { addStyle, getComponents, loadPackageDependencys, initDataSource } from '../app-function'
 
 const appSchema = ref<AppSchema | null>(null)
 const isLoading = ref(false)
@@ -75,6 +75,9 @@ export function useAppSchema() {
 
     // 初始化工具函数
     await initializeUtils(schema.data.utils)
+
+    // 初始化数据源
+    initDataSource(schema.data.dataSource)
 
     // 注入全局CSS
     injectGlobalCSS(schema.data.css)

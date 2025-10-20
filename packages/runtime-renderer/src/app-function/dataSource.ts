@@ -1,12 +1,5 @@
 import useHttp from './http'
-import { useAppSchema } from '../composables/useAppSchema'
 import { parseJSFunction } from '../utils/data-utils'
-
-const { dataSourceConfig } = useAppSchema()
-
-// 深拷贝防止修改原始 reactive
-const rawConfig = JSON.parse(JSON.stringify(dataSourceConfig.value || {}))
-
 // 将原本的配置格式标准化以方便复用出码逻辑
 const normalizeItem = (item: any) => {
   return {
@@ -23,14 +16,9 @@ const normalizeItem = (item: any) => {
   }
 }
 
-const dataSources = {
-  dataHandler: rawConfig.dataHandler,
-  list: (rawConfig.list || []).map(normalizeItem)
-}
+const dataSourceMap: Record<string, any> = {}
 
-export const dataSourceMap: Record<string, any> = {}
-
-const globalDataHandle = dataSources.dataHandler ? parseJSFunction(dataSources.dataHandler) : (res) => res
+let globalDataHandle: (res: any) => any = (res) => res
 
 // 统一的 load 构造
 const load = (http, options, dataSource, shouldFetch) => (params?, customUrl?) => {
@@ -70,52 +58,54 @@ const load = (http, options, dataSource, shouldFetch) => (params?, customUrl?) =
   return http.request(config)
 }
 
-// 构建每个数据源
-dataSources.list.forEach((config) => {
-  const http = useHttp(globalDataHandle)
-  const dataSource = {
-    config: config,
-    status: 'init',
-    data: { data: config.data } // 保持占位，后续 remote 成功后再写
+export const initDataSource = (config: any) => {
+  Object.keys(dataSourceMap).forEach((key) => delete dataSourceMap[key])
+
+  if (!config) {
+    return dataSourceMap
   }
 
-  dataSourceMap[config.name] = dataSource
+  const normalized = (config.list || []).map(normalizeItem)
 
-  const shouldFetch = config.shouldFetch?.value ? parseJSFunction(config.shouldFetch) : () => true
-  const willFetch = config.willFetch?.value ? parseJSFunction(config.willFetch) : (options) => options
+  globalDataHandle = config.dataHandler ? parseJSFunction(config.dataHandler) : (res) => res
 
-  const dataHandler = (res) => {
-    const handled = config.dataHandler?.value ? parseJSFunction(config.dataHandler)(res) : res
-    dataSource.status = 'loaded'
-    dataSource.data = handled
-    return handled
-  }
-
-  const errorHandler = (error) => {
-    if (config.errorHandler?.value) {
-      parseJSFunction(config.errorHandler)(error)
+  normalized.forEach((item) => {
+    const http = useHttp(globalDataHandle)
+    const dataSource = {
+      config: item,
+      status: 'init',
+      data: { data: item.data },
+      load: null // 将在下面设置
     }
-    dataSource.status = 'error'
-    dataSource.error = error
-    return Promise.reject(error)
-  }
 
-  http.interceptors.request.use(willFetch, errorHandler)
-  http.interceptors.response.use(dataHandler, errorHandler)
+    const shouldFetch = item.shouldFetch?.value ? parseJSFunction(item.shouldFetch) : () => true
+    const willFetch = item.willFetch?.value ? parseJSFunction(item.willFetch) : (options) => options
+    const dataHandler = (res) => {
+      const handled = item.dataHandler?.value ? parseJSFunction(item.dataHandler)(res) : res
+      dataSource.status = 'loaded'
+      dataSource.data = handled
+      return handled
+    }
+    const errorHandler = (error) => {
+      if (item.errorHandler?.value) {
+        parseJSFunction(item.errorHandler)(error)
+      }
+      dataSource.status = 'error'
+      dataSource.error = error
+      return Promise.reject(error)
+    }
 
-  if (import.meta.env.VITE_APP_MOCK === 'mock') {
-    http.mock([
-      {
-        url: config.options?.uri,
-        response() {
-          return Promise.resolve([200, { data: config.data }])
-        }
-      },
-      { url: '*', proxy: '*' }
-    ])
-  }
+    http.interceptors.request.use(willFetch, errorHandler)
+    http.interceptors.response.use(dataHandler, errorHandler)
 
-  dataSource.load = load(http, config.options, dataSource, shouldFetch)
-})
+    // 设置 load 方法
+    dataSource.load = load(http, item.options, dataSource, shouldFetch)
+
+    // 存储到映射中
+    dataSourceMap[item.name] = dataSource
+  })
+}
+
+export const getDataSource = () => dataSourceMap
 
 export default dataSourceMap

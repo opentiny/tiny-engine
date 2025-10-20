@@ -12,16 +12,14 @@
 
 import { h, computed, provide, nextTick, reactive, watch, defineComponent, inject } from 'vue'
 import Loading from '../components/Loading.vue'
-import { parseData } from './parser/parser.ts'
+import { parseData } from './parser'
 import { renderer } from './render.ts'
-import { setPageCss } from './page-function/css-handler.ts'
-import { useState } from './page-function/state'
+import { setPageCss, useState } from './page-function'
 import useContext from './useContext.ts'
 import { useRouter, useRoute } from 'vue-router'
 import { useAppSchema } from '../composables/useAppSchema'
 import type { PageContent as Schema } from '../types/schema'
-import dataSourceMap from '../app-function/dataSource.ts'
-import { getUtilsAll } from '../app-function/utils.ts'
+import { getDataSource, getUtilsAll } from '../app-function'
 
 interface Props {
   pageId: number
@@ -84,7 +82,7 @@ export default defineComponent({
         route,
         router,
         stores,
-        dataSourceMap,
+        dataSourceMap: getDataSource(),
         utils: getUtilsAll()
       }
       // 此处提升很重要，因为setState、initProps也会触发画布重新渲染，所以需要提升上下文环境的设置时间
