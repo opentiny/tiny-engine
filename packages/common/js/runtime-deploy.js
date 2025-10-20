@@ -48,16 +48,6 @@ export const deployPage = () => {
 export const runtimeDeploy = async () => {
   const { openUrl } = await deployPage()
 
-  if (runtimeWindow && !runtimeWindow.closed) {
-    try {
-      runtimeWindow.focus()
-    } catch (e) {
-      // eslint-disable-next-line no-console
-      console.warn('[runtime-deploy] focus runtime window failed:', e)
-    }
-    return
-  }
-
   runtimeWindow = window.open(openUrl, 'tiny-engine-runtime')
   if (!runtimeWindow) {
     useNotify({
