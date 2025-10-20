@@ -30,8 +30,7 @@ async function createRouterConfig() {
           depth: page.meta.depth, // 疑问：在嵌套路由中此属性没有改变，此属性和面包屑有关吗？
           isDefault: page.meta.isDefault, // 用于嵌套路由的默认子路由
           hasDefault: false,
-          defaultPath: '', // 默认子路由的路径
-          parentPath: '/'
+          defaultPath: '' // 默认子路由的路径
         }
       }
 
@@ -87,13 +86,5 @@ export async function createAppRouter() {
   const routes = await createRouterConfig()
   const router = createRouter({ history: createWebHashHistory('/runtime.html'), routes })
 
-  if (typeof window !== 'undefined') {
-    window.__DEBUG_ROUTER__ = router
-    // eslint-disable-next-line no-console
-    console.log(
-      '所有路由:',
-      router.getRoutes().map((r) => ({ path: r.path, name: r.name, redirect: r.redirect }))
-    )
-  }
   return router
 }
