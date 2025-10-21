@@ -1,26 +1,81 @@
+import { toRaw } from 'vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import type { BubbleContentItem } from '@opentiny/tiny-robot'
 import {
   STATUS,
   useConversation,
+  type AIModelConfig,
   type ChatCompletionStreamResponse,
   type ChatCompletionStreamResponseChoice,
   type ChatMessage,
   type UseMessageOptions
 } from '@opentiny/tiny-robot-kit'
-import { toRaw } from 'vue'
+import { utils } from '@opentiny/tiny-engine-utils'
 import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
+import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { client } from '../client'
 import { updatePageSchema } from './useAgent'
-import { utils } from '@opentiny/tiny-engine-utils'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import useRobot from '../js/useRobot'
+import { getAgentSystemPrompt } from '../js/prompts'
 
 const { deepClone } = utils
 
 type Message = ChatMessage & {
   renderContent: BubbleContentItem[]
   tool_calls: ResponseToolCall[]
+}
+
+const { robotSettingState, CHAT_MODE, saveRobotSettingState } = useRobot()
+
+const getApiUrl = () => {
+  return robotSettingState.chatMode === CHAT_MODE.Agent ? '/app-center/api/ai/chat' : '/app-center/api/chat/completions'
+}
+
+const config: Omit<AIModelConfig, 'provider' | 'providerImplementation'> = {
+  apiKey: robotSettingState.selectedModel.apiKey || '',
+  apiUrl: getApiUrl(),
+  defaultModel: robotSettingState.selectedModel.model || 'deepseek-v3'
+}
+
+const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
+  if (!messages.length || messages[0].role !== 'system') {
+    messages.unshift({ role: 'system', content: prompt })
+  } else if (messages[0].role === 'system' && messages[0].content !== prompt) {
+    messages[0].content = prompt
+  }
+}
+
+const beforeRequest = async (requestParams: any) => {
+  const { CHAT_MODE, robotSettingState } = useRobot()
+  const pageSchema = deepClone(useCanvas().pageState.pageSchema)
+  const isAgentMode = robotSettingState.chatMode === CHAT_MODE.Agent
+  const tools = await useMcpServer().getLLMTools()
+  if (!requestParams.tools && tools?.length && !isAgentMode) {
+    Object.assign(requestParams, { tools })
+  }
+  if (isAgentMode) {
+    requestParams.apiKey = robotSettingState.selectedModel.apiKey
+    // let referenceContext = ''
+    // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
+    //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
+    // }
+    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, ''))
+  }
+  requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
+  requestParams.model = robotSettingState.selectedModel.model
+  if (config.apiKey !== robotSettingState.selectedModel.apiKey) {
+    provider?.updateConfig({ apiKey: robotSettingState.selectedModel.apiKey }) // eslint-disable-line
+    config.apiKey = robotSettingState.selectedModel.apiKey
+  }
+  return requestParams
+}
+
+const { client, provider } = createClient({ config, beforeRequest })
+
+const updateLLMConfig = (newConfig: Omit<AIModelConfig, 'provider' | 'providerImplementation'>) => {
+  provider?.updateConfig(newConfig)
+  Object.assign(config, newConfig)
 }
 
 const removeLoading = (messages: ChatMessage[], name?: string) => {
@@ -68,22 +123,24 @@ const events: UseMessageOptions['events'] = {
       handleToolCall(lastMessage.tool_calls, messages.value) // eslint-disable-line
     } else if (finishReason !== 'abort' && messageState.status !== STATUS.ABORTED) {
       messageState.status = STATUS.FINISHED
-      updatePageSchema(lastMessage.content, pageSchema, true).then(({ schema: newSchema }) => {
-        // TODO: isError时让AI继续修复
-        if (newSchema) {
-          messages.value.at(-1).renderContent.at(-1).status = 'success'
-          messages.value.at(-1).renderContent.at(-1).schema = newSchema
-        } else {
-          messages.value.at(-1).renderContent.at(-1).status = 'failed'
-        }
-      })
+      if (robotSettingState.chatMode === CHAT_MODE.Agent) {
+        updatePageSchema(lastMessage.content, pageSchema, true).then(({ schema: newSchema } = { schema: null }) => {
+          // TODO: isError时让AI继续修复
+          if (newSchema) {
+            messages.value.at(-1).renderContent.at(-1).status = 'success'
+            messages.value.at(-1).renderContent.at(-1).schema = newSchema
+          } else {
+            messages.value.at(-1).renderContent.at(-1).status = 'failed'
+          }
+        })
+      }
     }
     chatStatus = messageState.status
     pageSchema = null
   }
 }
 
-const { messageManager, state: conversationState, ...rest } = useConversation({ client, events })
+const { messageManager, state: conversationState, createConversation, ...rest } = useConversation({ client, events })
 
 const getMessageManager = () => messageManager
 
@@ -264,10 +321,26 @@ const handleToolCall = async (
   )
 }
 
+const changeChatMode = (chatMode: string) => {
+  // 空会话更新metadata
+  const usedConversationId = conversationState.currentId
+  const newConversationId = createConversation('新会话', { chatMode })
+  if (usedConversationId === newConversationId) {
+    rest.updateMetadata(newConversationId, { chatMode })
+    rest.saveConversations()
+  }
+
+  robotSettingState.chatMode = chatMode
+  saveRobotSettingState({ chatMode })
+  updateLLMConfig({ apiUrl: getApiUrl() })
+}
+
 export default function () {
   return {
+    updateLLMConfig,
     conversationState,
     ...messageManager,
+    changeChatMode,
     abortRequest: () => {
       afterToolCallAbortController?.abort()
       messageManager.abortRequest()
@@ -275,6 +348,23 @@ export default function () {
       removeLoading(messageManager.messages.value, 'latest')
     },
     ...rest,
+    switchConversation: (conversationId: string) => {
+      const conversation = conversationState.conversations.find((conversation) => conversation.id === conversationId)
+      if (!conversation) return
+
+      rest.switchConversation(conversationId)
+      // 切换会话后跟随切换对话模式
+      if (conversation.metadata?.chatMode) {
+        robotSettingState.chatMode = conversation.metadata.chatMode as string
+      } else {
+        robotSettingState.chatMode = CHAT_MODE.Agent
+        rest.updateMetadata(conversationId, { chatMode: CHAT_MODE.Agent })
+        rest.saveConversations()
+      }
+    },
+    createConversation: (title?: string) => {
+      createConversation(title, { chatMode: robotSettingState.chatMode })
+    },
     removeLoading
   }
 }

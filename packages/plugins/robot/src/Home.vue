@@ -13,9 +13,11 @@
           ref="robotChatRef"
           :prompt-items="promptItems"
           :bubbleRenderers="
-            aiMode === CHAT_MODE.Agent ? { markdown: BuildLoadingRenderer, loading: BuildLoadingRenderer } : {}
+            robotSettingState.chatMode === CHAT_MODE.Agent
+              ? { markdown: BuildLoadingRenderer, loading: BuildLoadingRenderer }
+              : {}
           "
-          :allowFiles="isVisualModel() && aiMode === CHAT_MODE.Agent"
+          :allowFiles="isVisualModel() && robotSettingState.chatMode === CHAT_MODE.Agent"
           @fileSelected="handleFileSelected"
         >
           <template #operations>
@@ -28,7 +30,7 @@
             >
               <robot-setting-popover
                 v-if="showSettingPopover"
-                @changeType="handleChatModeChange"
+                @changeType="saveSettingState"
                 @close="closePanel"
               ></robot-setting-popover>
               <template #reference>
@@ -39,8 +41,11 @@
             </tiny-popover>
           </template>
           <template #footer-left>
-            <robot-type-select :aiMode="aiMode" @typeChange="typeChange"></robot-type-select>
-            <mcp-server :position="mcpDrawerPosition" v-if="aiMode === CHAT_MODE.Chat"></mcp-server>
+            <robot-type-select
+              :chatMode="robotSettingState.chatMode"
+              @typeChange="handleChatModeChange"
+            ></robot-type-select>
+            <mcp-server :position="mcpDrawerPosition" v-if="robotSettingState.chatMode === CHAT_MODE.Chat"></mcp-server>
           </template>
         </robot-chat>
       </div>
@@ -62,7 +67,6 @@ import type { PromptProps } from '@opentiny/tiny-robot'
 import RobotTypeSelect from './components/RobotTypeSelect.vue'
 import McpServer from './mcp/McpServer.vue'
 import BuildLoadingRenderer from './BuildLoadingRenderer.vue'
-import { updateLLMConfig } from './client'
 import useChat from './composables/useChat'
 
 const { options } = defineProps({
@@ -112,8 +116,8 @@ const promptItems: PromptProps[] = [
 const showTeleport = ref(false)
 const showSettingPopover = ref(false)
 
-const { robotSettingState, CHAT_MODE, AIModelOptions, aiMode } = useRobot()
-const { inputMessage } = useChat()
+const { robotSettingState, CHAT_MODE, AIModelOptions } = useRobot()
+const { inputMessage, changeChatMode } = useChat()
 
 const isVisualModel = () => {
   const platform = AIModelOptions.find((option) => option.value === robotSettingState.selectedModel.baseUrl)
@@ -121,19 +125,13 @@ const isVisualModel = () => {
   return modelAbility?.ability?.includes('visual') || false
 }
 
-const typeChange = (type: string) => {
-  aiMode.value = type
-  robotChatRef.value?.createConversation()
-  updateLLMConfig({
-    apiUrl: type === CHAT_MODE.Agent ? '/app-center/api/ai/chat' : '/app-center/api/chat/completions'
-  })
-}
-
-const handleChatModeChange = () => {
+const handleChatModeChange = (type: string) => {
+  changeChatMode(type)
   // singleAttachmentItems.value = []
   // imageUrl.value = ''
-  // endContent()
 }
+
+const saveSettingState = () => {}
 
 const closePanel = () => {
   showSettingPopover.value = false

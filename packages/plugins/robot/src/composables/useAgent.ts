@@ -1,7 +1,7 @@
 import { jsonrepair } from 'jsonrepair'
 import * as jsonpatch from 'fast-json-patch'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
 import useRobot from '../js/useRobot'
 import SvgICons from '@opentiny/vue-icon'
 
@@ -44,8 +44,8 @@ const schemaAutoFix = (data: object | object[]) => {
 }
 
 const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
-  const { aiMode, CHAT_MODE, isValidFastJsonPatch } = useRobot()
-  if (aiMode.value !== CHAT_MODE.Agent) {
+  const { robotSettingState, CHAT_MODE, isValidFastJsonPatch } = useRobot()
+  if (robotSettingState.chatMode !== CHAT_MODE.Agent) {
     return
   }
 
@@ -98,3 +98,21 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
 }
 
 export const updatePageSchema = useThrottleFn(_updatePageSchema, 200, true)
+
+export const search = async (content: string) => {
+  let result = ''
+  const MAX_SEARCH_LENGTH = 8000
+  try {
+    const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
+
+    res.forEach((item: { content: string }) => {
+      if (result.length + item.content.length > MAX_SEARCH_LENGTH) {
+        return
+      }
+      result += item.content
+    })
+  } catch (error) {
+    // error
+  }
+  return result
+}

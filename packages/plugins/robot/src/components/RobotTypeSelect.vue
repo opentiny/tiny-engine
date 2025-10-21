@@ -1,7 +1,7 @@
 <template>
   <div class="button-wrapper">
-    <tiny-tabs v-model="state.activeNameTabs" tab-style="button-card">
-      <tiny-tab-item :name="CHAT_MODE.Agent">
+    <tiny-tabs v-model="aiChatMode" tab-style="button-card">
+      <tiny-tab-item name="agent">
         <template #title>
           <tiny-tooltip effect="light">
             <template #content>
@@ -19,7 +19,7 @@
           </tiny-tooltip>
         </template>
       </tiny-tab-item>
-      <tiny-tab-item class="json-tab" :name="CHAT_MODE.Chat">
+      <tiny-tab-item class="json-tab" name="chat">
         <template #title>
           <tiny-tooltip effect="light">
             <template #content>
@@ -42,10 +42,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, watch } from 'vue'
-import type { Component } from 'vue'
+import { computed, type Component } from 'vue'
 import { Tabs, TabItem, Tooltip } from '@opentiny/vue'
-import { useRobot } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -54,33 +52,23 @@ export default {
     TinyTooltip: Tooltip as Component
   },
   props: {
-    aiType: {
-      type: String
+    chatMode: {
+      type: String,
+      default: 'agent'
     }
   },
   emits: ['typeChange'],
   setup(props, { emit }) {
-    const { CHAT_MODE } = useRobot()
-    const state = reactive({
-      activeNameTabs: props.aiType || CHAT_MODE.Agent
+    const aiChatMode = computed<string>({
+      get: () => props.chatMode,
+      set: (value: string) => {
+        if (value === props.chatMode) return
+        emit('typeChange', value)
+      }
     })
 
-    const handleTabChange = (value) => {
-      emit('typeChange', value)
-    }
-
-    // TODO: 这里不需要watch监听，直接用modelChange方法监听activeNameTabs的变化
-    // 使用watch监听activeNameTabs的变化
-    watch(
-      () => state.activeNameTabs,
-      (newValue) => {
-        handleTabChange(newValue)
-      }
-    )
-
     return {
-      state,
-      CHAT_MODE
+      aiChatMode
     }
   }
 }

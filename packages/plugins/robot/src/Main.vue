@@ -93,7 +93,7 @@
                 </div>
               </template>
               <template #footer-left>
-                <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
+                <robot-type-select :chatMode="aiType" @typeChange="typeChange"></robot-type-select>
                 <mcp-server :position="mcpDrawerPosition" v-if="aiType === CHAT_MODE.Chat"></mcp-server>
               </template>
             </tr-sender>

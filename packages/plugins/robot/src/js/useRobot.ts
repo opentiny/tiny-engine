@@ -11,15 +11,13 @@
  */
 
 /* metaService: engine.plugins.robot.useRobot */
-import { reactive, ref } from 'vue'
+import { reactive } from 'vue'
 import { getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
 const CHAT_MODE = { Agent: 'agent', Chat: 'chat' }
-
-const aiMode = ref(CHAT_MODE.Agent)
 
 const AIModelOptions = [
   {
@@ -61,10 +59,6 @@ const getAIModelOptions = () => {
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
 
-const saveRobotSettingState = (state: object) => {
-  localStorage.setItem(SETTING_STORAGE_KEY, JSON.stringify(state))
-}
-
 const loadRobotSettingState = () => {
   const items = localStorage.getItem(SETTING_STORAGE_KEY) || '{}'
   try {
@@ -74,7 +68,13 @@ const loadRobotSettingState = () => {
   }
 }
 
-const { activeName, existModel, customizeModel } = loadRobotSettingState() || {}
+const saveRobotSettingState = (state: object) => {
+  const currentState = loadRobotSettingState() || {}
+  const newState = { ...currentState, ...state }
+  localStorage.setItem(SETTING_STORAGE_KEY, JSON.stringify(newState))
+}
+
+const { activeName, existModel, customizeModel, chatMode } = loadRobotSettingState() || {}
 
 const storageSettingState = (activeName === EXISTING_MODELS ? existModel : customizeModel) || {}
 
@@ -86,10 +86,11 @@ const robotSettingState = reactive({
     model: storageSettingState.model || getAIModelOptions()[0].model[0].value,
     completeModel: storageSettingState.completeModel || getAIModelOptions()[0].model[0].value || '',
     apiKey: storageSettingState.apiKey || ''
-  }
+  },
+  chatMode: chatMode || CHAT_MODE.Agent
 })
 
-const isValidOperation = (operation) => {
+const isValidOperation = (operation: object) => {
   const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
 
   if (typeof operation !== 'object' || operation === null) {
@@ -139,7 +140,6 @@ export default () => {
     EXISTING_MODELS,
     CUSTOMIZE,
     CHAT_MODE,
-    aiMode,
     AIModelOptions,
     getAIModelOptions,
     robotSettingState,
