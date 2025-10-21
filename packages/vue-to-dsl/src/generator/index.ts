@@ -143,10 +143,7 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
     componentName: 'Page',
     fileName: options.fileName || 'UnnamedPage',
     meta: {
-      name: options.fileName || 'UnnamedPage',
-      description: options.description || 'Page generated from Vue SFC',
-      generatedAt: new Date().toISOString(),
-      generator: '@opentiny/tiny-engine-vue-to-dsl'
+      name: options.fileName || 'UnnamedPage'
     }
   }
   if (scriptSchema) {
