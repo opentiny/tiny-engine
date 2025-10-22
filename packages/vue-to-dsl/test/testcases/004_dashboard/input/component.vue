@@ -41,7 +41,7 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive } from 'vue'
 
 const state = reactive({
   activeStep: 1,
@@ -74,19 +74,19 @@ const state = reactive({
     { id: 1, title: '修复登录问题', deadline: '2025-09-30' },
     { id: 2, title: '升级依赖', deadline: '2025-10-10' }
   ]
-});
+})
 
 function onSearch() {
-  console.log('search with', state.filters, state.category);
+  console.log('search with', state.filters, state.category)
 }
 function onReset() {
-  state.filters.keyword = '';
-  state.filters.module = '';
-  state.category = 'all';
+  state.filters.keyword = ''
+  state.filters.module = ''
+  state.category = 'all'
 }
 
 function go(item) {
-  console.log('go to', item.path);
+  console.log('go to', item.path)
 }
 </script>
 

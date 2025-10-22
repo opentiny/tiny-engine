@@ -2,10 +2,7 @@
   "componentName": "Page",
   "fileName": "component",
   "meta": {
-    "name": "component",
-    "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-09-07T05:16:34.432Z",
-    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+    "name": "component"
   },
   "state": {
     "activeStep": 1,
@@ -101,25 +98,25 @@
   "methods": {
     "onSearch": {
       "type": "JSFunction",
-      "value": "function onSearch() { console.log('search with', state.filters, state.category); }"
+      "value": "function onSearch() {\n  console.log('search with', state.filters, state.category)\n}"
     },
     "onReset": {
       "type": "JSFunction",
-      "value": "function onReset() { state.filters.keyword = ''; state.filters.module = ''; state.category = 'all'; }"
+      "value": "function onReset() {\n  state.filters.keyword = ''\n  state.filters.module = ''\n  state.category = 'all'\n}"
     },
     "go": {
       "type": "JSFunction",
-      "value": "function go(item) { console.log('go to', item.path); }"
+      "value": "function go(item) {\n  console.log('go to', item.path)\n}"
     }
   },
   "computed": {},
   "lifecycle": {},
-  "css": ".dashboard-page { padding: 16px; } .panel { padding: 12px; border: 1px solid #eee; border-radius: 4px; background: #fff; } .panel-title { margin: 0 0 8px; font-size: 16px; font-weight: 600; } .quick-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; } .quick-link-tile { height: 80px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fafafa; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; } .quick-link-tile:hover { background: #f0f6ff; border-color: #cfe0ff; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); } .quick-link-text { color: #1f2329; font-size: 14px; font-weight: 500; }",
+  "css": ".dashboard-page {\n  padding: 16px;\n}\n\n.panel {\n  padding: 12px;\n  border: 1px solid #eee;\n  border-radius: 4px;\n  background: #fff;\n}\n\n.panel-title {\n  margin: 0 0 8px;\n  font-size: 16px;\n  font-weight: 600;\n}\n\n.quick-links {\n  display: grid;\n  grid-template-columns: repeat(4, minmax(0, 1fr));\n  gap: 12px;\n  margin-bottom: 12px;\n}\n\n.quick-link-tile {\n  height: 80px;\n  border: 1px solid #e5e7eb;\n  border-radius: 8px;\n  background: #fafafa;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  cursor: pointer;\n  transition: all 0.2s ease;\n}\n\n.quick-link-tile:hover {\n  background: #f0f6ff;\n  border-color: #cfe0ff;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);\n}\n\n.quick-link-text {\n  color: #1f2329;\n  font-size: 14px;\n  font-weight: 500;\n}",
   "children": [
     {
       "componentName": "div",
       "props": {
-        "class": "dashboard-page"
+        "className": "dashboard-page"
       },
       "children": [
         {
@@ -137,19 +134,19 @@
             }
           },
           "children": [],
-          "id": "ygd6neb0"
+          "id": "f59raon9"
         },
         {
           "componentName": "div",
           "props": {
-            "class": "panel",
+            "className": "panel",
             "style": "margin-bottom: 12px"
           },
           "children": [
             {
               "componentName": "h3",
               "props": {
-                "class": "panel-title"
+                "className": "panel-title"
               },
               "children": [
                 {
@@ -157,10 +154,10 @@
                   "props": {
                     "text": "筛选"
                   },
-                  "id": "8guqlwea"
+                  "id": "kkgfrui1"
                 }
               ],
-              "id": "lsushe3l"
+              "id": "dwwurpcj"
             },
             {
               "componentName": "TinyForm",
@@ -180,13 +177,17 @@
                       "componentName": "TinySearch",
                       "props": {
                         "placeholder": "请输入关键词",
-                        "v-model": "state.filters.keyword"
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "state.filters.keyword",
+                          "model": true
+                        }
                       },
                       "children": [],
-                      "id": "6mw5759s"
+                      "id": "5m0pkah7"
                     }
                   ],
-                  "id": "hzxcb08p"
+                  "id": "y3goleeb"
                 },
                 {
                   "componentName": "TinyFormItem",
@@ -198,17 +199,21 @@
                       "componentName": "TinySelect",
                       "props": {
                         "placeholder": "请选择模块",
-                        "v-model": "state.filters.module",
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "state.filters.module",
+                          "model": true
+                        },
                         "options": {
                           "type": "JSExpression",
                           "value": "state.modules"
                         }
                       },
                       "children": [],
-                      "id": "kuepu6yc"
+                      "id": "g7sbqnft"
                     }
                   ],
-                  "id": "0bqj7ybl"
+                  "id": "caz07g6b"
                 },
                 {
                   "componentName": "TinyFormItem",
@@ -219,17 +224,21 @@
                     {
                       "componentName": "TinyButtonGroup",
                       "props": {
-                        "v-model": "state.category",
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "state.category",
+                          "model": true
+                        },
                         "data": {
                           "type": "JSExpression",
                           "value": "state.categories"
                         }
                       },
                       "children": [],
-                      "id": "durheebb"
+                      "id": "lwb0qf2l"
                     }
                   ],
-                  "id": "99fgya4j"
+                  "id": "ta8d6xus"
                 },
                 {
                   "componentName": "TinyFormItem",
@@ -239,7 +248,7 @@
                       "componentName": "TinyButton",
                       "props": {
                         "type": "primary",
-                        "click": {
+                        "onClick": {
                           "type": "JSExpression",
                           "value": "onSearch"
                         }
@@ -250,16 +259,16 @@
                           "props": {
                             "text": "搜索"
                           },
-                          "id": "1m0b6h33"
+                          "id": "fiygyf9b"
                         }
                       ],
-                      "id": "fa0agu1q"
+                      "id": "acrjkrp2"
                     },
                     {
                       "componentName": "TinyButton",
                       "props": {
                         "style": "margin-left: 8px",
-                        "click": {
+                        "onClick": {
                           "type": "JSExpression",
                           "value": "onReset"
                         }
@@ -270,19 +279,19 @@
                           "props": {
                             "text": "重置"
                           },
-                          "id": "5dt8vdno"
+                          "id": "w2optwrv"
                         }
                       ],
-                      "id": "yslovlkt"
+                      "id": "hkb5xq8q"
                     }
                   ],
-                  "id": "j79jkql2"
+                  "id": "no24uuys"
                 }
               ],
-              "id": "bkmhl0po"
+              "id": "i87ca3b3"
             }
           ],
-          "id": "da1wz8ue"
+          "id": "tjkp78uw"
         },
         {
           "componentName": "TinyRow",
@@ -297,13 +306,13 @@
                 {
                   "componentName": "div",
                   "props": {
-                    "class": "panel"
+                    "className": "panel"
                   },
                   "children": [
                     {
                       "componentName": "h3",
                       "props": {
-                        "class": "panel-title"
+                        "className": "panel-title"
                       },
                       "children": [
                         {
@@ -311,10 +320,10 @@
                           "props": {
                             "text": "快速入口"
                           },
-                          "id": "rdfuwng4"
+                          "id": "5135tk3c"
                         }
                       ],
-                      "id": "6v6plgzv"
+                      "id": "rjy5v72m"
                     },
                     {
                       "componentName": "TinyGrid",
@@ -330,13 +339,13 @@
                         "auto-resize": true
                       },
                       "children": [],
-                      "id": "rxvaqytv"
+                      "id": "xciifp02"
                     }
                   ],
-                  "id": "qzh3gdo9"
+                  "id": "h27vtj8q"
                 }
               ],
-              "id": "xf7auyel"
+              "id": "7565lb42"
             },
             {
               "componentName": "TinyCol",
@@ -347,13 +356,13 @@
                 {
                   "componentName": "div",
                   "props": {
-                    "class": "panel"
+                    "className": "panel"
                   },
                   "children": [
                     {
                       "componentName": "h3",
                       "props": {
-                        "class": "panel-title"
+                        "className": "panel-title"
                       },
                       "children": [
                         {
@@ -361,10 +370,10 @@
                           "props": {
                             "text": "待办事项"
                           },
-                          "id": "tcpy0ssp"
+                          "id": "2vpoheon"
                         }
                       ],
-                      "id": "i4d3uafg"
+                      "id": "45q9o8z0"
                     },
                     {
                       "componentName": "TinyGrid",
@@ -380,20 +389,20 @@
                         "auto-resize": true
                       },
                       "children": [],
-                      "id": "8i4krbvp"
+                      "id": "6o2fqs22"
                     }
                   ],
-                  "id": "pmxmazif"
+                  "id": "e1u7pepk"
                 }
               ],
-              "id": "bebifxkg"
+              "id": "g32ur0yx"
             }
           ],
-          "id": "b2aibhqb"
+          "id": "phzx3kdm"
         }
       ],
-      "id": "bnhx35xa"
+      "id": "1z55g7br"
     }
   ],
-  "id": "hidyyzlo"
+  "id": "6kkb8knu"
 }

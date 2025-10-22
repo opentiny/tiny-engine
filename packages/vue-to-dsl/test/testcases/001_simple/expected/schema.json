@@ -2,122 +2,59 @@
   "componentName": "Page",
   "fileName": "component",
   "meta": {
-    "name": "component",
-    "description": "Page generated from Vue SFC",
-    "generatedAt": "2025-08-19T16:02:26.707Z",
-    "generator": "@opentiny/tiny-engine-vue-to-dsl"
+    "name": "component"
   },
   "state": {
-    "count": 0
+    "switchStatus": true
   },
   "methods": {
-    "increment": {
+    "onClickNew": {
       "type": "JSFunction",
-      "value": "function increment() { state.count.value++ }"
-    },
-    "decrement": {
-      "type": "JSFunction",
-      "value": "function decrement() { state.count.value-- }"
-    },
-    "reset": {
-      "type": "JSFunction",
-      "value": "function reset() { state.count.value = 0 }"
+      "value": "function onClickNew(event) {\n  this.state.switchStatus = !this.state.switchStatus\n}"
     }
   },
   "computed": {},
-  "lifecycle": {},
-  "css": ".simple-counter { text-align: center; padding: 20px; } button { margin: 0 5px; padding: 10px 15px; background: #42b883; color: white; border: none; border-radius: 4px; cursor: pointer; } button:hover { background: #369870; }",
+  "lifecycle": {
+    "setup": {
+      "type": "JSFunction",
+      "value": "function setup({ props, state, watch, onMounted }) {\n  console.log('setup')\n  state.switchStatus = false\n}"
+    }
+  },
+  "css": ".page-base-style {\n  padding: 24px;\n  background: #ffffff;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}",
   "children": [
     {
       "componentName": "div",
-      "props": {
-        "class": "simple-counter"
-      },
+      "props": {},
       "children": [
         {
-          "componentName": "h1",
-          "props": {},
-          "children": [
-            {
-              "componentName": "Text",
-              "props": {
-                "text": "计数器:"
-              },
-              "id": "rd9vuepa"
-            },
-            {
-              "componentName": "Text",
-              "props": {
-                "text": {
-                  "type": "JSExpression",
-                  "value": "count"
-                }
-              },
-              "id": "v25egrti"
-            }
-          ],
-          "id": "7j6tx839"
-        },
-        {
-          "componentName": "button",
+          "componentName": "TinySwitch",
           "props": {
-            "click": {
+            "className": "component-base-style",
+            "modelValue": {
               "type": "JSExpression",
-              "value": "increment"
+              "value": "state.switchStatus",
+              "model": true
             }
           },
-          "children": [
-            {
-              "componentName": "Text",
-              "props": {
-                "text": "增加"
-              },
-              "id": "qyzg99gb"
-            }
-          ],
-          "id": "ucgug5pz"
+          "children": [],
+          "id": "fv6wuu63"
         },
         {
-          "componentName": "button",
+          "componentName": "TinyButton",
           "props": {
-            "click": {
+            "text": "按钮文案",
+            "className": "component-base-style",
+            "onClick": {
               "type": "JSExpression",
-              "value": "decrement"
+              "value": "onClickNew"
             }
           },
-          "children": [
-            {
-              "componentName": "Text",
-              "props": {
-                "text": "减少"
-              },
-              "id": "j7p87lzv"
-            }
-          ],
-          "id": "mahw0wl3"
-        },
-        {
-          "componentName": "button",
-          "props": {
-            "click": {
-              "type": "JSExpression",
-              "value": "reset"
-            }
-          },
-          "children": [
-            {
-              "componentName": "Text",
-              "props": {
-                "text": "重置"
-              },
-              "id": "l2a43rr2"
-            }
-          ],
-          "id": "lfvqe4es"
+          "children": [],
+          "id": "88gmxjxz"
         }
       ],
-      "id": "rgi6bxnv"
+      "id": "ngzpirht"
     }
   ],
-  "id": "dxv478en"
+  "id": "g6s705pv"
 }

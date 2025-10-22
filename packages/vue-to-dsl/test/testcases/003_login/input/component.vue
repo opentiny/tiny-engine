@@ -33,23 +33,23 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue';
+import { reactive } from 'vue'
 
 const state = reactive({
   form: {
     username: '',
     password: ''
   }
-});
+})
 
 function onSubmit() {
-  if (!state.form.username || !state.form.password) return;
-  console.log('login', state.form);
+  if (!state.form.username || !state.form.password) return
+  console.log('login', state.form)
 }
 
 function onReset() {
-  state.form.username = '';
-  state.form.password = '';
+  state.form.username = ''
+  state.form.password = ''
 }
 </script>
 

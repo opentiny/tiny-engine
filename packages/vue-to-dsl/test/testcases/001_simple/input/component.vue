@@ -1,61 +1,49 @@
 <template>
-  <div class="simple-counter">
-    <h1>计数器: {{ count }}</h1>
-    <button @click="increment">增加</button>
-    <button @click="decrement">减少</button>
-    <button @click="reset">重置</button>
+  <div>
+    <tiny-switch v-model="state.switchStatus" class="component-base-style"></tiny-switch>
+    <tiny-button text="按钮文案" class="component-base-style" @click="onClickNew"></tiny-button>
   </div>
 </template>
 
-<script>
-import { reactive, ref } from 'vue'
+<script setup>
+import { Switch as TinySwitch, Button as TinyButton } from '@opentiny/vue'
+import * as vue from 'vue'
+import { defineProps, defineEmits } from 'vue'
+import { I18nInjectionKey } from 'vue-i18n'
 
-export default {
-  name: 'SimpleCounter',
-  setup() {
-    const state = reactive({
-      count: 0
-    })
+const props = defineProps({})
 
-    const increment = () => {
-      state.count.value++
-    }
+const emit = defineEmits([])
+const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
+const wrap = lowcodeWrap(props, { emit })
+wrap({ stores })
 
-    function decrement() {
-      state.count.value--
-    }
+const state = vue.reactive({ switchStatus: true })
+wrap({ state })
 
-    const reset = () => {
-      state.count.value = 0
-    }
+const onClickNew = wrap(function onClickNew(event) {
+  this.state.switchStatus = !this.state.switchStatus
+})
 
-    return {
-      count,
-      increment,
-      decrement,
-      reset
-    }
-  }
-}
+wrap({ onClickNew })
+
+const setup = wrap(function setup({ props, state, watch, onMounted }) {
+  console.log('setup')
+  state.switchStatus = false
+})
+setup({ props, context: { emit }, state, ...vue })
 </script>
-
 <style scoped>
-.simple-counter {
-  text-align: center;
-  padding: 20px;
+.page-base-style {
+  padding: 24px;
+  background: #ffffff;
 }
 
-button {
-  margin: 0 5px;
-  padding: 10px 15px;
-  background: #42b883;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.block-base-style {
+  margin: 16px;
 }
 
-button:hover {
-  background: #369870;
+.component-base-style {
+  margin: 8px;
 }
 </style>
