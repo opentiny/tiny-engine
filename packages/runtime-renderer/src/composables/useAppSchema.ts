@@ -187,7 +187,7 @@ export function useAppSchema() {
   // 根据ID获取页面
   const getPageById = (id: number) => {
     if (!pages.value) return null
-    return pages.value.find((page) => page.meta.id === id)
+    return pages.value.find((page) => page.id === id)
   }
 
   // 获取数据源配置

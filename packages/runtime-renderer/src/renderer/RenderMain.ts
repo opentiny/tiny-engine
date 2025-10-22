@@ -40,11 +40,10 @@ export default defineComponent({
   },
   setup(props: Props) {
     const { getPageById } = useAppSchema()
-    //clearAllPageCSS()
 
     const currentSchema = computed(() => {
       const page = getPageById(props.pageId) // 通过 pageId 获取最新的页面对象
-      const pageContent = page?.meta?.page_content
+      const pageContent = page?.page_content
       if (!pageContent) return null
       return JSON.parse(JSON.stringify(pageContent))
     })
