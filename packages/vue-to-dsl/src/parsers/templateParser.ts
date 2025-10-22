@@ -1,8 +1,22 @@
 import { parse } from '@vue/compiler-dom'
 import { parse as babelParse } from '@babel/parser'
 
+function toPascalCase(input: string) {
+  return input
+    .split(/[-_\s]+/)
+    .filter(Boolean)
+    .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+    .join('')
+}
+
 function getComponentName(tag: string, options: any) {
   if (options.componentMap && options.componentMap[tag]) return options.componentMap[tag]
+  const lower = tag.toLowerCase()
+  // Normalize all tiny-* components to PascalCase TinyXxxYyy
+  if (lower.startsWith('tiny-')) {
+    const rest = lower.replace(/^tiny-/, '')
+    return `Tiny${toPascalCase(rest)}`
+  }
   const htmlTags = [
     'div',
     'span',
@@ -35,8 +49,9 @@ function getComponentName(tag: string, options: any) {
     'aside',
     'main'
   ]
-  if (htmlTags.includes(tag.toLowerCase())) return tag.toLowerCase()
-  return tag.charAt(0).toUpperCase() + tag.slice(1)
+  if (htmlTags.includes(lower)) return lower
+  // Default: convert arbitrary custom elements to PascalCase by hyphen/underscore splitting
+  return toPascalCase(tag)
 }
 
 function parseNodeProps(props: any[], _options: any) {
