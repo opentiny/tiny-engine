@@ -1,10 +1,18 @@
 import { ref, computed, readonly } from 'vue'
-import type { AppSchema, Util, BlockItem, BlockContent, I18nConfig, ComponentMap, PackageConfig } from '../types/schema'
+import type {
+  IAppSchema,
+  Util,
+  BlockItem,
+  BlockContent,
+  I18nConfig,
+  ComponentMap,
+  PackageConfig
+} from '../types/schema'
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
 import { addStyle, getComponents, loadPackageDependencys, initDataSource } from '../app-function'
 
-const appSchema = ref<AppSchema | null>(null)
+const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
 const error = ref<string | null>(null)
 window.TinyLowcodeComponent = {}
@@ -64,23 +72,23 @@ export function useAppSchema() {
   }
 
   // 初始化应用配置
-  const initializeAppConfig = async (schema: AppSchema) => {
-    if (!schema?.data) return
+  const initializeAppConfig = async (schema: IAppSchema) => {
+    if (!schema?.pages) return
 
     // 初始化除tinyVue之外的nativeComponents
-    initializeComponentsMap(schema.data.componentsMap, schema.data.packages)
+    initializeComponentsMap(schema?.componentsMap, schema?.packages)
 
     // 初始化国际化
-    initializeI18n(schema.data.i18n)
+    initializeI18n(schema?.i18n)
 
     // 初始化工具函数
-    await initializeUtils(schema.data.utils)
+    await initializeUtils(schema?.utils)
 
     // 初始化数据源
-    initDataSource(schema.data.dataSource)
+    initDataSource(schema?.dataSource)
 
     // 注入全局CSS
-    injectGlobalCSS(schema.data.css)
+    injectGlobalCSS(schema?.css)
   }
 
   // 拉取完整应用schema
@@ -101,7 +109,15 @@ export function useAppSchema() {
         throw new Error('应用Schema数据无效')
       }
 
-      appSchema.value = data
+      const response1 = await fetch(`/app-center/api/pages/list/${appId}`)
+
+      if (!response.ok) {
+        throw new Error(`加载区块Schema失败: HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const res = await response1.json()
+
+      appSchema.value = { ...data.data, pages: res?.data || [] }
       // 解析并初始化应用级配置
       await initializeAppConfig(appSchema.value!)
     } catch (err) {
@@ -166,8 +182,7 @@ export function useAppSchema() {
 
   // 获取页面列表
   const pages = computed(() => {
-    if (!appSchema.value?.data?.componentsTree) return []
-    return appSchema.value.data.componentsTree
+    return appSchema.value.pages
   })
   // 根据ID获取页面
   const getPageById = (id: number) => {
@@ -177,17 +192,17 @@ export function useAppSchema() {
 
   // 获取数据源配置
   const dataSourceConfig = computed(() => {
-    return appSchema.value?.data?.dataSource || {}
+    return appSchema.value?.dataSource || {}
   })
 
   // 获取全局状态配置
   const globalStates = computed(() => {
-    return appSchema.value?.data?.meta?.globalState || []
+    return appSchema.value?.meta?.globalState || []
   })
 
   // 获取包依赖
   const packages = computed(() => {
-    return appSchema.value?.data?.packages || []
+    return appSchema.value?.packages || []
   })
 
   // 检查应用是否已加载
@@ -196,7 +211,7 @@ export function useAppSchema() {
   })
 
   const i18nConfig = computed(() => {
-    return appSchema.value?.data?.i18n || {}
+    return appSchema.value?.i18n || {}
   })
 
   return {

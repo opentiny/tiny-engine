@@ -1,24 +1,18 @@
 // 应用级Schema类型定义
-export interface AppSchema {
-  data: {
-    bridge: any[]
-    componentsMap: ComponentMap[]
-    componentsTree: PageSchema[]
-    css: string
-    dataSource: DataSourceConfig
-    utils: Util[]
-    packages: PackageConfig[]
-    meta: AppMeta
-    config: AppConfig
-    constants: string
-    i18n: I18nConfig
-    version: string
-  }
-  code: string
-  message: string
-  error: any
-  errMsg: any
-  success: boolean
+export interface IAppSchema {
+  pages: any[]
+  bridge: any[]
+  componentsMap: ComponentMap[]
+  componentsTree: PageSchema[]
+  css: string
+  dataSource: DataSourceConfig
+  utils: Util[]
+  packages: PackageConfig[]
+  meta: AppMeta
+  config: AppConfig
+  constants: string
+  i18n: I18nConfig
+  version: string
 }
 
 // 组件映射表
