@@ -32,7 +32,7 @@
             "className": "component-base-style",
             "modelValue": {
               "type": "JSExpression",
-              "value": "state.switchStatus",
+              "value": "this.state.switchStatus",
               "model": true
             }
           },
@@ -46,7 +46,7 @@
             "className": "component-base-style",
             "onClick": {
               "type": "JSExpression",
-              "value": "onClickNew"
+              "value": "this.onClickNew"
             }
           },
           "children": [],

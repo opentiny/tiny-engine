@@ -81,7 +81,7 @@
                         "placeholder": "请输入用户名",
                         "modelValue": {
                           "type": "JSExpression",
-                          "value": "state.form.username",
+                          "value": "this.state.form.username",
                           "model": true
                         }
                       },
@@ -104,7 +104,7 @@
                         "placeholder": "请输入密码",
                         "modelValue": {
                           "type": "JSExpression",
-                          "value": "state.form.password",
+                          "value": "this.state.form.password",
                           "model": true
                         }
                       },
@@ -137,7 +137,7 @@
                                 "style": "width: 100%",
                                 "onClick": {
                                   "type": "JSExpression",
-                                  "value": "onSubmit"
+                                  "value": "this.onSubmit"
                                 }
                               },
                               "children": [
@@ -167,7 +167,7 @@
                                 "style": "width: 100%",
                                 "onClick": {
                                   "type": "JSExpression",
-                                  "value": "onReset"
+                                  "value": "this.onReset"
                                 }
                               },
                               "children": [

@@ -126,11 +126,11 @@
             "horizontal": true,
             "active": {
               "type": "JSExpression",
-              "value": "state.activeStep"
+              "value": "this.state.activeStep"
             },
             "data": {
               "type": "JSExpression",
-              "value": "state.steps"
+              "value": "this.state.steps"
             }
           },
           "children": [],
@@ -179,7 +179,7 @@
                         "placeholder": "请输入关键词",
                         "modelValue": {
                           "type": "JSExpression",
-                          "value": "state.filters.keyword",
+                          "value": "this.state.filters.keyword",
                           "model": true
                         }
                       },
@@ -201,12 +201,12 @@
                         "placeholder": "请选择模块",
                         "modelValue": {
                           "type": "JSExpression",
-                          "value": "state.filters.module",
+                          "value": "this.state.filters.module",
                           "model": true
                         },
                         "options": {
                           "type": "JSExpression",
-                          "value": "state.modules"
+                          "value": "this.state.modules"
                         }
                       },
                       "children": [],
@@ -226,12 +226,12 @@
                       "props": {
                         "modelValue": {
                           "type": "JSExpression",
-                          "value": "state.category",
+                          "value": "this.state.category",
                           "model": true
                         },
                         "data": {
                           "type": "JSExpression",
-                          "value": "state.categories"
+                          "value": "this.state.categories"
                         }
                       },
                       "children": [],
@@ -250,7 +250,7 @@
                         "type": "primary",
                         "onClick": {
                           "type": "JSExpression",
-                          "value": "onSearch"
+                          "value": "this.onSearch"
                         }
                       },
                       "children": [
@@ -270,7 +270,7 @@
                         "style": "margin-left: 8px",
                         "onClick": {
                           "type": "JSExpression",
-                          "value": "onReset"
+                          "value": "this.onReset"
                         }
                       },
                       "children": [
@@ -330,11 +330,11 @@
                       "props": {
                         "columns": {
                           "type": "JSExpression",
-                          "value": "state.columns"
+                          "value": "this.state.columns"
                         },
                         "data": {
                           "type": "JSExpression",
-                          "value": "state.quickLinks"
+                          "value": "this.state.quickLinks"
                         },
                         "auto-resize": true
                       },
@@ -380,11 +380,11 @@
                       "props": {
                         "columns": {
                           "type": "JSExpression",
-                          "value": "state.todoCols"
+                          "value": "this.state.todoCols"
                         },
                         "data": {
                           "type": "JSExpression",
-                          "value": "state.todos"
+                          "value": "this.state.todos"
                         },
                         "auto-resize": true
                       },
