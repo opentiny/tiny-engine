@@ -10,7 +10,8 @@ import type {
 } from '../types/schema'
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import { addStyle, getComponents, loadPackageDependencys, initDataSource } from '../app-function'
+import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
+import bundle from '../../../../designer-demo/public/mock/bundle.json'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -31,18 +32,33 @@ export function useAppSchema() {
       npmrc: component.npmrc
     }))
 
-    await loadPackageDependencys(packages)
+    const importStyleUrls = initImportMap(packages)
 
-    // 获取包依赖中的样式
-    const styles = packages.map((pkg) => pkg.css).filter((css) => css) as string[]
+    await loadPackageDependencys(packages)
 
     try {
       // 并行加载所有组件依赖和包资源，与 runner.ts 中的机制保持一致
-      await Promise.all([...componentsDeps.map(getComponents), ...styles.map((src) => addStyle(src))])
+      await Promise.all([...componentsDeps.map(getComponents), ...importStyleUrls.map((src) => addStyle(src))])
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('组件或资源加载失败:', error)
     }
+  }
+
+  const mergePackages = (...packageGroups: PackageConfig[][]) => {
+    const map = new Map<string, PackageConfig>()
+
+    packageGroups
+      .flat()
+      .filter(Boolean)
+      .forEach((pkg) => {
+        const key = pkg.package || pkg.name
+        if (key) {
+          map.set(key, pkg)
+        }
+      })
+
+    return Array.from(map.values())
   }
 
   // 初始化工具函数
@@ -75,8 +91,10 @@ export function useAppSchema() {
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
 
+    const packages = mergePackages(bundle.data.materials.packages || [], schema.packages || [])
+
     // 初始化除tinyVue之外的nativeComponents
-    initializeComponentsMap(schema?.componentsMap, schema?.packages)
+    initializeComponentsMap(schema.componentsMap, packages)
 
     // 初始化国际化
     initializeI18n(schema?.i18n)

@@ -186,8 +186,8 @@ export interface PackageConfig {
   name: string
   version: string
   script: string
-  css: string
-  others: any
+  css?: string
+  others?: any
   package: string
 }
 
