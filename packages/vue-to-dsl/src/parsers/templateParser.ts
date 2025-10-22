@@ -58,7 +58,8 @@ function parseNodeProps(props: any[], _options: any) {
   const result: Record<string, any> = {}
   props.forEach((prop: any) => {
     if (prop.type === 6) {
-      result[prop.name] = prop.value ? prop.value.content : true
+      const name = prop.name === 'class' ? 'className' : prop.name
+      result[name] = prop.value ? prop.value.content : true
     }
   })
   return result
@@ -158,13 +159,15 @@ function parseDirectives(node: any, schema: any, _options: any) {
         schema.props['modelValue'] = { type: 'JSExpression', value: String(prop.exp.content), model: true }
         break
       case 'on': {
-        const eventName = prop.arg ? prop.arg.content : 'click'
+        const rawEvent = prop.arg ? prop.arg.content : 'click'
+        const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
         schema.props[eventName] = { type: 'JSExpression', value: val }
         break
       }
       case 'bind': {
-        const attrName = prop.arg ? prop.arg.content : 'value'
+        let attrName = prop.arg ? prop.arg.content : 'value'
+        if (attrName === 'class') attrName = 'className'
         if (prop.exp && prop.exp.content !== null) {
           const raw = String(prop.exp.content)
           const parsed = parseLiteralExpression(raw)
