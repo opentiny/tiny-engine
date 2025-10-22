@@ -155,7 +155,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
         schema.props['v-show'] = prop.exp ? prop.exp.content : 'true'
         break
       case 'model':
-        schema.props['v-model'] = prop.exp ? prop.exp.content : ''
+        schema.props['modelValue'] = { type: 'JSExpression', value: String(prop.exp.content), model: true }
         break
       case 'on': {
         const eventName = prop.arg ? prop.arg.content : 'click'
