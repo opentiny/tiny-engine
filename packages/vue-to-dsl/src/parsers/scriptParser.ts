@@ -24,7 +24,8 @@ const LIFECYCLE_HOOKS = [
   'created',
   'beforeCreate',
   'destroyed',
-  'beforeDestroy'
+  'beforeDestroy',
+  'setup'
 ]
 
 function isVueReactiveCall(node: any, apiName: string) {
@@ -117,17 +118,55 @@ function functionExpressionToNamedFunctionString(
   return `${asyncStr}function ${name}(${params}) ${body}`
 }
 
+// ---- setup 专属逻辑的小分支封装（共享生命周期处理主干）----
+const isSetupName = (name: string) => name === 'setup'
+
+function setLifecycleEntry(result: any, name: string, code: string, opts: { noOverride?: boolean } = {}) {
+  if (opts.noOverride && result.lifecycle[name]) return
+  result.lifecycle[name] = { type: 'lifecycle', value: code || (name ? `function ${name}(){}` : 'function() {}') }
+}
+
+function setMethodEntry(result: any, name: string, code: string) {
+  result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
+}
+
+function routeFunctionLikeByName(result: any, name: string, code: string) {
+  if (isSetupName(name)) setLifecycleEntry(result, name, code)
+  else setMethodEntry(result, name, code)
+}
+
 // Helpers to reduce duplication when handling variable declarators in <script setup>
 function addMethodFromFunctionLike(name: string, init: any, result: any, source: string): boolean {
+  // Direct function-like: foo = () => {} | function() {}
   if (t.isArrowFunctionExpression(init)) {
     const code = arrowToFunctionString(name, init, source)
-    result.methods[name] = { type: 'function', value: code }
+    routeFunctionLikeByName(result, name, code)
     return true
   }
   if (t.isFunctionExpression(init)) {
     const code = getSource(init, source)
-    result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
+    routeFunctionLikeByName(result, name, code)
     return true
+  }
+
+  // Wrapped function-like by helper: foo = wrap(() => {}) | wrap(function() {})
+  // Only treat known wrapper identifier 'wrap' as method binder to avoid misclassifying calls like computed(() => {}).
+  if (t.isCallExpression(init) && t.isIdentifier(init.callee) && init.callee.name === 'wrap') {
+    const fnArg = init.arguments.find(
+      (arg: any) => t.isArrowFunctionExpression(arg) || t.isFunctionExpression(arg)
+    ) as any
+    if (fnArg) {
+      if (t.isArrowFunctionExpression(fnArg)) {
+        const code = arrowToFunctionString(name, fnArg, source)
+        routeFunctionLikeByName(result, name, code)
+        return true
+      }
+      if (t.isFunctionExpression(fnArg)) {
+        const code = functionExpressionToNamedFunctionString(name, fnArg, source)
+        routeFunctionLikeByName(result, name, code)
+        return true
+      }
+    }
   }
   return false
 }
@@ -203,7 +242,7 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
       const name = statement.id!.name
       const fnCode = getSource(statement, source)
       functionBodies[name] = fnCode
-      result.methods[name] = { type: 'function', value: fnCode || `function ${name}(){}` }
+      routeFunctionLikeByName(result, name, fnCode)
     } else if (t.isExpressionStatement(statement) && t.isCallExpression(statement.expression)) {
       const call = statement.expression
       if (t.isIdentifier(call.callee) && isLifecycleHook(call.callee.name)) {
@@ -214,7 +253,7 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
           else if (t.isFunctionExpression(cb))
             cbCode = functionExpressionToNamedFunctionString(call.callee.name, cb, source)
         }
-        result.lifecycle[call.callee.name] = { type: 'lifecycle', value: cbCode }
+        setLifecycleEntry(result, call.callee.name, cbCode)
       }
     }
 
@@ -315,28 +354,44 @@ function parseOptionsObject(objectExpression: any, result: any, source: string) 
           result.computed = parseComputedSimple(prop.value, source)
           break
         case 'setup':
+          // 解析 setup 函数体提取内部方法/状态
           parseSetupFunction(prop, result, source)
+          // 同时将 setup 作为生命周期输出
+          {
+            const val: any = (prop as any).value
+            if (t.isFunctionExpression(val)) {
+              const code = functionExpressionToNamedFunctionString('setup', val, source)
+              setLifecycleEntry(result, 'setup', code)
+            } else if (t.isArrowFunctionExpression(val)) {
+              const code = arrowToFunctionString('setup', val, source)
+              setLifecycleEntry(result, 'setup', code)
+            }
+          }
           break
         default:
           if (isLifecycleHook(key)) {
             const val: any = (prop as any).value
             if (t.isFunctionExpression(val)) {
               const code = functionExpressionToNamedFunctionString(key, val, source)
-              result.lifecycle[key] = { type: 'lifecycle', value: code || 'function() {}' }
+              setLifecycleEntry(result, key, code || 'function() {}')
             } else if (t.isArrowFunctionExpression(val)) {
               const code = arrowToFunctionString(key, val, source)
-              result.lifecycle[key] = { type: 'lifecycle', value: code }
+              setLifecycleEntry(result, key, code)
             } else {
-              result.lifecycle[key] = { type: 'lifecycle', value: 'function() { /* lifecycle hook */ }' }
+              setLifecycleEntry(result, key, 'function() { /* lifecycle hook */ }')
             }
           }
       }
     } else if (t.isObjectMethod(prop) && t.isIdentifier(prop.key)) {
       const key = prop.key.name
-      if (key === 'setup') parseSetupMethod(prop, result, source)
-      else if (isLifecycleHook(key)) {
+      if (key === 'setup') {
+        // 输出 setup 生命周期，并解析其函数体
+        const code = functionExpressionToNamedFunctionString('setup', prop, source)
+        setLifecycleEntry(result, 'setup', code)
+        parseSetupMethod(prop, result, source)
+      } else if (isLifecycleHook(key)) {
         const code = functionExpressionToNamedFunctionString(key, prop, source)
-        result.lifecycle[key] = { type: 'lifecycle', value: code }
+        setLifecycleEntry(result, key, code)
       }
     }
   })
@@ -369,20 +424,26 @@ function parseSetupScript(ast: any, result: any, source: string) {
     FunctionDeclaration(path: any) {
       const name = path.node.id.name
       const code = getSource(path.node, source)
-      result.methods[name] = { type: 'function', value: code || `function ${name}(){}` }
+      routeFunctionLikeByName(result, name, code)
     },
     CallExpression(path: any) {
-      if (t.isIdentifier(path.node.callee)) {
-        const name = path.node.callee.name
-        if (isLifecycleHook(name)) {
-          const cb = path.node.arguments && (path.node.arguments[0] as any)
-          let cbCode = 'function() { /* lifecycle hook */ }'
-          if (cb) {
-            if (t.isArrowFunctionExpression(cb)) cbCode = arrowToFunctionString(name, cb, source)
-            else if (t.isFunctionExpression(cb)) cbCode = functionExpressionToNamedFunctionString(name, cb, source)
-          }
-          result.lifecycle[name] = { type: 'lifecycle', value: cbCode }
+      const callee = path.node.callee
+      let hookName: string | null = null
+      if (t.isIdentifier(callee)) hookName = callee.name
+      else if (t.isMemberExpression(callee) && t.isIdentifier(callee.property)) hookName = callee.property.name
+
+      if (hookName && isLifecycleHook(hookName)) {
+        // 避免 obj.setup() 这类成员调用被误判为生命周期
+        if (hookName === 'setup' && !t.isIdentifier(callee)) return
+        const cb = path.node.arguments && (path.node.arguments[0] as any)
+        let cbCode = 'function() { /* lifecycle hook */ }'
+        if (cb) {
+          if (t.isArrowFunctionExpression(cb)) cbCode = arrowToFunctionString(hookName, cb, source)
+          else if (t.isFunctionExpression(cb)) cbCode = functionExpressionToNamedFunctionString(hookName, cb, source)
         }
+        // 若已捕获 setup 的函数体，则不要被调用形式覆盖
+        if (hookName === 'setup') setLifecycleEntry(result, hookName, cbCode, { noOverride: true })
+        else setLifecycleEntry(result, hookName, cbCode)
       }
     }
   })
