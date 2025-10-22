@@ -11,11 +11,11 @@ export function withPageRenderer(WrappedComponent: any) {
       }
     },
     setup(props) {
+      const key = `data-te-page-${props.pageId}`
       return () => {
         return h(WrappedComponent, {
           pageId: props.pageId,
-          // ref: pageInstance,
-          key: props.pageId
+          cssScopeId: key
         })
       }
     }

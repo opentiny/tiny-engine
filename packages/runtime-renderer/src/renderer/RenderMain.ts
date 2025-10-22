@@ -23,6 +23,7 @@ import { getDataSource, getUtilsAll } from '../app-function'
 
 interface Props {
   pageId: number
+  cssScopeId: string
 }
 
 export default defineComponent({
@@ -31,10 +32,15 @@ export default defineComponent({
     pageId: {
       type: Number,
       default: 0
+    },
+    cssScopeId: {
+      type: String,
+      default: null
     }
   },
   setup(props: Props) {
     const { getPageById } = useAppSchema()
+    //clearAllPageCSS()
 
     const currentSchema = computed(() => {
       const page = getPageById(props.pageId) // 通过 pageId 获取最新的页面对象
@@ -77,16 +83,19 @@ export default defineComponent({
 
       const newSchema = JSON.parse(JSON.stringify(data))
 
-      const context = {
+      const cssScopeId = props.cssScopeId || `data-te-page-${String(props.pageId) || 'render-main'}`
+      const contextData = {
         state,
         route,
         router,
         stores,
         dataSourceMap: getDataSource(),
-        utils: getUtilsAll()
+        utils: getUtilsAll(),
+        cssScopeId,
+        getCssScopeId: () => cssScopeId
       }
       // 此处提升很重要，因为setState、initProps也会触发画布重新渲染，所以需要提升上下文环境的设置时间
-      setContext(context, true)
+      setContext(contextData, true)
 
       // 设置方法调用上下文
       setMethods(newSchema.methods, true)
@@ -94,7 +103,7 @@ export default defineComponent({
       // 这里setState（会触发画布渲染），是因为状态管理里面的变量会用到props、utils、bridge、stores、methods
       setState(newSchema.state, true)
       await nextTick()
-      setPageCss(data.css || '', String(props.pageId) || 'render-main')
+      setPageCss(data.css || '', cssScopeId)
 
       Object.assign(pageSchema, newSchema)
     }

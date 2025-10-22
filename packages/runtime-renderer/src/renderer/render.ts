@@ -28,7 +28,7 @@ import {
 import { Notify } from '@opentiny/vue'
 import { isHTMLTag, hyphenate } from '@vue/shared'
 import TinyVue from '@opentiny/vue'
-import { getBlockContext } from './page-function/blockContext'
+import { getBlockContext, getBlockCssScopeId } from './page-function/blockContext'
 import {
   CanvasRow,
   CanvasCol,
@@ -115,9 +115,17 @@ export const getComponent = (name) => {
         // 递归渲染区块的 children
         const blockContent = blockSchema.schema
         const context = this.context
+        const cssScopeId = getBlockCssScopeId(blockSchema.schema.fileName)
+        // eslint-disable-next-line @typescript-eslint/no-use-before-define
+        const children = renderGroup(blockContent.children || [], { cssScopeId }, context, renderComponent)
 
-        // eslint-disable-next-line
-        return renderGroup(blockContent.children, {}, context, renderComponent)
+        return h(
+          'div',
+          {
+            [cssScopeId]: ''
+          },
+          children
+        )
       }
     })
   }
@@ -223,7 +231,7 @@ const _checkGroup = (componentName) => configure[componentName]?.nestingRule?.ch
 const directChildrenHasTemplate = (children) => children.some((child) => child.componentName === 'Template')
 
 const getBindProps = (schema, scope, context) => {
-  const { componentName } = schema
+  const { componentName, componentType } = schema
 
   if (componentName === 'CanvasPlaceholder') {
     return {}
@@ -231,6 +239,11 @@ const getBindProps = (schema, scope, context) => {
 
   const bindProps = {
     ...parseData(schema.props, scope, context)
+  }
+
+  const cssScopeId = scope?.cssScopeId || context?.cssScopeId || context?.getCssScopeId?.()
+  if (cssScopeId && componentType !== 'Block') {
+    bindProps[cssScopeId] = ''
   }
 
   if (Mapper[componentName]) {
@@ -308,7 +321,6 @@ const renderGroup = (children, scope, context, renderComponent) => {
     return loopList?.length ? loopList.map(renderElement) : renderElement(undefined, 0)
   })
 }
-
 const getChildren = (schema, mergeScope, context, renderComponent) => {
   const { componentName, children } = schema
   const renderChildren = injectPlaceHolder(componentName, children)

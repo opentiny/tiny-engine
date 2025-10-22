@@ -22,7 +22,9 @@
     "axios": "^1.10.0",
     "axios-mock-adapter": "^1.19.0",
     "pinia": "^2.1.0",
-    "vue-router": "^4.2.0"
+    "vue-router": "^4.2.0",
+    "postcss": "^8.4.31",
+    "postcss-selector-parser": "^7.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",

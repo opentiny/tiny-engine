@@ -10,5 +10,5 @@
  *
  */
 
-export * from './css-handler'
+export * from './css'
 export * from './state'

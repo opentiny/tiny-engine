@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * Copyright (c) 2023 - present TinyEngine Authors.
  * Copyright (c) 2023 - present Huawei Cloud Computing Technologies Co., Ltd.
@@ -11,7 +12,7 @@
  */
 
 import { nextTick, inject } from 'vue'
-import { getCSSHandler } from './css-handler.ts'
+import { getCSSHandler } from './css.ts'
 import { parseData } from '../parser/parser.ts'
 import { useState } from './state.ts'
 import useContext from '../useContext.ts'
@@ -19,9 +20,21 @@ import type { PageContent as Schema } from '../../types/schema.ts'
 import dataSourceMap from '../../app-function/dataSource.js'
 import { getUtilsAll } from '../../app-function/utils.ts'
 
+const invalidateCharRE = /[^a-z0-9-]/g
+
+export const getBlockCssScopeId = (fileName?: string) => {
+  const normalized = String(fileName || 'unknown')
+    .toLowerCase()
+    .replace(invalidateCharRE, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+  return `data-te-page-block-${normalized || 'unknown'}`
+}
+
 // 创建 context 实例的工厂函数
 export const createBlockContext = () => {
-  const { context, setContext, getContext } = useContext()
+  const contextApi = useContext() as any
+  const { context, setContext, getContext } = contextApi
   const stores = inject('stores')
   const methods: Record<string, any> = {}
   const { state, setState } = useState({ getContext })
@@ -46,11 +59,14 @@ export const createBlockContext = () => {
 
     const newSchema = JSON.parse(JSON.stringify(data))
 
+    const cssScopeId = getBlockCssScopeId(data.fileName)
     const contextData = {
       state,
       stores,
       dataSourceMap,
-      utils: getUtilsAll()
+      utils: getUtilsAll(),
+      cssScopeId,
+      getCssScopeId: () => cssScopeId
     }
     setContext(contextData, true)
     setMethods(newSchema.methods, true)
@@ -58,8 +74,8 @@ export const createBlockContext = () => {
     await nextTick()
 
     const cssHandler = getCSSHandler({ enableScoped: true })
-    cssHandler.setPageCss(data.css || '', `block-${data.fileName || 'unknown'}`)
-
+    cssHandler.setPageCss(data.css || '', cssScopeId)
+    //console.log('setPageCss', data.css)
     return context
   }
 
@@ -70,7 +86,7 @@ export const createBlockContext = () => {
 }
 
 // 暂时不写成异步函数形式，方便后续调用
-export const getBlockContext = (schema: Schema) => {
+export const getBlockContext = (schema: Schema): Record<string, any> => {
   const blockContext = createBlockContext()
   blockContext.setSchema(schema)
   return blockContext.getContext()
