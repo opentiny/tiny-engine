@@ -158,9 +158,7 @@ export function generateAppSchema(pageSchemas: any[], options: any = {}) {
   return {
     meta: {
       name: options.name || 'Generated App',
-      description: options.description || 'App generated from Vue SFC files',
-      generatedAt: new Date().toISOString(),
-      generator: '@opentiny/tiny-engine-vue-to-dsl'
+      description: options.description || 'App generated from Vue SFC files'
     },
     i18n: options.i18n || { en_US: {}, zh_CN: {} },
     utils: options.utils || [],
