@@ -35,7 +35,7 @@
  * @property {Object} state - 状态
  * @property {Object} methods - 方法
  * @property {Object} computed - 计算属性
- * @property {Object} lifecycle - 生命周期
+ * @property {Object} lifeCycles - 生命周期
  * @property {Array} props - 属性
  * @property {string} css - 样式
  * @property {Array} children - 子组件
@@ -57,7 +57,7 @@
  * @property {Object} state - 状态
  * @property {Object} methods - 方法
  * @property {Object} computed - 计算属性
- * @property {Object} lifecycle - 生命周期
+ * @property {Object} lifeCycles - 生命周期
  * @property {Array} imports - 导入项
  * @property {Array} props - 属性
  * @property {Array} emits - 事件

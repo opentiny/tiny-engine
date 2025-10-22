@@ -41,7 +41,7 @@ declare module '@opentiny/tiny-engine-vue-to-dsl' {
     state?: Record<string, any>
     methods?: Record<string, any>
     computed?: Record<string, any>
-    lifecycle?: Record<string, any>
+    lifeCycles?: Record<string, any>
     imports?: ImportInfo[]
     props?: PropInfo[]
     emits?: string[]
@@ -74,7 +74,7 @@ declare module '@opentiny/tiny-engine-vue-to-dsl' {
     state?: Record<string, any>
     methods?: Record<string, any>
     computed?: Record<string, any>
-    lifecycle?: Record<string, any>
+    lifeCycles?: Record<string, any>
     props?: PropInfo[]
     css?: string
     children?: TemplateSchema[]

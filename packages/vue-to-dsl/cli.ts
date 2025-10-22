@@ -79,7 +79,7 @@ function getSchemaStats(schema: any) {
     stateCount: schema.state ? Object.keys(schema.state).length : 0,
     methodCount: schema.methods ? Object.keys(schema.methods).length : 0,
     computedCount: schema.computed ? Object.keys(schema.computed).length : 0,
-    lifecycleCount: schema.lifecycle ? Object.keys(schema.lifecycle).length : 0,
+    lifecycleCount: schema.lifeCycles ? Object.keys(schema.lifeCycles).length : 0,
     childrenCount: schema.children ? schema.children.length : 0,
     cssLength: schema.css ? schema.css.length : 0
   }

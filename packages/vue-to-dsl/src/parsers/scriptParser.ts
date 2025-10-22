@@ -122,8 +122,8 @@ function functionExpressionToNamedFunctionString(
 const isSetupName = (name: string) => name === 'setup'
 
 function setLifecycleEntry(result: any, name: string, code: string, opts: { noOverride?: boolean } = {}) {
-  if (opts.noOverride && result.lifecycle[name]) return
-  result.lifecycle[name] = { type: 'lifecycle', value: code || (name ? `function ${name}(){}` : 'function() {}') }
+  if (opts.noOverride && result.lifeCycles[name]) return
+  result.lifeCycles[name] = { type: 'lifecycle', value: code || (name ? `function ${name}(){}` : 'function() {}') }
 }
 
 function setMethodEntry(result: any, name: string, code: string) {
@@ -467,7 +467,7 @@ export function parseScript(script: string, options: any = {}) {
       state: {} as any,
       methods: {} as any,
       computed: {} as any,
-      lifecycle: {} as any
+      lifeCycles: {} as any
     }
     parseImports(ast, result)
     if (options.isSetup) parseSetupScript(ast, result, script)
@@ -481,7 +481,7 @@ export function parseScript(script: string, options: any = {}) {
       state: {},
       methods: {},
       computed: {},
-      lifecycle: {},
+      lifeCycles: {},
       error: error.message
     }
   }

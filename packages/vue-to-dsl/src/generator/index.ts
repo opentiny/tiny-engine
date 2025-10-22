@@ -70,7 +70,7 @@ function transformComputed(computed: Record<string, any>) {
   return result
 }
 
-function transformLifecycle(lifecycle: Record<string, any>) {
+function transformLifeCycles(lifecycle: Record<string, any>) {
   const result: Record<string, any> = {}
   Object.keys(lifecycle).forEach((key) => {
     const lifecycleItem = lifecycle[key]
@@ -142,7 +142,7 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
     if (scriptSchema.state) schema.state = transformState(scriptSchema.state)
     if (scriptSchema.methods) schema.methods = transformMethods(scriptSchema.methods)
     if (scriptSchema.computed) schema.computed = transformComputed(scriptSchema.computed)
-    if (scriptSchema.lifecycle) schema.lifecycle = transformLifecycle(scriptSchema.lifecycle)
+    if (scriptSchema.lifeCycles) schema.lifeCycles = transformLifeCycles(scriptSchema.lifeCycles)
     if (scriptSchema.props && scriptSchema.props.length > 0) schema.props = transformProps(scriptSchema.props)
   }
   if (styleSchema && styleSchema.css) schema.css = styleSchema.css
