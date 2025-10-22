@@ -39,6 +39,24 @@ describe('VueToDslConverter testcases', () => {
         return val
       }
 
+      // helper: normalize line endings by removing carriage returns to avoid Windows/Linux diffs
+      const normalizeCR = (val) => {
+        if (Array.isArray(val)) {
+          return val.map((v) => normalizeCR(v))
+        }
+        if (val && typeof val === 'object') {
+          const out = {}
+          Object.keys(val).forEach((k) => {
+            out[k] = normalizeCR(val[k])
+          })
+          return out
+        }
+        if (typeof val === 'string') {
+          return val.replace(/\r/g, '')
+        }
+        return val
+      }
+
       // helper: expect actual to be a superset of expected (subset match)
       const expectSubset = (actual, exp) => {
         if (Array.isArray(exp)) {
@@ -69,8 +87,11 @@ describe('VueToDslConverter testcases', () => {
         expect(result.schema).toBeDefined()
         const actualClean = deepClean(result.schema)
         const expectedClean = deepClean(expected)
+        // Normalize CR to avoid Windows/Linux line ending diffs
+        const actualNorm = normalizeCR(actualClean)
+        const expectedNorm = normalizeCR(expectedClean)
         // 进行部分匹配断言（忽略 meta/id 且仅要求包含期望结构）
-        expectSubset(actualClean, expectedClean)
+        expectSubset(actualNorm, expectedNorm)
       }
     })
   })
