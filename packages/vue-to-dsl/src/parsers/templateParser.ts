@@ -1,6 +1,18 @@
 import { parse } from '@vue/compiler-dom'
 import { parse as babelParse } from '@babel/parser'
 
+function ensureThisPrefix(exp: string) {
+  const v = String(exp || '').trim()
+  if (!v) return v
+  if (v.startsWith('this.')) return v
+  // Only prefix when expression starts with an identifier (not literals/objects/arrays/parens/etc.)
+  // and avoid prefixing keywords like function/async/new
+  if (/^[A-Za-z_$]/.test(v) && !/^(function|async|new)\b/.test(v)) {
+    return `this.${v}`
+  }
+  return v
+}
+
 function toPascalCase(input: string) {
   return input
     .split(/[-_\s]+/)
@@ -148,21 +160,24 @@ function parseDirectives(node: any, schema: any, _options: any) {
           const match =
             exp.match(/^[^]*?(?:\)|\S)\s+(?:in|of)\s+([^]+)$/) || exp.match(/^(?:[^]+?)\s+(?:in|of)\s+([^]+)$/)
           const src = (match ? match[1] : exp).trim()
-          const ensureThis = (s: string) => (s.startsWith('this.') ? s : `this.${s}`)
-          schema.loop = { type: 'JSExpression', value: ensureThis(src) }
+          schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src) }
         }
         break
       case 'show':
         schema.props['v-show'] = prop.exp ? prop.exp.content : 'true'
         break
       case 'model':
-        schema.props['modelValue'] = { type: 'JSExpression', value: String(prop.exp.content), model: true }
+        schema.props['modelValue'] = {
+          type: 'JSExpression',
+          value: ensureThisPrefix(String(prop.exp.content)),
+          model: true
+        }
         break
       case 'on': {
         const rawEvent = prop.arg ? prop.arg.content : 'click'
         const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
-        schema.props[eventName] = { type: 'JSExpression', value: val }
+        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val) }
         break
       }
       case 'bind': {
@@ -174,7 +189,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
           if (parsed.ok) {
             schema.props[`${attrName}`] = parsed.value
           } else {
-            schema.props[`${attrName}`] = { type: 'JSExpression', value: raw }
+            schema.props[`${attrName}`] = { type: 'JSExpression', value: ensureThisPrefix(raw) }
           }
         } else {
           schema.props[`${attrName}`] = ''
@@ -200,7 +215,12 @@ function parseTextNode(node: any, _options: any) {
 function parseInterpolationNode(node: any, _options: any) {
   return {
     componentName: 'Text',
-    props: { text: { type: 'JSExpression', value: node.content ? node.content.content : '' } }
+    props: {
+      text: {
+        type: 'JSExpression',
+        value: ensureThisPrefix(node.content ? node.content.content : '')
+      }
+    }
   }
 }
 
