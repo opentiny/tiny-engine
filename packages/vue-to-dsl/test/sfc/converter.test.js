@@ -76,7 +76,7 @@ export default {
     expect(result.schema).toBeDefined()
     expect(result.schema.state).toBeDefined()
     expect(result.schema.methods).toBeDefined()
-    expect(result.schema.lifecycle).toBeDefined()
+    expect(result.schema.lifeCycles).toBeDefined()
   })
 
   it('should parse <script setup> reactive/computed/lifecycle', async () => {
@@ -99,7 +99,7 @@ onMounted(() => { /* mounted */ })
     expect(result.errors).toHaveLength(0)
     expect(result.schema.state.count).toBeDefined()
     // lifecycle hook stored with key 'onMounted'
-    expect(result.schema.lifecycle.onMounted).toBeDefined()
+    expect(result.schema.lifeCycles.onMounted).toBeDefined()
     expect(result.schema.methods.inc).toBeDefined()
   })
 })

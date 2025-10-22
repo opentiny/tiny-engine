@@ -14,7 +14,7 @@
     }
   },
   "computed": {},
-  "lifecycle": {
+  "lifeCycles": {
     "setup": {
       "type": "JSFunction",
       "value": "function setup({ props, state, watch, onMounted }) {\n  console.log('setup')\n  state.switchStatus = false\n}"

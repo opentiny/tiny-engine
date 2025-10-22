@@ -17,7 +17,7 @@
     }
   },
   "computed": {},
-  "lifecycle": {},
+  "lifeCycles": {},
   "css": ".page-base-style {\n  padding: 24px;\n  background: #ffffff;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}",
   "children": [
     {

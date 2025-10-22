@@ -9,7 +9,7 @@
   },
   "methods": {},
   "computed": {},
-  "lifecycle": {},
+  "lifeCycles": {},
   "css": "body {\n  background-color: #eef0f5;\n  margin-bottom: 80px;\n}",
   "children": [
     {

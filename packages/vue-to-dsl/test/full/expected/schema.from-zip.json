@@ -800,7 +800,7 @@
       "state": {},
       "methods": {},
       "computed": {},
-      "lifecycle": {},
+      "lifeCycles": {},
       "children": [
         {
           "componentName": "div",
@@ -849,7 +849,7 @@
       "state": {},
       "methods": {},
       "computed": {},
-      "lifecycle": {},
+      "lifeCycles": {},
       "children": [
         {
           "componentName": "div",
@@ -968,7 +968,7 @@
       "state": {},
       "methods": {},
       "computed": {},
-      "lifecycle": {},
+      "lifeCycles": {},
       "css": ".page-base-style { padding: 24px; background: #ffffff; } .block-base-style { margin: 16px; } .component-base-style { margin: 8px; }",
       "children": [
         {
@@ -1075,7 +1075,7 @@
       },
       "methods": {},
       "computed": {},
-      "lifecycle": {},
+      "lifeCycles": {},
       "css": "body { background-color: #eef0f5; margin-bottom: 80px; }",
       "children": [
         {

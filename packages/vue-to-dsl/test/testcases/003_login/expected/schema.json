@@ -21,7 +21,7 @@
     }
   },
   "computed": {},
-  "lifecycle": {},
+  "lifeCycles": {},
   "css": ".login-page {\n  min-height: 100vh;\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  padding: 24px;\n  background: linear-gradient(135deg, #f5f7fa 0%, #e9eff7 100%);\n}\n\n.login-card {\n  width: 420px;\n  background: #fff;\n  border: 1px solid #eef0f5;\n  border-radius: 12px;\n  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);\n  padding: 24px 24px 16px;\n}\n\n.login-header {\n  text-align: center;\n  margin-bottom: 12px;\n}\n\n.login-title {\n  margin: 0;\n  font-size: 22px;\n  color: #1f2329;\n}\n\n.login-subtitle {\n  margin: 6px 0 0;\n  color: #6b7280;\n  font-size: 12px;\n}\n\n.login-extra {\n  display: flex;\n  justify-content: space-between;\n  font-size: 12px;\n}\n\n.link {\n  color: #344899;\n  text-decoration: none;\n}\n\n.link:hover {\n  text-decoration: underline;\n}",
   "children": [
     {
