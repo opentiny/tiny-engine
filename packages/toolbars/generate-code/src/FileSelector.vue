@@ -9,6 +9,11 @@
     @close="$emit('cancel')"
     @open="openDialog"
   >
+    <div class="mcp-switch-container">
+      <span class="mcp-switch-label">启用 MCP 集成：</span>
+      <tiny-switch v-model="mcpEnabled" @change="handleMcpChange"></tiny-switch>
+      <span class="mcp-switch-tip">（开启后将生成 MCP 相关配置和工具代码）</span>
+    </div>
     <div class="dialog-grid">
       <tiny-grid
         :data="tableData"
@@ -35,8 +40,8 @@
 
 <script lang="ts">
 /* metaService: engine.toolbars.generate-code.FileSelector */
-import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
-import { reactive, computed, ref, nextTick } from 'vue'
+import { DialogBox, Button, Grid, GridColumn, Switch } from '@opentiny/vue'
+import { computed, ref, nextTick, watch, reactive } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
 export default {
@@ -44,16 +49,18 @@ export default {
     TinyDialogBox: DialogBox,
     TinyButton: Button,
     TinyGrid: Grid,
-    TinyGridColumn: GridColumn
+    TinyGridColumn: GridColumn,
+    TinySwitch: Switch
   },
   props: {
     visible: { type: Boolean, default: false },
     data: {
       type: Array,
       default: () => []
-    }
+    },
+    enableMcp: { type: Boolean, default: false }
   },
-  emits: ['cancel', 'confirm'],
+  emits: ['cancel', 'confirm', 'update:enableMcp'],
   setup(props, { emit }) {
     const getTableTreeData = (data: any[]) => {
       const res: any[] = []
@@ -86,6 +93,33 @@ export default {
     const gridRef = ref<any>(null)
 
     const state = reactive({})
+    const mcpEnabled = ref(props.enableMcp)
+
+    // 监听 props.enableMcp 的变化，同步到本地状态
+    watch(
+      () => props.enableMcp,
+      (newVal) => {
+        mcpEnabled.value = newVal
+      }
+    )
+
+    // 监听 props.data 的变化，重新选中所有项
+    watch(
+      () => props.data,
+      () => {
+        nextTick(() => {
+          if (gridRef.value) {
+            gridRef.value.setAllTreeExpansion(true)
+            gridRef.value.setAllSelection(true)
+          }
+        })
+      },
+      { deep: true }
+    )
+
+    const handleMcpChange = (value: boolean) => {
+      emit('update:enableMcp', value)
+    }
 
     const confirm = () => {
       const selectedData = gridRef.value.getSelectRecords().filter((item: { children: any }) => !item.children)
@@ -102,9 +136,14 @@ export default {
     }
 
     const openDialog = () => {
+      // 同步 props 到本地状态
+      mcpEnabled.value = props.enableMcp
+
       nextTick(() => {
-        gridRef.value.setAllTreeExpansion(true)
-        gridRef.value.setAllSelection(true)
+        if (gridRef.value) {
+          gridRef.value.setAllTreeExpansion(true)
+          gridRef.value.setAllSelection(true)
+        }
       })
     }
 
@@ -112,14 +151,36 @@ export default {
       state,
       tableData,
       gridRef,
+      mcpEnabled,
       confirm,
-      openDialog
+      openDialog,
+      handleMcpChange
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
+.mcp-switch-container {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--te-toolbars-generate-code-border-color, #ddd);
+
+  .mcp-switch-label {
+    font-size: 14px;
+    color: var(--te-toolbars-generate-code-text-color);
+    margin-right: 8px;
+  }
+
+  .mcp-switch-tip {
+    font-size: 12px;
+    color: var(--te-toolbars-generate-code-text-color-secondary, #999);
+    margin-left: 8px;
+  }
+}
+
 .dialog-box {
   :deep(.tiny-dialog-box__content) {
     background-color: var(--te-toolbars-generate-code-bg-color);

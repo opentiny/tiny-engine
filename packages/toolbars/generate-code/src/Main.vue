@@ -5,6 +5,8 @@
         <generate-file-selector
           :visible="state.showDialogbox"
           :data="state.saveFilesInfo"
+          :enable-mcp="state.enableMcp"
+          @update:enable-mcp="handleMcpToggle"
           @confirm="confirm"
           @cancel="cancel"
         ></generate-file-selector>
@@ -50,7 +52,10 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      enableMcp: false, // MCP 开关状态
+      appSchemaCache: null, // 缓存应用 schema，用于重新生成代码
+      metaDataCache: null // 缓存元数据
     })
 
     const getParams = () => {
@@ -181,7 +186,19 @@ export default {
         }
       }
 
-      const res = await generateAppCode(appSchema)
+      // 缓存 appSchema，用于后续根据 MCP 开关重新生成
+      state.appSchemaCache = appSchema
+
+      // 根据 MCP 开关状态配置出码选项
+      const codeGenOptions = {
+        pluginConfig: {
+          mcp: {
+            enabled: state.enableMcp
+          }
+        }
+      }
+
+      const res = await generateAppCode(appSchema, codeGenOptions)
 
       const { genResult = [] } = res || {}
       const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
@@ -279,11 +296,73 @@ export default {
       state.saveFilesInfo = []
     }
 
+    // 当 MCP 开关切换时重新生成代码
+    const handleMcpToggle = async (enabled) => {
+      state.enableMcp = enabled
+
+      // 如果没有缓存的 schema，说明还没有生成过代码
+      if (!state.appSchemaCache) {
+        return
+      }
+
+      try {
+        useNotify({ type: 'info', title: '正在重新生成代码...', message: '' })
+
+        // 根据新的 MCP 开关状态重新生成代码
+        const codeGenOptions = {
+          pluginConfig: {
+            mcp: {
+              enabled: state.enableMcp
+            }
+          }
+        }
+
+        const res = await generateAppCode(state.appSchemaCache, codeGenOptions)
+        const { genResult = [] } = res || {}
+
+        const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
+          const slash = path.endsWith('/') || path === '.' ? '' : '/'
+          let filePath = `${path}${slash}`
+          if (filePath.startsWith('./')) {
+            filePath = filePath.slice(2)
+          }
+          if (filePath.startsWith('.')) {
+            filePath = filePath.slice(1)
+          }
+          if (filePath.startsWith('/')) {
+            filePath = filePath.slice(1)
+          }
+
+          return {
+            fileContent,
+            filePath: `${filePath}${fileName}`,
+            fileType
+          }
+        })
+
+        // 更新文件列表
+        state.saveFilesInfo = fileRes
+
+        useNotify({
+          type: 'success',
+          title: '代码重新生成完成',
+          message: `已${enabled ? '启用' : '禁用'} MCP 集成，共 ${fileRes.length} 个文件`
+        })
+      } catch (error) {
+        useNotify({
+          type: 'error',
+          title: '代码重新生成失败',
+          message: error?.message || error
+        })
+      }
+    }
+
     return {
       state,
       generate,
       confirm,
-      cancel
+      cancel,
+      handleMcpToggle
     }
   }
 }
