@@ -18,13 +18,20 @@ function genPagePlugin(options = {}) {
      * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
-    run(schema) {
+    run(schema, context) {
       const pages = schema.pageSchema
 
       const resPage = []
 
+      // 从上下文中获取 MCP 配置
+      const mcpEnabled = context?.pluginConfig?.mcp?.enabled || false
+
       for (const page of pages) {
-        const res = genSFCWithDefaultPlugin(page, schema.componentsMap, sfcConfig)
+        // 将 MCP 配置传递给 SFC 生成器
+        const res = genSFCWithDefaultPlugin(page, schema.componentsMap, {
+          ...sfcConfig,
+          mcpEnabled
+        })
 
         resPage.push({
           fileType: 'vue',

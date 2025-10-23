@@ -1726,7 +1726,7 @@
         "package": "@opentiny/vue",
         "exportName": "CarouselItem",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyCheckboxButton",
@@ -1740,14 +1740,14 @@
         "package": "@opentiny/vue",
         "exportName": "Tree",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyPopover",
         "package": "@opentiny/vue",
         "exportName": "Popover",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyTooltip",
@@ -1761,21 +1761,21 @@
         "package": "@opentiny/vue",
         "exportName": "Col",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyDropdownItem",
         "package": "@opentiny/vue",
         "exportName": "DropdownItem",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyPager",
         "package": "@opentiny/vue",
         "exportName": "Pager",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyPlusAccessdeclined",
@@ -1817,14 +1817,14 @@
         "package": "@opentiny/vue",
         "exportName": "Row",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyFormItem",
         "package": "@opentiny/vue",
         "exportName": "FormItem",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyAlert",
@@ -1838,21 +1838,21 @@
         "package": "@opentiny/vue",
         "exportName": "Input",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyTabs",
         "package": "@opentiny/vue",
         "exportName": "Tabs",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyDropdownMenu",
         "package": "@opentiny/vue",
         "exportName": "DropdownMenu",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyDialogBox",
@@ -1866,56 +1866,56 @@
         "package": "@opentiny/vue",
         "exportName": "Switch",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyTimeLine",
         "package": "@opentiny/vue",
         "exportName": "TimeLine",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyTabItem",
         "package": "@opentiny/vue",
         "exportName": "TabItem",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyRadio",
         "package": "@opentiny/vue",
         "exportName": "Radio",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyForm",
         "package": "@opentiny/vue",
         "exportName": "Form",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyGrid",
         "package": "@opentiny/vue",
         "exportName": "Grid",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyGridColumn",
         "package": "@opentiny/vue",
         "exportName": "TinyGridColumn",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyNumeric",
         "package": "@opentiny/vue",
         "exportName": "Numeric",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyCheckboxGroup",
@@ -1929,49 +1929,49 @@
         "package": "@opentiny/vue",
         "exportName": "Checkbox",
         "destructuring": true,
-        "version": "3.20.0"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinySelect",
         "package": "@opentiny/vue",
         "exportName": "Select",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyButton",
         "package": "@opentiny/vue",
         "exportName": "Button",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyButtonGroup",
         "package": "@opentiny/vue",
         "exportName": "ButtonGroup",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyCarousel",
         "package": "@opentiny/vue",
         "exportName": "Carousel",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyPopeditor",
         "package": "@opentiny/vue",
         "exportName": "Popeditor",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyDatePicker",
         "package": "@opentiny/vue",
         "exportName": "DatePicker",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyDropdown",
@@ -1985,35 +1985,35 @@
         "package": "@opentiny/vue",
         "exportName": "ChartHistogram",
         "destructuring": true,
-        "version": "0.1.16"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyCollapse",
         "package": "@opentiny/vue",
         "exportName": "Collapse",
         "destructuring": true,
-        "version": "3.20.0"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyCollapseItem",
         "package": "@opentiny/vue",
         "exportName": "CollapseItem",
         "destructuring": true,
-        "version": "3.20.0"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyBreadcrumb",
         "package": "@opentiny/vue",
         "exportName": "Breadcrumb",
         "destructuring": true,
-        "version": "3.20.0"
+        "version": "3.26.0"
       },
       {
         "componentName": "TinyBreadcrumbItem",
         "package": "@opentiny/vue",
         "exportName": "BreadcrumbItem",
         "destructuring": true,
-        "version": "3.20.0"
+        "version": "3.26.0"
       },
       {
         "componentName": "ElInput",
