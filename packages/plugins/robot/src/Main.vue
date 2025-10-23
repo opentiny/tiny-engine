@@ -494,7 +494,10 @@ export default {
 
     const search = async (content) => {
       try {
-        const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
+        const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/vector-storage/search', {
+          content,
+          collection: 'tinyengine_documents'
+        })
 
         res.forEach((item) => {
           searchContent.value += item.content
