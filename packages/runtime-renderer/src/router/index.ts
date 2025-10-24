@@ -27,7 +27,7 @@ async function createRouterConfig() {
           pageName: page.name,
           isHome: page.isHome,
           hasChildren: (page.children && page.children.length > 0) || false,
-          depth: page.depth, // 疑问：在嵌套路由中此属性没有改变，此属性和面包屑有关吗？
+          depth: page.depth,
           isDefault: page.isDefault, // 用于嵌套路由的默认子路由
           hasDefault: false,
           defaultPath: '' // 默认子路由的路径
@@ -51,7 +51,7 @@ async function createRouterConfig() {
           // eslint-disable-next-line no-console
           console.error(`父路由未找到: 页面 "${page.name}" (ID: ${page.id}) 引用的父路由 ID ${parentId} 不存在`)
           // 将孤立的子路由作为顶级路由添加,确保其仍可访问
-          routeConfigCurrent.path = `/${page.router}`
+          routeConfigCurrent.path = `/${page.route}`
           routesConfig.push(routeConfigCurrent)
         }
       } else {
