@@ -10,6 +10,7 @@ import type {
 } from '../types/schema'
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
+import { initRuntimeChannel, getDesignerGlobalState } from './useCommunication'
 import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
 
 const appSchema = ref<IAppSchema | null>(null)
@@ -21,7 +22,7 @@ window.TinyComponentLibs = {}
 export function useAppSchema() {
   let cachedBundlePackages: PackageConfig[] | null = null
 
-  // 应该会修改为和globalState一样通过通信拉取
+  // 应该会修改为和globalState一样通过窗口通信得到
   const loadBundlePackages = async () => {
     if (cachedBundlePackages) {
       return cachedBundlePackages
@@ -112,6 +113,16 @@ export function useAppSchema() {
     })
   }
 
+  const initializeGlobalState = async (schema: IAppSchema) => {
+    await initRuntimeChannel()
+
+    schema.meta = schema.meta || {}
+    if (!schema.meta.globalState || !schema.meta.globalState.length) {
+      const injected = getDesignerGlobalState()
+      if (injected) schema.meta.globalState = injected
+    }
+  }
+
   // 初始化应用配置
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
@@ -121,6 +132,8 @@ export function useAppSchema() {
 
     // 初始化除tinyVue之外的nativeComponents
     await initializeComponentsMap(schema.componentsMap, packages)
+
+    await initializeGlobalState(schema)
 
     // 初始化国际化
     initializeI18n(schema?.i18n)

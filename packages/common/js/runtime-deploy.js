@@ -10,10 +10,42 @@
  *
  */
 
-import { getMergeMeta, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useResource, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
+let hasSentGlobalState = false
+let hasRuntimeListener = false
+
+const sendGlobalStateToRuntime = () => {
+  if (!runtimeWindow || runtimeWindow.closed || hasSentGlobalState) return
+  runtimeWindow.postMessage(
+    {
+      source: 'designer',
+      type: 'globalState',
+      data: useResource().appSchemaState.globalState
+    },
+    runtimeWindow.origin || window.location.origin
+  )
+  hasSentGlobalState = true
+}
+
+const setupRuntimeMessageListener = () => {
+  if (hasRuntimeListener) return
+  window.addEventListener('message', (event) => {
+    const parsedOrigin = new URL(event.origin)
+    const parsedHost = new URL(window.location.href)
+    if (parsedOrigin.origin !== parsedHost.origin && parsedOrigin.host !== parsedHost.host) return
+
+    const { event: eventType, source } = event.data || {}
+    if (source === 'runtime' && (eventType === 'connect' || eventType === 'onMounted')) {
+      runtimeWindow = event.source || runtimeWindow
+      sendGlobalStateToRuntime()
+    }
+  })
+  hasRuntimeListener = true
+}
+
 const getQueryParams = () => {
   const paramsMap = new URLSearchParams(location.search)
   const tenant = paramsMap.get('tenant') || ''
@@ -49,11 +81,15 @@ export const runtimeDeploy = async () => {
   const { openUrl } = await deployPage()
 
   runtimeWindow = window.open(openUrl, 'tiny-engine-runtime')
+  hasSentGlobalState = false
   if (!runtimeWindow) {
     useNotify({
       type: 'error',
       title: '运行时窗口打开失败',
       message: '请检查浏览器是否允许新窗口打开'
     })
+  } else {
+    setupRuntimeMessageListener()
+    runtimeWindow.addEventListener('load', sendGlobalStateToRuntime, { once: true })
   }
 }
