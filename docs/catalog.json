@@ -95,7 +95,7 @@
           "title": "解决方案",
           "name": "solutions",
           "articles": [
-            {"title": "前端及Java服务端docker部署", "name": "front-backend-docker-deployment.md"},
+            { "title": "前端及Java服务端docker部署", "name": "front-backend-docker-deployment.md" },
             { "title": "Java服务端部署", "name": "server-deployment-solution-java.md" },
             { "title": "Node.js服务端部署", "name": "server-deployment-solution.md" },
             { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },
@@ -168,7 +168,6 @@
                 { "title": "应用工具类管理", "name": "app-utility-management.md" },
                 { "title": "区块管理", "name": "block-management-api.md" },
                 { "title": "数据源管理", "name": "data-source-management.md" },
-                { "title": "DSL代码生成", "name": "dsl-code-generation.md" },
                 { "title": "物料中心", "name": "material-center.md" },
                 { "title": "页面管理", "name": "page-management-api.md" },
                 { "title": "APP服务", "name": "app-services.md" }
