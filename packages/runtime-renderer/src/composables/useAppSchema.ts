@@ -11,7 +11,6 @@ import type {
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
 import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
-import bundle from '../../../../designer-demo/public/mock/bundle.json'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -20,6 +19,32 @@ window.TinyLowcodeComponent = {}
 window.TinyComponentLibs = {}
 
 export function useAppSchema() {
+  let cachedBundlePackages: PackageConfig[] | null = null
+
+  const loadBundlePackages = async () => {
+    if (cachedBundlePackages) {
+      return cachedBundlePackages
+    }
+
+    try {
+      const response = await fetch('/mock/bundle.json')
+
+      if (!response.ok) {
+        throw new Error(`加载基础物料包失败: HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const bundleJson = await response.json()
+
+      cachedBundlePackages = (bundleJson?.data?.materials?.packages as PackageConfig[]) || []
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('加载基础物料包失败:', error)
+      cachedBundlePackages = []
+    }
+
+    return cachedBundlePackages
+  }
+
   const initializeComponentsMap = async (componentsMap: ComponentMap[], packages: PackageConfig[]) => {
     // 获取组件依赖
     const componentsDeps = componentsMap.map((component: ComponentMap) => ({
@@ -44,7 +69,6 @@ export function useAppSchema() {
       console.error('组件或资源加载失败:', error)
     }
   }
-
   const mergePackages = (...packageGroups: PackageConfig[][]) => {
     const map = new Map<string, PackageConfig>()
 
@@ -91,7 +115,8 @@ export function useAppSchema() {
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
 
-    const packages = mergePackages(bundle.data.materials.packages || [], schema.packages || [])
+    const defaultPackages = await loadBundlePackages()
+    const packages = mergePackages(defaultPackages, schema.packages || [])
 
     // 初始化除tinyVue之外的nativeComponents
     initializeComponentsMap(schema.componentsMap, packages)
