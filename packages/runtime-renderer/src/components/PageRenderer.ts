@@ -6,7 +6,7 @@ export function withPageRenderer(WrappedComponent: any) {
     name: 'PageRendererHOC',
     props: {
       pageId: {
-        type: Number,
+        type: String,
         required: true
       }
     },

@@ -1,7 +1,21 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAppSchema } from '../composables/useAppSchema'
 import type { RouteConfig } from '../types/config'
-import { reactive } from 'vue'
+import type { PageMeta } from '../types/schema'
+
+// 定义页面结构类型
+interface PageSchema {
+  id: string
+  name: string
+  route: string
+  parentId: string
+  isHome: boolean
+  isDefault: boolean
+  depth: number
+  children?: PageSchema[]
+  meta: PageMeta
+}
+
 // 异步初始化路由配置
 async function createRouterConfig() {
   const { pages } = useAppSchema()
@@ -10,54 +24,65 @@ async function createRouterConfig() {
   const generateRoutesConfig = () => {
     if (!pages.value) return []
 
-    const routesConfig = reactive<RouteConfig[]>([])
+    // 构建页面映射，方便查找
+    const pageMap = new Map<string, PageSchema>()
+    pages.value.forEach((page: PageSchema) => {
+      pageMap.set(page.id, page)
+    })
 
-    // 遍历页面列表生成路由配置
-    pages.value.forEach((page) => {
+    // 构建父子关系映射
+    const childrenMap = new Map<string, PageSchema[]>()
+    pages.value.forEach((page: PageSchema) => {
+      if (page.parentId !== '0') {
+        if (!childrenMap.has(page.parentId)) {
+          childrenMap.set(page.parentId, [])
+        }
+        childrenMap.get(page.parentId)!.push(page)
+      }
+    })
+
+    // 递归构建路由配置
+    const buildRouteConfig = (page: PageSchema) => {
       const isChildRoute = page.parentId !== '0'
 
-      const routeConfigCurrent = {
+      const routeConfig = {
         path: isChildRoute ? page.route : `/${page.route}`,
         name: `${page.id}`,
-        component: async () => (await import('../components/PageRenderer.ts')).default, // 懒加载，避免过早引入RenderMain
-        props: { pageId: page.id }, // 静态对象，避免路由嵌套时被覆盖
-        children: [],
+        component: async () => (await import('../components/PageRenderer.ts')).default,
+        props: { pageId: page.id },
+        children: [] as RouteConfig[],
         meta: {
           pageId: page.id,
           pageName: page.name,
           isHome: page.isHome,
           hasChildren: (page.children && page.children.length > 0) || false,
           depth: page.depth,
-          isDefault: page.isDefault, // 用于嵌套路由的默认子路由
+          isDefault: page.isDefault,
           hasDefault: false,
-          defaultPath: '' // 默认子路由的路径
+          defaultPath: ''
         }
       }
 
-      if (isChildRoute) {
-        const parentId = parseInt(page.parentId, 10)
-        const parentRoute = routesConfig.find((r) => r.meta?.pageId === parentId)
-        if (parentRoute) {
-          parentRoute.children = parentRoute.children || []
-          parentRoute.children.push(routeConfigCurrent)
-          parentRoute.meta.hasChildren = true
-          if (routeConfigCurrent.meta.isDefault) {
-            parentRoute.meta.hasDefault = true
-            parentRoute.meta.defaultPath = `${parentRoute.path}/${routeConfigCurrent.path}`
-            parentRoute.redirect = parentRoute.meta.defaultPath
-          }
-          return
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(`父路由未找到: 页面 "${page.name}" (ID: ${page.id}) 引用的父路由 ID ${parentId} 不存在`)
-          // 将孤立的子路由作为顶级路由添加,确保其仍可访问
-          routeConfigCurrent.path = `/${page.route}`
-          routesConfig.push(routeConfigCurrent)
+      // 递归处理子路由
+      const children = childrenMap.get(page.id) || []
+      children.forEach((child) => {
+        const childRoute = buildRouteConfig(child)
+        routeConfig.children.push(childRoute)
+
+        // 处理默认路由
+        if (childRoute.meta.isDefault) {
+          routeConfig.meta.hasDefault = true
+          routeConfig.meta.defaultPath = `${routeConfig.path}/${childRoute.path}`
+          routeConfig.redirect = routeConfig.meta.defaultPath
         }
-      } else {
-        routesConfig.push(routeConfigCurrent)
-      }
-    })
+      })
+
+      return routeConfig
+    }
+
+    // 只处理根路由（parentId为'0'的路由）
+    const rootPages = pages.value.filter((page: PageSchema) => page.parentId === '0')
+    const routesConfig = rootPages.map((page) => buildRouteConfig(page))
 
     return routesConfig
   }

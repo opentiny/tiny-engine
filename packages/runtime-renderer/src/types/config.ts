@@ -1,7 +1,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 
 export interface PageRendererProps {
-  pageId: number
+  pageId: string
 }
 
 export interface RouteConfig {
@@ -11,7 +11,7 @@ export interface RouteConfig {
   props?: PageRendererProps
   redirect?: RouteLocationRaw
   meta: {
-    pageId: number
+    pageId: string
     pageName: string
     hasChildren: boolean
     isHome: boolean

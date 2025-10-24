@@ -30,8 +30,8 @@ export default defineComponent({
   name: 'RenderMain',
   props: {
     pageId: {
-      type: Number,
-      default: 0
+      type: String,
+      default: '0'
     },
     cssScopeId: {
       type: String,
