@@ -22,7 +22,7 @@ import type { PageContent as Schema } from '../types/schema'
 import { getDataSource, getUtilsAll } from '../app-function'
 
 interface Props {
-  pageId: number
+  pageId: string
   cssScopeId: string
 }
 

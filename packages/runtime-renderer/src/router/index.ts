@@ -55,7 +55,6 @@ async function createRouterConfig() {
           pageId: page.id,
           pageName: page.name,
           isHome: page.isHome,
-          hasChildren: (page.children && page.children.length > 0) || false,
           depth: page.depth,
           isDefault: page.isDefault,
           hasDefault: false,

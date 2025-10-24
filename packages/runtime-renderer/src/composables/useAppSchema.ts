@@ -21,6 +21,7 @@ window.TinyComponentLibs = {}
 export function useAppSchema() {
   let cachedBundlePackages: PackageConfig[] | null = null
 
+  // 应该会修改为和globalState一样通过通信拉取
   const loadBundlePackages = async () => {
     if (cachedBundlePackages) {
       return cachedBundlePackages
@@ -119,7 +120,7 @@ export function useAppSchema() {
     const packages = mergePackages(defaultPackages, schema.packages || [])
 
     // 初始化除tinyVue之外的nativeComponents
-    initializeComponentsMap(schema.componentsMap, packages)
+    await initializeComponentsMap(schema.componentsMap, packages)
 
     // 初始化国际化
     initializeI18n(schema?.i18n)
@@ -155,7 +156,7 @@ export function useAppSchema() {
       const response1 = await fetch(`/app-center/api/pages/list/${appId}`)
 
       if (!response.ok) {
-        throw new Error(`加载区块Schema失败: HTTP ${response.status}: ${response.statusText}`)
+        throw new Error(`加载页面Schema失败: HTTP ${response.status}: ${response.statusText}`)
       }
 
       const res = await response1.json()
@@ -225,12 +226,12 @@ export function useAppSchema() {
 
   // 获取页面列表
   const pages = computed(() => {
-    return appSchema.value.pages
+    return appSchema.value.pages || []
   })
   // 根据ID获取页面
-  const getPageById = (id: number) => {
+  const getPageById = (id: string) => {
     if (!pages.value) return null
-    return pages.value.find((page) => page.id === id)
+    return pages.value.find((page) => page.id === id) || null
   }
 
   // 获取数据源配置
