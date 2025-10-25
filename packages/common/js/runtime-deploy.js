@@ -25,7 +25,7 @@ const sendGlobalStateToRuntime = () => {
       type: 'globalState',
       data: useResource().appSchemaState.globalState
     },
-    runtimeWindow.origin || window.location.origin
+    window.location.origin
   )
   hasSentGlobalState = true
 }
@@ -35,7 +35,7 @@ const setupRuntimeMessageListener = () => {
   window.addEventListener('message', (event) => {
     const parsedOrigin = new URL(event.origin)
     const parsedHost = new URL(window.location.href)
-    if (parsedOrigin.origin !== parsedHost.origin && parsedOrigin.host !== parsedHost.host) return
+    if (parsedOrigin.origin !== parsedHost.origin) return
 
     const { event: eventType, source } = event.data || {}
     if (source === 'runtime' && (eventType === 'connect' || eventType === 'onMounted')) {
