@@ -10,8 +10,13 @@ import type {
 } from '../types/schema'
 import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import { initRuntimeChannel, getDesignerGlobalState } from './useCommunication'
-import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
+import {
+  initRuntimeChannel,
+  getDesignerGlobalState,
+  getDesignerPkgDeps,
+  getDesignerStylesDeps
+} from './useCommunication'
+import { addStyle, getComponents, loadPackageDependencys, initDataSource } from '../app-function'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -20,33 +25,6 @@ window.TinyLowcodeComponent = {}
 window.TinyComponentLibs = {}
 
 export function useAppSchema() {
-  let cachedBundlePackages: PackageConfig[] | null = null
-
-  // 应该会修改为和globalState一样通过窗口通信得到
-  const loadBundlePackages = async () => {
-    if (cachedBundlePackages) {
-      return cachedBundlePackages
-    }
-
-    try {
-      const response = await fetch('/mock/bundle.json')
-
-      if (!response.ok) {
-        throw new Error(`加载基础物料包失败: HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      const bundleJson = await response.json()
-
-      cachedBundlePackages = (bundleJson?.data?.materials?.packages as PackageConfig[]) || []
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error('加载基础物料包失败:', error)
-      cachedBundlePackages = []
-    }
-
-    return cachedBundlePackages
-  }
-
   const initializeComponentsMap = async (componentsMap: ComponentMap[], packages: PackageConfig[]) => {
     // 获取组件依赖
     const componentsDeps = componentsMap.map((component: ComponentMap) => ({
@@ -59,7 +37,7 @@ export function useAppSchema() {
       npmrc: component.npmrc
     }))
 
-    const importStyleUrls = initImportMap(packages)
+    const importStyleUrls = getDesignerStylesDeps()
 
     await loadPackageDependencys(packages)
 
@@ -70,21 +48,6 @@ export function useAppSchema() {
       // eslint-disable-next-line no-console
       console.error('组件或资源加载失败:', error)
     }
-  }
-  const mergePackages = (...packageGroups: PackageConfig[][]) => {
-    const map = new Map<string, PackageConfig>()
-
-    packageGroups
-      .flat()
-      .filter(Boolean)
-      .forEach((pkg) => {
-        const key = pkg.package || pkg.name
-        if (key) {
-          map.set(key, pkg)
-        }
-      })
-
-    return Array.from(map.values())
   }
 
   // 初始化工具函数
@@ -114,10 +77,8 @@ export function useAppSchema() {
   }
 
   const initializeGlobalState = async (schema: IAppSchema) => {
-    await initRuntimeChannel()
-
     schema.meta = schema.meta || {}
-    if (!schema.meta.globalState || !schema.meta.globalState.length) {
+    if (!getDesignerGlobalState()) {
       const injected = getDesignerGlobalState()
       if (injected) schema.meta.globalState = injected
     }
@@ -127,8 +88,10 @@ export function useAppSchema() {
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
 
-    const defaultPackages = await loadBundlePackages()
-    const packages = mergePackages(defaultPackages, schema.packages || [])
+    // 初始化与设计器窗口的通信
+    await initRuntimeChannel()
+
+    const packages = getDesignerPkgDeps()
 
     // 初始化除tinyVue之外的nativeComponents
     await initializeComponentsMap(schema.componentsMap, packages)

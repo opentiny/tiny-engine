@@ -10,24 +10,27 @@
  *
  */
 
-import { getMergeMeta, useResource, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useResource, useMaterial, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
-let hasSentGlobalState = false
 let hasRuntimeListener = false
-
-const sendGlobalStateToRuntime = () => {
-  if (!runtimeWindow || runtimeWindow.closed || hasSentGlobalState) return
+//sd
+const sendDepsToRuntime = () => {
+  const globalState = JSON.parse(JSON.stringify(useResource().appSchemaState.globalState))
+  const { scripts, styles } = useMaterial().getCanvasDeps()
+  const stylesDeps = JSON.parse(JSON.stringify(styles))
+  const pkgDeps = JSON.parse(JSON.stringify(scripts))
+  const globalDeps = { pkgDeps, stylesDeps, globalState }
+  if (!runtimeWindow || runtimeWindow.closed) return
   runtimeWindow.postMessage(
     {
       source: 'designer',
-      type: 'globalState',
-      data: useResource().appSchemaState.globalState
+      type: 'globalDeps',
+      data: globalDeps
     },
     window.location.origin
   )
-  hasSentGlobalState = true
 }
 
 const setupRuntimeMessageListener = () => {
@@ -40,11 +43,13 @@ const setupRuntimeMessageListener = () => {
     const { event: eventType, source } = event.data || {}
     if (source === 'runtime' && (eventType === 'connect' || eventType === 'onMounted')) {
       runtimeWindow = event.source || runtimeWindow
-      sendGlobalStateToRuntime()
+      sendDepsToRuntime()
     }
   })
   hasRuntimeListener = true
 }
+
+setupRuntimeMessageListener()
 
 const getQueryParams = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -81,7 +86,6 @@ export const runtimeDeploy = async () => {
   const { openUrl } = await deployPage()
 
   runtimeWindow = window.open(openUrl, 'tiny-engine-runtime')
-  hasSentGlobalState = false
   if (!runtimeWindow) {
     useNotify({
       type: 'error',
@@ -89,7 +93,6 @@ export const runtimeDeploy = async () => {
       message: '请检查浏览器是否允许新窗口打开'
     })
   } else {
-    setupRuntimeMessageListener()
-    runtimeWindow.addEventListener('load', sendGlobalStateToRuntime, { once: true })
+    runtimeWindow.addEventListener('load', sendDepsToRuntime, { once: true })
   }
 }
