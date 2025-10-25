@@ -168,8 +168,8 @@ export function useAppSchema() {
 
       const response1 = await fetch(`/app-center/api/pages/list/${appId}`)
 
-      if (!response.ok) {
-        throw new Error(`加载页面Schema失败: HTTP ${response.status}: ${response.statusText}`)
+      if (!response1.ok) {
+        throw new Error(`加载页面Schema失败: HTTP ${response1.status}: ${response1.statusText}`)
       }
 
       const res = await response1.json()
