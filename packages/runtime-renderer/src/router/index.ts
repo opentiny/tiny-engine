@@ -63,7 +63,7 @@ async function createRouterConfig() {
       }
 
       // 递归处理子路由
-      const children = childrenMap.get(page.id) || []
+      const children = childrenMap.get(String(page.id)) || []
       children.forEach((child) => {
         const childRoute = buildRouteConfig(child)
         routeConfig.children.push(childRoute)

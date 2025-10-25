@@ -86,7 +86,7 @@ export interface PageMeta {
   tenantId: string
   name: string
   page_content?: any
-  id: number
+  id: string
   isPage: boolean
   group: string
 }
