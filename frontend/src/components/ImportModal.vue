@@ -423,7 +423,6 @@ const notifyBackendCancelTask = async (backendTaskId) => {
     await axios.post(`${baseApi}/material/cancel`, {
       taskId: backendTaskId
     });
-    TinyNotify({ type: 'success', message: '任务已成功取消', position: 'top-right' });
   } catch (error) {
     console.warn('通知后端终止任务失败：', error.message);
     TinyNotify({ type: 'warning', message: '前端任务已关闭，后端任务可能仍在执行', position: 'top-right' });
