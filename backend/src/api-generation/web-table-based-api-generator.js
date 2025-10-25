@@ -387,37 +387,58 @@ ${pageTitle}
  * 整合爬取和LLM转换逻辑，并处理重试机制。
  * @param {string} url 目标页面URL
  * @param {string} tableSelector 表格DOM选择器
- * @param {number} initialRetries 初始重试次数（默认3次）
+ * @param {Object} options 选项参数
+ * @param {number} options.initialRetries 初始重试次数（默认3次）
+ * @param {AbortSignal} options.signal 中断信号
 * @returns {Promise<Array<object>>} API JSON数组（每个元素为一个组件的API信息）
  * @throws {Error} 爬取/转换失败时抛出错误
  */
-async function extractApiFromUrl(url, tableSelector, initialRetries = 3) {
+async function extractApiFromUrl(url, tableSelector, { initialRetries = 3, signal } = {}) {
 	const componentName = extractComponentName(url); // 提前提取用于日志/文件名
 
-	for (let retries = initialRetries; retries >= 0; retries--) {
-		try {
-			// 1. 爬取原始数据
-			const { pageTitle, tablesData } = await scrapeRawTables(url, tableSelector, retries);
+	// 添加中断监听
+	if (signal?.aborted) throw new Error('任务已取消');
+	const abortHandler = () => {
+		console.log(`[${componentName}] 收到中断信号，终止流程`);
+	};
+	signal?.addEventListener('abort', abortHandler);
 
-			// 2. LLM转换
-			const apiJson = await convertTablesToApiJson(tablesData, pageTitle);
+	try {
+		for (let retries = initialRetries; retries >= 0; retries--) {
+			// 关键节点1：重试前检查中断
+			if (signal?.aborted) throw new Error('任务被用户取消');
+			try {
+				// 1. 爬取原始数据
+				const { pageTitle, tablesData } = await scrapeRawTables(url, tableSelector, retries);
 
-			// 3. 构造最终返回结果
-			return apiJson // 大模型生成的标准API JSON;
+				// 关键节点2：爬取后检查中断
+				if (signal?.aborted) throw new Error('任务被用户取消');
+				// 2. LLM转换
+				const apiJson = await convertTablesToApiJson(tablesData, pageTitle);
 
-		} catch (error) {
-			const errorMsg = error.message;
+				// 关键节点3：转换后检查中断
+				if (signal?.aborted) throw new Error('任务被用户取消');
+				// 3. 构造最终返回结果
+				return apiJson // 大模型生成的标准API JSON;
 
-			// 如果是LLM错误或非爬取错误，则直接抛出
-			if (errorMsg.includes('大模型') || retries === 0) {
-				throw new Error(`[失败] ${errorMsg}`);
+			} catch (error) {
+				const errorMsg = error.message;
+				// 捕获中断错误
+				if (errorMsg.includes('取消')) throw error;
+				// 如果是LLM错误或非爬取错误，则直接抛出
+				if (errorMsg.includes('大模型') || retries === 0) {
+					throw new Error(`[失败] ${errorMsg}`);
+				}
+
+				// 如果是爬取错误，且还有重试次数
+				console.log(`[重试] 错误：${errorMsg}，剩余次数：${retries}，正在重试...`);
+				// 注意：scrapeRawTables 内部已处理浏览器关闭，此处仅需等待后继续循环
+				await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒后重试
 			}
-			
-			// 如果是爬取错误，且还有重试次数
-			console.log(`[重试] 错误：${errorMsg}，剩余次数：${retries}，正在重试...`);
-			// 注意：scrapeRawTables 内部已处理浏览器关闭，此处仅需等待后继续循环
-			await new Promise(resolve => setTimeout(resolve, 2000)); // 等待2秒后重试
 		}
+	} finally {
+		// 移除事件监听，避免内存泄漏
+		signal?.removeEventListener('abort', abortHandler);
 	}
 }
 
@@ -425,55 +446,55 @@ async function extractApiFromUrl(url, tableSelector, initialRetries = 3) {
 if (require.main === module) {
 	// 检查环境变量（大模型密钥必填）
 	if (!process.env.OPENAI_API_KEY) {
-			console.error('❌ 缺少环境变量：请设置 OPENAI_API_KEY（大模型密钥）');
-			process.exit(1);
+		console.error('❌ 缺少环境变量：请设置 OPENAI_API_KEY（大模型密钥）');
+		process.exit(1);
 	}
 
 	const [url, tableSelector] = process.argv.slice(2);
 	if (!url || !tableSelector) {
-			console.error('❌ 参数缺失！使用示例：');
-			console.error('node generic-api-crawler.js "https://element-plus.org/zh-CN/component/button" ".vp-table"');
-			process.exit(1);
+		console.error('❌ 参数缺失！使用示例：');
+		console.error('node generic-api-crawler.js "https://element-plus.org/zh-CN/component/button" ".vp-table"');
+		process.exit(1);
 	}
 
 	// 执行爬取+转换（处理并按组件拆分保存）
 	extractApiFromUrl(url, tableSelector)
-			.then(apiJson => {
-					console.log('\n[最终结果] 爬取+转换成功！');
-					console.log(`共生成 ${apiJson.length} 个组件API`);
-					
-					// 保存每个组件为单独的JSON文件
-					const logDir = path.join(__dirname, './scraper-api-logs');
-					if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
-					
-					// 遍历API JSON数组
-					apiJson.forEach((component, index) => {
-							// 提取组件名作为文件名（处理特殊字符）
-							const componentName = component.name 
-									? component.name.replace(/\s+/g, '-').replace(/[^\w-]/g, '').toLowerCase()
-									: `component-${index}`;
-							
-							// 生成唯一文件名（组件名+时间戳）
-							const timestamp = Date.now();
-							const fileName = `${componentName}-${timestamp}.json`;
-							
-							// 保存单个组件JSON
-							fs.writeFileSync(
-									path.join(logDir, fileName),
-									JSON.stringify(component, null, 2),
-									'utf8'
-							);
-							console.log(`📄 已保存组件：${path.join(logDir, fileName)}`);
-					});
-					
-					console.log(`\n✅ 所有组件已保存，共 ${apiJson.length} 个文件`);
-			})
-			.catch(err => {
-					console.error('\n❌ 执行失败：', err.message);
-					process.exit(1);
+		.then(apiJson => {
+			console.log('\n[最终结果] 爬取+转换成功！');
+			console.log(`共生成 ${apiJson.length} 个组件API`);
+
+			// 保存每个组件为单独的JSON文件
+			const logDir = path.join(__dirname, './scraper-api-logs');
+			if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+			// 遍历API JSON数组
+			apiJson.forEach((component, index) => {
+				// 提取组件名作为文件名（处理特殊字符）
+				const componentName = component.name
+					? component.name.replace(/\s+/g, '-').replace(/[^\w-]/g, '').toLowerCase()
+					: `component-${index}`;
+
+				// 生成唯一文件名（组件名+时间戳）
+				const timestamp = Date.now();
+				const fileName = `${componentName}-${timestamp}.json`;
+
+				// 保存单个组件JSON
+				fs.writeFileSync(
+					path.join(logDir, fileName),
+					JSON.stringify(component, null, 2),
+					'utf8'
+				);
+				console.log(`📄 已保存组件：${path.join(logDir, fileName)}`);
 			});
+
+			console.log(`\n✅ 所有组件已保存，共 ${apiJson.length} 个文件`);
+		})
+		.catch(err => {
+			console.error('\n❌ 执行失败：', err.message);
+			process.exit(1);
+		});
 }
-	
+
 
 // 最终暴露的接口
 module.exports = { extractApiFromUrl };

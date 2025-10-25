@@ -35,7 +35,16 @@ router.post('/import', upload.any(), validateImportParams, materialController.cr
  */
 router.get('/status/:taskId', materialController.getTaskStatus);
 
-// 保存物料到数据库（供前端“保存到物料库”调用）
+/**
+ * @api {POST} /api/material/cancel 取消物料导入任务
+ * @apiDescription 接收前端取消请求，立即中断正在执行的任务
+ * @apiBody {string} taskId 任务ID（必填）
+ * @apiSuccess {boolean} success true
+ * @apiSuccess {string} message 取消结果描述
+ */
+router.post('/cancel', materialController.cancelTask);
+
+// 保存物料到数据库
 /**
  * @api {POST} /api/material/save 手动保存物料到数据库
  * @apiDescription 接收前端传递的物料数组，批量保存到数据库
@@ -49,6 +58,7 @@ router.get('/status/:taskId', materialController.getTaskStatus);
  */
 router.post('/save', materialController.saveMaterials);
 
+// 接口文档
 router.get('/docs', (req, res) => {
   res.send(`
     <!DOCTYPE html>
@@ -118,7 +128,19 @@ router.get('/docs', (req, res) => {
       <p><strong>响应示例：</strong></p>
       <pre>{ "code": 200, "success": true, "savedCount": 1, "message": "物料保存成功" }</pre>
 
-      <h3>4. 获取接口文档（当前接口）</h3>
+      <h3>4. 取消物料导入任务</h3>
+      <p><strong>请求方式：</strong> POST</p>
+      <p><strong>接口路径：</strong> <code>/cancel</code></p>
+      <p><strong>Content-Type：</strong> <code>application/json</code></p>
+      <p><strong>必填参数（Body）：</strong></p>
+      <ul>
+        <li><code>taskId</code>：字符串，必选，创建任务返回的任务ID</li>
+      </ul>
+      <p><strong>响应示例（成功）：</strong></p>
+      <pre>{ "code": 200, "success": true, "message": "已发送取消信号给任务task-123456" }</pre>
+      <p><strong>说明：</strong> 接收前端取消请求，立即中断正在执行的任务（如文件分析、LLM转换等），并清理相关资源（如临时文件）</p>
+
+      <h3>5. 获取接口文档（当前接口）</h3>
       <p><strong>请求方式：</strong> GET</p>
       <p><strong>接口路径：</strong> <code>/docs</code></p>
       <p><strong>说明：</strong> 返回当前HTML格式的完整接口说明</p>

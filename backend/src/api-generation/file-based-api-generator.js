@@ -379,7 +379,7 @@ async function generateComponentApiJson(target, sourceType = "code", componentNa
     }
 
     let combinedContent, componentInfo, componentDir;
-    
+
     console.log(`1/3 🔍 正在从${sourceType === 'code' ? '源码' : 'NPM包'}筛选并拼接API文件...`);
     if (sourceType === "code") {
       // 处理本地源码目录
@@ -432,9 +432,25 @@ async function generateComponentApiJson(target, sourceType = "code", componentNa
  * @param {Buffer} uploadData.data - 单个文件或压缩包的二进制数据
  * @param {string} uploadData.type - 上传类型："single"（单个文件）、"zip"（压缩包）
  * @param {string} uploadData.fileName - 原始文件名（含扩展名）
+ * @param {Object} options 选项参数
+ * @param {AbortSignal} options.signal 中断信号
  * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
  */
-async function generateComponentApiFromUploadedSource(uploadData) {
+async function generateComponentApiFromUploadedSource(uploadData, { signal } = {}) {
+  let tempDir = null; // 用于记录临时目录，方便中断时清理
+
+  // 当前函数内检查中断
+  if (signal?.aborted) throw new Error('任务已取消');
+  const abortHandler = () => {
+    console.log(`[${uploadData.fileName}] 收到中断信号，终止流程`);
+    // 中断时尝试清理临时目录
+    if (tempDir) {
+      try { fs.rmSync(tempDir, { recursive: true, force: true }); }
+      catch (e) { console.warn(`清理临时目录失败: ${e.message}`); }
+    }
+  };
+  signal?.addEventListener('abort', abortHandler);
+
   try {
     // 1. 验证上传数据格式
     if (!uploadData || !uploadData.data || !uploadData.type || !uploadData.fileName) {
@@ -445,10 +461,15 @@ async function generateComponentApiFromUploadedSource(uploadData) {
     }
 
     console.log(`1/3 📥 正在处理上传的${uploadData.type === 'single' ? '文件' : '压缩包'}: ${uploadData.fileName}...`);
-    
+
     // 2. 调用新的筛选+拼接函数（原filterAndConcatUploadedApiCodeFiles已替换）
     const result = await filterAndConcatUploadedApiSource(uploadData, 3);
-    const { combinedContent, componentName, tempDir } = result;
+    tempDir = result.tempDir; // 记录临时目录
+
+    // 关键节点1：文件处理后检查中断
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
+    const { combinedContent, componentName } = result;
 
     if (!combinedContent || combinedContent.length === 0) {
       throw new Error("上传文件内容拼接为空，无法生成JSON");
@@ -457,6 +478,9 @@ async function generateComponentApiFromUploadedSource(uploadData) {
     // 3. 复用原有大模型生成逻辑
     console.log("\n2/3 🤖 正在生成结构化API JSON...");
     const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    // 关键节点2：生成后检查中断
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
 
     // 4. 生成完成后清理临时目录
@@ -475,6 +499,8 @@ async function generateComponentApiFromUploadedSource(uploadData) {
   } catch (error) {
     console.error("\n❌ 生成上传文件的API JSON失败：", error.message);
     throw error;
+  } finally {
+    signal?.removeEventListener('abort', abortHandler);
   }
 }
 
@@ -483,16 +509,27 @@ async function generateComponentApiFromUploadedSource(uploadData) {
  * 处理npm包名和组件名，生成API JSON
  * @param {string} packageName - npm包名 (如: element-plus)
  * @param {string} componentName - 组件名 (如: affix)
+ * @param {Object} options 选项参数
+ * @param {AbortSignal} options.signal 中断信号
  * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
  */
-async function generateComponentApiFromNpmPackage(packageName, componentName) {
+async function generateComponentApiFromNpmPackage(packageName, componentName, { signal } = {}) {
+  // 当前函数内检查中断
+  if (signal?.aborted) throw new Error('任务已取消');
+  const abortHandler = () => {
+    console.log(`[${packageName}:${componentName}] 收到中断信号，终止流程`);
+  };
+  signal?.addEventListener('abort', abortHandler);
+
   try {
     console.log(`1/3 📦 正在处理npm包: ${packageName}，组件: ${componentName}...`);
-    
+
     // 1. 调用npm包的筛选+拼接函数
     const result = await filterAndConcatNpmApiByPackage(packageName, componentName);
-    const { combinedContent, componentNames, componentDir } = result;
+    // 关键节点1：npm处理后检查中断
+    if (signal?.aborted) throw new Error('任务被用户取消');
 
+    const { combinedContent, componentNames, componentDir } = result;
     if (!combinedContent || combinedContent.length === 0) {
       throw new Error("npm包文件内容拼接为空，无法生成JSON");
     }
@@ -500,6 +537,9 @@ async function generateComponentApiFromNpmPackage(packageName, componentName) {
     // 2. 复用大模型生成逻辑
     console.log("\n2/3 🤖 正在生成npm包组件的结构化API JSON...");
     const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    // 关键节点2：生成后检查中断
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
 
     // 3. 输出结果日志
@@ -511,6 +551,8 @@ async function generateComponentApiFromNpmPackage(packageName, componentName) {
   } catch (error) {
     console.error("\n❌ 生成npm包组件的API JSON失败：", error.message);
     throw error;
+  } finally {
+    signal?.removeEventListener('abort', abortHandler);
   }
 }
 

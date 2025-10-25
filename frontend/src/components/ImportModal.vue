@@ -10,7 +10,7 @@
           <!-- 导入成功：固定显示“物料导入成功。” -->
           <template v-else-if="task.showSuccessTip">物料导入成功。</template>
           <!-- 其他状态（如失败）：保留原有进度文本（可选，避免文字空白） -->
-          <template v-else>{{ task.progressText }}</template>
+          <template v-else>任务状态异常</template>
         </p>
         <div class="card-buttons">
           <tiny-button type="text" @click="openModalFromCard(task.id)">详情</tiny-button>
@@ -34,7 +34,7 @@
                 <tiny-input v-model="activeTask.formData.url"
                   placeholder="请输入URL（如https://element-plus.org/zh-CN/component/breadcrumb.html）" clearable />
               </tiny-form-item>
-              <tiny-form-item label="表格CSS选择器" prop="tableSelector">
+              <tiny-form-item label="API表格CSS选择器" prop="tableSelector">
                 <tiny-input v-model="activeTask.formData.tableSelector" placeholder="请输入选择器（如.vp-table）" clearable />
               </tiny-form-item>
             </template>
@@ -416,10 +416,28 @@ const openModalFromCard = async (taskId) => {
   emit('update:visible', true);
 };
 
+// 通知后端取消任务的函数
+const notifyBackendCancelTask = async (backendTaskId) => {
+  if (!backendTaskId) return;
+  try {
+    await axios.post(`${baseApi}/material/cancel`, {
+      taskId: backendTaskId
+    });
+    TinyNotify({ type: 'success', message: '任务已成功取消', position: 'top-right' });
+  } catch (error) {
+    console.warn('通知后端终止任务失败：', error.message);
+    TinyNotify({ type: 'warning', message: '前端任务已关闭，后端任务可能仍在执行', position: 'top-right' });
+  }
+};
 // 取消当前任务
-const cancelActiveTask = () => {
+const cancelActiveTask = async () => {
   if (!activeTask.value) return;
   const task = activeTask.value;
+
+  // 关键修改：通知后端取消任务
+  if (task.backendTaskId) {
+    await notifyBackendCancelTask(task.backendTaskId);
+  }
 
   // 清除轮询
   if (task.pollingTimerId) clearInterval(task.pollingTimerId);
@@ -432,9 +450,13 @@ const cancelActiveTask = () => {
 };
 
 // 取消指定任务（卡片上的取消）
-const cancelTask = (taskId) => {
+const cancelTask = async (taskId) => {
   const task = tasks.value.find(t => t.id === taskId);
   if (!task) return;
+
+  if (task.backendTaskId) {
+    await notifyBackendCancelTask(task.backendTaskId);
+  }
 
   if (task.pollingTimerId) clearInterval(task.pollingTimerId);
   tasks.value = tasks.value.filter(t => t.id !== taskId);
@@ -642,6 +664,8 @@ const formatSlotsForTable = (slots = {}) => {
 
 // 删除物料
 const handleDeleteMaterial = (row, taskId) => {
+  if (!window.confirm(`确定删除该组件物料吗？`)) return;
+
   const task = tasks.value.find(t => t.id === taskId);
   if (!task || !task.realMaterialData) return;
 

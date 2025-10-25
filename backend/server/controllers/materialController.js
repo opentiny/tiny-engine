@@ -17,14 +17,17 @@ const { v4: uuidv4 } = require('uuid');
 // 配置multer临时存储（仅内存存储）
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 50 * 1024 * 1024 }, 
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
+
+// 维护活跃任务的可中断资源
+const activeTaskResources = new Map(); // key: taskId, value: { abortController, ... }
 
 // 验证数据库是否初始化完成
 dbReadyPromise.then(() => {
-  console.log('✅ 数据库已初始化完成，DAO 方法可正常调用');
+  console.log('✅ 数据库已初始化完成');
 }).catch(err => {
-  console.error('❌ 数据库初始化失败（DAO 方法不可用）:', err.message);
+  console.error('❌ 数据库初始化失败:', err.message);
 });
 
 /**
@@ -208,7 +211,19 @@ async function processImportTask(taskId, params) {
   } = params;
   let apiArray;
 
+  // 创建AbortController用于中断任务
+  const abortController = new AbortController();
+  const signal = abortController.signal;
+  // 存储可中断资源
+  activeTaskResources.set(taskId, { abortController });
+
   try {
+    // 监听中断信号
+    signal.addEventListener('abort', () => {
+      console.log(`[任务${taskId}] 收到中断信号，立即停止执行`);
+      throw new Error('任务被用户取消');
+    });
+
     // 1. 按导入类型生成API JSON
     switch (importType) {
       // 类型1：URL爬取
@@ -220,7 +235,7 @@ async function processImportTask(taskId, params) {
             message: `开始爬取URL：${url}`
           }
         });
-        apiArray = await extractApiFromUrl(url, tableSelector);
+        apiArray = await extractApiFromUrl(url, tableSelector, { signal });
         updateTask(taskId, {
           progress: 40,
           step: {
@@ -246,7 +261,7 @@ async function processImportTask(taskId, params) {
           fileName: uploadFile.fileName,
           type: uploadFile.fileType
         };
-        apiArray = await generateComponentApiFromUploadedSource(uploadData);
+        apiArray = await generateComponentApiFromUploadedSource(uploadData, { signal });
         updateTask(taskId, {
           progress: 40,
           step: {
@@ -268,7 +283,7 @@ async function processImportTask(taskId, params) {
           }
         });
         // 直接传递包名和组件名（适配generateComponentApiFromNpmPackage）
-        apiArray = await generateComponentApiFromNpmPackage(packageName, componentName);
+        apiArray = await generateComponentApiFromNpmPackage(packageName, componentName, { signal });
         updateTask(taskId, {
           progress: 40,
           step: {
@@ -280,14 +295,20 @@ async function processImportTask(taskId, params) {
       }
     }
 
+    // 监听中断信号
+    if (signal.aborted) throw new Error('任务被用户取消');
     // 2. 校验API数组有效性
     if (!Array.isArray(apiArray) || apiArray.length === 0) {
       throw new Error('生成的API数组为空或格式错误');
     }
 
+    // 监听中断信号
+    if (signal.aborted) throw new Error('任务被用户取消');
     // 3. 保存API JSON（共用逻辑）
     const saveResult = await saveApiArrayToFiles(apiArray, apiLogDir);
 
+    // 监听中断信号
+    if (signal.aborted) throw new Error('任务被用户取消');
     // 4. 转换为TinyEngine物料（共用逻辑）
     updateTask(taskId, {
       progress: 60,
@@ -301,7 +322,8 @@ async function processImportTask(taskId, params) {
       process.env.OPENAI_MODEL,
       true, // 保存Schema
       5, // 并发数
-      schemaLogDir
+      schemaLogDir,
+      { signal }
     );
     updateTask(taskId, {
       progress: 85,
@@ -342,24 +364,36 @@ async function processImportTask(taskId, params) {
 
     return schemaOnlyResults;
   } catch (error) {
-    console.error(`[任务${taskId}] 执行失败：`, error.message, '堆栈：', error.stack);
-    try {
-      // 更新任务状态
+    if (error.message === '任务被用户取消') {
       updateTask(taskId, {
         status: TASK_STATUS.FAILED,
         progress: 100,
-        step: {
-          name: 'error',
-          message: `流程失败：${error.message || '未知错误'}`
-        },
-        error: {
-          message: error.message || '未知错误',
-          stack: process.env.NODE_ENV === 'development' ? error.stack : ''
-        }
+        step: { name: 'cancelled', message: '任务已被用户取消' },
+        error: { message: '任务被用户取消' }
       });
-    } catch (updateError) {
-      console.error('更新任务状态失败:', updateError);
+    } else {
+      console.error(`[任务${taskId}] 执行失败：`, error.message, '堆栈：', error.stack);
+      try {
+        // 更新任务状态
+        updateTask(taskId, {
+          status: TASK_STATUS.FAILED,
+          progress: 100,
+          step: {
+            name: 'error',
+            message: `流程失败：${error.message || '未知错误'}`
+          },
+          error: {
+            message: error.message || '未知错误',
+            stack: process.env.NODE_ENV === 'development' ? error.stack : ''
+          }
+        });
+      } catch (updateError) {
+        console.error('更新任务状态失败:', updateError);
+      }
     }
+  } finally {
+    // 任务结束（成功/失败/取消）时清理资源
+    activeTaskResources.delete(taskId);
   }
 }
 
@@ -380,6 +414,60 @@ function getTaskStatus(req, res, next) {
     }
 
     res.status(200).json({ code: 200, success: true, ...task });
+  } catch (error) {
+    next(error);
+  }
+}
+
+/**
+ * 接收前端取消请求，中断正在执行的任务
+ */
+async function cancelTask(req, res, next) {
+  try {
+    const { taskId } = req.body;
+    if (!taskId) {
+      return res.status(400).json({
+        code: 400,
+        message: 'taskId为必填参数',
+        success: false
+      });
+    }
+
+    // 1. 检查任务是否存在
+    const task = getTask(taskId);
+    if (!task) {
+      return res.status(404).json({
+        code: 404,
+        message: `任务${taskId}不存在或已结束`,
+        success: true
+      });
+    }
+
+    // 2. 检查任务是否在执行中
+    if (task.status !== TASK_STATUS.PROCESSING) {
+      return res.status(200).json({
+        code: 200,
+        message: `任务${taskId}当前状态：${task.status}，无需取消`,
+        success: true
+      });
+    }
+
+    // 3. 中断任务
+    const taskResources = activeTaskResources.get(taskId);
+    if (taskResources?.abortController) {
+      taskResources.abortController.abort(); // 触发中断
+      updateTask(taskId, {
+        progress: 100,
+        step: { name: 'cancelling', message: '正在取消任务...' }
+      });
+    }
+
+    res.status(200).json({
+      code: 200,
+      message: `已发送取消信号给任务${taskId}`,
+      success: true
+    });
+
   } catch (error) {
     next(error);
   }
@@ -458,5 +546,6 @@ module.exports = {
   createImportTask,
   getTaskStatus,
   saveMaterials,
+  cancelTask,
   upload
 };

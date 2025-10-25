@@ -27,7 +27,7 @@
 ## 📌 环境要求
 | 环境/工具  | 版本要求                          | 说明                               |
 | ---------- | --------------------------------- | ---------------------------------- |
-| Node.js    | v18.18.0 及以上                   | 支持`fetch`、ES6+语法，前后端通用  |
+| Node.js    | v20.19.5 及以上                   | 支持`fetch`、ES6+语法，前后端通用  |
 | 包管理工具 | npm / yarn / pnpm                 | 前后端依赖安装                     |
 | 前端框架   | Vue 3.2+                          | 前端使用`<script setup>`语法       |
 | 构建工具   | Vite 4.0+                         | 前端项目构建与跨域代理             |
@@ -109,22 +109,49 @@ npm install
   });
 ```
 
-## 🚀 快速启动
-前后端需分别启动，且需先启动MySQL数据库服务，再启动后端服务，最后启动前端服务：
 
-### 1. 启动MySQL数据库服务
-确保本地MySQL服务已启动（以常见系统为例）：
+## 🚀 快速启动  
+前后端需分别启动，且需先启动MySQL数据库服务、创建项目专用数据库，再启动后端服务，最后启动前端服务：  
+
+### 1. 启动MySQL数据库服务及创建项目数据库
+确保本地MySQL服务已启动，并手动创建项目专用数据库，步骤如下：
+
+#### 1.1 启动MySQL服务
+以常见系统为例，执行对应启动操作：
 - **Windows**：通过服务管理器启动“MySQL”服务；
 - **macOS（Homebrew安装）**：执行 `brew services start mysql`；
 - **Linux（系统服务）**：执行 `sudo systemctl start mysql`（或对应发行版的MySQL服务启动命令）。
 
+#### 1.2 手动创建项目数据库
+项目需使用预先创建的 `lowcode_material` 数据库，操作步骤：
+1. 打开终端/命令提示符，登录MySQL（使用配置中的用户名，默认 `root`）：  
+   ```bash
+   mysql -u root -p  # 回车后输入MySQL密码（若未设置密码，直接回车跳过）
+   ```  
+
+2. 执行SQL命令创建数据库（指定字符集避免中文乱码）：  
+   ```sql
+   CREATE DATABASE IF NOT EXISTS lowcode_material 
+   CHARACTER SET utf8mb4 
+   COLLATE utf8mb4_unicode_ci;
+   ```  
+
+3. 验证数据库是否创建成功（可选）：  
+   ```sql
+   SHOW DATABASES;  # 列表中应包含 lowcode_material
+   ```  
+
+4. 退出MySQL：  
+   ```sql
+   exit;
+   ```  
 
 ### 2. 启动后端服务
 ```bash
 # 进入backend目录
 cd backend
 # 开发环境启动
-node server/index.js
+npm run serve
 ```
 
 启动成功后，服务会监听配置的 `SERVER_PORT`（默认3001），可通过 `http://localhost:3001/api/material/docs` 访问简易接口文档。
@@ -194,6 +221,11 @@ LowCode-Material-Import/
 - Events定义（参数、触发时机）
 - Slots定义（名称、用途、参数）
 
+### 4. 后处理模块（`backend/src/post-processing`）
+作为物料生成的最终优化环节，核心是对转换后的原始 Schema 进行标准化、规则化处理，确保物料符合 TinyEngine 规范。核心作用包括：
+- 统一组件名格式（如table-column→TableColumn），避免命名混乱；
+- 按预设规则分类优化（无需处理的组件直接保留、子项组件清理冗余片段、表格组件合并列定义）；
+
 
 ## 🖥️ 前端核心模块说明
 
@@ -209,7 +241,7 @@ LowCode-Material-Import/
   - NPM 导入：输入 “NPM 包名”“组件名”
   - 源码导入：上传文件（支持单个文件 / ZIP 压缩包）
 - 任务进度：提交后显示进度条（0-100%），实时更新任务状态（处理中 / 成功 / 失败）。
-- 物料预览：任务成功后，通过MaterialTable展示生成的物料，支持编辑属性 / 事件 / 插槽。
+- 物料预览：任务成功后，通过MaterialTable展示生成的物料，支持删除组件物料和编辑属性 / 事件 / 插槽。
 - 任务卡片：处理中任务可点击 “最小化”，生成右侧悬浮卡片，点击卡片可重新打开模态框。
 
 #### （3）物料表格（MaterialTable.vue）
@@ -281,7 +313,21 @@ LowCode-Material-Import/
   { "code": 200, "success": true, "savedCount": 1, "message": "物料保存成功" }
   ```
 
-#### 4. 获取接口文档
+#### 4. 取消物料导入任务  
+- **请求方式**：POST  
+- **接口路径**：`/cancel`  
+- **Content-Type**：`application/json`  
+- **必填参数（Body）**：  
+  | 参数名   | 类型   | 说明               |  
+  |----------|--------|--------------------|  
+  | taskId   | string | 任务ID（创建任务返回的ID，必填） |  
+- **响应示例（成功）**：  
+  ```json
+  { "code": 200, "success": true, "message": "任务已成功取消" }
+  ```  
+- **说明**：接收前端取消请求，立即中断正在执行的任务（如文件分析、LLM转换等），并清理相关资源（如临时文件）。
+
+#### 5. 获取接口文档
 - **请求方式**：GET  
 - **接口路径**：`/docs`  
 - **说明**：返回HTML格式的完整接口说明

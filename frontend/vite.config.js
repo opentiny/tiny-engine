@@ -15,6 +15,7 @@ export default defineConfig({
     }
   },
   server: {
+    port: 8080, // 前端端口号
     proxy: {
       // 匹配所有以 "/api" 开头的请求路径
       '/api': {

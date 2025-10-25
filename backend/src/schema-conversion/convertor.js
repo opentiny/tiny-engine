@@ -1255,7 +1255,7 @@ function cleanSchemaResponse(schemaText, subComponentName) {
  * @returns {object} 校验后的schema + 成功标识
  */
 function parseAndValidateSchema(
-  cleanedText, 
+  cleanedText,
   subComponentName,
   schemaLogDir = path.resolve(__dirname, '../../schema-log')
 ) {
@@ -1432,6 +1432,8 @@ function splitIntoBatches(array, batchSize) {
  * @param {boolean} save - 是否保存到文件（可选，默认true）
  * @param {number} concurrentLimit - 并发数上限（可选，默认3，支持环境变量配置）
  * @param {string} schemaLogDir - 日志文件存储目录
+ * @param {Object} options 选项参数
+ * @param {AbortSignal} options.signal 中断信号
  * @returns {Promise<Array>} 子组件schema结果数组（每个元素含子组件名、schema对象、原始文本）
  */
 async function batchConvertToTinyEngineSchema(
@@ -1439,76 +1441,98 @@ async function batchConvertToTinyEngineSchema(
   model = process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
   save = true,
   concurrentLimit = 5,
-  schemaLogDir = path.resolve(__dirname, '../../schema-log')
+  schemaLogDir = path.resolve(__dirname, '../../schema-log'),
+  { signal } = {}
 ) {
-  if (!Array.isArray(apiArray) || apiArray.length === 0) {
-    throw new Error("输入必须是非空的API对象数组");
-  }
+  // 当前函数内检查中断
+  if (signal?.aborted) throw new Error('任务已取消');
+  const abortHandler = () => {
+    console.log(`批量转换收到中断信号，终止流程`);
+  };
+  signal?.addEventListener('abort', abortHandler);
 
-  // 收集所有关联子组件名称
-  const allSubComponentNames = new Set();
-  apiArray.forEach(apiObj => {
-    const subCompName = Object.keys(apiObj.components)[0];
-    if (subCompName) allSubComponentNames.add(subCompName);
-  });
-  const relatedSubComponents = Array.from(allSubComponentNames);
-  console.log(`已收集所有关联子组件（共${relatedSubComponents.length}个）：${relatedSubComponents.join(", ")}`);
+  try {
+    if (!Array.isArray(apiArray) || apiArray.length === 0) {
+      throw new Error("输入必须是非空的API对象数组");
+    }
 
-  // 校验并发数（避免非法值，最小1，最大建议不超过10）
-  const validConcurrentLimit = Math.max(1, Math.min(concurrentLimit, 10));
-  console.log(`\n=== 开始批量转换 ===`);
-  console.log(`总子组件数：${apiArray.length} | 并发数上限：${validConcurrentLimit} | 模型：${model}`);
-
-  // 记录开始时间（毫秒级时间戳）
-  const startTime = Date.now();
-  const startISO = new Date(startTime).toISOString(); // 可读性更好的ISO时间
-  console.log(`批量转换开始执行 | 时间：${startISO} | 时间戳：${startTime}`);
-
-  // 1. 将API数组拆分为批次
-  const batches = splitIntoBatches(apiArray, validConcurrentLimit);
-  console.log(`共拆分为 ${batches.length} 个批次`);
-
-  const conversionResults = [];
-
-  // 2. 批次间串行执行（避免全量并发），批次内并行执行
-  for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
-    const currentBatch = batches[batchIndex];
-    const batchNumber = batchIndex + 1; // 批次号（从1开始）
-    console.log(`\n--- 处理批次 ${batchNumber}/${batches.length}（含 ${currentBatch.length} 个子组件）---`);
-
-    // 3. 批次内并行处理每个子组件
-    const batchPromises = currentBatch.map(async (apiObj) => {
-      const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
-      try {
-        console.log(`[批次${batchNumber}] 开始转换子组件：${subComponentName}`);
-        const result = await convertSingleSubComponent(apiObj, model, relatedSubComponents, save, schemaLogDir);
-        console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
-        return result; // 成功结果（含subComponentName、schema等）
-      } catch (error) {
-        throw new Error(`[批次${batchNumber}] 转换失败：${subComponentName} | 原因：${error.message}`);
-      }
+    // 收集所有关联子组件名称
+    const allSubComponentNames = new Set();
+    apiArray.forEach(apiObj => {
+      const subCompName = Object.keys(apiObj.components)[0];
+      if (subCompName) allSubComponentNames.add(subCompName);
     });
+    const relatedSubComponents = Array.from(allSubComponentNames);
+    console.log(`已收集所有关联子组件（共${relatedSubComponents.length}个）：${relatedSubComponents.join(", ")}`);
 
-    // 4. 等待当前批次所有子组件处理完成（并行）
-    const batchResults = await Promise.all(batchPromises);
+    // 校验并发数（避免非法值，最小1，最大建议不超过10）
+    const validConcurrentLimit = Math.max(1, Math.min(concurrentLimit, 10));
+    console.log(`\n=== 开始批量转换 ===`);
+    console.log(`总子组件数：${apiArray.length} | 并发数上限：${validConcurrentLimit} | 模型：${model}`);
 
-    conversionResults.push(...batchResults); // 收集当前批次结果
-    console.log(`--- 批次 ${batchNumber}/${batches.length} 处理完成 ---`);
+    // 记录开始时间（毫秒级时间戳）
+    const startTime = Date.now();
+    const startISO = new Date(startTime).toISOString(); // 可读性更好的ISO时间
+    console.log(`批量转换开始执行 | 时间：${startISO} | 时间戳：${startTime}`);
+
+    // 1. 将API数组拆分为批次
+    const batches = splitIntoBatches(apiArray, validConcurrentLimit);
+    console.log(`共拆分为 ${batches.length} 个批次`);
+
+    const conversionResults = [];
+
+    // 2. 批次间串行执行（避免全量并发），批次内并行执行
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      // 关键节点1：批次处理前检查中断
+      if (signal?.aborted) throw new Error('任务被用户取消');
+
+      const currentBatch = batches[batchIndex];
+      const batchNumber = batchIndex + 1; // 批次号（从1开始）
+      console.log(`\n--- 处理批次 ${batchNumber}/${batches.length}（含 ${currentBatch.length} 个子组件）---`);
+
+      // 3. 批次内并行处理每个子组件
+      const batchPromises = currentBatch.map(async (apiObj) => {
+        // 关键节点2：单个组件处理前检查中断
+        if (signal?.aborted) throw new Error('任务被用户取消');
+
+        const subComponentName = Object.keys(apiObj.components)[0] || 'unknown';
+        try {
+          console.log(`[批次${batchNumber}] 开始转换子组件：${subComponentName}`);
+          const result = await convertSingleSubComponent(apiObj, model, relatedSubComponents, save, schemaLogDir);
+          console.log(`[批次${batchNumber}] 转换成功：${subComponentName}`);
+          return result; // 成功结果（含subComponentName、schema等）
+        } catch (error) {
+          if (error.message.includes('取消')) throw error; // 捕获中断错误
+          throw new Error(`[批次${batchNumber}] 转换失败：${subComponentName} | 原因：${error.message}`);
+        }
+      });
+
+      // 4. 等待当前批次所有子组件处理完成（并行）
+      const batchResults = await Promise.all(batchPromises);
+
+      conversionResults.push(...batchResults); // 收集当前批次结果
+      console.log(`--- 批次 ${batchNumber}/${batches.length} 处理完成 ---`);
+    }
+
+    // 关键节点3：全部处理后检查中断
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
+    // 记录结束时间
+    const endTime = Date.now();
+    const endISO = new Date(endTime).toISOString();
+    const duration = (endTime - startTime) / 1000; // 耗时（秒）
+    console.log(`批量转换执行完成 | 时间：${endISO} | 耗时：${duration.toFixed(2)}秒`);
+
+    // 5. 汇总统计
+    const successCount = conversionResults.filter(r => r.success !== false).length;
+    const failCount = conversionResults.filter(r => r.success === false).length;
+    console.log(`\n=== 批量转换全部完成 ===`);
+    console.log(`总处理：${apiArray.length} 个 | 成功：${successCount} 个 | 失败：${failCount} 个`);
+
+    return conversionResults;
+  } finally {
+    signal?.removeEventListener('abort', abortHandler);
   }
-
-  // 记录结束时间
-  const endTime = Date.now();
-  const endISO = new Date(endTime).toISOString();
-  const duration = (endTime - startTime) / 1000; // 耗时（秒）
-  console.log(`批量转换执行完成 | 时间：${endISO} | 耗时：${duration.toFixed(2)}秒`);
-
-  // 5. 汇总统计
-  const successCount = conversionResults.filter(r => r.success !== false).length;
-  const failCount = conversionResults.filter(r => r.success === false).length;
-  console.log(`\n=== 批量转换全部完成 ===`);
-  console.log(`总处理：${apiArray.length} 个 | 成功：${successCount} 个 | 失败：${failCount} 个`);
-
-  return conversionResults;
 }
 
 // 对外导出批量转换函数
