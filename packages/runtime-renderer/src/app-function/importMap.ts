@@ -1,5 +1,4 @@
 import importMapConfig from './import-map.json'
-import type { PackageConfig } from '../types/schema'
 
 const IMPORT_MAP_ELEMENT_ID = 'tiny-engine-runtime-import-map'
 
@@ -16,19 +15,8 @@ const DEFAULT_ENV = {
   VITE_LOCAL_IMPORT_MAPS: 'false'
 }
 
-const getWindowEnv = () => {
-  if (typeof window === 'undefined') {
-    return {}
-  }
-
-  return (window as any)?.__TINY_ENGINE_ENV__ || {}
-}
-
 const getEnvValue = (key: keyof typeof DEFAULT_ENV) => {
-  const windowEnv = getWindowEnv()
-  const viteEnv = (import.meta as any)?.env || {}
-
-  return windowEnv[key] ?? viteEnv[key] ?? DEFAULT_ENV[key]
+  return DEFAULT_ENV[key]
 }
 
 const replacePlaceholder = (value: string) => {
@@ -95,30 +83,10 @@ const mergeImportMap = (imports: Record<string, string>) => {
   }
 }
 
-const collectPackageImports = (packages: PackageConfig[] = []) => {
-  return packages.reduce<Record<string, string>>((acc, pkg) => {
-    if (pkg?.package && pkg?.script) {
-      acc[pkg.package] = pkg.script
-    }
-    return acc
-  }, {})
-}
+export const initImportMap = () => {
+  const { imports: baseImports } = parseImportMapConfig(importMapConfig)
 
-const collectPackageStyles = (packages: PackageConfig[] = []) => {
-  return packages
-    .map((pkg) => pkg?.css)
-    .filter(Boolean)
-    .map((css) => css as string)
-}
-
-export const initImportMap = (packages: PackageConfig[] = []) => {
-  const { imports: baseImports, importStyles: baseStyles } = parseImportMapConfig(importMapConfig)
-  const packageImports = collectPackageImports(packages)
-  const importStyles = new Set([...baseStyles, ...collectPackageStyles(packages)])
-
-  mergeImportMap({ ...baseImports, ...packageImports })
-
-  return Array.from(importStyles)
+  mergeImportMap({ ...baseImports })
 }
 
 export default initImportMap

@@ -16,8 +16,7 @@ import {
   getDesignerPkgDeps,
   getDesignerStylesDeps
 } from './useCommunication'
-import { addStyle, getComponents, loadPackageDependencys, initDataSource } from '../app-function'
-import { initImportMap } from '../app-function/importMap' // 添加 importMap 的导入
+import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -94,11 +93,8 @@ export function useAppSchema() {
 
     const packages = getDesignerPkgDeps()
 
-    // 初始化 importMap - 在加载包依赖之前处理 importMap
-    const importMapStyles = initImportMap(packages)
-
-    // 等待 importMap 中的样式加载完成
-    await Promise.all(importMapStyles.map((src) => addStyle(src)))
+    // 初始化 importMap
+    initImportMap()
 
     // 初始化除tinyVue之外的nativeComponents
     await initializeComponentsMap(schema.componentsMap, packages)
@@ -209,7 +205,7 @@ export function useAppSchema() {
 
   // 获取页面列表
   const pages = computed(() => {
-    return appSchema.value.pages || []
+    return appSchema.value?.pages || []
   })
   // 根据ID获取页面
   const getPageById = (id: string) => {
