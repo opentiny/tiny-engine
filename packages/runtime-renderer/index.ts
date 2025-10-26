@@ -49,7 +49,14 @@ export const initRuntimeRenderer = async () => {
     }
   }
 
-  app.use(pinia).use(router).use(i18n).mount('#app')
+  app.use(pinia).use(router).use(i18n)
+
+  // 等待设计器页面导航完成后再挂载应用
+  if (router.navigateToDesignerPage) {
+    await router.navigateToDesignerPage
+  }
+
+  app.mount('#app')
 
   return app
 }

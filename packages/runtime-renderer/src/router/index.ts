@@ -108,6 +108,7 @@ async function createRouterConfig() {
 export async function createAppRouter() {
   const routes = await createRouterConfig()
   const router = createRouter({ history: createWebHashHistory('/runtime.html'), routes })
+  const { designerPageid } = useAppSchema()
 
   if (typeof window !== 'undefined') {
     window.__DEBUG_ROUTER__ = router
@@ -117,5 +118,29 @@ export async function createAppRouter() {
       router.getRoutes().map((r) => ({ path: r.path, name: r.name, redirect: r.redirect }))
     )
   }
+
+  // 路由到设计器中当前页面
+  const navigateToDesignerPage = new Promise<void>((resolve) => {
+    router.isReady().then(() => {
+      if (designerPageid && designerPageid !== 'undefined') {
+        const route = router.resolve({ name: `${designerPageid}` })
+        if (route.matched.length > 0) {
+          router.push({ name: `${designerPageid}` }).finally(() => {
+            resolve()
+          })
+        } else {
+          // eslint-disable-next-line no-console
+          console.warn('设计器中当前的页面路由不存在:', designerPageid)
+          resolve()
+        }
+      } else {
+        resolve()
+      }
+    })
+  })
+
+  // 将导航 promise 暴露出去，供外部使用
+  router.navigateToDesignerPage = navigateToDesignerPage
+
   return router
 }
