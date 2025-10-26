@@ -8,8 +8,8 @@ type ImportMapConfig = {
 }
 
 const DEFAULT_ENV = {
-  VITE_CDN_TYPE: 'unpkg',
-  VITE_CDN_DOMAIN: 'https://unpkg.com',
+  VITE_CDN_TYPE: 'npmmirror',
+  VITE_CDN_DOMAIN: 'https://registry.npmmirror.com',
   VITE_LOCAL_IMPORT_PATH: 'local-cdn-static',
   BASE_URL: '/',
   VITE_LOCAL_IMPORT_MAPS: 'false'

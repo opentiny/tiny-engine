@@ -2,7 +2,5 @@
   "imports": {
     "echarts": "${VITE_CDN_DOMAIN}/echarts${versionDelimiter}5.4.1${fileDelimiter}/dist/echarts.esm.js"
   },
-  "importStyles": {
-    "@opentiny/vue-theme": "${VITE_CDN_DOMAIN}/@opentiny/vue-theme${versionDelimiter}~3.20${fileDelimiter}/index.css"
-  }
+  "importStyles": {}
 }
