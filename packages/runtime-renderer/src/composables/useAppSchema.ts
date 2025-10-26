@@ -79,9 +79,9 @@ export function useAppSchema() {
 
   const initializeGlobalState = async (schema: IAppSchema) => {
     schema.meta = schema.meta || {}
-    if (!getDesignerGlobalState()) {
-      const injected = getDesignerGlobalState()
-      if (injected) schema.meta.globalState = injected
+    const injected = getDesignerGlobalState()
+    if (injected && !schema.meta.globalState) {
+      schema.meta.globalState = injected
     }
   }
 
