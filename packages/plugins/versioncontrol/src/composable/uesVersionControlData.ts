@@ -16,7 +16,13 @@ export interface DisplayCommit {
   filesChanged?: number
   additions?: number
   deletions?: number
-  changedFiles?: string[]
+  changedFiles?: DiffData[]
+}
+
+export interface DiffData {
+  path: string
+  newValue: any
+  oldValue: any
 }
 
 export interface CompareData {
@@ -25,7 +31,7 @@ export interface CompareData {
   filesChanged: number
   additions: number
   deletions: number
-  changedFiles: any[]
+  changedFiles: DiffData[]
 }
 
 export function useVersionControlData() {

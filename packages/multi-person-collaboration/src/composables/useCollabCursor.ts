@@ -11,6 +11,7 @@ export interface CursorAwarenessState {
     y: number
     pressed: boolean
   }
+  pageId: string
 }
 
 interface UserCollabCursorOptions {
@@ -62,6 +63,10 @@ export function useCollabCursor(options: UserCollabCursorOptions) {
     })
   }
 
+  const updateCursorPageId = (pageId: string) => {
+    updateLocalStateField('pageId', pageId)
+  }
+
   const mouseDownHandler = () => updateCursorPressedState(true)
   const mouseUpHandler = () => updateCursorPressedState(false)
 
@@ -69,6 +74,7 @@ export function useCollabCursor(options: UserCollabCursorOptions) {
     remoteCursors: remoteStates,
     updateCursorPositioin,
     mouseDownHandler,
-    mouseUpHandler
+    mouseUpHandler,
+    updateCursorPageId
   }
 }

@@ -46,51 +46,77 @@ export class SchemaStatsCalculator {
 
     let totalAdditions = 0
     let totalDeletions = 0
-    const changedFiles: string[] = [] // 在 Schema 中，可以理解为 changedNodes 或 changedPaths
+    const changedFiles: { path: string; oldValue: any; newValue: any }[] = []
 
     if (!delta) {
       return { totalAdditions: 0, totalDeletions: 0, changedFiles: [] }
     }
 
-    // 递归遍历 delta 对象，计算差异
+    // 清理函数：去掉 jsondiffpatch 的内部数组键
+    const cleanPath = (p: string) => {
+      // 将 children.N 变为 children[N]
+      let formatted = p
+        .replace(/\.?_(\d+)/g, '[$1]')
+        .replace(/children\.(\d+)/g, 'children[$1]')
+        .replace(/\._t/g, '')
+        .replace(/\.+/g, '.')
+        .replace(/^\./, '')
+
+      // 用 " > " 分隔不同层级
+      formatted = formatted.replace(/\.children/g, ' > children')
+
+      return formatted
+    }
+
     const traverseDelta = (currentDelta: any, path: string[]) => {
       for (const key in currentDelta) {
-        if (!Object.prototype.hasOwnProperty.call(currentDelta, key)) {
-          continue
-        }
+        if (!Object.prototype.hasOwnProperty.call(currentDelta, key)) continue
 
         const value = currentDelta[key]
         const currentPath = [...path, key]
-        const pathStr = currentPath.join('.')
+        const pathStr = cleanPath(currentPath.join('.')) // 清理路径
 
-        // 判断是否是新增、删除或修改
         if (Array.isArray(value)) {
+          let oldValue = null
+          let newValue = null
+
           if (value.length === 1) {
             // [newValue] - 新增
             totalAdditions++
-            if (!changedFiles.includes(pathStr)) changedFiles.push(pathStr)
+            newValue = value[0]
           } else if (value.length === 2) {
             // [oldValue, newValue] - 修改
-            totalAdditions++ // 视为新增一行
-            totalDeletions++ // 视为删除一行
-            if (!changedFiles.includes(pathStr)) changedFiles.push(pathStr)
+            // 但如果 newValue === 0，说明是被删除或空位，不应计入修改
+            if (value[1] === 0) {
+              totalDeletions++
+              oldValue = value[0]
+              newValue = null
+            } else {
+              totalAdditions++
+              totalDeletions++
+              oldValue = value[0]
+              newValue = value[1]
+            }
           } else if (value.length === 3 && value[2] === 0) {
             // [oldValue, newValue, 0] - 文本差异
-            // 文本差异通常包含在 value[0] 和 value[1] 中，这里简化处理，只算作修改
             totalAdditions++
             totalDeletions++
-            if (!changedFiles.includes(pathStr)) changedFiles.push(pathStr)
+            oldValue = value[0]
+            newValue = value[1]
           } else if (value.length === 3 && value[2] === 2) {
             // [oldValue, 0, 2] - 删除
             totalDeletions++
-            if (!changedFiles.includes(pathStr)) changedFiles.push(pathStr)
+            oldValue = value[0]
           } else if (value.length === 3 && value[2] === 3) {
-            // [oldValue, newValue, 3] - 数组元素移动
-            // 移动不直接增加或删除行数，但表示文件有变动
-            if (!changedFiles.includes(pathStr)) changedFiles.push(pathStr)
+            // [oldValue, newValue, 3] - 数组移动
+            oldValue = value[0]
+            newValue = value[1]
+          }
+
+          if (oldValue !== null || newValue !== null) {
+            changedFiles.push({ path: pathStr, oldValue, newValue })
           }
         } else if (typeof value === 'object' && value !== null) {
-          // 递归处理嵌套对象
           traverseDelta(value, currentPath)
         }
       }

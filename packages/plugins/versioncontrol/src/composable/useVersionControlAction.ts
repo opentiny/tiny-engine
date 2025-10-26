@@ -87,9 +87,9 @@ export function useVersionControlActions(
       deletions: commit.deletions || 0,
       changedFiles:
         commit.changedFiles?.map((name) => ({
-          name,
-          additions: Math.floor(Math.random() * 20),
-          deletions: Math.floor(Math.random() * 10)
+          name: name.path,
+          additions: name.newValue,
+          deletions: name.oldValue
         })) || []
     }
     compareDialogVisible.value = true

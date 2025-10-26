@@ -61,7 +61,15 @@
 <script>
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMessage, useResource, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import {
+  useTranslate,
+  useCanvas,
+  useMessage,
+  useResource,
+  getMergeMeta,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
@@ -145,9 +153,10 @@ export default {
     const { multiSelectedStates, isMouseDown } = useMultiSelect()
 
     const currentUser = {
-      id: 2,
+      id: 'user-2',
       name: 'Bob',
-      color: '#4ECDC4',
+      color: '#1296db',
+      email: 'opentiny@tiny-engine',
       avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
     }
 
@@ -184,18 +193,30 @@ export default {
     }
 
     // 远端 selections，自动过滤不存在的元素
+    const baseInfo = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo())
+    const currentPageId = ref(baseInfo.value.pageId)
+    const search = ref(location.search)
+
+    // 更新函数：当 URL 改变时执行
+    const updateSearch = () => {
+      search.value = location.search
+    }
+
     const remoteStatesSelections = computed(() => {
       if (!remoteStates.value) return []
 
+      const pageId = currentPageId.value
+
       return Object.values(remoteStates.value)
+        .filter((state) => state.pageId === pageId)
         .flatMap((state) => {
           const selections = Array.isArray(state.selection) ? state.selection : [state.selection]
 
           return selections
-            .filter(Boolean) // 去掉 null/undefined
+            .filter(Boolean)
             .map((sel) => mapStateToSelection(state, sel))
+            .filter(Boolean)
         })
-        .filter(Boolean) // 去掉无效结果
     })
 
     // 手动刷新远端节点位置
@@ -348,7 +369,7 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let isScrolling = false
 
-        const { updateCursorPositioin, mouseUpHandler, mouseDownHandler } = useCollabCursor({
+        const { updateCursorPositioin, mouseUpHandler, mouseDownHandler, updateCursorPageId } = useCollabCursor({
           roomId: 'cursor-yjs',
           currentUser
         })
@@ -489,6 +510,7 @@ export default {
           insertSharedNode,
           deleteSharedNode,
           updateUserSelection,
+          updateUserPage,
           moveDownSharedNode,
           moveUpSharedNode,
           updateStyleNode,
@@ -505,12 +527,14 @@ export default {
           insertSharedNode,
           deleteSharedNode,
           updateUserSelection,
+          updateUserPage,
           moveDownSharedNode,
           moveUpSharedNode,
           updateStyleNode,
           updatePropsNode,
           updateMethodNode,
           updateAttributesNode,
+          updateCursorPageId,
           remoteStates
         })
 
@@ -559,12 +583,27 @@ export default {
       hoverState.slot = slotName
     }
 
-    onMounted(() => run(iframe))
+    onMounted(() => {
+      run(iframe)
+
+      window.addEventListener('popstate', updateSearch)
+      // 劫持 pushState / replaceState，使编程式跳转也能触发
+      const { pushState, replaceState } = history
+      history.pushState = function (...args) {
+        pushState.apply(this, args)
+        updateSearch()
+      }
+      history.replaceState = function (...args) {
+        replaceState.apply(this, args)
+        updateSearch()
+      }
+    })
     onUnmounted(() => {
       if (iframe.value?.contentDocument) {
         removeHotkeyEvent(iframe.value.contentDocument)
       }
       window.removeEventListener('message', updateI18n, false)
+      window.removeEventListener('popstate', updateSearch)
     })
 
     document.addEventListener('beforeCanvasReady', beforeCanvasReady)
@@ -572,8 +611,14 @@ export default {
 
     watch(isReady, (newVal) => {
       if (newVal) {
+        useRealtimeCollab().updateUserPage(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
+        useRealtimeCollab().updateCursorPageId(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
         const newStates = useRealtimeCollab().remoteStates
         remoteStates.value = newStates
+        currentPageId.value = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId
+
+        // 用户头像展示编辑内容
+        useRealtimeCollab().collabState = newStates
       }
     })
 
@@ -584,6 +629,13 @@ export default {
       },
       { immediate: true }
     )
+
+    // 当 search 改变时重新更新 baseInfo
+    watch(search, () => {
+      const newInfo = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      baseInfo.value = newInfo
+      currentPageId.value = newInfo.pageId
+    })
 
     return {
       cursorComponent,

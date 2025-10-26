@@ -52,14 +52,24 @@
           <div class="files-diff-list">
             <div v-for="file in modelCompareData.changedFiles || []" :key="file.name" class="file-diff-item">
               <div class="file-diff-header">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-                  <polyline points="14,2 14,8 20,8"></polyline>
-                </svg>
                 <span class="file-name">{{ file.name }}</span>
+                <div style="font-size: 12px; color: #6b7280">
+                  +{{ file.additions ? 1 : 0 }} / -{{ file.deletions ? 1 : 0 }}
+                </div>
+              </div>
+              <div class="file-stats">
                 <div class="file-stats">
-                  <span class="additions">+{{ file.additions || 0 }}</span>
-                  <span class="deletions">-{{ file.deletions || 0 }}</span>
+                  <pre
+                    v-if="file.deletions !== undefined"
+                    class="deletions"
+                    v-text="formatDiffValue(file.deletions, 'del')"
+                  ></pre>
+
+                  <pre
+                    v-if="file.additions !== undefined"
+                    class="additions"
+                    v-text="formatDiffValue(file.additions, 'add')"
+                  ></pre>
                 </div>
               </div>
             </div>
@@ -94,10 +104,70 @@ export default {
     // 父组件传递事件
     const closeCompareDialog = () => emit('close-compare-dialog')
 
+    const formatDiffValue = (data, type) => {
+      if (data === null || data === undefined) {
+        return type === 'add' ? '空值（null）' : '空对象（null）'
+      }
+
+      if (data === 0) {
+        return type === 'add' ? '新增空对象' : '删除标记 (0)'
+      }
+
+      if (data === '') {
+        return type === 'add' ? '空字符串' : '内容已清空'
+      }
+
+      if (typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length === 0) {
+        return type === 'add' ? '空对象（新建）' : '空对象（已清空）'
+      }
+
+      try {
+        if (typeof data === 'string') {
+          const str = data.trim()
+
+          // 1. 如果是 diff 格式，直接处理为文本
+          if (str.startsWith('@@')) {
+            // 尝试解码 URL 编码字符
+            try {
+              return decodeURIComponent(str)
+            } catch {
+              return str // 如果解码失败就返回原始
+            }
+          }
+
+          // 2. 如果是可能的 JSON 字符串
+          const firstChar = str[0]
+          if (firstChar === '{' || firstChar === '[') {
+            const parsed = JSON.parse(str)
+            return JSON.stringify(parsed, null, 2)
+          }
+
+          // 3. 如果含有 %xx 编码，也尝试解码
+          if (/%[0-9A-Fa-f]{2}/.test(str)) {
+            try {
+              return decodeURIComponent(str)
+            } catch {
+              return str
+            }
+          }
+
+          // 4. 普通字符串
+          return str
+        }
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.warn('formatDiffValue parse error:', err)
+        return data
+      }
+
+      return JSON.stringify(data, null, 2)
+    }
+
     return {
       modelCompareData,
       modelCompareDialogVisible,
-      closeCompareDialog
+      closeCompareDialog,
+      formatDiffValue
     }
   }
 }
@@ -581,46 +651,77 @@ export default {
         .files-diff-list {
           .file-diff-item {
             border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 16px;
+            background: #ffffff;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+          }
+
+          .file-diff-header {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            gap: 6px;
+          }
+
+          .file-name {
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            word-break: break-all;
+          }
+
+          .file-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 14px 16px;
+            background: #fff;
+            font-family: 'SF Mono', Monaco, 'Cascadia Code', Consolas, monospace;
+          }
+
+          .file-stats .deletions,
+          .file-stats .additions {
+            display: block;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 12px;
             border-radius: 6px;
-            margin-bottom: 8px;
-            background: white;
+            padding: 10px 12px;
+            overflow-x: auto;
+            line-height: 1.4;
+            box-shadow: inset 0 0 0 1px #e5e7eb;
+          }
 
-            .file-diff-header {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              padding: 12px;
+          .file-stats .deletions {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+          }
 
-              .file-name {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
-                font-size: 13px;
-                color: #374151;
+          .file-stats .additions {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+          }
 
-                svg {
-                  width: 14px;
-                  height: 14px;
-                  color: #6b7280;
-                }
-              }
+          .file-stats .additions:hover,
+          .file-stats .deletions:hover {
+            background-color: #f3f4f6;
+          }
 
-              .file-stats {
-                display: flex;
-                gap: 8px;
-                font-size: 12px;
-                font-weight: 600;
-
-                .additions {
-                  color: #10b981;
-                }
-
-                .deletions {
-                  color: #ef4444;
-                }
-              }
-            }
+          .file-stats .empty {
+            font-style: italic;
+            color: #9ca3af;
+            background: #f3f4f6;
+            border-left-color: #d1d5db !important;
           }
         }
       }

@@ -21,20 +21,26 @@
       </div>
 
       <div v-for="user in visibleUsers" :key="user.id" class="avatar-wrapper" :title="user.name">
-        <img :src="user.avatarUrl" :alt="user.name" class="avatar" />
+        <img :src="user.avatarUrl || user.user.avatarUrl" :alt="user.name" class="avatar" />
         <div class="status-dot online"></div>
 
         <div class="user-tooltip">
           <div class="tooltip-header">
-            <img :src="user.avatarUrl" :alt="user.name" class="tooltip-avatar" />
+            <img :src="user.avatarUrl || user.user.avatarUrl" :alt="user.name" class="tooltip-avatar" />
             <div class="tooltip-info">
-              <div class="tooltip-name">{{ user.name }}</div>
+              <div class="tooltip-name">{{ user.name || user.user.name }}</div>
               <div class="tooltip-status online">Online</div>
             </div>
           </div>
           <div class="tooltip-body">
-            <p>ID: {{ user.id }}</p>
-            <p>Email: {{ user.email || 'not-set' }}</p>
+            <p>ID: {{ user.id || user.user.id }}</p>
+            <p>Email: {{ user.email || user.user.email || 'not-set' }}</p>
+            <p v-if="user.selection" class="editing-status">
+              正在编辑
+              <span class="editing-target">{{
+                `${user.selection.componentName}组件 ID:${user.selection.schema.id}`
+              }}</span>
+            </p>
           </div>
         </div>
       </div>
@@ -54,8 +60,9 @@
 </template>
 
 <script>
-import { computed, reactive, ref, watch } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, toRaw, watch } from 'vue'
 import { useCollabCursor } from '@opentiny/tiny-engine-multi-person-collaboration'
+import { HOOK_NAME, initHook, useRealtimeCollab, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'Avatar',
@@ -78,11 +85,34 @@ export default {
       })
     )
 
+    const baseInfo = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo())
+    const currentPageId = ref(baseInfo.value.pageId)
+    const search = ref(location.search)
+
+    initHook(HOOK_NAME.useRealtimeCollab, collabState)
+
     // 将远程数据转换为数组
     const remoteUsers = computed(() => {
-      return Object.values(collabState.remoteCursors)
-        .filter((state) => state.user)
+      // 缓存 useRealtimeCollab() 的结果，避免多次调用创建新实例
+      const realtime = useRealtimeCollab()
+      const rawState = toRaw(realtime.collabState)
+
+      // 当前页面 ID
+      const pageId = currentPageId.value
+
+      // 获取本地 remoteCursors 中的用户
+      const remoteUser = Object.values(collabState.remoteCursors ?? {})
+        .filter((state) => state?.user)
         .map((state) => state.user)
+
+      // 获取远程协作状态（非空才使用）
+      const hasRemoteState = !!rawState && Object.values(rawState).length !== 0
+      const remoteUserAndSelection = hasRemoteState
+        ? Object.values(rawState).filter((state) => state.pageId === pageId) // 过滤当前页面
+        : remoteUser
+
+      // 逻辑保持一致（不要改动判断方向）
+      return remoteUserAndSelection.length > remoteUser.length ? remoteUser : remoteUserAndSelection
     })
 
     const maxVisible = 4
@@ -143,6 +173,11 @@ export default {
       notificationBuffer = { enter: [], left: [] }
     }
 
+    // 更新函数：当 URL 改变时执行
+    const updateSearch = () => {
+      search.value = location.search
+    }
+
     // 监视一个由 collabState.remoteCursors 的所有属性创建的新对象的浅拷贝
     watch(
       () => ({ ...collabState.remoteCursors }),
@@ -172,6 +207,31 @@ export default {
       },
       { deep: true }
     )
+
+    // 当 search 改变时重新更新 baseInfo
+    watch(search, () => {
+      const newInfo = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      baseInfo.value = newInfo
+      currentPageId.value = newInfo.pageId
+    })
+
+    onMounted(() => {
+      window.addEventListener('popstate', updateSearch)
+      // 劫持 pushState / replaceState，使编程式跳转也能触发
+      const { pushState, replaceState } = history
+      history.pushState = function (...args) {
+        pushState.apply(this, args)
+        updateSearch()
+      }
+      history.replaceState = function (...args) {
+        replaceState.apply(this, args)
+        updateSearch()
+      }
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('popstate', updateSearch)
+    })
 
     return {
       currentUser,
@@ -396,6 +456,65 @@ export default {
 }
 .tooltip-body p {
   margin: 4px 0;
+}
+
+.editing-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 8px;
+  line-height: 1.4;
+  white-space: nowrap;
+  animation: fadePulse 2.2s ease-in-out infinite;
+}
+
+.editing-status::before {
+  content: '✏️';
+  display: inline-block;
+  font-size: 14px;
+  animation: pencilMove 1.5s infinite ease-in-out;
+}
+
+.editing-target {
+  display: inline-block;
+  max-width: 200px;
+  word-break: break-word;
+  white-space: normal;
+}
+
+@keyframes fadePulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes pencilMove {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.editing-target {
+  background: rgba(37, 99, 235, 0.08);
+  color: #1e40af;
+  padding: 1px 6px;
+  border-radius: 6px;
+  font-weight: 600;
 }
 
 @keyframes breathing-glow {

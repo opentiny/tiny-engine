@@ -1,6 +1,6 @@
 <template>
   <div class="collab-ui-manager">
-    <div v-for="cursor in processedCursors" :key="cursor.clientId">
+    <div v-for="cursor in finalCursors" :key="cursor.clientId">
       <div
         class="cursor-positioner"
         :style="{ transform: `translate(${cursor.position.x}px, ${cursor.position.y}px)` }"
@@ -44,8 +44,9 @@
 
 <script>
 import { useCollabCursor } from '@opentiny/tiny-engine-multi-person-collaboration'
-import { computed, reactive } from 'vue'
+import { computed, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 import { useViewport } from './composables/useViewport'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'Cursor',
@@ -70,6 +71,9 @@ export default {
     )
 
     const { viewport } = useViewport()
+    const baseInfo = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo())
+    const currentPageId = ref(baseInfo.value.pageId)
+    const search = ref(location.search)
 
     const processedCursors = computed(() => {
       return Object.entries(collabState.remoteCursors).map(([clientId, state]) => {
@@ -123,10 +127,49 @@ export default {
       }, {})
     })
 
+    // 最终在同一Page下的Cursor
+    const finalCursors = computed(() => {
+      return processedCursors.value.filter((item) => {
+        return item.state.pageId === currentPageId.value
+      })
+    })
+
+    // 更新函数：当 URL 改变时执行
+    const updateSearch = () => {
+      search.value = location.search
+    }
+
+    // 当 search 改变时重新更新 baseInfo
+    watch(search, () => {
+      const newInfo = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      baseInfo.value = newInfo
+      currentPageId.value = newInfo.pageId
+    })
+
+    onMounted(() => {
+      window.addEventListener('popstate', updateSearch)
+      // 劫持 pushState / replaceState，使编程式跳转也能触发
+      const { pushState, replaceState } = history
+      history.pushState = function (...args) {
+        pushState.apply(this, args)
+        updateSearch()
+      }
+      history.replaceState = function (...args) {
+        replaceState.apply(this, args)
+        updateSearch()
+      }
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener('popstate', updateSearch)
+    })
+
     return {
       processedCursors,
       pressedMap,
-      viewport
+      viewport,
+      finalCursors,
+      currentPageId
     }
   }
 }

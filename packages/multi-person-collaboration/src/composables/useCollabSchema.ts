@@ -40,6 +40,7 @@ interface SchemaAwarenessState {
     nodeId: string
     position?: { x: number; y: number }
   }
+  pageId: string
 }
 
 /**
@@ -105,6 +106,12 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   const updateUserSelection = (selectedNode: any) => {
     updateLocalStateField('selection', selectedNode)
   }
+
+  // 所在页面更新 方法
+  const updateUserPage = (page: string) => {
+    updateLocalStateField('pageId', page)
+  }
+
   const updateDragState = (dragState: SchemaAwarenessState['drag']) => {
     updateLocalStateField('drag', dragState)
   }
@@ -129,6 +136,7 @@ export function useCollabSchema(options: UseCollabSchemaOptions) {
   return {
     remoteStates,
     updateUserSelection,
+    updateUserPage,
     updateDragState,
     insertSharedNode,
     deleteSharedNode,

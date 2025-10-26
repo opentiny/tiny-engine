@@ -58,7 +58,7 @@ export interface DiffResult {
 export interface CommitStats {
   readonly totalAdditions: number
   readonly totalDeletions: number
-  readonly changedFiles: string[]
+  readonly changedFiles: any[]
 }
 
 /**
