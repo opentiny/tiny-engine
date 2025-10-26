@@ -47,7 +47,7 @@ export const initRuntimeChannel = () => {
     // 设置超时，避免无限等待
     timeout = setTimeout(() => {
       window.removeEventListener('message', handler)
-      reject(new Error('Timeout waiting for globalState'))
+      reject(new Error('Timeout waiting for globalDeps message from designer'))
     }, 10000)
 
     window.addEventListener('message', handler)
