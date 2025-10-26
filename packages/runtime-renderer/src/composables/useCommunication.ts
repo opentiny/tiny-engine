@@ -6,27 +6,12 @@ const designerStylesDeps = ref<any>(null)
 
 export const initRuntimeChannel = () => {
   return new Promise((resolve, reject) => {
-    // 向设计器发送连接消息
-    if (window.opener) {
-      try {
-        window.opener.postMessage(
-          {
-            source: 'runtime',
-            event: 'connect'
-          },
-          '*'
-        )
-      } catch (error) {
-        reject(error)
-        return
-      }
-    }
+    // 先声明 timeout 变量
+    let timeout: ReturnType<typeof setTimeout> | null
 
-    // 设置超时，避免无限等待
-    const timeout = setTimeout(() => {
-      reject(new Error('Timeout waiting for globalState'))
-    }, 10000)
+    timeout = null
 
+    // 定义 handler 函数
     const handler = (event: MessageEvent) => {
       // 更宽松的源检查，允许同域不同端口的通信
       const parsedOrigin = new URL(event.origin)
@@ -59,7 +44,30 @@ export const initRuntimeChannel = () => {
       }
     }
 
+    // 设置超时，避免无限等待
+    timeout = setTimeout(() => {
+      window.removeEventListener('message', handler)
+      reject(new Error('Timeout waiting for globalState'))
+    }, 10000)
+
     window.addEventListener('message', handler)
+
+    if (window.opener) {
+      try {
+        window.opener.postMessage(
+          {
+            source: 'runtime',
+            event: 'connect'
+          },
+          window.location.origin
+        )
+      } catch (error) {
+        clearTimeout(timeout)
+        window.removeEventListener('message', handler)
+        reject(error)
+        return
+      }
+    }
   })
 }
 

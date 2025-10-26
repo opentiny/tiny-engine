@@ -63,6 +63,7 @@ async function createRouterConfig() {
       }
 
       // 递归处理子路由
+      // 注意JAVA后端的page.id为number，而mockServer的page.id为string
       const children = childrenMap.get(String(page.id)) || []
       children.forEach((child) => {
         const childRoute = buildRouteConfig(child)
