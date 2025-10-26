@@ -15,13 +15,15 @@ import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
 let hasRuntimeListener = false
-//sd
+
 const sendDepsToRuntime = () => {
+  const paramsMap = new URLSearchParams(location.search)
+  const pageid = paramsMap.get('pageid') || ''
   const globalState = JSON.parse(JSON.stringify(useResource().appSchemaState.globalState))
   const { scripts, styles } = useMaterial().getCanvasDeps()
   const stylesDeps = JSON.parse(JSON.stringify(styles))
   const pkgDeps = JSON.parse(JSON.stringify(scripts))
-  const globalDeps = { pkgDeps, stylesDeps, globalState }
+  const globalDeps = { pkgDeps, stylesDeps, globalState, pageid }
   if (!runtimeWindow || runtimeWindow.closed) return
   runtimeWindow.postMessage(
     {
