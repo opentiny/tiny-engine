@@ -3,7 +3,6 @@ import { ref } from 'vue'
 const designerGlobalState = ref<any>(null)
 const designerPkgDeps = ref<any>(null)
 const designerStylesDeps = ref<any>(null)
-export let designerPageid: string
 
 export const initRuntimeChannel = () => {
   return new Promise((resolve, reject) => {
@@ -31,7 +30,6 @@ export const initRuntimeChannel = () => {
           designerGlobalState.value = JSON.parse(JSON.stringify(data.globalState))
           designerPkgDeps.value = JSON.parse(JSON.stringify(data.pkgDeps))
           designerStylesDeps.value = JSON.parse(JSON.stringify(data.stylesDeps))
-          designerPageid = data.pageid
 
           clearTimeout(timeout)
           window.removeEventListener('message', handler)

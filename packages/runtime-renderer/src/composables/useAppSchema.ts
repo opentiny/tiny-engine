@@ -8,22 +8,15 @@ import type {
   ComponentMap,
   PackageConfig
 } from '../types/schema'
+import { initUtils } from '../app-function/utils'
 import i18n from '@opentiny/tiny-engine-i18n-host'
 import {
   initRuntimeChannel,
   getDesignerGlobalState,
   getDesignerPkgDeps,
-  getDesignerStylesDeps,
-  designerPageid
+  getDesignerStylesDeps
 } from './useCommunication'
-import {
-  addStyle,
-  getComponents,
-  loadPackageDependencys,
-  initDataSource,
-  initImportMap,
-  initUtils
-} from '../app-function'
+import { addStyle, getComponents, loadPackageDependencys, initDataSource, initImportMap } from '../app-function'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -257,8 +250,6 @@ export function useAppSchema() {
     packages,
     isAppLoaded,
     i18nConfig,
-
-    designerPageid,
 
     // 方法
     fetchAppSchema,
