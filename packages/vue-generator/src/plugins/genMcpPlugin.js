@@ -1,5 +1,13 @@
 import { mergeOptions } from '../utils/mergeOptions'
 import { INSERT_POSITION, JS_EXPRESSION } from '../constant'
+import mcpBaseTemplate from '../templates/vue-template/templateFiles/src/mcp/base.ts'
+import mcpServerTemplate from '../templates/vue-template/templateFiles/src/mcp/server.ts'
+import mcpNavigationToolsTemplate from '../templates/vue-template/templateFiles/src/mcp/tools/navigationTools.ts'
+import mcpImportsTemplate from '../templates/vue-template/templateFiles/src/mcp/App.vue.mcp-imports.ts'
+import mcpSetupTemplate from '../templates/vue-template/templateFiles/src/mcp/App.vue.mcp-setup.ts'
+import mcpTemplateTemplate from '../templates/vue-template/templateFiles/src/mcp/App.vue.mcp-template.ts'
+import mcpStyleTemplate from '../templates/vue-template/templateFiles/src/mcp/App.vue.mcp-style.ts'
+import mcpOnMountedTemplate from '../templates/vue-template/templateFiles/src/mcp/App.vue.mcp-onMounted.ts'
 
 const defaultOption = {
   enabled: false, // 默认禁用 MCP，用户需要显式启用
@@ -20,12 +28,11 @@ const defaultOption = {
 }
 
 /**
- * 生成导航工具代码
+ * 提取路由信息
  * @param {Array} pageSchema 页面模式数组
- * @returns {string} 导航工具代码
+ * @returns {Array} 路由列表
  */
-function generateNavigationTools(pageSchema) {
-  // 从页面模式中提取路由路径，支持 route 和 router 字段
+function extractRoutes(pageSchema) {
   const routes = pageSchema
     .filter((page) => page.meta && (page.meta.route || page.meta.router))
     .map((page) => {
@@ -39,103 +46,17 @@ function generateNavigationTools(pageSchema) {
     routes.push('home')
   }
 
-  const routeEnum = routes.map((route) => `"${route}"`).join(', ')
+  return routes
+}
 
-  return `import { z } from "@opentiny/next-sdk"
-import type { WebMcpServer } from "@opentiny/next-sdk"
-import type { Router } from 'vue-router'
-
-export function registerNavigationTools(server: WebMcpServer, router: Router) {
-  server.registerTool(
-    "navigate-to-page",
-    {
-      title: "页面导航",
-      description: "导航到指定页面",
-      inputSchema: {
-        path: z.enum([${routeEnum}])
-          .describe("目标页面路径"),
-      },
-    },
-    async ({ path }: { path: string }) => {
-      try {
-        await router.push(\`/\${path}\`)
-        return {
-          content: [{ type: "text", text: \`已导航到 \${path} 页面\` }],
-        }
-      } catch (error) {
-        return {
-          content: [{ type: "text", text: \`导航失败：\${error}\` }],
-        }
-      }
-    }
-  )
-
-  server.registerTool(
-    "go-back",
-    {
-      title: "返回上一页",
-      description: "返回到上一个页面",
-      inputSchema: {},
-    },
-    async () => {
-      try {
-        router.back()
-        return {
-          content: [{ type: "text", text: "已返回上一页" }],
-        }
-      } catch (error) {
-        return {
-          content: [{ type: "text", text: \`返回上一页失败：\${error}\` }],
-        }
-      }
-    }
-  )
-
-  server.registerTool(
-    "go-forward",
-    {
-      title: "前进到下一页",
-      description: "前进到下一个页面",
-      inputSchema: {},
-    },
-    async () => {
-      try {
-        router.forward()
-        return {
-          content: [{ type: "text", text: "已前进到下一页" }],
-        }
-      } catch (error) {
-        return {
-          content: [{ type: "text", text: \`前进到下一页失败：\${error}\` }],
-        }
-      }
-    }
-  )
-
-  server.registerTool(
-    "get-current-route",
-    {
-      title: "获取当前路由",
-      description: "获取当前页面的路由信息",
-      inputSchema: {},
-    },
-    async () => {
-      try {
-        const currentRoute = router.currentRoute.value
-        return {
-          content: [{ 
-            type: "text", 
-            text: \`当前路由：\${currentRoute.path}，页面名称：\${String(currentRoute.name)}\` 
-          }],
-        }
-      } catch (error) {
-        return {
-          content: [{ type: "text", text: \`获取当前路由失败：\${error}\` }],
-        }
-      }
-    }
-  )
-}`
+/**
+ * 生成导航工具代码（使用模板）
+ * @param {Array} pageSchema 页面模式数组
+ * @returns {string} 导航工具代码
+ */
+function generateNavigationTools(pageSchema) {
+  const routes = extractRoutes(pageSchema)
+  return mcpNavigationToolsTemplate(null, { routes })
 }
 
 /**
@@ -240,232 +161,33 @@ export function registerApplicationTools(server: WebMcpServer) {`
 }
 
 /**
- * 生成 MCP 服务器文件
+ * 工具生成器注册表（配置驱动）
+ * 新增工具只需在此添加对应的生成函数
+ */
+const toolGenerators = {
+  navigation: generateNavigationTools,
+  application: generateApplicationTools
+}
+
+/**
+ * 生成 MCP 服务器文件（使用模板）
  * @param {Array} enabledTools 启用的工具类别
  * @returns {string} MCP 服务器代码
  */
 function generateMcpServer(enabledTools) {
-  let imports = `import type { Router } from 'vue-router'
-import { WebMcpServer } from "@opentiny/next-sdk"
-import { registerMcpConfig } from '@opentiny/vue-common'
-import { createMcpTools, getTinyVueMcpConfig } from '@opentiny/tiny-vue-mcp'`
-
-  let toolImports = ''
-  let registrations = ''
-
-  if (enabledTools.includes('navigation')) {
-    toolImports += `
-import { registerNavigationTools } from './tools/navigationTools'`
-    registrations += `
-      registerNavigationTools(server, this.router!);`
-  }
-
-  if (enabledTools.includes('application')) {
-    toolImports += `
-import { registerApplicationTools } from './tools/applicationTools'`
-    registrations += `
-      registerApplicationTools(server);`
-  }
-
-  return `${imports}${toolImports}
-
-// 配置接口
-interface PageServerConfig {
-  name: string
-  business: {
-    id: string
-    description: string
-  }
-}
-
-// MCP 服务器管理器
-export class McpServerManager {
-  private servers = new Map<string, WebMcpServer>()
-  private mainServer: WebMcpServer | null = null
-  private router: Router | null = null
-  private capabilities: any = null
-
-  /**
-   * 注册服务器 tools
-   * @param mode 模式：page 页面服务器，main 应用级别服务器
-   * @param server 服务器实例
-   */
-  registerServerToolsByMode(mode: 'page' | 'main', server: WebMcpServer) {
-    const commonRegistrations = () => {${registrations}
-    };
-
-    if (mode === 'main') {
-      registerMcpConfig(getTinyVueMcpConfig(), createMcpTools);
-    }
-
-    commonRegistrations();
-  }
-
-  // 初始化管理器
-  init(router: Router, config: any) {
-    this.router = router
-    this.capabilities = config.capabilities
-
-    // 创建主服务器
-    this.mainServer = new WebMcpServer(
-      { name: "business-app", version: "1.0.0" },
-      { capabilities: this.capabilities }
-    )
-
-    // 注册主服务器 tools
-    this.registerServerToolsByMode('main', this.mainServer)
-  }
-
-  // 获取或创建页面服务器
-  getPageServer(pageId: string, config?: PageServerConfig): WebMcpServer {
-    // 返回缓存的服务器
-    if (this.servers.has(pageId)) {
-      return this.servers.get(pageId)!
-    }
-
-    // 创建新服务器
-    const serverConfig = config || {
-      name: pageId,
-      business: { id: pageId, description: \`\${pageId} 页面\` }
-    }
-
-    const server = new WebMcpServer(
-      { name: serverConfig.name, version: "1.0.0" },
-      { capabilities: this.capabilities }
-    )
-
-    // 注册页面服务器 tools
-    this.registerServerToolsByMode('page', server)
-
-    // 缓存并返回
-    this.servers.set(pageId, server)
-    console.log(\`页面服务器 \${pageId} 创建完成\`)
-
-    return server
-  }
-
-  // 连接所有服务器
-  async connectAll(transport: any) {
-    const results = []
-
-    // 连接主服务器
-    if (this.mainServer) {
-      try {
-        await this.mainServer.connect(transport)
-        this.mainServer.transport = transport
-        results.push({ name: 'main', success: true })
-      } catch (error) {
-        console.error('主服务器连接失败:', error)
-        results.push({ name: 'main', success: false })
-      }
-    }
-
-    // 连接页面服务器
-    for (const [pageId, server] of this.servers.entries()) {
-      try {
-        await server.connect(transport)
-        server.transport = transport
-        results.push({ name: pageId, success: true })
-      } catch (error) {
-        console.error(\`页面服务器 \${pageId} 连接失败:\`, error)
-        results.push({ name: pageId, success: false })
-      }
-    }
-
-    console.log(\`服务器连接完成: \${results.filter(r => r.success).length}/\${results.length} 成功\`)
-    return results
-  }
-
-  // 获取主服务器
-  getMainServer() {
-    return this.mainServer
-  }
-
-  // 清理页面服务器
-  removePageServer(pageId: string) {
-    const server = this.servers.get(pageId)
-    if (server) {
-      server.transport = null
-      this.servers.delete(pageId)
-      console.log(\`页面服务器 \${pageId} 已清理\`)
-    }
-  }
-
-  // 清理所有资源
-  dispose() {
-    // 清理所有服务器
-    this.servers.forEach(server => {
-      server.transport = null
-    })
-    this.servers.clear()
-
-    if (this.mainServer) {
-      this.mainServer.transport = null
-    }
-
-    this.mainServer = null
-    this.router = null
-    this.capabilities = null
-
-    console.log('所有服务器资源已清理')
-  }
-}
-
-// 全局实例
-export const mcpServerManager = new McpServerManager()
-
-// 页面级服务器 composable
-export function usePageMcpServer(pageId: string, config?: PageServerConfig) {
-  const server = mcpServerManager.getPageServer(pageId, config)
-
-  // 连接服务器
-  const connect = async (): Promise<boolean> => {
-    // 已连接直接返回
-    if (server?.transport) {
-      console.log(\`页面服务器 \${pageId} 已经连接\`)
-      return true
-    }
-
-    // 获取主服务器传输层并连接
-    const transport = mcpServerManager.getMainServer()?.transport
-    if (!transport) {
-      console.warn(\`无法连接页面服务器 \${pageId}: 主服务器未连接\`)
-      return false
-    }
-
-    try {
-      await server!.connect(transport)
-      server!.transport = transport
-      console.log(\`页面服务器 \${pageId} 已连接\`)
-      return true
-    } catch (error) {
-      console.error(\`页面服务器 \${pageId} 连接失败:\`, error)
-      return false
-    }
-  }
-
-  // 断开连接并清理页面服务器
-  const disconnect = () => {
-    if (server?.transport) {
-      server.transport = null
-      console.log(\`页面服务器 \${pageId} 已断开连接\`)
-    }
-
-    mcpServerManager.removePageServer(pageId)
-  }
-
-  return { server, connect, disconnect }
-}`
+  return mcpServerTemplate(null, { enabledTools })
 }
 
 /**
- * 生成基础配置文件
+ * 生成基础配置文件（使用模板）
  * @param {Object} config MCP 配置
  * @returns {string} 基础配置代码
  */
 function generateBaseConfig(config) {
-  return `export const AGENT_ROOT = '${config.agentRoot}'
-export const SESSION_ID = '${config.sessionId}'`
+  return mcpBaseTemplate(null, {
+    agentRoot: config.agentRoot,
+    sessionId: config.sessionId
+  })
 }
 
 /**
@@ -500,6 +222,160 @@ function modifyMainTs(originalContent) {
 }
 
 /**
+ * 辅助函数：添加必要的 imports
+ * @param {string} newScript 新脚本内容
+ * @param {string} existingScript 现有脚本内容
+ * @returns {string} 修改后的脚本
+ */
+function addRequiredImports(newScript, existingScript) {
+  if (!existingScript.includes('provide')) {
+    newScript = `import { provide, onMounted } from "vue";\n${newScript}`
+  } else if (!existingScript.includes('onMounted')) {
+    newScript = newScript.replace('import { provide', 'import { provide, onMounted')
+  }
+
+  if (!existingScript.includes('useRouter')) {
+    newScript = `import { useRouter } from "vue-router";\n${newScript}`
+  }
+
+  return newScript
+}
+
+/**
+ * 辅助函数：添加或修改 onMounted
+ * @param {string} newScript 新脚本内容
+ * @param {string} existingScript 现有脚本内容
+ * @param {string} mcpOnMountedCode MCP onMounted 代码
+ * @returns {string} 修改后的脚本
+ */
+function addOrModifyOnMounted(newScript, existingScript, mcpOnMountedCode) {
+  if (existingScript.includes('onMounted(')) {
+    // 已有 onMounted，在其中添加 MCP 初始化
+    newScript = newScript.replace(/onMounted\(\(\) => \{([\s\S]*?)\}\)/, (_, content) => {
+      return `onMounted(() => {${content}\n${mcpOnMountedCode}\n})`
+    })
+  } else {
+    // 没有 onMounted，添加新的
+    newScript += `\n\nonMounted(() => {\n${mcpOnMountedCode}\n});`
+  }
+  return newScript
+}
+
+/**
+ * 辅助函数：添加 MCP 模板
+ * @param {string} content 内容
+ * @param {string} mcpTemplate MCP 模板代码
+ * @returns {string} 修改后的内容
+ */
+function addMcpTemplate(content, mcpTemplate) {
+  if (!content.includes('<TinyRemoter')) {
+    content = content.replace('</template>', `${mcpTemplate}\n  </template>`)
+  }
+  return content
+}
+
+/**
+ * 辅助函数：添加 MCP 样式
+ * @param {string} content 内容
+ * @param {string} mcpStyle MCP 样式代码
+ * @returns {string} 修改后的内容
+ */
+function addMcpStyle(content, mcpStyle) {
+  if (content.includes('<style')) {
+    content = content.replace(/<\/style>/, `${mcpStyle}\n</style>`)
+  } else {
+    content += `\n\n<style scoped>${mcpStyle}\n</style>`
+  }
+  return content
+}
+
+/**
+ * 辅助函数：创建新的 script setup
+ * @param {string} originalContent 原始内容
+ * @param {string} mcpImports MCP imports
+ * @param {string} mcpSetup MCP setup 代码
+ * @param {string} mcpTemplate MCP 模板
+ * @param {string} mcpStyle MCP 样式
+ * @param {string} mcpOnMountedCode MCP onMounted 代码
+ * @returns {string} 修改后的内容
+ */
+function createNewScriptSetup(originalContent, mcpImports, mcpSetup, mcpTemplate, mcpStyle, mcpOnMountedCode) {
+  const mcpScript = `<script setup lang="ts">
+${mcpImports}
+import { useRouter } from "vue-router";
+import { I18nInjectionKey } from 'vue-i18n'
+import { provide, onMounted } from 'vue'
+import i18n from './i18n'
+
+provide(I18nInjectionKey, i18n)
+
+const router = useRouter();
+${mcpSetup}
+
+onMounted(() => {
+${mcpOnMountedCode}
+});
+</script>`
+
+  let modifiedContent = originalContent.replace(/<template>/, `${mcpScript}\n\n<template>`)
+  modifiedContent = addMcpTemplate(modifiedContent, mcpTemplate)
+  modifiedContent = addMcpStyle(modifiedContent, mcpStyle)
+
+  return modifiedContent
+}
+
+/**
+ * 辅助函数：修改已有的 script setup
+ * @param {string} originalContent 原始内容
+ * @param {Object} scriptSetupMatch script setup 匹配结果
+ * @param {string} mcpImports MCP imports
+ * @param {string} mcpSetup MCP setup 代码
+ * @param {string} mcpTemplate MCP 模板
+ * @param {string} mcpStyle MCP 样式
+ * @param {string} mcpOnMountedCode MCP onMounted 代码
+ * @returns {string} 修改后的内容
+ */
+function modifyExistingScriptSetup(
+  originalContent,
+  scriptSetupMatch,
+  mcpImports,
+  mcpSetup,
+  mcpTemplate,
+  mcpStyle,
+  mcpOnMountedCode
+) {
+  const existingScript = scriptSetupMatch[1]
+  let newScript = existingScript
+
+  // 添加必要的 imports
+  newScript = addRequiredImports(newScript, existingScript)
+  newScript = `${mcpImports}\n${newScript}`
+
+  // 添加 router 变量（如果不存在）
+  if (!existingScript.includes('const router')) {
+    newScript += `\nconst router = useRouter();`
+  }
+
+  // 添加 MCP 设置代码
+  newScript += mcpSetup
+
+  // 修改或添加 onMounted
+  newScript = addOrModifyOnMounted(newScript, existingScript, mcpOnMountedCode)
+
+  // 替换原始脚本
+  let modifiedContent = originalContent.replace(
+    scriptSetupMatch[0],
+    `<script setup lang="ts">\n${newScript}\n</script>`
+  )
+
+  // 添加模板和样式
+  modifiedContent = addMcpTemplate(modifiedContent, mcpTemplate)
+  modifiedContent = addMcpStyle(modifiedContent, mcpStyle)
+
+  return modifiedContent
+}
+
+/**
  * 修改 App.vue 文件以包含 MCP 集成
  * @param {string} originalContent 原始 App.vue 内容
  * @param {Object} config MCP 配置
@@ -511,265 +387,31 @@ function modifyAppVue(originalContent, config) {
     return originalContent
   }
 
+  // 获取模板内容
+  const mcpImports = mcpImportsTemplate()
+  const mcpSetup = mcpSetupTemplate(null, { capabilities: config.capabilities })
+  const mcpTemplate = mcpTemplateTemplate()
+  const mcpStyle = mcpStyleTemplate()
+  const mcpOnMountedCode = mcpOnMountedTemplate()
+
   // 提取 script setup 部分
   const scriptSetupMatch = originalContent.match(/<script setup[^>]*>([\s\S]*?)<\/script>/)
+
   if (!scriptSetupMatch) {
-    // 如果没有 script setup，创建一个新的
-    const mcpScript = `<script setup lang="ts">
-import { TinyRemoter } from "@opentiny/next-remoter";
-import {
-  WebMcpClient,
-  createMessageChannelPairTransport,
-} from "@opentiny/next-sdk";
-import type { Transport } from "@opentiny/next-sdk";
-import { AGENT_ROOT, SESSION_ID } from "./base";
-import { mcpServerManager } from "./mcp/server";
-import { useRouter } from "vue-router";
-import { I18nInjectionKey } from 'vue-i18n'
-import { provide, onMounted } from 'vue'
-import i18n from './i18n'
-
-provide(I18nInjectionKey, i18n)
-
-const router = useRouter();
-const [serverTransport, clientTransport] = createMessageChannelPairTransport();
-
-// 定义 MCP Server 的能力
-const capabilities = ${JSON.stringify(config.capabilities, null, 2)};
-
-const mcpServer: {
-  transport: Transport | null;
-  capabilities: Record<string, any>;
-} = {
-  transport: serverTransport,
-  capabilities,
-};
-
-provide("mcpServer", mcpServer);
-
-serverTransport.onerror = (error) => {
-  console.error(\`ServerTransport error:\`, error);
-};
-
-const createProxyTransport = async () => {
-  const client = new WebMcpClient(
-    { name: "mcp-web-client", version: "1.0.0" },
-    {
-      capabilities: {
-        roots: { listChanged: true },
-        sampling: {},
-        elicitation: {},
-      },
-    }
-  );
-  // @ts-expect-error client
-  window.client = client;
-  await client.connect(clientTransport);
-
-  await client.connect({
-    url: AGENT_ROOT + "mcp",
-    sessionId: SESSION_ID,
-    agent: true,
-    onError: (error: Error) => {
-      console.error("Connect proxy error:", error);
-    },
-  });
-
-  window.addEventListener("pagehide", client.onPagehide);
-};
-
-// 初始化MCP服务器管理器
-const initMcpServer = async () => {
-  try {
-    // 初始化管理器
-    mcpServerManager.init(router, mcpServer);
-    // 连接所有服务器
-    await mcpServerManager.connectAll(mcpServer.transport as Transport);
-    console.log('MCP 服务器管理器初始化成功');
-  } catch (error) {
-    console.error('MCP 服务器管理器初始化失败:', error);
-  }
-};
-
-onMounted(() => {
-  createProxyTransport();
-  initMcpServer();
-});
-</script>`
-
-    let modifiedContent = originalContent.replace(/<template>/, `${mcpScript}\n\n<template>`)
-
-    // 在模板中添加 TinyRemoter 组件
-    if (!modifiedContent.includes('TinyRemoter')) {
-      // 查找 </template> 标签前添加 TinyRemoter
-      modifiedContent = modifiedContent.replace(
-        '</template>',
-        `    <TinyRemoter :sessionId="SESSION_ID" class="remoter" />\n  </template>`
-      )
-
-      // 添加 TinyRemoter 的样式
-      const remoterStyles = `
-:deep(.next-sdk-trigger-btn) {
-  font-size: 30px;
-}`
-
-      // 添加样式到现有的 style 标签中，或创建新的 style 标签
-      if (modifiedContent.includes('<style')) {
-        modifiedContent = modifiedContent.replace(/<\/style>/, `${remoterStyles}\n</style>`)
-      } else {
-        modifiedContent += `\n\n<style scoped>${remoterStyles}\n</style>`
-      }
-    }
-
-    return modifiedContent
+    // 没有 script setup，创建完整的新 script
+    return createNewScriptSetup(originalContent, mcpImports, mcpSetup, mcpTemplate, mcpStyle, mcpOnMountedCode)
   }
 
-  // 如果存在 script setup，则修改它
-  const existingScript = scriptSetupMatch[1]
-
-  // 添加必要的导入
-  const mcpImports = `import { TinyRemoter } from "@opentiny/next-remoter";
-import {
-  WebMcpClient,
-  createMessageChannelPairTransport,
-} from "@opentiny/next-sdk";
-import type { Transport } from "@opentiny/next-sdk";
-import { AGENT_ROOT, SESSION_ID } from "./base";
-import { mcpServerManager } from "./mcp/server";`
-
-  // 添加 MCP 相关代码
-  const mcpCode = `
-const [serverTransport, clientTransport] = createMessageChannelPairTransport();
-
-// 定义 MCP Server 的能力
-const capabilities = ${JSON.stringify(config.capabilities, null, 2)};
-
-const mcpServer: {
-  transport: Transport | null;
-  capabilities: Record<string, any>;
-} = {
-  transport: serverTransport,
-  capabilities,
-};
-
-provide("mcpServer", mcpServer);
-
-serverTransport.onerror = (error) => {
-  console.error(\`ServerTransport error:\`, error);
-};
-
-const createProxyTransport = async () => {
-  const client = new WebMcpClient(
-    { name: "mcp-web-client", version: "1.0.0" },
-    {
-      capabilities: {
-        roots: { listChanged: true },
-        sampling: {},
-        elicitation: {},
-      },
-    }
-  );
-  // @ts-expect-error client
-  window.client = client;
-  await client.connect(clientTransport);
-
-  await client.connect({
-    url: AGENT_ROOT + "mcp",
-    sessionId: SESSION_ID,
-    agent: true,
-    onError: (error: Error) => {
-      console.error("Connect proxy error:", error);
-    },
-  });
-
-  window.addEventListener("pagehide", client.onPagehide);
-};
-
-// 初始化MCP服务器管理器
-const initMcpServer = async () => {
-  try {
-    // 初始化管理器
-    mcpServerManager.init(router, mcpServer);
-    // 连接所有服务器
-    await mcpServerManager.connectAll(mcpServer.transport as Transport);
-    console.log('MCP 服务器管理器初始化成功');
-  } catch (error) {
-    console.error('MCP 服务器管理器初始化失败:', error);
-  }
-};`
-
-  // 修改 onMounted 或添加新的 onMounted
-  let newScript = existingScript
-
-  // 添加导入
-  if (!existingScript.includes('provide')) {
-    newScript = `import { provide, onMounted } from "vue";\n${newScript}`
-  } else if (!existingScript.includes('onMounted')) {
-    newScript = newScript.replace('import { provide', 'import { provide, onMounted')
-  }
-
-  if (!existingScript.includes('useRouter')) {
-    newScript = `import { useRouter } from "vue-router";\n${newScript}`
-  }
-
-  newScript = `${mcpImports}\n${newScript}`
-
-  // 添加 router 变量如果不存在
-  if (!existingScript.includes('const router')) {
-    newScript += `\nconst router = useRouter();`
-  }
-
-  // 添加 MCP 代码
-  newScript += mcpCode
-
-  // 修改或添加 onMounted
-  if (existingScript.includes('onMounted(')) {
-    // 如果已经有 onMounted，在其中添加 MCP 初始化
-    newScript = newScript.replace(/onMounted\(\(\) => \{([\s\S]*?)\}\)/, (match, content) => {
-      return `onMounted(() => {${content}
-  createProxyTransport();
-  initMcpServer();
-})`
-    })
-  } else {
-    // 如果没有 onMounted，添加新的
-    newScript += `
-
-onMounted(() => {
-  createProxyTransport();
-  initMcpServer();
-});`
-  }
-
-  // 替换原始脚本
-  let modifiedContent = originalContent.replace(
-    scriptSetupMatch[0],
-    `<script setup lang="ts">\n${newScript}\n</script>`
+  // 已有 script setup，修改它
+  return modifyExistingScriptSetup(
+    originalContent,
+    scriptSetupMatch,
+    mcpImports,
+    mcpSetup,
+    mcpTemplate,
+    mcpStyle,
+    mcpOnMountedCode
   )
-
-  // 在模板中添加 TinyRemoter 组件（检查模板部分是否已包含）
-  if (!modifiedContent.includes('<TinyRemoter')) {
-    // 查找 </template> 标签前添加 TinyRemoter
-    modifiedContent = modifiedContent.replace(
-      '</template>',
-      `    <TinyRemoter :sessionId="SESSION_ID" class="remoter" />\n  </template>`
-    )
-
-    // 添加 TinyRemoter 的样式
-    const remoterStyles = `
-:deep(.next-sdk-trigger-btn) {
-  font-size: 30px;
-}`
-
-    // 添加样式到现有的 style 标签中，或创建新的 style 标签
-    if (modifiedContent.includes('<style')) {
-      modifiedContent = modifiedContent.replace(/<\/style>/, `${remoterStyles}\n</style>`)
-    } else {
-      modifiedContent += `\n\n<style scoped>${remoterStyles}\n</style>`
-    }
-  }
-
-  return modifiedContent
 }
 
 /**
@@ -980,44 +622,39 @@ function genMcpPlugin(options = {}) {
           fileContent: generateMcpServer(enabledTools)
         })
 
-        // 生成工具文件
-        if (tools.navigation) {
-          try {
-            files.push({
-              fileType: 'ts',
-              fileName: 'navigationTools.ts',
-              path: './src/mcp/tools',
-              fileContent: generateNavigationTools(schema.pageSchema || [])
-            })
-          } catch (error) {
-            if (this.addLog) {
-              this.addLog({
-                type: 'warning',
-                message: `导航工具生成失败: ${error.message}`,
-                plugin: 'genMcpPlugin'
-              })
-            }
-          }
-        }
+        // 使用配置驱动的方式生成工具文件
+        Object.entries(tools).forEach(([toolName, enabled]) => {
+          if (enabled && toolGenerators[toolName]) {
+            try {
+              const generator = toolGenerators[toolName]
+              const toolFileName = `${toolName}Tools.ts`
 
-        if (tools.application) {
-          try {
-            files.push({
-              fileType: 'ts',
-              fileName: 'applicationTools.ts',
-              path: './src/mcp/tools',
-              fileContent: generateApplicationTools(schema)
-            })
-          } catch (error) {
+              files.push({
+                fileType: 'ts',
+                fileName: toolFileName,
+                path: './src/mcp/tools',
+                fileContent: generator(toolName === 'navigation' ? schema.pageSchema || [] : schema)
+              })
+            } catch (error) {
+              if (this.addLog) {
+                this.addLog({
+                  type: 'warning',
+                  message: `${toolName} 工具生成失败: ${error.message}`,
+                  plugin: 'genMcpPlugin'
+                })
+              }
+            }
+          } else if (enabled && !toolGenerators[toolName]) {
+            // 工具已启用但未找到对应的生成器
             if (this.addLog) {
               this.addLog({
                 type: 'warning',
-                message: `应用程序工具生成失败: ${error.message}`,
+                message: `未找到 ${toolName} 工具的生成器，请检查 toolGenerators 配置`,
                 plugin: 'genMcpPlugin'
               })
             }
           }
-        }
+        })
 
         // 检查并处理页面中的 tiny_mcp_config 配置
         let hasPageMcpConfig = false
@@ -1098,6 +735,11 @@ function genMcpPlugin(options = {}) {
 
 // 导出属性转换钩子，供其他生成器使用
 export const handleTinyMcpConfigAttrHook = (schemaData, globalHooks, config) => {
+  // 早期返回：如果 MCP 未启用，直接返回，不处理任何 tiny_mcp_config
+  if (config?.mcpEnabled === false) {
+    return
+  }
+
   const { schema: { props = {} } = {} } = schemaData || {}
 
   // 检查是否有 tiny_mcp_config 属性
