@@ -489,8 +489,8 @@ function transformTinyMcpConfig(schema) {
         value: `{
           server,
           business: {
-            id: '${mcpConfig.id}',
-            description: '${mcpConfig.description}'
+            id: ${JSON.stringify(mcpConfig.id)},
+            description: ${JSON.stringify(mcpConfig.description)}
           }
         }`
       }
@@ -769,7 +769,9 @@ export const handleTinyMcpConfigAttrHook = (schemaData, globalHooks, config) => 
       // 转换为完整格式的 JSExpression
       const transformedConfig = {
         type: 'JSExpression',
-        value: `{ server, business: { id: '${mcpConfig.id}', description: '${mcpConfig.description}' } }`
+        value: `{ server, business: { id: ${JSON.stringify(mcpConfig.id)}, description: ${JSON.stringify(
+          mcpConfig.description
+        )} } }`
       }
 
       // 更新 props
