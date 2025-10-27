@@ -78,6 +78,16 @@ const getBlock = (name) => {
   return window.blocks?.[name]
 }
 
+let pageScopeId = ''
+
+const setPageScopeId = (scopeId: string) => {
+  pageScopeId = scopeId
+}
+
+const getPageScopeId = () => {
+  return pageScopeId
+}
+
 export const getComponent = (name) => {
   // 首先尝试从映射表、原生组件、自定义元素中获取
   const component = Mapper[name] || getNative(name) || customElements[name]
@@ -118,13 +128,14 @@ export const getComponent = (name) => {
         const cssScopeId = getBlockCssScopeId(blockSchema.schema.fileName)
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         const children = renderGroup(blockContent.children || [], { cssScopeId }, context, renderComponent)
+        const pageScopeId = getPageScopeId()
 
         return h(
           'div',
           {
-            [cssScopeId]: ''
+            [pageScopeId]: ''
           },
-          children
+          h('div', { [cssScopeId]: '', ...blockContent.props }, children)
         )
       }
     })
@@ -344,7 +355,6 @@ const getChildren = (schema, mergeScope, context, renderComponent) => {
 
 function renderComponent(schema, scope, parent) {
   const { componentName, loop, loopArgs, condition } = schema
-  //console.log('renderComponent', schema)
 
   // 处理数据源和表格fetchData的映射关系
   generateCollection(schema)
@@ -415,6 +425,8 @@ export const renderer = defineComponent({
 
     const context = inject('pageContext')
     const lifeCycles = props.parent?.lifeCycles
+    const pageScopeId = context?.cssScopeId || context?.getCssScopeId?.()
+    setPageScopeId(pageScopeId)
 
     // 注入生命周期钩子
     if (lifeCycles?.setup) {

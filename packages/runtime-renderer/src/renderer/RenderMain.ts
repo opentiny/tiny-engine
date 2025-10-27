@@ -103,7 +103,6 @@ export default defineComponent({
       setState(newSchema.state, true)
       await nextTick()
       setPageCss(data.css || '', cssScopeId)
-
       Object.assign(pageSchema, newSchema)
     }
 
@@ -129,7 +128,7 @@ export default defineComponent({
     // 渲染画布增加根节点，与出码和预览保持一致
     const rootChildrenSchema: any = {
       componentName: 'div',
-      // 把页级 props（主要是 className: "page-base-style"）挂到根容器
+      // 把页级 props（主要是页面样式）挂到根容器
       props: { ...(pageSchema.props || {}) },
       children: pageSchema.children
     }

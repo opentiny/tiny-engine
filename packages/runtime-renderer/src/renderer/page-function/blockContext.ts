@@ -75,7 +75,6 @@ export const createBlockContext = () => {
 
     const cssHandler = getCSSHandler({ enableScoped: true })
     cssHandler.setPageCss(data.css || '', cssScopeId)
-    //console.log('setPageCss', data.css)
     return context
   }
 
