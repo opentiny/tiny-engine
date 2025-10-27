@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import { VueToDslConverter } from '../../src/converter'
 
 describe('VueToDslConverter', () => {
-  const converter = new VueToDslConverter()
+  const converter = new VueToDslConverter({ computed_flag: true })
 
   it('should convert simple Vue SFC to DSL', async () => {
     const vueCode = `
@@ -101,5 +101,23 @@ onMounted(() => { /* mounted */ })
     // lifecycle hook stored with key 'onMounted'
     expect(result.schema.lifeCycles.onMounted).toBeDefined()
     expect(result.schema.methods.inc).toBeDefined()
+  })
+
+  it('should omit computed by default when flag is false', async () => {
+    const vueCode = `
+<template>
+  <div>{{ doubled }}</div>
+</template>
+
+<script setup>
+import { computed } from 'vue'
+const doubled = computed(() => 2)
+</script>
+    `
+
+    const defaultConverter = new VueToDslConverter()
+    const result = await defaultConverter.convertFromString(vueCode)
+    expect(result.errors).toHaveLength(0)
+    expect(result.schema.computed).toBeUndefined()
   })
 })

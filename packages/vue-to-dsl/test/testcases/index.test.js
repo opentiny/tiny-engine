@@ -5,7 +5,7 @@ import path from 'path'
 
 describe('VueToDslConverter testcases', () => {
   const baseDir = path.resolve(__dirname, '.')
-  const converter = new VueToDslConverter()
+  const converter = new VueToDslConverter({ computed_flag: true })
 
   const cases = fs.readdirSync(baseDir).filter((name) => /\d+_/.test(name))
 

@@ -17,7 +17,7 @@ function writeOutput(name, schema) {
 
 describe('Full - convert app directory', () => {
   it('should convert input/appdemo01 into a merged schema.json', async () => {
-    const converter = new VueToDslConverter()
+    const converter = new VueToDslConverter({ computed_flag: true })
     const schema = await converter.convertAppDirectory(appDir)
     // 关键字段基本断言
     expect(schema).toBeDefined()
@@ -29,7 +29,7 @@ describe('Full - convert app directory', () => {
   })
 
   it('should convert appdemo01.zip buffer into a merged schema.json', async () => {
-    const converter = new VueToDslConverter()
+    const converter = new VueToDslConverter({ computed_flag: true })
     const zipPath = path.join(inputDir, 'appdemo01.zip')
     const zipBuf = fs.readFileSync(zipPath)
     const schema = await converter.convertAppFromZip(zipBuf)
