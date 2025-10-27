@@ -1,8 +1,8 @@
 export default (schema, options) => {
   const { routes } = options
 
-  // 生成路由枚举
-  const routeEnum = routes.map((route) => `"${route}"`).join(', ')
+  // 生成路由枚举，使用 JSON.stringify 来正确转义特殊字符
+  const routeEnum = routes.map((route) => JSON.stringify(route)).join(', ')
 
   return `import { z } from "@opentiny/next-sdk"
 import type { WebMcpServer } from "@opentiny/next-sdk"

@@ -196,8 +196,12 @@ function generateBaseConfig(config) {
  * @returns {string} 修改后的内容
  */
 function modifyMainTs(originalContent) {
-  // 如果已经包含 tiny-robot 样式，则不重复添加
-  if (originalContent.includes('@opentiny/tiny-robot/dist/style.css')) {
+  // 检查是否已经包含两个样式导入
+  const hasTinyRobot = originalContent.includes('@opentiny/tiny-robot/dist/style.css')
+  const hasNextRemoter = originalContent.includes('@opentiny/next-remoter/dist/style.css')
+
+  // 如果两个都已存在，直接返回
+  if (hasTinyRobot && hasNextRemoter) {
     return originalContent
   }
 
@@ -214,9 +218,15 @@ function modifyMainTs(originalContent) {
     }
   }
 
-  // 插入 MCP 样式导入
-  lines.splice(insertIndex, 0, "import '@opentiny/tiny-robot/dist/style.css'")
-  lines.splice(insertIndex + 1, 0, "import '@opentiny/next-remoter/dist/style.css'")
+  // 只插入缺失的样式导入
+  if (!hasTinyRobot) {
+    lines.splice(insertIndex, 0, "import '@opentiny/tiny-robot/dist/style.css'")
+    insertIndex++ // 更新插入位置
+  }
+
+  if (!hasNextRemoter) {
+    lines.splice(insertIndex, 0, "import '@opentiny/next-remoter/dist/style.css'")
+  }
 
   return lines.join('\n')
 }
