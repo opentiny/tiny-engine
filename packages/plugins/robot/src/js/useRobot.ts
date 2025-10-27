@@ -10,65 +10,73 @@
  *
  */
 
-/* metaService: engine.plugins.robot.js-robotSetting */
+/* metaService: engine.plugins.robot.useRobot */
 import { reactive } from 'vue'
 import { getOptions, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 
-export const EXISTING_MODELS = 'existingModels'
-export const CUSTOMIZE = 'customize'
-export const VISUAL_MODEL = ['qwen-vl-max', 'qwen-vl-plus']
-export const TALK_TYPE = 'talk'
-export const MCP_TYPE = 'mcp'
-export const BUILD_TYPE = 'build'
+const EXISTING_MODELS = 'existingModels'
+const CUSTOMIZE = 'customize'
+const VISUAL_MODEL = ['qwen-vl-max', 'qwen-vl-plus']
+const AI_MODES = { Builder: 'builder', Chat: 'chat' }
 
-export const AIModelOptions = [
+const AIModelOptions = [
   {
     label: '阿里云百炼',
     value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     model: [
-      { label: 'qwen-vl-max', value: 'qwen-vl-max', maxTokens: 32000 },
-      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', maxTokens: 32000 },
-      { label: 'qwen-plus', value: 'qwen-plus', maxTokens: 131072 },
-      { label: 'qwen-max', value: 'qwen-max', maxTokens: 32768 },
-      { label: 'qwen-turbo', value: 'qwen-turbo', maxTokens: 1000000 },
-      { label: 'qwen-long', value: 'qwen-long', maxTokens: 1000000 },
-      { label: 'deepseek-r1', value: 'deepseek-r1', maxTokens: 65792 },
-      { label: 'deepseek-v3', value: 'deepseek-v3', maxTokens: 65792 }
+      { label: 'qwen-vl-max', value: 'qwen-vl-max', ability: ['visual'] },
+      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', ability: ['visual'] },
+      { label: 'qwen-plus', value: 'qwen-plus' },
+      { label: 'qwen-max', value: 'qwen-max' },
+      { label: 'qwen-turbo', value: 'qwen-turbo' },
+      { label: 'qwen-long', value: 'qwen-long' },
+      { label: 'deepseek-r1', value: 'deepseek-r1' },
+      { label: 'deepseek-v3', value: 'deepseek-v3' },
+      { label: 'qwen2.5-14b-instruct', value: 'qwen2.5-14b-instruct' },
+      { label: 'qwen2.5-7b-instruct', value: 'qwen2.5-7b-instruct' },
+      { label: 'qwen2.5-coder-7b-instruct', value: 'qwen2.5-coder-7b-instruct' },
+      { label: 'qwen2.5-omni', value: 'qwen2.5-omni' },
+      { label: 'qwen3-14b', value: 'qwen3-14b' },
+      { label: 'qwen3-8b', value: 'qwen3-8b' },
+      { label: 'deepseek-r1-distill-qwen-1.5b', value: 'deepseek-r1-distill-qwen-1.5b' },
+      { label: 'deepseek-r1-distill-qwen-32b', value: 'deepseek-r1-distill-qwen-32b' }
     ]
   },
   {
     label: 'DeepSeek',
     value: 'https://api.deepseek.com/v1',
     model: [
-      { label: 'deepseek-chat', value: 'deepseek-chat', maxTokens: 64000 },
-      { label: 'deepseek-reasoner', value: 'deepseek-reasoner', maxTokens: 64000 }
+      { label: 'deepseek-chat', value: 'deepseek-chat' },
+      { label: 'deepseek-reasoner', value: 'deepseek-reasoner' }
     ]
   },
   {
     label: '月之暗面',
     value: 'https://api.moonshot.cn/v1',
     model: [
-      { label: 'moonshot-v1-8k', value: 'moonshot-v1-8k', maxTokens: 8192 },
-      { label: 'moonshot-v1-32k', value: 'moonshot-v1-32k', maxTokens: 32768 },
-      { label: 'moonshot-v1-128k', value: 'moonshot-v1-128k', maxTokens: 131072 }
+      { label: 'moonshot-v1-8k', value: 'moonshot-v1-8k' },
+      { label: 'moonshot-v1-32k', value: 'moonshot-v1-32k' },
+      { label: 'moonshot-v1-128k', value: 'moonshot-v1-128k' }
     ]
   }
 ]
 
-export const getAIModelOptions = () => {
+const getAIModelOptions = () => {
   const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
   return aiRobotOptions.length ? aiRobotOptions : AIModelOptions
 }
 
-export const defaultSelectedModel = {
-  label: getAIModelOptions()[0].label,
-  activeName: EXISTING_MODELS,
-  baseUrl: getAIModelOptions()[0].value,
-  model: getAIModelOptions()[0].model[0].value,
-  maxTokens: getAIModelOptions()[0].model[0].maxTokens,
-  apiKey: ''
-}
+const robotSettingState = reactive({
+  selectedModel: {
+    label: getAIModelOptions()[0].label,
+    activeName: EXISTING_MODELS,
+    baseUrl: getAIModelOptions()[0].value,
+    model: getAIModelOptions()[0].model[0].value,
+    completeModel: getAIModelOptions()[0].model[0].value || '',
+    apiKey: ''
+  }
+})
 
 // 这里存放的是aichat的响应式数据
 const state = reactive({
@@ -76,13 +84,13 @@ const state = reactive({
   blockContent: ''
 })
 
-export const getBlocks = () => state.blockList || []
+const getBlocks = () => state.blockList || []
 
-export const setBlocks = (blocks) => {
+const setBlocks = (blocks) => {
   state.blockList = blocks
 }
 
-export const getBlockContent = () => state.blockContent || ''
+const getBlockContent = () => state.blockContent || ''
 
 const transformBlockNameToElement = (label) => {
   const elementName = label.replace(/[A-Z]/g, (letter, index) => {
@@ -106,7 +114,7 @@ const setBlockContent = (list = getBlocks()) => {
   }
 }
 
-export const initBlockList = async () => {
+const initBlockList = async () => {
   if (state.blockList?.length) {
     return
   }
@@ -121,7 +129,7 @@ export const initBlockList = async () => {
   }
 }
 
-export const isValidOperation = (operation) => {
+const isValidOperation = (operation) => {
   const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
 
   if (typeof operation !== 'object' || operation === null) {
@@ -155,11 +163,32 @@ export const isValidOperation = (operation) => {
   return true
 }
 
-export const isValidFastJsonPatch = (patch) => {
+const isValidFastJsonPatch = (patch) => {
   if (Array.isArray(patch)) {
     return patch.every(isValidOperation)
   } else if (typeof patch === 'object' && patch !== null) {
     return isValidOperation(patch)
   }
   return false
+}
+
+export default () => {
+  return {
+    EXISTING_MODELS,
+    CUSTOMIZE,
+    VISUAL_MODEL,
+    AI_MODES,
+    AIModelOptions,
+    getAIModelOptions,
+    robotSettingState,
+    state,
+    getBlocks,
+    setBlocks,
+    getBlockContent,
+    transformBlockNameToElement,
+    setBlockContent,
+    initBlockList,
+    isValidOperation,
+    isValidFastJsonPatch
+  }
 }

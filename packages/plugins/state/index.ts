@@ -12,9 +12,15 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
+import globalStateService from './src/js/globalStateService'
+import mcp from './src/mcp'
 import './src/styles/vars.less'
 
 export default {
   ...metaData,
-  entry
+  entry,
+  metas: [globalStateService],
+  mcp
 }
+
+export { globalStateService }

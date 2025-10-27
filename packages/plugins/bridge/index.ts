@@ -12,9 +12,15 @@
 
 import entry from './src/Main.vue'
 import metaData from './meta'
+import mcp from './src/mcp'
+import useUtils from './src/js/useUtils'
 import './src/styles/vars.less'
 
 export default {
   ...metaData,
-  entry
+  entry,
+  mcp,
+  metas: [useUtils]
 }
+
+export { useUtils }

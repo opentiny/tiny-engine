@@ -9,8 +9,16 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { useCanvas, useResource } from '@opentiny/tiny-engine-meta-register'
+import { ref } from 'vue'
+import {
+  useCanvas,
+  useResource,
+  useRobot,
+  getMergeMeta,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
+import completion from './completion-files/context.md?raw'
 
 const keyWords = [
   'state',
@@ -172,6 +180,135 @@ const getRange = (position, words) => ({
   endColumn: words[words.length - 1].endColumn
 })
 
+const generateBaseReference = () => {
+  const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState
+  const { state, methods } = useCanvas().getPageSchema()
+  const currentSchema = useCanvas().getCurrentSchema()
+  let referenceContext = completion
+  referenceContext = referenceContext.replace('$dataSource$', JSON.stringify(dataSource))
+  referenceContext = referenceContext.replace('$utils$', JSON.stringify(utils))
+  referenceContext = referenceContext.replace('$globalState$', JSON.stringify(globalState))
+  referenceContext = referenceContext.replace('$state$', JSON.stringify(state))
+  referenceContext = referenceContext.replace('$methods$', JSON.stringify(methods))
+  referenceContext = referenceContext.replace('$currentSchema$', JSON.stringify(currentSchema))
+  return referenceContext
+}
+
+const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
+  const { completeModel, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
+  if (!completeModel || !apiKey || !baseUrl) {
+    return
+  }
+  const referenceContext = generateBaseReference()
+  return getMetaApi(META_SERVICE.Http).post(
+    '/app-center/api/chat/completions',
+    {
+      model: completeModel,
+      messages: [
+        {
+          role: 'user',
+          content: referenceContext
+            .replace('$codeBeforeCursor$', codeBeforeCursor)
+            .replace('$codeAfterCursor$', codeAfterCursor)
+        }
+      ],
+      baseUrl,
+      stream: false
+    },
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${apiKey}`
+      }
+    }
+  )
+}
+
+const initInlineCompletion = (monacoInstance, editorModel) => {
+  const requestAllowed = ref(true)
+  const timer = ref()
+  const inlineCompletionProvider = {
+    provideInlineCompletions(model, position, _context, _token) {
+      if (editorModel && model.id !== editorModel.id) {
+        return new Promise((resolve) => {
+          resolve({ items: [] })
+        })
+      }
+
+      if (timer.value) {
+        clearTimeout(timer.value)
+      }
+
+      const words = getWords(model, position)
+      const range = getRange(position, words)
+      const wordContent = words.map((item) => item.word).join('')
+      if (!wordContent || wordContent.lastIndexOf('}') === 0 || wordContent.length < 4) {
+        return new Promise((resolve) => {
+          resolve({ items: [] })
+        })
+      }
+      if (!requestAllowed.value) {
+        return new Promise((resolve) => {
+          resolve({
+            items: [
+              {
+                insertText: '',
+                range
+              }
+            ]
+          })
+        })
+      }
+      const codeBeforeCursor = model.getValueInRange({
+        startLineNumber: 1,
+        startColumn: 1,
+        endLineNumber: position.lineNumber,
+        endColumn: position.column
+      })
+      const codeAfterCursor = model.getValueInRange({
+        startLineNumber: position.lineNumber,
+        startColumn: position.column,
+        endLineNumber: model.getLineCount(),
+        endColumn: model.getLineMaxColumn(model.getLineCount())
+      })
+      return new Promise((resolve) => {
+        // 延迟请求800ms
+        timer.value = setTimeout(() => {
+          // 节流操作，防止接口一直被请求
+          requestAllowed.value = false
+          fetchAiInlineCompletion(codeBeforeCursor, codeAfterCursor)
+            .then((res) => {
+              let insertText = res.choices[0].message.content.trim()
+              const wordContentIndex = insertText.indexOf(wordContent)
+              if (wordContentIndex === -1) {
+                insertText = `${wordContent}${insertText}\n`
+              }
+              if (wordContentIndex > 0) {
+                insertText = insertText.slice(wordContentIndex)
+              }
+              requestAllowed.value = true
+              resolve({
+                items: [
+                  {
+                    insertText,
+                    range
+                  }
+                ]
+              })
+            })
+            .catch(() => {
+              requestAllowed.value = true
+            })
+        }, 800)
+      })
+    },
+    freeInlineCompletions() {}
+  }
+  return ['javascript', 'typescript'].map((lang) =>
+    monacoInstance.languages.registerInlineCompletionsProvider(lang, inlineCompletionProvider)
+  )
+}
+
 export const initCompletion = (monacoInstance, editorModel, conditionFn) => {
   const completionItemProvider = {
     provideCompletionItems(model, position, _context, _token) {
@@ -198,8 +335,12 @@ export const initCompletion = (monacoInstance, editorModel, conditionFn) => {
     },
     triggerCharacters: ['.']
   }
-
-  return ['javascript', 'typescript'].map((lang) =>
-    monacoInstance.languages.registerCompletionItemProvider(lang, completionItemProvider)
-  )
+  const completions = ['javascript', 'typescript'].map((lang) => {
+    return monacoInstance.languages.registerCompletionItemProvider(lang, completionItemProvider)
+  })
+  const { enableAICompletion } = getMergeMeta('engine.plugins.pagecontroller')?.options || {}
+  if (enableAICompletion) {
+    return completions.concat(initInlineCompletion(monacoInstance, editorModel))
+  }
+  return completions
 }

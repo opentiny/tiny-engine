@@ -25,7 +25,9 @@ const createFn = (fnContent) => {
   }
 }
 
-const globalDataHandle = dataSources.dataHandler ? createFn(dataSources.dataHandler.value) : (res) => res
+const globalDataHandle = dataSources.dataHandler
+  ? createFn(dataSources.dataHandler.value)
+  : Promise.resolve({ data: res })
 
 const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => {
   // 如果没有配置远程请求，则直接返回静态数据，返回前可能会有全局数据处理

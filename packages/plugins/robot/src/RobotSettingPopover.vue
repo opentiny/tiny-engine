@@ -3,7 +3,13 @@
     <div class="header">设置</div>
     <tiny-tabs tab-style="button-card" class="full-width-tabs" v-model="state.activeName">
       <tiny-tab-item title="可选模型" :name="EXISTING_MODELS">
-        <tiny-form ref="robotSettingExistForm" label-position="top" :model="state.existFormData" validate-type="text">
+        <tiny-form
+          :rules="existFormRules"
+          ref="robotSettingExistForm"
+          label-position="top"
+          :model="state.existFormData"
+          validate-type="text"
+        >
           <tiny-form-item prop="baseUrl" label="大模型平台" label-width="150px">
             <tiny-select
               v-model="state.existFormData.baseUrl"
@@ -17,7 +23,13 @@
               v-model="state.existFormData.model"
               :options="state.modelOptions"
               placeholder="请选择"
-              @change="changeModel"
+            ></tiny-select>
+          </tiny-form-item>
+          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+            <tiny-select
+              v-model="state.existFormData.completeModel"
+              :options="state.modelOptions"
+              placeholder="请选择"
             ></tiny-select>
           </tiny-form-item>
           <tiny-form-item prop="apiKey" label-width="150px">
@@ -50,6 +62,13 @@
           <tiny-form-item prop="model" label="模型名称" label-width="150px">
             <tiny-input class="filedName" v-model="state.customizeFormData.model" placeholder="请输入"></tiny-input>
           </tiny-form-item>
+          <tiny-form-item prop="completeModel" label="补全模型名称" label-width="150px">
+            <tiny-input
+              class="filedName"
+              v-model="state.customizeFormData.completeModel"
+              placeholder="请输入"
+            ></tiny-input>
+          </tiny-form-item>
           <tiny-form-item prop="apiKey" label-width="150px">
             <template #label>
               大模型API Key
@@ -58,19 +77,6 @@
               </tiny-tooltip>
             </template>
             <tiny-input class="filedName" v-model="state.customizeFormData.apiKey" placeholder="请输入"></tiny-input>
-          </tiny-form-item>
-          <tiny-form-item prop="maxTokens" label-width="150px">
-            <template #label>
-              上下文长度
-              <tiny-tooltip effect="light" :content="maxTokensTip" placement="top">
-                <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
-              </tiny-tooltip>
-            </template>
-            <tiny-input
-              class="filedName"
-              v-model="state.customizeFormData.maxTokens"
-              placeholder="例如：64000"
-            ></tiny-input>
           </tiny-form-item>
         </tiny-form>
       </tiny-tab-item>
@@ -97,7 +103,7 @@ import {
   TinyTabItem,
   TinyAlert
 } from '@opentiny/vue'
-import { EXISTING_MODELS, CUSTOMIZE, getAIModelOptions } from './js/robotSetting'
+import { useRobot } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -111,19 +117,12 @@ export default {
     TinyTabItem,
     TinyAlert
   },
-  props: {
-    typeValue: {
-      type: Object,
-      default: () => ({})
-    }
-  },
   setup(props, { emit }) {
+    const { EXISTING_MODELS, CUSTOMIZE, getAIModelOptions, robotSettingState } = useRobot()
     const robotSettingExistForm = ref(null)
     const robotSettingCustomizeForm = ref(null)
     const apiKeyTip =
       'API Key 是用于身份验证和权限控制的密钥，允许开发者通过API访问云服务商提供的大模型（如通义千问、deepseek等）。'
-    const maxTokensTip =
-      '上下文长度表示模型单次响应中最多生成的token数量（包括输入和输出的总和）。若该项不设置，默认为64K。'
     const AIModelOptions = getAIModelOptions()
 
     const state = reactive({
@@ -133,20 +132,23 @@ export default {
         label: '',
         baseUrl: '',
         model: '',
-        maxTokens: null,
+        completeModel: '',
         apiKey: ''
       },
       customizeFormData: {
         baseUrl: '',
         model: '',
-        maxTokens: null,
+        completeModel: '',
         apiKey: ''
       }
     })
 
     const customizeFormRules = {
       baseUrl: [{ required: true, message: '必填', trigger: 'blur' }],
-      model: [{ required: true, message: '必填', trigger: 'blur' }],
+      apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
+    }
+
+    const existFormRules = {
       apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
     }
 
@@ -159,14 +161,8 @@ export default {
       const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
       state.modelOptions = options?.model
       state.existFormData.label = options?.label
-      state.existFormData.model = state.modelOptions[0]?.value
-      state.existFormData.maxTokens = state.modelOptions[0]?.maxTokens
-    }
-
-    const changeModel = () => {
-      state.existFormData.maxTokens = state.modelOptions.find(
-        (option) => option.value === state.existFormData.model
-      )?.maxTokens
+      state.existFormData.model = state.modelOptions[0]?.value || ''
+      state.existFormData.completeModel = state.modelOptions[0]?.value || ''
     }
 
     const confirm = () => {
@@ -178,9 +174,6 @@ export default {
       } else {
         formData = { ...state.customizeFormData }
         form = robotSettingCustomizeForm
-        if (!formData.maxTokens) {
-          formData.maxTokens = 64000
-        }
       }
 
       form.value.validate((valid) => {
@@ -188,6 +181,14 @@ export default {
           return
         }
 
+        robotSettingState.selectedModel.completeModel = formData.completeModel
+        localStorage.setItem(
+          'AICompleteModel',
+          JSON.stringify({
+            existModel: state.existFormData.completeModel,
+            customizeModel: state.customizeFormData.completeModel
+          })
+        )
         emit('changeType', {
           activeName: state.activeName,
           ...formData
@@ -197,11 +198,11 @@ export default {
     }
 
     const initFormData = () => {
-      const initModel = props.typeValue
+      const smallModel = JSON.parse(localStorage.getItem('AICompleteModel')) || null
+      const initModel = robotSettingState.selectedModel
       const data = {
         baseUrl: initModel.baseUrl,
         model: initModel.model,
-        maxTokens: initModel.maxTokens,
         apiKey: initModel.apiKey
       }
       state.activeName = initModel.activeName
@@ -209,13 +210,17 @@ export default {
       if (state.activeName === EXISTING_MODELS) {
         state.existFormData = {
           label: initModel.label,
+          completeModel: smallModel?.existModel ? smallModel.existModel : initModel.completeModel,
           ...data
         }
         const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
         state.modelOptions = options?.model
       }
       if (state.activeName === CUSTOMIZE) {
-        state.customizeFormData = data
+        state.customizeFormData = { ...data }
+        state.customizeFormData.completeModel = smallModel?.customizeModel
+          ? smallModel.customizeModel
+          : initModel.completeModel
       }
     }
 
@@ -229,12 +234,11 @@ export default {
       robotSettingCustomizeForm,
       state,
       customizeFormRules,
+      existFormRules,
       confirm,
       closePanel,
       changeBaseUrl,
-      changeModel,
-      apiKeyTip,
-      maxTokensTip
+      apiKeyTip
     }
   }
 }

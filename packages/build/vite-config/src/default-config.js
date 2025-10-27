@@ -89,6 +89,9 @@ const getDefaultConfig = (engineConfig) => {
         ]
       }
     },
+    define: {
+      'process.env': {}
+    },
     build: {
       commonjsOptions: {
         transformMixedEsModules: true,

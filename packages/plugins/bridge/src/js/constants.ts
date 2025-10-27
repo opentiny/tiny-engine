@@ -10,6 +10,16 @@
  *
  */
 
-import defineCustomElement from './defineCustomElement'
+// 资源类型：utils 和 bridge
+// utils: 工具类
+// bridge: 桥接源
+export const RESOURCE_CATEGORY = {
+  Util: 'utils',
+  Bridge: 'bridge'
+} as const
 
-export { defineCustomElement }
+// utils 类型: npm 和 function
+export const RESOURCE_TYPE = {
+  Npm: 'npm',
+  Function: 'function'
+} as const

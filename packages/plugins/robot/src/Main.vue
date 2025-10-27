@@ -25,7 +25,6 @@
             >
               <robot-setting-popover
                 v-if="showPopover"
-                :typeValue="selectedModel"
                 @changeType="changeModel"
                 @close="closePanel"
               ></robot-setting-popover>
@@ -56,7 +55,10 @@
                 @item-click="handlePromptItemClick"
               ></tr-prompts>
             </div>
-            <tr-bubble-provider :content-renderers="contentRenderers" v-else>
+            <tr-bubble-provider
+              :content-renderers="aiType === AI_MODES['Chat'] ? contentRenderers : buildContentRenderers"
+              v-else
+            >
               <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
             </tr-bubble-provider>
           </div>
@@ -72,9 +74,7 @@
               placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
               :clearable="true"
               :showWordLimit="true"
-              :allowFiles="
-                singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model) && aiType === BUILD_TYPE
-              "
+              :allowFiles="singleAttachmentItems.length < 1 && isVisualModel() && aiType === AI_MODES['Builder']"
               uploadTooltip="支持上传1张图片"
               @submit="sendContent(inputContent, false)"
               @files-selected="handleSingleFilesSelected"
@@ -94,7 +94,7 @@
               </template>
               <template #footer-left>
                 <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
-                <mcp-server :position="mcpDrawerPosition" v-if="aiType === TALK_TYPE"></mcp-server>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === AI_MODES['Chat']"></mcp-server>
               </template>
             </tr-sender>
           </template>
@@ -122,7 +122,14 @@ import {
   type Component
 } from 'vue'
 import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
-import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useRobot,
+  useHistory,
+  useCanvas,
+  useModal,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
   TrContainer,
@@ -138,24 +145,14 @@ import { IconNewSession } from '@opentiny/tiny-robot-svgs'
 import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import { utils } from '@opentiny/tiny-engine-utils'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import {
-  getBlockContent,
-  initBlockList,
-  getAIModelOptions,
-  defaultSelectedModel,
-  isValidFastJsonPatch,
-  VISUAL_MODEL,
-  TALK_TYPE,
-  MCP_TYPE,
-  BUILD_TYPE
-} from './js/robotSetting'
 import { PROMPTS } from './js/prompts'
 import * as jsonpatch from 'fast-json-patch'
-import { chatStream, checkComponentNameExists } from './js/utils'
+import { checkComponentNameExists, processSSEStream } from './js/utils'
 import McpServer from './mcp/McpServer.vue'
 import useMcpServer from './mcp/useMcp'
 import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
 import LoadingRenderer from './mcp/LoadingRenderer.vue'
+import BuildLoadingRenderer from './BuildLoadingRenderer.vue'
 import { sendMcpRequest, serializeError } from './mcp/utils'
 import type { RobotMessage } from './mcp/types'
 import RobotTypeSelect from './RobotTypeSelect.vue'
@@ -190,6 +187,15 @@ export default {
   },
   emits: ['close-chat'],
   setup() {
+    const {
+      getBlockContent,
+      initBlockList,
+      getAIModelOptions,
+      isValidFastJsonPatch,
+      VISUAL_MODEL,
+      AI_MODES,
+      robotSettingState
+    } = useRobot()
     const { pageState, importSchema, setSaved } = useCanvas()
     const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
@@ -201,7 +207,6 @@ export default {
     const connectedFailed = ref(false)
     const inputContent = ref('')
     const inProcesing = ref(false)
-    const selectedModel = ref(defaultSelectedModel)
     const { confirm } = useModal()
     const showPopover = ref(false)
     const searchContent = ref('')
@@ -210,7 +215,7 @@ export default {
     const singleAttachmentItems = ref([])
     const imageUrl = ref('')
     const MESSAGE_TIP = '已生成新的页面效果。'
-    const aiType = ref(TALK_TYPE)
+    const aiType = ref(AI_MODES['Chat'])
     const chatContainerRef = ref(null)
     const showTeleport = ref(false)
     const { deepClone, string2Obj, reactiveObj2String: obj2String } = utils
@@ -226,7 +231,7 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                ...selectedModel.value
+                ...robotSettingState.selectedModel
               },
               messages: [],
               displayMessages: [], // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
@@ -260,7 +265,7 @@ export default {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
       let firstContent = firstMessage.content
-      if (aiType.value === BUILD_TYPE) {
+      if (aiType.value === AI_MODES['Builder']) {
         firstContent = firstMessage.content.map((item) => {
           if (item.type === 'text') {
             item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
@@ -270,7 +275,7 @@ export default {
           return item
         })
       }
-      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
         firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
       }
 
@@ -313,7 +318,7 @@ export default {
     // 处理响应
     const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }, currentJson) => {
       try {
-        if (aiType.value === BUILD_TYPE) {
+        if (aiType.value === AI_MODES['Builder']) {
           const regex = /```json([\s\S]*?)```/
           const match = chatMessage?.content.match(regex)
 
@@ -321,6 +326,7 @@ export default {
             const newValue = JSON.parse(match[1])
             // 使用 applyPatch 修改 Schema
             const result = newValue.reduce(jsonpatch.applyReducer, currentJson)
+            useHistory().addHistory()
 
             sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
             sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
@@ -336,7 +342,7 @@ export default {
           inProcesing.value = false
           connectedFailed.value = false
         }
-        if (aiType.value === TALK_TYPE) {
+        if (aiType.value === AI_MODES['Chat']) {
           sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
           sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
           messages.value[messages.value.length - 1].content = chatMessage?.content
@@ -352,15 +358,16 @@ export default {
     // 发送流式请求
     const sendStreamRequest = async () => {
       const requestData = getSendSeesionProcess()
-      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+      if (useMcpServer().isToolsEnabled && aiType.value === AI_MODES['Chat']) {
         try {
           requestLoading.value = true
           await scrollContent()
           await sendMcpRequest(messages.value, {
-            model: selectedModel.value.model,
+            model: robotSettingState.selectedModel.model,
             headers: {
-              Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
-            }
+              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
+            },
+            baseUrl: robotSettingState.selectedModel.baseUrl
           })
         } catch (error) {
           const { renderContent } = messages.value.at(-1)!
@@ -382,78 +389,95 @@ export default {
         }
         return
       } else {
-        if (requestData.foundationModel) {
-          requestData.foundationModel.stream = true
+        const params = {
+          label: requestData.foundationModel?.label,
+          baseUrl: requestData.foundationModel?.baseUrl,
+          model: requestData.foundationModel?.model,
+          apiKey: requestData.foundationModel?.apiKey,
+          stream: true,
+          messages: requestData.messages
         }
 
         let streamContent = ''
+        let lastResponseLength = 0
         const chatId = Date.now().toString()
         const currentJson = deepClone(pageState.pageSchema)
         let lastExecutionTime = 0
         const throttleDelay = 3000
-        await chatStream(
-          {
-            requestUrl: '/app-center/api/ai/chat',
-            requestData: { ...requestData.foundationModel, messages: requestData.messages }
-          },
-          {
-            onData: (data) => {
-              const choice = data.choices?.[0]
-              if (choice && choice.delta.content) {
-                if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
-                  messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
-                }
-                if (streamContent !== messages.value[messages.value.length - 1].content) {
-                  messages.value[messages.value.length - 1].content = ''
-                }
-                streamContent += choice.delta.content
-                messages.value[messages.value.length - 1].content += choice.delta.content
-                const currentTime = Date.now()
-                if (currentTime - lastExecutionTime > throttleDelay) {
-                  try {
-                    const repaired = jsonrepair(streamContent)
-                    const parsedJson = JSON.parse(repaired)
-                    const result = parsedJson.reduce((acc, patch) => {
-                      return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
-                    }, currentJson)
-                    const editorValue = string2Obj(obj2String(result))
-
-                    if (editorValue && checkComponentNameExists(result)) {
-                      setSchema(result)
+        requestLoading.value = true
+        getMetaApi(META_SERVICE.Http)
+          .stream({
+            method: 'POST',
+            url: '/app-center/api/ai/chat',
+            data: params,
+            headers: {
+              'Content-Type': 'application/json',
+              Accept: 'text/event-stream',
+              Authorization: `Bearer ${robotSettingState.selectedModel.apiKey || import.meta.env.VITE_API_TOKEN}`
+            },
+            onDownloadProgress: (progressEvent) => {
+              const currentResponse = progressEvent.currentTarget.responseText
+              const newData = currentResponse.substring(lastResponseLength)
+              lastResponseLength = currentResponse.length
+              processSSEStream(newData, {
+                onData: (data) => {
+                  const choice = data.choices?.[0]
+                  if (choice && choice.delta.content) {
+                    if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                      messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
                     }
-                  } catch (error) {
-                    // error
-                  }
-                  lastExecutionTime = currentTime
-                }
-              }
-            },
-            onError: (error) => {
-              messages.value[messages.value.length - 1].content = '连接失败'
-              localStorage.removeItem('aiChat')
-              inProcesing.value = false
-              connectedFailed.value = false
-              // eslint-disable-next-line no-console
-              console.error('Stream error:', error)
-            },
-            onDone: () => {
-              handleResponse(
-                {
-                  id: chatId,
-                  chatMessage: {
-                    role: 'assistant',
-                    content: streamContent || '没有返回内容',
-                    name: 'AI'
+                    if (streamContent !== messages.value[messages.value.length - 1].content) {
+                      messages.value[messages.value.length - 1].content = ''
+                    }
+                    streamContent += choice.delta.content
+                    messages.value.at(-1)!.renderContent = [{ type: 'loading', content: streamContent }]
+                    const currentTime = Date.now()
+                    if (currentTime - lastExecutionTime > throttleDelay) {
+                      try {
+                        const repaired = jsonrepair(streamContent)
+                        const parsedJson = JSON.parse(repaired)
+                        const result = parsedJson.reduce((acc, patch) => {
+                          return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
+                        }, currentJson)
+                        const editorValue = string2Obj(obj2String(result))
+
+                        if (editorValue && checkComponentNameExists(result)) {
+                          setSchema(result)
+                        }
+                      } catch (error) {
+                        // error
+                      }
+                      lastExecutionTime = currentTime
+                    }
                   }
                 },
-                currentJson
-              )
+                onDone: () => {
+                  requestLoading.value = false
+                  delete messages.value.at(-1)!.renderContent
+                  handleResponse(
+                    {
+                      id: chatId,
+                      chatMessage: {
+                        role: 'assistant',
+                        content: streamContent || '没有返回内容',
+                        name: 'AI'
+                      }
+                    },
+                    currentJson
+                  )
+                }
+              })
             }
-          },
-          {
-            Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
-          }
-        )
+          })
+          .catch((error) => {
+            messages.value[messages.value.length - 1].content = '连接失败'
+            localStorage.removeItem('aiChat')
+            requestLoading.value = false
+            inProcesing.value = false
+            connectedFailed.value = false
+            // eslint-disable-next-line no-console
+            console.error('Stream error:', error)
+          })
       }
     }
 
@@ -492,7 +516,7 @@ export default {
           text
         }
       ]
-      if (singleAttachmentItems.value.length > 0 && aiType.value === BUILD_TYPE) {
+      if (singleAttachmentItems.value.length > 0 && aiType.value === AI_MODES['Builder']) {
         content.push({
           type: 'image_url',
           image_url: {
@@ -522,7 +546,7 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
-        if (!sessionProcess?.messages?.length && aiType.value !== TALK_TYPE) {
+        if (!sessionProcess?.messages?.length && aiType.value !== AI_MODES['Chat']) {
           sessionProcess?.messages.push({
             role: 'system',
             content: [
@@ -538,7 +562,7 @@ export default {
         messages.value.push(message)
         sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
-        if (aiType.value === BUILD_TYPE && (!searchContent.value || !sessionProcess.messages?.length)) {
+        if (aiType.value === AI_MODES['Builder'] && (!searchContent.value || !sessionProcess.messages?.length)) {
           await search(realContent)
         }
 
@@ -557,10 +581,10 @@ export default {
 
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
-      selectedModel.value = {
+      robotSettingState.selectedModel = {
         ...JSON.parse(aiSession)?.foundationModel
       }
-      aiType.value = JSON.parse(aiSession)?.aiType
+      aiType.value = JSON.parse(aiSession)?.aiType || aiType.value
     }
 
     const initChat = () => {
@@ -607,17 +631,20 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.baseUrl !== model.baseUrl || selectedModel.value !== model.model) {
+      if (
+        robotSettingState.selectedModel.baseUrl !== model.baseUrl ||
+        robotSettingState.selectedModel.model !== model.model
+      ) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = {
+            robotSettingState.selectedModel = {
               label: model.label || model.model,
               activeName: model.activeName,
               baseUrl: model.baseUrl,
               model: model.model,
-              maxTokens: model.maxTokens,
+              completeModel: model.completeModel,
               apiKey: model.apiKey
             }
             singleAttachmentItems.value = []
@@ -627,11 +654,11 @@ export default {
         })
       }
       if (
-        selectedModel.value.apiKey !== model.apiKey &&
-        selectedModel.value.baseUrl === model.baseUrl &&
-        selectedModel.value.model === model.model
+        robotSettingState.selectedModel.apiKey !== model.apiKey &&
+        robotSettingState.selectedModel.baseUrl === model.baseUrl &&
+        robotSettingState.selectedModel.model === model.model
       ) {
-        selectedModel.value.apiKey = model.apiKey
+        robotSettingState.selectedModel.apiKey = model.apiKey
         changeApiKey()
       }
     }
@@ -712,20 +739,18 @@ export default {
       // 开始上传
       const formData = new FormData()
       const fileData = retry ? files : files[0]
-      formData.append('modelName', String(sessionProcess.foundationModel.model))
-      formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
       formData.append('file', fileData)
 
       try {
         getMetaApi(META_SERVICE.Http)
-          .post('/app-center/api/ai/uploadFile', formData, {
+          .post('/material-center/api/resource/upload', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           })
           .then((res) => {
-            if (res?.url) {
-              imageUrl.value = res.url
+            if (res?.resourceUrl) {
+              imageUrl.value = res.resourceUrl
               singleAttachmentItems.value[0].status = 'done'
               singleAttachmentItems.value[0].isUploading = false
               singleAttachmentItems.value[0].messageType = 'success'
@@ -776,6 +801,10 @@ export default {
       loading: LoadingRenderer
     }
 
+    const buildContentRenderers: Record<string, Component> = {
+      loading: BuildLoadingRenderer
+    }
+
     const mcpDrawerPosition = computed(() => {
       return {
         type: 'fixed',
@@ -787,6 +816,12 @@ export default {
       }
     })
 
+    const isVisualModel = () => {
+      const platform = AIModelOptions.find((option) => option.value === robotSettingState.selectedModel.baseUrl)
+      const modelAbility = platform.model.find((item) => item.value === robotSettingState.selectedModel.model)
+      return modelAbility?.ability?.includes('visual') || false
+    }
+
     return {
       chatContainerRef,
       robotVisible,
@@ -796,7 +831,7 @@ export default {
       inputContent,
       connectedFailed,
       AIModelOptions,
-      selectedModel,
+      robotSettingState,
       showPopover,
       fullscreen,
       welcomeIcon,
@@ -809,9 +844,7 @@ export default {
       MarkdownRenderer,
       requestLoading,
       aiType,
-      TALK_TYPE,
-      MCP_TYPE,
-      BUILD_TYPE,
+      AI_MODES,
       showTeleport,
       sendContent,
       endContent,
@@ -826,8 +859,10 @@ export default {
       handleSingleFileRemove,
       handleSingleFileRetry,
       typeChange,
+      isVisualModel,
       contentRenderers,
-      mcpDrawerPosition
+      mcpDrawerPosition,
+      buildContentRenderers
     }
   }
 }
