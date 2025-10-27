@@ -13,6 +13,8 @@ export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
   preserveComments?: boolean
   strictMode?: boolean
+  // 控制是否在出码结果中包含 computed 字段，默认 false
+  computed_flag?: boolean
   customParsers?: {
     template?: { parse: (code: string) => any }
     script?: { parse: (code: string) => any }
@@ -39,6 +41,7 @@ export class VueToDslConverter {
       componentMap: defaultComponentMap,
       preserveComments: false,
       strictMode: false,
+      computed_flag: false,
       customParsers: {},
       ...options
     }

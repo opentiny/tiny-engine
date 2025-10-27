@@ -141,7 +141,10 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   if (scriptSchema) {
     if (scriptSchema.state) schema.state = transformState(scriptSchema.state)
     if (scriptSchema.methods) schema.methods = transformMethods(scriptSchema.methods)
-    if (scriptSchema.computed) schema.computed = transformComputed(scriptSchema.computed)
+    // only output computed when computed_flag is explicitly enabled
+    if (options.computed_flag === true && scriptSchema.computed) {
+      schema.computed = transformComputed(scriptSchema.computed)
+    }
     if (scriptSchema.lifeCycles) schema.lifeCycles = transformLifeCycles(scriptSchema.lifeCycles)
     if (scriptSchema.props && scriptSchema.props.length > 0) schema.props = transformProps(scriptSchema.props)
   }

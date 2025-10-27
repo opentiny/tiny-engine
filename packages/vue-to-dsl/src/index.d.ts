@@ -6,6 +6,8 @@ declare module '@opentiny/tiny-engine-vue-to-dsl' {
     preserveComments?: boolean
     // 是否严格模式
     strictMode?: boolean
+    // 控制是否输出 computed 字段（默认 false）
+    computed_flag?: boolean
     // 自定义解析器
     customParsers?: {
       template?: TemplateParser

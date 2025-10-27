@@ -27,6 +27,7 @@ if (args.length === 0 || showHelp) {
   --output, -o    输出文件路径
   --format, -f    输出格式 (json, js) 默认: json
   --help, -h      显示帮助信息
+  --computed      启用输出 computed 字段（默认关闭）
 
 示例:
   node ${path.basename(__filename)} ./components/MyComponent.vue
@@ -40,8 +41,9 @@ if (args.length === 0 || showHelp) {
 const inputFile = args[0]
 let outputFile: string | undefined
 let format: 'json' | 'js' = 'json'
+let computedFlag = false
 
-for (let i = 1; i < args.length; i += 2) {
+for (let i = 1; i < args.length; ) {
   const option = args[i]
   const value = args[i + 1]
 
@@ -49,18 +51,27 @@ for (let i = 1; i < args.length; i += 2) {
     case '--output':
     case '-o':
       outputFile = value
+      i += 2
       break
     case '--format':
     case '-f':
       if (value === 'json' || value === 'js') {
         format = value
       }
+      i += 2
       break
     case '--help':
     case '-h':
       console.log('显示帮助信息...')
       process.exit(0)
       break
+    case '--computed':
+      computedFlag = true
+      i += 1
+      break
+    default:
+      // 跳过无法识别的参数，避免死循环
+      i += 1
   }
 }
 
@@ -109,7 +120,8 @@ async function main() {
         form: 'TinyForm'
       },
       preserveComments: false,
-      strictMode: false
+      strictMode: false,
+      computed_flag: computedFlag
     })
 
     // 执行转换

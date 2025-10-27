@@ -82,6 +82,8 @@ interface VueToSchemaOptions {
   componentMap?: Record<string, string>
   preserveComments?: boolean
   strictMode?: boolean
+  // 控制是否输出 computed 字段（默认 false）
+  computed_flag?: boolean
   customParsers?: {
     template?: { parse: (code: string) => any }
     script?: { parse: (code: string) => any }
