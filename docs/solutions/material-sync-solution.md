@@ -9,7 +9,7 @@ pnpm uploadMaterials
 #### 注意事项
 1. bundle.json文件内组件版本version字段为必须字段，缺少的需要补充不然上传接口报错
 2. bundle.json文件内组件版本version与数据库t_component内version不一致时为新增，一致为更新，也可根据自身需求更改相关代码逻辑
-3. .env.local中配置访问后端接口的路径，默认java后端路径
+3. .env.local中配置访问后端接口的路径，默认java后端路径 http://localhost:9090/material-center/api/component/bundle/create
 
 ![注意事项图](./imgs/component_create_code.png '注意事项图')
 
