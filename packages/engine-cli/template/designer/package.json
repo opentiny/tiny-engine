@@ -7,6 +7,7 @@
     "dev": "concurrently 'pnpm:serve:mock' 'pnpm:serve:frontend'",
     "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build --mode alpha",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build",
+    "uploadMaterials": "node ./scripts/uploadMaterials.mjs",
     "serve:frontend": "cross-env vite",
     "serve:mock": "node node_modules/@opentiny/tiny-engine-mock/dist/app.js"
   },
@@ -28,6 +29,9 @@
     "@opentiny/tiny-engine-vite-config": "^2.8.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "cross-env": "^7.0.3",
+    "dotenv": "^16.6.1",
+    "fs-extra": "^11.3.2",
+    "picocolors": "^1.1.1",
     "vite": "^5.4.2",
     "concurrently": "^8.2.0"
   }
