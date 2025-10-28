@@ -10,48 +10,10 @@
  *
  */
 
-import { getMergeMeta, useResource, useMaterial, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
-let hasRuntimeListener = false
-
-const sendDepsToRuntime = () => {
-  const paramsMap = new URLSearchParams(location.search)
-  const pageid = paramsMap.get('pageid') || ''
-  const globalState = JSON.parse(JSON.stringify(useResource().appSchemaState.globalState))
-  const { scripts, styles } = useMaterial().getCanvasDeps()
-  const stylesDeps = JSON.parse(JSON.stringify(styles))
-  const pkgDeps = JSON.parse(JSON.stringify(scripts))
-  const globalDeps = { pkgDeps, stylesDeps, globalState, pageid }
-  if (!runtimeWindow || runtimeWindow.closed) return
-  runtimeWindow.postMessage(
-    {
-      source: 'designer',
-      type: 'globalDeps',
-      data: globalDeps
-    },
-    window.location.origin
-  )
-}
-
-const setupRuntimeMessageListener = () => {
-  if (hasRuntimeListener) return
-  window.addEventListener('message', (event) => {
-    const parsedOrigin = new URL(event.origin)
-    const parsedHost = new URL(window.location.href)
-    if (parsedOrigin.origin !== parsedHost.origin) return
-
-    const { event: eventType, source } = event.data || {}
-    if (source === 'runtime' && (eventType === 'connect' || eventType === 'onMounted')) {
-      runtimeWindow = event.source || runtimeWindow
-      sendDepsToRuntime()
-    }
-  })
-  hasRuntimeListener = true
-}
-
-setupRuntimeMessageListener()
 
 const getQueryParams = () => {
   const paramsMap = new URLSearchParams(location.search)
@@ -94,7 +56,5 @@ export const runtimeDeploy = async () => {
       title: '运行时窗口打开失败',
       message: '请检查浏览器是否允许新窗口打开'
     })
-  } else {
-    runtimeWindow.addEventListener('load', sendDepsToRuntime, { once: true })
   }
 }

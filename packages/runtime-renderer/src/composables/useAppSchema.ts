@@ -9,7 +9,6 @@ import type {
   PackageConfig
 } from '../types/schema'
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import { initRuntimeChannel, designerPageid } from './useCommunication'
 import {
   addStyle,
   getComponents,
@@ -107,8 +106,6 @@ export function useAppSchema() {
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
 
-    // 初始化与设计器窗口的通信
-    await initRuntimeChannel()
     const packages = await loadBundlePackages()
 
     // 初始化 importMap
@@ -266,8 +263,6 @@ export function useAppSchema() {
     packages,
     isAppLoaded,
     i18nConfig,
-
-    designerPageid,
 
     // 方法
     fetchAppSchema,
