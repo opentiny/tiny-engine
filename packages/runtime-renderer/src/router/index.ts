@@ -59,7 +59,8 @@ async function createRouterConfig() {
         pRouteConf.meta = { ...pRouteConf.meta, hasChildren: true }
         // 处理默认子路由
         if (config?.meta?.isDefault) {
-          pRouteConf.redirect = config.path
+          const parentPath = pRouteConf.path.startsWith('/') ? pRouteConf.path : `/${pRouteConf.path}`
+          pRouteConf.redirect = `${parentPath}/${config.path}`.replace(/\/+/g, '/')
           pRouteConf.meta = { ...pRouteConf.meta, hasDefault: true }
         }
       } else {
