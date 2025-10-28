@@ -10,42 +10,67 @@
  *
  */
 
-import { getMergeMeta, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { getMergeMeta, useNotify, usePage } from '@opentiny/tiny-engine-meta-register'
 import { isDevelopEnv } from './environments'
 
 let runtimeWindow = null
 
-const getQueryParams = () => {
+const getRuntimeLocation = async () => {
   const paramsMap = new URLSearchParams(location.search)
   const tenant = paramsMap.get('tenant') || ''
   const platform = getMergeMeta('engine.config')?.platformId
   const appId = paramsMap.get('id')
+  const queryPageId = paramsMap.get('pageId') || paramsMap.get('pageid') || ''
+
+  const { pageSettingState, getAncestors } = usePage()
+
+  const activePageId = queryPageId
+  let routeSegment = ''
+  if (activePageId) {
+    const chain = ((await getAncestors(String(activePageId), true)) || [])
+      .concat(String(activePageId))
+      .map((id) => String(id))
+    routeSegment = chain
+      .map((id) => pageSettingState.treeDataMapping[id]?.route || '')
+      .filter(Boolean)
+      .map((segment) => segment.replace(/^\/+|\/+$/g, ''))
+      .join('/')
+  }
 
   const params = new URLSearchParams()
   if (appId) params.set('id', appId)
   if (tenant) params.set('tenant', tenant)
   if (platform) params.set('platform', platform)
 
-  return params.toString()
+  return {
+    query: params.toString(),
+    hash: routeSegment ? `#/${routeSegment}` : ''
+  }
 }
 
-export const deployPage = () => {
+export const deployPage = async () => {
   const href = window.location.href.split('?')[0] || './'
-  const query = getQueryParams()
+  const { query, hash } = await getRuntimeLocation()
 
   const customDeployUrl = getMergeMeta('engine.toolbars.runtimeDeploy')?.options?.deployUrl
   const defaultDeployUrl = isDevelopEnv ? `./runtime.html` : `${href.endsWith('/') ? href : `${href}/`}runtime`
+  const querySuffix = query ? `?${query}` : ''
+
+  const appendHash = (url) => {
+    if (!hash) return url
+    return url.includes('#') ? url : `${url}${hash}`
+  }
+
+  const buildUrl = (base) => appendHash(`${base}${querySuffix}`)
 
   let openUrl = ''
   openUrl = customDeployUrl
     ? typeof customDeployUrl === 'function'
-      ? String(customDeployUrl(defaultDeployUrl, query) || defaultDeployUrl)
-      : `${customDeployUrl}?${query}`
-    : `${defaultDeployUrl}?${query}`
-
+      ? appendHash(String(customDeployUrl(defaultDeployUrl, query, hash) || defaultDeployUrl))
+      : buildUrl(customDeployUrl)
+    : buildUrl(defaultDeployUrl)
   return { openUrl }
 }
-
 export const runtimeDeploy = async () => {
   const { openUrl } = await deployPage()
 
