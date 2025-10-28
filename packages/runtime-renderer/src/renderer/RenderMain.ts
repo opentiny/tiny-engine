@@ -23,7 +23,6 @@ import { getDataSource, getUtilsAll } from '../app-function'
 
 interface Props {
   pageId: string
-  cssScopeId: string
 }
 
 export default defineComponent({
@@ -32,10 +31,6 @@ export default defineComponent({
     pageId: {
       type: String,
       default: '0'
-    },
-    cssScopeId: {
-      type: String,
-      default: null
     }
   },
   setup(props: Props) {
@@ -82,7 +77,7 @@ export default defineComponent({
 
       const newSchema = JSON.parse(JSON.stringify(data))
 
-      const cssScopeId = props.cssScopeId || `data-te-page-${String(props.pageId) || 'render-main'}`
+      const cssScopeId = `data-te-page-${String(props.pageId) || 'render-main'}`
       const contextData = {
         state,
         route,
