@@ -9,13 +9,7 @@ import type {
   PackageConfig
 } from '../types/schema'
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import {
-  initRuntimeChannel,
-  getDesignerGlobalState,
-  getDesignerPkgDeps,
-  getDesignerStylesDeps,
-  designerPageid
-} from './useCommunication'
+import { initRuntimeChannel, designerPageid } from './useCommunication'
 import {
   addStyle,
   getComponents,
@@ -32,6 +26,32 @@ window.TinyLowcodeComponent = {}
 window.TinyComponentLibs = {}
 
 export function useAppSchema() {
+  let cachedBundlePackages: PackageConfig[] | null = null
+
+  const loadBundlePackages = async () => {
+    if (cachedBundlePackages) {
+      return cachedBundlePackages
+    }
+
+    try {
+      const response = await fetch('/mock/bundle.json')
+
+      if (!response.ok) {
+        throw new Error(`加载基础物料包失败: HTTP ${response.status}: ${response.statusText}`)
+      }
+
+      const bundleJson = await response.json()
+
+      cachedBundlePackages = (bundleJson?.data?.materials?.packages as PackageConfig[]) || []
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('加载基础物料包失败:', error)
+      cachedBundlePackages = []
+    }
+
+    return cachedBundlePackages
+  }
+
   const initializeComponentsMap = async (componentsMap: ComponentMap[], packages: PackageConfig[]) => {
     // 获取组件依赖
     const componentsDeps = componentsMap.map((component: ComponentMap) => ({
@@ -44,13 +64,13 @@ export function useAppSchema() {
       npmrc: component.npmrc
     }))
 
-    const importStyleUrls = getDesignerStylesDeps()
+    const styles = packages.map((pkg) => pkg.css).filter((css) => css) as string[]
 
     await loadPackageDependencys(packages)
 
     try {
       // 并行加载所有组件依赖和包资源，与 runner.ts 中的机制保持一致
-      await Promise.all([...componentsDeps.map(getComponents), ...importStyleUrls.map((src) => addStyle(src))])
+      await Promise.all([...componentsDeps.map(getComponents), ...styles.map((src) => addStyle(src))])
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('组件或资源加载失败:', error)
@@ -83,30 +103,19 @@ export function useAppSchema() {
     })
   }
 
-  const initializeGlobalState = async (schema: IAppSchema) => {
-    schema.meta = schema.meta || {}
-    const injected = getDesignerGlobalState()
-    if (injected && !schema.meta.globalState) {
-      schema.meta.globalState = injected
-    }
-  }
-
   // 初始化应用配置
   const initializeAppConfig = async (schema: IAppSchema) => {
     if (!schema?.pages) return
 
     // 初始化与设计器窗口的通信
     await initRuntimeChannel()
-
-    const packages = getDesignerPkgDeps()
+    const packages = await loadBundlePackages()
 
     // 初始化 importMap
     initImportMap()
 
     // 初始化除tinyVue之外的nativeComponents
     await initializeComponentsMap(schema.componentsMap, packages)
-
-    await initializeGlobalState(schema)
 
     // 初始化国际化
     initializeI18n(schema?.i18n)

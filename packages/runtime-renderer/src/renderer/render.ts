@@ -49,6 +49,7 @@ import {
 import { parseData, parseCondition, parseLoopArgs } from './parser'
 
 const hyphenateRE = /\B([A-Z])/g
+// 用于后续对Web component的扩展支持
 const customElements = {}
 
 const Mapper = {
