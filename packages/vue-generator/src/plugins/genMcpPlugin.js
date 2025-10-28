@@ -790,6 +790,10 @@ export const handleTinyMcpConfigAttrHook = (schemaData, globalHooks, config) => 
       if (globalHooks && globalHooks.addStatement) {
         const pageId = config?.pageId || config?.fileName || 'current-page'
 
+        // 使用 JSON.stringify 来转义 pageId，防止特殊字符破坏生成的代码
+        const pageIdLiteral = JSON.stringify(pageId)
+        const descriptionLiteral = JSON.stringify(`${pageId}页面`)
+
         // 添加必要的导入
         globalHooks.addImport('vue', {
           destructuring: true,
@@ -808,10 +812,10 @@ export const handleTinyMcpConfigAttrHook = (schemaData, globalHooks, config) => 
           position: INSERT_POSITION.AFTER_METHODS,
           value: `
 // 使用统一管理的页面服务器
-const { server, connect, disconnect } = usePageMcpServer('${pageId}', {
+const { server, connect, disconnect } = usePageMcpServer(${pageIdLiteral}, {
   business: {
-    id: '${pageId}',
-    description: '${pageId}页面'
+    id: ${pageIdLiteral},
+    description: ${descriptionLiteral}
   }
 })
 
