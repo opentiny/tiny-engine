@@ -19,35 +19,109 @@ const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
 const CHAT_MODE = { Agent: 'agent', Chat: 'chat' }
 
+const thinkingExtraBody = {
+  extraBody: {
+    enable: {
+      enable_thinking: true,
+      thinking_budget: 1000
+    },
+    disable: null
+  }
+}
+
 const AIModelOptions = [
   {
     label: '阿里云百炼',
+    provider: 'bailian',
     value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     model: [
-      { label: 'qwen-vl-max', value: 'qwen-vl-max', ability: ['visual'] },
-      { label: 'qwen-vl-plus', value: 'qwen-vl-plus', ability: ['visual'] },
-      { label: 'qwen-plus', value: 'qwen-plus' },
-      { label: 'qwen-max', value: 'qwen-max' },
-      { label: 'qwen-turbo', value: 'qwen-turbo' },
-      { label: 'qwen-long', value: 'qwen-long' },
-      { label: 'deepseek-r1', value: 'deepseek-r1' },
-      { label: 'deepseek-v3', value: 'deepseek-v3', ability: ['tools'] },
-      { label: 'qwen2.5-14b-instruct', value: 'qwen2.5-14b-instruct' },
-      { label: 'qwen2.5-7b-instruct', value: 'qwen2.5-7b-instruct' },
-      { label: 'qwen2.5-coder-7b-instruct', value: 'qwen2.5-coder-7b-instruct' },
-      { label: 'qwen2.5-omni', value: 'qwen2.5-omni' },
-      { label: 'qwen3-14b', value: 'qwen3-14b' },
-      { label: 'qwen3-8b', value: 'qwen3-8b' },
-      { label: 'deepseek-r1-distill-qwen-1.5b', value: 'deepseek-r1-distill-qwen-1.5b' },
-      { label: 'deepseek-r1-distill-qwen-32b', value: 'deepseek-r1-distill-qwen-32b' }
+      // Agent/chat
+      // 备注：千问多模态模型不支持工具调用；
+      {
+        label: 'Qwen 通用模型（Plus）',
+        value: 'qwen-plus',
+        capabilities: {
+          tools: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      {
+        label: 'Qwen QVQ视觉推理模型（PLUS）',
+        value: 'qvq-plus',
+        capabilities: {
+          visual: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      {
+        label: 'Qwen QVQ视觉推理模型（MAX）',
+        value: 'qvq-max',
+        capabilities: {
+          visual: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      {
+        label: 'Qwen VL视觉理解模型（PLUS）',
+        value: 'qwen3-vl-plus',
+        capabilities: {
+          visual: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      {
+        label: 'Qwen Coder编程模型（PLUS）',
+        value: 'qwen3-coder-plus',
+        capabilities: {
+          tools: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      {
+        label: 'DeepSeek（v3.2）',
+        value: 'deepseek-v3.2-exp',
+        capabilities: {
+          tools: true,
+          thinking: thinkingExtraBody
+        }
+      },
+      // 小参数模型
+      {
+        label: 'Qwen 通用模型（Flash）',
+        value: 'qwen-flash',
+        capabilities: {
+          compact: true
+        }
+      },
+      {
+        label: 'Qwen Coder编程模型（Flash）',
+        value: 'qwen3-coder-flash',
+        capabilities: {
+          compact: true
+        }
+      },
+      { label: 'Qwen3（14b）', value: 'qwen3-14b', capabilities: { compact: true } },
+      { label: 'Qwen3（8b）', value: 'qwen3-8b', capabilities: { compact: true } }
     ]
   },
   {
     label: 'DeepSeek',
+    provider: 'deepseek',
     value: 'https://api.deepseek.com/v1',
     model: [
-      { label: 'deepseek-chat', value: 'deepseek-chat' },
-      { label: 'deepseek-reasoner', value: 'deepseek-reasoner' }
+      {
+        label: 'DeepSeek',
+        value: 'deepseek-chat',
+        capabilities: {
+          tools: true,
+          thinking: {
+            extraBody: {
+              enable: { model: 'deepseek-reasoner' },
+              disable: { model: 'deepseek-chat' }
+            }
+          }
+        }
+      }
     ]
   }
 ]
@@ -55,6 +129,11 @@ const AIModelOptions = [
 const getAIModelOptions = () => {
   const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
   return aiRobotOptions.length ? aiRobotOptions : AIModelOptions
+}
+
+const getModelCapabilities = (baseUrl: string, model: string) => {
+  return AIModelOptions.find((option) => option.value === baseUrl)?.model.find((item) => item.value === model)
+    ?.capabilities
 }
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
@@ -74,7 +153,7 @@ const saveRobotSettingState = (state: object) => {
   localStorage.setItem(SETTING_STORAGE_KEY, JSON.stringify(newState))
 }
 
-const { activeName, existModel, customizeModel, chatMode } = loadRobotSettingState() || {}
+const { activeName, existModel, customizeModel, chatMode, enableThinking } = loadRobotSettingState() || {}
 
 const storageSettingState = (activeName === EXISTING_MODELS ? existModel : customizeModel) || {}
 
@@ -87,7 +166,8 @@ const robotSettingState = reactive({
     completeModel: storageSettingState.completeModel || getAIModelOptions()[0].model[0].value || '',
     apiKey: storageSettingState.apiKey || ''
   },
-  chatMode: chatMode || CHAT_MODE.Agent
+  chatMode: chatMode || CHAT_MODE.Agent,
+  enableThinking: enableThinking || false
 })
 
 const isValidOperation = (operation: object) => {
@@ -142,6 +222,7 @@ export default () => {
     CHAT_MODE,
     AIModelOptions,
     getAIModelOptions,
+    getModelCapabilities,
     robotSettingState,
     isValidOperation,
     isValidFastJsonPatch

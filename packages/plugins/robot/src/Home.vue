@@ -12,12 +12,8 @@
         <robot-chat
           ref="robotChatRef"
           :prompt-items="promptItems"
-          :bubbleRenderers="
-            robotSettingState.chatMode === CHAT_MODE.Agent
-              ? { markdown: BuildLoadingRenderer, loading: BuildLoadingRenderer }
-              : {}
-          "
-          :allowFiles="isVisualModel() && robotSettingState.chatMode === CHAT_MODE.Agent"
+          :bubble-renderers="bubbleRenderers"
+          :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
           @fileSelected="handleFileSelected"
         >
           <template #operations>
@@ -45,7 +41,20 @@
               :chatMode="robotSettingState.chatMode"
               @typeChange="handleChatModeChange"
             ></robot-type-select>
-            <mcp-server :position="mcpDrawerPosition" v-if="robotSettingState.chatMode === CHAT_MODE.Chat"></mcp-server>
+            <mcp-server
+              :position="mcpDrawerPosition"
+              v-if="robotSettingState.chatMode === CHAT_MODE.Chat && isToolsModel"
+            ></mcp-server>
+            <footer-button
+              :active="robotSettingState.enableThinking"
+              tooltip-content="深度思考"
+              @update:active="toggleActive"
+            >
+              <template #icon>
+                <IconThink class="icon-think" />
+              </template>
+              <template #text> 深度思考 </template>
+            </footer-button>
           </template>
         </robot-chat>
       </div>
@@ -66,8 +75,10 @@ import StudyIconComponent from './icons/study-icon.vue'
 import type { PromptProps } from '@opentiny/tiny-robot'
 import RobotTypeSelect from './components/RobotTypeSelect.vue'
 import McpServer from './mcp/McpServer.vue'
-import BuildLoadingRenderer from './BuildLoadingRenderer.vue'
+import AgentRenderer from './AgentRenderer.vue'
 import useChat from './composables/useChat'
+import { IconThink } from '@opentiny/tiny-robot-svgs'
+import FooterButton from './mcp/FooterButton.vue'
 
 const { options } = defineProps({
   options: {
@@ -76,11 +87,18 @@ const { options } = defineProps({
   }
 })
 
+const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState } = useRobot()
+
 const robotChatRef = ref(null)
 
 const fullscreen = computed(() => {
   return robotChatRef.value?.fullscreen
 })
+
+const toggleActive = () => {
+  robotSettingState.enableThinking = !robotSettingState.enableThinking
+  saveRobotSettingState({ enableThinking: robotSettingState.enableThinking })
+}
 
 const mcpDrawerPosition = computed(() => {
   return {
@@ -116,14 +134,23 @@ const promptItems: PromptProps[] = [
 const showTeleport = ref(false)
 const showSettingPopover = ref(false)
 
-const { robotSettingState, CHAT_MODE, AIModelOptions } = useRobot()
 const { inputMessage, changeChatMode } = useChat()
 
-const isVisualModel = () => {
-  const platform = AIModelOptions.find((option) => option.value === robotSettingState.selectedModel.baseUrl)
-  const modelAbility = platform?.model.find((item) => item.value === robotSettingState.selectedModel.model)
-  return modelAbility?.ability?.includes('visual') || false
-}
+const isVisualModel = computed(() => {
+  const modelCapabilities = getModelCapabilities(
+    robotSettingState.selectedModel.baseUrl,
+    robotSettingState.selectedModel.model
+  )
+  return modelCapabilities?.visual || false
+})
+
+const isToolsModel = computed(() => {
+  const modelCapabilities = getModelCapabilities(
+    robotSettingState.selectedModel.baseUrl,
+    robotSettingState.selectedModel.model
+  )
+  return modelCapabilities?.tools || false
+})
 
 const handleChatModeChange = (type: string) => {
   changeChatMode(type)
@@ -140,6 +167,12 @@ const closePanel = () => {
 const openAIRobot = () => {
   robotChatRef.value?.openAIRobot()
 }
+
+const bubbleRenderers = computed(() => {
+  return robotSettingState.chatMode === CHAT_MODE.Agent
+    ? { markdown: AgentRenderer, loading: AgentRenderer, 'collapsible-text': AgentRenderer }
+    : {}
+})
 
 const handleFileSelected = (formData: unknown, updateAttachment: (resourceUrl: string) => void) => {
   try {

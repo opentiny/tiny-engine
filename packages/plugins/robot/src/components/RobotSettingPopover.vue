@@ -34,7 +34,7 @@
             </template>
             <tiny-select
               v-model="state.existFormData.completeModel"
-              :options="modelOptions"
+              :options="compactModelOptions"
               placeholder="请选择"
             ></tiny-select>
           </tiny-form-item>
@@ -45,7 +45,12 @@
                 <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
               </tiny-tooltip>
             </template>
-            <tiny-input class="filedName" v-model="state.existFormData.apiKey" placeholder="请输入"></tiny-input>
+            <tiny-input
+              type="password"
+              class="filedName"
+              v-model="state.existFormData.apiKey"
+              placeholder="请输入"
+            ></tiny-input>
           </tiny-form-item>
         </tiny-form>
       </tiny-tab-item>
@@ -92,7 +97,12 @@
                 <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
               </tiny-tooltip>
             </template>
-            <tiny-input class="filedName" v-model="state.customizeFormData.apiKey" placeholder="请输入"></tiny-input>
+            <tiny-input
+              class="filedName"
+              type="password"
+              v-model="state.customizeFormData.apiKey"
+              placeholder="请输入"
+            ></tiny-input>
           </tiny-form-item>
         </tiny-form>
       </tiny-tab-item>
@@ -166,7 +176,17 @@ export default {
     })
 
     const modelOptions = computed(
-      () => AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)?.model || []
+      () =>
+        AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)?.model.filter(
+          (item) => !item.capabilities?.compact
+        ) || []
+    )
+
+    const compactModelOptions = computed(
+      () =>
+        AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)?.model.filter(
+          (item) => item.capabilities?.compact
+        ) || []
     )
 
     const customizeFormRules = {
@@ -258,6 +278,7 @@ export default {
     return {
       AIModelOptions,
       modelOptions,
+      compactModelOptions,
       EXISTING_MODELS,
       CUSTOMIZE,
       robotSettingExistForm,

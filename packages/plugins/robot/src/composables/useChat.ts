@@ -47,23 +47,38 @@ const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
 }
 
 const beforeRequest = async (requestParams: any) => {
-  const { CHAT_MODE, robotSettingState } = useRobot()
+  const { CHAT_MODE, robotSettingState, getModelCapabilities } = useRobot()
   const pageSchema = deepClone(useCanvas().pageState.pageSchema)
   const isAgentMode = robotSettingState.chatMode === CHAT_MODE.Agent
   const tools = await useMcpServer().getLLMTools()
-  if (!requestParams.tools && tools?.length && !isAgentMode) {
+  const modelCapabilities = getModelCapabilities(
+    robotSettingState.selectedModel.baseUrl,
+    robotSettingState.selectedModel.model
+  )
+  if (!requestParams.tools && tools?.length && !isAgentMode && modelCapabilities?.tools) {
     Object.assign(requestParams, { tools })
   }
   if (isAgentMode) {
     requestParams.apiKey = robotSettingState.selectedModel.apiKey
-    // let referenceContext = ''
+    const referenceContext = ''
     // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
     //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
     // }
-    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, ''))
+    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext))
+    if (!robotSettingState.enableThinking) {
+      Object.assign(requestParams, { response_format: { type: 'json_object' } })
+    }
   }
   requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
   requestParams.model = robotSettingState.selectedModel.model
+  if (modelCapabilities?.thinking?.extraBody) {
+    Object.assign(
+      requestParams,
+      robotSettingState.enableThinking
+        ? modelCapabilities.thinking.extraBody.enable
+        : modelCapabilities.thinking.extraBody.disable
+    )
+  }
   if (config.apiKey !== robotSettingState.selectedModel.apiKey) {
     provider?.updateConfig({ apiKey: robotSettingState.selectedModel.apiKey }) // eslint-disable-line
     config.apiKey = robotSettingState.selectedModel.apiKey
@@ -152,6 +167,7 @@ const handleDeltaReasoning = (choice: ChatCompletionStreamResponseChoice, lastMe
         contentType: 'reasoning',
         title: '深度思考',
         content: '',
+        status: 'reasoning',
         defaultOpen: true
       })
     }
@@ -161,6 +177,9 @@ const handleDeltaReasoning = (choice: ChatCompletionStreamResponseChoice, lastMe
 
 const handleDeltaContent = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
   if (typeof choice.delta.content === 'string' && choice.delta.content) {
+    if (lastMessage.renderContent.at(-1)?.contentType === 'reasoning') {
+      lastMessage.renderContent.at(-1).status = 'finish'
+    }
     if (lastMessage.renderContent.at(-1)?.type !== 'markdown') {
       lastMessage.renderContent.push({ type: 'markdown', content: '' })
       lastMessage.content = ''
