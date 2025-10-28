@@ -1,26 +1,9 @@
-import type { RouteLocationRaw } from 'vue-router'
-
+import type { RouteRecordRaw } from 'vue-router'
 export interface PageRendererProps {
   pageId: string
 }
 
-export interface RouteConfig {
-  path: string
-  name: string
-  children?: RouteConfig[]
-  props?: PageRendererProps
-  redirect?: RouteLocationRaw
-  meta: {
-    pageId: string
-    pageName: string
-    hasChildren: boolean
-    isHome: boolean
-    depth: number
-    isDefault: boolean
-    hasDefault: boolean
-    defaultPath: string
-  }
-}
+export type IRouteConfig = RouteRecordRaw
 
 export interface StoreConfig {
   id: string

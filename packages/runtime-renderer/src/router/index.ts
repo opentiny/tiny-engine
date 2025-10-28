@@ -1,6 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { useAppSchema } from '../composables/useAppSchema'
-import type { RouteConfig } from '../types/config'
+import type { IRouteConfig } from '../types/config'
 import type { PageMeta } from '../types/schema'
 
 // 定义页面结构类型
@@ -20,82 +20,67 @@ interface PageSchema {
 async function createRouterConfig() {
   const { pages } = useAppSchema()
 
-  // 生成路由配置
-  const generateRoutesConfig = () => {
-    if (!pages.value) return []
-
-    // 构建页面映射，方便查找
-    const pageMap = new Map<string, PageSchema>()
-    pages.value.forEach((page: PageSchema) => {
-      pageMap.set(page.id, page)
-    })
-
-    // 构建父子关系映射
-    const childrenMap = new Map<string, PageSchema[]>()
-    pages.value.forEach((page: PageSchema) => {
-      if (page.parentId !== '0') {
-        if (!childrenMap.has(page.parentId)) {
-          childrenMap.set(page.parentId, [])
-        }
-        childrenMap.get(page.parentId)!.push(page)
-      }
-    })
-
-    // 递归构建路由配置
-    const buildRouteConfig = (page: PageSchema) => {
-      const isChildRoute = page.parentId !== '0'
-
-      const routeConfig = {
-        path: isChildRoute ? page.route : `/${page.route}`,
-        name: `${page.id}`,
-        component: async () => (await import('../components/PageRenderer.ts')).default,
+  // 通过pages生成路由配置
+  const generateRoutesByPages = (pages: Array<PageSchema>): Array<IRouteConfig> => {
+    // 建立路由-页面id映射
+    const pageRouteMap = new Map<string, IRouteConfig>()
+    pages.forEach((page: PageSchema) => {
+      const pageIdStr = String(page.id)
+      // JAVA后端中page.id字段为number类型，前端mockServer中为string类型
+      // 为了同时兼容JAVA后端和mockserver,显示转换作为键的pageId为字符串
+      pageRouteMap.set(pageIdStr, {
+        path: `${page.route}`,
+        name: pageIdStr,
+        component: () => import('../components/PageRenderer.ts'),
         props: { pageId: page.id },
-        children: [] as RouteConfig[],
+        children: [],
         meta: {
-          pageId: page.id,
+          pageId: pageIdStr,
+          parentId: page.parentId,
           pageName: page.name,
           isHome: page.isHome,
           depth: page.depth,
           isDefault: page.isDefault,
           hasDefault: false,
+          hasChildren: false,
           defaultPath: ''
         }
-      }
-
-      // 递归处理子路由
-      // 注意JAVA后端的page.id为number，而mockServer的page.id为string
-      const children = childrenMap.get(String(page.id)) || []
-      children.forEach((child) => {
-        const childRoute = buildRouteConfig(child)
-        routeConfig.children.push(childRoute)
-
-        // 处理默认路由
-        if (childRoute.meta.isDefault) {
-          routeConfig.meta.hasDefault = true
-          routeConfig.meta.defaultPath = `${routeConfig.path}/${childRoute.path}`
-          routeConfig.redirect = routeConfig.meta.defaultPath
-        }
       })
+    })
 
-      return routeConfig
-    }
-
-    // 只处理根路由（parentId为'0'的路由）
-    const rootPages = pages.value.filter((page: PageSchema) => page.parentId === '0')
-    const routesConfig = rootPages.map((page) => buildRouteConfig(page))
-
-    return routesConfig
+    // 建立树状路由关系
+    const routeConfs = [] as Array<IRouteConfig>
+    let redirectRoute = {} as IRouteConfig
+    pageRouteMap.forEach((config, _id) => {
+      const pRouteConf = pageRouteMap.get((config?.meta?.parentId || '0') as string)
+      if (pRouteConf) {
+        // 存在父级路由则添加至父级路由
+        pRouteConf.children = [...(pRouteConf?.children || []), config]
+        pRouteConf.meta = { ...pRouteConf.meta, hasChildren: true }
+        // 处理默认子路由
+        if (config?.meta?.isDefault) {
+          pRouteConf.redirect = config.path
+          pRouteConf.meta = { ...pRouteConf.meta, hasDefault: true }
+        }
+      } else {
+        // 无父级路由均为根路由
+        config.path = `/${config.path}`
+        routeConfs.push(config)
+      }
+      // 处理首页路由
+      if (config?.meta?.isHome) {
+        const getUrl = (conf: IRouteConfig): string => {
+          const parent = pageRouteMap.get((conf?.meta?.parentId || '0') as string)
+          return parent && conf ? `${getUrl(parent)}/${conf.path}` : conf ? `/${conf.path.replace(/^\/+/, '')}` : ''
+        }
+        redirectRoute = { path: '/', redirect: getUrl(config) }
+        routeConfs.push(redirectRoute)
+      }
+    })
+    return routeConfs
   }
 
-  const routes: any[] = []
-  const routesConfig = generateRoutesConfig()
-
-  routesConfig.forEach((page) => {
-    routes.push(page)
-    if (page.meta.isHome) {
-      routes.push({ path: '/', redirect: `${page.path}` })
-    }
-  })
+  const routes = generateRoutesByPages(pages.value)
 
   routes.push({
     path: '/:pathMatch(.*)*',
@@ -107,16 +92,9 @@ async function createRouterConfig() {
 
 export async function createAppRouter() {
   const routes = await createRouterConfig()
-  const router = createRouter({ history: createWebHashHistory('/runtime.html'), routes })
-
-  if (typeof window !== 'undefined') {
-    window.__DEBUG_ROUTER__ = router
-    // eslint-disable-next-line no-console
-    console.log(
-      '所有路由:',
-      router.getRoutes().map((r) => ({ path: r.path, name: r.name, redirect: r.redirect }))
-    )
-  }
-
+  const router = createRouter({
+    history: createWebHashHistory('/runtime.html'),
+    routes
+  })
   return router
 }
