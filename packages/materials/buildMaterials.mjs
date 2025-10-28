@@ -181,7 +181,7 @@ const buildComponents = async (config = {}) => {
             snippet.children = []
           }
 
-          snippet.children.push(...snippetItem.children)
+          snippet.children.push(...(snippetItem.children || []))
         } else {
           allBundles.snippets.push(snippetItem)
         }
