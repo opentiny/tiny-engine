@@ -80,15 +80,18 @@ export const initDataSource = (config: any) => {
 
     const shouldFetch = item.shouldFetch?.value ? parseJSFunction(item.shouldFetch) : () => true
     const willFetch = item.willFetch?.value ? parseJSFunction(item.willFetch) : (options) => options
+    const parsedDataHandler = item.dataHandler?.value ? parseJSFunction(item.dataHandler) : null
+    const parsedErrorHandler = item.errorHandler?.value ? parseJSFunction(item.errorHandler) : null
+
     const dataHandler = (res) => {
-      const handled = item.dataHandler?.value ? parseJSFunction(item.dataHandler)(res) : res
+      const handled = parsedDataHandler ? parsedDataHandler(res) : res
       dataSource.status = 'loaded'
       dataSource.data = handled
       return handled
     }
     const errorHandler = (error) => {
-      if (item.errorHandler?.value) {
-        parseJSFunction(item.errorHandler)(error)
+      if (parsedErrorHandler) {
+        parsedErrorHandler(error)
       }
       dataSource.status = 'error'
       dataSource.error = error

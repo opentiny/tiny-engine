@@ -95,7 +95,7 @@ function rewriteSelector(id: string, selector: selectorParser.Selector, selector
       // deep: inject [id] attribute at the node before the ::v-deep
       // combinator.
       if (value === ':deep' || value === '::v-deep') {
-        if (n.nodes.length) {
+        if (n.nodes && n.nodes.length) {
           // .foo ::v-deep(.bar) -> .foo[xxxxxxx] .bar
           // replace the current node with ::v-deep's inner selector
           let last: selectorParser.Selector['nodes'][0] = n
