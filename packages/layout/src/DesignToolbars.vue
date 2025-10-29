@@ -96,14 +96,9 @@ export default {
       return layoutConfig.toolbars
     })
 
-    const gotoCenter = (type: string) => {
-      window.open(`/template.html?type=${type}`, '_blank')
-    }
-
     return {
       getMergeMeta,
-      toolbars,
-      gotoCenter
+      toolbars
     }
   }
 }
