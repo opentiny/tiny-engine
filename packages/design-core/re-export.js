@@ -34,8 +34,9 @@ export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
 export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
+export { default as ApplicationCenter } from '@opentiny/tiny-engine-home-application-center'
+export { default as TemplateCenter } from '@opentiny/tiny-engine-home-template-center'
 export { initPreview } from './src/preview/src/main'
-export { initTemplate } from './src/template/src/main'
 export {
   GenerateCodeService,
   PluginPanel,

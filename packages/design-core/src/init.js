@@ -131,12 +131,6 @@ export const init = async ({
   createAppSignal = [],
   initTimeout = 30000
 } = {}) => {
-  // 如果输入的URL没有任何参数则跳转到应用中心
-  const [baseUrl, query] = window.location.href.split('?')
-  if (!query) {
-    window.location.href = `${baseUrl}template.html?type=app`
-    return
-  }
   const { beforeAppCreate, appCreated, appMounted } = lifeCycles
 
   registerConfigurators(configurators)
