@@ -1,4 +1,3 @@
-// tests/components/TagDialog.spec.js
 import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import TagDialog from '../../src/components/VersionTagCreate.vue'

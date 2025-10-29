@@ -1,4 +1,3 @@
-// test/component/VersionCommitCreate.spec.js
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import VersionCommitCreate from '../../src/components/VersionCommitCreate.vue'
@@ -37,7 +36,7 @@ vi.mock('@opentiny/tiny-engine-utils', () => ({
   }
 }))
 
-describe('CommitDialog.vue', () => {
+describe('VersionCommitCreate.vue', () => {
   let wrapper
 
   const createWrapper = () =>
