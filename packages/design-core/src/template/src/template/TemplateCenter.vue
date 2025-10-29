@@ -119,7 +119,6 @@ export default {
     TemplateDetail,
     TinyPager: Pager,
     TinySearch: Search,
-    TinyNotify: Notify,
     SearchEmpty,
     TinyIconSearch: iconSearch()
   },
@@ -153,7 +152,7 @@ export default {
           tagList.industry = res[1] || []
         })
         .catch((error) => {
-          TinyNotify({
+          Notify({
             type: 'error',
             message: error,
             position: 'top-right',
@@ -171,13 +170,13 @@ export default {
         industryId: state.industry,
         framework: state.framework
       }
-      fetchTemplateList(Object.fromEntries(Object.entries(params).filter(([key, value]) => !!value)))
+      fetchTemplateList(Object.fromEntries(Object.entries(params).filter((item) => !!item[1])))
         .then((res) => {
           templateList.value = res.apps || []
           state.total = res.total
         })
         .catch((error) => {
-          TinyNotify({
+          Notify({
             type: 'error',
             message: error,
             position: 'top-right',

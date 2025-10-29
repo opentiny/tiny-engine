@@ -103,11 +103,7 @@
         @current-change="currentChange"
       ></tiny-pager>
     </div>
-    <app-dialog
-      v-model:visible="state.appVisible"
-      :template="currentTemplate"
-      @confirm="confirmApp"
-    ></app-dialog>
+    <app-dialog v-model:visible="state.appVisible" :template="currentTemplate" @confirm="confirmApp"></app-dialog>
   </div>
 </template>
 
@@ -128,8 +124,6 @@ export default {
     TinyGridColumn: GridColumn,
     TinyPopover: Popover,
     TinySearch: Search,
-    TinyModal: Modal,
-    TinyNotify: Notify,
     SearchEmpty,
     TinyIconSearch: iconSearch(),
     AppDialog
@@ -197,7 +191,7 @@ export default {
       if (state.orderBy === 'last_updated_time') {
         params.orderBy = state.orderBy
       }
-      fetchApplicationList(Object.fromEntries(Object.entries(params).filter(([key, value]) => !!value))).then((res) => {
+      fetchApplicationList(Object.fromEntries(Object.entries(params).filter((item) => !!item[1]))).then((res) => {
         appList.value = res.apps || []
         state.total = res.total
       })
@@ -213,7 +207,7 @@ export default {
     }
 
     const handleDelete = (template) => {
-      TinyModal.confirm({
+      Modal.confirm({
         message: '即将删除应用，删除后不可恢复，请谨慎操作。',
         title: '删除应用'
       }).then((res) => {
@@ -223,7 +217,7 @@ export default {
               getTemplateList()
             })
             .catch((error) => {
-              TinyNotify({
+              Notify({
                 type: 'error',
                 message: error,
                 position: 'top-right',
@@ -260,7 +254,7 @@ export default {
         delete formData.id
         updateApplication(updateId, formData)
           .then(() => {
-            TinyNotify({
+            Notify({
               type: 'success',
               message: '应用更新成功',
               position: 'top-right',
@@ -269,7 +263,7 @@ export default {
             getApplicationList()
           })
           .catch((error) => {
-            TinyNotify({
+            Notify({
               type: 'error',
               message: error,
               position: 'top-right',
@@ -279,7 +273,7 @@ export default {
       } else {
         createApplication(formData)
           .then(() => {
-            TinyNotify({
+            Notify({
               type: 'success',
               message: '应用创建成功',
               position: 'top-right',
@@ -288,7 +282,7 @@ export default {
             getApplicationList()
           })
           .catch((error) => {
-            TinyNotify({
+            Notify({
               type: 'error',
               message: error,
               position: 'top-right',

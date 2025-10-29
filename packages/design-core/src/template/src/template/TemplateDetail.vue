@@ -45,8 +45,6 @@ export default {
   components: {
     TinyButton: Button,
     TinyDrawer: Drawer,
-    Notify,
-    Modal,
     AppDialog
   },
   props: {
@@ -101,7 +99,6 @@ export default {
     }
 
     onMounted(() => {
-      console.log(props.template)
       getPageList(1).then((pages: any) => {
         if (pages?.length) {
           const href = window.location.href.split('?')[0] || './'

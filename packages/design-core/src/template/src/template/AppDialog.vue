@@ -49,7 +49,7 @@
             <div v-if="isOpen" class="dropdown-menu">
               <!-- 菜单项 -->
               <div class="icon-list">
-                <template v-for="iconIndex in 15" :key="icon">
+                <template v-for="iconIndex in 15" :key="iconIndex">
                   <svg-icon
                     :name="'template-cover-' + iconIndex"
                     class="icon"
@@ -89,8 +89,7 @@ export default {
     TinyDialogBox,
     TinyForm,
     TinyFormItem,
-    TinySelect,
-    Notify
+    TinySelect
   },
   props: {
     visible: {
