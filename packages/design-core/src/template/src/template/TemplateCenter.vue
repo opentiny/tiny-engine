@@ -170,7 +170,7 @@ export default {
         industryId: state.industry,
         framework: state.framework
       }
-      fetchTemplateList(Object.fromEntries(Object.entries(params).filter((item) => !!item[1])))
+      fetchTemplateList(Object.fromEntries(Object.entries(params).filter(([, value]) => !!value)))
         .then((res) => {
           templateList.value = res.apps || []
           state.total = res.total

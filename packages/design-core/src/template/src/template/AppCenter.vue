@@ -191,7 +191,7 @@ export default {
       if (state.orderBy === 'last_updated_time') {
         params.orderBy = state.orderBy
       }
-      fetchApplicationList(Object.fromEntries(Object.entries(params).filter((item) => !!item[1]))).then((res) => {
+      fetchApplicationList(Object.fromEntries(Object.entries(params).filter(([, value]) => !!value))).then((res) => {
         appList.value = res.apps || []
         state.total = res.total
       })
@@ -214,7 +214,7 @@ export default {
         if (res === 'confirm') {
           deleteApplication(template.id)
             .then(() => {
-              getTemplateList()
+              getApplicationList()
             })
             .catch((error) => {
               Notify({
@@ -230,7 +230,7 @@ export default {
 
     const openApplication = (template) => {
       const baseUrl = new URL(window.location.href).origin
-      window.open(`${baseUrl}/type=app&id=${template.id}&tenant=${template.tenantId}`, '_blank')
+      window.open(`${baseUrl}/?type=app&id=${template.id}&tenant=${template.tenantId}`, '_blank')
     }
 
     const typeClick = (type) => {
