@@ -1,0 +1,42 @@
+{
+  "name": "@opentiny/tiny-engine-runtime-renderer",
+  "version": "1.0.0",
+  "description": "TinyEngine Runtime Renderer Package",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@opentiny/tiny-engine-builtin-component": "workspace:*",
+    "@opentiny/tiny-engine-i18n-host": "workspace:*",
+    "@vue/babel-plugin-jsx": "^1.2.5",
+    "@babel/core": "^7.18.13",
+    "@vue/shared": "^3.3.4",
+    "axios": "^1.10.0",
+    "axios-mock-adapter": "^1.19.0",
+    "pinia": "^2.1.0",
+    "vue-router": "^4.2.0",
+    "postcss": "^8.4.31",
+    "postcss-selector-parser": "^7.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.2",
+    "typescript": "^5.4.2",
+    "vite": "^5.4.2"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
+    "@opentiny/vue-locale": "~3.20.0",
+    "@opentiny/vue-theme": "~3.20.0",
+    "vue": "^3.4.15",
+    "vue-i18n": "^9.9.0"
+  }
+}

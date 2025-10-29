@@ -37,6 +37,7 @@ export const META_APP = {
   Save: 'engine.toolbars.save',
   GenerateCode: 'engine.toolbars.generate-code',
   Preview: 'engine.toolbars.preview',
+  RuntimeDeploy: 'engine.toolbars.runtime-deploy',
   RedoUndo: 'engine.toolbars.redoundo',
   Fullscreen: 'engine.toolbars.fullscreen',
   Lock: 'engine.toolbars.lock',

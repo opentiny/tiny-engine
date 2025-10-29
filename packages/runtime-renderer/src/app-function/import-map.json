@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "echarts": "${VITE_CDN_DOMAIN}/echarts${versionDelimiter}5.4.1${fileDelimiter}/dist/echarts.esm.js"
+  },
+  "importStyles": {}
+}
