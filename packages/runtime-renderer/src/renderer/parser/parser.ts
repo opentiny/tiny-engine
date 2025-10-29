@@ -218,10 +218,9 @@ const parseJSFunction = (data, _scope, ctx) => {
   }
 }
 
-const parseJSSlot = (_data, _scope, _ctx) => {
-  return ($scope) => renderDefault(data.value, { ...scope, ...$scope }, data)
+const parseJSSlot = (data, _scope, _ctx) => {
+  return ($scope) => renderDefault(data.value, { ..._scope, ...$scope }, data)
 }
-
 export function parseData(data, scope, ctx) {
   const typeParser = parseList.find((item) => item.type(data))
   return typeParser ? typeParser.parseFunc(data, scope, ctx) : data

@@ -191,15 +191,12 @@ const generateCollection = (schema) => {
   }
 }
 
-export const renderDefault = (children: Node[], scope: Record<string, any>, parent: Node) =>
-  children.map?.((child) =>
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    h(renderer, {
-      schema: child,
-      scope,
-      parent
-    })
-  )
+export const renderDefault = (
+  children: any[],
+  scope: Record<string, any>,
+  parent: any,
+  renderComponent: (schema: any, scope: Record<string, any>, parent: any) => any
+) => children.map?.((child) => renderComponent(child, scope, parent))
 const generateSlotGroup = (children, isCustomElm, schema) => {
   const slotGroup = {}
 
