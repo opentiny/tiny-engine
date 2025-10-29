@@ -87,10 +87,29 @@ export const initDataSource = (config: any) => {
     const parsedErrorHandler = item.errorHandler?.value ? parseJSFunction(item.errorHandler) : null
 
     const dataHandler = (res) => {
+      // 先应用用户定义的dataHandler
       const handled = parsedDataHandler ? parsedDataHandler(res) : res
+
+      // 统一数据结构，确保与远程数据源与静态数据源结构一致
+      let unifiedData
+      if (handled && typeof handled === 'object' && !handled.data?.items) {
+        // 如果不是静态数据源的格式，则转换为统一格式
+        const items = Array.isArray(handled.data) ? handled.data : handled.data ? [handled.data] : []
+        unifiedData = {
+          code: handled.code || '',
+          msg: handled.message || handled.msg || 'success',
+          data: {
+            items,
+            total: items.length
+          }
+        }
+      } else {
+        unifiedData = handled
+      }
+
       dataSource.status = 'loaded'
-      dataSource.data = handled
-      return handled
+      dataSource.data = unifiedData
+      return unifiedData
     }
     const errorHandler = (error) => {
       if (parsedErrorHandler) {
