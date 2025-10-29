@@ -70,7 +70,7 @@
             </div>
           </template>
         </div>
-        <tiny-grid ref="gridRef" class="table" v-if="state.type === 'table'" :data="appList">
+        <tiny-grid ref="gridRef" class="table" v-if="state.type === 'table' && appList.length" :data="appList">
           <tiny-grid-column field="name" title="应用名称" show-overflow>
             <template #default="data">
               <div class="app-name">
@@ -90,6 +90,7 @@
             </template>
           </tiny-grid-column>
         </tiny-grid>
+        <search-empty :isShow="!appList.length" />
       </div>
       <tiny-pager
         v-if="state.total > state.pageSize"
@@ -114,6 +115,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { Button, Select, Pager, Grid, GridColumn, Popover, Search, Modal, Notify } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
+import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import AppDialog from './AppDialog.vue'
 import { fetchApplicationList, createApplication, updateApplication, deleteApplication } from '../js/http'
 
@@ -126,8 +128,9 @@ export default {
     TinyGridColumn: GridColumn,
     TinyPopover: Popover,
     TinySearch: Search,
-    Modal,
-    Notify,
+    TinyModal: Modal,
+    TinyNotify: Notify,
+    SearchEmpty,
     TinyIconSearch: iconSearch(),
     AppDialog
   },
@@ -177,7 +180,7 @@ export default {
       orderBy: 'created_time',
       appSearchKey: '',
       type: 'default',
-      total: 50,
+      total: 0,
       pageSize: 10,
       currentPage: 1,
       pageSizes: [10, 20, 30, 40],
@@ -210,7 +213,7 @@ export default {
     }
 
     const handleDelete = (template) => {
-      Modal.confirm({
+      TinyModal.confirm({
         message: '即将删除应用，删除后不可恢复，请谨慎操作。',
         title: '删除应用'
       }).then((res) => {
@@ -220,7 +223,7 @@ export default {
               getTemplateList()
             })
             .catch((error) => {
-              Notify({
+              TinyNotify({
                 type: 'error',
                 message: error,
                 position: 'top-right',
@@ -257,7 +260,7 @@ export default {
         delete formData.id
         updateApplication(updateId, formData)
           .then(() => {
-            Notify({
+            TinyNotify({
               type: 'success',
               message: '应用更新成功',
               position: 'top-right',
@@ -266,7 +269,7 @@ export default {
             getApplicationList()
           })
           .catch((error) => {
-            Notify({
+            TinyNotify({
               type: 'error',
               message: error,
               position: 'top-right',
@@ -276,7 +279,7 @@ export default {
       } else {
         createApplication(formData)
           .then(() => {
-            Notify({
+            TinyNotify({
               type: 'success',
               message: '应用创建成功',
               position: 'top-right',
@@ -285,7 +288,7 @@ export default {
             getApplicationList()
           })
           .catch((error) => {
-            Notify({
+            TinyNotify({
               type: 'error',
               message: error,
               position: 'top-right',
@@ -455,6 +458,9 @@ export default {
   margin-bottom: 12px;
   max-height: calc(100% - 80px);
   overflow: auto;
+  .empty-wrap {
+    width: 100%;
+  }
 }
 .options {
   .option {

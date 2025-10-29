@@ -82,6 +82,7 @@
             </div>
           </div>
         </template>
+        <search-empty :isShow="!templateList.length" />
       </div>
       <tiny-pager
         v-if="state.total > state.pageSize"
@@ -109,6 +110,7 @@
 import { ref, reactive, onMounted } from 'vue'
 import { Pager, Search, Notify } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
+import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import TemplateDetail from './TemplateDetail.vue'
 import { fetchBusinessCategoryByGroup, fetchTemplateList } from '../js/http'
 
@@ -117,7 +119,8 @@ export default {
     TemplateDetail,
     TinyPager: Pager,
     TinySearch: Search,
-    Notify,
+    TinyNotify: Notify,
+    SearchEmpty,
     TinyIconSearch: iconSearch()
   },
 
@@ -136,7 +139,7 @@ export default {
       searchValue: '',
       scene: null,
       industry: null,
-      framework: 'Vue',
+      framework: '',
       total: 0,
       currentPage: 1,
       pageSize: 10,
@@ -150,7 +153,7 @@ export default {
           tagList.industry = res[1] || []
         })
         .catch((error) => {
-          Notify({
+          TinyNotify({
             type: 'error',
             message: error,
             position: 'top-right',
@@ -174,7 +177,7 @@ export default {
           state.total = res.total
         })
         .catch((error) => {
-          Notify({
+          TinyNotify({
             type: 'error',
             message: error,
             position: 'top-right',
@@ -274,6 +277,9 @@ export default {
       margin-bottom: 12px;
       overflow: auto;
       max-height: calc(100% - 80px);
+      .empty-wrap {
+        width: 100%;
+      }
       .item {
         width: 300px;
         border-radius: 8px;

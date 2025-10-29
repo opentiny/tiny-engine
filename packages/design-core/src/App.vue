@@ -25,7 +25,7 @@ export default {
     const layoutRegistry = getMergeMeta('engine.layout')
     const materialsApi = getMetaApi('engine.plugins.materials')
     const blockApi = getMetaApi('engine.plugins.blockmanage')
-
+    console.log(layoutRegistry)
     // 此处接收画布内部的错误和警告提示
     const { data } = useBroadcastChannel({ name: BROADCAST_CHANNEL.Notify })
 
