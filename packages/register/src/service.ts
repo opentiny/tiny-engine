@@ -8,7 +8,7 @@ interface Context<T, K> {
   options: K
 }
 
-interface ServiceOptions<T, K> {
+export interface ServiceOptions<T, K> {
   id: string
   type: 'MetaService'
   initialState: T

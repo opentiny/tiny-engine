@@ -14,6 +14,7 @@ interface IPage {
   id: number
   name: string
   parentId: number | string
+  isPage: boolean
   page_content: {
     [key: string]: any
     componentName: string
@@ -76,7 +77,12 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   const history = searchParams.get('history')
 
   if (pageId) {
-    let ancestors = (await getPageRecursively(pageId)).reverse()
+    let ancestors = (await getPageRecursively(pageId)).reverse().filter((item) => item.isPage)
+    // 避免祖先页面第一个为文件夹，导致没有 ROOT_ID，导致设置 Main.vue 失败
+    if (ancestors.length && ancestors[0]?.parentId !== ROOT_ID) {
+      ancestors[0].parentId = ROOT_ID
+    }
+
     let currentPage = await getPageById(pageId)
     if (history) {
       const historyList: IPage[] = await fetchPageHistory(pageId)
@@ -197,6 +203,13 @@ const getPageAncestryFiles = (
         index: false
       })
     }
+  }
+
+  const hasMainPage = familyPages.some((item) => item.panelName === 'Main.vue' && item.index)
+
+  if (!hasMainPage && familyPages.length) {
+    familyPages[0].index = true
+    familyPages[0].panelName = 'Main.vue'
   }
 
   return familyPages

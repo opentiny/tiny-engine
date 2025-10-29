@@ -1,24 +1,23 @@
 <template>
   <div class="robot">
-    <div title="AI对话框" class="robot-img">
-      <svg-icon name="AI" @click="openAIRobot"></svg-icon>
-    </div>
-    <Teleport to="body">
-      <div v-if="robotVisible" class="robot-dialog">
-        <div class="bind-chatgpt" id="bind-chatgpt">
-          <section>
-            <div class="chat-title-icons">
-              <svg-icon name="close" class="common-svg opt-button" @click="robotVisible = false"></svg-icon>
-              <svg-icon
-                :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-                class="common-svg opt-button"
-                @click="resizeChatWindow"
-              ></svg-icon>
-            </div>
-          </section>
-          <header class="chat-title">
+    <toolbar-base
+      content="AI对话框"
+      :icon="options.icon?.default || options?.icon"
+      :options="options"
+      @click-api="openAIRobot"
+    >
+    </toolbar-base>
+    <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
+      <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
+        <tr-container
+          v-if="robotVisible"
+          v-model:fullscreen="fullscreen"
+          v-model:show="robotVisible"
+          class="tiny-container"
+        >
+          <template #operations>
             <tiny-popover
-              width="270"
+              width="290"
               trigger="manual"
               v-model="showPopover"
               :visible-arrow="false"
@@ -27,85 +26,82 @@
               <robot-setting-popover
                 v-if="showPopover"
                 :typeValue="selectedModel"
-                :tokenValue="tokenValue"
                 @changeType="changeModel"
                 @close="closePanel"
               ></robot-setting-popover>
               <template #reference>
                 <span class="chat-title-dropdown" @click.stop="showPopover = true">
-                  <span class="chat-title-label">{{ selectedModel.label }}</span>
-                  <svg-icon name="setting" class="ml8"> </svg-icon>
+                  <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
                 </span>
               </template>
             </tiny-popover>
-          </header>
-          <div class="robot-dialog-content">
-            <div class="robot-dialog-content-top">
-              <div class="robot-dialog-content-top-title">我是你的开发小助手</div>
-              <span class="robot-dialog-content-top-icon"><svg-icon name="AI" class="icon-ai"></svg-icon>智能对话</span>
-              <article class="chat-tips">
-                <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
-                <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-              </article>
-            </div>
-            <article
-              :class="[
-                'chat-window',
-                'lowcode-scrollbar-hide',
-                chatWindowOpened ? 'max-chat-window' : 'min-chat-window'
-              ]"
-              id="chatgpt-window"
-            >
-              <tiny-layout>
-                <tiny-row
-                  v-for="(item, index) in activeMessages"
-                  :key="index"
-                  :flex="true"
-                  :order="item.role === 'user' ? 'des' : 'asc'"
-                  :justify="item.role === 'user' ? 'end' : 'start'"
-                  class="chat-message-row"
-                >
-                  <tiny-col
-                    :span="1"
-                    :no="1"
-                    class="chat-avatar-wrap"
-                    :class="{ 'chat-avatar-wrap-ai': item.role !== 'user' }"
-                  >
-                    <svg-icon v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" name="AI"></svg-icon>
-                    <svg-icon v-else class="chat-avatar" name="user-head"></svg-icon>
-                  </tiny-col>
-                  <tiny-col :span="22" :no="2">
-                    <div
-                      :class="[
-                        'chat-content',
-                        item.role === 'user'
-                          ? 'chat-content-user'
-                          : connectedFailed
-                          ? 'chat-content-ai-unconnected'
-                          : 'chat-content-ai'
-                      ]"
-                    >
-                      <span>{{ item.content }}</span>
-                    </div>
-                  </tiny-col>
-                </tiny-row>
-              </tiny-layout>
-            </article>
-
-            <footer class="chat-submit">
-              <tiny-input
-                @keydown.enter="sendContent(inputContent, false)"
-                placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-                v-model="inputContent"
+            <button class="icon-btn" @click="endContent">
+              <icon-new-session />
+            </button>
+          </template>
+          <div class="robot-chat-container-content" ref="chatContainerRef">
+            <div v-if="activeMessages.length === 0">
+              <tr-welcome
+                title="AI助手"
+                description="您好，我是您的开发小助手"
+                :icon="welcomeIcon"
+                class="robot-welcome"
               >
-                <template #suffix>
-                  <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
-                </template>
-              </tiny-input>
-              <tiny-button @click="endContent"><svg-icon name="add"></svg-icon><span>新对话</span></tiny-button>
-            </footer>
+              </tr-welcome>
+              <tr-prompts
+                :items="promptItems"
+                :wrap="true"
+                item-class="prompt-item"
+                class="tiny-prompts"
+                @item-click="handlePromptItemClick"
+              ></tr-prompts>
+            </div>
+            <tr-bubble-provider :content-renderers="contentRenderers" v-else>
+              <tr-bubble-list :items="activeMessages" :roles="roles" autoScroll></tr-bubble-list>
+            </tr-bubble-provider>
           </div>
-        </div>
+          <template #footer>
+            <tr-sender
+              :maxlength="4000"
+              mode="multiple"
+              :autoSize="{ minRows: 1, maxRows: 5 }"
+              :loading="requestLoading"
+              class="footer-sender"
+              ref="senderRef"
+              v-model="inputContent"
+              placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
+              :clearable="true"
+              :showWordLimit="true"
+              :allowFiles="
+                singleAttachmentItems.length < 1 && VISUAL_MODEL.includes(selectedModel.model) && aiType === BUILD_TYPE
+              "
+              uploadTooltip="支持上传1张图片"
+              @submit="sendContent(inputContent, false)"
+              @files-selected="handleSingleFilesSelected"
+            >
+              <template #header v-if="singleAttachmentItems.length > 0">
+                <div>
+                  <tr-attachments
+                    ref="singleAttachmentRef"
+                    v-model:items="singleAttachmentItems"
+                    variant="card"
+                    wrap
+                    @file-remove="handleSingleFileRemove"
+                    @file-retry="handleSingleFileRetry"
+                  >
+                  </tr-attachments>
+                </div>
+              </template>
+              <template #footer-left>
+                <robot-type-select :aiType="aiType" @typeChange="typeChange"></robot-type-select>
+                <mcp-server :position="mcpDrawerPosition" v-if="aiType === TALK_TYPE"></mcp-server>
+              </template>
+            </tr-sender>
+          </template>
+        </tr-container>
+        <tiny-dialog-box v-model:visible="showPreview" title="当前AI渲染效果" width="80%">
+          <schema-renderer v-if="showPreview" :schema="currentSchema"></schema-renderer>
+        </tiny-dialog-box>
       </div>
     </Teleport>
   </div>
@@ -113,42 +109,109 @@
 
 <script lang="ts">
 /* metaService: engine.plugins.robot.Main */
-import { ref, onMounted, watchEffect } from 'vue'
-import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
+import {
+  ref,
+  onMounted,
+  watchEffect,
+  type CSSProperties,
+  h,
+  resolveComponent,
+  computed,
+  watch,
+  nextTick,
+  type Component
+} from 'vue'
+import { Notify, Loading, TinyPopover, TinyDialogBox } from '@opentiny/vue'
+import { useCanvas, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import {
+  TrContainer,
+  TrWelcome,
+  TrPrompts,
+  TrBubbleList,
+  TrSender,
+  TrFeedback,
+  TrAttachments,
+  TrBubbleProvider
+} from '@opentiny/tiny-robot'
+import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
+import { IconNewSession } from '@opentiny/tiny-robot-svgs'
+import SchemaRenderer from '@opentiny/tiny-schema-renderer'
 import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+import {
+  getBlockContent,
+  initBlockList,
+  getAIModelOptions,
+  defaultSelectedModel,
+  isValidFastJsonPatch,
+  VISUAL_MODEL,
+  TALK_TYPE,
+  MCP_TYPE,
+  BUILD_TYPE
+} from './js/robotSetting'
+import { PROMPTS } from './js/prompts'
+import * as jsonpatch from 'fast-json-patch'
+import { chatStream } from './js/utils'
+import McpServer from './mcp/McpServer.vue'
+import useMcpServer from './mcp/useMcp'
+import MarkdownRenderer from './mcp/MarkdownRenderer.vue'
+import LoadingRenderer from './mcp/LoadingRenderer.vue'
+import { sendMcpRequest, serializeError } from './mcp/utils'
+import type { RobotMessage } from './mcp/types'
+import RobotTypeSelect from './RobotTypeSelect.vue'
+import McpIconComponent from './icon-prompt/mcp-icon.vue'
+import PageIconComponent from './icon-prompt/page-icon.vue'
+import StudyIconComponent from './icon-prompt/study-icon.vue'
 
 export default {
   components: {
-    TinyLayout,
-    TinyButton,
-    TinyRow,
-    TinyCol,
-    TinyInput,
-    TinyPopover,
-    RobotSettingPopover
+    TinyPopover: TinyPopover as unknown,
+    TinyDialogBox: TinyDialogBox as unknown,
+    RobotSettingPopover,
+    ToolbarBase,
+    TrContainer,
+    TrWelcome,
+    TrPrompts,
+    TrBubbleList,
+    TrSender,
+    TrAttachments,
+    IconNewSession,
+    SchemaRenderer,
+    McpServer,
+    TrBubbleProvider,
+    RobotTypeSelect
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
   },
   emits: ['close-chat'],
   setup() {
-    const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
+    const { pageState, importSchema, setSaved } = useCanvas()
+    const AIModelOptions = getAIModelOptions()
     const robotVisible = ref(false)
     const avatarUrl = ref('')
     const chatWindowOpened = ref(true)
     let sessionProcess = null
-    const messages = ref([])
+    const messages = ref<RobotMessage[]>([])
     const activeMessages = ref([])
     const connectedFailed = ref(false)
     const inputContent = ref('')
     const inProcesing = ref(false)
-    const selectedModel = ref(AIModelOptions[0])
+    const selectedModel = ref(defaultSelectedModel)
     const { confirm } = useModal()
-    const tokenValue = ref('')
     const showPopover = ref(false)
-
-    const { pageSettingState, getDefaultPage } = usePage()
-    const ROOT_ID = pageSettingState.ROOT_ID
+    const searchContent = ref('')
+    const currentSchema = ref(null)
+    const showPreview = ref(false)
+    const singleAttachmentItems = ref([])
+    const imageUrl = ref('')
+    const MESSAGE_TIP = '已生成新的页面效果，请点击下方按钮应用schema'
+    const aiType = ref(TALK_TYPE)
+    const chatContainerRef = ref(null)
+    const showTeleport = ref(false)
     const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
     watchEffect(() => {
       avatarUrl.value = 'img/defaultAvator.png'
@@ -161,94 +224,209 @@ export default {
           ? JSON.stringify(sessionProcess)
           : JSON.stringify({
               foundationModel: {
-                manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value,
-                token: tokenValue.value
+                ...selectedModel.value
               },
               messages: [],
-              displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+              displayMessages: [], // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
+              aiType: aiType.value
             })
       )
     }
 
-    const createNewPage = (schema) => {
-      if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
-        pageSettingState.isNew = true
-        pageSettingState.isAIPage = true
-        pageSettingState.currentPageData = {
-          ...getDefaultPage(),
-          parentId: ROOT_ID,
-          route: 'temporaryPage',
-          name: 'TemporaryPage',
-          group: 'staticPages'
-        }
+    const scrollContent = async () => {
+      await nextTick()
+      const el = chatContainerRef.value as HTMLElement | null
+      if (el) {
+        el.scrollTop = el.scrollHeight
       }
-      pageSettingState.currentPageData['page_content'] = schema
-      pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
-      clearCurrentState()
-      // 已经创建过临时页面只更新schema
-      initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
-      useHistory().addHistory()
     }
 
     const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
+    请扮演一名前端开发专家，生成代码时遵从以下几点要求：
+    ###
+    1.只使用element-ui组件库完成代码编写
+    2.使用vue2技术栈
+    3.回复中只能有一个代码块
+    4.el-table标签内不得出现el-table-column
+    ###
+    `
 
-    // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
+    // 在每一次发送请求之前，都把提示词，给放到第一条消息中
     // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
     // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
     const getSendSeesionProcess = () => {
       const sendProcess = { ...sessionProcess }
       const firstMessage = sendProcess.messages[0]
+      let firstContent = firstMessage.content
+      if (aiType.value === BUILD_TYPE) {
+        firstContent = firstMessage.content.map((item) => {
+          if (item.type === 'text') {
+            item.text = `[指令] ${PROMPTS}\n[知识] ${searchContent.value}\n[当前schema] ${JSON.stringify(
+              pageState.pageSchema
+            )}`
+          }
+          return item
+        })
+      }
+      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+        firstContent = `${getBlockContent()}\n${codeRules}\n${firstMessage.content[0]?.text || ''}`
+      }
+
       sendProcess.messages = [
-        { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
+        {
+          ...firstMessage,
+          content: firstContent
+        },
         ...sendProcess.messages.slice(1)
       ]
       delete sendProcess.displayMessages
       return sendProcess
     }
 
-    const getAiRespMessage = (role = 'assistant', content) => ({
+    const getAiRespMessage = (content, role = 'assistant') => ({
+      role,
+      content
+    })
+
+    const getAiDisplayMessage = (content, role = 'assistant', schema = {}, id = null) => ({
       role,
       content,
-      name: 'AI'
+      name: 'AI',
+      schema,
+      id
     })
-    const sendRequest = () => {
-      getMetaApi(META_SERVICE.Http)
-        .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
-        .then((res) => {
-          const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
-          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
-          sessionProcess.messages.push(responseMessage)
-          sessionProcess.displayMessages.push(respDisplayMessage)
-          messages.value[messages.value.length - 1].content = replyWithoutCode
-          setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
-          }
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
-        .catch(() => {
-          messages.value[messages.value.length - 1].content = '连接失败'
-          localStorage.removeItem('aiChat')
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
+
+    const setSchema = () => {
+      const value = {
+        ...pageState.pageSchema,
+        ...currentSchema.value,
+        componentName: pageState.pageSchema.componentName
+      }
+      importSchema(value)
+      setSaved(false)
+      showPreview.value = false
     }
-    const scrollContent = async () => {
-      await sleep(100)
-      const scrollElement = document.getElementById('chatgpt-window')
-      if (scrollElement) {
-        scrollElement.scrollTop = scrollElement.scrollHeight
+
+    // 处理响应
+    const handleResponse = ({ id, chatMessage }: { id: string; chatMessage: any }) => {
+      try {
+        if (aiType.value === BUILD_TYPE) {
+          const regex = /```json([\s\S]*?)```/
+          const match = chatMessage?.content.match(regex)
+
+          if (match && match[1] && JSON.parse(match[1]) && isValidFastJsonPatch(JSON.parse(match[1]))) {
+            const newValue = JSON.parse(match[1])
+            // 使用 applyPatch 修改 Schema
+            const result = newValue.reduce(jsonpatch.applyReducer, pageState.pageSchema)
+
+            sessionProcess.messages.push(getAiRespMessage(JSON.stringify(result, null, 2), chatMessage.role))
+            sessionProcess.displayMessages.push(getAiDisplayMessage(MESSAGE_TIP, chatMessage.role, result, id))
+            messages.value[messages.value.length - 1].content = MESSAGE_TIP
+            messages.value[messages.value.length - 1].schema = result
+            messages.value[messages.value.length - 1].id = id
+          } else {
+            sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
+            sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
+            messages.value[messages.value.length - 1].content = chatMessage?.content
+          }
+          setContextSession()
+          inProcesing.value = false
+          connectedFailed.value = false
+        }
+        if (aiType.value === TALK_TYPE) {
+          sessionProcess.messages.push(getAiRespMessage(chatMessage?.content))
+          sessionProcess.displayMessages.push(getAiRespMessage(chatMessage?.content))
+          messages.value[messages.value.length - 1].content = chatMessage?.content
+        }
+      } catch (e) {
+        messages.value[messages.value.length - 1].content = '处理响应时出错'
+        inProcesing.value = false
+        connectedFailed.value = false
+      }
+    }
+
+    const requestLoading = ref(false)
+    // 发送流式请求
+    const sendStreamRequest = async () => {
+      const requestData = getSendSeesionProcess()
+      if (useMcpServer().isToolsEnabled && aiType.value === TALK_TYPE) {
+        try {
+          requestLoading.value = true
+          await scrollContent()
+          await sendMcpRequest(messages.value, {
+            model: selectedModel.value.model,
+            headers: {
+              Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
+            }
+          })
+        } catch (error) {
+          const { renderContent } = messages.value.at(-1)!
+          if (renderContent?.length) {
+            if (renderContent.at(-1)!.type === 'loading') {
+              renderContent.pop()
+            }
+            renderContent.push({
+              type: 'text',
+              content: `连接失败, 请稍后重试: ${serializeError(error)}`
+            })
+          } else {
+            messages.value.at(-1)!.content = `连接失败, 请稍后重试: ${serializeError(error)}`
+          }
+        } finally {
+          inProcesing.value = false
+          requestLoading.value = false
+          await scrollContent()
+        }
+        return
+      } else {
+        if (requestData.foundationModel) {
+          requestData.foundationModel.stream = true
+        }
+
+        let streamContent = ''
+        const chatId = Date.now().toString()
+        await chatStream(
+          {
+            requestUrl: '/app-center/api/ai/chat',
+            requestData: { ...requestData.foundationModel, messages: requestData.messages }
+          },
+          {
+            onData: (data) => {
+              const choice = data.choices?.[0]
+              if (choice && choice.delta.content) {
+                if (messages.value.length === 0 || messages.value[messages.value.length - 1].role !== 'assistant') {
+                  messages.value.push(getAiDisplayMessage('', 'assistant', {}, chatId))
+                }
+                if (streamContent !== messages.value[messages.value.length - 1].content) {
+                  messages.value[messages.value.length - 1].content = ''
+                }
+                streamContent += choice.delta.content
+                messages.value[messages.value.length - 1].content += choice.delta.content
+              }
+            },
+            onError: (error) => {
+              messages.value[messages.value.length - 1].content = '连接失败'
+              localStorage.removeItem('aiChat')
+              inProcesing.value = false
+              connectedFailed.value = false
+              // eslint-disable-next-line no-console
+              console.error('Stream error:', error)
+            },
+            onDone: () => {
+              handleResponse({
+                id: chatId,
+                chatMessage: {
+                  role: 'assistant',
+                  content: streamContent || '没有返回内容',
+                  name: 'AI'
+                }
+              })
+            }
+          },
+          {
+            Authorization: `Bearer ${selectedModel.value.apiKey || import.meta.env.VITE_API_TOKEN}`
+          }
+        )
       }
     }
 
@@ -263,22 +441,46 @@ export default {
       await resetContent()
     }
 
+    const search = async (content) => {
+      try {
+        const res = await getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
+
+        res.forEach((item) => {
+          searchContent.value += item.content
+        })
+      } catch (error) {
+        // error
+      }
+    }
+
     const getMessage = (content) => ({
       role: 'user',
-      content,
-      name: 'John'
+      content
     })
 
-    const sendContent = async (content, isModel) => {
-      if (!isSaved() && !pageSettingState.isNew) {
-        Notify({
-          type: 'error',
-          message: `当前${isBlock() ? '区块' : '页面'}尚未保存，请保存后再试！`,
-          position: 'top-right',
-          duration: 5000
+    const getSessionMessage = (text) => {
+      const content = [
+        {
+          type: 'text',
+          text
+        }
+      ]
+      if (singleAttachmentItems.value.length > 0 && aiType.value === BUILD_TYPE) {
+        content.push({
+          type: 'image_url',
+          image_url: {
+            url: imageUrl.value
+          }
         })
-        return
       }
+      return {
+        role: 'user',
+        content,
+        name: 'John'
+      }
+    }
+
+    const sendContent = async (content, isModel) => {
       if (inProcesing.value) {
         Notify({
           type: 'error',
@@ -293,28 +495,45 @@ export default {
         if (chatWindowOpened.value === false) {
           await resizeChatWindow()
         }
+        if (!sessionProcess?.messages?.length && aiType.value !== TALK_TYPE) {
+          sessionProcess?.messages.push({
+            role: 'system',
+            content: [
+              {
+                type: 'text',
+                text: ''
+              }
+            ]
+          })
+        }
         const message = getMessage(realContent)
         inProcesing.value = true
-
         messages.value.push(message)
-        sessionProcess?.messages.push(message)
+        sessionProcess?.messages.push(getSessionMessage(realContent))
         sessionProcess?.displayMessages.push(message)
+        if (aiType.value === BUILD_TYPE && (!searchContent.value || !sessionProcess.messages?.length)) {
+          await search(realContent)
+        }
+
+        singleAttachmentItems.value = []
+        imageUrl.value = ''
         if (!isModel) {
           inputContent.value = ''
         }
         await scrollContent()
         await sleep(1000)
-        messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
+        messages.value.push(getAiDisplayMessage('好的，正在执行相关操作，请稍等片刻...'))
         await scrollContent()
-        sendRequest()
+        await sendStreamRequest()
       }
     }
 
     // 根据localstorage初始化AI大模型
     const initCurrentModel = (aiSession) => {
-      const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
-      tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
+      selectedModel.value = {
+        ...JSON.parse(aiSession)?.foundationModel
+      }
+      aiType.value = JSON.parse(aiSession)?.aiType
     }
 
     const initChat = () => {
@@ -330,6 +549,9 @@ export default {
     }
 
     onMounted(async () => {
+      setTimeout(() => {
+        showTeleport.value = true
+      }, 1000)
       const loadingInstance = Loading.service({
         text: '初始化中，请稍等...',
         customClass: 'chat-loading',
@@ -346,10 +568,11 @@ export default {
     const endContent = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
+      inProcesing.value = false
       initChat()
     }
 
-    const changeTokenValue = () => {
+    const changeApiKey = () => {
       localStorage.removeItem('aiChat')
       sessionProcess = null
       setContextSession()
@@ -357,19 +580,32 @@ export default {
     }
 
     const changeModel = (model) => {
-      if (selectedModel.value.value !== model.type) {
+      if (selectedModel.value.baseUrl !== model.baseUrl || selectedModel.value !== model.model) {
         confirm({
           title: '切换AI大模型',
           message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
           exec() {
-            selectedModel.value = AIModelOptions.find((item) => item.value === model.type)
-            tokenValue.value = model.tokenVal
+            selectedModel.value = {
+              label: model.label || model.model,
+              activeName: model.activeName,
+              baseUrl: model.baseUrl,
+              model: model.model,
+              maxTokens: model.maxTokens,
+              apiKey: model.apiKey
+            }
+            singleAttachmentItems.value = []
+            imageUrl.value = ''
             endContent()
           }
         })
-      } else if (tokenValue.value !== model.tokenVal && selectedModel.value.value === model.type) {
-        tokenValue.value = model.tokenVal
-        changeTokenValue()
+      }
+      if (
+        selectedModel.value.apiKey !== model.apiKey &&
+        selectedModel.value.baseUrl === model.baseUrl &&
+        selectedModel.value.model === model.model
+      ) {
+        selectedModel.value.apiKey = model.apiKey
+        changeApiKey()
       }
     }
 
@@ -381,287 +617,424 @@ export default {
       showPopover.value = false
     }
 
+    // 控制全屏切换
+    const fullscreen = ref(false)
+
+    // 欢迎界面提示
+    const promptItems: PromptProps[] = [
+      {
+        label: 'MCP工具',
+        description: '帮我查询当前的页面列表',
+        icon: h(McpIconComponent),
+        badge: 'NEW'
+      },
+      {
+        label: '页面搭建场景',
+        description: '给当前页面中添加一个问卷调查表单',
+        icon: h(PageIconComponent)
+      },
+      {
+        label: '学习/知识型场景',
+        description: 'Vue3 和 React 有什么区别？',
+        icon: h(StudyIconComponent)
+      }
+    ]
+
+    // 处理提示项点击事件
+    const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
+      sendContent(item.description, true)
+    }
+
+    const getItemSchema = (item) => {
+      const targetMessage = messages.value.find((message) => message.id && message.id === item.id)
+
+      return targetMessage
+    }
+
+    // Icon
+    const getSvgIcon = (name: string, style?: CSSProperties) => {
+      return h(resolveComponent('svg-icon'), { name, style: { fontSize: '32px', ...style } })
+    }
+    const aiAvatar = getSvgIcon('AI')
+    const userAvatar = getSvgIcon('user-head', { color: '#dfe1e6' })
+    const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
+    const saveIcon = getSvgIcon('save', { fontSize: '20px' })
+    const previewIcon = getSvgIcon('preview', { fontSize: '20px' })
+
+    // 处理文件选择事件
+    const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
+      if (retry) {
+        singleAttachmentItems.value[0].status = 'uploading'
+        singleAttachmentItems.value[0].isUploading = true
+        singleAttachmentItems.value[0].messageType = 'uploading'
+      } else {
+        if (!files.length) return
+
+        if (files && files.length > 1) {
+          Notify({
+            type: 'error',
+            message: '当前仅支持上传一张图片',
+            position: 'top-right',
+            duration: 5000
+          })
+          return
+        }
+
+        if (files && files.length > 0) {
+          // 将选中的文件转换为 Attachment 格式并添加到附件列表
+          const newAttachments = Array.from(files).map((file) => ({
+            size: file.size,
+            rawFile: file
+          }))
+          singleAttachmentItems.value.push(...newAttachments)
+        }
+      }
+
+      // 开始上传
+      const formData = new FormData()
+      const fileData = retry ? files : files[0]
+      formData.append('modelName', String(sessionProcess.foundationModel.model))
+      formData.append('apiKey', String(sessionProcess.foundationModel.apiKey))
+      formData.append('file', fileData)
+
+      try {
+        getMetaApi(META_SERVICE.Http)
+          .post('/app-center/api/ai/uploadFile', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          .then((res) => {
+            if (res?.url) {
+              imageUrl.value = res.url
+              singleAttachmentItems.value[0].status = 'done'
+              singleAttachmentItems.value[0].isUploading = false
+              singleAttachmentItems.value[0].messageType = 'success'
+            } else {
+              imageUrl.value = ''
+              singleAttachmentItems.value[0].status = 'error'
+              singleAttachmentItems.value[0].isUploading = false
+              singleAttachmentItems.value[0].messageType = 'error'
+            }
+          })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('上传失败', error)
+      }
+    }
+
+    const handleSingleFileRemove = () => {
+      imageUrl.value = ''
+    }
+
+    const handleSingleFileRetry = (file: any) => {
+      handleSingleFilesSelected(file.file, true)
+    }
+
+    const typeChange = (type) => {
+      aiType.value = type
+      endContent()
+    }
+
+    const roles: Record<string, BubbleRoleConfig> = {
+      assistant: {
+        placement: 'start',
+        avatar: aiAvatar,
+        maxWidth: '90%',
+        contentRenderer: MarkdownRenderer,
+        customContentField: 'renderContent',
+        slots: {
+          footer: ({ bubbleProps }) => {
+            return h(TrFeedback, {
+              style: {
+                display: getItemSchema(bubbleProps)?.schema && aiType.value === BUILD_TYPE ? 'block' : 'none'
+              },
+              actions: [
+                { name: 'run', label: '应用', icon: saveIcon },
+                { name: 'preview', label: '预览', icon: previewIcon }
+              ],
+              onAction(name) {
+                currentSchema.value = getItemSchema(bubbleProps)?.schema || {}
+                if (name === 'preview') {
+                  showPreview.value = true
+                }
+                if (name === 'run') {
+                  setSchema()
+                }
+              }
+            })
+          }
+        }
+      },
+      user: { placement: 'end', avatar: userAvatar, maxWidth: '90%', contentRenderer: MarkdownRenderer },
+      system: { hidden: true }
+    }
+
+    watch([() => activeMessages.value.length, () => activeMessages.value.at(-1)?.renderContent?.length ?? 0], () => {
+      scrollContent()
+    })
+
+    const contentRenderers: Record<string, Component> = {
+      markdown: MarkdownRenderer,
+      loading: LoadingRenderer
+    }
+
+    const mcpDrawerPosition = computed(() => {
+      return {
+        type: 'fixed',
+        position: {
+          top: 'var(--base-top-panel-height)',
+          bottom: 0,
+          ...(fullscreen.value ? { left: 0 } : { right: 'var(--tr-container-width)' })
+        }
+      }
+    })
+
     return {
+      chatContainerRef,
       robotVisible,
       avatarUrl,
       chatWindowOpened,
       activeMessages,
       inputContent,
       connectedFailed,
-      sendContent,
-      endContent,
-      changeTokenValue,
-      resizeChatWindow,
       AIModelOptions,
       selectedModel,
+      showPopover,
+      fullscreen,
+      welcomeIcon,
+      roles,
+      currentSchema,
+      showPreview,
+      singleAttachmentItems,
+      VISUAL_MODEL,
+      promptItems,
+      MarkdownRenderer,
+      requestLoading,
+      aiType,
+      TALK_TYPE,
+      MCP_TYPE,
+      BUILD_TYPE,
+      showTeleport,
+      sendContent,
+      endContent,
+      changeApiKey,
+      resizeChatWindow,
       changeModel,
       openAIRobot,
       closePanel,
-      tokenValue,
-      showPopover
+      handlePromptItemClick,
+      setSchema,
+      handleSingleFilesSelected,
+      handleSingleFileRemove,
+      handleSingleFileRetry,
+      typeChange,
+      contentRenderers,
+      mcpDrawerPosition
     }
   }
 }
 </script>
 
-<style lang="less" scope>
+<style lang="less" scoped>
+.robot {
+  margin-right: 8px;
+}
+.robot-chat-container {
+  height: 100%;
+}
 .robot-img {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 26px;
   height: 26px;
+
   .chatgpt-icon {
     width: 18px;
     height: 18px;
   }
 }
 
-.robot-dialog {
-  position: fixed;
-  width: 450px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  border-radius: 12px;
-}
-.common-svg {
-  color: var(--te-chat-model-common-icon);
-}
-
-.chat-title-icons {
-  font-size: 20px;
-  height: 20px;
-  margin-bottom: 20px;
-  svg {
-    float: right;
-    margin: 0 6px;
-    cursor: pointer;
-    color: var(--te-chat-model-icon);
-    &:hover {
-      opacity: 0.8;
-    }
-    &:first-child {
-      margin-right: 0;
-    }
-  }
-}
-.chat-title {
-  position: absolute;
-  top: 16px;
-  left: 28px;
-  font-weight: bold;
-  color: var(--te-chat-model-text);
-  .chat-title-dropdown {
-    display: flex;
-    align-items: center;
-    height: 24px;
-    cursor: pointer;
-  }
-  .chat-title-label,
-  .ml8 {
-    color: var(--te-chat-model-text);
-    font-weight: 700;
-    font-size: 16px;
-  }
-  .ml8 {
-    margin-left: 8px;
-    outline: none;
+.chat-popover {
+  .robot-setting .bottom-buttons .tiny-button {
+    margin-left: 10px;
   }
 }
 
-.robot-dialog-content {
-  background: var(--te-chat-model-bg);
-  border-radius: 6px;
-  padding: 16px;
-  &-top {
-    margin-bottom: 30px;
-    &-title {
-      color: var(--te-chat-model-helper-text);
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    &-icon {
-      color: var(--te-chat-model-text);
-    }
-    .icon-ai {
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-    }
-    .chat-tips {
-      text-align: left;
-      font-size: 12px;
-      margin-top: 10px;
-      color: var(--te-chat-model-tips-text);
-      span {
-        display: inline-block;
-        height: 28px;
-        line-height: 28px;
-        padding: 0 8px;
-        margin-right: 8px;
-        border-radius: 4px;
-        background: var(--te-chat-model-tips-bg);
-        cursor: pointer;
-        &:hover {
-          border-color: var(--te-chat-model-text);
-        }
-      }
-    }
-  }
-}
-.chat-window {
-  overflow: scroll;
-  .chat-avatar-wrap {
-    width: 40px;
-    color: var(--te-chat-model-avatar-border);
-    .chat-avatar {
-      width: 24px;
-      height: 24px;
-      font-size: 26px;
-      margin-top: 6px;
-      border-radius: 50px;
-      border: none;
-    }
-  }
-  .chat-avatar-wrap-ai {
-    padding-left: 0;
-  }
-  .chat-content {
-    max-width: 465px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: normal;
-    line-height: 20px;
-    padding: 12px;
+:deep(.tiny-container) {
+  container-type: inline-size;
 
-    &.chat-content-user {
-      background-color: var(--te-chat-model-user-text-bg);
-      color: var(--te-chat-model-user-text);
-    }
-  }
-  .chat-message-row {
-    margin-bottom: 20px;
-  }
-  &.max-chat-window {
-    height: 520px;
-  }
-  &.min-chat-window {
-    height: 80px;
-  }
-}
-
-.chat-content-ai {
-  background-color: var(--te-chat-model-ai-text-bg);
-  border: 1px solid var(--te-chat-model-ai-text-border);
-  color: var(--te-chat-model-ai-text);
-}
-
-.chat-content-ai-unconnected {
-  background-color: var(--te-chat-model-ai-fail-text-bg);
-  border: 1px solid var(--te-chat-model-ai-fail-text-border);
-  color: var(--te-chat-model-ai-fail-text);
-}
-
-.chat-submit.chat-submit {
-  margin-top: 14px;
-  font-size: 14px;
-  display: flex;
-  .tiny-input {
-    .tiny-input__inner {
-      padding-left: 12px;
-      color: var(--te-chat-model-helper-text);
-      height: 40px;
-      border: 2px solid var(--te-chat-model-input-border);
-      border-radius: 8px;
-      padding-right: 44px;
-    }
-    .tiny-input__inner:hover {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__inner:focus {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__prefix,
-    .tiny-input__suffix {
-      padding-right: 8px;
-    }
-    clip-path: inset(0 0 round 2px);
-    svg {
-      font-size: 16px;
-    }
-  }
-
-  .tiny-button.tiny-button.tiny-button {
-    margin-left: 12px;
-    background-image: linear-gradient(
-      to bottom right,
-      var(--te-chat-model-button-bg-1),
-      var(--te-chat-model-button-bg-2),
-      var(--te-chat-model-button-bg-3)
-    );
-    border: none;
-    color: var(--te-chat-model-button-text) !important;
-    font-size: 14px;
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    float: right;
-    padding: 0;
-    transition: all 0.1s linear;
-    .svg-icon {
-      fill: var(--te-chat-model-button-text);
-      margin-right: 0;
-    }
-    span {
+  &.tr-container.tr-container {
+    --tr-container-width: 400px;
+    position: relative;
+    height: 100%;
+    .tr-container__dragging-bar {
       display: none;
     }
-    &:hover {
-      transform: scale(1);
-      border-radius: 8px;
-      width: 105px;
-      padding: 0 12px;
-      span {
-        display: inline-block;
-        margin-left: 4px;
+  }
+
+  :deep(button.icon-btn) {
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  :deep(.robot-setting button) {
+    margin-left: 10px;
+  }
+
+  .tr-bubble-list {
+    font-size: 14px;
+    flex: 1;
+    .tr-bubble {
+      word-break: break-word;
+    }
+    ul,
+    ol {
+      padding-left: 10px;
+    }
+    ul > li {
+      list-style: disc;
+    }
+    ol > li {
+      list-style: decimal;
+    }
+    table {
+      border-collapse: collapse; // 合并边框
+      border: 1px solid #ccc;
+      width: 100%;
+      margin: 1rem 0;
+      th,
+      td {
+        border: 1px solid #ccc; /* 单元格边框 */
+        padding: 8px;
+      }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:hover {
+        background-color: #e6f7ff;
       }
     }
   }
-}
-.hidden-text {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 
-.chat-loading .tiny-loading__spinner svg {
-  fill: var(--te-chat-loading-svg-color);
-}
-.chat-loading .tiny-loading__spinner .tiny-loading__text {
-  color: var(--te-chat-loading-text-color);
-}
-.chat-model-popover.chat-model-popover {
-  width: 220px;
-  background-color: var(--te-chat-model-popover-bg);
-  .tiny-dropdown-item {
-    color: var(--te-chat-model-popover-color);
-    max-width: 220px;
-    &:hover {
-      color: var(--te-chat-model-popover-color);
-      background-color: var(--te-chat-model-popover-active-bg);
+  .robot-welcome > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .operations-setting {
+    font-size: 28px;
+    padding: 4px;
+  }
+
+  .tiny-prompts > div {
+    padding: 16px 24px;
+
+    .prompt-item {
+      width: 100%;
+      box-sizing: border-box;
+
+      @container (width >=64rem) {
+        width: calc(50% - 8px);
+      }
+
+      .tr-prompt__content-label {
+        font-size: 14px;
+        line-height: 24px;
+      }
+
+      &:hover {
+        background-color: #f8f8f8;
+      }
     }
   }
-  .selected-model {
-    color: var(--te-chat-model-popover-color);
-    background-color: var(--te-chat-model-popover-active-bg);
+
+  button.icon-btn {
+    width: 28px;
+    height: 28px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s;
+    background-color: rgba(0, 0, 0, 0);
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.04);
+    }
+
+    &:active {
+      background-color: rgba(0, 0, 0, 0.15);
+    }
+
+    svg {
+      font-size: 20px;
+    }
+  }
+}
+
+.robot-chat-container-fullscreen {
+  :deep(.tiny-container) {
+    container-type: inline-size;
+
+    &.tr-container.tr-container {
+      top: var(--base-top-panel-height);
+      position: fixed;
+      height: auto;
+    }
+  }
+  .operations-setting {
+    font-size: 20px;
+  }
+  @media (min-width: 1280px) {
+    .robot-chat-container-content {
+      width: 1280px;
+      margin: 0 auto;
+    }
+    .footer-sender {
+      width: 1280px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+  }
+}
+
+.tiny-sender__header-slot .tr-attachments .tr-attachments__file-list .tr-attachments__add-button {
+  display: none;
+}
+
+:deep(.tiny-sender) {
+  margin: 20px;
+  .tiny-sender__footer-slot.tiny-sender__bottom-row {
+    justify-content: space-between !important;
+  }
+  .tiny-sender__upload-popup {
+    .upload-options {
+      height: 42px;
+
+      .upload-option:first-child {
+        display: none;
+      }
+    }
+  }
+  .tiny-sender__input-field-wrapper .tiny-textarea__inner {
+    font-size: 20px;
+  }
+}
+:deep(.action-buttons__icon) {
+  width: 26px !important;
+  height: 26px !important;
+}
+:deep(.tr-attachments) {
+  .tr-attachments__file-list {
+    .tr-file-card {
+      margin-top: 10px;
+      margin-left: 10px;
+    }
   }
 }
 </style>

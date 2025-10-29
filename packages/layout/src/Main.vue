@@ -26,6 +26,9 @@
             @changeRightAlign="changeRightAlign"
           ></design-settings>
         </div>
+        <div class="tiny-engine-right-robot">
+          <!-- AI对话框展示 -->
+        </div>
       </div>
     </div>
   </component>

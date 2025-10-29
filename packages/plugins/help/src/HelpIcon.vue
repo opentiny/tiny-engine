@@ -106,7 +106,9 @@ export default {
 
     const toShowStep = () => {
       if (!tinyGuideRef.value?.state?.tour?.isActive()) {
-        state.showStep = !state.showStep
+        setTimeout(() => {
+          state.showStep = !state.showStep
+        }, 1000)
         state.helpBox = false
       }
     }
