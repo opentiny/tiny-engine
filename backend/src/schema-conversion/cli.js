@@ -325,7 +325,7 @@ async function main() {
 
     // 6. 后续处理
     console.log('\n--- 开始后续处理 ---');
-    const finalResults = postProcessSchemas(conversionResults, outputDir);
+    const finalResults = await postProcessSchemas(conversionResults, outputDir);
     console.log('\n--- 批量转换全部完成 ---');
     return finalResults;
 

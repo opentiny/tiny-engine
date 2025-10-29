@@ -476,7 +476,7 @@ async function generateComponentApiFromUploadedSource(uploadData, { signal } = {
     if (signal?.aborted) throw new Error('任务被用户取消');
 
     // 2. 调用新的筛选+拼接函数（原filterAndConcatUploadedApiCodeFiles已替换）
-    const result = await filterAndConcatUploadedApiSource(uploadData, 3);
+    const result = await filterAndConcatUploadedApiSource(uploadData, 3, { signal });
     tempDir = result.tempDir; // 记录临时目录
 
     // 关键节点1：文件处理后检查中断

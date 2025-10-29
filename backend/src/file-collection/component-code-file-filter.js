@@ -236,12 +236,18 @@ function extractZipToTempDir(zipBuffer) {
  * @returns {string} 临时目录路径（文件所在目录）
  */
 function saveSingleFileToTempDir(fileBuffer, fileName) {
+  // 仅允许文件名，不允许路径分隔符
+  const safeName = path.basename(fileName);
+  if (safeName !== fileName || safeName.includes('..')) {
+    throw new Error(`非法文件名: ${fileName}`);
+  }
+
   // 创建临时目录
   const tempDir = path.join(os.tmpdir(), `code-component-${Date.now()}-${uuidv4().replace(/-/g, '')}`);
   fs.mkdirSync(tempDir, { recursive: true });
 
   // 拼接文件绝对路径（临时目录下直接存放该文件）
-  const filePath = path.join(tempDir, fileName);
+  const filePath = path.join(tempDir, safeName);
   // 写入文件内容
   fs.writeFileSync(filePath, fileBuffer);
 

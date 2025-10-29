@@ -22,6 +22,13 @@ const client = new OpenAI({
  * @returns {object} 包含子组件名和Prompt消息的对象
  */
 function initContextAndBuildPrompt(apiObj, relatedSubComponents) {
+  if (!apiObj || typeof apiObj !== 'object') {
+    throw new Error('apiObj must be a valid object');
+  }
+  if (!apiObj.components || typeof apiObj.components !== 'object') {
+    throw new Error('apiObj.components is required and must be an object');
+  }
+
   // 只解析一次子组件名，避免重复计算
   const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
   console.log(`\n=== 开始转换子组件[${subComponentName}] ===`);
@@ -1207,6 +1214,13 @@ async function callOpenAIModel(messages, model, subComponentName) {
     max_tokens: 65536,
   });
 
+  if (!completion.choices || completion.choices.length === 0) {
+    throw new Error(`OpenAI returned no choices for ${subComponentName}`);
+  }
+  if (!completion.choices[0].message?.content) {
+    throw new Error(`OpenAI returned empty content for ${subComponentName}`);
+  }
+  
   // 记录结束时间
   const taskEndTime = Date.now();
   const taskEndISO = new Date(taskEndTime).toISOString();

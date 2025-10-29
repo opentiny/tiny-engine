@@ -234,6 +234,10 @@ async function processImportTask(taskId, params) {
             message: `开始爬取URL：${url}`
           }
         });
+        const u = new URL(url);
+        if (!['http:', 'https:'].includes(u.protocol)) {
+          throw new Error(`不支持的URL协议：${u.protocol}`);
+        }
         apiArray = await extractApiFromUrl(url, tableSelector, { signal });
         updateTask(taskId, {
           progress: 40,
@@ -446,7 +450,7 @@ async function cancelTask(req, res, next) {
       return res.status(404).json({
         code: 404,
         message: `任务${taskId}不存在或已结束`,
-        success: true
+        success: false
       });
     }
 

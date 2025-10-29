@@ -159,6 +159,13 @@ router.put('/:id', async (req, res, next) => {
         message: '未传入content更新内容'
       });
     }
+    if (typeof content !== 'object' || Array.isArray(content)) {
+      return res.status(400).json({ code: 400, success: false, message: 'content必须为对象(JSON)' });
+    }
+    const serialized = JSON.stringify(content);
+    if (Buffer.byteLength(serialized, 'utf8') > 5 * 1024 * 1024) {
+      return res.status(413).json({ code: 413, success: false, message: 'content过大' });
+    }
 
     updates.content = content; // 仅更新 `content` 字段
 

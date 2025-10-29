@@ -354,8 +354,8 @@ ${table.rows.map((row, i) => `行${i + 1}：${row.join(' | ')}`).join('\n')}
 2. 若识别到N个独立组件，数组长度必须为N（即使组件功能相关，如Button和ButtonGroup）；
 3. 不同组件必须作为数组的独立元素，禁止在同一个\`components\`中包含多个组件；
 4. 输出前请自我校验：是否所有独立组件都已分离为数组元素？是否存在组件嵌套（如A组件的components内包含B组件）？若有则立即修正；
-5. 输出格式：仅返回纯JSON对象，不包含任何多余内容（如解释、注释、json代码块标记）；
-6. 禁止在JSON前后添加任何文字，直接以{开头、}结尾；
+5. 输出格式：仅返回纯 JSON 数组，不包含任何多余内容（如解释、注释、json代码块标记）；
+6. 禁止在JSON前后添加任何文字，直接以 [ 开头、 ] 结尾；
 7. 确保JSON格式标准，键名用双引号，逗号分隔正确。
 
 
@@ -379,7 +379,6 @@ ${pageTitle}
 			messages: promptMessages,
 			temperature: 0.1, // 低温度确保格式准确
 			max_tokens: 65536, // 足够长度容纳API结构
-			response_format: { type: "json_object" }, // 强制返回JSON（部分模型支持）
 			signal
 		});
 

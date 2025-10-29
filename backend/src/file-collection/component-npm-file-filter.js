@@ -110,7 +110,7 @@ function findComponentDirectory(packageName, componentName, { signal } = {}) {
         }
       }
     } catch (error) {
-      if (signal?.aborted) throw error; 
+      if (signal?.aborted) throw error;
       // 忽略读取权限或非预期文件系统错误
       console.warn(`⚠️ 无法访问目录 ${path.relative(packagePath, currentPath)}: ${error.message}`);
     }
@@ -267,7 +267,7 @@ function extractComponentKeywords(entryPath) {
  */
 function getComponentHigh1Files(componentDir, { signal } = {}) {
   if (signal?.aborted) throw new Error('任务被用户取消，停止提取高优先级文件');
-  
+
   const high1 = new Set();
   const indexFiles = getRootIndexFiles(componentDir);
   if (indexFiles.length === 0) {
@@ -509,9 +509,15 @@ ${content}
       model: process.env.OPENAI_MODEL || "Qwen/Qwen3-32B",
       messages: promptMessages,
       temperature: 0.1,
-      response_format: { type: "json_object" },
       signal
     });
+
+    if (!completion.choices || completion.choices.length === 0) {
+      throw new Error(`OpenAI returned no choices for file analysis`);
+    }
+    if (!completion.choices[0].message?.content) {
+      throw new Error(`OpenAI returned empty content for file analysis`);
+    }
 
     const result = JSON.parse(completion.choices[0].message.content);
     return {
@@ -538,7 +544,7 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
   // 分析高优先级文件
   console.log(`👉 正在分析高优先级文件（${highPriorityFiles.length}个）`);
   for (const file of highPriorityFiles) {
-    if (signal?.aborted) throw new Error('任务已取消'); 
+    if (signal?.aborted) throw new Error('任务已取消');
     const result = await analyzeFileForComponentApi(file, componentName, baseDir, { signal });
 
     // 收集结果（去重）
@@ -805,12 +811,16 @@ async function filterAndConcatNpmApiByPackage(packageName, componentName, { sign
   const nodeModulesPath = path.join(projectRoot, 'node_modules');
   const packagePath = path.join(nodeModulesPath, packageName);
 
-  // 🔴 新增：检查包是否存在，不存在则自动安装
+  // 检查包是否存在，不存在则自动安装
   if (!fs.existsSync(packagePath)) {
+    // 验证包名格式,防止命令注入
+    if (!/^(@[a-z0-9-~][a-z0-9-._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(packageName)) {
+      throw new Error(`非法的包名格式: ${packageName}`);
+    }
     console.log(`⚠️ 未在 ${nodeModulesPath} 中找到包 ${packageName}，开始自动安装...`);
     try {
       // 执行npm install命令（在backend根目录下安装，--save-dev可根据需求改为--save）
-      execSync(`npm install ${packageName} --save-dev`, {
+      execSync('npm', ['install', packageName, '--save-dev'], {
         cwd: projectRoot, // 执行目录：backend根目录（确保node_modules在此目录下）
         stdio: 'inherit'  // 输出安装日志到控制台，便于用户查看进度
       });
