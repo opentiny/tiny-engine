@@ -49,7 +49,7 @@ import {
 import { parseData, parseCondition, parseLoopArgs } from './parser'
 
 const hyphenateRE = /\B([A-Z])/g
-// 用于后续对Web component的扩展支持
+// 用于后续对Web component的扩展支持，目前暂未实际使用
 const customElements = {}
 
 const Mapper = {
@@ -191,13 +191,15 @@ const generateCollection = (schema) => {
   }
 }
 
-const renderDefault = (
-  children: any[],
-  scope: Record<string, any>,
-  parent: any,
-  renderComponent: (schema: any, scope: Record<string, any>, parent: any) => any
-) => children.map?.((child) => renderComponent(child, scope, parent))
-
+export const renderDefault = (children: Node[], scope: Record<string, any>, parent: Node) =>
+  children.map?.((child) =>
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    h(renderer, {
+      schema: child,
+      scope,
+      parent
+    })
+  )
 const generateSlotGroup = (children, isCustomElm, schema) => {
   const slotGroup = {}
 

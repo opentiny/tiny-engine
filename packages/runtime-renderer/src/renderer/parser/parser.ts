@@ -14,6 +14,7 @@ import babelPluginJSX from '@vue/babel-plugin-jsx'
 import { transformSync } from '@babel/core'
 import { Notify } from '@opentiny/vue'
 import i18nHost from '@opentiny/tiny-engine-i18n-host'
+import { renderDefault } from '../render'
 
 interface ITypeParserDef {
   type: (data) => boolean
@@ -218,11 +219,7 @@ const parseJSFunction = (data, _scope, ctx) => {
 }
 
 const parseJSSlot = (_data, _scope, _ctx) => {
-  return (_$scope) => {
-    // 这里需要导入 renderDefault，但由于循环依赖问题，暂时返回空函数
-    // 实际使用时会在 render.ts 中处理
-    return []
-  }
+  return ($scope) => renderDefault(data.value, { ...scope, ...$scope }, data)
 }
 
 export function parseData(data, scope, ctx) {
