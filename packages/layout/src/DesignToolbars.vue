@@ -1,15 +1,22 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
-      <tiny-popover :visible-arrow="false" trigger="hover" placement="bottom-start" popper-class="center-popover">
+      <tiny-popover
+        v-if="homeRegistry.length"
+        :visible-arrow="false"
+        trigger="hover"
+        placement="bottom-start"
+        popper-class="center-popover"
+      >
         <template #reference>
           <div class="app-center-icon">
             <svg-icon name="small-list"></svg-icon>
           </div>
         </template>
         <div class="app-center-item">
-          <span @click="gotoCenter('app')">应用中心</span>
-          <span @click="gotoCenter('template')">模板中心</span>
+          <span v-for="node in homeRegistry" :key="node.id" @click="$emit('openHomePage', node.id)">{{
+            node.title
+          }}</span>
         </div>
       </tiny-popover>
       <component
@@ -73,8 +80,13 @@ export default {
     layoutRegistry: {
       type: Object,
       default: () => ({})
+    },
+    homeRegistry: {
+      type: Array,
+      default: () => []
     }
   },
+  emits: ['openHomePage'],
   setup() {
     const { getFinalLayoutConfig } = useLayout()
 
