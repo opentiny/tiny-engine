@@ -6,7 +6,7 @@
 
 ### 页面/区块预览入口
 
-![Alt text](./imgs/preview-btn.png)
+![Alt text](./imgs/preview-popover-page.png)
 
 ### 示例
 
@@ -18,8 +18,27 @@
 
 ![Alt text](./imgs/preview.png)
 
+
 页面/区块预览界面除了帮助我们直观的看到整体页面结构以及进行交互动作外，还可以提供其他功能验证
 - 切换设备宽度
 - 国际化语言
 - state状态响应式
 - 表单验证提交
+
+### 应用预览入口
+
+![Alt text](./imgs/preview-popover-app.png)
+
+### 示例
+
+画布上的页面结构
+
+![Alt text](./imgs/preview-app-pre.png)
+
+预览页的页面效果
+
+![Alt text](./imgs/preview-app.png)
+
+应用预览界面除了具备 页面/区块预览界面 的交互和验证功能外，还提供了
+- 手动路由切换
+- 路由功能验证
