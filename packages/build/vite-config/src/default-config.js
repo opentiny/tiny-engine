@@ -109,7 +109,8 @@ const getDefaultConfig = (engineConfig) => {
         plugins: [nodePolyfill({ include: null })], // 使用@rollup/plugin-inject的默认值{include: null}, 即在所有代码中生效
         input: {
           index: path.resolve(process.cwd(), './index.html'),
-          preview: path.resolve(process.cwd(), './preview.html')
+          preview: path.resolve(process.cwd(), './preview.html'),
+          runtime: path.resolve(process.cwd(), './runtime.html')
         },
         output: {
           manualChunks: (id) => {
