@@ -27,7 +27,11 @@ const client = new OpenAI({
  * @returns {string} 清理后的标准JSON字符串
  * @throws {Error} 若无法从返回内容中提取有效JSON，抛出错误
  */
-function cleanAndExtractJson(responseText) {
+function cleanAndExtractJson(responseText, { signal } = {}) {
+  if (signal?.aborted) {
+    throw new Error('任务已终止，停止JSON解析');
+  }
+
   if (typeof responseText !== 'string' || responseText.trim() === '') {
     throw new Error('大模型返回内容为空或非字符串');
   }
@@ -58,7 +62,7 @@ function cleanAndExtractJson(responseText) {
  * @param {string} combinedContent - 所有文件的拼接内容（含路径标识）
  * @returns {Promise<Array<Object>>} 组件 API 数组，每个元素是一个组件的完整 JSON 对象
  */
-async function generateApiJsonWithLLM(combinedContent) {
+async function generateApiJsonWithLLM(combinedContent, { signal } = {}) {
   // 新增：校验OpenAI客户端配置
   if (!client.apiKey || client.apiKey.trim() === "") {
     throw new Error("OpenAI API Key未配置，请在.env文件中设置OPENAI_API_KEY");
@@ -237,6 +241,7 @@ async function generateApiJsonWithLLM(combinedContent) {
     }
   ];
 
+  let rawResponse;
   try {
     console.log("🤖 正在调用大模型综合分析API信息...");
     const completion = await client.chat.completions.create({
@@ -244,14 +249,18 @@ async function generateApiJsonWithLLM(combinedContent) {
       messages: promptMessages,
       temperature: 0.1, // 极低温度确保格式准确、结果稳定
       max_tokens: 65536, // 足够长度容纳完整API结构
-      // response_format: { type: "json_object" } // 强制返回JSON（部分模型支持）
+      signal
     });
 
-    const rawResponse = completion.choices[0].message.content.trim();
+    if (signal?.aborted) {
+      throw new Error('任务已终止，大模型返回结果未处理');
+    }
+
+    rawResponse = completion.choices[0].message.content.trim();
     // console.log("📜 大模型完整原始返回：", rawResponse);
 
     // 清理并提取JSON（调用封装的函数）
-    const cleanJsonText = cleanAndExtractJson(rawResponse);
+    const cleanJsonText = cleanAndExtractJson(rawResponse, { signal });
 
     // 3. 解析为JSON对象并返回
     const apiData = JSON.parse(cleanJsonText);
@@ -372,7 +381,7 @@ function saveApiArrayToFiles(apiArray, baseDir) {
  * @param {string} [componentName] - 组件名(仅npm类型需要)
  * @returns {Promise<Array<Object>>} 最终的结构化API JSON数组
  */
-async function generateComponentApiJson(target, sourceType = "code", componentName) {
+async function generateComponentApiJson(target, sourceType = "code", componentName, { signal } = {}) {
   try {
     if (!["code", "npm"].includes(sourceType)) {
       throw new Error(`无效的来源类型: ${sourceType}，必须是"code"或"npm"`);
@@ -383,7 +392,7 @@ async function generateComponentApiJson(target, sourceType = "code", componentNa
     console.log(`1/3 🔍 正在从${sourceType === 'code' ? '源码' : 'NPM包'}筛选并拼接API文件...`);
     if (sourceType === "code") {
       // 处理本地源码目录
-      const result = await filterAndConcatApiCodeFiles(target);
+      const result = await filterAndConcatApiCodeFiles(target, { signal });
       combinedContent = result.combinedContent;
       componentDir = target;
       componentInfo = {
@@ -392,7 +401,7 @@ async function generateComponentApiJson(target, sourceType = "code", componentNa
       };
     } else {
       // 处理npm包
-      const result = await filterAndConcatNpmApiByPackage(target, componentName);
+      const result = await filterAndConcatNpmApiByPackage(target, componentName, { signal });
       combinedContent = result.combinedContent;
       componentDir = result.componentDir;
       componentInfo = {
@@ -401,12 +410,14 @@ async function generateComponentApiJson(target, sourceType = "code", componentNa
       };
     }
 
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     if (!combinedContent || combinedContent.length === 0) {
       throw new Error("API文件内容拼接为空，无法生成JSON");
     }
 
     console.log("\n2/3 🤖 正在生成结构化API JSON...");
-    const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    const finalApiJson = await generateApiJsonWithLLM(combinedContent, { signal });
 
     const apiArray = Array.isArray(finalApiJson) ? finalApiJson : [finalApiJson];
 
@@ -462,6 +473,8 @@ async function generateComponentApiFromUploadedSource(uploadData, { signal } = {
 
     console.log(`1/3 📥 正在处理上传的${uploadData.type === 'single' ? '文件' : '压缩包'}: ${uploadData.fileName}...`);
 
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     // 2. 调用新的筛选+拼接函数（原filterAndConcatUploadedApiCodeFiles已替换）
     const result = await filterAndConcatUploadedApiSource(uploadData, 3);
     tempDir = result.tempDir; // 记录临时目录
@@ -477,7 +490,7 @@ async function generateComponentApiFromUploadedSource(uploadData, { signal } = {
 
     // 3. 复用原有大模型生成逻辑
     console.log("\n2/3 🤖 正在生成结构化API JSON...");
-    const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    const finalApiJson = await generateApiJsonWithLLM(combinedContent, { signal });
     // 关键节点2：生成后检查中断
     if (signal?.aborted) throw new Error('任务被用户取消');
 
@@ -525,7 +538,7 @@ async function generateComponentApiFromNpmPackage(packageName, componentName, { 
     console.log(`1/3 📦 正在处理npm包: ${packageName}，组件: ${componentName}...`);
 
     // 1. 调用npm包的筛选+拼接函数
-    const result = await filterAndConcatNpmApiByPackage(packageName, componentName);
+    const result = await filterAndConcatNpmApiByPackage(packageName, componentName, { signal });
     // 关键节点1：npm处理后检查中断
     if (signal?.aborted) throw new Error('任务被用户取消');
 
@@ -536,7 +549,7 @@ async function generateComponentApiFromNpmPackage(packageName, componentName, { 
 
     // 2. 复用大模型生成逻辑
     console.log("\n2/3 🤖 正在生成npm包组件的结构化API JSON...");
-    const finalApiJson = await generateApiJsonWithLLM(combinedContent);
+    const finalApiJson = await generateApiJsonWithLLM(combinedContent, { signal });
     // 关键节点2：生成后检查中断
     if (signal?.aborted) throw new Error('任务被用户取消');
 

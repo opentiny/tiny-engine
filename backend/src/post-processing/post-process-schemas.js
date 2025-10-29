@@ -102,7 +102,9 @@ function createStandardizedMap(originalSet) {
  * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  * @returns {Array} 处理后的结果（或原始结果，若校验不通过）
  */
-async function postProcessSchemas(conversionResults, outputDir) {
+async function postProcessSchemas(conversionResults, outputDir, { signal } = {}) {
+  if (signal?.aborted) throw new Error('任务被用户取消，停止后处理');
+
   // 1. 校验是否全部转换成功
   const successCount = conversionResults.filter(r => r.success !== false).length;
   const totalCount = conversionResults.length;
@@ -112,6 +114,8 @@ async function postProcessSchemas(conversionResults, outputDir) {
   }
 
   const validResults = conversionResults.map(item => {
+    if (signal?.aborted) throw new Error('任务被用户取消，停止筛选有效结果');
+
     const { subComponentName, schema } = item;
     // 校验1：schema 必须是对象
     if (typeof schema !== 'object' || schema === null || Array.isArray(schema)) {
@@ -129,13 +133,13 @@ async function postProcessSchemas(conversionResults, outputDir) {
   // 3. 按结果数量分支处理
   if (validResults.length === 1) {
     console.log("✅ 结果数量为1，无需额外处理，直接保存");
-    saveProcessedSchemas(validResults, outputDir);
+    saveProcessedSchemas(validResults, outputDir, { signal });
     return conversionResults;
   } else if (validResults.length > 1) {
     console.log("🔍 结果数量>1，开始分类处理");
-    const processed = processMultiResults(validResults);
+    const processed = processMultiResults(validResults, { signal });
 
-    saveProcessedSchemas(processed, outputDir);
+    saveProcessedSchemas(processed, outputDir, { signal });
     console.log("✅ 所有结果后处理完毕，保存到文件");
 
     return processed;
@@ -150,12 +154,14 @@ async function postProcessSchemas(conversionResults, outputDir) {
  * @param {Array} validResults - 仅含成功结果的数组
  * @returns {Array} 处理后的结果（含新 schema 或原始数据）
  */
-function processMultiResults(validResults) {
+function processMultiResults(validResults, { signal } = {}) {
   const processed = [];
   const tableCandidates = []; // 暂存表格相关组件，后续合并
 
   // 1. 遍历所有有效结果，分类处理（仅收集表格组件，不执行合并）
   validResults.forEach(item => {
+    if (signal?.aborted) throw new Error('任务被用户取消，停止多组件分类处理');
+
     const { subComponentName, schema } = item;
     // 关键：将输入的 subComponentName 标准化
     const standardizedName = standardizeComponentName(subComponentName);
@@ -187,7 +193,9 @@ function processMultiResults(validResults) {
     }
   });
 
-  // 2. 遍历结束后，统一处理表格合并（放在forEach外部！）
+  if (signal?.aborted) throw new Error('任务被用户取消，停止表格组件合并');
+
+  // 2. 遍历结束后，统一处理表格合并
   if (tableCandidates.length === 2) {
     console.log("🔧 发现表格组件配对，执行 mergeTableColumns 合并");
     // 标准化合法配对的名称（支持多格式匹配）
@@ -260,8 +268,9 @@ function processMultiResults(validResults) {
  * @param {Array} processedResults - 处理后的结果数组（含 subComponentName 和 schema）
  * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  */
-function saveProcessedSchemas(processedResults, outputDir) {
+function saveProcessedSchemas(processedResults, outputDir, { signal } = {}) {
   processedResults.forEach(item => {
+    if (signal?.aborted) throw new Error('任务被用户取消，停止文件保存');
     saveSchemaToFile(item.schema, item.subComponentName, outputDir);
   });
 }
@@ -272,8 +281,10 @@ function saveProcessedSchemas(processedResults, outputDir) {
  * @param {string} subComponentName - 子组件名（用于文件名区分）
  * @param {string} outputDir - 指定文件保存路径（支持相对路径或绝对路径）
  */
-function saveSchemaToFile(schema, subComponentName, outputDir) {
+function saveSchemaToFile(schema, subComponentName, outputDir, { signal } = {}) {
   try {
+    if (signal?.aborted) throw new Error('任务被用户取消，停止当前文件保存');
+
     if (!schema) throw new Error("schema 为空");
 
     const schemaDir = path.resolve(outputDir);
@@ -286,10 +297,12 @@ function saveSchemaToFile(schema, subComponentName, outputDir) {
     const components = Array.isArray(schema) ? schema : [schema];
 
     components.forEach((compSchema, idx) => {
-      const compName = compSchema.component
-        ? compSchema.component.replace(/[^a-z0-9]/gi, '-')
-        : `${subComponentName}-${idx}`;
-      const fileName = `${compName}-${timestamp}.json`;
+      if (signal?.aborted) throw new Error('任务被用户取消，停止当前文件写入');
+
+      const baseName = compSchema.component || `${subComponentName}-${idx}`;
+      const safeName = String(baseName).replace(/[^a-z0-9._-]/gi, '-');
+      const fileName = path.basename(`${safeName}-${timestamp}.json`);
+
       const filePath = path.join(schemaDir, fileName);
 
       fs.writeFileSync(filePath, JSON.stringify(compSchema, null, 2), 'utf8');
@@ -297,6 +310,7 @@ function saveSchemaToFile(schema, subComponentName, outputDir) {
     });
 
   } catch (err) {
+    if (signal?.aborted) throw err;
     console.error(`子组件[${subComponentName}] 保存失败：${err.message}`);
   }
 }

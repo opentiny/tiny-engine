@@ -32,7 +32,9 @@ function extractComponentName(pageTitle) {
  * @param {string} responseText 大模型原始返回
  * @returns {string} 清理后的JSON字符串
  */
-function cleanModelResponse(responseText) {
+function cleanModelResponse(responseText, { signal } = {}) {
+	if (signal?.aborted) throw new Error('任务被用户取消，停止JSON解析');
+
 	if (typeof responseText !== 'string' || responseText.trim() === '') {
 		throw new Error('大模型返回内容为空或非字符串');
 	}
@@ -67,10 +69,19 @@ function cleanModelResponse(responseText) {
  * @param {number} retries 重试次数
  * @returns {Promise<{pageTitle: string, tablesData: Array}>} 
  */
-async function scrapeRawTables(url, tableSelector, retries) {
+async function scrapeRawTables(url, tableSelector, retries, { signal } = {}) {
 	let browser = null;
 
+	// 注册中断监听，关闭浏览器
+  const abortHandler = async () => {
+    console.log(`[爬取中断] 正在关闭浏览器（URL：${url}）`);
+    if (browser) await browser.close().catch(e => console.warn(`关闭浏览器失败：${e.message}`));
+  };
+  signal?.addEventListener('abort', abortHandler);
+
 	try {
+		if (signal?.aborted) throw new Error('任务被用户取消');
+
 		browser = await puppeteer.launch({
 			headless: 'new',
 			defaultViewport: { width: 1280, height: 720 },
@@ -100,11 +111,14 @@ async function scrapeRawTables(url, tableSelector, retries) {
 		// 加载页面
 		console.log(`[开始] 加载页面: ${url}`);
 		try {
-			await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+			await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000, signal });
 			// await page.waitForTimeout(1000);
 		} catch (err) {
+			if (signal?.aborted) throw new Error('任务被用户取消');
 			throw new Error(`页面加载失败：${err.message}（URL：${url}）`);
 		}
+
+		if (signal?.aborted) throw new Error('任务被用户取消');
 
 		// 校验表格选择器
 		const hasTable = await page.evaluate((selector) => {
@@ -185,6 +199,7 @@ async function scrapeRawTables(url, tableSelector, retries) {
 		// 仅重新抛出错误，重试逻辑放在整合函数中处理
 		throw error;
 	} finally {
+		signal?.removeEventListener('abort', abortHandler); // 清理监听
 		if (browser) {
 			await browser.close();
 			console.log(`[结束] 浏览器已关闭`);
@@ -201,7 +216,7 @@ async function scrapeRawTables(url, tableSelector, retries) {
  * @param {string} pageTitle 页面原始标题
  * @returns {Promise<Array>} 大模型生成的API JSON数组
  */
-async function convertTablesToApiJson(tablesData, pageTitle) {
+async function convertTablesToApiJson(tablesData, pageTitle, { signal } = {}) {
 	// 构造大模型输入：表格数据→清晰文本描述
 	console.log(`[开始] 构造大模型输入...`);
 	const tableContentStr = tablesData.map(table => {
@@ -364,12 +379,15 @@ ${pageTitle}
 			messages: promptMessages,
 			temperature: 0.1, // 低温度确保格式准确
 			max_tokens: 65536, // 足够长度容纳API结构
-			response_format: { type: "json_object" } // 强制返回JSON（部分模型支持）
+			response_format: { type: "json_object" }, // 强制返回JSON（部分模型支持）
+			signal
 		});
+
+		if (signal?.aborted) throw new Error('任务被用户取消');
 
 		// 清理并解析大模型返回
 		const rawResponse = completion.choices[0].message.content.trim();
-		const cleanedResponse = cleanModelResponse(rawResponse);
+		const cleanedResponse = cleanModelResponse(rawResponse, { signal });
 		let apiJsonArray = JSON.parse(cleanedResponse);
 
 		console.log(`[成功] 大模型转换完成，生成${apiJsonArray.length}个组件API`);
@@ -409,12 +427,12 @@ async function extractApiFromUrl(url, tableSelector, { initialRetries = 3, signa
 			if (signal?.aborted) throw new Error('任务被用户取消');
 			try {
 				// 1. 爬取原始数据
-				const { pageTitle, tablesData } = await scrapeRawTables(url, tableSelector, retries);
+				const { pageTitle, tablesData } = await scrapeRawTables(url, tableSelector, retries, { signal });
 
 				// 关键节点2：爬取后检查中断
 				if (signal?.aborted) throw new Error('任务被用户取消');
 				// 2. LLM转换
-				const apiJson = await convertTablesToApiJson(tablesData, pageTitle);
+				const apiJson = await convertTablesToApiJson(tablesData, pageTitle, { signal });
 
 				// 关键节点3：转换后检查中断
 				if (signal?.aborted) throw new Error('任务被用户取消');

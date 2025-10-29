@@ -191,7 +191,7 @@ function saveApiJsonToFile(componentName, apiJson, baseDir) {
  * @param {string} [apiLogDir="../../raw-api-log"] - 保存目录路径
  * @returns {Object} 保存结果汇总（successCount: 成功数量, failCount: 失败数量, failures: 失败详情数组）
  */
-function saveApiArrayToFiles(apiArray, apiLogDir="../../raw-api-log") {
+function saveApiArrayToFiles(apiArray, apiLogDir = "../../raw-api-log") {
   // 初始化结果统计
   const result = {
     successCount: 0,
@@ -210,7 +210,10 @@ function saveApiArrayToFiles(apiArray, apiLogDir="../../raw-api-log") {
   // 遍历数组保存每个API对象
   apiArray.forEach((apiObj, index) => {
     // 提取组件名（优先从components键获取，无则用索引兜底）
-    const componentName = Object.keys(apiObj.components)[0] || `unknown-component-${index + 1}`;
+    const componentName =
+      apiObj && apiObj.components && typeof apiObj.components === 'object'
+        ? (Object.keys(apiObj.components)[0] || `unknown-component-${index + 1}`)
+        : `unknown-component-${index + 1}`;
     const sequence = `${index + 1}/${apiArray.length}`; // 进度标识（如 1/5）
 
     try {
@@ -268,9 +271,9 @@ function printUsage() {
 async function main() {
   try {
     // 1. 解析命令行参数
-    const { 
-      url, tableSelector, target, componentName, 
-      outputDir, sourceType, schemaLogDir, apiLogDir 
+    const {
+      url, tableSelector, target, componentName,
+      outputDir, sourceType, schemaLogDir, apiLogDir
     } = parseCommandLineArgs();
 
     let apiArray;
@@ -305,10 +308,10 @@ async function main() {
 
     // 4. 批量转换为TinyEngine物料
     const conversionResults = await batchConvertToTinyEngineSchema(
-      apiArray, 
-      undefined, 
-      undefined, 
-      undefined, 
+      apiArray,
+      undefined,
+      undefined,
+      undefined,
       schemaLogDir
     );
 

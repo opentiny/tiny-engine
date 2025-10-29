@@ -6,6 +6,9 @@ const { OpenAI } = require("openai");
 const fs = require('fs');
 
 // 初始化OpenAI客户端
+if (!process.env.OPENAI_API_KEY) {
+  throw new Error("OPENAI_API_KEY is required.");
+}
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
   baseURL: process.env.OPENAI_BASE_URL || "https://api.openai.com/v1",
@@ -1259,7 +1262,12 @@ function parseAndValidateSchema(
   subComponentName,
   schemaLogDir = path.resolve(__dirname, '../../schema-log')
 ) {
-  let parsedSchema = JSON.parse(cleanedText);
+  let parsedSchema;
+  try {
+    parsedSchema = JSON.parse(cleanedText);
+  } catch (err) {
+    throw new Error(`JSON解析失败 [${subComponentName}]: ${err.message}`);
+  }
   console.log(`[任务${subComponentName} 解析] 类型：${typeof parsedSchema} | 数组：${Array.isArray(parsedSchema)}`);
 
   // 处理数组格式（强制转为单个对象）
@@ -1326,7 +1334,7 @@ async function convertSingleSubComponent(
 
     // 5. 按需保存文件（校验成功后再保存）
     if (save && success) {
-      saveSchemaToFile(validSchema, subComponentName, false, schemaLogDir);
+      await saveSchemaToFile(validSchema, subComponentName, false, schemaLogDir);
     }
 
     console.log(`[任务${subComponentName}]：转换完成`);
@@ -1342,7 +1350,7 @@ async function convertSingleSubComponent(
     const subComponentName = Object.keys(apiObj.components)[0] || 'unknown-subcomponent';
     if (schemaText && save) {
       console.log(`调试：准备保存错误日志，schemaText类型=${typeof schemaText}`);
-      saveSchemaToFile(schemaText, subComponentName, true, schemaLogDir); // 标记为错误日志
+      await saveSchemaToFile(schemaText, subComponentName, true, schemaLogDir); // 标记为错误日志
     }
     throw new Error(`[任务${subComponentName}] 转换失败：${error.message}`);
   }
@@ -1355,7 +1363,7 @@ async function convertSingleSubComponent(
  * @param {boolean} isError - 是否为错误日志（true时保存原始文本）
  * @param {string} schemaLogDir - 日志存储目录
  */
-function saveSchemaToFile(
+async function saveSchemaToFile(
   schema,
   subComponentName,
   isError = false,
@@ -1388,7 +1396,7 @@ function saveSchemaToFile(
     // 定义保存目录
     const schemaDir = path.resolve(schemaLogDir); // 确保绝对路径
     if (!fs.existsSync(schemaDir)) {
-      fs.mkdirSync(schemaDir, { recursive: true });
+      await fs.promises.mkdir(schemaDir, { recursive: true });
       console.log(`已创建schema保存目录：${schemaDir}`);
     }
 
@@ -1402,7 +1410,7 @@ function saveSchemaToFile(
     const filePath = path.join(schemaDir, fileName);
 
     // 写入文件
-    fs.writeFileSync(filePath, cleanedSchema, 'utf8');
+    await fs.promises.writeFile(filePath, cleanedSchema, 'utf8');
     const logType = isError ? "错误原始文本" : "有效schema";
     console.log(`子组件[${subComponentName}]：${logType}已保存至：${filePath}`);
 

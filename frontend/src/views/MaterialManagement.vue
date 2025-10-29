@@ -161,7 +161,6 @@ const getMaterialList = async () => {
           slotsList: formatSlots(material.content?.schema?.slots || {})
         }
       }));
-      totalCount.value = res.data.count;
     }
   } catch (err) {
     TinyNotify({ type: 'error', message: '获取物料列表失败', position: 'top-right' });

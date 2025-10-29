@@ -56,8 +56,10 @@ function getAllFiles(dirPath) {
  * @param {string} baseDir - 基准目录（用户输入目录），用于生成相对路径
  * @returns {Promise<{fileName: string, filePath: string, fileLength: number, hasApiInfo: boolean}>}
  */
-async function checkFileWithLLM(filePath, baseDir) {
+async function checkFileWithLLM(filePath, baseDir, { signal } = {}) {
   try {
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     const content = fs.readFileSync(filePath, "utf-8");
     // 生成相对于基准目录的相对路径
     const relativePath = path.relative(baseDir, filePath);
@@ -86,7 +88,10 @@ ${content}
       messages: promptMessages,
       temperature: 0.2,
       max_tokens: 65536,
+      signal
     });
+
+    if (signal?.aborted) throw new Error('任务被用户取消');
 
     const responseText = completion.choices[0].message.content.trim();
     let hasApiInfo = false;
@@ -106,6 +111,8 @@ ${content}
       hasApiInfo,
     };
   } catch (error) {
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     console.error(`❌ Error analyzing ${filePath}:`, error.message);
     // 出错时也返回相对路径
     const relativePath = path.relative(baseDir, filePath);
@@ -124,8 +131,11 @@ ${content}
  * @param {number} [concurrency=3] - 并行分析文件的批次大小，控制同时处理的文件数量
  * @returns {Promise<{allFiles: Array, filteredFiles: Array}>} 分析结果
  */
-async function analyzeComponentApiFiles(componentDir, concurrency = 3) {
-  // 新增：校验 concurrency 参数有效性
+async function analyzeComponentApiFiles(componentDir, concurrency = 3, { signal } = {}) {
+  // 检查中断信号
+  if (signal?.aborted) throw new Error('任务已取消');
+
+  // 校验 concurrency 参数有效性
   if (!Number.isInteger(concurrency) || concurrency <= 0) {
     console.warn(`⚠️  无效的并发数 ${concurrency}，自动修正为默认值 3`);
     concurrency = 3; // 强制修正为有效最小值
@@ -148,11 +158,14 @@ async function analyzeComponentApiFiles(componentDir, concurrency = 3) {
   // 并行分析 src 目录下的所有文件（传入 componentDir 作为基准目录生成相对路径）
   const results = [];
   for (let i = 0; i < totalFiles; i += concurrency) {
+    if (signal?.aborted) throw new Error('任务已取消');
+
     const batch = allSrcFiles.slice(i, i + concurrency);
     const batchResults = await Promise.all(
       batch.map(async (file) => {
+        if (signal?.aborted) throw new Error('任务已取消');
         console.log(`🔍 分析文件: ${file}`);
-        return checkFileWithLLM(file, componentDir);
+        return checkFileWithLLM(file, componentDir, { signal });
       })
     );
     results.push(...batchResults);
@@ -242,14 +255,18 @@ function saveSingleFileToTempDir(fileBuffer, fileName) {
  * @param {string} componentDir - 组件根目录（用于拼接文件绝对路径）
  * @returns {string} 包含所有文件路径和内容的总字符串
  */
-function readAndConcatFiles(filteredFiles, componentDir) {
+function readAndConcatFiles(filteredFiles, componentDir, { signal } = {}) {
   if (!Array.isArray(filteredFiles) || filteredFiles.length === 0) {
     throw new Error("没有需要分析的API文件");
   }
 
+  if (signal?.aborted) throw new Error('任务被用户取消，停止文件内容拼接');
+
   let totalContent = "以下是组件的API相关文件内容，包含文件路径和源码：\n\n";
 
   filteredFiles.forEach((file, index) => {
+    if (signal?.aborted) throw new Error('任务被用户取消，停止文件内容拼接');
+
     // 拼接文件绝对路径
     const absolutePath = path.isAbsolute(file.filePath)
       ? file.filePath
@@ -276,9 +293,9 @@ function readAndConcatFiles(filteredFiles, componentDir) {
  * @param {string} componentDir - 组件目录（本地目录或临时目录）
  * @returns {Promise<{filteredFiles: Array, combinedContent: string, componentName: string, tempDir: string}>}
  */
-async function filterAndConcatApiCodeFiles(componentDir) {
+async function filterAndConcatApiCodeFiles(componentDir, { signal } = {}) {
   console.log("🔍 正在筛选组件的API相关文件...");
-  const { filteredFiles } = await analyzeComponentApiFiles(componentDir, 3);
+  const { filteredFiles } = await analyzeComponentApiFiles(componentDir, 3, { signal });
   if (filteredFiles.length === 0) {
     throw new Error("未筛选出任何包含API信息的文件");
   }
@@ -289,7 +306,7 @@ async function filterAndConcatApiCodeFiles(componentDir) {
   console.log("\n📄 正在读取并拼接文件内容...");
   const componentName = path.basename(componentDir)
     .replace(/^(\w)/, (match) => match.toUpperCase());
-  const combinedContent = readAndConcatFiles(filteredFiles, componentDir);
+  const combinedContent = readAndConcatFiles(filteredFiles, componentDir, { signal });
   console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
 
   return {
@@ -308,7 +325,7 @@ async function filterAndConcatApiCodeFiles(componentDir) {
  * @param {number} [concurrency=3] - 并行分析并发数
  * @returns {Promise<{filteredFiles: Array, combinedContent: string, componentName: string, tempDir: string}>}
  */
-async function filterAndConcatUploadedApiSource(uploadData, concurrency = 3) {
+async function filterAndConcatUploadedApiSource(uploadData, concurrency = 3, { signal } = {}) {
   let tempDir = null; // 临时目录，用于后续清理
   try {
     // 1. 基础参数校验
@@ -330,7 +347,7 @@ async function filterAndConcatUploadedApiSource(uploadData, concurrency = 3) {
 
     // 3. 复用本地目录的筛选逻辑（统一处理临时目录）
     console.log(`🔍 正在筛选上传${uploadData.type === 'single' ? '文件' : '压缩包'}中的API相关文件...`);
-    const { filteredFiles } = await analyzeComponentApiFiles(tempDir, concurrency);
+    const { filteredFiles } = await analyzeComponentApiFiles(tempDir, concurrency, { signal });
     if (filteredFiles.length === 0) {
       throw new Error(`未从上传${uploadData.type === 'single' ? '文件' : '压缩包'}中筛选出任何包含API信息的文件`);
     }
@@ -349,7 +366,7 @@ async function filterAndConcatUploadedApiSource(uploadData, concurrency = 3) {
         .replace(/^code-component-\d+-/, '') // 移除临时目录前缀
         .replace(/^(\w)/, (match) => match.toUpperCase()) || "ZipComponent";
     }
-    const combinedContent = readAndConcatFiles(filteredFiles, tempDir);
+    const combinedContent = readAndConcatFiles(filteredFiles, tempDir, { signal });
     console.log(`✅ 内容拼接完成（${combinedContent.length} 字符）`);
 
     return {

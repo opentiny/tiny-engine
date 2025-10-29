@@ -1,6 +1,6 @@
 // backend/server/db/dao/materialDao.js
 const { dbReadyPromise } = require('../index');
-const Material = require('../models/Material'); 
+const Material = require('../models/Material');
 const { getRepository } = require('typeorm');
 
 let materialRepository;
@@ -72,8 +72,10 @@ async function getMaterials(exactQuery, keyword, page, limit) {
   const { AppDataSource } = require('../index'); // 获取已初始化的数据源
 
   // 从已初始化的数据源创建查询构建器
-  const queryBuilder = AppDataSource.createQueryBuilder(Material, 'material')
-    .where('material.status = :status', { status: exactQuery.status });
+  const queryBuilder = AppDataSource.createQueryBuilder(Material, 'material');
+  if (exactQuery && exactQuery.status !== undefined && exactQuery.status !== null) {
+    queryBuilder.where('material.status = :status', { status: exactQuery.status });
+  }
 
   // 追加「精确匹配」条件
   if (exactQuery.importType) {
@@ -119,8 +121,8 @@ async function updateMaterial(id, updates) {
  */
 async function deleteMaterial(id) {
   const repo = await getMaterialRepository();
-  await repo.delete(id);
-  return 1;
+  const res = await repo.delete(id);
+  return res.affected || 0;
 }
 
 /**

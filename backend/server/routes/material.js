@@ -19,7 +19,7 @@ const { upload } = require('../controllers/materialController');
  * @apiSuccess {boolean} success true
  */
 // 注意：upload.any() 需放在校验前，确保code类型的req.files能被正确解析
-router.post('/import', upload.any(), validateImportParams, materialController.createImportTask);
+router.post('/import', upload.array('files', 1), validateImportParams, materialController.createImportTask);
 
 /**
  * @api {GET} /api/material/status/:taskId 查询任务状态

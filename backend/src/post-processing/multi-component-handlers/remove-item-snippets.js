@@ -31,6 +31,12 @@ async function readJsonFile(filePath) {
  * @returns {object} 移除snippets字段后的JSON对象
  */
 function removeItemSnippets(jsonData) {
+  // 校验输入类型：非对象/数组直接返回，避免展开操作报错
+  if (!jsonData || typeof jsonData !== 'object') {
+    console.warn('ℹ️ 输入不是对象，跳过移除snippets');
+    return jsonData;
+  }
+  
   // 复制原对象避免直接修改输入（纯函数思想）
   const processedData = { ...jsonData };
   

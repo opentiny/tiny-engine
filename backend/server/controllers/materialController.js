@@ -220,8 +220,7 @@ async function processImportTask(taskId, params) {
   try {
     // 监听中断信号
     signal.addEventListener('abort', () => {
-      console.log(`[任务${taskId}] 收到中断信号，立即停止执行`);
-      throw new Error('任务被用户取消');
+      console.log(`[任务${taskId}] 收到中断信号，准备停止执行`);
     });
 
     // 1. 按导入类型生成API JSON
@@ -317,6 +316,9 @@ async function processImportTask(taskId, params) {
         message: '开始转换组件物料JSON（调用大模型）'
       }
     });
+
+    if (signal.aborted) throw new Error('任务被用户取消');
+
     const conversionResults = await batchConvertToTinyEngineSchema(
       apiArray,
       process.env.OPENAI_MODEL,
@@ -325,6 +327,9 @@ async function processImportTask(taskId, params) {
       schemaLogDir,
       { signal }
     );
+
+    if (signal.aborted) throw new Error('任务被用户取消');
+
     updateTask(taskId, {
       progress: 85,
       step: {
@@ -334,7 +339,7 @@ async function processImportTask(taskId, params) {
     });
 
     // 5. 物料后续处理（共用逻辑）
-    const finalResults = await postProcessSchemas(conversionResults, outputDir);
+    const finalResults = await postProcessSchemas(conversionResults, outputDir, { signal });
 
     // 过滤数组，只提取每个项的schema字段
     const schemaOnlyResults = finalResults.map(item => {
@@ -344,6 +349,8 @@ async function processImportTask(taskId, params) {
       }
       return null;
     }).filter(Boolean);
+
+    if (signal.aborted) throw new Error('任务被用户取消');
 
     // 6. 更新任务状态
     updateTask(taskId, {

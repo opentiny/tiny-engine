@@ -177,9 +177,9 @@ const props = defineProps({
     type: Array,
     default: () => []
   },
-  currentPage: { type: Number, required: true, default: 1 }, // 当前页
-  pageSize: { type: Number, required: true, default: 10 },   // 每页数量
-  total: { type: Number, required: true, default: 0 },        // 总条数
+  currentPage: { type: Number, default: 1 }, // 当前页
+  pageSize: { type: Number, default: 10 },   // 每页数量
+  total: { type: Number, default: 0 },        // 总条数
   columnWidths: {
     type: Object,
     default: () => ({
@@ -198,7 +198,6 @@ const props = defineProps({
 const emit = defineEmits([
   'delete-prop',     // 删除属性/事件/插槽
   'delete-material', // 删除物料
-  'edit-prop',       // 编辑属性/事件/插槽
   'save-prop',       // 保存属性/事件/插槽修改
   'current-change',  // 当前页变化
   'size-change'      // 每页数量变化

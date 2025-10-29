@@ -14,11 +14,17 @@ const PORT = process.env.SERVER_PORT || 3001;
 // 先初始化数据库，再启动服务
 initializeDb().then(() => {
   // 中间件配置
+  const allowOrigins = process.env.CORS_ALLOW_ORIGIN || '*';
+  const corsOrigin = allowOrigins === '*'
+    ? true
+    : allowOrigins.split(',').map(origin => origin.trim()).filter(Boolean);
+
   app.use(cors({
-    origin: process.env.CORS_ALLOW_ORIGIN || '*',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    origin: corsOrigin,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    credentials: allowOrigins !== '*' 
   }));
+
   app.use(express.json({ limit: '10mb' }));
   app.use(express.urlencoded({ extended: true }));
 

@@ -91,7 +91,6 @@
             <div class="import-result">
               <MaterialTable ref="materialTableRef" :table-data="formatForTable(activeTask.realMaterialData)"
                 @delete-material="(row) => handleDeleteMaterial(row, activeTask.id)" :table-max-height="460"
-                @edit-prop="(row, propRow) => handleEditProp(row, propRow, activeTask.id)"
                 @delete-prop="(parentRow, type, propRow) => handleDeleteProp(parentRow, type, propRow, activeTask.id)"
                 @save-prop="(parentRow, type, editedRow) => handleSaveProp(parentRow, type, editedRow, activeTask.id)"
                 :column-widths="{
@@ -142,7 +141,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, nextTick, watch } from 'vue';
+import { ref, reactive, computed, nextTick, watch, onBeforeUnmount } from 'vue';
 import {
   TinyModal, TinyButton, TinyForm, TinyFormItem, TinyInput,
   TinyFileUpload, TinyProgress, TinyNotify, TinyCard
@@ -271,6 +270,9 @@ const confirmImport = async () => {
     }
 
     else if (task.activeModal === 'source') {
+      if (!task.fileList?.[0]?.raw) {
+        throw new Error('请先选择源码文件');
+      }
       const formData = new FormData();
       formData.append('importType', 'code');
       formData.append('files', task.fileList[0].raw);
@@ -674,17 +676,6 @@ const handleDeleteMaterial = (row, taskId) => {
   );
 };
 
-// 编辑属性
-const handleEditProp = (row, propRow, taskId) => {
-  const task = tasks.value.find(t => t.id === taskId);
-  if (!task || !task.realMaterialData) return;
-
-  // 保存编辑前的 realMaterialData 深拷贝快照
-  const beforeEditSnapshot = JSON.parse(JSON.stringify(task.realMaterialData));
-  // 存储快照到任务对象中，供编辑后对比（避免闭包问题）
-  task.beforeEditSnapshot = beforeEditSnapshot;
-};
-
 // 删除属性（局部更新目标物料的schema，不替换整个数组元素）
 const handleDeleteProp = (parentRow, type, propRow, taskId) => {
   if (!window.confirm(`确定删除该${type === 'properties' ? '属性' : type === 'events' ? '事件' : '插槽'}吗？`)) return;
@@ -857,6 +848,11 @@ const handleModelUpdate = (value) => {
     }
   }
 };
+
+// 全局清理：组件卸载时清除所有轮询
+onBeforeUnmount(() => {
+  tasks.value.forEach((t) => t.pollingTimerId && clearInterval(t.pollingTimerId));
+});
 </script>
 
 <style scoped>

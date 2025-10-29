@@ -35,7 +35,7 @@ const WITH_INSTALL_PATTERN = /const\s+\w+\s*=\s*with(?:Install|NoopInstall)\s*\(
  * @returns {string} 找到的组件目录绝对路径
  * @throws {Error} 如果找不到对应的组件目录
  */
-function findComponentDirectory(packageName, componentName) {
+function findComponentDirectory(packageName, componentName, { signal } = {}) {
   console.log(`\n🔍 正在 node_modules 中查找组件目录...`);
   // 假设 node_modules 在后端根目录的父级或同级，我们从当前文件向上两级查找。
   const projectRoot = path.resolve(__dirname, '../../');
@@ -58,6 +58,8 @@ function findComponentDirectory(packageName, componentName) {
 
   // 递归查找函数
   function traverse(currentPath) {
+    if (signal?.aborted) throw new Error('任务被用户取消');
+
     if (foundPath) return; // 找到即停止
     if (visited.has(currentPath)) return;
     visited.add(currentPath);
@@ -66,6 +68,7 @@ function findComponentDirectory(packageName, componentName) {
       const entries = fs.readdirSync(currentPath, { withFileTypes: true });
 
       for (const entry of entries) {
+        if (signal?.aborted) throw new Error('任务被用户取消');
         const fullPath = path.join(currentPath, entry.name);
 
         // 限制搜索深度，防止无限递归
@@ -107,6 +110,7 @@ function findComponentDirectory(packageName, componentName) {
         }
       }
     } catch (error) {
+      if (signal?.aborted) throw error; 
       // 忽略读取权限或非预期文件系统错误
       console.warn(`⚠️ 无法访问目录 ${path.relative(packagePath, currentPath)}: ${error.message}`);
     }
@@ -261,7 +265,9 @@ function extractComponentKeywords(entryPath) {
 /**
  * 4. 生成「高优先级文件组1」：入口+含关键词的核心文件及依赖
  */
-function getComponentHigh1Files(componentDir) {
+function getComponentHigh1Files(componentDir, { signal } = {}) {
+  if (signal?.aborted) throw new Error('任务被用户取消，停止提取高优先级文件');
+  
   const high1 = new Set();
   const indexFiles = getRootIndexFiles(componentDir);
   if (indexFiles.length === 0) {
@@ -283,7 +289,7 @@ function getComponentHigh1Files(componentDir) {
   // 3. 加入含关键词的本地核心文件及依赖
   const coreFiles = getAllCoreFilesFromEntry(entryPath, componentDir, componentKeywords);
   coreFiles.forEach((file) => {
-    const coreDeps = getRelevantFiles(file, new Set(), componentDir, componentKeywords);
+    const coreDeps = getRelevantFiles(file, new Set(), componentDir, componentKeywords, { signal });
     coreDeps.forEach((depFile) => high1.add(depFile));
   });
 
@@ -391,8 +397,9 @@ function splitFilesByPriority(componentDir) {
 /**
  * 辅助函数：递归获取含关键词的核心文件依赖（核心修改）
  */
-function getRelevantFiles(filePath, visited, baseDir, keywords) {
+function getRelevantFiles(filePath, visited, baseDir, keywords, { signal } = {}) {
   try {
+    if (signal?.aborted) throw new Error('任务被用户取消');
     // 边界控制：文件不存在/已访问/超出组件目录 → 直接返回
     if (!fs.existsSync(filePath) || visited.has(filePath) || !filePath.startsWith(baseDir)) {
       return [];
@@ -408,6 +415,7 @@ function getRelevantFiles(filePath, visited, baseDir, keywords) {
     let importMatch;
     IMPORT_DECLARATION_PATTERN.lastIndex = 0;
     while ((importMatch = IMPORT_DECLARATION_PATTERN.exec(content)) !== null) {
+      if (signal?.aborted) throw new Error('任务被用户取消');
       const [, importName, importPath] = importMatch;
       if (isNameMatchKeyword(importName, keywords) && isRelativePath(importPath)) {
         const absPath = path.resolve(fileDir, importPath);
@@ -421,6 +429,7 @@ function getRelevantFiles(filePath, visited, baseDir, keywords) {
     let exportMatch;
     EXPORT_DECLARATION_PATTERN.lastIndex = 0;
     while ((exportMatch = EXPORT_DECLARATION_PATTERN.exec(content)) !== null) {
+      if (signal?.aborted) throw new Error('任务被用户取消');
       const [, exportNames, exportPath] = exportMatch;
       exportNames.split(",").forEach(name => {
         const cleanName = name.trim().split("as")[0].trim();
@@ -436,7 +445,7 @@ function getRelevantFiles(filePath, visited, baseDir, keywords) {
     // 递归获取依赖
     for (const absPath of importPaths) {
       if (!visited.has(absPath)) {
-        const subDeps = getRelevantFiles(absPath, visited, baseDir, keywords);
+        const subDeps = getRelevantFiles(absPath, visited, baseDir, keywords, { signal });
         subDeps.forEach((f) => deps.push(f));
       }
     }
@@ -465,8 +474,10 @@ function isRelativePath(path) {
 /**
  * 7. 用大模型分析单个文件
  */
-async function analyzeFileForComponentApi(filePath, componentName, baseDir) {
+async function analyzeFileForComponentApi(filePath, componentName, baseDir, { signal } = {}) {
   try {
+    if (signal?.aborted) throw new Error('任务已取消');
+
     const content = fs.readFileSync(filePath, "utf-8");
     const relativePath = path.relative(baseDir, filePath);
     const isVueDts = filePath.includes(".vue.d.ts");
@@ -499,6 +510,7 @@ ${content}
       messages: promptMessages,
       temperature: 0.1,
       response_format: { type: "json_object" },
+      signal
     });
 
     const result = JSON.parse(completion.choices[0].message.content);
@@ -515,16 +527,19 @@ ${content}
 /**
  * 8. 按优先级分析文件，聚合API定义
  */
-async function aggregateComponentApiByPriority(componentName, highPriorityFiles, lowPriorityFiles, baseDir) {
+async function aggregateComponentApiByPriority(componentName, highPriorityFiles, lowPriorityFiles, baseDir, { signal } = {}) {
   const apiMap = { props: new Set(), emits: new Set(), slots: new Set() };
   const foundFlags = { props: false, emits: false, slots: false };
 
   console.log(`\n🔍 开始分析【${componentName}】`);
 
+  if (signal?.aborted) throw new Error('任务已取消');
+
   // 分析高优先级文件
   console.log(`👉 正在分析高优先级文件（${highPriorityFiles.length}个）`);
   for (const file of highPriorityFiles) {
-    const result = await analyzeFileForComponentApi(file, componentName, baseDir);
+    if (signal?.aborted) throw new Error('任务已取消'); 
+    const result = await analyzeFileForComponentApi(file, componentName, baseDir, { signal });
 
     // 收集结果（去重）
     if (result.propsFile) apiMap.props.add(result.propsFile);
@@ -548,7 +563,8 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
   if (needLowPriority) {
     console.log(`👉 正在分析低优先级文件（${lowPriorityFiles.length}个）`);
     for (const file of lowPriorityFiles) {
-      const result = await analyzeFileForComponentApi(file, componentName, baseDir);
+      if (signal?.aborted) throw new Error('任务已取消');
+      const result = await analyzeFileForComponentApi(file, componentName, baseDir, { signal });
 
       if (!foundFlags.props && result.propsFile) apiMap.props.add(result.propsFile);
       if (!foundFlags.emits && result.emitsFile) apiMap.emits.add(result.emitsFile);
@@ -585,8 +601,9 @@ async function aggregateComponentApiByPriority(componentName, highPriorityFiles,
 /**
  * 9. 主分析函数
  */
-async function analyzeComponentApiMap(componentDir) {
+async function analyzeComponentApiMap(componentDir, { signal } = {}) {
   if (!fs.existsSync(componentDir)) throw new Error(`目录不存在: ${componentDir}`);
+  if (signal?.aborted) throw new Error('任务已取消');
 
   const indexFiles = getRootIndexFiles(componentDir);
   if (indexFiles.length === 0) throw new Error("未找到入口文件（index.*，已排除.d.ts），无法提取子组件");
@@ -596,14 +613,15 @@ async function analyzeComponentApiMap(componentDir) {
 
   // 拆分优先级后二次过滤低优先级（排除高1）
   const { high2, lowPriority: tempLow } = splitFilesByPriority(componentDir);
-  const globalHigh1 = getComponentHigh1Files(componentDir);
+  const globalHigh1 = getComponentHigh1Files(componentDir, { signal });
   const realLowPriority = tempLow.filter(file => !globalHigh1.has(file));
 
   const apiResults = [];
   for (const component of subComponents) {
+    if (signal?.aborted) throw new Error('任务已取消');
     const componentHighPriority = Array.from(new Set([...globalHigh1, ...high2]));
     const apiResult = await aggregateComponentApiByPriority(
-      component, componentHighPriority, realLowPriority, componentDir
+      component, componentHighPriority, realLowPriority, componentDir, { signal }
     );
     apiResults.push(apiResult);
   }
@@ -653,7 +671,9 @@ function getRootIndexFiles(componentDir) {
  * @param {string} baseDir - 组件根目录（用于校验路径合法性）
  * @returns {string} 文件内容（读取失败返回空字符串）
  */
-function readFileWithFallback(filePath, baseDir) {
+function readFileWithFallback(filePath, baseDir, { signal } = {}) {
+  if (signal?.aborted) throw new Error('任务被用户取消，停止文件读取');
+
   try {
     // 无需再提取纯路径，直接使用传入的路径
     const absolutePath = path.isAbsolute(filePath)
@@ -680,7 +700,7 @@ function readFileWithFallback(filePath, baseDir) {
  *  - combinedContent: 拼接后的总内容
  *  - componentNames: 识别到的组件名称列表
  */
-async function filterAndConcatApiNpmFiles(componentDir) {
+async function filterAndConcatApiNpmFiles(componentDir, { signal } = {}) {
   // 1. 前置校验：目录有效性
   if (!componentDir) {
     throw new Error("请提供组件npm目录路径");
@@ -692,7 +712,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
 
   // 2. 调用主分析函数获取API结果
   console.log("1/3 🔍 正在分析组件API定义文件...");
-  const apiResults = await analyzeComponentApiMap(componentDir);
+  const apiResults = await analyzeComponentApiMap(componentDir, { signal });
   if (!apiResults || apiResults.length === 0) {
     throw new Error("未获取到组件API分析结果");
   }
@@ -711,7 +731,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
     combinedContent += `## 组件入口文件（index系列文件）\n`;
     rootIndexFiles.forEach((indexFile, idx) => {
       const relativePath = path.relative(componentDir, indexFile);
-      const fileContent = readFileWithFallback(indexFile, componentDir);
+      const fileContent = readFileWithFallback(indexFile, componentDir, { signal });
       combinedContent += `\n--- 入口文件 ${idx + 1}：${relativePath} ---\n`;
       combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
     });
@@ -729,7 +749,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
     if (props.length > 0) {
       combinedContent += `\n【Props定义文件】（共 ${props.length} 个）\n`;
       props.forEach((propFile, idx) => {
-        const fileContent = readFileWithFallback(propFile, componentDir);
+        const fileContent = readFileWithFallback(propFile, componentDir, { signal });
         combinedContent += `\n--- 第 ${idx + 1} 个：${propFile} ---\n`;
         combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
       });
@@ -739,7 +759,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
     if (emits.length > 0) {
       combinedContent += `\n【Emits定义文件】（共 ${emits.length} 个）\n`;
       emits.forEach((emitFile, idx) => {
-        const fileContent = readFileWithFallback(emitFile, componentDir);
+        const fileContent = readFileWithFallback(emitFile, componentDir, { signal });
         combinedContent += `\n--- 第 ${idx + 1} 个：${emitFile} ---\n`;
         combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
       });
@@ -749,7 +769,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
     if (slots.length > 0) {
       combinedContent += `\n【Slots定义文件】（共 ${slots.length} 个）\n`;
       slots.forEach((slotFile, idx) => {
-        const fileContent = readFileWithFallback(slotFile, componentDir);
+        const fileContent = readFileWithFallback(slotFile, componentDir, { signal });
         combinedContent += `\n--- 第 ${idx + 1} 个：${slotFile} ---\n`;
         combinedContent += fileContent ? fileContent : "⚠️  未读取到文件内容\n";
       });
@@ -774,7 +794,7 @@ async function filterAndConcatApiNpmFiles(componentDir) {
  * @param {string} componentName - 组件名 (如: affix)
  * @returns {Promise<{combinedContent: string, componentNames: string[], componentDir: string}>}
  */
-async function filterAndConcatNpmApiByPackage(packageName, componentName) {
+async function filterAndConcatNpmApiByPackage(packageName, componentName, { signal } = {}) {
   if (!packageName || !componentName) {
     throw new Error("请输入npm包名和组件名");
   }
@@ -802,14 +822,14 @@ async function filterAndConcatNpmApiByPackage(packageName, componentName) {
 
   // 2. 安装完成后（或已存在），查找组件目录
   try {
-    componentDir = findComponentDirectory(packageName, componentName);
+    componentDir = findComponentDirectory(packageName, componentName, { signal });
   } catch (findError) {
     throw new Error(`查找组件目录失败：${findError.message}`);
   }
 
   // 3. 复用原有npm包筛选拼接逻辑
   console.log("🔍 正在筛选和拼接API相关文件...");
-  const result = await filterAndConcatApiNpmFiles(componentDir);
+  const result = await filterAndConcatApiNpmFiles(componentDir, { signal });
 
   // 4. 返回结果（包含组件目录路径）
   return {
