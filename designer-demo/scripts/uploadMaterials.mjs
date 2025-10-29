@@ -30,7 +30,7 @@ async function main() {
 
   if (!backend_url) {
     logger.error('backend_url is not set in .env.local file')
-    return
+    process.exit(1)
   }
   
   const bundlePath = path.join(process.cwd(), './public/mock/bundle.json')
@@ -47,6 +47,11 @@ async function main() {
       method: 'POST',
       body: formData
     })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`Upload failed with status ${response.status}: ${errorText}`)
+    }
     const data = await response.json()
     logger.success('File uploaded successfully:', data)
   } catch (error) {
