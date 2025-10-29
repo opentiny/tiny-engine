@@ -229,8 +229,8 @@ export default {
     }
 
     const openApplication = (template) => {
-      const baseUrl = new URL(window.location.href).origin
-      window.open(`${baseUrl}/?type=app&id=${template.id}&tenant=${template.tenantId}`, '_blank')
+      const href = window.location.href.split('?')[0] || './'
+      window.open(`${href}?type=app&id=${template.id}&tenant=${template.tenantId}`)
     }
 
     const typeClick = (type) => {
