@@ -53,7 +53,15 @@ async function main() {
       throw new Error(`Upload failed with status ${response.status}: ${errorText}`)
     }
     const data = await response.json()
-    logger.success('File uploaded successfully:', data)
+    if (data && data.success) {
+      logger.success('File uploaded successfully!')
+      logger.success('Inserted records:', data.data?.insertNum || 0)
+      logger.success('Updated records:', data.data?.updateNum || 0)
+      logger.success('Message:', data.message)
+    } else {
+      logger.warn('Upload completed but success flag is false:', data)
+      logger.warn('Upload completed with warnings:', data.message)
+    }
   } catch (error) {
     logger.error('Error uploading file:', error instanceof Error ? error.message : String(error))
   }

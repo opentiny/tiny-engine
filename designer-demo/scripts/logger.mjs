@@ -1,43 +1,67 @@
-import colors from 'picocolors'
-
 class Logger {
-  constructor(command) {
+  constructor(command = 'default') {
     this.command = command
+    this.hasColors = this.checkColorSupport()
   }
 
-  output(type, msg) {
-    const format = () => {
-      const colorMap = {
-        info: 'cyan',
-        warn: 'yellow',
-        error: 'red',
-        success: 'green'
-      }
-      const time = new Date().toLocaleTimeString()
-      const colorMsg = colors[colorMap[type]](type)
-
-      return `[${this.command}] [${colors.dim(time)}] ${colorMsg} ${msg}`
+  checkColorSupport() {
+    try {
+      require('colors')
+      return true
+    } catch (e) {
+      console.warn('colors package not found, using basic logging')
+      return false
     }
-    const _logger = console
-
-    return _logger.log(format())
   }
 
-  info(msg) {
-    this.output('info', msg)
+  output(type, ...args) {  // 支持多个参数
+    const time = new Date().toLocaleTimeString()
+    const prefix = `[${this.command}] [${time}]`
+
+    // 将所有参数合并为一个字符串
+    const message = args.map(arg => {
+      if (typeof arg === 'object') {
+        return JSON.stringify(arg, null, 2)
+      }
+      return String(arg)
+    }).join(' ')
+
+    if (this.hasColors) {
+      const colors = require('colors')
+      const colorMap = {
+        info: colors.cyan,
+        warn: colors.yellow,
+        error: colors.red,
+        success: colors.green
+      }
+
+      const coloredType = colorMap[type] ? colorMap[type](type.toUpperCase()) : type.toUpperCase()
+      console.log(`${prefix} ${coloredType} ${message}`)
+    } else {
+      const emojiMap = {
+        info: 'ℹ️',
+        warn: '⚠️',
+        error: '❌',
+        success: '✅'
+      }
+      console.log(`${prefix} ${emojiMap[type] || ''} ${message}`)
+    }
   }
 
-  warn(msg) {
-    this.output('warn', msg)
+  success(...args) {
+    this.output('success', ...args)
   }
 
-  error(msg) {
-    this.output('error', msg)
+  info(...args) {
+    this.output('info', ...args)
   }
 
-  success(msg) {
-    this.output('success', msg)
+  warn(...args) {
+    this.output('warn', ...args)
+  }
+
+  error(...args) {
+    this.output('error', ...args)
   }
 }
-
 export default Logger
