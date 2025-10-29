@@ -13,7 +13,8 @@ export default {
     configProvider: TinyConfigProvider,
     configProviderDesign: designSmbConfig,
     isShowLine: true,
-    isShowCollapse: true
+    isShowCollapse: true,
+    isShowHomePage: true
   },
   metas: [LayoutService],
   mcp
