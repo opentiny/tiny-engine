@@ -54,7 +54,7 @@
               <div class="file-diff-header">
                 <span class="file-name">{{ file.name }}</span>
                 <div style="font-size: 12px; color: #6b7280">
-                  +{{ file.additions ? 1 : 0 }} / -{{ file.deletions ? 1 : 0 }}
+                  +{{ file.additions || 0 }} / -{{ file.deletions || 0 }}
                 </div>
               </div>
               <div class="file-stats">

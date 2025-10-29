@@ -129,8 +129,12 @@ export function useVersionControlActions(
   }
 
   const compareWithCurrent = () => {
-    compareCommit(selectedCommit.value!)
-    closeDialog()
+    if (selectedCommit.value) {
+      compareCommit(selectedCommit.value)
+      closeDialog()
+    } else {
+      useNotify({ type: 'warning', message: '请先选择一个提交' })
+    }
   }
 
   const createTag = () => {

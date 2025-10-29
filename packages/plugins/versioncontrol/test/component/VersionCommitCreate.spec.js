@@ -37,7 +37,6 @@ vi.mock('@opentiny/tiny-engine-utils', () => ({
   }
 }))
 
-import { VersionManager } from '../../src/js'
 describe('CommitDialog.vue', () => {
   let wrapper
 

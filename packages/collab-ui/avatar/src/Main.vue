@@ -36,7 +36,7 @@
             <p>ID: {{ user.id || user.user.id }}</p>
             <p>Email: {{ user.email || user.user.email || 'not-set' }}</p>
             <p v-if="user.selection" class="editing-status">
-              正在编辑
+              Editing
               <span class="editing-target">{{
                 `${user.selection.componentName}组件 ID:${user.selection.schema.id}`
               }}</span>
