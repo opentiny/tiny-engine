@@ -112,7 +112,7 @@ export function useAppSchema() {
     initImportMap()
 
     // 初始化除tinyVue之外的nativeComponents
-    await initializeComponentsMap(schema.componentsMap, packages)
+    await initializeComponentsMap(schema.componentsMap || [], packages)
 
     // 初始化国际化
     initializeI18n(schema?.i18n)
