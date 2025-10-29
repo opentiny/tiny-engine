@@ -1,7 +1,18 @@
 <template>
   <component :is="configProvider" :design="configProviderDesign">
-    <div id="tiny-engine">
-      <design-toolbars :layoutRegistry="layoutRegistry"></design-toolbars>
+    <div id="tiny-engign-home" v-if="isShowDefaultHomePage || !!clickedHomePageId">
+      <design-home
+        :homeRegistry="homeRegistry"
+        :currentPageId="clickedHomePageId"
+        @backToDesigner="setHomePageId"
+      ></design-home>
+    </div>
+    <div id="tiny-engine" v-if="!isShowDefaultHomePage">
+      <design-toolbars
+        :layoutRegistry="layoutRegistry"
+        :homeRegistry="homeRegistry"
+        @openHomePage="setHomePageId"
+      ></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
@@ -36,12 +47,13 @@
 
 <script lang="ts">
 /* metaService: engine.layout.Main */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useLayout, getMergeMeta, getMergeMetaByType } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
+import DesignHome from './DesignHome.vue'
 import meta from '../meta'
 
 export default {
@@ -49,7 +61,8 @@ export default {
   components: {
     DesignToolbars,
     DesignPlugins,
-    DesignSettings
+    DesignSettings,
+    DesignHome
   },
   provide() {
     return {
@@ -60,12 +73,26 @@ export default {
     const layoutRegistry = getMergeMeta(meta.id)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
+    const isShowHomePage = layoutRegistry.options.isShowHomePage
     const { layoutState, leftMenuShownStorage, rightMenuShownStorage, initPluginStorageReactive } = useLayout()
     const { plugins, settings } = layoutState
     const canvasEntry = getMergeMeta('engine.canvas')?.entry
     const pluginRegistry = getMergeMetaByType('plugins')
+    const homeRegistry = getMergeMetaByType('home')
     // @legacy 旧版本兼容，后续废弃 type: 'setting' 的 plugin，全部改为 type: 'plugins'
     const settingRegistry = getMergeMetaByType('setting')
+    // 启用isShowHomePage = true后，且当url中不包含id=xxx即应用id时自动打开home页
+    const queryParams = new URLSearchParams(location.search)
+    const isShowDefaultHomePage = computed(() => {
+      return isShowHomePage && queryParams.get('id') === null && homeRegistry.length
+    })
+
+    // 跳转到home模块下的页面的组件ID，如果有则跳转到home下页面如应用中心
+    const clickedHomePageId = ref('')
+
+    const setHomePageId = (nodeId) => {
+      clickedHomePageId.value = nodeId
+    }
 
     const toggleNav = ({ item }) => {
       if (!item.id) return
@@ -121,7 +148,11 @@ export default {
       toggleNav,
       layoutState,
       canvasEntry,
-      pluginRegistry
+      pluginRegistry,
+      homeRegistry,
+      isShowDefaultHomePage,
+      clickedHomePageId,
+      setHomePageId
     }
   }
 }
@@ -158,5 +189,9 @@ export default {
   :deep(.monaco-editor .suggest-widget) {
     border-width: 0;
   }
+}
+
+#tiny-engine-home {
+  position: absolute;
 }
 </style>
