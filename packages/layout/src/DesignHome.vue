@@ -71,7 +71,7 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid var(--te-template-common-border-bg-color);
+    border-bottom: 1px solid var(--te-common-border-bg-divider);
     padding: 0 24px;
     .icon-arrow-left {
       font-size: 28px;
@@ -96,7 +96,7 @@ export default {
       font-size: 14px;
       padding-top: 24px;
       width: 220px;
-      border-right: 1px solid var(--te-template-common-border-bg-color);
+      border-right: 1px solid var(--te-common-border-bg-divider);
     }
   }
   .menu-item {
@@ -106,11 +106,11 @@ export default {
       padding-right: 4px;
     }
     &:hover {
-      background: var(--te-template-common-bg-color-hover);
+      background: var(--te-common-bg-container);
     }
   }
   .active {
-    background: var(--te-template-common-bg-color-active);
+    background: var(--te-common-bg-container);
     position: relative;
     &::before {
       content: '';
@@ -119,13 +119,13 @@ export default {
       left: 0px;
       width: 2px;
       height: 100%;
-      background: var(--te-template-common-before-bg-color);
+      background: var(--te-common-bg-primary);
     }
   }
   .manager-container {
     padding: 20px;
     width: calc(100% - 220px);
-    background: var(--te-template-common-container-bg-color);
+    background: var(--te-common-bg-container);
   }
 }
 </style>
