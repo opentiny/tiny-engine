@@ -25,15 +25,15 @@ const load = (http, options, dataSource, shouldFetch, parsedDataHandler) => (par
   // 无 options 视为本地/静态数据
   if (!options) {
     try {
-      const raw = globalDataHandle(dataSource.config.data)
+      let raw = globalDataHandle(dataSource.config.data)
+      if (parsedDataHandler) {
+        raw = parsedDataHandler(raw)
+      }
       const items = Array.isArray(raw) ? raw : raw ? [raw] : []
       const wrapped = { code: '', msg: 'success', data: { items, total: items.length } }
-
-      // 对静态数据也应用单个数据源的dataHandler，确保处理逻辑统一
-      const handled = parsedDataHandler ? parsedDataHandler(wrapped) : wrapped
       dataSource.status = 'loaded'
-      dataSource.data = handled
-      return Promise.resolve(handled)
+      dataSource.data = wrapped
+      return Promise.resolve(wrapped)
     } catch (e) {
       dataSource.status = 'error'
       dataSource.error = e
