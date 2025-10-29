@@ -36,7 +36,7 @@
 
 我们在图片的物料中内置了选择资源的组件 SourceSelectConfigurator，只要配置了这个Configurator的组件都可以进行资源选择并绑定
 
-![使用资源](./imgs/resourceBind.gif)
+![使用资源](./imgs/resourceBind.png)
 
 #### 其他组件使用资源
 
