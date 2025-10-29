@@ -81,7 +81,7 @@ async function createRouterConfig() {
     return routeConfs
   }
 
-  const routes = generateRoutesByPages(pages.value)
+  const routes = generateRoutesByPages(pages.value || [])
 
   routes.push({
     path: '/:pathMatch(.*)*',
