@@ -43,9 +43,10 @@ import {
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
 import { Button, DialogBox, TinyAlert } from '@opentiny/vue'
-import { nextTick, provide, reactive, ref } from 'vue'
+import { nextTick, provide, reactive, ref, toRaw } from 'vue'
 import MagicString from 'magic-string'
 import meta from '../../meta'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 const dialogVisible = ref(false)
 
@@ -125,6 +126,14 @@ export default {
       nodeProps[eventName].value = `this.${name}`
 
       useHistory().addHistory()
+
+      // 多人协作， 同步methods
+      useRealtimeCollab().updateMethodNode({
+        type: 'node',
+        nodeId: pageState?.currentSchema?.id,
+        methodsName: eventName,
+        methods: toRaw(nodeProps[eventName])
+      })
     }
 
     const resetTipError = () => {

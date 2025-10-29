@@ -16,6 +16,10 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-common/component': path.resolve(basePath, 'packages/common/component'),
     '@opentiny/tiny-engine-common/js': path.resolve(basePath, 'packages/common/js'),
     '@opentiny/tiny-engine-common': path.resolve(basePath, 'packages/common/index.ts'),
+    '@opentiny/tiny-engine-multi-person-collaboration': path.resolve(
+      basePath,
+      'packages/multi-person-collaboration/src/index'
+    ),
     '@opentiny/tiny-engine-plugin-materials': path.resolve(basePath, 'packages/plugins/materials/index.ts'),
     '@opentiny/tiny-engine-plugin-block': path.resolve(basePath, 'packages/plugins/block/index.ts'),
     '@opentiny/tiny-engine-plugin-state': path.resolve(basePath, 'packages/plugins/state/index.ts'),
@@ -29,6 +33,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-plugin-bridge': path.resolve(basePath, 'packages/plugins/bridge/index.ts'),
     '@opentiny/tiny-engine-plugin-tutorial': path.resolve(basePath, 'packages/plugins/tutorial/index.ts'),
     '@opentiny/tiny-engine-plugin-robot': path.resolve(basePath, 'packages/plugins/robot/index.ts'),
+    '@opentiny/tiny-engine-plugin-version-control': path.resolve(basePath, 'packages/plugins/versioncontrol/index.ts'),
     '@opentiny/tiny-engine-settings-panel': path.resolve(basePath, 'packages/settings/panel/index.ts'),
     '@opentiny/tiny-engine-setting-events': path.resolve(basePath, 'packages/settings/events/index.ts'),
     '@opentiny/tiny-engine-setting-props': path.resolve(basePath, 'packages/settings/props/index.ts'),
@@ -60,7 +65,9 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.ts'),
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
-    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')
+    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts'),
+    '@opentiny/tiny-engine-collab-ui-cursor': path.resolve(basePath, 'packages/collab-ui/cursor/index.ts'),
+    '@opentiny/tiny-engine-collab-ui-avatar': path.resolve(basePath, 'packages/collab-ui/avatar/index.ts')
   }
 }
 

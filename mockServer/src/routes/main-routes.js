@@ -224,4 +224,50 @@ router.post('block-history/create', async (ctx) => {
   ctx.body = await mockService.blockHistoryService.create(ctx.request.body)
 })
 
+// 版本管理
+router.get('/app-center/api/version/branch/getById/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.branchService.findById(id)
+})
+
+router.get('/app-center/api/version/branch/getByName/:name', async (ctx) => {
+  const { name } = ctx.params
+  ctx.body = await mockService.branchService.findByName(name)
+})
+
+router.post('/app-center/api/version/branch/create', async (ctx) => {
+  ctx.body = await mockService.branchService.create(ctx.request.body)
+})
+
+router.post('/app-center/api/version/branch/update/:id', async (ctx) => {
+  const { id } = ctx.params
+  const { body } = ctx.request
+  ctx.body = await mockService.branchService.update(id, body)
+})
+
+router.get('/app-center/api/version/branch/list/:appId', async (ctx) => {
+  const { appId } = ctx.params
+  ctx.body = await mockService.branchService.list(appId)
+})
+
+router.get('/app-center/api/version/commit/detail/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.commitService.detail(id)
+})
+
+router.post('/app-center/api/version/commit/create', async (ctx) => {
+  ctx.body = await mockService.commitService.create(ctx.request.body)
+})
+
+router.get('/app-center/api/version/commit/list/:appId', async (ctx) => {
+  const { appId } = ctx.params
+  ctx.body = await mockService.commitService.list(appId)
+})
+
+router.post('/app-center/api/version/commit/update/:id', async (ctx) => {
+  const { id } = ctx.params
+  const { body } = ctx.request
+  ctx.body = await mockService.commitService.update(id, body)
+})
+
 export default router

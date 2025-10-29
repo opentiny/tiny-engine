@@ -1,5 +1,6 @@
 <template>
-  <div v-for="state in multiSelectedStates" :key="state.id">
+  <component :is="cursorComponent.entry"></component>
+  <div v-for="state in allMultiSelectedStates" :key="state.id">
     <canvas-action
       :hoverState="hoverState"
       :inactiveHoverState="inactiveHoverState"
@@ -60,7 +61,15 @@
 <script>
 import { onMounted, ref, computed, onUnmounted, watch, watchEffect } from 'vue'
 import { iframeMonitoring } from '@opentiny/tiny-engine-common/js/monitor'
-import { useTranslate, useCanvas, useMessage, useResource } from '@opentiny/tiny-engine-meta-register'
+import {
+  useTranslate,
+  useCanvas,
+  useMessage,
+  useResource,
+  getMergeMeta,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { NODE_UID, NODE_LOOP, DESIGN_MODE } from '../../common'
 import { registerHotkeyEvent, removeHotkeyEvent } from './keyboard'
 import CanvasMenu, { closeMenu, openMenu } from './components/CanvasMenu.vue'
@@ -91,8 +100,12 @@ import {
   clearLineState,
   querySelectById,
   getCurrent,
-  canvasApi
+  canvasApi,
+  getRect
 } from './container'
+import { initHook, HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
+import { useCollabSchema, useCollabCursor } from '@opentiny/tiny-engine-multi-person-collaboration'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -113,6 +126,7 @@ export default {
   },
   emits: ['selected', 'remove'],
   setup(props, { emit }) {
+    const cursorComponent = getMergeMeta('engine.collabUI.cursor')
     const iframe = ref(null)
     const insertPanel = ref(null)
     const insertPosition = ref(false)
@@ -137,6 +151,91 @@ export default {
     const currentDragType = ref(DRAG_TYPE.NONE)
 
     const { multiSelectedStates, isMouseDown } = useMultiSelect()
+
+    const currentUser = {
+      id: 'user-2',
+      name: 'Bob',
+      color: '#1296db',
+      email: 'opentiny@tiny-engine',
+      avatarUrl: 'https://avatars.githubusercontent.com/u/3?v=4'
+    }
+
+    // Awareness 是否完成初始化，initHook之后才能得到 remoteStates数据
+    const isReady = ref(false)
+
+    // Awareness 远端数据
+    const remoteStates = ref({})
+
+    // 滚动保持节点位置同步
+    const syncRemoteStatesSelections = ref([])
+
+    // 全部 Selection States 信息
+    const allMultiSelectedStates = computed(() => {
+      return [...multiSelectedStates.value, ...syncRemoteStatesSelections.value]
+    })
+
+    // 将 state 映射成带位置信息的 selection
+    const mapStateToSelection = (state, selection) => {
+      const element = querySelectById(selection.id)
+      if (!element) return null
+
+      const { top, left, width, height } = getRect(element)
+      return {
+        ...state,
+        isRemote: true,
+        user: state.user,
+        top,
+        left,
+        width,
+        height,
+        selection
+      }
+    }
+
+    // 远端 selections，自动过滤不存在的元素
+    const baseInfo = ref(getMetaApi(META_SERVICE.GlobalService).getBaseInfo())
+    const currentPageId = ref(baseInfo.value.pageId)
+    const search = ref(location.search)
+
+    // 更新函数：当 URL 改变时执行
+    const updateSearch = () => {
+      search.value = location.search
+    }
+
+    const remoteStatesSelections = computed(() => {
+      if (!remoteStates.value) return []
+
+      const pageId = currentPageId.value
+
+      return Object.values(remoteStates.value)
+        .filter((state) => state.pageId === pageId)
+        .flatMap((state) => {
+          const selections = Array.isArray(state.selection) ? state.selection : [state.selection]
+
+          return selections
+            .filter(Boolean)
+            .map((sel) => mapStateToSelection(state, sel))
+            .filter(Boolean)
+        })
+    })
+
+    // 手动刷新远端节点位置
+    const syncRemoteNode = () => {
+      syncRemoteStatesSelections.value = syncRemoteStatesSelections.value
+        .map((selState) => {
+          const element = querySelectById(selState.selection.id)
+          if (!element) return null
+          const { top, left, width, height } = getRect(element)
+          return {
+            ...selState,
+            top,
+            left,
+            width,
+            height
+          }
+        })
+        .filter(Boolean)
+    }
 
     const multiStateLength = computed(() => multiSelectedStates.value.length)
     const {
@@ -270,8 +369,14 @@ export default {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         let isScrolling = false
 
+        const { updateCursorPositioin, mouseUpHandler, mouseDownHandler, updateCursorPageId } = useCollabCursor({
+          roomId: 'cursor-yjs',
+          currentUser
+        })
+
         // 监听鼠标按下事件
         win.addEventListener('mousedown', (event) => {
+          mouseDownHandler()
           handleCanvasEvent(() => {
             // html元素使用scroll和mouseup事件处理
             if (event.target === doc.documentElement) {
@@ -304,6 +409,7 @@ export default {
         // 监听鼠标移动事件
         win.addEventListener('mousemove', (ev) => {
           handleCanvasEvent(() => {
+            updateCursorPositioin(ev)
             // 根据当前拖拽类型执行相应操作
             switch (currentDragType.value) {
               case DRAG_TYPE.MULTI:
@@ -331,6 +437,7 @@ export default {
         // 监听拖拽结束事件
         win.addEventListener('mouseup', (ev) => {
           handleCanvasEvent(() => {
+            mouseUpHandler()
             if (ev.button === 0 && isMouseDown.value) {
               isMouseDown.value = false
 
@@ -397,6 +504,41 @@ export default {
         registerHotkeyEvent(doc)
 
         win.addEventListener('scroll', syncNodeScroll, true)
+        win.addEventListener('scroll', syncRemoteNode, true)
+
+        const {
+          insertSharedNode,
+          deleteSharedNode,
+          updateUserSelection,
+          updateUserPage,
+          moveDownSharedNode,
+          moveUpSharedNode,
+          updateStyleNode,
+          updatePropsNode,
+          updateMethodNode,
+          updateAttributesNode,
+          remoteStates
+        } = useCollabSchema({
+          roomId: 'schema-yjs',
+          currentUser
+        })
+
+        initHook(HOOK_NAME.useRealtimeCollab, {
+          insertSharedNode,
+          deleteSharedNode,
+          updateUserSelection,
+          updateUserPage,
+          moveDownSharedNode,
+          moveUpSharedNode,
+          updateStyleNode,
+          updatePropsNode,
+          updateMethodNode,
+          updateAttributesNode,
+          updateCursorPageId,
+          remoteStates
+        })
+
+        isReady.value = true
       }
     }
     // 设置弹窗
@@ -441,18 +583,62 @@ export default {
       hoverState.slot = slotName
     }
 
-    onMounted(() => run(iframe))
+    onMounted(() => {
+      run(iframe)
+
+      window.addEventListener('popstate', updateSearch)
+      // 劫持 pushState / replaceState，使编程式跳转也能触发
+      const { pushState, replaceState } = history
+      history.pushState = function (...args) {
+        pushState.apply(this, args)
+        updateSearch()
+      }
+      history.replaceState = function (...args) {
+        replaceState.apply(this, args)
+        updateSearch()
+      }
+    })
     onUnmounted(() => {
       if (iframe.value?.contentDocument) {
         removeHotkeyEvent(iframe.value.contentDocument)
       }
       window.removeEventListener('message', updateI18n, false)
+      window.removeEventListener('popstate', updateSearch)
     })
 
     document.addEventListener('beforeCanvasReady', beforeCanvasReady)
     document.addEventListener('canvasReady', canvasReady)
 
+    watch(isReady, (newVal) => {
+      if (newVal) {
+        useRealtimeCollab().updateUserPage(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
+        useRealtimeCollab().updateCursorPageId(getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId)
+        const newStates = useRealtimeCollab().remoteStates
+        remoteStates.value = newStates
+        currentPageId.value = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().pageId
+
+        // 用户头像展示编辑内容
+        useRealtimeCollab().collabState = newStates
+      }
+    })
+
+    watch(
+      remoteStatesSelections,
+      (newVal) => {
+        syncRemoteStatesSelections.value = newVal
+      },
+      { immediate: true }
+    )
+
+    // 当 search 改变时重新更新 baseInfo
+    watch(search, () => {
+      const newInfo = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      baseInfo.value = newInfo
+      currentPageId.value = newInfo.pageId
+    })
+
     return {
+      cursorComponent,
       isMouseDown,
       iframe,
       dragState,
@@ -477,7 +663,11 @@ export default {
       srcAttrName,
       isMultiDragging,
       multiDragState,
-      getMultiDragPositionText
+      getMultiDragPositionText,
+      remoteStates,
+      allMultiSelectedStates,
+      remoteStatesSelections,
+      syncRemoteStatesSelections
     }
   }
 }

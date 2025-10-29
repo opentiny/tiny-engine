@@ -189,4 +189,25 @@ export default {
 :deep(.monaco-editor .editorPlaceholder) {
   font-size: 12px !important;
 }
+:global(.yRemoteSelection) {
+  background-color: rgba(250, 129, 0, 0.5);
+}
+
+:global(.yRemoteSelectionHead) {
+  position: absolute;
+  border-left: orange solid 2px;
+  border-top: orange solid 2px;
+  border-bottom: orange solid 2px;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+:global(.yRemoteSelectionHead::after) {
+  position: absolute;
+  content: ' ';
+  border: 3px solid orange;
+  border-radius: 4px;
+  left: -4px;
+  top: -5px;
+}
 </style>

@@ -6,10 +6,11 @@
       top: selectState.top + 'px',
       left: selectState.left + 'px',
       height: selectState.height + 'px',
-      width: selectState.width + 'px'
+      width: selectState.width + 'px',
+      ...(haveRemoteState ? { border: `2px solid ${selectState.user.color}` } : {})
     }"
   >
-    <div v-if="showQuickAction" ref="labelRef" class="corner-mark-left" :style="labelStyle">
+    <div v-if="showQuickAction && !haveRemoteState" ref="labelRef" class="corner-mark-left" :style="labelStyle">
       <span>{{ selectState.componentName }}</span>
       <TinyPopover
         v-model="showPopover"
@@ -25,8 +26,17 @@
         </template>
       </TinyPopover>
     </div>
+    <!-- 多人协作选区 -->
+    <div
+      v-if="haveRemoteState"
+      ref="remoteRef"
+      class="corner-mark-left"
+      :style="[remoteStyle, { backgroundColor: selectState.user.color }]"
+    >
+      <span> {{ selectState.user.name }} 正在编辑 </span>
+    </div>
     <!-- 绝对定位画布时调节元素大小 -->
-    <template v-else>
+    <template v-if="!showQuickAction">
       <div
         :class="[showAction && 'drag-resize', 'resize-top']"
         draggable="true"
@@ -68,7 +78,7 @@
         @mousedown.stop="onMousedown($event, 'end', 'end')"
       ></div>
     </template>
-    <div v-if="showAction" ref="optionRef" class="corner-mark-right" :style="fixStyle">
+    <div v-if="showAction && !haveRemoteState" ref="optionRef" class="corner-mark-right" :style="fixStyle">
       <template v-if="!isModal">
         <div v-if="showToParent" title="选择父级">
           <icon-chevron-left class="svg-currentcolor" @click.stop="selectParent"></icon-chevron-left>
@@ -136,6 +146,7 @@ import {
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -224,11 +235,13 @@ export default {
     const moveUp = () => {
       const { parent, schema } = getCurrent()
       moveChild(parent?.children, schema, -1)
+      useRealtimeCollab().moveUpSharedNode(parent.id, schema.id, 'up')
     }
 
     const moveDown = () => {
       const { parent, schema } = getCurrent()
       moveChild(parent?.children, schema, 1)
+      useRealtimeCollab().moveDownSharedNode(parent.id, schema.id, 'down')
     }
 
     const selectParent = () => {
@@ -257,6 +270,11 @@ export default {
 
     const isSingleNode = computed(() => {
       return props.multiStateLength < 2
+    })
+
+    const haveRemoteState = computed(() => {
+      const user = props.selectState?.user
+      return user !== null && user !== undefined && Object.keys(user).length > 0
     })
 
     const showAction = computed(() => {
@@ -337,7 +355,10 @@ export default {
     )
 
     const labelRef = ref(null)
+    const remoteRef = ref(null)
+
     const labelStyle = ref('')
+    const remoteStyle = ref('')
 
     const positions = {
       LEFT: 'left',
@@ -586,12 +607,13 @@ export default {
 
       return {
         labelStyleValue: labelAlign.toStyleValue(),
-        optionStyleValue: optionAlign.toStyleValue()
+        optionStyleValue: optionAlign.toStyleValue(),
+        remoteStyleValue: labelAlign.toStyleValue()
       }
     }
 
     watchPostEffect(async () => {
-      const { left, top, width, height, doc } = props.selectState
+      const { left, top, width, height, doc } = props.selectState || props.selectState.selection
 
       // template上虽然已经判断了showQuickAction，这里再加上主要是为了watchPostEffect能够监听它，然后刷新action
       if (!showQuickAction.value) {
@@ -617,7 +639,7 @@ export default {
       const { width: optionWidth } = optionRef.value.getBoundingClientRect()
 
       // canvas容器中，iframe以及iframe之外的元素clientRect的尺寸都是缩放过的，除以scale得到原始大小
-      const { labelStyleValue, optionStyleValue } = getStyleValues(
+      const { labelStyleValue, optionStyleValue, remoteStyleValue } = getStyleValues(
         { left, top, width, height, doc },
         { width: canvasRect.width / scale, height: canvasRect.height / scale },
         labelWidth / scale,
@@ -626,6 +648,7 @@ export default {
 
       labelStyle.value = labelStyleValue
       fixStyle.value = optionStyleValue
+      remoteStyle.value = remoteStyleValue
     })
 
     return {
@@ -639,13 +662,16 @@ export default {
       fixStyle,
       showAction,
       showQuickAction,
+      haveRemoteState,
       showPopover,
       showToParent,
       activeSetting,
       isModal,
       onMousedown,
       labelStyle,
-      labelRef
+      labelRef,
+      remoteRef,
+      remoteStyle
     }
   }
 }

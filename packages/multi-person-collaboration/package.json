@@ -1,0 +1,68 @@
+{
+  "name": "@opentiny/tiny-engine-multi-person-collaboration",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TinyEngine plugin: provides multi-person real-time collaboration editing capability based on Yjs",
+  "keywords": [
+    "tiny-engine",
+    "collaboration",
+    "multi-person",
+    "realtime",
+    "yjs",
+    "vue"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/plugins/multi-person-collaboration"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "homepage": "https://opentiny.design/tiny-engine",
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "dependencies": {
+    "@opentiny/tiny-engine-canvas": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*"
+  },
+  "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "glob": "^10.0.0",
+    "lib0": "^0.2.85",
+    "lodash-es": "^4.17.21",
+    "mitt": "^3.0.1",
+    "uuid": "^9.0.1",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2",
+    "vitest": "^1.4.0",
+    "vue": "^3.4.21",
+    "y-monaco": "^0.1.6",
+    "y-protocols": "^1.0.6",
+    "y-websocket": "^2.0.0",
+    "yjs": "^13.6.8"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.21",
+    "y-monaco": "^0.1.6",
+    "y-protocols": "^1.0.6",
+    "y-websocket": "^2.0.0",
+    "yjs": "^13.6.8"
+  }
+}

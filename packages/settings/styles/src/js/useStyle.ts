@@ -16,6 +16,7 @@ import { useCanvas, useHistory, useProperties as useProps, getOptions } from '@o
 import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 const { EXPRESSION_TYPE } = constants
 const { generateRandomLetters, parseExpression } = utils
@@ -259,9 +260,16 @@ export const initStylePanelWatch = () => {
 }
 
 export const updateGlobalStyleStr = (styleStr: string) => {
-  const { updateSchema } = useCanvas()
+  const { updateSchema, getSchema: getCanvasPageSchema } = useCanvas()
+  const { getSchema } = useProps()
+  const schema = getSchema() || getCanvasPageSchema()
+
+  const schemaId = schema.id
+  const classNames = schema.props.className || ''
 
   updateSchema({ css: styleStr })
+  // 多人协同 样式同步
+  useRealtimeCollab().updateStyleNode(styleStr, schemaId, classNames)
   state.schemaUpdateKey++
 }
 

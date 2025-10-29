@@ -22,7 +22,8 @@ import {
   useModal,
   useNotify,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useRealtimeCollab
 } from '@opentiny/tiny-engine-meta-register'
 import http from '../http'
 
@@ -443,6 +444,11 @@ const switchPage = (pageId: string | number, clearPreview = false) => {
 
     return
   }
+
+  // 实时同步所在页面
+  useRealtimeCollab().updateUserPage(pageId)
+  useRealtimeCollab().updateUserSelection(null)
+  useRealtimeCollab().updateCursorPageId(pageId)
 
   return http
     .fetchPageDetail(pageId)

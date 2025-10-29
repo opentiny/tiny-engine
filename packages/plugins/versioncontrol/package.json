@@ -1,0 +1,54 @@
+{
+  "name": "@opentiny/tiny-engine-plugin-version-control",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "coverage": "vitest run --coverage"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/opentiny/tiny-engine",
+    "directory": "packages/plugins/versioncontrol"
+  },
+  "bugs": {
+    "url": "https://github.com/opentiny/tiny-engine/issues"
+  },
+  "author": "OpenTiny Team",
+  "license": "MIT",
+  "homepage": "https://opentiny.design/tiny-engine",
+  "dependencies": {
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-canvas": "workspace:*",
+    "jsondiffpatch": "^0.6.0",
+    "diff-match-patch": "^1.0.5"
+  },
+  "devDependencies": {
+    "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@vitejs/plugin-vue": "^5.1.2",
+    "@vitejs/plugin-vue-jsx": "^4.0.1",
+    "vite": "^5.4.2",
+    "@types/diff-match-patch": "^1.0.36",
+    "vitest": "^2.1.4",
+    "@vue/test-utils": "^2.4.6",
+    "jsdom": "^24.1.1",
+    "@testing-library/jest-dom": "^6.6.3"
+  },
+  "peerDependencies": {
+    "@opentiny/vue": "^3.20.0",
+    "@opentiny/vue-icon": "^3.20.0",
+    "@opentiny/vue-renderless": "^3.20.0",
+    "vue": "^3.4.15"
+  }
+}

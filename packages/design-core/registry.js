@@ -40,6 +40,7 @@ import {
   Block,
   Datasource,
   Robot,
+  VersionControl,
   Props,
   Events,
   Styles,
@@ -49,7 +50,8 @@ import {
   GlobalService,
   ThemeSwitchService,
   HttpService,
-  McpService
+  Cursor,
+  Avatar
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -160,12 +162,17 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.versioncontrol'] === false ? null : VersionControl
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
+  ],
+  collabUI: [
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.cursor'] === false ? null : Cursor,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.collabUI.avatar'] === false ? null : Avatar
   ],
   canvas: Canvas
 }

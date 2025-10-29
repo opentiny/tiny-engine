@@ -1,5 +1,5 @@
 <template>
-  <toolbar-base :options="options">
+  <toolbar-base :options="options" @click="openVersionControl">
     <template #default>
       <span class="collaboration-container">
         <tiny-popover
@@ -94,9 +94,15 @@ export default {
       return true
     }
 
+    const openVersionControl = () => {
+      const { PLUGIN_NAME, activePlugin } = useLayout()
+      activePlugin(PLUGIN_NAME.VersionControl).then(() => {})
+    }
+
     return {
       state,
-      isSingle
+      isSingle,
+      openVersionControl
     }
   }
 }

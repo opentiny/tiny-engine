@@ -88,7 +88,8 @@ import {
   useMaterial,
   getMetaApi,
   META_APP,
-  useMessage
+  useMessage,
+  useRealtimeCollab
 } from '@opentiny/tiny-engine-meta-register'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import { BlockLinkEvent, SvgButton } from '@opentiny/tiny-engine-common'
@@ -194,6 +195,12 @@ export default {
         delete pageState.currentSchema.props[action.eventName]
 
         useMessage().publish({ topic: 'schemaChange', data: { props: pageState.currentSchema.props } })
+        // 多人协作适配
+        useRealtimeCollab().updateMethodNode({
+          type: 'delete-method',
+          nodeId: pageState?.currentSchema?.id,
+          methodsName: action.eventName
+        })
       }
     }
 

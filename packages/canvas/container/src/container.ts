@@ -26,6 +26,7 @@ import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import Builtin from '../../render/src/builtin/builtin.json' //TODO 画布内外应该分开
 import { useMultiSelect } from './composables/useMultiSelect'
 import type { Node, RootNode } from '../../types'
+import { useRealtimeCollab } from '@opentiny/tiny-engine-meta-register'
 
 export interface DragOffset {
   offsetX: number
@@ -310,6 +311,9 @@ const insertAfter = ({ parent, node, data }: InsertOptions) => {
     position: 'after',
     referTargetNodeId: node.id
   })
+
+  // 多人协作同步
+  useRealtimeCollab().insertSharedNode({ node, parent, data }, POSITION.BOTTOM)
 }
 
 const insertReplace = ({ parent, node, data }: InsertOptions) => {
@@ -327,6 +331,9 @@ const insertReplace = ({ parent, node, data }: InsertOptions) => {
       position: 'replace',
       referTargetNodeId: node.id
     })
+
+    // 多人协作同步
+    useRealtimeCollab().insertSharedNode({ node, parent, data }, POSITION.REPLACE)
   }
 }
 
@@ -342,6 +349,9 @@ const insertBefore = ({ parent, node, data }: InsertOptions) => {
     position: 'before',
     referTargetNodeId: node.id
   })
+
+  // 多人协作同步
+  useRealtimeCollab().insertSharedNode({ node, parent, data }, POSITION.TOP)
 }
 
 const insertInner = ({ node, data }: Omit<InsertOptions, 'parent'>, position: string = '') => {
@@ -355,6 +365,9 @@ const insertInner = ({ node, data }: Omit<InsertOptions, 'parent'>, position: st
     newNodeData: data,
     position: ([POSITION.TOP, POSITION.LEFT] as string[]).includes(position) ? 'before' : 'after'
   })
+
+  // 多人协作同步
+  useRealtimeCollab().insertSharedNode({ node, parent: node, data }, position)
 }
 
 export const removeNode = (id: string) => {
@@ -362,6 +375,8 @@ export const removeNode = (id: string) => {
     type: 'delete',
     id
   })
+  // 多人协作同步
+  useRealtimeCollab().deleteSharedNode(id)
 }
 
 // 添加外部容器
@@ -377,6 +392,9 @@ const insertContainer = ({ parent, node, data }: InsertOptions) => {
     position: POSITION.OUT,
     referTargetNodeId: node.id
   })
+
+  // 多人协作同步
+  useRealtimeCollab().insertSharedNode({ node, parent, data }, POSITION.OUT)
 }
 
 export const removeNodeById = (id: string) => {
