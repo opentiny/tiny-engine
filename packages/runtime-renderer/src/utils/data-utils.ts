@@ -1,6 +1,14 @@
-import { utils as commonUtils } from '@opentiny/tiny-engine-utils'
-export const { parseFunction: generateFunction } = commonUtils
+const fun_ctor = Function
 
+export function generateFunction(rawCode: any, context = {}) {
+  try {
+    return fun_ctor(`return (${rawCode})`).call(context).bind(context)
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(`generateFunction error: ${JSON.stringify(error)}`)
+    return null
+  }
+}
 export const reset = (obj) => {
   Object.keys(obj).forEach((key) => delete obj[key])
 }
