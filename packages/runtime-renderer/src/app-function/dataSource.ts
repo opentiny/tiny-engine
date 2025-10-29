@@ -21,16 +21,19 @@ const dataSourceMap: Record<string, any> = {}
 let globalDataHandle: (res: any) => any = (res) => res
 
 // 统一的 load 构造
-const load = (http, options, dataSource, shouldFetch) => (params?, customUrl?) => {
+const load = (http, options, dataSource, shouldFetch, parsedDataHandler) => (params?, customUrl?) => {
   // 无 options 视为本地/静态数据
   if (!options) {
     try {
       const raw = globalDataHandle(dataSource.config.data)
       const items = Array.isArray(raw) ? raw : raw ? [raw] : []
       const wrapped = { code: '', msg: 'success', data: { items, total: items.length } }
+
+      // 对静态数据也应用单个数据源的dataHandler，确保处理逻辑统一
+      const handled = parsedDataHandler ? parsedDataHandler(wrapped) : wrapped
       dataSource.status = 'loaded'
-      dataSource.data = wrapped
-      return Promise.resolve(wrapped)
+      dataSource.data = handled
+      return Promise.resolve(handled)
     } catch (e) {
       dataSource.status = 'error'
       dataSource.error = e
@@ -101,8 +104,8 @@ export const initDataSource = (config: any) => {
     http.interceptors.request.use(willFetch, errorHandler)
     http.interceptors.response.use(dataHandler, errorHandler)
 
-    // 设置 load 方法
-    dataSource.load = load(http, item.options, dataSource, shouldFetch)
+    // 设置 load 方法，传递 parsedDataHandler 参数
+    dataSource.load = load(http, item.options, dataSource, shouldFetch, parsedDataHandler)
 
     // 存储到映射中
     dataSourceMap[item.name] = dataSource
