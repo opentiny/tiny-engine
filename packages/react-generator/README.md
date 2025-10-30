@@ -172,35 +172,40 @@ const [state, setState] = useState({ username: '' })
 
 ### 2. 生命周期管理
 
-自动转换React组件的生命周期方法。
+TinyEngine DSL 仅支持 Vue3 风格的生命周期钩子，生成器会自动映射为 React 的生命周期实现（类组件方法/函数组件 hooks）。
 
-#### 支持的生命周期
+#### Vue3 → React 映射
 
-- `componentDidMount` - 组件挂载后
-- `componentWillUnmount` - 组件卸载前
-- `componentDidUpdate` - 组件更新后
-- `componentDidCatch` - 错误边界捕获
-- `componentWillMount` - 组件挂载前
-- `shouldComponentUpdate` - 控制组件更新
+- onBeforeMount → componentWillMount（以 useLayoutEffect 模拟）
+- onMounted → componentDidMount（useEffect 空依赖）
+- onBeforeUpdate → componentDidUpdate（近似映射）
+- onUpdated → componentDidUpdate
+- onBeforeUnmount → componentWillUnmount（useEffect 返回清理函数）
+- onUnmounted → componentWillUnmount
+- onErrorCaptured → componentDidCatch（类组件错误边界）
+- onActivated → componentDidMount（近似映射）
+- onDeactivated → componentWillUnmount（近似映射）
+
+当多个 Vue 钩子映射到同一个 React 生命周期时，会顺序合并其函数体。
 
 #### 使用示例
 
 ```javascript
-// DSL Schema
+// DSL Schema（Vue3 生命周期）
 {
   "lifeCycles": {
-    "componentDidMount": {
+    "onMounted": {
       "type": "JSFunction",
-      "value": "function componentDidMount() { console.log('Component mounted') }"
+      "value": "function onMounted() { console.log('Component mounted') }"
     },
-    "componentWillUnmount": {
-      "type": "JSFunction", 
-      "value": "function componentWillUnmount() { console.log('Component unmounted') }"
+    "onBeforeUnmount": {
+      "type": "JSFunction",
+      "value": "function onBeforeUnmount() { console.log('Component unmounted') }"
     }
   }
 }
 
-// 生成的React代码
+// 生成的 React 类组件片段
 class MyComponent extends React.Component {
   componentDidMount() {
     console.log('Component mounted')
@@ -208,10 +213,6 @@ class MyComponent extends React.Component {
 
   componentWillUnmount() {
     console.log('Component unmounted')
-  }
-
-  render() {
-    return <div>Hello World</div>
   }
 }
 ```

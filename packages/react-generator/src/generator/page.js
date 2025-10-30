@@ -551,22 +551,49 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
       return `  ${asyncPrefix}function ${key}(${params.join(',')}) { ${convertedBody} }`
     })
 
-  // 处理生命周期
-  const lifecycleMap = Object.entries(lifeCycles)
-    .filter(([, item]) => item?.value)
-    .reduce((acc, [key, item]) => {
-      acc[key] = item
-      return acc
-    }, {})
-
-  const hasLifecycleMethods = Object.keys(lifecycleMap).length > 0
-  const jsxNode = generateJSXNode(schema, state, description, true, hasLifecycleMethods)
+  // 处理生命周期（支持 Vue3 DSL 钩子并映射到 React）
+  const normalizeLifecycleKey = (key = '') => key.trim()
+  const vueToReactLifecycleKey = (key) => {
+    const k = normalizeLifecycleKey(key)
+    const map = {
+      // Vue3 -> React
+      onBeforeMount: 'componentWillMount',
+      onMounted: 'componentDidMount',
+      onBeforeUpdate: 'componentDidUpdate', // 近似：在 React 中可用 didUpdate 覆盖
+      onUpdated: 'componentDidUpdate',
+      onBeforeUnmount: 'componentWillUnmount',
+      onUnmounted: 'componentWillUnmount',
+      onErrorCaptured: 'componentDidCatch',
+      onActivated: 'componentDidMount', // 近似：激活时视为挂载
+      onDeactivated: 'componentWillUnmount'
+    }
+    return map[k] || k
+  }
 
   // 工具函数：提取函数体
   const extractFunctionBody = (functionStr) => {
     const match = functionStr.match(/function\s+\w+\s*\([^)]*\)\s*\{([^}]*)\}/)
     return match ? match[1].trim() : ''
   }
+
+  // 将 Vue3 钩子合并映射到 React 生命周期方法
+  const lifecycleMap = Object.entries(lifeCycles)
+    .filter(([, item]) => item?.value)
+    .reduce((acc, [rawKey, item]) => {
+      const reactKey = vueToReactLifecycleKey(rawKey)
+      // 将函数名标准化为目标 React 钩子名，便于类组件方法生成
+      const fnStr = String(item.value)
+      const replaced = fnStr.replace(/function\s+\w+\s*\(/, `function ${reactKey}(`)
+      const merged = acc[reactKey]?.value
+        ? // 合并多个 Vue 钩子到同一 React 方法：顺序追加函数体
+          `function ${reactKey}() { ${extractFunctionBody(acc[reactKey].value)}; ${extractFunctionBody(replaced)} }`
+        : replaced
+      acc[reactKey] = { ...item, value: merged }
+      return acc
+    }, {})
+
+  const hasLifecycleMethods = Object.keys(lifecycleMap).length > 0
+  const jsxNode = generateJSXNode(schema, state, description, true, hasLifecycleMethods)
 
   // 工具函数：转换为类方法
   const convertToClassMethod = (functionStr) => {
