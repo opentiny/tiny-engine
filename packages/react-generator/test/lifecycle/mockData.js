@@ -16,21 +16,21 @@ export const lifecycleTestSchema = {
     }
   },
   lifeCycles: {
-    componentDidMount: {
+    onMounted: {
       type: 'JSFunction',
-      value: 'function componentDidMount() { console.log("Component mounted") }'
+      value: 'function onMounted() { console.log("Component mounted") }'
     },
-    componentWillUnmount: {
+    onBeforeUnmount: {
       type: 'JSFunction',
-      value: 'function componentWillUnmount() { console.log("Component unmounted") }'
+      value: 'function onBeforeUnmount() { console.log("Component unmounted") }'
     },
-    componentDidUpdate: {
+    onUpdated: {
       type: 'JSFunction',
-      value: 'function componentDidUpdate(prevProps, prevState) { console.log("Component updated") }'
+      value: 'function onUpdated(prevProps, prevState) { console.log("Component updated") }'
     },
-    componentDidCatch: {
+    onErrorCaptured: {
       type: 'JSFunction',
-      value: 'function componentDidCatch(error, errorInfo) { console.log("Error caught:", error) }'
+      value: 'function onErrorCaptured(error, errorInfo) { console.log("Error caught:", error) }'
     }
   },
   children: [
@@ -98,22 +98,22 @@ export const complexLifecycleSchema = {
     }
   },
   lifeCycles: {
-    componentDidMount: {
+    onMounted: {
       type: 'JSFunction',
-      value: 'function componentDidMount() { this.initializeData(); this.setupEventListeners(); }'
+      value: 'function onMounted() { this.initializeData(); this.setupEventListeners(); }'
     },
-    componentWillUnmount: {
+    onBeforeUnmount: {
       type: 'JSFunction',
-      value: 'function componentWillUnmount() { this.cleanup(); this.removeEventListeners(); }'
+      value: 'function onBeforeUnmount() { this.cleanup(); this.removeEventListeners(); }'
     },
-    componentDidCatch: {
+    onErrorCaptured: {
       type: 'JSFunction',
-      value: 'function componentDidCatch(error, errorInfo) { this.handleError(error); this.reportError(error); }'
+      value: 'function onErrorCaptured(error, errorInfo) { this.handleError(error); this.reportError(error); }'
     },
-    componentDidUpdate: {
+    onUpdated: {
       type: 'JSFunction',
       value:
-        'function componentDidUpdate(prevProps, prevState) { if (prevState.inputValue !== this.state.inputValue) { console.log("Input value changed"); } }'
+        'function onUpdated(prevProps, prevState) { if (prevState.inputValue !== this.state.inputValue) { console.log("Input value changed"); } }'
     }
   },
   children: [
@@ -187,18 +187,18 @@ export const mixedLifecycleSchema = {
     }
   },
   lifeCycles: {
-    componentDidMount: {
+    onMounted: {
       type: 'JSFunction',
-      value: 'function componentDidMount() { console.log("Component mounted"); this.focusInput(); }'
+      value: 'function onMounted() { console.log("Component mounted"); this.focusInput(); }'
     },
-    componentWillUnmount: {
+    onBeforeUnmount: {
       type: 'JSFunction',
-      value: 'function componentWillUnmount() { console.log("Component unmounting"); }'
+      value: 'function onBeforeUnmount() { console.log("Component unmounting"); }'
     },
-    componentDidUpdate: {
+    onUpdated: {
       type: 'JSFunction',
       value:
-        'function componentDidUpdate(prevProps, prevState) { if (prevState.count !== this.state.count) { console.log("Count updated to:", this.state.count); } }'
+        'function onUpdated(prevProps, prevState) { if (prevState.count !== this.state.count) { console.log("Count updated to:", this.state.count); } }'
     }
   },
   children: [
@@ -312,18 +312,18 @@ export const errorBoundaryLifecycleSchema = {
     }
   },
   lifeCycles: {
-    componentDidCatch: {
+    onErrorCaptured: {
       type: 'JSFunction',
       value:
-        'function componentDidCatch(error, errorInfo) { this.setState({ hasError: true, error, errorInfo }); console.log("Error caught:", error); }'
+        'function onErrorCaptured(error, errorInfo) { this.setState({ hasError: true, error, errorInfo }); console.log("Error caught:", error); }'
     },
-    componentDidMount: {
+    onMounted: {
       type: 'JSFunction',
-      value: 'function componentDidMount() { console.log("Error boundary mounted"); }'
+      value: 'function onMounted() { console.log("Error boundary mounted"); }'
     },
-    componentWillUnmount: {
+    onBeforeUnmount: {
       type: 'JSFunction',
-      value: 'function componentWillUnmount() { console.log("Error boundary unmounting"); }'
+      value: 'function onBeforeUnmount() { console.log("Error boundary unmounting"); }'
     }
   },
   children: [

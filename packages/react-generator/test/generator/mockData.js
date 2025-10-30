@@ -242,9 +242,9 @@ export const appSchemaDemo01 = {
       css: '.page-container {\n  padding: 20px;\n  background: #f5f5f5;\n  max-width: 600px;\n  margin: 0 auto;\n  border-radius: 8px;\n  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);\n}',
       props: {},
       lifeCycles: {
-        componentDidMount: {
+        onMounted: {
           type: 'JSFunction',
-          value: 'function componentDidMount() {\n  console.log("Component mounted");\n}'
+          value: 'function onMounted() {\n  console.log("Component mounted");\n}'
         }
       },
       children: [
