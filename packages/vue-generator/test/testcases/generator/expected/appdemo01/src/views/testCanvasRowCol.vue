@@ -40,8 +40,17 @@ const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit })
 wrap({ stores })
 
-const state = vue.reactive({ dataDisk: [1, 2, 3] })
+const state = vue.reactive({
+  canvasConfig: { rowGap: '20px', colGap: '20px', layoutMode: 'grid' },
+  uiState: { showGrid: true, selectedElement: null }
+})
 wrap({ state })
+
+const handleElementClick = wrap(function handleElementClick(elementId) {
+  this.state.uiState.selectedElement = elementId
+})
+
+wrap({ handleElementClick })
 </script>
 <style scoped>
 body {

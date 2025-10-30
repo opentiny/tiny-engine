@@ -908,7 +908,36 @@ export const appSchemaDemo01 = {
     },
     {
       state: {
-        dataDisk: [1, 2, 3]
+        dataDisk: [1, 2, 3],
+        // 表单相关状态
+        formData: {
+          zone: '1',
+          cpu: '1',
+          memory: '1',
+          storageType: '1',
+          storageSize: '40',
+          diskType: '1',
+          diskSize: '100',
+          networkType: '1',
+          bandwidth: '1',
+          instanceType: '1',
+          instanceCount: '1'
+        },
+        // 输入框相关状态
+        inputValues: {
+          diskLabel: '',
+          systemDisk: '',
+          dataDiskSize: '',
+          networkConfig: ''
+        },
+        // 选择器相关状态
+        selectValues: {
+          availableZone: '1',
+          cpuArch: '1',
+          memorySize: '1',
+          storageOption: '1',
+          networkOption: '1'
+        }
       },
       methods: {},
       componentName: 'Page',
@@ -1055,7 +1084,11 @@ export const appSchemaDemo01 = {
                             value: '3'
                           }
                         ],
-                        modelValue: '1'
+                        modelValue: {
+                          type: 'JSExpression',
+                          model: true,
+                          value: 'state.selectValues.availableZone'
+                        }
                       },
                       id: '6184481b'
                     }
@@ -1104,7 +1137,11 @@ export const appSchemaDemo01 = {
                             value: '2'
                           }
                         ],
-                        modelValue: '1'
+                        modelValue: {
+                          type: 'JSExpression',
+                          model: true,
+                          value: 'state.formData.cpu'
+                        }
                       },
                       id: '7d33ced7'
                     }
@@ -1142,7 +1179,11 @@ export const appSchemaDemo01 = {
                             {
                               componentName: 'TinySelect',
                               props: {
-                                modelValue: '',
+                                modelValue: {
+                                  type: 'JSExpression',
+                                  model: true,
+                                  value: 'state.selectValues.cpuArch'
+                                },
                                 placeholder: '请选择',
                                 options: [
                                   {
@@ -1176,7 +1217,11 @@ export const appSchemaDemo01 = {
                             {
                               componentName: 'TinySelect',
                               props: {
-                                modelValue: '',
+                                modelValue: {
+                                  type: 'JSExpression',
+                                  model: true,
+                                  value: 'state.selectValues.memorySize'
+                                },
                                 placeholder: '请选择',
                                 options: [
                                   {
@@ -1204,15 +1249,19 @@ export const appSchemaDemo01 = {
                               componentName: 'Text',
                               props: {
                                 text: '规格名称',
-                                style: 'width: 80px;'
+                                style: 'width: 120px;'
                               },
                               id: 'd3eb6352'
                             },
                             {
                               componentName: 'TinySearch',
                               props: {
-                                modelValue: '',
-                                placeholder: '输入关键词'
+                                placeholder: '输入关键词',
+                                modelValue: {
+                                  type: 'JSExpression',
+                                  model: true,
+                                  value: 'state.inputValues.diskLabel'
+                                }
                               },
                               id: '21cb9282'
                             }
@@ -1417,7 +1466,11 @@ export const appSchemaDemo01 = {
                         {
                           componentName: 'TinySelect',
                           props: {
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.selectValues.storageOption'
+                            },
                             placeholder: '请选择',
                             options: [
                               {
@@ -1436,7 +1489,11 @@ export const appSchemaDemo01 = {
                         {
                           componentName: 'TinySelect',
                           props: {
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.selectValues.networkOption'
+                            },
                             placeholder: '请选择',
                             options: [
                               {
@@ -1515,7 +1572,11 @@ export const appSchemaDemo01 = {
                         {
                           componentName: 'TinySelect',
                           props: {
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.formData.storageType'
+                            },
                             placeholder: '请选择',
                             options: [
                               {
@@ -1535,7 +1596,11 @@ export const appSchemaDemo01 = {
                           componentName: 'TinyInput',
                           props: {
                             placeholder: '请输入',
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.inputValues.systemDisk'
+                            },
                             style: 'width: 120px; margin-right: 10px;'
                           },
                           id: '1cde4c0f'
@@ -1592,7 +1657,11 @@ export const appSchemaDemo01 = {
                         {
                           componentName: 'TinySelect',
                           props: {
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.formData.diskType'
+                            },
                             placeholder: '请选择',
                             options: [
                               {
@@ -1612,7 +1681,11 @@ export const appSchemaDemo01 = {
                           componentName: 'TinyInput',
                           props: {
                             placeholder: '请输入',
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.inputValues.dataDiskSize'
+                            },
                             style: 'width: 120px; margin-right: 10px;'
                           },
                           id: '667c7926'
@@ -1629,7 +1702,11 @@ export const appSchemaDemo01 = {
                           componentName: 'TinyInput',
                           props: {
                             placeholder: '请输入',
-                            modelValue: '',
+                            modelValue: {
+                              type: 'JSExpression',
+                              model: true,
+                              value: 'state.inputValues.diskLabel'
+                            },
                             style: 'width: 120px;'
                           },
                           id: '1bd56dc0'
@@ -1741,7 +1818,11 @@ export const appSchemaDemo01 = {
                               componentName: 'TinyInput',
                               props: {
                                 placeholder: '请输入',
-                                modelValue: '',
+                                modelValue: {
+                                  type: 'JSExpression',
+                                  model: true,
+                                  value: 'state.formData.instanceCount'
+                                },
                                 style: 'width: 120px; margin-right: 10px;'
                               },
                               id: '2f9cf442'
@@ -2027,6 +2108,23 @@ export const appSchemaDemo01 = {
         }
       ],
       fileName: 'testCanvasRowCol',
+      state: {
+        canvasConfig: {
+          rowGap: '20px',
+          colGap: '20px',
+          layoutMode: 'grid'
+        },
+        uiState: {
+          showGrid: true,
+          selectedElement: null
+        }
+      },
+      methods: {
+        handleElementClick: {
+          type: 'JSFunction',
+          value: 'function handleElementClick(elementId) { this.state.uiState.selectedElement = elementId; }'
+        }
+      },
       meta: {
         name: 'testCanvasRowCol',
         id: 1737797330916,
@@ -2089,6 +2187,142 @@ export const appSchemaDemo01 = {
         router: 'createVm/untitledFA/UntitledA'
       },
       path: 'createVm/untitledFA'
+    },
+    {
+      componentName: 'div',
+      fileName: 'LifeCyclePage',
+      meta: {
+        id: 'lifecycle-page',
+        isPage: true,
+        parentId: '0',
+        router: '/lifecycle'
+      },
+      props: {
+        class: 'lifecycle-container'
+      },
+      children: [
+        {
+          componentName: 'TinyCard',
+          props: {
+            title: '仪表板'
+          },
+          children: [
+            {
+              componentName: 'div',
+              props: {
+                class: 'metrics-grid'
+              },
+              children: [
+                {
+                  componentName: 'div',
+                  props: {
+                    class: 'metric-item'
+                  },
+                  children: [
+                    {
+                      componentName: 'Text',
+                      props: {
+                        text: {
+                          type: 'JSExpression',
+                          value: '"活跃用户: " + this.state.activeUsers'
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  componentName: 'div',
+                  props: {
+                    class: 'metric-item'
+                  },
+                  children: [
+                    {
+                      componentName: 'Text',
+                      props: {
+                        text: {
+                          type: 'JSExpression',
+                          value: '"系统负载: " + this.state.systemLoad + "%"'
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              componentName: 'TinyButton',
+              props: {
+                type: 'success',
+                onClick: {
+                  type: 'JSExpression',
+                  value: 'this.refreshData'
+                }
+              },
+              children: ['刷新数据']
+            }
+          ]
+        }
+      ],
+      state: {
+        activeUsers: 0,
+        systemLoad: 0,
+        lastUpdateTime: null,
+        autoRefresh: true
+      },
+      methods: {
+        refreshData: {
+          type: 'JSFunction',
+          value: 'function refreshData() { this.fetchMetrics(); this.state.lastUpdateTime = new Date(); }'
+        },
+        fetchMetrics: {
+          type: 'JSFunction',
+          value:
+            'function fetchMetrics() { this.state.activeUsers = Math.floor(Math.random() * 1000); this.state.systemLoad = Math.floor(Math.random() * 100); }'
+        },
+        startAutoRefresh: {
+          type: 'JSFunction',
+          value:
+            'function startAutoRefresh() { if (this.autoRefresh) { this.refreshInterval = setInterval(() => this.refreshData(), 30000); } }'
+        },
+        stopAutoRefresh: {
+          type: 'JSFunction',
+          value:
+            'function stopAutoRefresh() { if (this.refreshInterval) { clearInterval(this.refreshInterval); this.refreshInterval = null; } }'
+        },
+        handleVisibilityChange: {
+          type: 'JSFunction',
+          value:
+            'function handleVisibilityChange() { if (document.hidden) { this.stopAutoRefresh(); } else { this.startAutoRefresh(); } }'
+        }
+      },
+      lifeCycles: {
+        onMounted: {
+          type: 'JSFunction',
+          value:
+            'function onMounted() { console.log("onMounted."); refreshData(); startAutoRefresh(); document.addEventListener("visibilitychange", handleVisibilityChange) }'
+        },
+        onUnmounted: {
+          type: 'JSFunction',
+          value:
+            'function onUnmounted() { console.log("onUnmounted."); stopAutoRefresh(); document.removeEventListener("visibilitychange", handleVisibilityChange) }'
+        },
+        onActivated: {
+          type: 'JSFunction',
+          value: 'function onActivated() { console.log("页面激活"); refreshData() }'
+        },
+        onDeactivated: {
+          type: 'JSFunction',
+          value: 'function onDeactivated() { console.log("页面停用"); stopAutoRefresh() }'
+        },
+        onUpdated: {
+          type: 'JSFunction',
+          value: 'function onUpdated() { console.log("页面已更新", this.state.loginCount) }'
+        },
+        onBeforeMount: {
+          type: 'JSFunction',
+          value: 'function onBeforeMount() { console.log("onBeforeMount.") }'
+        }
+      }
     }
   ],
   componentsMap: [
@@ -2097,28 +2331,28 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'CarouselItem',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyCheckboxButton',
       package: '@opentiny/vue',
       exportName: 'CheckboxButton',
       destructuring: true,
-      version: '0.1.17'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyTree',
       package: '@opentiny/vue',
       exportName: 'Tree',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyPopover',
       package: '@opentiny/vue',
       exportName: 'Popover',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyTooltip',
@@ -2132,21 +2366,21 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'Col',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyDropdownItem',
       package: '@opentiny/vue',
       exportName: 'DropdownItem',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyPager',
       package: '@opentiny/vue',
       exportName: 'Pager',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyPlusAccessdeclined',
@@ -2181,21 +2415,21 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'Search',
       destructuring: true,
-      version: '0.1.13'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyRow',
       package: '@opentiny/vue',
       exportName: 'Row',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyFormItem',
       package: '@opentiny/vue',
       exportName: 'FormItem',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyAlert',
@@ -2209,21 +2443,21 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'Input',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyTabs',
       package: '@opentiny/vue',
       exportName: 'Tabs',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyDropdownMenu',
       package: '@opentiny/vue',
       exportName: 'DropdownMenu',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyDialogBox',
@@ -2237,91 +2471,98 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'Switch',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyTimeLine',
       package: '@opentiny/vue',
       exportName: 'TimeLine',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyTabItem',
       package: '@opentiny/vue',
       exportName: 'TabItem',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyRadio',
       package: '@opentiny/vue',
       exportName: 'Radio',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyForm',
       package: '@opentiny/vue',
       exportName: 'Form',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyGrid',
       package: '@opentiny/vue',
       exportName: 'Grid',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyNumeric',
       package: '@opentiny/vue',
       exportName: 'Numeric',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyCheckboxGroup',
       package: '@opentiny/vue',
       exportName: 'CheckboxGroup',
       destructuring: true,
-      version: '0.1.17'
+      version: '3.24.0'
     },
     {
       componentName: 'TinySelect',
       package: '@opentiny/vue',
       exportName: 'Select',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyButtonGroup',
       package: '@opentiny/vue',
       exportName: 'ButtonGroup',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
+    },
+    {
+      componentName: 'TinyButton',
+      package: '@opentiny/vue',
+      exportName: 'Button',
+      destructuring: true,
+      version: '3.24.0'
     },
     {
       componentName: 'TinyCarousel',
       package: '@opentiny/vue',
       exportName: 'Carousel',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyPopeditor',
       package: '@opentiny/vue',
       exportName: 'Popeditor',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyDatePicker',
       package: '@opentiny/vue',
       exportName: 'DatePicker',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'TinyDropdown',
@@ -2335,7 +2576,7 @@ export const appSchemaDemo01 = {
       package: '@opentiny/vue',
       exportName: 'ChartHistogram',
       destructuring: true,
-      version: '0.1.16'
+      version: '3.24.0'
     },
     {
       componentName: 'PortalHome',
@@ -2366,6 +2607,13 @@ export const appSchemaDemo01 = {
       main: '',
       destructuring: false,
       version: '1.0.0'
+    },
+    {
+      componentName: 'TinyCard',
+      exportName: 'Card',
+      package: '@opentiny/vue',
+      version: '^3.10.0',
+      destructuring: true
     }
   ],
   meta: {

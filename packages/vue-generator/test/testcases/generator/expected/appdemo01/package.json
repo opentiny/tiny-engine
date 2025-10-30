@@ -11,8 +11,8 @@
   "module": "dist/index.js",
   "dependencies": {
     "@opentiny/tiny-engine-i18n-host": "^1.0.0",
-    "@opentiny/vue": "0.1.16",
-    "@opentiny/vue-icon": "0.1.16",
+    "@opentiny/vue": "3.24.0",
+    "@opentiny/vue-icon": "3.24.0",
     "axios": "latest",
     "axios-mock-adapter": "^1.19.0",
     "vue": "^3.3.9",
