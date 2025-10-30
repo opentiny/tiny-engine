@@ -301,12 +301,20 @@ function arrowToFunctionCode(name: string | undefined, node: any): string {
 }
 
 // 递归应用组件名映射（如 antd -> TinyVue）
-function styleObjToCss(obj: Record<string, any> | string | undefined): any {
+function styleObjToCss(obj: any): any {
   if (!obj || typeof obj === 'string') return obj
-  const toKebab = (s: string) => s.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
-  return Object.entries(obj)
-    .map(([k, v]) => `${toKebab(k)}: ${v}`)
-    .join('; ')
+  const isJSExpr = (v: any) => v && typeof v === 'object' && v.type === 'JSExpression'
+  // 若整个 style 就是 JSExpression，例如 style={state.style}，原样保留
+  if (isJSExpr(obj)) return obj
+  // 仅当是纯字面量对象且无表达式/展开时，才转换为字符串
+  if (typeof obj === 'object') {
+    const entries = Object.entries(obj)
+    const hasDynamic = entries.some(([k, v]) => k === '...' || isJSExpr(v) || typeof v === 'object')
+    if (hasDynamic) return obj
+    const toKebab = (s: string) => s.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
+    return entries.map(([k, v]) => `${toKebab(k)}: ${v}`).join('; ')
+  }
+  return obj
 }
 
 function applyComponentMapping(nodes: ISchemaChildrenItem[] | undefined | null, map: Record<string, string>) {
