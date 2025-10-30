@@ -143,10 +143,7 @@ const generateReactFile = (schema, componentsMap, config = {}) => {
         return
       }
 
-      // scriptConfig = {
-      //   ...scriptConfig,
-      //   ...newConfig
-      // }
+      Object.assign(styleConfig, newConfig)
     },
     getScriptConfig: () => scriptConfig,
     setStyleConfig: (newConfig = {}) => {
@@ -154,10 +151,7 @@ const generateReactFile = (schema, componentsMap, config = {}) => {
         return
       }
 
-      // styleConfig = {
-      //   ...styleConfig,
-      //   ...newConfig
-      // }
+      Object.assign(scriptConfig, newConfig)
     },
     getStyleConfig: () => styleConfig,
     addCss: (css) => {
