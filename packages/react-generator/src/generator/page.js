@@ -36,6 +36,7 @@ import {
   IntrinsicElements,
   AntdComponents
 } from '../constant'
+import path from 'path'
 
 // 工具函数：清理状态引用
 const cleanStateReference = (value, isClassComponent = false) => {
@@ -56,25 +57,23 @@ const cleanStateReference = (value, isClassComponent = false) => {
 // 工具函数：生成状态更新逻辑
 const generateUpdateLogic = (path, isClassComponent = false, isCheckbox = false, componentName = '') => {
   const pathParts = path.split('.')
-  
+
   // 根据组件类型确定如何获取值
   let valueAccess
-  
+
   // 定义直接传递值的组件列表
-  const directValueComponents = [
-    'Select'
-  ]
-  
+  const directValueComponents = ['Select']
+
   if (isCheckbox) {
     valueAccess = 'e.target.checked'
-  } else if (directValueComponents.some(comp => componentName === comp || componentName.startsWith(comp))) {
+  } else if (directValueComponents.some((comp) => componentName === comp || componentName.startsWith(comp))) {
     // 这些组件的 onChange 直接传递选中的值
     valueAccess = 'e'
   } else {
     // 其他组件使用 e.target.value
     valueAccess = 'e.target.value'
   }
-  
+
   if (pathParts.length === 1) {
     if (isClassComponent) {
       return `this.setState({ ${path}: ${valueAccess} })`
@@ -84,7 +83,7 @@ const generateUpdateLogic = (path, isClassComponent = false, isCheckbox = false,
   } else {
     const parentPath = pathParts.slice(0, -1).join('.')
     const lastPart = pathParts[pathParts.length - 1]
-    
+
     if (isClassComponent) {
       return `this.setState(prev => ({ ...prev, ${parentPath}: { ...prev.${parentPath}, ${lastPart}: ${valueAccess} } }))`
     } else {
@@ -93,57 +92,17 @@ const generateUpdateLogic = (path, isClassComponent = false, isCheckbox = false,
   }
 }
 
-// 工具函数：处理JSX子元素
-const recurseJSXChildren = (children, state, description, result, isClassComponent = false) => {
-  if (Array.isArray(children)) {
-    const subTemplate = children.map((child) => {
-      // 如果子元素是 JSExpression 或 JSDataBinding，直接处理
-      if (child?.type === 'JSExpression' || child?.type === 'JSDataBinding') {
-        const convertedValue = cleanStateReference(child.value, isClassComponent)
-        return `{ ${convertedValue} }`
-      }
-      // 如果子元素是纯文本，直接返回
-      if (typeof child === 'string' && child.trim()) {
-        return child
-      }
-      // 否则递归处理
-      return generateJSXNode(child, state, description, false, isClassComponent)
-    }).join('')
-    result.push(subTemplate)
-  } else if (children?.type === 'JSExpression' || children?.type === 'JSDataBinding') {
-    const convertedValue = cleanStateReference(children.value, isClassComponent)
-    result.push(`{ ${convertedValue} }`)
-    
-    // 记录JS资源使用情况
-    Object.keys(description.jsResource).forEach((key) => {
-      description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`)
-    })
-  } else if (children?.type === 'i18n') {
-    result.push(`{ t('${children.key}') }`)
-  } else if (typeof children === 'string' && children.trim()) {
-    // 处理纯文本内容
-    result.push(children)
-  } else {
-    // 对于空内容或 undefined，不添加任何内容
-    if (children && typeof children === 'string' && children.trim()) {
-      result.push(children)
-    }
-  }
-
-  return result
-}
-
 // 工具函数：处理事件绑定
 const handleJSXEventBinding = (key, item, isClassComponent = false) => {
   if (item?.type !== 'JSExpression') return null
-  
+
   let eventHandler = item.value
-  
+
   // 对于类组件，保留 this. 前缀；对于函数组件，移除 this. 前缀
   if (!isClassComponent) {
     eventHandler = item.value.replace('this.', '')
   }
-  
+
   if (item.params?.length) {
     const extendParams = item.params.join(',')
     return `${key}={(...eventArgs) => ${eventHandler}(eventArgs, ${extendParams})}`
@@ -170,9 +129,10 @@ const handleJSXLiteralBinding = ({ key, item, attrsArr, description, state }) =>
 
   if (typeof item === 'object') {
     traverseState(item, description)
-    const canotBind = description.internalTypes.has(JS_FUNCTION) || 
-                     description.internalTypes.has(JS_RESOURCE) || 
-                     description.internalTypes.has(JS_SLOT)
+    const canotBind =
+      description.internalTypes.has(JS_FUNCTION) ||
+      description.internalTypes.has(JS_RESOURCE) ||
+      description.internalTypes.has(JS_SLOT)
 
     if (canotBind) {
       description.internalTypes = new Set()
@@ -180,7 +140,7 @@ const handleJSXLiteralBinding = ({ key, item, attrsArr, description, state }) =>
       state[valueKey] = item
       return attrsArr.push(`${key}={state.${valueKey}}`)
     }
-    
+
     const parsedValue = unwrapExpression(JSON.stringify(item))
     return attrsArr.push(`${key}={${parsedValue}}`)
   }
@@ -189,7 +149,16 @@ const handleJSXLiteralBinding = ({ key, item, attrsArr, description, state }) =>
 }
 
 // 工具函数：处理数据绑定
-const handleJSXDataBinding = ({ key, item, attrsArr, description, state, isClassComponent = false, hasOnChange = false, componentName = '' }) => {
+const handleJSXDataBinding = ({
+  key,
+  item,
+  attrsArr,
+  description: _description,
+  state: _state,
+  isClassComponent = false,
+  hasOnChange = false,
+  componentName = ''
+}) => {
   const cleanedValue = cleanStateReference(item.value, isClassComponent)
   const stateMatch = cleanedValue.match(/state\.(.+)/)
   const statePath = stateMatch ? stateMatch[1] : key
@@ -211,13 +180,15 @@ const handleJSXDataBinding = ({ key, item, attrsArr, description, state, isClass
     attrsArr.push(`name="${stateVarName}"`)
   } else {
     attrsArr.push(`${key}={${cleanedValue}}`)
-    
+
     if (item.model) {
       const modelProp = item.model.prop || 'value'
       const modelEvent = item.model.event || 'onChange'
-      
+
       if (modelProp === 'value') {
-        attrsArr.push(`${modelEvent}={(e) => ${generateUpdateLogic(statePath, isClassComponent, false, componentName)}}`)
+        attrsArr.push(
+          `${modelEvent}={(e) => ${generateUpdateLogic(statePath, isClassComponent, false, componentName)}}`
+        )
       } else if (modelProp === 'checked') {
         attrsArr.push(`${modelEvent}={(e) => ${generateUpdateLogic(statePath, isClassComponent, true, componentName)}}`)
       } else {
@@ -232,24 +203,33 @@ const handleJSXDataBinding = ({ key, item, attrsArr, description, state, isClass
 // 工具函数：处理JSX属性绑定
 const handleJSXBinding = (props, attrsArr, description, state, isClassComponent = false, componentName = '') => {
   const processedKeys = new Set()
-  
+
   // 检查是否有显式定义的 onChange
-  const hasOnChange = Object.keys(props).some(key => isOn(key) && key === 'onChange')
-  
+  const hasOnChange = Object.keys(props).some((key) => isOn(key) && key === 'onChange')
+
   Object.entries(props).forEach(([key, item]) => {
     const propType = item?.type || 'literal'
-    
+
     if (key === 'dataSource') return attrsArr
-    
+
     if (propType === 'JSDataBinding' || (propType === 'JSExpression' && item.model)) {
-      const result = handleJSXDataBinding({key, item, attrsArr, description, state, isClassComponent, hasOnChange, componentName})
+      const result = handleJSXDataBinding({
+        key,
+        item,
+        attrsArr,
+        description,
+        state,
+        isClassComponent,
+        hasOnChange,
+        componentName
+      })
       // 标记已处理的键，避免重复处理
       if (key === 'value' || key === 'modelValue') {
         processedKeys.add('onChange')
       }
       return result
     }
-    
+
     if (isOn(key) && !processedKeys.has(key)) {
       const eventBinding = handleJSXEventBinding(key, item, isClassComponent)
       if (eventBinding) {
@@ -277,10 +257,13 @@ const generateJSXNode = (schema, state, description, isRootNode = false, isClass
   if (componentName === 'Template') return ''
   if (componentName === BUILTIN_COMPONENT_NAME.TEMPLATE && !(children?.length || children?.type)) return ''
 
-  let component = isRootNode ? 'div' : 
-                 componentName === BUILTIN_COMPONENT_NAME.BLOCK && fileName ? toPascalCase(fileName) :
-                 IntrinsicElements.includes(componentName || 'div') ? componentName || 'div' : 
-                 toPascalCase(componentName)
+  let component = isRootNode
+    ? 'div'
+    : componentName === BUILTIN_COMPONENT_NAME.BLOCK && fileName
+    ? toPascalCase(fileName)
+    : IntrinsicElements.includes(componentName || 'div')
+    ? componentName || 'div'
+    : toPascalCase(componentName)
 
   // 处理带有子组件的组件
   const cmp = AntdComponents.filter((item) => item.subName).find((item) => item.componentName === component)
@@ -340,7 +323,43 @@ const generateJSXNode = (schema, state, description, isRootNode = false, isClass
     jsxResult.push(' />')
   } else {
     jsxResult.push('>')
-    recurseJSXChildren(children, state, description, jsxResult, isClassComponent)
+    // 内联处理 JSX 子元素，等价于原来的 recurseJSXChildren
+    if (Array.isArray(children)) {
+      const subTemplate = children
+        .map((child) => {
+          // 如果子元素是 JSExpression 或 JSDataBinding，直接处理
+          if (child?.type === 'JSExpression' || child?.type === 'JSDataBinding') {
+            const convertedValue = cleanStateReference(child.value, isClassComponent)
+            return `{ ${convertedValue} }`
+          }
+          // 如果子元素是纯文本，直接返回
+          if (typeof child === 'string' && child.trim()) {
+            return child
+          }
+          // 否则递归处理
+          return generateJSXNode(child, state, description, false, isClassComponent)
+        })
+        .join('')
+      jsxResult.push(subTemplate)
+    } else if (children?.type === 'JSExpression' || children?.type === 'JSDataBinding') {
+      const convertedValue = cleanStateReference(children.value, isClassComponent)
+      jsxResult.push(`{ ${convertedValue} }`)
+
+      // 记录JS资源使用情况
+      Object.keys(description.jsResource).forEach((key) => {
+        description.jsResource[key] = description.jsResource[key] || children.value.includes(`.${key}.`)
+      })
+    } else if (children?.type === 'i18n') {
+      jsxResult.push(`{ t('${children.key}') }`)
+    } else if (typeof children === 'string' && children.trim()) {
+      // 处理纯文本内容
+      jsxResult.push(children)
+    } else {
+      // 对于空内容或 undefined，不添加任何内容
+      if (children && typeof children === 'string' && children.trim()) {
+        jsxResult.push(children)
+      }
+    }
     jsxResult.push(`</${component}>`)
   }
 
@@ -357,10 +376,7 @@ const generateReactImports = (description, moduleName, type, componentsMap) => {
   const { blockSet, componentSet } = description
   const imports = []
 
-  imports.push([
-    'import React from "react"',
-    `import './${moduleName}.css'`
-  ].join('\n'))
+  imports.push(['import React from "react"', `import './${moduleName}.css'`].join('\n'))
 
   // 导入组件
   const componentsInSFC = [...componentSet]
@@ -390,7 +406,7 @@ const generateReactImports = (description, moduleName, type, componentsMap) => {
     const uniqueDeps = deps.reduce((acc, dep) => {
       const { componentName, exportName } = dep
       const key = exportName || componentName
-      if (!acc.some(item => (item.exportName || item.componentName) === key)) {
+      if (!acc.some((item) => (item.exportName || item.componentName) === key)) {
         acc.push(dep)
       }
       return acc
@@ -434,15 +450,13 @@ const generateReactImports = (description, moduleName, type, componentsMap) => {
       } else if (toPath === fromPath) {
         depPath = '.'
       } else {
-        const path = require('path')
-        const relativePath = path?.relative(fromPath, toPath).replace(/\\/g, '/')
+        const relativePath = path.relative(fromPath, toPath).replace(/\\/g, '/')
         depPath = relativePath.startsWith('.') ? relativePath : `./${relativePath}`
       }
       imports.push(`import ${block} from '${depPath}/${block}'`)
     } else {
-      const blockDefaultPath = type === 'Block' ? 
-        `import ${block} from './${block}'` : 
-        `import ${block} from '../components/${block}'`
+      const blockDefaultPath =
+        type === 'Block' ? `import ${block} from './${block}'` : `import ${block} from '../components/${block}'`
       imports.push(blockDefaultPath)
     }
   })
@@ -566,27 +580,37 @@ const generateReactCode = ({ schema, name, type, componentsMap }) => {
 
   // 生成hooks
   const hooks = {
-    useEffect: lifecycleMap.componentDidMount?.value || lifecycleMap.componentWillUnmount?.value ? `
+    useEffect:
+      lifecycleMap.componentDidMount?.value || lifecycleMap.componentWillUnmount?.value
+        ? `
       React.useEffect(() => {
         ${lifecycleMap.componentDidMount?.value ? extractFunctionBody(lifecycleMap.componentDidMount.value) : ''}
-        ${lifecycleMap.componentWillUnmount?.value ? `return () => {${extractFunctionBody(lifecycleMap.componentWillUnmount.value)}}` : ''}
+        ${
+          lifecycleMap.componentWillUnmount?.value
+            ? `return () => {${extractFunctionBody(lifecycleMap.componentWillUnmount.value)}}`
+            : ''
+        }
         }, [])
-    ` : '',
-    useLayoutEffect: lifecycleMap.componentWillMount?.value ? `
+    `
+        : '',
+    useLayoutEffect: lifecycleMap.componentWillMount?.value
+      ? `
          React.useLayoutEffect(() => {
         ${extractFunctionBody(lifecycleMap.componentWillMount.value)}
         }, [])
-  ` : '',
-    useMemo: lifecycleMap.shouldComponentUpdate?.value ? `
+  `
+      : '',
+    useMemo: lifecycleMap.shouldComponentUpdate?.value
+      ? `
     React.useMemo(() => {
       ${extractFunctionBody(lifecycleMap.shouldComponentUpdate.value)}
       }, [])
-  ` : ''
+  `
+      : ''
   }
 
   // 生成类组件的生命周期方法
-  const lifecycleMethods = Object.values(lifecycleMap)
-    .map(item => convertToClassMethod(item.value))
+  const lifecycleMethods = Object.values(lifecycleMap).map((item) => convertToClassMethod(item.value))
 
   // 生成类组件的方法
   const classMethods = Object.entries(methods)
