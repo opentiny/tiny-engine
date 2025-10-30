@@ -1,0 +1,31 @@
+{
+  "name": "langchain-api-extractor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "node server/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "langchain": "^0.3.30",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.1",
+    "openai": "^5.10.1",
+    "puppeteer": "^24.14.0",
+    "sequelize": "^6.37.7",
+    "sql.js": "^1.13.0",
+    "typeorm": "^0.3.27"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3"
+  }
+}
