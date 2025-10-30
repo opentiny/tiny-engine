@@ -502,7 +502,7 @@ if (require.main === module) {
 			apiJson.forEach((component, index) => {
 				// 提取组件名作为文件名（处理特殊字符）
 				const componentName = component.name
-					? component.name.replace(/\s+/g, '-').replace(/[^\w-]/g, '').toLowerCase()
+					? component.name.replace(/\s+/g, '-').replace(/[<>:"/\\|?*]/g, '').toLowerCase()
 					: `component-${index}`;
 
 				// 生成唯一文件名（组件名+时间戳）
