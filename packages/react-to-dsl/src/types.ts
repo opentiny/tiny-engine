@@ -50,7 +50,7 @@ export interface IPageSchema {
   }
   methods: Record<string, IFuncType>
   props: Record<string, any>
-  state: Array<Record<string, any>>
+  state: Record<string, any>
   meta: {
     id: number
     isPage: boolean

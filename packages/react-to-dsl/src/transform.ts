@@ -282,7 +282,7 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     lifeCycles: {},
     methods: {},
     props: {},
-    state: [],
+    state: {},
     meta: {
       id: 1,
       isPage: !options.isBlock,
@@ -298,7 +298,13 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
   }
   if (stateInitNode) {
     try {
-      page.state = [astExprToValue(stateInitNode)]
+      const parsed = astExprToValue(stateInitNode)
+      // 如果是对象则直接使用；否则以特殊 key 包裹，尽量保持对象格式
+      if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+        page.state = parsed
+      } else {
+        page.state = { value: parsed }
+      }
     } catch (e) {
       // 失败则忽略
     }
