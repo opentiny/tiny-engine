@@ -73,11 +73,11 @@ async function scrapeRawTables(url, tableSelector, retries, { signal } = {}) {
 	let browser = null;
 
 	// 注册中断监听，关闭浏览器
-  const abortHandler = async () => {
-    console.log(`[爬取中断] 正在关闭浏览器（URL：${url}）`);
-    if (browser) await browser.close().catch(e => console.warn(`关闭浏览器失败：${e.message}`));
-  };
-  signal?.addEventListener('abort', abortHandler);
+	const abortHandler = async () => {
+		console.log(`[爬取中断] 正在关闭浏览器（URL：${url}）`);
+		if (browser) await browser.close().catch(e => console.warn(`关闭浏览器失败：${e.message}`));
+	};
+	signal?.addEventListener('abort', abortHandler);
 
 	try {
 		if (signal?.aborted) throw new Error('任务被用户取消');
@@ -111,8 +111,19 @@ async function scrapeRawTables(url, tableSelector, retries, { signal } = {}) {
 		// 加载页面
 		console.log(`[开始] 加载页面: ${url}`);
 		try {
-			await page.goto(url, { waitUntil: 'networkidle2', timeout: 60000, signal });
-			// await page.waitForTimeout(1000);
+			const gotoPromise = page.goto(url, { waitUntil: 'networkidle2', timeout: 60000 });
+
+			if (signal) {
+				await Promise.race([
+					gotoPromise,
+					new Promise((_, reject) => {
+						if (signal.aborted) reject(new Error('任务被用户取消'));
+						signal.addEventListener('abort', () => reject(new Error('任务被用户取消')), { once: true });
+					})
+				]);
+			} else {
+				await gotoPromise;
+			}
 		} catch (err) {
 			if (signal?.aborted) throw new Error('任务被用户取消');
 			throw new Error(`页面加载失败：${err.message}（URL：${url}）`);
@@ -389,6 +400,11 @@ ${pageTitle}
 		const cleanedResponse = cleanModelResponse(rawResponse, { signal });
 		let apiJsonArray = JSON.parse(cleanedResponse);
 
+		// 验证返回结果必须是数组
+		if (!Array.isArray(apiJsonArray)) {
+			throw new Error(`大模型返回格式错误：期望JSON数组，实际收到${typeof apiJsonArray}`);
+		}
+
 		console.log(`[成功] 大模型转换完成，生成${apiJsonArray.length}个组件API`);
 		return apiJsonArray;
 
@@ -411,12 +427,10 @@ ${pageTitle}
  * @throws {Error} 爬取/转换失败时抛出错误
  */
 async function extractApiFromUrl(url, tableSelector, { initialRetries = 3, signal } = {}) {
-	const componentName = extractComponentName(url); // 提前提取用于日志/文件名
-
 	// 添加中断监听
 	if (signal?.aborted) throw new Error('任务已取消');
 	const abortHandler = () => {
-		console.log(`[${componentName}] 收到中断信号，终止流程`);
+		console.log(`[URL: ${url}] 收到中断信号，终止流程`);
 	};
 	signal?.addEventListener('abort', abortHandler);
 

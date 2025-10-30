@@ -93,7 +93,11 @@ ${content}
 
     if (signal?.aborted) throw new Error('任务被用户取消');
 
+    if (!completion.choices?.length || !completion.choices[0].message?.content) {
+      throw new Error('OpenAI 返回内容为空或无 choices');
+    }
     const responseText = completion.choices[0].message.content.trim();
+
     let hasApiInfo = false;
 
     try {
