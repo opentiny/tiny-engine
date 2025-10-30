@@ -30,6 +30,8 @@ export interface ISchemaChildrenItem {
   props: Record<string, any>
   // optional loop expression for repeated rendering
   loop?: JSExpression
+  // optional visible condition expression for conditional rendering
+  condition?: JSExpression
 }
 
 export interface IFolderItem {

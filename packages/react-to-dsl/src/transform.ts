@@ -120,6 +120,23 @@ function buildNodeFromJSX(jsxEl: any): ISchemaChildrenItem {
   jsxEl.children.forEach((c: any) => {
     if (c.type === 'JSXElement') {
       children.push(buildNodeFromJSX(c))
+    } else if (c.type === 'JSXFragment') {
+      // 将片段映射为 div，并递归其子元素
+      const wrapped = {
+        type: 'JSXElement',
+        openingElement: {
+          type: 'JSXOpeningElement',
+          name: { type: 'JSXIdentifier', name: 'div' },
+          attributes: [],
+          selfClosing: false
+        },
+        closingElement: {
+          type: 'JSXClosingElement',
+          name: { type: 'JSXIdentifier', name: 'div' }
+        },
+        children: c.children || []
+      }
+      children.push(buildNodeFromJSX(wrapped))
     } else if (c.type === 'JSXText') {
       const text = c.value.trim()
       if (text) {
@@ -156,10 +173,108 @@ function buildNodeFromJSX(jsxEl: any): ISchemaChildrenItem {
           return
         }
       }
+      // 识别条件渲染：test ? <JSX/> : null / undefined / false
+      if (expr && expr.type === 'ConditionalExpression') {
+        const test = expr.test
+        const cons = expr.consequent
+        const alt = expr.alternate
+        const testCode = generate(test).code
+        // 处理分支是 JSX 的情况
+        const handleBranch = (branch: any, condCode: string) => {
+          if (!branch) return false
+          if (branch.type === 'JSXFragment') {
+            const wrapped = {
+              type: 'JSXElement',
+              openingElement: {
+                type: 'JSXOpeningElement',
+                name: { type: 'JSXIdentifier', name: 'div' },
+                attributes: [],
+                selfClosing: false
+              },
+              closingElement: {
+                type: 'JSXClosingElement',
+                name: { type: 'JSXIdentifier', name: 'div' }
+              },
+              children: branch.children || []
+            }
+            const n = buildNodeFromJSX(wrapped)
+            ;(n as any).condition = { type: 'JSExpression', value: condCode }
+            children.push(n)
+            return true
+          }
+          if (branch.type === 'JSXElement') {
+            const n = buildNodeFromJSX(branch)
+            ;(n as any).condition = { type: 'JSExpression', value: condCode }
+            children.push(n)
+            return true
+          }
+          return false
+        }
+        // 优先处理常见写法：test ? <JSX> : null/false
+        const altIsFalsyLiteral =
+          alt && (alt.type === 'NullLiteral' || (alt.type === 'BooleanLiteral' && alt.value === false))
+        if (handleBranch(cons, testCode)) return
+        // 若反向也是 JSX，则生成第二个节点，条件取否定
+        if (!altIsFalsyLiteral && (alt?.type === 'JSXElement' || alt?.type === 'JSXFragment')) {
+          const negTest = `!(${testCode})`
+          if (handleBranch(alt, negTest)) return
+        }
+      }
+      // 识别逻辑与：cond && <JSX/>
+      if (expr && expr.type === 'LogicalExpression' && expr.operator === '&&') {
+        const left = expr.left
+        const right = expr.right
+        if (right && (right.type === 'JSXElement' || right.type === 'JSXFragment')) {
+          const condCode = generate(left).code
+          const jsxNode =
+            right.type === 'JSXFragment'
+              ? {
+                  type: 'JSXElement',
+                  openingElement: {
+                    type: 'JSXOpeningElement',
+                    name: { type: 'JSXIdentifier', name: 'div' },
+                    attributes: [],
+                    selfClosing: false
+                  },
+                  closingElement: {
+                    type: 'JSXClosingElement',
+                    name: { type: 'JSXIdentifier', name: 'div' }
+                  },
+                  children: (right as any).children || []
+                }
+              : right
+          const n = buildNodeFromJSX(jsxNode as any)
+          ;(n as any).condition = { type: 'JSExpression', value: condCode }
+          children.push(n)
+          return
+        }
+      }
+      // 直接是 JSX，继续解析
+      if (expr && (expr.type === 'JSXElement' || expr.type === 'JSXFragment')) {
+        const jsxNode =
+          expr.type === 'JSXFragment'
+            ? {
+                type: 'JSXElement',
+                openingElement: {
+                  type: 'JSXOpeningElement',
+                  name: { type: 'JSXIdentifier', name: 'div' },
+                  attributes: [],
+                  selfClosing: false
+                },
+                closingElement: {
+                  type: 'JSXClosingElement',
+                  name: { type: 'JSXIdentifier', name: 'div' }
+                },
+                children: (expr as any).children || []
+              }
+            : expr
+        children.push(buildNodeFromJSX(jsxNode as any))
+        return
+      }
       // 默认：保留表达式
       const code = generate(expr).code
       children.push({
-        componentName: 'Fragment',
+        componentName: 'div',
         id: genId8(),
         props: { children: { type: 'JSExpression', value: code } },
         children: []
@@ -253,7 +368,25 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
       // find nearest JSXElement in return
       const arg: any = path.node.argument
       if (arg && (arg.type === 'JSXElement' || arg.type === 'JSXFragment') && !rootJsx) {
-        rootJsx = arg.type === 'JSXFragment' ? arg.children.find((c: any) => c.type === 'JSXElement') : arg
+        // 如果是 Fragment，包装成一个 div，保留其 children
+        if (arg.type === 'JSXFragment') {
+          rootJsx = {
+            type: 'JSXElement',
+            openingElement: {
+              type: 'JSXOpeningElement',
+              name: { type: 'JSXIdentifier', name: 'div' },
+              attributes: [],
+              selfClosing: false
+            },
+            closingElement: {
+              type: 'JSXClosingElement',
+              name: { type: 'JSXIdentifier', name: 'div' }
+            },
+            children: arg.children || []
+          }
+        } else {
+          rootJsx = arg
+        }
         // 记录包含该 return 的最近函数（函数声明/函数表达式/箭头函数）——即组件函数
         const funcPath = path.findParent(
           (p: any) => p.isFunctionDeclaration?.() || p.isFunctionExpression?.() || p.isArrowFunctionExpression?.()
