@@ -2,7 +2,7 @@
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
       <tiny-popover
-        v-if="homeRegistry.length"
+        v-if="workspaceRegistry.length"
         :visible-arrow="false"
         trigger="hover"
         placement="bottom-start"
@@ -14,7 +14,7 @@
           </div>
         </template>
         <div class="app-center-item">
-          <span v-for="node in homeRegistry" :key="node.id" @click="$emit('openHomePage', node.id)">{{
+          <span v-for="node in workspaceRegistry" :key="node.id" @click="$emit('openWorkspace', node.id)">{{
             node.title
           }}</span>
         </div>
@@ -81,12 +81,12 @@ export default {
       type: Object,
       default: () => ({})
     },
-    homeRegistry: {
+    workspaceRegistry: {
       type: Array,
       default: () => []
     }
   },
-  emits: ['openHomePage'],
+  emits: ['openWorkspace'],
   setup() {
     const { getFinalLayoutConfig } = useLayout()
 
