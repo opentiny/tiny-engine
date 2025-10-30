@@ -1,17 +1,17 @@
 <template>
   <component :is="configProvider" :design="configProviderDesign">
-    <div id="tiny-engign-home" v-if="isShowDefaultHomePage || !!clickedHomePageId">
-      <design-home
-        :homeRegistry="homeRegistry"
-        :currentPageId="clickedHomePageId"
-        @backToDesigner="setHomePageId"
-      ></design-home>
+    <div id="tiny-engign-workspace" v-if="isShowDefaultWorkspace || !!clickedWorkspacePageId">
+      <design-workspace
+        :workspaceRegistry="workspaceRegistry"
+        :currentPageId="clickedWorkspacePageId"
+        @backToDesigner="setWorkspacePageId"
+      ></design-workspace>
     </div>
-    <div id="tiny-engine" v-if="!isShowDefaultHomePage">
+    <div id="tiny-engine" v-if="!isShowDefaultWorkspace">
       <design-toolbars
         :layoutRegistry="layoutRegistry"
-        :homeRegistry="homeRegistry"
-        @openHomePage="setHomePageId"
+        :workspaceRegistry="workspaceRegistry"
+        @openWorkspace="setWorkspacePageId"
       ></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
@@ -53,7 +53,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
-import DesignHome from './DesignHome.vue'
+import DesignWorkspace from './DesignWorkspace.vue'
 import meta from '../meta'
 
 export default {
@@ -62,7 +62,7 @@ export default {
     DesignToolbars,
     DesignPlugins,
     DesignSettings,
-    DesignHome
+    DesignWorkspace
   },
   provide() {
     return {
@@ -73,25 +73,25 @@ export default {
     const layoutRegistry = getMergeMeta(meta.id)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
-    const isShowHomePage = layoutRegistry.options.isShowHomePage
+    const isShowWorkspace = layoutRegistry.options.isShowWorkspace
     const { layoutState, leftMenuShownStorage, rightMenuShownStorage, initPluginStorageReactive } = useLayout()
     const { plugins, settings } = layoutState
     const canvasEntry = getMergeMeta('engine.canvas')?.entry
     const pluginRegistry = getMergeMetaByType('plugins')
-    const homeRegistry = getMergeMetaByType('home')
+    const workspaceRegistry = getMergeMetaByType('workspace')
     // @legacy 旧版本兼容，后续废弃 type: 'setting' 的 plugin，全部改为 type: 'plugins'
     const settingRegistry = getMergeMetaByType('setting')
-    // 启用isShowHomePage = true后，且当url中不包含id=xxx即应用id时自动打开home页
+    // 启用isShowWorkspace = true后，且当url中不包含id=xxx即应用id时自动打开workspace页
     const queryParams = new URLSearchParams(location.search)
-    const isShowDefaultHomePage = computed(() => {
-      return isShowHomePage && queryParams.get('id') === null && homeRegistry.length
+    const isShowDefaultWorkspace = computed(() => {
+      return isShowWorkspace && queryParams.get('id') === null && workspaceRegistry.length
     })
 
-    // 跳转到home模块下的页面的组件ID，如果有则跳转到home下页面如应用中心
-    const clickedHomePageId = ref('')
+    // 跳转到workspace模块下的页面的组件ID，如果有则跳转到workspace下页面如应用中心
+    const clickedWorkspacePageId = ref('')
 
-    const setHomePageId = (nodeId) => {
-      clickedHomePageId.value = nodeId
+    const setWorkspacePageId = (nodeId) => {
+      clickedWorkspacePageId.value = nodeId
     }
 
     const toggleNav = ({ item }) => {
@@ -149,10 +149,10 @@ export default {
       layoutState,
       canvasEntry,
       pluginRegistry,
-      homeRegistry,
-      isShowDefaultHomePage,
-      clickedHomePageId,
-      setHomePageId
+      workspaceRegistry,
+      isShowDefaultWorkspace,
+      clickedWorkspacePageId,
+      setWorkspacePageId
     }
   }
 }
@@ -191,7 +191,7 @@ export default {
   }
 }
 
-#tiny-engine-home {
+#tiny-engine-workspace {
   position: absolute;
 }
 </style>
