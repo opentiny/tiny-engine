@@ -6,7 +6,7 @@ export const parseImport = (children) => {
   let blocks = []
 
   for (const item of children || []) {
-    if (item?.componentType === BUILTIN_COMPONENT_NAME.BLOCK) {
+    if (item?.componentName === BUILTIN_COMPONENT_NAME.BLOCK) {
       blocks.push(item?.componentName)
     } else {
       components.push(item?.componentName)
