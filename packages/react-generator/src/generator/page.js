@@ -212,7 +212,7 @@ const handleJSXBinding = (props, attrsArr, description, state, isClassComponent 
 
     if (key === 'dataSource') return attrsArr
 
-    if (propType === 'JSDataBinding' || (propType === 'JSExpression' && item.model)) {
+    if (propType === 'JSExpression' && item.model) {
       const result = handleJSXDataBinding({
         key,
         item,
@@ -327,8 +327,8 @@ const generateJSXNode = (schema, state, description, isRootNode = false, isClass
     if (Array.isArray(children)) {
       const subTemplate = children
         .map((child) => {
-          // 如果子元素是 JSExpression 或 JSDataBinding，直接处理
-          if (child?.type === 'JSExpression' || child?.type === 'JSDataBinding') {
+          // 如果子元素是 JSExpression 则直接处理
+          if (child?.type === 'JSExpression') {
             const convertedValue = cleanStateReference(child.value, isClassComponent)
             return `{ ${convertedValue} }`
           }
@@ -341,7 +341,7 @@ const generateJSXNode = (schema, state, description, isRootNode = false, isClass
         })
         .join('')
       jsxResult.push(subTemplate)
-    } else if (children?.type === 'JSExpression' || children?.type === 'JSDataBinding') {
+    } else if (children?.type === 'JSExpression') {
       const convertedValue = cleanStateReference(children.value, isClassComponent)
       jsxResult.push(`{ ${convertedValue} }`)
 

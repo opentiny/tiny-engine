@@ -5,7 +5,7 @@
 ## ✨ 特性
 
 - 🚀 **完整的React应用生成** - 支持生成完整的React应用，包括页面、组件、路由等
-- 🔄 **数据双向绑定** - 支持JSDataBinding和JSExpression的双向数据绑定
+- 🔄 **数据双向绑定** - 使用 JSExpression（ model: true）实现双向数据绑定
 - ⚡ **生命周期管理** - 自动转换React组件生命周期方法
 - 🎨 **代码格式化** - 集成Prettier，自动格式化生成的代码
 - 🔌 **插件化架构** - 支持自定义插件扩展功能
@@ -120,7 +120,7 @@ const appCode = generator.generate(schema)
 
 ### 1. 数据双向绑定
 
-支持将DSL中的`JSDataBinding`和带有`model`属性的`JSExpression`转换为React的`useState`和事件处理逻辑。
+支持将DSL中带有`model`标记的`JSExpression`（双向绑定）转换为React的`useState`与事件处理逻辑。
 
 #### 使用示例
 
@@ -130,8 +130,9 @@ const appCode = generator.generate(schema)
   "componentName": "TinyInput",
   "props": {
     "value": {
-      "type": "JSDataBinding",
-      "value": "this.state.username"
+      "type": "JSExpression",
+      "value": "this.state.username",
+      "model": true 
     }
   }
 }
@@ -145,7 +146,7 @@ const [state, setState] = useState({ username: '' })
 />
 ```
 
-#### 嵌套对象绑定
+#### 示例：嵌套对象绑定
 
 ```javascript
 // DSL Schema
@@ -153,9 +154,9 @@ const [state, setState] = useState({ username: '' })
   "componentName": "TinyInput",
   "props": {
     "value": {
-      "type": "JSDataBinding", 
-      "value": "this.state.userInfo.name"
-    }
+      "type": "JSExpression",
+      "value": "this.state.userInfo.name",
+      "model": true
   }
 }
 

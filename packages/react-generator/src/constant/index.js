@@ -594,8 +594,7 @@ export const [JS_EXPRESSION, JS_FUNCTION, JS_I18N, JS_RESOURCE, JS_SLOT, JS_DATA
   'JSFunction',
   'i18n',
   'JSResource',
-  'JSSlot',
-  'JSDataBinding'
+  'JSSlot'
 ]
 
 export {
