@@ -267,8 +267,9 @@ export const appSchemaDemo01 = {
               props: {
                 placeholder: '请输入内容',
                 value: {
-                  type: 'JSDataBinding',
-                  value: 'state.inputValue'
+                  type: 'JSExpression',
+                  value: 'state.inputValue',
+                  model: true
                 },
                 onChange: {
                   type: 'JSExpression',
@@ -458,8 +459,9 @@ export const appSchemaDemo01 = {
                           }
                         ],
                         value: {
-                          type: 'JSDataBinding',
-                          value: 'state.formData.storageType'
+                          type: 'JSExpression',
+                          value: 'state.formData.storageType',
+                          model: true
                         }
                       },
                       id: 'a8d84361'
@@ -532,8 +534,9 @@ export const appSchemaDemo01 = {
                           }
                         ],
                         value: {
-                          type: 'JSDataBinding',
-                          value: 'state.formData.zone'
+                          type: 'JSExpression',
+                          value: 'state.formData.zone',
+                          model: true
                         }
                       },
                       id: '6184481b'
@@ -593,8 +596,9 @@ export const appSchemaDemo01 = {
                           }
                         ],
                         value: {
-                          type: 'JSDataBinding',
-                          value: 'state.formData.cpuArch'
+                          type: 'JSExpression',
+                          value: 'state.formData.cpuArch',
+                          model: true
                         }
                       },
                       id: '7d33ced7'
@@ -634,8 +638,9 @@ export const appSchemaDemo01 = {
                               componentName: 'Select',
                               props: {
                                 value: {
-                                  type: 'JSDataBinding',
-                                  value: 'state.formData.cpu'
+                                  type: 'JSExpression',
+                                  value: 'state.formData.cpu',
+                                  model: true
                                 },
                                 placeholder: '请选择',
                                 options: [
@@ -671,8 +676,9 @@ export const appSchemaDemo01 = {
                               componentName: 'Select',
                               props: {
                                 value: {
-                                  type: 'JSDataBinding',
-                                  value: 'state.formData.memory'
+                                  type: 'JSExpression',
+                                  value: 'state.formData.memory',
+                                  model: true
                                 },
                                 placeholder: '请选择',
                                 options: [
@@ -710,8 +716,9 @@ export const appSchemaDemo01 = {
                               props: {
                                 placeholder: '输入关键词',
                                 value: {
-                                  type: 'JSDataBinding',
-                                  value: 'state.inputValues.diskLabel'
+                                  type: 'JSExpression',
+                                  value: 'state.inputValues.diskLabel',
+                                  model: true
                                 }
                               },
                               id: '21cb9282'
@@ -762,8 +769,9 @@ export const appSchemaDemo01 = {
                               }
                             ],
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.formData.instanceType'
+                              type: 'JSExpression',
+                              value: 'state.formData.instanceType',
+                              model: true
                             },
                             style: { borderRadius: '0px', marginTop: '12px' }
                           },
@@ -918,8 +926,9 @@ export const appSchemaDemo01 = {
                           }
                         ],
                         value: {
-                          type: 'JSDataBinding',
-                          value: 'state.formData.imageType'
+                          type: 'JSExpression',
+                          value: 'state.formData.imageType',
+                          model: true
                         }
                       },
                       id: '922b14cb'
@@ -935,8 +944,9 @@ export const appSchemaDemo01 = {
                           componentName: 'Select',
                           props: {
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.formData.storageType'
+                              type: 'JSExpression',
+                              value: 'state.formData.storageType',
+                              model: true
                             },
                             placeholder: '请选择',
                             options: [
@@ -957,8 +967,9 @@ export const appSchemaDemo01 = {
                           componentName: 'Select',
                           props: {
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.formData.storageSize'
+                              type: 'JSExpression',
+                              value: 'state.formData.storageSize',
+                              model: true
                             },
                             placeholder: '请选择',
                             options: [
@@ -1050,8 +1061,9 @@ export const appSchemaDemo01 = {
                           componentName: 'Select',
                           props: {
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.formData.storageType'
+                              type: 'JSExpression',
+                              value: 'state.formData.storageType',
+                              model: true
                             },
                             placeholder: '请选择',
                             options: [
@@ -1073,8 +1085,9 @@ export const appSchemaDemo01 = {
                           props: {
                             placeholder: '请输入',
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.inputValues.systemDisk'
+                              type: 'JSExpression',
+                              value: 'state.inputValues.systemDisk',
+                              model: true
                             },
                             style: { width: '120px', marginRight: '10px' }
                           },
@@ -1133,8 +1146,9 @@ export const appSchemaDemo01 = {
                           componentName: 'Select',
                           props: {
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.formData.diskType'
+                              type: 'JSExpression',
+                              value: 'state.formData.diskType',
+                              model: true
                             },
                             placeholder: '请选择',
                             options: [
@@ -1156,8 +1170,9 @@ export const appSchemaDemo01 = {
                           props: {
                             placeholder: '请输入',
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.inputValues.dataDiskSize'
+                              type: 'JSExpression',
+                              value: 'state.inputValues.dataDiskSize',
+                              model: true
                             },
                             style: { width: '120px', marginRight: '10px' }
                           },
@@ -1176,8 +1191,9 @@ export const appSchemaDemo01 = {
                           props: {
                             placeholder: '请输入',
                             value: {
-                              type: 'JSDataBinding',
-                              value: 'state.inputValues.diskLabel'
+                              type: 'JSExpression',
+                              value: 'state.inputValues.diskLabel',
+                              model: true
                             },
                             style: { width: '120px' }
                           },
@@ -1290,8 +1306,9 @@ export const appSchemaDemo01 = {
                               props: {
                                 placeholder: '请输入',
                                 value: {
-                                  type: 'JSDataBinding',
-                                  value: 'state.formData.instanceCount'
+                                  type: 'JSExpression',
+                                  value: 'state.formData.instanceCount',
+                                  model: true
                                 },
                                 style: { width: '120px', marginRight: '10px' }
                               },

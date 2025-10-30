@@ -46,8 +46,9 @@
               "componentName": "AntdInput",
               "props": {
                 "value": {
-                  "type": "JSDataBinding",
-                  "value": "this.state.userInfo.name"
+                  "type": "JSExpression",
+                  "value": "this.state.userInfo.name",
+                  "model": true
                 },
                 "placeholder": "请输入姓名"
               }
@@ -94,8 +95,9 @@
               "componentName": "AntdInput",
               "props": {
                 "value": {
-                  "type": "JSDataBinding",
-                  "value": "this.state.userInfo.email"
+                  "type": "JSExpression",
+                  "value": "this.state.userInfo.email",
+                  "model": true
                 },
                 "type": "email",
                 "placeholder": "请输入邮箱"
@@ -117,8 +119,9 @@
               "componentName": "AntdCheckbox",
               "props": {
                 "checked": {
-                  "type": "JSDataBinding",
-                  "value": "this.state.settings.notifications"
+                  "type": "JSExpression",
+                  "value": "this.state.settings.notifications",
+                  "model": true
                 }
               }
             }
@@ -142,8 +145,9 @@
               "componentName": "AntdInput",
               "props": {
                 "value": {
-                  "type": "JSDataBinding",
-                  "value": "this.state.formData.title"
+                  "type": "JSExpression",
+                  "value": "this.state.formData.title",
+                  "model": true
                 },
                 "placeholder": "请输入文章标题"
               }
@@ -164,8 +168,9 @@
               "componentName": "AntdInput",
               "props": {
                 "value": {
-                  "type": "JSDataBinding",
-                  "value": "this.state.formData.content"
+                  "type": "JSExpression",
+                  "value": "this.state.formData.content",
+                  "model": true
                 },
                 "rows": 4,
                 "placeholder": "请输入文章内容"

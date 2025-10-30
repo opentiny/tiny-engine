@@ -68,8 +68,9 @@
               "props": {
                 "disabled": false,
                 "modelValue": {
-                  "type": "JSDataBinding",
-                  "value": "state.companyName"
+                  "type": "JSExpression",
+                  "value": "state.companyName",
+                  "model": true
                 }
               }
             }

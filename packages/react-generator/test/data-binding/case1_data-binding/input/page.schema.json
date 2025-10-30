@@ -21,8 +21,9 @@
           "componentName": "AntdInput",
           "props": {
             "value": {
-              "type": "JSDataBinding",
-              "value": "this.state.username"
+              "type": "JSExpression",
+              "value": "this.state.username",
+              "model": true
             },
             "placeholder": "请输入用户名"
           },
@@ -47,8 +48,9 @@
           "componentName": "AntdCheckbox",
           "props": {
             "checked": {
-              "type": "JSDataBinding",
-              "value": "this.state.isSubscribed"
+              "type": "JSExpression",
+              "value": "this.state.isSubscribed",
+              "model": true
             }
           },
           "id": "checkbox-subscribed"
