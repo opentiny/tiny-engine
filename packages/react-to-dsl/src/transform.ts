@@ -300,6 +300,24 @@ function arrowToFunctionCode(name: string | undefined, node: any): string {
   return `${asyncPrefix}function${namePart}(${params}) ${bodyCode}`
 }
 
+// 将 ClassMethod 转为具名函数源码（用于生命周期重命名）
+function classMethodToNamedFunctionCode(name: string, node: any): string {
+  const params = (node.params || []).map((p: any) => generate(p).code).join(', ')
+  const asyncPrefix = (node as any).async ? 'async ' : ''
+  const body = (node as any).body
+  const bodyCode = body && body.type === 'BlockStatement' ? generate(body).code : '{ }'
+  return `${asyncPrefix}function ${name}(${params}) ${bodyCode}`
+}
+
+// 提取类方法体中的语句源码（不包含函数头与花括号）
+function getMethodBodyCode(node: any): string {
+  const body = node && node.body
+  if (body && body.type === 'BlockStatement' && Array.isArray(body.body)) {
+    return body.body.map((s: any) => generate(s).code).join('\n')
+  }
+  return ''
+}
+
 // 递归应用组件名映射（如 antd -> TinyVue）
 function styleObjToCss(obj: any): any {
   if (!obj || typeof obj === 'string') return obj
@@ -519,22 +537,55 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     if (componentClassPath && componentClassPath.node && componentClassPath.node.body) {
       const classBody = componentClassPath.node.body.body || []
       const lifeCycleRecord: Record<string, any> = {}
-      const lifecycleNames = new Set([
-        'constructor',
-        'componentDidMount',
-        'componentWillUnmount',
-        'componentDidUpdate',
-        'componentDidCatch',
-        'shouldComponentUpdate',
-        'getSnapshotBeforeUpdate',
-        'componentWillReceiveProps'
-      ])
+      // 预处理：收集 constructor 中除 super(...) 外的语句，稍后合并到 onMounted
+      let constructorExtraCode = ''
+      const ctor = classBody.find(
+        (m: any) => m && m.type === 'ClassMethod' && (m.kind === 'constructor' || m.key?.name === 'constructor')
+      ) as any
+      if (ctor && ctor.body && Array.isArray(ctor.body.body)) {
+        const filtered = ctor.body.body.filter((s: any) => {
+          if (s.type !== 'ExpressionStatement') return true
+          const e = s.expression
+          return !(e && e.type === 'CallExpression' && e.callee && e.callee.type === 'Super')
+        })
+        constructorExtraCode = filtered.map((s: any) => generate(s).code).join('\n')
+      }
+      // React -> Vue3 DSL 生命周期映射
+      const reactToVueLifeMap: Record<string, string> = {
+        componentWillMount: 'onBeforeMount',
+        componentDidMount: 'onMounted',
+        componentWillUnmount: 'onBeforeUnmount',
+        componentDidUpdate: 'onUpdated',
+        componentDidCatch: 'onErrorCaptured',
+        shouldComponentUpdate: 'onBeforeUpdate',
+        getSnapshotBeforeUpdate: 'onBeforeUpdate',
+        componentWillReceiveProps: 'onBeforeUpdate'
+      }
+      const lifecycleNames = new Set(['constructor'].concat(Object.keys(reactToVueLifeMap)))
       for (const m of classBody) {
         if (m.type === 'ClassMethod' && m.key && (m.key.type === 'Identifier' || m.key.type === 'StringLiteral')) {
           const name = m.key.type === 'Identifier' ? m.key.name : String(m.key.value)
           if (name === 'render') continue
           if (lifecycleNames.has(name)) {
-            lifeCycleRecord[name] = { type: 'JSFunction', value: generate(m).code }
+            const vueLife = reactToVueLifeMap[name]
+            if (vueLife) {
+              if (vueLife === 'onMounted') {
+                // onMounted 需要合并 constructor 的语句
+                const mountBody = getMethodBodyCode(m)
+                const merged = [constructorExtraCode, mountBody].filter(Boolean).join('\n')
+                const value = `function onMounted() {\n${merged}\n}`
+                lifeCycleRecord[vueLife] = { type: 'JSFunction', value }
+              } else if (vueLife === 'onBeforeUpdate' && name === 'componentWillReceiveProps') {
+                // onBeforeUpdate 通常不需要参数，移除原参数
+                const value = `function onBeforeUpdate() {\n${getMethodBodyCode(m)}\n}`
+                lifeCycleRecord[vueLife] = { type: 'JSFunction', value }
+              } else {
+                lifeCycleRecord[vueLife] = { type: 'JSFunction', value: classMethodToNamedFunctionCode(vueLife, m) }
+              }
+            } else if (name !== 'constructor') {
+              // 兜底：若未来有未映射的生命周期，保留原名（不处理 constructor）
+              lifeCycleRecord[name] = { type: 'JSFunction', value: classMethodToNamedFunctionCode(name, m) }
+            }
           } else {
             methods[name] = { type: 'JSFunction', value: generate(m).code }
           }
@@ -552,6 +603,13 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
           }
         }
       }
+      // 若无 didMount，但有 constructor 语句，仍然生成 onMounted
+      if (constructorExtraCode && !lifeCycleRecord['onMounted']) {
+        lifeCycleRecord['onMounted'] = {
+          type: 'JSFunction',
+          value: `function onMounted() {\n${constructorExtraCode}\n}`
+        }
+      }
       if (Object.keys(lifeCycleRecord).length > 0) {
         page.lifeCycles = { ...page.lifeCycles, ...lifeCycleRecord }
       }
@@ -567,6 +625,28 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     applyComponentMapping(page.children, defaultComponentMap)
   } catch (e) {
     // ignore mapping errors
+  }
+
+  // 过滤生命周期：仅保留 DSL 支持的键，避免 constructor 等异常键残留
+  try {
+    const allowed = new Set([
+      'onBeforeMount',
+      'onMounted',
+      'onBeforeUpdate',
+      'onUpdated',
+      'onBeforeUnmount',
+      'onUnmounted',
+      'onErrorCaptured',
+      'onActivated',
+      'onDeactivated'
+    ])
+    const lc = page.lifeCycles || {}
+    for (const k of Object.keys(lc)) {
+      if (!allowed.has(k)) delete (lc as any)[k]
+    }
+    page.lifeCycles = lc
+  } catch {
+    // ignore lifecycle filtering errors
   }
 
   // 受控表单双向绑定规范化：将 value/checked = state.xxx 的场景标记为 model，并移除 onChange

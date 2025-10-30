@@ -200,13 +200,13 @@ describe('react-to-dsl: run all testcases and output to ./output', () => {
       }
 
       if (caseName.startsWith('004_lifecycle')) {
-        // 生命周期与类方法提取
+        // 生命周期与类方法提取（Vue3 DSL 名称）
         const lc = page.lifeCycles || {}
         const methods = page.methods || {}
-        expect(!!lc.componentDidMount).toBe(true)
-        expect(!!lc.componentWillUnmount).toBe(true)
-        expect(!!lc.componentDidUpdate).toBe(true)
-        expect(!!lc.componentDidCatch).toBe(true)
+        expect(!!lc.onMounted).toBe(true)
+        expect(!!lc.onBeforeUnmount).toBe(true)
+        expect(!!lc.onUpdated).toBe(true)
+        expect(!!lc.onErrorCaptured).toBe(true)
         expect(!!methods.handleClick).toBe(true)
       }
 
