@@ -14,7 +14,7 @@ export default {
     configProviderDesign: designSmbConfig,
     isShowLine: true,
     isShowCollapse: true,
-    isShowHomePage: true
+    isShowWorkspace: true
   },
   metas: [LayoutService],
   mcp

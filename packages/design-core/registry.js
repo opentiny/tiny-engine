@@ -47,8 +47,6 @@ import {
   Styles,
   Layout,
   Canvas,
-  ApplicationCenter,
-  TemplateCenter,
   GenerateCodeService,
   GlobalService,
   ThemeSwitchService,
@@ -174,9 +172,9 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
   ],
-  homes: [
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.home.application-center'] === false ? null : ApplicationCenter,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.home.template-center'] === false ? null : TemplateCenter
+  workspace: [
+    // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
+    // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
   ],
   canvas: Canvas
 }
