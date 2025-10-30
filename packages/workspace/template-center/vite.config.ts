@@ -25,7 +25,7 @@ export default defineConfig({
     sourcemap: true,
     lib: {
       entry: path.resolve(__dirname, './index.ts'),
-      name: 'home-application-center',
+      name: 'workspace-template-center',
       fileName: (_format, entryName) => `${entryName}.js`,
       formats: ['es']
     },

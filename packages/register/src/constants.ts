@@ -84,6 +84,6 @@ export const META_APP = {
   Canvas: 'engine.canvas',
   Tutorial: 'engine.plugins.tutorial',
   // 首页菜单
-  AppCenter: 'engine.home.application-center',
-  TemplateCenter: 'engine.home.template-center'
+  AppCenter: 'engine.workspace.application-center',
+  TemplateCenter: 'engine.workspace.template-center'
 }
