@@ -1,5 +1,9 @@
 import { defineConfig } from 'vite'
 import path from 'path'
+import { fileURLToPath } from 'url'
+
+// __dirname 在 ESM 中不可用，这里手动计算
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
@@ -33,4 +37,4 @@ export default defineConfig({
     exclude: ['**/result/**'],
     watchExclude: ['**/result/**']
   }
-}) 
+})
