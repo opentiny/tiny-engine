@@ -29,7 +29,7 @@
   "dependencies": {
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
     "react-router-dom": "^6.27.0",
-    "vitest": "^1.0.0"
+    "prettier": "^2.6.1"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.28.0",
@@ -42,9 +42,9 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react": "^7.37.5",
     "fs-extra": "^10.0.1",
-    "prettier": "^2.6.1",
     "vite": "^2.8.6",
     "vite-plugin-static-copy": "^1.0.6",
-    "winston": "^3.10.0"
+    "winston": "^3.10.0",
+    "vitest": "^1.0.0"
   }
 }
