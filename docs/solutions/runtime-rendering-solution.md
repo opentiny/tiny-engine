@@ -46,7 +46,7 @@
   - 生产环境：`/runtime`
 
 - 访问示例
-  - Dev: `http://localhost:8090/runtime.html?id=1&tenant=1&platform=1#/homep`
+  - Dev: `http://localhost:8090/runtime.html?id=1&tenant=1&platform=1#/home`
   - Prod: `https://your-host/runtime?id=1&tenant=1&platform=1#/home`
 
 ### 物料与依赖导入说明
