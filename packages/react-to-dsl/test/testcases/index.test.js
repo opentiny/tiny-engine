@@ -130,14 +130,15 @@ describe('react-to-dsl: run all testcases and output to ./output', () => {
       if (caseName.startsWith('002_data-binding')) {
         // value/checked 等数据绑定应转为 JSExpression
         const hasBoundValue = someNode(page.children, (n) => {
-          const v = n?.props?.value
+          const v = n?.props?.modelValue
           return v && typeof v === 'object' && v.type === 'JSExpression' && /state\.(username|email)/.test(v.value)
         })
+        expect(hasBoundValue).toBe(true)
         const hasBoundChecked = someNode(page.children, (n) => {
           const v = n?.props?.checked
           return v && typeof v === 'object' && v.type === 'JSExpression' && /state\.isSubscribed/.test(v.value)
         })
-        expect(hasBoundValue && hasBoundChecked).toBe(true)
+        expect(hasBoundChecked).toBe(true)
       }
 
       if (caseName.startsWith('003_createVM')) {

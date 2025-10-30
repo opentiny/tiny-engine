@@ -12,5 +12,19 @@ export const defaultComponentMap: Record<string, string> = {
   Row: 'TinyRow',
   Steps: 'TinyTimeLine',
   'Typography.Text': 'Text',
-  Table: 'TinyGrid'
+  Table: 'TinyGrid',
+  AntdForm: 'TinyForm',
+  AntdFormItem: 'TinyFormItem',
+  AntdButton: 'TinyButton',
+  AntdButtonGroup: 'TinyButtonGroup',
+  AntdSelect: 'TinySelect',
+  AntdSearch: 'TinySearch',
+  AntdInput: 'TinyInput',
+  AntdGrid: 'TinyGrid',
+  AntdGridItem: 'TinyGridItem',
+  AntdCol: 'TinyCol',
+  AntdRow: 'TinyRow',
+  AntdTimeLine: 'TinyTimeLine',
+  AntdText: 'Text',
+  AntdTable: 'TinyGrid'
 }
