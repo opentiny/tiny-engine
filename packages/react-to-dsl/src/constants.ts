@@ -28,3 +28,14 @@ export const defaultComponentMap: Record<string, string> = {
   AntdText: 'Text',
   AntdTable: 'TinyGrid'
 }
+
+// 组件属性映射示例：key 为“映射后的组件名”，值为属性级规则
+export const defaultPropMap: Record<string, Record<string, { rename?: string; mapValue?: (v: any) => any }>> = {
+  TinyForm: {
+    labelCol: { rename: 'label-position' }
+  },
+  TinyFormItem: {
+    label: { rename: 'label' }
+  }
+  // 待补充...
+}

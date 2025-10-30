@@ -3,7 +3,7 @@ import traverse from '@babel/traverse'
 import generate from '@babel/generator'
 import type { File } from '@babel/types'
 import type { IAppSchema, IPageSchema, ISchemaChildrenItem } from './types'
-import { defaultComponentMap } from './constants'
+import { defaultComponentMap, defaultPropMap } from './constants'
 import { genId8 } from './utils'
 
 export interface TransformOptions {
@@ -317,6 +317,35 @@ function styleObjToCss(obj: any): any {
   return obj
 }
 
+// 按组件的属性规则映射/重命名 props
+function applyPropMapping(
+  componentName: string,
+  props: Record<string, any> | undefined | null
+): Record<string, any> | undefined | null {
+  if (!props) return props
+  const rules = (defaultPropMap as any)[componentName] as
+    | Record<string, { rename?: string; mapValue?: (v: any) => any }>
+    | undefined
+  if (!rules) return props
+  const next: Record<string, any> = {}
+  for (const [key, val] of Object.entries(props)) {
+    if (key === '...') {
+      next[key] = val
+      continue
+    }
+    const rule = rules[key]
+    if (rule) {
+      const newKey = rule.rename || key
+      const newVal = typeof rule.mapValue === 'function' ? rule.mapValue(val) : val
+      // 若已存在同名目标键，保留第一次设置，避免无意覆盖
+      if (!(newKey in next)) next[newKey] = newVal
+    } else {
+      next[key] = val
+    }
+  }
+  return next
+}
+
 function applyComponentMapping(nodes: ISchemaChildrenItem[] | undefined | null, map: Record<string, string>) {
   if (!nodes || nodes.length === 0) return
   for (const n of nodes) {
@@ -332,6 +361,8 @@ function applyComponentMapping(nodes: ISchemaChildrenItem[] | undefined | null, 
     if (n.props && n.props.style) {
       n.props.style = styleObjToCss(n.props.style)
     }
+    // 应用属性级映射（依据组件）
+    n.props = applyPropMapping(n.componentName, n.props) as any
     // Tiny 组件属性名调整
     if (n.componentName === 'TinySelect' || n.componentName === 'TinyInput') {
       if (n.props && n.props.value !== undefined) {

@@ -107,3 +107,18 @@ export interface IAppSchema {
   componentsMap: Array<IComponentMapItem>
   meta: IMetaInfo
 }
+
+// 可配置的组件属性映射规则类型
+export type PropTransformRule = {
+  // 将属性名重命名为
+  rename?: string
+  // 对属性值进行变换
+  mapValue?: (value: any) => any
+}
+
+export type ComponentPropMapping = Record<
+  // 组件名（映射后的）
+  string,
+  // 属性名 -> 规则
+  Record<string, PropTransformRule>
+>
