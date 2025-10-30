@@ -23,7 +23,7 @@ import {
   formatCode
 } from '../utils'
 import { traverse as traverseState, unwrapExpression, translateHookState } from '../parser/state'
-import { capitalizeFirstLetter } from '../utils/uaperCase'
+import { capitalizeFirstLetter } from '../utils/upperCase'
 import { preProcess } from '../pre-processor'
 import {
   DEFAULT_COMPONENTS_MAP,

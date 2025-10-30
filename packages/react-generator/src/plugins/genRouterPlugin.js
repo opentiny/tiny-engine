@@ -1,5 +1,5 @@
 import { mergeOptions } from '../utils/mergeOptions'
-import { capitalizeFirstLetter } from '../utils/uaperCase'
+import { capitalizeFirstLetter } from '../utils/upperCase'
 
 const defaultOption = {
   fileName: 'index.jsx',
