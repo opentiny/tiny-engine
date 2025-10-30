@@ -42,7 +42,7 @@ export const getImportMap = (schema, componentsMap, config) => {
     pkgMap[key].push(item)
   })
 
-  const { blockRelativePath = '../components', blockSuffix = '.vue' } = config
+  const { blockRelativePath = '../components', blockSuffix = '.jsx' } = config
   const blockPkgMap = {}
   const relativePath = blockRelativePath.endsWith('/') ? blockRelativePath.slice(0, -1) : blockRelativePath
 
@@ -67,7 +67,7 @@ export const getImportMap = (schema, componentsMap, config) => {
 export const genCompImport = (schema, componentsMap, config = {}) => {
   const { components, blocks } = parseImport(schema.children)
   const pkgMap = {}
-  const { blockRelativePath = '../components/', blockSuffix = '.vue' } = config
+  const { blockRelativePath = '../components', blockSuffix = '.jsx' } = config
 
   const importComps = componentsMap.filter(({ componentName }) => components.includes(componentName))
 
@@ -81,8 +81,9 @@ export const genCompImport = (schema, componentsMap, config = {}) => {
     return generateImportByPkgName({ pkgName: key, imports: value })
   })
 
+  const rel = blockRelativePath.endsWith('/') ? blockRelativePath.slice(0, -1) : blockRelativePath
   const blockImportStatement = blocks.map((name) => {
-    return `import ${name} from ${blockRelativePath}/${name}${blockSuffix}`
+    return `import ${name} from '${rel}/${name}${blockSuffix}'`
   })
 
   return `${batchImportStatements.join('\n')}\n${blockImportStatement.join('\n')}`
