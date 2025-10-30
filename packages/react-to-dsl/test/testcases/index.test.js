@@ -139,6 +139,42 @@ describe('react-to-dsl: run all testcases and output to ./output', () => {
           return v && typeof v === 'object' && v.type === 'JSExpression' && /state\.isSubscribed/.test(v.value)
         })
         expect(hasBoundChecked).toBe(true)
+
+        // 双向绑定：value/modelValue 与 checked 应带有 model: true 且使用 this.state 路径
+        const hasModelForValue = someNode(page.children, (n) => {
+          const mv = n?.props?.modelValue || n?.props?.value
+          return (
+            mv &&
+            typeof mv === 'object' &&
+            mv.type === 'JSExpression' &&
+            mv.model === true &&
+            /this\.state\.(username|email)/.test(mv.value)
+          )
+        })
+        expect(hasModelForValue).toBe(true)
+
+        const hasModelForChecked = someNode(page.children, (n) => {
+          const ck = n?.props?.checked
+          return (
+            ck &&
+            typeof ck === 'object' &&
+            ck.type === 'JSExpression' &&
+            ck.model === true &&
+            /this\.state\.isSubscribed/.test(ck.value)
+          )
+        })
+        expect(hasModelForChecked).toBe(true)
+
+        // 双向绑定后应移除 onChange
+        const removedOnChange = someNode(page.children, (n) => {
+          const p = n?.props || {}
+          const hasModel =
+            (p.modelValue && typeof p.modelValue === 'object' && p.modelValue.model === true) ||
+            (p.value && typeof p.value === 'object' && p.value.model === true) ||
+            (p.checked && typeof p.checked === 'object' && p.checked.model === true)
+          return hasModel && !('onChange' in p)
+        })
+        expect(removedOnChange).toBe(true)
       }
 
       if (caseName.startsWith('003_createVM')) {

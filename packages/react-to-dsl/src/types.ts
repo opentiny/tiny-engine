@@ -1,6 +1,8 @@
 export type JSExpression = {
   type: 'JSExpression'
   value: string
+  // 标记为双向绑定
+  model?: boolean
 }
 
 export interface IFuncType {

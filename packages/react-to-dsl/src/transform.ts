@@ -538,6 +538,52 @@ export function transformReactToDsl(code: string, options: TransformOptions = {}
     // ignore mapping errors
   }
 
+  // 受控表单双向绑定规范化：将 value/checked = state.xxx 的场景标记为 model，并移除 onChange
+  try {
+    const walk = (nodes: ISchemaChildrenItem[] | undefined) => {
+      if (!nodes) return
+      for (const n of nodes) {
+        const p: any = n.props || {}
+        const isJSExpr = (v: any) => v && typeof v === 'object' && v.type === 'JSExpression'
+        const matchesStatePath = (code: string) => /(?:^|\b)(?:this\.)?state\.[A-Za-z_$][\w$]*/.test(code)
+        // 处理 value
+        if (p.value && isJSExpr(p.value) && matchesStatePath(p.value.value)) {
+          // 统一加上 this. 前缀，便于运行时解析
+          if (!/^this\./.test(p.value.value)) {
+            p.value = { ...p.value, value: `this.${p.value.value}`, model: true }
+          } else {
+            p.value = { ...p.value, model: true }
+          }
+          // 删除 onChange（由 model 接管）
+          if (p.onChange) delete p.onChange
+        }
+        // 处理 modelValue（Tiny 组件）
+        if (p.modelValue && isJSExpr(p.modelValue) && matchesStatePath(p.modelValue.value)) {
+          if (!/^this\./.test(p.modelValue.value)) {
+            p.modelValue = { ...p.modelValue, value: `this.${p.modelValue.value}`, model: true }
+          } else {
+            p.modelValue = { ...p.modelValue, model: true }
+          }
+          if (p.onChange) delete p.onChange
+        }
+        // 处理 checked
+        if (p.checked && isJSExpr(p.checked) && matchesStatePath(p.checked.value)) {
+          if (!/^this\./.test(p.checked.value)) {
+            p.checked = { ...p.checked, value: `this.${p.checked.value}`, model: true }
+          } else {
+            p.checked = { ...p.checked, model: true }
+          }
+          if (p.onChange) delete p.onChange
+        }
+        n.props = p
+        if (n.children && n.children.length) walk(n.children)
+      }
+    }
+    walk(page.children)
+  } catch (e) {
+    // ignore model normalization errors
+  }
+
   const appSchema: IAppSchema = {
     i18n: { en_US: {}, zh_CN: {} },
     utils: [],
