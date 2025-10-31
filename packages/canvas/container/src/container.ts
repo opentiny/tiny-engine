@@ -468,7 +468,7 @@ const setSelectRect = (
 
 const getElementDurationTime = (elementId?: string) => {
   const element = elementId ? querySelectById(elementId) : getDocument().body
-  let delayTime = 0
+  let delayTime = 50
 
   if (!element) {
     return delayTime
