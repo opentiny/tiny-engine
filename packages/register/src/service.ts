@@ -56,10 +56,10 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
 
   // 使用对象展开运算符合并 apis，避免直接赋值导致类型错误
   if (typeof apis === 'object' && apis) {
-    resultService.apis = { ...resultService.apis, ...apis }
+    resultService.apis = apis as any
   } else if (typeof apis === 'function') {
     // 传递完整的 context 对象，包含 state 和 options
-    resultService.apis = { ...resultService.apis, ...apis({ state, options }) }
+    resultService.apis = apis({ state, options }) as any
   }
 
   resultService.apis.setOptions = (kv) => {

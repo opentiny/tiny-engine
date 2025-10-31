@@ -5,6 +5,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
     "baseUrl": "./",
