@@ -468,9 +468,13 @@ const setSelectRect = (
 
 const getElementDurationTime = (elementId?: string) => {
   const element = elementId ? querySelectById(elementId) : getDocument().body
+  let delayTime = 0
+
+  if (!element) {
+    return delayTime
+  }
   const transitionDuration = window.getComputedStyle(element).getPropertyValue('transition-duration')
   const transitionDelay = window.getComputedStyle(element).getPropertyValue('transition-delay')
-  let delayTime = 0
   const getMaxMillisecondNumber = (arr: string[]) => {
     const millisecondNumber = arr.map((item) => {
       if (item.endsWith('ms')) {

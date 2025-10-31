@@ -191,10 +191,12 @@ export default {
       if (state.orderBy === 'last_updated_time') {
         params.orderBy = state.orderBy
       }
-      fetchApplicationList(Object.fromEntries(Object.entries(params).filter(([, value]) => !!value))).then((res) => {
-        appList.value = res.apps || []
-        state.total = res.total
-      })
+      fetchApplicationList(Object.fromEntries(Object.entries(params).filter(([, value]) => Boolean(value)))).then(
+        (res) => {
+          appList.value = res.apps || []
+          state.total = res.total
+        }
+      )
     }
 
     const creatApp = () => {
