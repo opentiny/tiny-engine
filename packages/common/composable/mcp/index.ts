@@ -221,8 +221,7 @@ const collectTools = (state: IState) => {
   state.toolList = tools
 }
 
-// 移除未使用的 @ts-expect-error 注释
-export default defineService<IState, IOptions>({
+const mcpService: ReturnType<typeof defineService<IState, IOptions>> = defineService<IState, IOptions>({
   id: META_SERVICE.McpService,
   type: 'MetaService',
   options: {
@@ -261,3 +260,5 @@ export default defineService<IState, IOptions>({
     updateTool: (name: string, config?: UpdateToolConfig) => updateTool(state, name, config)
   })
 })
+
+export default mcpService

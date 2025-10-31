@@ -1,19 +1,7 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "types": ["@types/wicg-file-system-access"],
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "module": "ESNext",
-
-    /* Bundler mode */
-    "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "emitDeclarationOnly": true,
-    "jsx": "preserve",
-    "useDefineForClassFields": true
+    "types": ["@types/wicg-file-system-access"]
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
 }

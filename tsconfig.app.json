@@ -1,9 +1,6 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "./tsconfig.base.json"],
   "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
