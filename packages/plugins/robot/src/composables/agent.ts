@@ -2,7 +2,7 @@ import { jsonrepair } from 'jsonrepair'
 import * as jsonpatch from 'fast-json-patch'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { getMetaApi, META_SERVICE, useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
-import useRobot from '../js/useRobot'
+import useRobot from './useRobot'
 import SvgICons from '@opentiny/vue-icon'
 
 const { deepClone } = utils
@@ -45,7 +45,8 @@ const schemaAutoFix = (data: object | object[]) => {
 
 const jsonPatchAutoFix = (jsonPatches: any[], isFinial: boolean) => {
   // 流式渲染过程中，画布只渲染children字段，避免不完整的methods/states/css等字段导致解析报错
-  const childrenFilter = (patch) => isFinial || patch.path?.startsWith('/children') || patch.path?.startsWith('/css')
+  const childrenFilter = (patch, index, arr) =>
+    isFinial || index < arr.length - 1 || (index === arr.length - 1 && patch.path?.startsWith('/children'))
   const validJsonPatches = jsonPatches.filter(childrenFilter).filter(useRobot().isValidFastJsonPatch)
 
   return validJsonPatches

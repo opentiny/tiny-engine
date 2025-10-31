@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import type { BubbleContentItem } from '@opentiny/tiny-robot'
 import {
   STATUS,
@@ -15,9 +15,9 @@ import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema } from './useAgent'
-import useRobot from '../js/useRobot'
-import { getAgentSystemPrompt } from '../js/prompts'
+import { updatePageSchema } from './agent'
+import useRobot from './useRobot'
+import { getAgentSystemPrompt } from '../prompts'
 
 const { deepClone } = utils
 
@@ -32,10 +32,15 @@ const getApiUrl = () => {
   return robotSettingState.chatMode === CHAT_MODE.Agent ? '/app-center/api/ai/chat' : '/app-center/api/chat/completions'
 }
 
-const config: Omit<AIModelConfig, 'provider' | 'providerImplementation'> = {
+const config: Omit<AIModelConfig, 'provider' | 'providerImplementation'> & {
+  axiosClient?: unknown
+  httpClientType?: 'axios' | 'fetch'
+} = {
   apiKey: robotSettingState.selectedModel.apiKey || '',
   apiUrl: getApiUrl(),
-  defaultModel: robotSettingState.selectedModel.model || 'deepseek-v3'
+  defaultModel: robotSettingState.selectedModel.model || 'deepseek-v3',
+  axiosClient: () => getMetaApi(META_SERVICE.Http)?.getHttp(),
+  httpClientType: 'axios'
 }
 
 const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
@@ -87,6 +92,7 @@ const beforeRequest = async (requestParams: any) => {
 }
 
 const { client, provider } = createClient({ config, beforeRequest })
+window.client = client
 
 const updateLLMConfig = (newConfig: Omit<AIModelConfig, 'provider' | 'providerImplementation'>) => {
   provider?.updateConfig(newConfig)

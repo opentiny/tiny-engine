@@ -1,7 +1,8 @@
 import { computed, ref } from 'vue'
 import type { PluginInfo, PluginTool } from '@opentiny/tiny-robot'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import type { McpTool, RequestTool } from '../mcp/types'
+import type { McpTool } from '../types/mcp-types'
+import type { RequestTool } from '../types/types'
 
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',

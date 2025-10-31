@@ -46,22 +46,6 @@ const AIModelOptions = [
         }
       },
       {
-        label: 'Qwen QVQ视觉推理模型（PLUS）',
-        value: 'qvq-plus',
-        capabilities: {
-          visual: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      {
-        label: 'Qwen QVQ视觉推理模型（MAX）',
-        value: 'qvq-max',
-        capabilities: {
-          visual: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      {
         label: 'Qwen VL视觉理解模型（PLUS）',
         value: 'qwen3-vl-plus',
         capabilities: {

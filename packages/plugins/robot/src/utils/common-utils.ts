@@ -1,10 +1,8 @@
 import { toRaw } from 'vue'
-import useMcpServer from '../composables/useMcp'
-import type { LLMMessage, RobotMessage } from './types'
-import type { LLMRequestBody, LLMResponse, ReponseToolCall, RequestOptions, RequestTool } from './types'
+import type { LLMMessage } from '../types/mcp-types'
+import type { LLMRequestBody, RequestOptions, RequestTool } from '../types/types'
 import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
-
-let requestOptions: RequestOptions = {}
+import type { StreamHandler } from '@opentiny/tiny-robot-kit'
 
 // 格式化LLM输入messages消息
 export const formatMessages = (messages: LLMMessage[]) => {
@@ -19,7 +17,19 @@ export const formatMessages = (messages: LLMMessage[]) => {
     }))
 }
 
-const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = requestOptions) => {
+export const serializeError = (err: unknown): string => {
+  if (err instanceof Error) {
+    return JSON.stringify({ name: err.name, message: err.message })
+  }
+  if (typeof err === 'string') return err
+  try {
+    return JSON.stringify(err)
+  } catch {
+    return String(err)
+  }
+}
+
+export const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = {}) => {
   const bodyObj: LLMRequestBody = {
     baseUrl: options.baseUrl,
     model: options?.model || 'deepseek-chat',
@@ -37,141 +47,33 @@ const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: R
   })
 }
 
-const parseArgs = (args: string) => {
-  try {
-    return JSON.parse(args)
-  } catch (error) {
-    return args
-  }
-}
+export const processSSEStream = (data: string, handler: StreamHandler) => {
+  let finishReason: string | undefined
+  let latestFinishReason: string | undefined
+  const lines = data.split('\n\n')
+  lines.pop()
 
-export const serializeError = (err: unknown): string => {
-  if (err instanceof Error) {
-    return JSON.stringify({ name: err.name, message: err.message })
-  }
-  if (typeof err === 'string') return err
-  try {
-    return JSON.stringify(err)
-  } catch {
-    return String(err)
-  }
-}
-
-const formatToolResult = (
-  toolResult: string | { type: 'text'; text: string } | Array<{ type: 'text'; text: string }>
-) => {
-  let result: any = toolResult
-  if (Array.isArray(result) && result.length === 1) {
-    result = result[0]
-  }
-
-  if (typeof result === 'object' && result.type === 'text' && result.text) {
-    result = result.text
-  }
-
-  if (typeof result === 'string') {
-    return result
-  }
-
-  return JSON.stringify(result)
-}
-
-const handleToolCall = async (
-  res: LLMResponse,
-  tools: RequestTool[],
-  messages: RobotMessage[],
-  contextMessages?: RobotMessage[]
-) => {
-  if (messages.length < 1) {
-    return
-  }
-  const currentMessage = messages.at(-1)!
-  if (!currentMessage.renderContent) {
-    currentMessage.renderContent = []
-  }
-  if (res.choices[0].message.content) {
-    currentMessage.renderContent.push({
-      type: 'markdown',
-      content: res.choices[0].message.content
-    })
-  }
-  const tool_calls: ReponseToolCall[] | undefined = res.choices[0].message.tool_calls
-  if (tool_calls && tool_calls.length) {
-    const historyMessages = contextMessages?.length ? contextMessages : toRaw(messages.slice(0, -1))
-    const toolMessages: LLMMessage[] = [...historyMessages, res.choices[0].message] as LLMMessage[]
-    for (const tool of tool_calls) {
-      const { name, arguments: args } = tool.function
-      const parsedArgs = parseArgs(args)
-      const currentToolMessage = {
-        type: 'tool',
-        name,
-        status: 'running',
-        content: {
-          params: parsedArgs
-        },
-        formatPretty: true
+  for (const line of lines) {
+    if (line.trim() === '') continue
+    if (line.trim() === 'data: [DONE]') {
+      if (latestFinishReason) {
+        finishReason = latestFinishReason
       }
-      currentMessage.renderContent.push(currentToolMessage)
-      let toolCallResult: string
-      let toolCallStatus: 'success' | 'failed'
-      try {
-        const resp = await useMcpServer().callTool(name, parsedArgs)
-        toolCallStatus = 'success'
-        toolCallResult = resp.content
-      } catch (error) {
-        toolCallStatus = 'failed'
-        toolCallResult = serializeError(error)
-      }
-      toolMessages.push({
-        content: formatToolResult(toolCallResult),
-        role: 'tool',
-        tool_call_id: tool.id
-      })
-
-      currentMessage.renderContent.at(-1)!.status = toolCallStatus
-      currentMessage.renderContent.at(-1)!.content = {
-        params: parsedArgs,
-        result: toolCallResult
-      }
+      handler.onDone(finishReason)
+      continue
     }
-    currentMessage.renderContent.push({ type: 'loading', content: '' })
-    const newResp = await fetchLLM(toolMessages, tools)
-    currentMessage.renderContent.pop()
-    const hasToolCall = newResp.choices[0].message.tool_calls?.length > 0
-    if (hasToolCall) {
-      await handleToolCall(newResp, tools, messages, toolMessages)
-    } else {
-      if (newResp.choices[0].message.content) {
-        currentMessage.renderContent.push({
-          type: 'markdown',
-          content: newResp.choices[0].message.content
-        })
-      }
-    }
-  }
-}
 
-export const sendMcpRequest = async (messages: LLMMessage[], options: RequestOptions = {}) => {
-  if (messages.length < 1) {
-    return
-  }
-  const tools = await useMcpServer().getLLMTools()
-  requestOptions = options
-  messages.at(-1)!.renderContent = [{ type: 'loading', content: '' }]
-  const historyRaw = toRaw(messages.slice(0, -1)) as LLMMessage[]
-  const res = await fetchLLM(formatMessages(historyRaw), tools, options)
-  delete messages.at(-1)!.renderContent
-  const hasToolCall = res.choices[0].message.tool_calls?.length > 0
-  if (hasToolCall) {
-    await handleToolCall(res, tools, messages)
-    const lastMsg: any = messages.at(-1) as any
-    const renderList: any[] | undefined = Array.isArray(lastMsg.renderContent)
-      ? (lastMsg.renderContent as any[])
-      : undefined
-    const lastRendered: any = renderList && renderList.length > 0 ? renderList[renderList.length - 1] : undefined
-    const renderedContent: unknown = lastRendered?.content
-    lastMsg.content = typeof renderedContent === 'string' ? renderedContent : JSON.stringify(renderedContent ?? '')
-  } else {
-    messages.at(-1)!.content = res.choices[0].message.content
+    try {
+      // 解析SSE消息
+      const dataMatch = line.match(/^data: (.+)$/m)
+      if (!dataMatch) continue
+
+      const data = JSON.parse(dataMatch[1])
+      handler.onData(data)
+      latestFinishReason = data.choices?.[0]?.finish_reason || undefined
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Error parsing SSE message:', error, line)
+    }
   }
 }

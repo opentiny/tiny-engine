@@ -116,9 +116,9 @@ import {
 } from 'vue'
 import { Notify } from '@opentiny/vue'
 import useChat from '../composables/useChat'
-import LoadingRenderer from '../mcp/LoadingRenderer.vue'
-import MarkdownRenderer from '../mcp/MarkdownRenderer.vue'
-import ImgRenderer from '../mcp/ImgRenderer.vue'
+import LoadingRenderer from '../components/LoadingRenderer.vue'
+import MarkdownRenderer from '../components/MarkdownRenderer.vue'
+import ImgRenderer from '../components/ImgRenderer.vue'
 import { serializeError } from '../utils/common-utils'
 
 const { promptItems, allowFiles, bubbleRenderers } = defineProps({

@@ -1,5 +1,6 @@
 import { AIClient, type AIModelConfig } from '@opentiny/tiny-robot-kit'
 import { OpenAICompatibleProvider } from './OpenAICompatibleProvider'
+
 interface ClientOptions {
   config: Omit<AIModelConfig, 'provider' | 'providerImplementation'>
   beforeRequest: () => object
