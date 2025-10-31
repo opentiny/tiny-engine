@@ -82,5 +82,8 @@ export const META_APP = {
   Container: 'engine.canvas.container',
   // 画布
   Canvas: 'engine.canvas',
-  Tutorial: 'engine.plugins.tutorial'
+  Tutorial: 'engine.plugins.tutorial',
+  // 首页菜单
+  AppCenter: 'engine.workspace.application-center',
+  TemplateCenter: 'engine.workspace.template-center'
 }

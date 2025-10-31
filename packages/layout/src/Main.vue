@@ -1,7 +1,18 @@
 <template>
   <component :is="configProvider" :design="configProviderDesign">
-    <div id="tiny-engine">
-      <design-toolbars :layoutRegistry="layoutRegistry"></design-toolbars>
+    <div id="tiny-engign-workspace" v-if="isShowDefaultWorkspace || !!clickedWorkspacePageId">
+      <design-workspace
+        :workspaceRegistry="workspaceRegistry"
+        :currentPageId="clickedWorkspacePageId"
+        @backToDesigner="setWorkspacePageId"
+      ></design-workspace>
+    </div>
+    <div id="tiny-engine" v-if="!isShowDefaultWorkspace">
+      <design-toolbars
+        :layoutRegistry="layoutRegistry"
+        :workspaceRegistry="workspaceRegistry"
+        @openWorkspace="setWorkspacePageId"
+      ></design-toolbars>
       <div class="tiny-engine-main">
         <div class="tiny-engine-left-wrap">
           <div class="tiny-engine-content-wrap">
@@ -36,12 +47,13 @@
 
 <script lang="ts">
 /* metaService: engine.layout.Main */
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useLayout, getMergeMeta, getMergeMetaByType } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
 import DesignSettings from './DesignSettings.vue'
+import DesignWorkspace from './DesignWorkspace.vue'
 import meta from '../meta'
 
 export default {
@@ -49,7 +61,8 @@ export default {
   components: {
     DesignToolbars,
     DesignPlugins,
-    DesignSettings
+    DesignSettings,
+    DesignWorkspace
   },
   provide() {
     return {
@@ -60,12 +73,26 @@ export default {
     const layoutRegistry = getMergeMeta(meta.id)
     const configProvider = layoutRegistry.options.configProvider
     const configProviderDesign = layoutRegistry.options.configProviderDesign
+    const isShowWorkspace = layoutRegistry.options.isShowWorkspace
     const { layoutState, leftMenuShownStorage, rightMenuShownStorage, initPluginStorageReactive } = useLayout()
     const { plugins, settings } = layoutState
     const canvasEntry = getMergeMeta('engine.canvas')?.entry
     const pluginRegistry = getMergeMetaByType('plugins')
+    const workspaceRegistry = getMergeMetaByType('workspace')
     // @legacy 旧版本兼容，后续废弃 type: 'setting' 的 plugin，全部改为 type: 'plugins'
     const settingRegistry = getMergeMetaByType('setting')
+    // 启用isShowWorkspace = true后，且当url中不包含id=xxx即应用id时自动打开workspace页
+    const queryParams = new URLSearchParams(location.search)
+    const isShowDefaultWorkspace = computed(() => {
+      return isShowWorkspace && queryParams.get('id') === null && workspaceRegistry.length
+    })
+
+    // 跳转到workspace模块下的页面的组件ID，如果有则跳转到workspace下页面如应用中心
+    const clickedWorkspacePageId = ref('')
+
+    const setWorkspacePageId = (nodeId) => {
+      clickedWorkspacePageId.value = nodeId
+    }
 
     const toggleNav = ({ item }) => {
       if (!item.id) return
@@ -121,7 +148,11 @@ export default {
       toggleNav,
       layoutState,
       canvasEntry,
-      pluginRegistry
+      pluginRegistry,
+      workspaceRegistry,
+      isShowDefaultWorkspace,
+      clickedWorkspacePageId,
+      setWorkspacePageId
     }
   }
 }
@@ -158,5 +189,9 @@ export default {
   :deep(.monaco-editor .suggest-widget) {
     border-width: 0;
   }
+}
+
+#tiny-engine-workspace {
+  position: absolute;
 }
 </style>

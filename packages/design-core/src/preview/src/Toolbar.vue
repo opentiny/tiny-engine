@@ -7,7 +7,7 @@
       <component :is="ToolbarMedia" :isCanvas="false" @setViewPort="setViewPort"></component>
     </div>
     <div class="toolbar-right">
-      <span><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
+      <span v-if="debugMode === null || debugMode === 'show'"><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
       <component :is="ChangeLang" :langChannel="previewLangChannel" :options="langOptions"></component>
     </div>
   </div>
@@ -33,6 +33,7 @@ export default {
     const langOptions = getMergeMeta('engine.toolbars.lang').options
     const ToolbarMedia = null // TODO: Media plugin rely on layout/canvas. Further processing is required.
     const { setBreadcrumbPage, setBreadcrumbBlock } = useBreadcrumb()
+    const debugMode = new URLSearchParams(location.search).get('debugmode')
 
     watch(
       () => previewState.currentPage,
@@ -63,7 +64,8 @@ export default {
       langOptions,
       ToolbarMedia,
       setViewPort,
-      debugSwitch
+      debugSwitch,
+      debugMode
     }
   }
 }
