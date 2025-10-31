@@ -1,0 +1,62 @@
+{
+  "componentName": "Page",
+  "fileName": "DataBindingDemo",
+  "css": "",
+  "props": {},
+  "state": {
+    "username": "",
+    "email": "",
+    "isSubscribed": false
+  },
+  "methods": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "style": "padding: 20px;"
+      },
+      "children": [
+        {
+          "componentName": "AntdInput",
+          "props": {
+            "value": {
+              "type": "JSExpression",
+              "value": "this.state.username",
+              "model": true
+            },
+            "placeholder": "请输入用户名"
+          },
+          "id": "input-username"
+        },
+        {
+          "componentName": "AntdInput",
+          "props": {
+            "value": {
+              "type": "JSExpression",
+              "value": "this.state.email",
+              "model": {
+                "prop": "value"
+              }
+            },
+            "type": "email",
+            "placeholder": "请输入邮箱"
+          },
+          "id": "input-email"
+        },
+        {
+          "componentName": "AntdCheckbox",
+          "props": {
+            "checked": {
+              "type": "JSExpression",
+              "value": "this.state.isSubscribed",
+              "model": true
+            }
+          },
+          "id": "checkbox-subscribed"
+        }
+      ],
+      "id": "container"
+    }
+  ]
+}

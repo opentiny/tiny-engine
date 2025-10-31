@@ -1,0 +1,8 @@
+.page-container {
+  padding: 20px;
+  background: #f5f5f5;
+  max-width: 600px;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
