@@ -12,9 +12,14 @@
 
 import vue from '@vitejs/plugin-vue'
 import path from 'path'
+import dts from 'vite-plugin-dts'
 
 export default {
   plugins: [
+    dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.json'),
+      rollupTypes: true
+    }),
     vue({
       template: {
         compilerOptions: {

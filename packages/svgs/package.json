@@ -10,6 +10,7 @@
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
@@ -28,7 +29,8 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.5.4"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",
