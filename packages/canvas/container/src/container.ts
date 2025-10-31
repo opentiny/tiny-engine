@@ -494,7 +494,7 @@ const getElementDurationTime = (elementId?: string) => {
     const transitionDelays = transitionDelay.split(',')
     delayTime += getMaxMillisecondNumber(transitionDelays)
   }
-  return delayTime === 0 ? 300 : delayTime
+  return delayTime
 }
 
 export const updateRect = (id?: string) => {
