@@ -7,8 +7,6 @@
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
   >
-    <desc>Created with Pixso.</desc>
-    <defs />
     <rect id="矩形" rx="6.000000" width="24.000000" height="24.000000" fill="#25C251" fill-opacity="1.000000" />
     <rect
       id="矩形"
@@ -31,9 +29,3 @@
     <path id="矢量 642" d="" fill="#979797" fill-opacity="0" fill-rule="evenodd" />
   </svg>
 </template>
-
-<script>
-export default {
-  name: 'PageIconComponent'
-}
-</script>

@@ -4,6 +4,7 @@ export interface RequestOptions {
   url?: string
   model?: string
   headers?: Record<string, string>
+  baseUrl?: string
 }
 
 export interface RequestTool {

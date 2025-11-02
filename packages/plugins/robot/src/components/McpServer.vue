@@ -1,22 +1,26 @@
 <template>
-  <div :class="['button-wrapper', activeCount > 0 ? 'active' : '']" @click="handleVisibleToggle">
-    <div class="button">
-      <icon-plugin class="plugin-common_icon" />
+  <div>
+    <footer-button :active="activeCount > 0" tooltip-content="MCP工具" @update:active="handleVisibleToggle">
+      <template #icon>
+        <IconPlugin class="plugin-common_icon" />
+      </template>
+      <template #text> MCP工具 </template>
+    </footer-button>
+    <div class="robot-mcp-server-picker">
+      <mcp-server-picker
+        title="扩展"
+        installedTabTitle="已添加的MCP服务"
+        :popup-config="props.position"
+        v-model:visible="visible"
+        v-model:activeCount="activeCount"
+        :installed-plugins="installedPlugins"
+        :show-market-tab="false"
+        @plugin-expand="handlePluginExpand"
+        @plugin-add="updateMcpServerStatus"
+        @plugin-toggle="handlePluginToggle"
+        @tool-toggle="updateMcpServerToolStatus"
+      />
     </div>
-  </div>
-  <div class="robot-mcp-server-picker">
-    <mcp-server-picker
-      :popup-config="props.position"
-      v-model:visible="visible"
-      v-model:activeCount="activeCount"
-      :installed-plugins="installedPlugins"
-      :market-plugins="marketPlugins"
-      :show-market-tab="false"
-      @plugin-expand="handlePluginExpand"
-      @plugin-add="updateMcpServerStatus"
-      @plugin-toggle="handlePluginToggle"
-      @tool-toggle="updateMcpServerToolStatus"
-    />
   </div>
 </template>
 
@@ -24,7 +28,8 @@
 import { onMounted, ref } from 'vue'
 import { McpServerPicker, type PluginInfo, type PopupConfig } from '@opentiny/tiny-robot'
 import { IconPlugin } from '@opentiny/tiny-robot-svgs'
-import useMcpServer from './useMcp'
+import useMcpServer from '../composables/useMcp'
+import FooterButton from './FooterButton.vue'
 
 const activeCount = ref(1)
 
@@ -44,7 +49,6 @@ const props = withDefaults(
 
 const {
   inUseMcpServers: installedPlugins,
-  mcpServers: marketPlugins,
   refreshMcpServerTools,
   updateMcpServerToolStatus,
   updateMcpServerStatus
@@ -117,86 +121,6 @@ onMounted(() => {
     }
     .plugin-card__desc {
       font-size: 12px;
-    }
-  }
-}
-
-.button-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgb(194, 194, 194);
-  border-radius: 999px;
-  cursor: pointer;
-  box-sizing: border-box;
-  background-color: var(--te-common-bg-container);
-
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.08);
-  }
-
-  &.active {
-    border: 1px solid rgb(20, 118, 255);
-    background: rgba(20, 118, 255, 0.08);
-    color: rgb(20, 118, 255);
-
-    &:hover {
-      background: rgba(20, 118, 255, 0.12);
-    }
-  }
-
-  .text {
-    width: 56px;
-    height: 22px;
-    line-height: 22px;
-    font-size: 14px;
-    font-weight: 400;
-    text-align: left;
-  }
-
-  .button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-
-  .plugin-common {
-    &_text {
-      font-size: 12px;
-      font-weight: 400;
-      line-height: 20px;
-      letter-spacing: 0;
-      text-align: left;
-    }
-
-    &_icon {
-      font-size: 16px;
-    }
-  }
-
-  .plugin-active {
-    &_count {
-      width: 12px;
-      height: 12px;
-      background: #1476ff;
-      border-radius: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-      font-size: 9px;
-      font-weight: 500;
-      line-height: 12px;
-      color: #fff;
-    }
-
-    &:hover {
-      color: #1476ff;
-      background-color: #eaf0f8;
-      border: 1px solid #1476ff;
     }
   }
 }

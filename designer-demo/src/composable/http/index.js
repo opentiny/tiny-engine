@@ -16,6 +16,7 @@ const procession = {
 let loginVM = null
 
 const showError = (url, message) => {
+  if (message === 'canceled') return // 取消请求场景不报错
   globalNotify({
     type: 'error',
     title: '接口报错',
