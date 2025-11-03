@@ -21,5 +21,3 @@ export default {
   entry,
   metas: [RobotService]
 }
-
-initDebugWindow()
