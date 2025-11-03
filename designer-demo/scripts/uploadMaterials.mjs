@@ -1,7 +1,7 @@
-import { Buffer } from 'node:buffer'
-import path from 'node:path'
 import dotenv from 'dotenv'
 import fs from 'fs-extra'
+import { Buffer } from 'node:buffer'
+import path from 'node:path'
 import Logger from './logger.mjs'
 
 
@@ -54,13 +54,10 @@ async function main() {
     }
     const data = await response.json()
     if (data && data.success) {
-      logger.success('File uploaded successfully!')
-      logger.success('Inserted records:', data.data?.insertNum || 0)
-      logger.success('Updated records:', data.data?.updateNum || 0)
-      logger.success('Message:', data.message)
+      logger.success(`File uploaded successfully：${JSON.stringify(data)}`)
     } else {
-      logger.warn('Upload completed but success flag is false:', data)
-      logger.warn('Upload completed with warnings:', data.message)
+      logger.warn(`Upload completed but success flag is false: ${JSON.stringify(data)}`)
+      logger.warn(`Upload completed with warnings: ${JSON.stringify(data.message)}`)
     }
   } catch (error) {
     logger.error('Error uploading file:', error instanceof Error ? error.message : String(error))

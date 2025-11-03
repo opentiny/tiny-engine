@@ -1,7 +1,7 @@
-import { Buffer } from 'node:buffer'
-import path from 'node:path'
 import dotenv from 'dotenv'
 import fs from 'fs-extra'
+import { Buffer } from 'node:buffer'
+import path from 'node:path'
 import Logger from './logger.mjs'
 
 /**
@@ -29,7 +29,7 @@ async function main() {
 
   if (!backend_url) {
     logger.error('backend_url is not set in .env.local file')
-    return
+    process.exit(1)
   }
 
   const bundlePath = path.join(process.cwd(), './public/mock/bundle.json')
@@ -48,8 +48,18 @@ async function main() {
       method: 'POST',
       body: formData
     })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`Upload failed with status ${response.status}: ${errorText}`)
+    }
     const data = await response.json()
-    logger.success('File uploaded successfully:', data)
+    if (data && data.success) {
+      logger.success(`File uploaded successfully：${JSON.stringify(data)}`)
+    } else {
+      logger.warn(`Upload completed but success flag is false: ${JSON.stringify(data)}`)
+      logger.warn(`Upload completed with warnings: ${JSON.stringify(data.message)}`)
+    }
   } catch (error) {
     logger.error('Error uploading file:', error instanceof Error ? error.message : String(error))
   }
