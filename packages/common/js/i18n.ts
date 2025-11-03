@@ -15,11 +15,20 @@ import i18n, { defineCustomI18n } from '@opentiny/tiny-engine-i18n-host'
 import tinyLocale from '@opentiny/vue-locale'
 import { i18nKeyMaps } from './constants'
 
+// 类型定义
+type LocaleKeyMap = keyof typeof i18nKeyMaps
+type LocaleMessages = Record<string, any>
+
+interface CreateI18nParams {
+  locale: string
+  messages: Record<string, LocaleMessages>
+}
+
 // 此处处理TinyVue组件库的国际化zhCN --> zh_CN
-const customCreateI18n = ({ locale, messages }) => {
-  const newMessages = {}
+const customCreateI18n = ({ locale, messages }: CreateI18nParams) => {
+  const newMessages: Record<string, LocaleMessages> = {}
   Object.keys(messages).forEach((key) => {
-    const lang = i18nKeyMaps[key]
+    const lang = i18nKeyMaps[key as LocaleKeyMap]
     newMessages[lang] = messages[key]
   })
 
@@ -30,7 +39,9 @@ const customCreateI18n = ({ locale, messages }) => {
   })
 }
 
-const customI18n = tinyLocale.initI18n({
+// 初始化 TinyVue 组件库的 i18n 实例
+// 注意：@opentiny/vue-locale 可能缺少完整的类型定义，此处暂时使用 any 类型
+const customI18n: any = tinyLocale.initI18n({
   i18n: { locale: i18nKeyMaps.zhCN },
   createI18n: customCreateI18n,
   messages: {}
@@ -38,6 +49,9 @@ const customI18n = tinyLocale.initI18n({
 
 // 合并组件库的i18n配置
 defineCustomI18n(customI18n)
+
+// 导出类型
+export type { LocaleKeyMap, LocaleMessages, CreateI18nParams }
 
 export { I18nInjectionKey, i18nKeyMaps }
 

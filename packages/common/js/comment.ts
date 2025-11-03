@@ -10,7 +10,7 @@
  *
  */
 
-export const getCommentByKey = (key) => ({
+export const getCommentByKey = (key: string): { start: string; end: string } => ({
   start: `start-${key} 设计器生成的代码，为了避免出现问题，请勿修改`,
   end: `end-${key}`
 })

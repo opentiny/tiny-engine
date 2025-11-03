@@ -20,7 +20,7 @@ export const VITE_CDN_TYPE = import.meta.env.VITE_CDN_TYPE
 
 export const isMock = VITE_API_MOCK === 'mock'
 
-export const isVsCodeEnv = window.vscodeBridge
+export const isVsCodeEnv = (window as any).vscodeBridge as boolean
 
 export const isDevelopEnv = MODE?.includes('dev')
 

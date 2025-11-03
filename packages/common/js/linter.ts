@@ -11,9 +11,44 @@
  */
 
 import eslintWorkerUrl from './worker-files/eslint.worker?worker&url'
+import type * as monaco from 'monaco-editor'
 
-export const initLinter = (editor, monacoInstance, state) => {
-  let workerUrl = new URL(eslintWorkerUrl, import.meta.url)
+// Linter 状态接口
+interface LinterState {
+  hasError: boolean
+  [key: string]: any
+}
+
+// ESLint 检查结果标记接口
+interface ESLintMarker {
+  severity: monaco.MarkerSeverity | 'Error' | 'Warning' | 'Info' | 'Hint'
+  message: string
+  startLineNumber: number
+  startColumn: number
+  endLineNumber: number
+  endColumn: number
+  source?: string
+  code?: string
+}
+
+// Worker 响应消息接口
+interface WorkerResponseMessage {
+  markers: ESLintMarker[]
+  version: number
+}
+
+// Worker 请求消息接口
+interface WorkerRequestMessage {
+  code: string
+  version: number
+}
+
+export const initLinter = (
+  editor: monaco.editor.IStandaloneCodeEditor,
+  monacoInstance: typeof monaco,
+  state: LinterState
+): Worker => {
+  let workerUrl: URL | string = new URL(eslintWorkerUrl, import.meta.url)
 
   // 线上环境，存在 worker 资源跨域的情况
   if (workerUrl.origin !== location.origin) {
@@ -26,7 +61,7 @@ export const initLinter = (editor, monacoInstance, state) => {
   const worker = new Worker(workerUrl, { type: 'module' })
 
   // 监听 ESLint web worker 的返回
-  worker.onmessage = function (event) {
+  worker.onmessage = function (event: MessageEvent<WorkerResponseMessage>) {
     const { markers, version } = event.data
     const model = editor.getModel()
 
@@ -34,16 +69,16 @@ export const initLinter = (editor, monacoInstance, state) => {
 
     // 判断当前 model 的 versionId 与请求时是否一致
     if (model && model.getVersionId() === version) {
-      monacoInstance.editor.setModelMarkers(model, 'ESLint', markers)
+      monacoInstance.editor.setModelMarkers(model, 'ESLint', markers as monaco.editor.IMarkerData[])
     }
   }
 
   return worker
 }
 
-let timer = null
+let timer: ReturnType<typeof setTimeout> | null = null
 
-export const lint = (model, worker) => {
+export const lint = (model: monaco.editor.ITextModel, worker: Worker): void => {
   if (timer) {
     clearTimeout(timer)
   }
@@ -55,6 +90,6 @@ export const lint = (model, worker) => {
       code: model.getValue(),
       // 发起 ESLint 静态检查时，携带 versionId
       version: model.getVersionId()
-    })
+    } as WorkerRequestMessage)
   }, 500)
 }

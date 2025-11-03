@@ -13,7 +13,19 @@
 import { PAGE_STATUS } from './constants'
 import { useResource, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
-export const getCanvasStatus = (data) => {
+// 占用者信息接口
+interface Occupier {
+  id: number
+  username: string
+}
+
+// 画布状态返回值接口
+interface CanvasStatus {
+  state: string
+  data: Occupier | undefined
+}
+
+export const getCanvasStatus = (data: Occupier | undefined): CanvasStatus => {
   const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
   const isDemo = useResource().appSchemaState.isDemo
   let state = ''

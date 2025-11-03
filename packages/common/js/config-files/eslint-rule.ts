@@ -1,4 +1,5 @@
-import eslintRecommended from '@eslint/js/src/configs/eslint-recommended.js'
+import eslintRecommended from '@eslint/js/src/configs/eslint-recommended'
+
 export default {
   ...eslintRecommended.rules,
   'no-console': 'error',
