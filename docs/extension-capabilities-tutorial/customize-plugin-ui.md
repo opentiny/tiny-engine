@@ -13,6 +13,7 @@
 
 ```js
 // registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 export default {
   // ...
   [META_APP.AppManage]: {
@@ -33,6 +34,7 @@ export default {
 
 ```js
 // registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 import CustomPage from './custom-page'
 export default {
   // ...
