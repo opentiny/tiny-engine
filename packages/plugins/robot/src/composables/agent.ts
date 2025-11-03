@@ -125,3 +125,13 @@ export const search = async (content: string) => {
   }
   return result
 }
+
+export const fetchAssets = async () => {
+  const res = (await getMetaApi(META_SERVICE.Http).get('/material-center/api/resource/find/1')) || []
+  return res
+    .filter((item) => item.description)
+    .map((item) => ({
+      url: item.resourceUrl,
+      describe: item.description
+    }))
+}

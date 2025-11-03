@@ -15,7 +15,7 @@ import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema } from './agent'
+import { updatePageSchema, fetchAssets } from './agent'
 import useRobot from './useRobot'
 import { getAgentSystemPrompt } from '../prompts'
 
@@ -69,7 +69,8 @@ const beforeRequest = async (requestParams: any) => {
     // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
     //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
     // }
-    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext))
+    const imageAssets = await fetchAssets()
+    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext, imageAssets))
     if (!robotSettingState.enableThinking) {
       Object.assign(requestParams, { response_format: { type: 'json_object' } })
     }
