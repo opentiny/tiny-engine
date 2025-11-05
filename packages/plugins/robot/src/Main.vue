@@ -53,7 +53,7 @@
               <template #icon>
                 <IconThink class="icon-think" />
               </template>
-              <template #text> 深度思考 </template>
+              <template #text>深度思考</template>
             </footer-button>
           </template>
         </robot-chat>
@@ -141,7 +141,7 @@ const isVisualModel = computed(() => {
     robotSettingState.selectedModel.baseUrl,
     robotSettingState.selectedModel.model
   )
-  return modelCapabilities?.visual || false
+  return modelCapabilities?.vision || false
 })
 
 const isToolsModel = computed(() => {
@@ -149,7 +149,7 @@ const isToolsModel = computed(() => {
     robotSettingState.selectedModel.baseUrl,
     robotSettingState.selectedModel.model
   )
-  return modelCapabilities?.tools || false
+  return modelCapabilities?.toolCalling !== false
 })
 
 const handleChatModeChange = (type: string) => {

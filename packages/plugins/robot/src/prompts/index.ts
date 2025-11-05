@@ -1,4 +1,4 @@
-import agentPrompt from './agent-prompt-en.md?raw'
+import agentPrompt from './agent-prompt.md?raw'
 import chatPrompt from './chat-prompt.md?raw'
 import componentsData from './components.json'
 import examplesData from './examples.json'

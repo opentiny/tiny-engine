@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import { getMetaApi, META_SERVICE, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, getOptions, META_SERVICE, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import type { BubbleContentItem } from '@opentiny/tiny-robot'
 import {
   STATUS,
@@ -15,9 +15,10 @@ import { formatMessages, serializeError } from '../utils/common-utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema, fetchAssets } from './agent'
+import { updatePageSchema, fetchAssets, search } from './agent'
 import useRobot from './useRobot'
 import { getAgentSystemPrompt } from '../prompts'
+import meta from '../../meta'
 
 const { deepClone } = utils
 
@@ -60,29 +61,34 @@ const beforeRequest = async (requestParams: any) => {
     robotSettingState.selectedModel.baseUrl,
     robotSettingState.selectedModel.model
   )
-  if (!requestParams.tools && tools?.length && !isAgentMode && modelCapabilities?.tools) {
+  if (!requestParams.tools && tools?.length && !isAgentMode && modelCapabilities?.toolCalling !== false) {
     Object.assign(requestParams, { tools })
   }
   if (isAgentMode) {
     requestParams.apiKey = robotSettingState.selectedModel.apiKey
-    const referenceContext = ''
-    // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
-    //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
-    // }
-    const imageAssets = await fetchAssets()
-    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext, imageAssets))
+    let referenceContext = ''
+    let imageAssets = []
+    if (requestParams.messages[0]?.role !== 'system') {
+      if (getOptions(meta.id)?.enableRagContext) {
+        referenceContext = await search(requestParams.messages?.at(-1)?.content)
+      }
+      if (getOptions(meta.id)?.enableResourceContext !== false) {
+        imageAssets = await fetchAssets()
+      }
+      addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext, imageAssets))
+    }
     if (!robotSettingState.enableThinking) {
       Object.assign(requestParams, { response_format: { type: 'json_object' } })
     }
   }
   requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
   requestParams.model = robotSettingState.selectedModel.model
-  if (modelCapabilities?.thinking?.extraBody) {
+  if (modelCapabilities?.reasoning?.extraBody) {
     Object.assign(
       requestParams,
       robotSettingState.enableThinking
-        ? modelCapabilities.thinking.extraBody.enable
-        : modelCapabilities.thinking.extraBody.disable
+        ? modelCapabilities.reasoning.extraBody.enable
+        : modelCapabilities.reasoning.extraBody.disable
     )
   }
   if (config.apiKey !== robotSettingState.selectedModel.apiKey) {
@@ -93,7 +99,6 @@ const beforeRequest = async (requestParams: any) => {
 }
 
 const { client, provider } = createClient({ config, beforeRequest })
-window.client = client
 
 const updateLLMConfig = (newConfig: Omit<AIModelConfig, 'provider' | 'providerImplementation'>) => {
   provider?.updateConfig(newConfig)

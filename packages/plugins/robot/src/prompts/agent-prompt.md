@@ -208,6 +208,6 @@ Note:
 **[Reference Knowledge]**
 {{REFERENCE_KNOWLEDGE}}
 
-**[Assets]**
+**[Image Assets]**
 Use the following image resources on demand: 
 {{IMAGE_ASSETS}}

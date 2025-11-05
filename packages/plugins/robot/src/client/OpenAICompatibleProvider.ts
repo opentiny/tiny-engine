@@ -155,7 +155,6 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     const requestData: ChatRequestData = {
       model: request.options?.model || this.config.defaultModel || this.defaultModel,
       messages,
-      ...request.options,
       stream: isStream
     }
 

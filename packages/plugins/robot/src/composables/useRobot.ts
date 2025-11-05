@@ -14,110 +14,97 @@
 import { reactive } from 'vue'
 import { getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
+import { DEFAULT_LLM_MODELS } from './const'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
 const CHAT_MODE = { Agent: 'agent', Chat: 'chat' }
 
-const thinkingExtraBody = {
-  extraBody: {
-    enable: {
-      enable_thinking: true,
-      thinking_budget: 1000
-    },
-    disable: null
-  }
-}
+/**
+ * 合并 AI 模型配置
+ * 支持：
+ * 1. 通过 _remove: true 删除整个 provider（基于 baseUrl 匹配）
+ * 2. 通过在 model 中设置 _remove: true 删除特定 model
+ * 3. 相同 baseUrl 的 provider 会合并其 models
+ * 4. 相同 value 的 model 会被自定义配置覆盖
+ * @param defaults 默认配置
+ * @param customs 自定义配置
+ * @returns 合并后的配置
+ */
+const mergeAIModelOptions = (defaults: any[], customs: any[]): any[] => {
+  // 深拷贝默认配置作为基础
+  const result = JSON.parse(JSON.stringify(defaults))
 
-const AIModelOptions = [
-  {
-    label: '阿里云百炼',
-    provider: 'bailian',
-    value: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
-    model: [
-      // Agent/chat
-      // 备注：千问多模态模型不支持工具调用；
-      {
-        label: 'Qwen 通用模型（Plus）',
-        value: 'qwen-plus',
-        capabilities: {
-          tools: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      {
-        label: 'Qwen VL视觉理解模型（PLUS）',
-        value: 'qwen3-vl-plus',
-        capabilities: {
-          visual: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      {
-        label: 'Qwen Coder编程模型（PLUS）',
-        value: 'qwen3-coder-plus',
-        capabilities: {
-          tools: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      {
-        label: 'DeepSeek（v3.2）',
-        value: 'deepseek-v3.2-exp',
-        capabilities: {
-          tools: true,
-          thinking: thinkingExtraBody
-        }
-      },
-      // 小参数模型
-      {
-        label: 'Qwen 通用模型（Flash）',
-        value: 'qwen-flash',
-        capabilities: {
-          compact: true
-        }
-      },
-      {
-        label: 'Qwen Coder编程模型（Flash）',
-        value: 'qwen3-coder-flash',
-        capabilities: {
-          compact: true
-        }
-      },
-      { label: 'Qwen3（14b）', value: 'qwen3-14b', capabilities: { compact: true } },
-      { label: 'Qwen3（8b）', value: 'qwen3-8b', capabilities: { compact: true } }
-    ]
-  },
-  {
-    label: 'DeepSeek',
-    provider: 'deepseek',
-    value: 'https://api.deepseek.com/v1',
-    model: [
-      {
-        label: 'DeepSeek',
-        value: 'deepseek-chat',
-        capabilities: {
-          tools: true,
-          thinking: {
-            extraBody: {
-              enable: { model: 'deepseek-reasoner' },
-              disable: { model: 'deepseek-chat' }
-            }
+  customs.forEach((customProvider) => {
+    // 如果标记删除整个 provider（基于 baseUrl 匹配）
+    if (customProvider._remove) {
+      const index = result.findIndex((p: any) => p.value === customProvider.value)
+      if (index !== -1) {
+        result.splice(index, 1)
+      }
+      return
+    }
+
+    // 查找相同 baseUrl (value 字段) 的 provider
+    const existingProviderIndex = result.findIndex((p: any) => p.value === customProvider.value)
+
+    if (existingProviderIndex !== -1) {
+      // 找到相同 baseUrl 的 provider，合并 models
+      const existingProvider = result[existingProviderIndex]
+
+      customProvider.models?.forEach((customModel: any) => {
+        if (customModel._remove) {
+          // 移除指定的 model
+          const modelIndex = existingProvider.models.findIndex((m: any) => m.value === customModel.value)
+          if (modelIndex !== -1) {
+            existingProvider.models.splice(modelIndex, 1)
+          }
+        } else {
+          // 查找是否存在相同 value 的 model
+          const existingModelIndex = existingProvider.models.findIndex((m: any) => m.value === customModel.value)
+          if (existingModelIndex !== -1) {
+            // 替换已有 model（覆盖）
+            const { _remove, ...modelWithoutRemove } = customModel
+            existingProvider.models[existingModelIndex] = modelWithoutRemove
+          } else {
+            // 添加新 model
+            const { _remove, ...modelWithoutRemove } = customModel
+            existingProvider.models.push(modelWithoutRemove)
           }
         }
-      }
-    ]
-  }
-]
+      })
+
+      // 更新 provider 的其他属性（如果提供了）
+      if (customProvider.label) existingProvider.label = customProvider.label
+      if (customProvider.provider) existingProvider.provider = customProvider.provider
+    } else {
+      // 添加新的 provider
+      const { _remove, ...providerWithoutRemove } = customProvider
+      providerWithoutRemove.models = (providerWithoutRemove.models || [])
+        .filter((m: any) => !m._remove)
+        .map((m: any) => {
+          const { _remove, ...modelWithoutRemove } = m
+          return modelWithoutRemove
+        })
+      result.push(providerWithoutRemove)
+    }
+  })
+
+  return result
+}
 
 const getAIModelOptions = () => {
-  const aiRobotOptions = getOptions(meta.id)?.customCompatibleAIModels || []
-  return aiRobotOptions.length ? aiRobotOptions : AIModelOptions
+  const customAIModels = getOptions(meta.id)?.customCompatibleAIModels || []
+  if (!customAIModels.length) {
+    return DEFAULT_LLM_MODELS
+  }
+  return mergeAIModelOptions(DEFAULT_LLM_MODELS, customAIModels)
 }
 
 const getModelCapabilities = (baseUrl: string, model: string) => {
-  return AIModelOptions.find((option) => option.value === baseUrl)?.model.find((item) => item.value === model)
-    ?.capabilities
+  return getAIModelOptions()
+    .find((option: any) => option.baseUrl === baseUrl)
+    ?.models.find((item: any) => item.value === model)?.capabilities
 }
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
@@ -146,56 +133,13 @@ const robotSettingState = reactive({
     label: storageSettingState.label || getAIModelOptions()[0].label,
     activeName: activeName || EXISTING_MODELS,
     baseUrl: storageSettingState.baseUrl || getAIModelOptions()[0].value,
-    model: storageSettingState.model || getAIModelOptions()[0].model[0].value,
-    completeModel: storageSettingState.completeModel || getAIModelOptions()[0].model[0].value || '',
+    model: storageSettingState.model || getAIModelOptions()[0].models[0].value,
+    completeModel: storageSettingState.completeModel || getAIModelOptions()[0].models[0].value || '',
     apiKey: storageSettingState.apiKey || ''
   },
   chatMode: chatMode || CHAT_MODE.Agent,
   enableThinking: enableThinking || false
 })
-
-const isValidOperation = (operation: object) => {
-  const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
-
-  if (typeof operation !== 'object' || operation === null) {
-    return false
-  }
-  // 检查操作类型是否有效
-  if (!operation.op || !allowedOps.includes(operation.op)) {
-    return false
-  }
-  // 检查path字段是否存在且为字符串
-  if (!operation.path || typeof operation.path !== 'string') {
-    return false
-  }
-  // 根据操作类型检查其他必需字段
-  switch (operation.op) {
-    case 'add':
-    case 'replace':
-    case 'test':
-      if (!('value' in operation)) {
-        return false
-      }
-      break
-    case 'move':
-    case 'copy':
-      if (!operation.from || typeof operation.from !== 'string') {
-        return false
-      }
-      break
-  }
-
-  return true
-}
-
-const isValidFastJsonPatch = (patch) => {
-  if (Array.isArray(patch)) {
-    return patch.every(isValidOperation)
-  } else if (typeof patch === 'object' && patch !== null) {
-    return isValidOperation(patch)
-  }
-  return false
-}
 
 export default () => {
   return {
@@ -204,11 +148,8 @@ export default () => {
     EXISTING_MODELS,
     CUSTOMIZE,
     CHAT_MODE,
-    AIModelOptions,
     getAIModelOptions,
     getModelCapabilities,
-    robotSettingState,
-    isValidOperation,
-    isValidFastJsonPatch
+    robotSettingState
   }
 }
