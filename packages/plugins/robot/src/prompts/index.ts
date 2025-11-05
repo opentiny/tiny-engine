@@ -1,7 +1,7 @@
-import agentPrompt from './agent-prompt.md?raw'
-import chatPrompt from './chat-prompt.md?raw'
-import componentsData from './components.json'
-import examplesData from './examples.json'
+import agentPrompt from './templates/agent-prompt.md?raw'
+import chatPrompt from './templates/chat-prompt.md?raw'
+import componentsData from './data/components.json'
+import examplesData from './data/examples.json'
 
 /**
  * Convert components array to JSONL format string

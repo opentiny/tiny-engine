@@ -129,7 +129,7 @@ import {
   TinyTabItem,
   TinyAlert
 } from '@opentiny/vue'
-import { useRobot } from '@opentiny/tiny-engine-meta-register'
+import useModelConfig from '../../composables/useConfig'
 
 export default {
   components: {
@@ -151,7 +151,7 @@ export default {
       robotSettingState,
       saveRobotSettingState,
       loadRobotSettingState
-    } = useRobot()
+    } = useModelConfig()
     const robotSettingExistForm = ref(null)
     const robotSettingCustomizeForm = ref(null)
     const apiKeyTip =

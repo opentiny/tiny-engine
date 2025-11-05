@@ -190,7 +190,7 @@ Components (componentName) can use low-code platform components (TinyVue compone
 {{COMPONENTS_LIST}}
 
 Note:
-- All form-type components with modelValue property support two-way binding and should prioritize using it
+- All form components with the `modelValue` property support two-way binding. This approach should be prioritized. If two-way binding is used, there is no need to redundantly bind the `onChange` or `onUpdate:modelValue` events.
 
 -----
 

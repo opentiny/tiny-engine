@@ -66,19 +66,20 @@
 import { computed, h, onMounted, ref } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyPopover } from '@opentiny/vue'
-import { useRobot, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { PromptProps } from '@opentiny/tiny-robot'
 import { IconThink } from '@opentiny/tiny-robot-svgs'
-import RobotChat from './components/RobotChat.vue'
-import McpIconComponent from './icons/mcp-icon.vue'
-import PageIconComponent from './icons/page-icon.vue'
-import StudyIconComponent from './icons/study-icon.vue'
-import RobotSettingPopover from './components/RobotSettingPopover.vue'
-import RobotTypeSelect from './components/RobotTypeSelect.vue'
-import McpServer from './components/McpServer.vue'
-import AgentRenderer from './components/AgentRenderer.vue'
-import FooterButton from './components/FooterButton.vue'
+import RobotChat from './components/chat/RobotChat.vue'
+import McpIconComponent from './components/icons/mcp-icon.vue'
+import PageIconComponent from './components/icons/page-icon.vue'
+import StudyIconComponent from './components/icons/study-icon.vue'
+import RobotSettingPopover from './components/header-extension/RobotSettingPopover.vue'
+import RobotTypeSelect from './components/footer-extension/RobotTypeSelect.vue'
+import McpServer from './components/footer-extension/McpServer.vue'
+import AgentRenderer from './components/renderers/AgentRenderer.vue'
+import FooterButton from './components/chat/FooterButton.vue'
 import useChat from './composables/useChat'
+import useModelConfig from './composables/useConfig'
 
 const { options } = defineProps({
   options: {
@@ -87,7 +88,7 @@ const { options } = defineProps({
   }
 })
 
-const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState } = useRobot()
+const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState } = useModelConfig()
 
 const robotChatRef = ref(null)
 

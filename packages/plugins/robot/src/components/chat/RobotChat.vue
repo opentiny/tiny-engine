@@ -115,11 +115,11 @@ import {
   resolveComponent
 } from 'vue'
 import { Notify } from '@opentiny/vue'
-import useChat from '../composables/useChat'
-import LoadingRenderer from '../components/LoadingRenderer.vue'
-import MarkdownRenderer from '../components/MarkdownRenderer.vue'
-import ImgRenderer from '../components/ImgRenderer.vue'
-import { serializeError } from '../utils/common-utils'
+import useChat from '../../composables/useChat'
+import LoadingRenderer from '../renderers/LoadingRenderer.vue'
+import MarkdownRenderer from '../renderers/MarkdownRenderer.vue'
+import ImgRenderer from '../renderers/ImgRenderer.vue'
+import { serializeError } from '../../utils'
 
 const { promptItems, allowFiles, bubbleRenderers } = defineProps({
   promptItems: {

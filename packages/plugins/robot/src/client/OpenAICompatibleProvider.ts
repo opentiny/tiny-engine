@@ -7,7 +7,7 @@ import type {
   AIAdapterError
 } from '@opentiny/tiny-robot-kit'
 import { BaseModelProvider, handleSSEStream, ErrorType } from '@opentiny/tiny-robot-kit'
-import { formatMessages } from '../utils/common-utils'
+import { formatMessages } from '../utils'
 
 interface AxiosRequestConfig {
   url: string

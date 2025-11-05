@@ -1,8 +1,7 @@
 import { toRaw } from 'vue'
-import type { LLMMessage } from '../types/mcp-types'
-import type { LLMRequestBody, RequestOptions, RequestTool } from '../types/types'
 import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import type { StreamHandler } from '@opentiny/tiny-robot-kit'
+import type { LLMMessage, LLMRequestBody, RequestOptions, RequestTool } from '../types'
 
 // 格式化LLM输入messages消息
 export const formatMessages = (messages: LLMMessage[]) => {
@@ -27,6 +26,33 @@ export const serializeError = (err: unknown): string => {
   } catch {
     return String(err)
   }
+}
+
+/**
+ * 合并字符串字段。如果值是对象，则递归合并字符串字段
+ * @param target 目标对象
+ * @param source 源对象
+ * @returns 合并后的对象
+ */
+export const mergeStringFields = (target: Record<string, any>, source: Record<string, any>) => {
+  for (const [key, value] of Object.entries(source)) {
+    const targetValue = target[key]
+
+    if (targetValue) {
+      if (typeof targetValue === 'string' && typeof value === 'string') {
+        // 都是字符串，直接拼接
+        target[key] = targetValue + value
+      } else if (targetValue && typeof targetValue === 'object' && value && typeof value === 'object') {
+        // 都是对象，递归合并
+        target[key] = mergeStringFields(targetValue, value)
+      }
+    } else {
+      // 不存在，直接赋值
+      target[key] = value
+    }
+  }
+
+  return target
 }
 
 export const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = {}) => {

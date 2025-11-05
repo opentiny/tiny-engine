@@ -1,4 +1,5 @@
 import type { BubbleContentItem } from '@opentiny/tiny-robot'
+import type { ResponseToolCall } from './mcp.types'
 
 export interface RequestOptions {
   url?: string
@@ -36,7 +37,7 @@ export interface LLMMessage {
 
 export interface RobotMessage {
   role: string
-  content: string
+  content: string | BubbleContentItem[]
   renderContent?: Array<BubbleContentItem>
   [prop: string]: unknown
 }
@@ -49,44 +50,13 @@ export interface LLMRequestBody {
   tools?: RequestTool[]
 }
 
-export interface ReponseToolCall {
-  id: string
-  function: {
-    name: string
-    arguments: string
-  }
-}
-
 export interface LLMResponse {
   choices: Array<{
     message: {
       role?: string
       content: string
-      tool_calls?: Array<ReponseToolCall>
+      tool_calls?: Array<ResponseToolCall>
       [prop: string]: unknown
     }
   }>
-}
-
-export interface McpTool {
-  name: string
-  title?: string
-  description: string
-  inputSchema?: {
-    type: 'object'
-    properties: Record<
-      string,
-      {
-        type: string
-        description: string
-        [prop: string]: unknown
-      }
-    >
-    [prop: string]: unknown
-  }
-  [prop: string]: unknown
-}
-
-export interface McpListToolsResponse {
-  tools: Array<McpTool>
 }

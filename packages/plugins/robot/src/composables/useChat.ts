@@ -11,12 +11,12 @@ import {
   type UseMessageOptions
 } from '@opentiny/tiny-robot-kit'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { formatMessages, serializeError } from '../utils/common-utils'
-import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
+import { formatMessages, serializeError, mergeStringFields } from '../utils'
+import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema, fetchAssets, search } from './agent'
-import useRobot from './useRobot'
+import { updatePageSchema, fetchAssets, search } from './useAgent'
+import useModelConfig from './useConfig'
 import { getAgentSystemPrompt } from '../prompts'
 import meta from '../../meta'
 
@@ -27,7 +27,7 @@ type Message = ChatMessage & {
   tool_calls: ResponseToolCall[]
 }
 
-const { robotSettingState, CHAT_MODE, saveRobotSettingState } = useRobot()
+const { robotSettingState, CHAT_MODE, saveRobotSettingState } = useModelConfig()
 
 const getApiUrl = () => {
   return robotSettingState.chatMode === CHAT_MODE.Agent ? '/app-center/api/ai/chat' : '/app-center/api/chat/completions'
@@ -53,7 +53,7 @@ const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
 }
 
 const beforeRequest = async (requestParams: any) => {
-  const { CHAT_MODE, robotSettingState, getModelCapabilities } = useRobot()
+  const { CHAT_MODE, robotSettingState, getModelCapabilities } = useModelConfig()
   const pageSchema = deepClone(useCanvas().pageState.pageSchema)
   const isAgentMode = robotSettingState.chatMode === CHAT_MODE.Agent
   const tools = await useMcpServer().getLLMTools()
@@ -199,33 +199,6 @@ const handleDeltaContent = (choice: ChatCompletionStreamResponseChoice, lastMess
     lastMessage.renderContent.at(-1).content += choice.delta.content
     lastMessage.content += choice.delta.content
   }
-}
-
-/**
- * 合并字符串字段。如果值是对象，则递归合并字符串字段
- * @param target 目标对象
- * @param source 源对象
- * @returns 合并后的对象
- */
-const mergeStringFields = (target: Record<string, any>, source: Record<string, any>) => {
-  for (const [key, value] of Object.entries(source)) {
-    const targetValue = target[key]
-
-    if (targetValue) {
-      if (typeof targetValue === 'string' && typeof value === 'string') {
-        // 都是字符串，直接拼接
-        target[key] = targetValue + value
-      } else if (targetValue && typeof targetValue === 'object' && value && typeof value === 'object') {
-        // 都是对象，递归合并
-        target[key] = mergeStringFields(targetValue, value)
-      }
-    } else {
-      // 不存在，直接赋值
-      target[key] = value
-    }
-  }
-
-  return target
 }
 
 const handleDeltaToolCalls = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {

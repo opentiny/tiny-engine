@@ -27,7 +27,7 @@ export default {
   },
   setup(props) {
     const getIconUrl = (icon: string) => {
-      return new URL(`../../assets/${icon}`, import.meta.url).href
+      return new URL(`../../../assets/${icon}`, import.meta.url).href
     }
 
     const statusDataMap = {

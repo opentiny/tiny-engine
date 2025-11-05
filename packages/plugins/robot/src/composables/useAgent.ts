@@ -4,7 +4,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { getMetaApi, META_SERVICE, useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
 import SvgICons from '@opentiny/vue-icon'
 import { useThrottleFn } from '@vueuse/core'
-import useRobot from './useRobot'
+import useModelConfig from './useConfig'
 
 const { deepClone } = utils
 
@@ -96,7 +96,7 @@ const jsonPatchAutoFix = (jsonPatches: any[], isFinial: boolean) => {
 }
 
 const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
-  const { robotSettingState, CHAT_MODE } = useRobot()
+  const { robotSettingState, CHAT_MODE } = useModelConfig()
   if (robotSettingState.chatMode !== CHAT_MODE.Agent) {
     return
   }

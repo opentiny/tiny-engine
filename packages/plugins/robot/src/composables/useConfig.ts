@@ -14,7 +14,7 @@
 import { reactive } from 'vue'
 import { getOptions } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
-import { DEFAULT_LLM_MODELS } from './const'
+import { DEFAULT_LLM_MODELS } from '../constants'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
@@ -38,7 +38,7 @@ const mergeAIModelOptions = (defaults: any[], customs: any[]): any[] => {
   customs.forEach((customProvider) => {
     // 如果标记删除整个 provider（基于 baseUrl 匹配）
     if (customProvider._remove) {
-      const index = result.findIndex((p: any) => p.value === customProvider.value)
+      const index = result.findIndex((p: any) => p.baseUrl === customProvider.baseUrl)
       if (index !== -1) {
         result.splice(index, 1)
       }
@@ -46,7 +46,7 @@ const mergeAIModelOptions = (defaults: any[], customs: any[]): any[] => {
     }
 
     // 查找相同 baseUrl (value 字段) 的 provider
-    const existingProviderIndex = result.findIndex((p: any) => p.value === customProvider.value)
+    const existingProviderIndex = result.findIndex((p: any) => p.baseUrl === customProvider.baseUrl)
 
     if (existingProviderIndex !== -1) {
       // 找到相同 baseUrl 的 provider，合并 models
@@ -55,13 +55,13 @@ const mergeAIModelOptions = (defaults: any[], customs: any[]): any[] => {
       customProvider.models?.forEach((customModel: any) => {
         if (customModel._remove) {
           // 移除指定的 model
-          const modelIndex = existingProvider.models.findIndex((m: any) => m.value === customModel.value)
+          const modelIndex = existingProvider.models.findIndex((m: any) => m.name === customModel.name)
           if (modelIndex !== -1) {
             existingProvider.models.splice(modelIndex, 1)
           }
         } else {
           // 查找是否存在相同 value 的 model
-          const existingModelIndex = existingProvider.models.findIndex((m: any) => m.value === customModel.value)
+          const existingModelIndex = existingProvider.models.findIndex((m: any) => m.name === customModel.name)
           if (existingModelIndex !== -1) {
             // 替换已有 model（覆盖）
             const { _remove, ...modelWithoutRemove } = customModel
@@ -104,7 +104,7 @@ const getAIModelOptions = () => {
 const getModelCapabilities = (baseUrl: string, model: string) => {
   return getAIModelOptions()
     .find((option: any) => option.baseUrl === baseUrl)
-    ?.models.find((item: any) => item.value === model)?.capabilities
+    ?.models.find((item: any) => item.name === model)?.capabilities
 }
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
