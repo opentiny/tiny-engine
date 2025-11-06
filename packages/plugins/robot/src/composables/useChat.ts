@@ -1,5 +1,5 @@
 import { toRaw } from 'vue'
-import { getMetaApi, META_SERVICE, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, getOptions, META_SERVICE, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import type { BubbleContentItem } from '@opentiny/tiny-robot'
 import {
   STATUS,
@@ -11,13 +11,14 @@ import {
   type UseMessageOptions
 } from '@opentiny/tiny-robot-kit'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { formatMessages, serializeError } from '../utils/common-utils'
-import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types/mcp-types'
+import { formatMessages, serializeError, mergeStringFields } from '../utils'
+import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema } from './agent'
-import useRobot from './useRobot'
+import { updatePageSchema, fetchAssets, search } from './useAgent'
+import useModelConfig from './useConfig'
 import { getAgentSystemPrompt } from '../prompts'
+import meta from '../../meta'
 
 const { deepClone } = utils
 
@@ -26,7 +27,7 @@ type Message = ChatMessage & {
   tool_calls: ResponseToolCall[]
 }
 
-const { robotSettingState, CHAT_MODE, saveRobotSettingState } = useRobot()
+const { robotSettingState, CHAT_MODE, saveRobotSettingState } = useModelConfig()
 
 const getApiUrl = () => {
   return robotSettingState.chatMode === CHAT_MODE.Agent ? '/app-center/api/ai/chat' : '/app-center/api/chat/completions'
@@ -52,7 +53,7 @@ const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
 }
 
 const beforeRequest = async (requestParams: any) => {
-  const { CHAT_MODE, robotSettingState, getModelCapabilities } = useRobot()
+  const { CHAT_MODE, robotSettingState, getModelCapabilities } = useModelConfig()
   const pageSchema = deepClone(useCanvas().pageState.pageSchema)
   const isAgentMode = robotSettingState.chatMode === CHAT_MODE.Agent
   const tools = await useMcpServer().getLLMTools()
@@ -60,28 +61,34 @@ const beforeRequest = async (requestParams: any) => {
     robotSettingState.selectedModel.baseUrl,
     robotSettingState.selectedModel.model
   )
-  if (!requestParams.tools && tools?.length && !isAgentMode && modelCapabilities?.tools) {
+  if (!requestParams.tools && tools?.length && !isAgentMode && modelCapabilities?.toolCalling !== false) {
     Object.assign(requestParams, { tools })
   }
   if (isAgentMode) {
     requestParams.apiKey = robotSettingState.selectedModel.apiKey
-    const referenceContext = ''
-    // if (requestParams.messages?.[0].role && requestParams.messages?.[0].role !== 'system') {
-    //   referenceContext = await search(requestParams.messages?.at(-1)?.content)
-    // }
-    addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext))
+    let referenceContext = ''
+    let imageAssets = []
+    if (requestParams.messages[0]?.role !== 'system') {
+      if (getOptions(meta.id)?.enableRagContext) {
+        referenceContext = await search(requestParams.messages?.at(-1)?.content)
+      }
+      if (getOptions(meta.id)?.enableResourceContext !== false) {
+        imageAssets = await fetchAssets()
+      }
+      addSystemPrompt(requestParams.messages, getAgentSystemPrompt(pageSchema, referenceContext, imageAssets))
+    }
     if (!robotSettingState.enableThinking) {
       Object.assign(requestParams, { response_format: { type: 'json_object' } })
     }
   }
   requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
   requestParams.model = robotSettingState.selectedModel.model
-  if (modelCapabilities?.thinking?.extraBody) {
+  if (modelCapabilities?.reasoning?.extraBody) {
     Object.assign(
       requestParams,
       robotSettingState.enableThinking
-        ? modelCapabilities.thinking.extraBody.enable
-        : modelCapabilities.thinking.extraBody.disable
+        ? modelCapabilities.reasoning.extraBody.enable
+        : modelCapabilities.reasoning.extraBody.disable
     )
   }
   if (config.apiKey !== robotSettingState.selectedModel.apiKey) {
@@ -92,7 +99,6 @@ const beforeRequest = async (requestParams: any) => {
 }
 
 const { client, provider } = createClient({ config, beforeRequest })
-window.client = client
 
 const updateLLMConfig = (newConfig: Omit<AIModelConfig, 'provider' | 'providerImplementation'>) => {
   provider?.updateConfig(newConfig)
@@ -193,33 +199,6 @@ const handleDeltaContent = (choice: ChatCompletionStreamResponseChoice, lastMess
     lastMessage.renderContent.at(-1).content += choice.delta.content
     lastMessage.content += choice.delta.content
   }
-}
-
-/**
- * 合并字符串字段。如果值是对象，则递归合并字符串字段
- * @param target 目标对象
- * @param source 源对象
- * @returns 合并后的对象
- */
-const mergeStringFields = (target: Record<string, any>, source: Record<string, any>) => {
-  for (const [key, value] of Object.entries(source)) {
-    const targetValue = target[key]
-
-    if (targetValue) {
-      if (typeof targetValue === 'string' && typeof value === 'string') {
-        // 都是字符串，直接拼接
-        target[key] = targetValue + value
-      } else if (targetValue && typeof targetValue === 'object' && value && typeof value === 'object') {
-        // 都是对象，递归合并
-        target[key] = mergeStringFields(targetValue, value)
-      }
-    } else {
-      // 不存在，直接赋值
-      target[key] = value
-    }
-  }
-
-  return target
 }
 
 const handleDeltaToolCalls = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {

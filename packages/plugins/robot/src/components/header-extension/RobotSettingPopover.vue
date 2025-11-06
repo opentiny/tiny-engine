@@ -13,7 +13,7 @@
           <tiny-form-item prop="baseUrl" label="大模型平台" label-width="150px">
             <tiny-select
               v-model="state.existFormData.baseUrl"
-              :options="AIModelOptions"
+              :options="baseUrlOptions"
               placeholder="请选择"
               @change="changeBaseUrl"
             ></tiny-select>
@@ -129,7 +129,7 @@ import {
   TinyTabItem,
   TinyAlert
 } from '@opentiny/vue'
-import { useRobot } from '@opentiny/tiny-engine-meta-register'
+import useModelConfig from '../../composables/useConfig'
 
 export default {
   components: {
@@ -151,12 +151,16 @@ export default {
       robotSettingState,
       saveRobotSettingState,
       loadRobotSettingState
-    } = useRobot()
+    } = useModelConfig()
     const robotSettingExistForm = ref(null)
     const robotSettingCustomizeForm = ref(null)
     const apiKeyTip =
       'API Key 是用于身份验证和权限控制的密钥，允许开发者通过API访问云服务商提供的大模型（如通义千问、deepseek等）。'
-    const AIModelOptions = getAIModelOptions()
+    const llmOptions: {
+      label: string
+      baseUrl: string
+      models: { label: string; name: string; capabilities: object }[]
+    }[] = getAIModelOptions()
 
     const state = reactive({
       activeName: EXISTING_MODELS,
@@ -175,19 +179,24 @@ export default {
       }
     })
 
-    const modelOptions = computed(
-      () =>
-        AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)?.model.filter(
-          (item) => !item.capabilities?.compact
-        ) || []
-    )
+    const baseUrlOptions = computed(() => llmOptions.map((option) => ({ label: option.label, value: option.baseUrl })))
+    const modelTransformer = (model: { label: string; name: string }) => ({ label: model.label, value: model.name })
+    const isCompactModel = (model: { capabilities: { compact: boolean } }) => model.capabilities?.compact as boolean
+    const getProviderByBaseUrl = (baseUrl: string) => llmOptions.find((option) => option.baseUrl === baseUrl)
 
-    const compactModelOptions = computed(
-      () =>
-        AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)?.model.filter(
-          (item) => item.capabilities?.compact
-        ) || []
-    )
+    const modelOptions = computed(() => {
+      return (
+        getProviderByBaseUrl(state.existFormData.baseUrl)
+          ?.models.filter((item) => !isCompactModel(item))
+          .map(modelTransformer) || []
+      )
+    })
+
+    const compactModelOptions = computed(() => {
+      return (
+        getProviderByBaseUrl(state.existFormData.baseUrl)?.models.filter(isCompactModel).map(modelTransformer) || []
+      )
+    })
 
     const customizeFormRules = {
       baseUrl: [{ required: true, message: '必填', trigger: 'blur' }]
@@ -203,11 +212,11 @@ export default {
 
     const changeBaseUrl = () => {
       state.existFormData.apiKey = ''
-      const options = AIModelOptions.find((option) => option.value === state.existFormData.baseUrl)
-      state.modelOptions = options?.model
+      const provider = getProviderByBaseUrl(state.existFormData.baseUrl)
+      const models = provider?.models.map(modelTransformer) || []
 
-      state.existFormData.label = options?.label
-      state.existFormData.model = state.modelOptions[0]?.value || ''
+      state.existFormData.label = provider?.label || ''
+      state.existFormData.model = models[0]?.name || ''
       state.existFormData.completeModel = ''
 
       saveRobotSettingState({
@@ -276,7 +285,7 @@ export default {
     initFormData()
 
     return {
-      AIModelOptions,
+      baseUrlOptions,
       modelOptions,
       compactModelOptions,
       EXISTING_MODELS,

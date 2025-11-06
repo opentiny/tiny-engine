@@ -1,7 +1,7 @@
-import agentPrompt from './agent-prompt-en.md?raw'
-import chatPrompt from './chat-prompt.md?raw'
-import componentsData from './components.json'
-import examplesData from './examples.json'
+import agentPrompt from './templates/agent-prompt.md?raw'
+import chatPrompt from './templates/chat-prompt.md?raw'
+import componentsData from './data/components.json'
+import examplesData from './data/examples.json'
 
 /**
  * Convert components array to JSONL format string
@@ -27,7 +27,7 @@ const formatExamples = (examples: Record<string, any>): string => {
 /**
  * Generate agent system prompt with dynamic components and examples
  */
-export const getAgentSystemPrompt = (currentPageSchema: object, referenceContext: string) => {
+export const getAgentSystemPrompt = (currentPageSchema: object, referenceContext: string, imageAssets: any[]) => {
   // Format components list
   const ignoreComponents = ['TinyNumeric'] // 组件报错，先忽略
   const componentsList = formatComponentsToJsonl(
@@ -46,6 +46,7 @@ export const getAgentSystemPrompt = (currentPageSchema: object, referenceContext
     .replace('{{EXAMPLES_SECTION}}', examplesSection)
     .replace('{{CURRENT_PAGE_SCHEMA}}', currentPageSchemaStr)
     .replace('{{REFERENCE_KNOWLEDGE}}', referenceContext || '')
+    .replace('{{IMAGE_ASSETS}}', imageAssets.map((item) => `- ![${item.describe}](${item.url})`).join('\n'))
 
   return prompt.trim()
 }

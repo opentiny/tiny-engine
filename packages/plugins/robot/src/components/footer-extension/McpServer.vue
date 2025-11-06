@@ -28,8 +28,8 @@
 import { onMounted, ref } from 'vue'
 import { McpServerPicker, type PluginInfo, type PopupConfig } from '@opentiny/tiny-robot'
 import { IconPlugin } from '@opentiny/tiny-robot-svgs'
-import useMcpServer from '../composables/useMcp'
-import FooterButton from './FooterButton.vue'
+import useMcpServer from '../../composables/useMcp'
+import FooterButton from '../chat/FooterButton.vue'
 
 const activeCount = ref(1)
 

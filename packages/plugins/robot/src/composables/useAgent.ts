@@ -2,11 +2,11 @@ import { jsonrepair } from 'jsonrepair'
 import * as jsonpatch from 'fast-json-patch'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { getMetaApi, META_SERVICE, useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
-import useRobot from './useRobot'
 import SvgICons from '@opentiny/vue-icon'
+import { useThrottleFn } from '@vueuse/core'
+import useModelConfig from './useConfig'
 
 const { deepClone } = utils
-import { useThrottleFn } from '@vueuse/core'
 
 const logger = console
 
@@ -43,17 +43,60 @@ const schemaAutoFix = (data: object | object[]) => {
   }
 }
 
+const isValidOperation = (operation: object) => {
+  const allowedOps = ['add', 'remove', 'replace', 'move', 'copy', 'test', '_get']
+
+  if (typeof operation !== 'object' || operation === null) {
+    return false
+  }
+  // 检查操作类型是否有效
+  if (!operation.op || !allowedOps.includes(operation.op)) {
+    return false
+  }
+  // 检查path字段是否存在且为字符串
+  if (!operation.path || typeof operation.path !== 'string') {
+    return false
+  }
+  // 根据操作类型检查其他必需字段
+  switch (operation.op) {
+    case 'add':
+    case 'replace':
+    case 'test':
+      if (!('value' in operation)) {
+        return false
+      }
+      break
+    case 'move':
+    case 'copy':
+      if (!operation.from || typeof operation.from !== 'string') {
+        return false
+      }
+      break
+  }
+
+  return true
+}
+
+const isValidFastJsonPatch = (patch) => {
+  if (Array.isArray(patch)) {
+    return patch.every(isValidOperation)
+  } else if (typeof patch === 'object' && patch !== null) {
+    return isValidOperation(patch)
+  }
+  return false
+}
+
 const jsonPatchAutoFix = (jsonPatches: any[], isFinial: boolean) => {
   // 流式渲染过程中，画布只渲染children字段，避免不完整的methods/states/css等字段导致解析报错
   const childrenFilter = (patch, index, arr) =>
     isFinial || index < arr.length - 1 || (index === arr.length - 1 && patch.path?.startsWith('/children'))
-  const validJsonPatches = jsonPatches.filter(childrenFilter).filter(useRobot().isValidFastJsonPatch)
+  const validJsonPatches = jsonPatches.filter(childrenFilter).filter(isValidFastJsonPatch)
 
   return validJsonPatches
 }
 
 const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
-  const { robotSettingState, CHAT_MODE, isValidFastJsonPatch } = useRobot()
+  const { robotSettingState, CHAT_MODE } = useModelConfig()
   if (robotSettingState.chatMode !== CHAT_MODE.Agent) {
     return
   }
@@ -124,4 +167,14 @@ export const search = async (content: string) => {
     // error
   }
   return result
+}
+
+export const fetchAssets = async () => {
+  const res = (await getMetaApi(META_SERVICE.Http).get('/material-center/api/resource/find/1')) || []
+  return res
+    .filter((item) => item.description)
+    .map((item) => ({
+      url: item.resourceUrl,
+      describe: item.description
+    }))
 }
