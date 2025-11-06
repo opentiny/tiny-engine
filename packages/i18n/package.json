@@ -15,6 +15,7 @@
   "type": "module",
   "main": "dist/lowcode-design-i18n-host.umd.js",
   "module": "dist/lowcode-design-i18n-host.es.js",
+  "types": "dist/lowcode-design-i18n-host.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
@@ -28,7 +29,8 @@
   "homepage": "https://opentiny.design/tiny-engine",
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.5.4"
   },
   "peerDependencies": {
     "vue": "^3.4.15",

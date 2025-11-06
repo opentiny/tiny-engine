@@ -48,15 +48,18 @@ export const defineService = <T, K>(serviceOptions: ServiceOptions<T, K>): Servi
     id,
     type,
     options,
-    apis: {}
+    // 使用类型断言，因为 getState 和 setState 会在后面添加
+    apis: {} as any
   }
 
   const state = reactive<any>(initialState || {})
 
+  // 使用对象展开运算符合并 apis，避免直接赋值导致类型错误
   if (typeof apis === 'object' && apis) {
-    resultService.apis = apis
+    resultService.apis = apis as any
   } else if (typeof apis === 'function') {
-    resultService.apis = apis({ state })
+    // 传递完整的 context 对象，包含 state 和 options
+    resultService.apis = apis({ state, options }) as any
   }
 
   resultService.apis.setOptions = (kv) => {

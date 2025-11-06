@@ -341,8 +341,8 @@ export const objectToArray = (obj, { keyTo = 'id', orderKey = '_order' }) => {
 
   const arr = Object.entries(obj)
     // 过滤掉非对象的值，防止后面展开对象失败
-    .filter(([, value]) => typeof value === 'object' && obj !== null)
-    .map(([key, value]) => ({ ...value, [keyTo]: key }))
+    .filter(([, value]) => typeof value === 'object' && value !== null && !Array.isArray(value))
+    .map(([key, value]) => ({ ...(value as Record<string, any>), [keyTo]: key }))
     .map(({ [orderKey]: order, ...rest }) => ({ ...rest, [orderKey]: order ?? Number.MAX_SAFE_INTEGER }))
     .sort((a, b) => a[orderKey] - b[orderKey])
 
