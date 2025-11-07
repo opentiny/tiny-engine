@@ -15,9 +15,9 @@ import { formatMessages, serializeError, mergeStringFields } from '../utils'
 import type { LLMMessage, ResponseToolCall, RobotMessage } from '../types'
 import { createClient } from '../client'
 import useMcpServer from './useMcp'
-import { updatePageSchema, fetchAssets, search } from './useAgent'
+import { updatePageSchema, fetchAssets, search, isValidJsonPatchObjectString } from './useAgent'
 import useModelConfig from './useConfig'
-import { getAgentSystemPrompt } from '../prompts'
+import { getAgentSystemPrompt, getJsonFixPrompt } from '../prompts'
 import meta from '../../meta'
 
 const { deepClone } = utils
@@ -121,6 +121,7 @@ const removeLoading = (messages: ChatMessage[], name?: string) => {
 
 let chatStatus = STATUS.INIT
 let pageSchema = null
+let chatAbortController: AbortController | null = null
 
 const events: UseMessageOptions['events'] = {
   onReceiveData: (data: ChatCompletionStreamResponse, messages, preventDefault) => {
@@ -143,24 +144,58 @@ const events: UseMessageOptions['events'] = {
 
     updatePageSchema(lastMessage.content, pageSchema)
   },
-  onFinish(finishReason, { messages, messageState }, preventDefault) {
+  async onFinish(finishReason, { messages, messageState }, preventDefault) {
     preventDefault()
     const lastMessage = messages.value.at(-1)
     if (finishReason === 'tool_calls') {
       handleToolCall(lastMessage.tool_calls, messages.value) // eslint-disable-line
     } else if (finishReason !== 'abort' && messageState.status !== STATUS.ABORTED) {
-      messageState.status = STATUS.FINISHED
       if (robotSettingState.chatMode === CHAT_MODE.Agent) {
-        updatePageSchema(lastMessage.content, pageSchema, true).then(({ schema: newSchema } = { schema: null }) => {
-          // TODO: isError时让AI继续修复
-          if (newSchema) {
-            messages.value.at(-1).renderContent.at(-1).status = 'success'
-            messages.value.at(-1).renderContent.at(-1).schema = newSchema
-          } else {
-            messages.value.at(-1).renderContent.at(-1).status = 'failed'
+        const jsonValidResult = isValidJsonPatchObjectString(lastMessage.content)
+        if (jsonValidResult.isError) {
+          chatAbortController = new AbortController()
+          try {
+            const beforeRequest = (requestParams: any) => {
+              const { robotSettingState, getModelCapabilities } = useModelConfig()
+              const modelCapabilities = getModelCapabilities(
+                robotSettingState.selectedModel.baseUrl,
+                robotSettingState.selectedModel.model
+              )
+              if (modelCapabilities?.reasoning?.extraBody?.disable) {
+                Object.assign(requestParams, modelCapabilities.reasoning.extraBody.disable)
+              }
+              Object.assign(requestParams, {
+                response_format: { type: 'json_object' },
+                model: robotSettingState.selectedModel.model,
+                baseUrl: robotSettingState.selectedModel.baseUrl
+              })
+              return requestParams
+            }
+            updateLLMConfig({ apiUrl: '/app-center/api/chat/completions' })
+            messages.value.at(-1).renderContent.at(-1).status = 'fix'
+            const fixedResponse = await client.chat({
+              messages: [{ role: 'user', content: getJsonFixPrompt(lastMessage.content, jsonValidResult.error) }],
+              options: { signal: chatAbortController?.signal, beforeRequest: beforeRequest as any }
+            })
+            if (!isValidJsonPatchObjectString(fixedResponse.choices[0].message.content).isError) {
+              lastMessage.originContent = lastMessage.content
+              lastMessage.content = fixedResponse.choices[0].message.content
+            }
+          } catch (error) {
+            console.error('json fix failed', error) // eslint-disable-line
           }
-        })
+          updateLLMConfig({ apiUrl: getApiUrl() })
+        }
+
+        const result = await updatePageSchema(lastMessage.content, pageSchema, true)
+        if (result.schema) {
+          messages.value.at(-1).renderContent.at(-1).status = 'success'
+          messages.value.at(-1).renderContent.at(-1).schema = result.schema
+        } else {
+          messages.value.at(-1).renderContent.at(-1).status = 'failed'
+        }
       }
+      messageState.status = STATUS.FINISHED
     }
     chatStatus = messageState.status
     pageSchema = null
@@ -226,8 +261,6 @@ const parseArgs = (args: string) => {
   }
 }
 
-let afterToolCallAbortController: AbortController | null = null
-
 const handleToolCall = async (
   tool_calls: ResponseToolCall[],
   messages: ChatMessage[],
@@ -238,7 +271,7 @@ const handleToolCall = async (
     return
   }
 
-  afterToolCallAbortController = new AbortController()
+  chatAbortController = new AbortController()
 
   const currentMessage = messages.at(-1)
   const historyMessages = contextMessages?.length ? contextMessages : messages.slice(0, -1)
@@ -277,7 +310,7 @@ const handleToolCall = async (
       result: toolCallResult
     }
 
-    if (afterToolCallAbortController?.signal?.aborted) {
+    if (chatAbortController?.signal?.aborted) {
       return
     }
   }
@@ -285,7 +318,7 @@ const handleToolCall = async (
   currentMessage.renderContent.push({ type: 'loading', content: '' })
 
   await client.chatStream(
-    { messages: toolMessages, options: { signal: afterToolCallAbortController?.signal } },
+    { messages: toolMessages, options: { signal: chatAbortController?.signal } },
     {
       onData: (data) => {
         if (
@@ -346,7 +379,7 @@ export default function () {
     ...messageManager,
     changeChatMode,
     abortRequest: () => {
-      afterToolCallAbortController?.abort()
+      chatAbortController?.abort()
       messageManager.abortRequest()
       messageManager.messageState.status = STATUS.ABORTED
       removeLoading(messageManager.messages.value, 'latest')

@@ -5,6 +5,7 @@ import { getMetaApi, META_SERVICE, useCanvas, useHistory } from '@opentiny/tiny-
 import SvgICons from '@opentiny/vue-icon'
 import { useThrottleFn } from '@vueuse/core'
 import useModelConfig from './useConfig'
+import { serializeError } from '../utils'
 
 const { deepClone } = utils
 
@@ -27,9 +28,27 @@ const isPlainObject = (value: unknown) =>
   typeof value === 'object' && value !== null && Object.prototype.toString.call(value) === '[object Object]'
 
 const fixComponentName = (data: object) => {
-  if (isPlainObject(data) && !data.componentName) {
+  if (isPlainObject(data) && !data.componentName && !data.op && !data.path) {
     data.componentName = 'div'
     logger.log('autofix component to div:', data)
+  }
+}
+
+const fixMethods = (methods: Record<string, any>) => {
+  if (methods && Object.keys(methods).length) {
+    Object.entries(methods).forEach(([methodName, methodValue]: [string, any]) => {
+      if (
+        typeof methodValue !== 'object' ||
+        methodValue?.type !== 'JSFunction' ||
+        !methodValue?.value.startsWith('function')
+      ) {
+        methods[methodName] = {
+          type: 'JSFunction',
+          value: 'function ' + methodName + '() {\n  console.log("' + methodName + '");\n}'
+        }
+        logger.log('autofix method to empty function:', methodName, methods[methodName])
+      }
+    })
   }
 }
 
@@ -87,12 +106,35 @@ const isValidFastJsonPatch = (patch) => {
 }
 
 const jsonPatchAutoFix = (jsonPatches: any[], isFinial: boolean) => {
-  // 流式渲染过程中，画布只渲染children字段，避免不完整的methods/states/css等字段导致解析报错
+  // 流式渲染过程中，画布只渲染完整的字段或流式的children字段，避免不完整的methods/states/css等字段导致解析报错
   const childrenFilter = (patch, index, arr) =>
     isFinial || index < arr.length - 1 || (index === arr.length - 1 && patch.path?.startsWith('/children'))
   const validJsonPatches = jsonPatches.filter(childrenFilter).filter(isValidFastJsonPatch)
 
   return validJsonPatches
+}
+
+export const getJsonObjectString = (streamContent: string) => {
+  const regex = /```(json|schema)?([\s\S]*?)```/
+  const match = streamContent.match(regex)
+  return (match && match[2]) || streamContent
+}
+
+export const isValidJsonPatchObjectString = (streamContent: string) => {
+  const jsonString = getJsonObjectString(streamContent)
+  try {
+    const data = JSON.parse(jsonString)
+    if (!isValidFastJsonPatch(data)) {
+      return {
+        isError: true,
+        error:
+          'format error: not a valid json patch format(strictly `RFC 6902` compliant JSON Patch array. Format example: `[{ "op": "add", "path": "/children/0", "value": { ... } }, {"op":"add","path":"/methods/handleBtnClick","value": { ... }}, { "op": "replace", "path": "/css", "value": "..." }]`), please check and fix the json patch format.'
+      }
+    }
+    return { isError: false, data }
+  } catch (error) {
+    return { isError: true, error: serializeError(error) }
+  }
 }
 
 const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
@@ -102,9 +144,7 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
   }
 
   // 解析流式返回的schema patch
-  const regex = /```(json|schema)?([\s\S]*?)```/
-  const match = streamContent.match(regex)
-  let content = (match && match[2]) || streamContent
+  let content = getJsonObjectString(streamContent)
   let jsonPatches = []
   try {
     if (!isFinial) {
@@ -138,6 +178,7 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
   }, originSchema)
 
   // schema纠错
+  fixMethods(newSchema.methods)
   schemaAutoFix(newSchema.children)
 
   // 更新Schema
@@ -170,11 +211,15 @@ export const search = async (content: string) => {
 }
 
 export const fetchAssets = async () => {
-  const res = (await getMetaApi(META_SERVICE.Http).get('/material-center/api/resource/find/1')) || []
-  return res
-    .filter((item) => item.description)
-    .map((item) => ({
-      url: item.resourceUrl,
-      describe: item.description
-    }))
+  try {
+    const res = (await getMetaApi(META_SERVICE.Http).get('/material-center/api/resource/find/1')) || []
+    return res
+      .filter((item) => item.description)
+      .map((item) => ({
+        url: item.resourceUrl,
+        describe: item.description
+      }))
+  } catch (error) {
+    return []
+  }
 }

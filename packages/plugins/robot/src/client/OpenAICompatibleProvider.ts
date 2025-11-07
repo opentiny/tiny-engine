@@ -158,7 +158,8 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
       stream: isStream
     }
 
-    return await this.beforeRequest(requestData)
+    const beforeRequest = request.options?.beforeRequest || this.beforeRequest
+    return beforeRequest(requestData)
   }
 
   /**

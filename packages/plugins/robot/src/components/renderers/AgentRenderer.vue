@@ -41,6 +41,11 @@ export default {
         icon: 'loading.webp',
         content: () => props.content?.slice(-30)
       },
+      fix: {
+        title: '页面优化中，请稍等片刻',
+        icon: 'loading.webp',
+        content: () => '检测到问题，正在修复...'
+      },
       success: {
         title: '已生成新页面效果',
         content: '您可以继续问答更新页面效果',
