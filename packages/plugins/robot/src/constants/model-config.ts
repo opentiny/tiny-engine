@@ -13,6 +13,7 @@ export const DEFAULT_LLM_MODELS = [
     provider: 'bailian',
     label: '阿里云百炼',
     baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    allowEmptyApiKey: false,
     models: [
       // Agent/chat
       {
@@ -71,6 +72,7 @@ export const DEFAULT_LLM_MODELS = [
     provider: 'deepseek',
     label: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com/v1',
+    allowEmptyApiKey: false,
     models: [
       {
         label: 'DeepSeek',

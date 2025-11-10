@@ -14,6 +14,7 @@
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
+          :beforeSubmit="checkApiKey"
           @fileSelected="handleFileSelected"
         >
           <template #operations>
@@ -63,9 +64,9 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, onMounted, ref } from 'vue'
+import { computed, h, onMounted, ref, type Component } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { TinyPopover } from '@opentiny/vue'
+import { TinyNotify, TinyPopover } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { PromptProps } from '@opentiny/tiny-robot'
 import { IconThink } from '@opentiny/tiny-robot-svgs'
@@ -88,7 +89,8 @@ const { options } = defineProps({
   }
 })
 
-const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState } = useModelConfig()
+const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState, getAIModelOptions } =
+  useModelConfig()
 
 const robotChatRef = ref(null)
 
@@ -169,10 +171,10 @@ const openAIRobot = () => {
   robotChatRef.value?.openAIRobot()
 }
 
-const bubbleRenderers = computed(() => {
+const bubbleRenderers = computed<Record<string, Component>>(() => {
   return robotSettingState.chatMode === CHAT_MODE.Agent
-    ? { markdown: AgentRenderer, loading: AgentRenderer, 'collapsible-text': AgentRenderer }
-    : {}
+    ? { markdown: AgentRenderer, loading: AgentRenderer }
+    : ({} as Record<string, Component>)
 })
 
 const handleFileSelected = (formData: unknown, updateAttachment: (resourceUrl: string) => void) => {
@@ -194,6 +196,28 @@ const handleFileSelected = (formData: unknown, updateAttachment: (resourceUrl: s
     console.error('上传失败', error)
     updateAttachment('')
   }
+}
+
+const checkApiKey = () => {
+  const provider = getAIModelOptions().find((option) => option.baseUrl === robotSettingState.selectedModel.baseUrl)
+  if (
+    !robotSettingState.selectedModel.baseUrl ||
+    (!robotSettingState.selectedModel.apiKey && provider && !provider.allowEmptyApiKey)
+  ) {
+    TinyNotify({
+      type: 'warning',
+      title: '未设置API Key，请检查设置',
+      message: '请先设置大模型API Key后重试。',
+      position: 'top-right',
+      duration: 5000
+    })
+    setTimeout(() => {
+      showSettingPopover.value = true
+    }, 1000)
+    return false
+  }
+
+  return true
 }
 
 onMounted(async () => {

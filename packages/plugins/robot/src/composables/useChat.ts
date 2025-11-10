@@ -106,16 +106,11 @@ const updateLLMConfig = (newConfig: Omit<AIModelConfig, 'provider' | 'providerIm
 }
 
 const removeLoading = (messages: ChatMessage[], name?: string) => {
-  const lastMessage = messages.at(-1)
-  if (name === 'latest' && lastMessage.renderContent?.at(-1)?.type === 'loading') {
-    lastMessage.renderContent.pop()
-    return
-  }
-  const index = lastMessage.renderContent?.findIndex(
-    (item) => item.type === 'loading' && (name ? item.content === name : true)
-  )
+  const renderContent = messages.at(-1)?.renderContent
+  if (!renderContent || !renderContent.length) return
+  const index = renderContent.findLastIndex((item) => item.type === 'loading' && (name ? item.content === name : true))
   if (index !== -1) {
-    lastMessage.renderContent?.splice(index, 1)
+    renderContent?.splice(index, 1)
   }
 }
 
@@ -136,7 +131,7 @@ const events: UseMessageOptions['events'] = {
     }
     const lastMessage = messages.value.at(-1)
     if (choice.delta.reasoning_content || choice.delta.content || choice.delta.tool_calls?.length) {
-      removeLoading(messages.value, 'latest')
+      removeLoading(messages.value)
     }
     handleDeltaReasoning(choice, lastMessage) // eslint-disable-line
     handleDeltaContent(choice, lastMessage) // eslint-disable-line
@@ -326,7 +321,7 @@ const handleToolCall = async (
           data.choices[0].delta.content ||
           data.choices[0].delta.tool_calls?.length
         ) {
-          removeLoading(messages, 'latest')
+          removeLoading(messages)
         }
         if (data.choices[0].delta.reasoning_content) {
           handleDeltaReasoning(data.choices[0], currentMessage)
@@ -346,7 +341,7 @@ const handleToolCall = async (
         getMessageManager().messageState.status = STATUS.ERROR
       },
       onDone: async () => {
-        removeLoading(messages, 'latest')
+        removeLoading(messages)
         const toolCalls = messages.at(-1)!.tool_calls
         if (toolCalls?.length) {
           await handleToolCall(toolCalls, messages, toolMessages)
@@ -382,7 +377,7 @@ export default function () {
       chatAbortController?.abort()
       messageManager.abortRequest()
       messageManager.messageState.status = STATUS.ABORTED
-      removeLoading(messageManager.messages.value, 'latest')
+      removeLoading(messageManager.messages.value)
     },
     ...rest,
     switchConversation: (conversationId: string) => {
@@ -392,11 +387,20 @@ export default function () {
       rest.switchConversation(conversationId)
       // 切换会话后跟随切换对话模式
       if (conversation.metadata?.chatMode) {
-        robotSettingState.chatMode = conversation.metadata.chatMode as string
+        robotSettingState.chatMode = robotSettingState.chatMode as string
       } else {
         robotSettingState.chatMode = CHAT_MODE.Agent
         rest.updateMetadata(conversationId, { chatMode: CHAT_MODE.Agent })
         rest.saveConversations()
+      }
+      if (robotSettingState.chatMode === CHAT_MODE.Agent) {
+        messageManager.messages.value.at(-1)?.renderContent?.forEach((item) => {
+          if (item.type === 'loading') {
+            item.status = 'failed'
+          }
+        })
+      } else {
+        removeLoading(messageManager.messages.value)
       }
     },
     createConversation: (title?: string) => {

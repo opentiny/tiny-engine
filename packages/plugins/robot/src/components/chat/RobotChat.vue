@@ -121,7 +121,7 @@ import MarkdownRenderer from '../renderers/MarkdownRenderer.vue'
 import ImgRenderer from '../renderers/ImgRenderer.vue'
 import { serializeError } from '../../utils'
 
-const { promptItems, allowFiles, bubbleRenderers } = defineProps({
+const { promptItems, allowFiles, bubbleRenderers, beforeSubmit } = defineProps({
   promptItems: {
     type: Array as PropType<PromptProps[]>,
     default: () => []
@@ -133,6 +133,10 @@ const { promptItems, allowFiles, bubbleRenderers } = defineProps({
   bubbleRenderers: {
     type: Object as PropType<Record<string, Component>>,
     default: () => ({})
+  },
+  beforeSubmit: {
+    type: Function,
+    default: () => true
   }
 })
 
@@ -275,6 +279,15 @@ const handleSendMessage = async (content: string) => {
   if (!messageContent || (typeof messageContent === 'string' && !messageContent.trim())) {
     return
   }
+
+  let result = beforeSubmit?.()
+  if (result && typeof result.then === 'function') {
+    result = await result
+  }
+  if (result !== true) {
+    return
+  }
+
   const userMessage: ChatMessage = {
     role: 'user',
     content: messageContent

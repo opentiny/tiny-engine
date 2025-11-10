@@ -1,7 +1,12 @@
 <template>
   <div ref="robotSetting" class="robot-setting">
     <div class="header">设置</div>
-    <tiny-tabs tab-style="button-card" class="full-width-tabs" v-model="state.activeName">
+    <tiny-tabs
+      tab-style="button-card"
+      class="full-width-tabs"
+      v-model="state.activeName"
+      :before-leave="handleChangeTab"
+    >
       <tiny-tab-item title="可选模型" :name="EXISTING_MODELS">
         <tiny-form
           :rules="existFormRules"
@@ -116,7 +121,7 @@
 </template>
 <script lang="ts">
 /* metaService: engine.plugins.robot.RobotSettingPopover */
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import type { Component } from 'vue'
 import {
   TinyForm,
@@ -199,12 +204,21 @@ export default {
     })
 
     const customizeFormRules = {
-      baseUrl: [{ required: true, message: '必填', trigger: 'blur' }]
+      baseUrl: [{ required: true, message: '必填', trigger: 'blur' }],
+      model: [{ required: true, message: '必填', trigger: 'blur' }]
     }
 
-    const existFormRules = {
-      apiKey: [{ required: true, message: '必填', trigger: 'blur' }]
-    }
+    const existFormRules = computed(() => {
+      const rules = {
+        baseUrl: [{ required: true, message: '必填', trigger: 'change' }],
+        model: [{ required: true, message: '必填', trigger: 'change' }]
+      }
+      const provider = getProviderByBaseUrl(state.existFormData.baseUrl)
+      if (provider && !provider.allowEmptyApiKey) {
+        rules.apiKey = [{ required: true, message: '必填', trigger: 'blur' }]
+      }
+      return rules
+    })
 
     const closePanel = () => {
       emit('close')
@@ -216,7 +230,7 @@ export default {
       const models = provider?.models.map(modelTransformer) || []
 
       state.existFormData.label = provider?.label || ''
-      state.existFormData.model = models[0]?.name || ''
+      state.existFormData.model = models[0]?.value || ''
       state.existFormData.completeModel = ''
 
       saveRobotSettingState({
@@ -258,6 +272,19 @@ export default {
       })
     }
 
+    const validate = () => {
+      const form = state.activeName === EXISTING_MODELS ? robotSettingExistForm : robotSettingCustomizeForm
+      form.value?.validate().catch((_error) => {})
+    }
+
+    onMounted(validate)
+
+    const handleChangeTab = (activeName, usedActiveName) => {
+      if (activeName !== usedActiveName) {
+        nextTick(validate)
+      }
+    }
+
     const initFormData = () => {
       const { activeName, existModel, customizeModel } = loadRobotSettingState() || {}
       const initModel = robotSettingState.selectedModel
@@ -285,6 +312,7 @@ export default {
     initFormData()
 
     return {
+      handleChangeTab,
       baseUrlOptions,
       modelOptions,
       compactModelOptions,
