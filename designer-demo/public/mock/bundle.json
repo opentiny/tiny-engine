@@ -692,7 +692,7 @@
             "version": "3.22.0",
             "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
           },
-          "group": "component",
+          "group": "chart",
           "category": "图表组件",
           "priority": 2,
           "schema": {
@@ -816,7 +816,7 @@
             "version": "3.22.0",
             "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
           },
-          "group": "component",
+          "group": "chart",
           "category": "图表组件",
           "priority": 2,
           "schema": {
