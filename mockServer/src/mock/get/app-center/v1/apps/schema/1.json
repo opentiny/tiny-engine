@@ -2058,6 +2058,55 @@
         "version": "2.4.2"
       },
       {
+        "componentName": "TinyProgress",
+        "package": "@opentiny/vue",
+        "exportName": "TinyProgress",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySkeleton",
+        "package": "@opentiny/vue",
+        "exportName": "TinySkeleton",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCard",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCard",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCalendar",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCalendar",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyBadge",
+        "package": "@opentiny/vue",
+        "exportName": "TinyBadge",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyTag",
+        "package": "@opentiny/vue",
+        "exportName": "TinyTag",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyStatistic",
+        "package": "@opentiny/vue",
+        "exportName": "TinyStatistic",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsLine",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsLine",
