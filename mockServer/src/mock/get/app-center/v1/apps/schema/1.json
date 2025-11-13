@@ -2016,6 +2016,41 @@
         "version": "3.20.0"
       },
       {
+        "componentName": "TinyRate",
+        "package": "@opentiny/vue",
+        "exportName": "TinyRate",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySlider",
+        "package": "@opentiny/vue",
+        "exportName": "TinySlider",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCascader",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCascader",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySteps",
+        "package": "@opentiny/vue",
+        "exportName": "TinySteps",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyTreeMenu",
+        "package": "@opentiny/vue",
+        "exportName": "TinyTreeMenu",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "ElInput",
         "package": "element-plus",
         "exportName": "ElInput",
