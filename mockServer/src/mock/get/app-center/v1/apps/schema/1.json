@@ -2051,6 +2051,13 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyRadioGroup",
+        "package": "@opentiny/vue",
+        "exportName": "TinyRadioGroup",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "ElInput",
         "package": "element-plus",
         "exportName": "ElInput",
