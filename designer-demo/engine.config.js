@@ -5,5 +5,7 @@ export default {
   scripts: [],
   styles: [],
   // 是否开启 TailWindCSS 特性
-  enableTailwindCSS: true
+  enableTailwindCSS: true,
+  // 是否启用路由
+  enableRouter: true
 }

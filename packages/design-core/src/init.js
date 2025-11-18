@@ -66,10 +66,14 @@ const defaultLifeCycles = {
     // 这里暴露到 window 是为了让 canvas 可以读取
     window.TinyGlobalConfig = config || {}
   },
-  appCreated: ({ app }) => {
+  appCreated: ({ app, router }) => {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
+    // 初始化路由
+    if (router) {
+      app.use(router)
+    }
 
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const theme = localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme
@@ -126,6 +130,7 @@ const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
 export const init = async ({
   selector = '#app',
   registry = [],
+  router = [],
   lifeCycles = {},
   configurators = {},
   createAppSignal = [],
@@ -146,7 +151,7 @@ export const init = async ({
   }
 
   const app = createApp(App)
-  defaultLifeCycles.appCreated({ app })
+  defaultLifeCycles.appCreated({ app, router })
   appCreated?.({ app })
 
   app.mount(selector)

@@ -48,5 +48,6 @@ export {
 } from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'
+export { initRouter } from './src/router'
 
 export * from '@opentiny/tiny-engine-meta-register'
