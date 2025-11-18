@@ -75,6 +75,7 @@
 import { reactive, watch } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinyTooltip } from '@opentiny/vue'
 import useLogin from './js/useLogin'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -105,7 +106,14 @@ export default {
           state.confirmManualShow = false
         }, 1000)
       } else {
-        emit('toSuccess')
+        getMetaApi(META_SERVICE.Http)
+          .post('/platform-center/api/user/register', {
+            username: state.registerData.username,
+            password: state.registerData.password
+          })
+          .then((data) => {
+            emit('toSuccess')
+          })
       }
     }
 

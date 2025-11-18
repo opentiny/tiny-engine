@@ -62,6 +62,7 @@
 import { reactive, watch } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinyTooltip } from '@opentiny/vue'
 import useLogin from './js/useLogin'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -92,8 +93,16 @@ export default {
         setTimeout(() => {
           state.confirmManualShow = false
         }, 1000)
-      }else {
-        emit('toLogin')
+      } else {
+        getMetaApi(META_SERVICE.Http)
+          .post('/platform-center/api/user/forgot-password', {
+            username: state.forgotData.username,
+            password: state.forgotData.password,
+            publicKey: state.forgotData.key
+          })
+          .then((data) => {
+            emit('toLogin')
+          })
       }
     }
 

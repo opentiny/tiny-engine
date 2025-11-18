@@ -39,8 +39,8 @@ export default {
     TinyInput,
     TinyButton
   },
-  emits: ['toRegister','toForgot'],
-  setup(props,{emit}) {
+  emits: ['toRegister', 'toForgot'],
+  setup(props, { emit }) {
     const state = reactive({
       loginData: {
         username: '',
@@ -49,15 +49,20 @@ export default {
     })
 
     const handleLogin = () => {
-
+      getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/user/login', {
+          username: state.forgotData.username,
+          password: state.forgotData.password
+        })
+        .then((data) => {})
     }
 
     const toRegister = () => {
-        emit('toRegister')
+      emit('toRegister')
     }
 
     const toForgot = () => {
-        emit('toForgot')
+      emit('toForgot')
     }
     return {
       state,
