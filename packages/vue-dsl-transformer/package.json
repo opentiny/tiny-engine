@@ -1,0 +1,24 @@
+{
+  "name": "@opentiny/vue-dsl-transformer",
+  "version": "1.0.0",
+  "description": "低代码DSL与Vue代码双向转化工具",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 3000"
+  },
+  "dependencies": {
+    "vue": "^3.4.15",
+    "@opentiny/tiny-engine-dsl-vue": "2.9.0-alpha.9",
+    "@opentiny/tiny-engine-vue-to-dsl": "workspace:*",
+    "monaco-editor": "^0.45.0",
+    "@monaco-editor/loader": "^1.4.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.5.2",
+    "vite": "^5.4.2"
+  }
+}

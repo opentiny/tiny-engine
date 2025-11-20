@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "pnpm -F @opentiny/tiny-engine-vue-to-dsl build && pnpm -F @opentiny/vue-dsl-transformer dev"
+  },
+  "devDependencies": {
+    "lerna": "^8.2.3",
+    "process": "^0.11.10"
+  }
+}
