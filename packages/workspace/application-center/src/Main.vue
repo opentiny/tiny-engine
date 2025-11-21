@@ -408,6 +408,7 @@ export default {
         height: 20px;
         border-radius: 4px;
         background: var(--te-template-center-common-item-operation-bg-color);
+        color: var(--te-template-center-common-item-operation-icon-color);
         display: inline-flex;
         justify-content: center;
         align-items: center;

@@ -234,7 +234,7 @@ export default {
     left: 0;
     padding: 16px;
     margin-bottom: 5px;
-    width: 216px;
+    width: 192px;
     border-radius: 4px;
     z-index: 1000;
     overflow: hidden;
