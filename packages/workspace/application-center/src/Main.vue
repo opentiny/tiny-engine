@@ -321,7 +321,7 @@ export default {
   .app-center-filter {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
   }
   .app-center-search {
     min-width: 300px;
