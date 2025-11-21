@@ -361,7 +361,11 @@ export default {
     padding: 24px;
     border-radius: 8px;
     background: var(--te-template-center-common-item-bg-color);
+    border: 1px solid var(--te-template-app-center-item-border-color);
     position: relative;
+    &:hover {
+      border-color: var(--te-template-app-center-item-border-color-hover);
+    }
     .app-name {
       display: flex;
       gap: 8px;

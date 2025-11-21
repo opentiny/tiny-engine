@@ -192,8 +192,9 @@ export default {
     }
     &-content {
       margin-top: 20px;
-      padding: 18px 30px;
+      padding: 24px;
       height: 100%;
+      background: var(--te-template-center-detail-bg-color);
     }
   }
 }
