@@ -31,6 +31,7 @@
 <script lang="ts">
 import { reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -51,8 +52,8 @@ export default {
     const handleLogin = () => {
       getMetaApi(META_SERVICE.Http)
         .post('/platform-center/api/user/login', {
-          username: state.forgotData.username,
-          password: state.forgotData.password
+          username: state.loginData.username,
+          password: state.loginData.password
         })
         .then((data) => {})
     }

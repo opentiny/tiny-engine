@@ -67,7 +67,8 @@ export default {
       SUCCESS,
       toLogin,
       toRegister,
-      toForgot
+      toForgot,
+      toSuccess
     }
   }
 }

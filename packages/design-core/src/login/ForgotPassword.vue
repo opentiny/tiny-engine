@@ -88,22 +88,28 @@ export default {
     })
 
     const handleForgot = () => {
+      if (state.pwManualShow) {
+        return
+      }
+
       handleConfirmPwChange()
       if (state.confirmManualShow) {
         setTimeout(() => {
           state.confirmManualShow = false
         }, 1000)
-      } else {
-        getMetaApi(META_SERVICE.Http)
-          .post('/platform-center/api/user/forgot-password', {
-            username: state.forgotData.username,
-            password: state.forgotData.password,
-            publicKey: state.forgotData.key
-          })
-          .then((data) => {
-            emit('toLogin')
-          })
+
+        return
       }
+
+      getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/user/forgot-password', {
+          username: state.forgotData.username,
+          password: state.forgotData.password,
+          publicKey: state.forgotData.key
+        })
+        .then((data) => {
+          emit('toLogin')
+        })
     }
 
     const handlePwChange = () => {

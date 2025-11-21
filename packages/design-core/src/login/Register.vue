@@ -100,21 +100,27 @@ export default {
     })
 
     const handleRegister = () => {
+      if (state.pwManualShow) {
+        return
+      }
+
       handleConfirmPwChange()
       if (state.confirmManualShow) {
         setTimeout(() => {
           state.confirmManualShow = false
         }, 1000)
-      } else {
-        getMetaApi(META_SERVICE.Http)
-          .post('/platform-center/api/user/register', {
-            username: state.registerData.username,
-            password: state.registerData.password
-          })
-          .then((data) => {
-            emit('toSuccess')
-          })
+
+        return
       }
+
+      getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/user/register', {
+          username: state.registerData.username,
+          password: state.registerData.password
+        })
+        .then((data) => {
+          emit('toSuccess')
+        })
     }
 
     const handlePwChange = () => {
