@@ -1,0 +1,399 @@
+{
+  "componentName": "Page",
+  "fileName": "TestTabel",
+  "css": ".page-base-style {\n  margin: 0;\n  padding: 0;\n  height: 100%;\n  background: #ffffff;\n}\n.page-ytlek {\n  padding-top: 32px;\n  padding-left: 12px;\n  padding-right: 12px;\n}\n",
+  "props": {
+    "className": "page-base-style page-ytlek"
+  },
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyGrid",
+      "props": {
+        "editConfig": {
+          "trigger": "click",
+          "mode": "cell",
+          "showStatus": true
+        },
+        "columns": [
+          {
+            "type": "index",
+            "width": 60
+          },
+          {
+            "type": "selection",
+            "width": "40"
+          },
+          {
+            "title": "公司名称",
+            "width": "200",
+            "field": "name",
+            "showOverflow": "ellipsis"
+          },
+          {
+            "field": "employees",
+            "title": "员工数",
+            "filter": false
+          },
+          {
+            "field": "created_date",
+            "title": "创建日期",
+            "sortable": false,
+            "slots": {
+              "default": {
+                "type": "JSSlot",
+                "value": [
+                  {
+                    "componentName": "div",
+                    "id": "62552322",
+                    "children": [
+                      {
+                        "componentName": "TinyDatePicker",
+                        "props": {
+                          "className": "",
+                          "modelValue": {
+                            "type": "JSExpression",
+                            "value": "row.created_date",
+                            "model": true
+                          },
+                          "type": "date"
+                        },
+                        "children": [],
+                        "id": "75e6262e"
+                      }
+                    ]
+                  }
+                ],
+                "params": [
+                  "row"
+                ]
+              }
+            }
+          },
+          {
+            "field": "city",
+            "title": "城市",
+            "filter": false
+          },
+          {
+            "title": "启用",
+            "field": "boole",
+            "slots": {
+              "default": {
+                "type": "JSSlot",
+                "value": [
+                  {
+                    "componentName": "div",
+                    "id": "165b5af6",
+                    "children": [
+                      {
+                        "componentName": "TinySwitch",
+                        "props": {
+                          "modelValue": {
+                            "type": "JSExpression",
+                            "value": "row.boole",
+                            "model": true
+                          },
+                          "className": ""
+                        },
+                        "children": [],
+                        "id": "45426556"
+                      }
+                    ]
+                  }
+                ],
+                "params": [
+                  "row"
+                ]
+              }
+            }
+          },
+          {
+            "title": "标签",
+            "field": "tags",
+            "slots": {
+              "default": {
+                "type": "JSSlot",
+                "value": [
+                  {
+                    "componentName": "div",
+                    "id": "45f34d75",
+                    "children": [
+                      {
+                        "componentName": "TinyTagGroup",
+                        "props": {
+                          "data": {
+                            "type": "JSExpression",
+                            "value": "this.getTagInfo(row.tags)"
+                          },
+                          "className": "",
+                          "size": "small"
+                        },
+                        "children": [],
+                        "id": "33244226"
+                      }
+                    ]
+                  }
+                ],
+                "params": [
+                  "row"
+                ]
+              }
+            }
+          },
+          {
+            "title": "状态",
+            "field": "status",
+            "slots": {
+              "default": {
+                "type": "JSSlot",
+                "value": [
+                  {
+                    "componentName": "div",
+                    "id": "653da333",
+                    "children": [
+                      {
+                        "componentName": "TinyBadge",
+                        "props": {
+                          "data": "我的待办",
+                          "value": {
+                            "type": "JSExpression",
+                            "value": "row.status"
+                          },
+                          "max": 99,
+                          "className": "",
+                          "type": "success"
+                        },
+                        "children": [],
+                        "id": "2d421413"
+                      }
+                    ]
+                  }
+                ],
+                "params": [
+                  "row"
+                ]
+              }
+            }
+          }
+        ],
+        "className": "",
+        "sortable": false,
+        "row-id": "id",
+        "data": [
+          {
+            "id": "1",
+            "name": "GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司",
+            "city": "福州",
+            "employees": 800,
+            "created_date": "2014-04-30 00:56:00",
+            "boole": false,
+            "status": 1,
+            "tags": [
+              "科技",
+              "信息",
+              "测试"
+            ]
+          },
+          {
+            "id": "2",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": false,
+            "status": 2,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "3",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": true,
+            "status": 2,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "4",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": false,
+            "status": 3,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "5",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": true,
+            "status": 2,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "6",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": true,
+            "status": 3,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "7",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": true,
+            "status": 1,
+            "tags": [
+              "科技"
+            ]
+          },
+          {
+            "id": "8",
+            "name": "WWW科技有限公司",
+            "city": "深圳",
+            "employees": 300,
+            "created_date": "2016-07-08 12:36:22",
+            "boole": true,
+            "status": 1,
+            "tags": [
+              "科技"
+            ]
+          }
+        ],
+        "highlight-hover-row": false,
+        "resizable": true,
+        "size": "small",
+        "border": false,
+        "highlight-current-row": false,
+        "seq-serial": false
+      },
+      "id": "63532263",
+      "children": [
+        {
+          "componentName": "Template",
+          "props": {
+            "slot": {
+              "name": "toolbar"
+            }
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "validate-type": "text",
+                "className": "",
+                "inline": true,
+                "label-position": "left"
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "名称"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "props": {
+                        "placeholder": "请输入",
+                        "modelValue": ""
+                      },
+                      "id": "34428513"
+                    }
+                  ],
+                  "id": "3463df55"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "标签"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyInput",
+                      "props": {
+                        "placeholder": "请输入",
+                        "modelValue": "",
+                        "type": "password"
+                      },
+                      "id": "aec38135"
+                    }
+                  ],
+                  "id": "23a64112"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": ""
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButton",
+                      "props": {
+                        "text": "查询",
+                        "type": "primary",
+                        "style": "margin-right: 10px"
+                      },
+                      "id": "14265332"
+                    },
+                    {
+                      "componentName": "TinyButton",
+                      "props": {
+                        "text": "重置",
+                        "type": "default"
+                      },
+                      "id": "2132d533"
+                    }
+                  ],
+                  "id": "32d28245"
+                }
+              ],
+              "id": "41323245"
+            }
+          ],
+          "id": "32616241"
+        }
+      ]
+    }
+  ],
+  "dataSource": {
+    "list": []
+  },
+  "methods": {
+    "getTagInfo": {
+      "type": "JSFunction",
+      "value": "function getTagInfo(tags) {\n  return tags.map((e) => ({ name: e, type: 'success' }))\n}\n"
+    }
+  },
+  "bridge": {
+    "imports": []
+  },
+  "state": {
+    "selectVal": ""
+  },
+  "inputs": [],
+  "outputs": [],
+  "id": "body"
+}
