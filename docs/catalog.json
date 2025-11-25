@@ -16,7 +16,6 @@
           "title": "基础功能",
           "name": "basic-features",
           "articles": [
-            { "title": "初识设计器", "name": "intro-to-designer.md" },
             { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
             { "title": "设计器界面模块简介", "name": "designer-ui-modules.md" },
             { "title": "页面管理", "name": "page-management.md" },
@@ -155,7 +154,9 @@
                 { "title": "全局布局API", "name": "global-layout-api.md" },
                 { "title": "物料API", "name": "material-api.md" },
                 { "title": "设置面板API", "name": "settings-panel-api.md" },
-                { "title": "预览API", "name": "preview-api.md" }
+                { "title": "预览API", "name": "preview-api.md" },
+                { "title": "元服务API", "name": "globalService-api.md" },
+                { "title": "注册表API", "name": "registry-api.md" }
               ]
             },
             {
