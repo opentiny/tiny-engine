@@ -8,32 +8,6 @@
   >
     <template #operations>
       <slot name="operations"></slot>
-      <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
-      <span style="display: inline-flex; line-height: 0; position: relative">
-        <tr-icon-button :icon="IconHistory" size="28" svgSize="20" @click="showHistory = true" />
-        <div v-show="showHistory" class="tr-history-container">
-          <div><h3 style="padding-left: 12px">历史对话</h3></div>
-          <tr-icon-button
-            :icon="IconClose"
-            size="28"
-            svgSize="20"
-            @click="showHistory = false"
-            style="position: absolute; right: 14px; top: 14px"
-          />
-          <tr-history
-            :selected="conversationState.currentId || undefined"
-            :search-bar="true"
-            :data="conversationState.conversations"
-            @item-action="handleHistoryItemAction"
-            @item-title-change="handleHistoryItemTitleChange"
-            @item-click="handleHistoryItemClick"
-          >
-            <template #item-prefix="{ item }">
-              <slot name="history-list-prefix" :item="item"></slot>
-            </template>
-          </tr-history>
-        </div>
-      </span>
     </template>
 
     <div class="robot-chat-container-content" ref="chatContainerRef">
@@ -59,9 +33,9 @@
           ref="senderRef"
           mode="multiple"
           v-model="inputMessage"
-          :placeholder="GeneratingStatus.includes(messageState.status) ? '正在思考中...' : '请输入您的问题'"
+          :placeholder="GeneratingStatus.includes(status) ? '正在思考中...' : '请输入您的问题'"
           :clearable="true"
-          :loading="GeneratingStatus.includes(messageState.status)"
+          :loading="GeneratingStatus.includes(status)"
           :showWordLimit="true"
           :maxLength="4000"
           @submit="handleSendMessage"
@@ -93,43 +67,31 @@
 </template>
 
 <script setup lang="ts">
-import type { BubbleRoleConfig, PromptProps } from '@opentiny/tiny-robot'
+import { ref, computed, h, resolveComponent, type Component, type CSSProperties, type PropType } from 'vue'
+import { Notify } from '@opentiny/vue'
 import {
   TrBubbleList,
   TrBubbleProvider,
   TrContainer,
-  TrHistory,
-  TrIconButton,
   TrPrompts,
   TrSender,
   TrWelcome,
-  TrAttachments
+  TrAttachments,
+  type BubbleRoleConfig,
+  type PromptProps
 } from '@opentiny/tiny-robot'
-import { type ChatMessage, type Conversation, GeneratingStatus } from '@opentiny/tiny-robot-kit'
-import { IconHistory, IconNewSession, IconClose } from '@opentiny/tiny-robot-svgs'
-import {
-  type Component,
-  computed,
-  type CSSProperties,
-  h,
-  nextTick,
-  onMounted,
-  type PropType,
-  ref,
-  resolveComponent
-} from 'vue'
-import { Notify } from '@opentiny/vue'
-import useChat from '../../composables/useChat'
-import LoadingRenderer from '../renderers/LoadingRenderer.vue'
-import MarkdownRenderer from '../renderers/MarkdownRenderer.vue'
-import ImgRenderer from '../renderers/ImgRenderer.vue'
-import { serializeError } from '../../utils'
+import { type ChatMessage, GeneratingStatus } from '@opentiny/tiny-robot-kit'
+import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
 
-const { promptItems, allowFiles, bubbleRenderers, beforeSubmit } = defineProps({
+const { promptItems, status, promptClickHandler, allowFiles, bubbleRenderers, beforeSubmit } = defineProps({
   promptItems: {
     type: Array as PropType<PromptProps[]>,
     default: () => []
   },
+  promptClickHandler: {
+    type: Function
+  },
+  status: { type: String },
   allowFiles: {
     type: Boolean,
     default: false
@@ -144,26 +106,14 @@ const { promptItems, allowFiles, bubbleRenderers, beforeSubmit } = defineProps({
   }
 })
 
-const emit = defineEmits(['fileSelected'])
+const emit = defineEmits(['fileSelected', 'sendMessage', 'abort'])
 
 const singleAttachmentItems = ref([])
 
 const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
-
-const {
-  messages,
-  messageState,
-  inputMessage,
-  abortRequest,
-  send,
-  removeLoading,
-  conversationState,
-  createConversation,
-  switchConversation,
-  deleteConversation,
-  updateTitle
-} = useChat()
+const inputMessage = defineModel<string>('input', { required: true })
+const messages = defineModel<ChatMessage[]>('messages', { required: true })
 
 const imageUrl = ref('')
 
@@ -254,22 +204,6 @@ const roles: Record<string, BubbleRoleConfig> = {
     hidden: true
   }
 }
-const showHistory = ref(false)
-
-const handleHistoryItemClick = (item: Conversation) => {
-  switchConversation(item.id)
-  showHistory.value = false
-}
-
-const handleHistoryItemAction = (action: { id: string }, item: Conversation) => {
-  if (action.id === 'delete') {
-    deleteConversation(item.id)
-  }
-}
-
-const handleHistoryItemTitleChange = (title: string, item: Conversation) => {
-  updateTitle(item.id, title)
-}
 
 const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
@@ -280,7 +214,7 @@ const handleSendMessage = async (content: string) => {
     return
   }
 
-  let result = beforeSubmit?.()
+  let result = beforeSubmit?.(content)
   if (result && typeof result.then === 'function') {
     result = await result
   }
@@ -326,47 +260,20 @@ const handleSendMessage = async (content: string) => {
   messages.value.push(userMessage)
   inputMessage.value = ''
   singleAttachmentItems.value = []
-  try {
-    nextTick(() => {
-      const assistantMessage: ChatMessage = {
-        role: 'assistant',
-        content: '',
-        renderContent: [{ type: 'loading' }]
-      }
-      messages.value.push(assistantMessage)
-    })
-    await send()
-    const currentTitle = conversationState.conversations.find(
-      (conversation) => conversation.id === conversationState.currentId
-    )?.title
-    const DEFAULT_TITLE = '新会话'
-    if (currentTitle === DEFAULT_TITLE && conversationState.currentId) {
-      const contentStr = typeof messageContent === 'string' ? messageContent : JSON.stringify(messageContent)
-      updateTitle(conversationState.currentId, contentStr.substring(0, 20))
-    }
-  } catch (error) {
-    removeLoading(messages.value)
-    const lastMessage = messages.value[messages.value.length - 1]
-    if (lastMessage) {
-      lastMessage.renderContent.push({ type: 'text', content: serializeError(error) })
-    }
-    // eslint-disable-next-line no-console
-    console.error(error)
-  }
+  emit('sendMessage')
 }
 
 const handleAbortRequest = () => {
-  abortRequest()
-  messages.value.at(-1)!.aborted = true
+  emit('abort')
 }
 
 const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
-  handleSendMessage(item.description)
+  if (promptClickHandler && typeof promptClickHandler === 'function') {
+    promptClickHandler(item)
+  } else {
+    handleSendMessage(item.description)
+  }
 }
-
-onMounted(() => {
-  createConversation()
-})
 </script>
 
 <style scoped lang="less">
@@ -375,24 +282,6 @@ onMounted(() => {
   color: rgb(128, 128, 128);
   font-size: 12px;
   line-height: 20px;
-}
-
-.tr-history-container {
-  position: absolute;
-  right: 100%;
-  top: 100%;
-  z-index: var(--tr-z-index-popover);
-  width: 300px;
-  height: 400px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-  background-color: white;
-  padding: 16px;
-  border-radius: 16px;
-  --tr-history-group-space-y: 0px;
-  :deep(.tr-history) {
-    height: calc(100% - 36px);
-    overflow-y: auto;
-  }
 }
 
 @container tiny-container (max-width: 640px) {

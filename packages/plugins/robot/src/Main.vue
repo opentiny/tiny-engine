@@ -10,13 +10,18 @@
     <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
       <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
         <robot-chat
+          v-model:messages="messages"
           v-model:fullscreen="fullscreen"
           v-model:show="robotVisible"
+          v-model:input="inputMessage"
+          :status="messageState.status"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
           :beforeSubmit="checkApiKey"
           @fileSelected="handleFileSelected"
+          @sendMessage="sendUserMessage"
+          @abort="handleAbortRequest"
         >
           <template #history-list-prefix="{ item }">
             <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
@@ -41,6 +46,26 @@
                 </span>
               </template>
             </tiny-popover>
+            <robot-history
+              :conversation-state="conversationState"
+              @item-click="
+                (item) => {
+                  switchConversation(item.id)
+                }
+              "
+              @item-action="
+                (action, item) => {
+                  if (action.id === 'delete') deleteConversation(item.id)
+                }
+              "
+              @item-title-change="(title, item) => updateTitle(item.id, title)"
+            >
+              <template #history-list-prefix="{ item }">
+                <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
+                <svg-icon v-else name="chat"></svg-icon>
+              </template>
+            </robot-history>
+            <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
           </template>
           <template #footer-left>
             <robot-type-select
@@ -73,13 +98,14 @@ import { computed, h, onMounted, ref, watch, type Component } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyNotify, TinyPopover } from '@opentiny/vue'
 import { getMetaApi, META_APP, META_SERVICE, useLayout } from '@opentiny/tiny-engine-meta-register'
-import type { PromptProps } from '@opentiny/tiny-robot'
-import { IconThink } from '@opentiny/tiny-robot-svgs'
+import { type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
+import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
 import McpIconComponent from './components/icons/mcp-icon.vue'
 import PageIconComponent from './components/icons/page-icon.vue'
 import StudyIconComponent from './components/icons/study-icon.vue'
 import RobotSettingPopover from './components/header-extension/RobotSettingPopover.vue'
+import RobotHistory from './components/header-extension/History.vue'
 import RobotTypeSelect from './components/footer-extension/RobotTypeSelect.vue'
 import McpServer from './components/footer-extension/McpServer.vue'
 import AgentRenderer from './components/renderers/AgentRenderer.vue'
@@ -143,7 +169,25 @@ const promptItems: PromptProps[] = [
 const showTeleport = ref(false)
 const showSettingPopover = ref(false)
 
-const { inputMessage, changeChatMode } = useChat()
+const {
+  inputMessage,
+  messages,
+  messageState,
+  changeChatMode,
+  abortRequest,
+  initChatClient,
+  sendUserMessage,
+  conversationState,
+  createConversation,
+  switchConversation,
+  deleteConversation,
+  updateTitle
+} = useChat()
+
+const handleAbortRequest = () => {
+  abortRequest()
+  messages.value.at(-1)!.aborted = true
+}
 
 const isVisualModel = computed(() => {
   const modelCapabilities = getModelCapabilities(
@@ -174,6 +218,7 @@ const closePanel = () => {
 }
 
 const openAIRobot = () => {
+  createConversation()
   robotVisible.value = true
   useLayout().closeSetting(true)
 }
@@ -228,6 +273,7 @@ const checkApiKey = () => {
 }
 
 onMounted(async () => {
+  initChatClient()
   setTimeout(() => {
     showTeleport.value = true
   }, 1000)
