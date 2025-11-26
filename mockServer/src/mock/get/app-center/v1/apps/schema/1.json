@@ -2058,6 +2058,27 @@
         "version": "2.4.2"
       },
       {
+        "componentName": "TinyHuichartsFunnel",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsFunnel",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsScatter",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsScatter",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsWaterfall",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsWaterfall",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsLine",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsLine",
