@@ -24,23 +24,142 @@ const formatExamples = (examples: Record<string, any>): string => {
     .join('\n\n')
 }
 
+type ComponentMaterial = {
+  component: string
+  name: { zh_CN: string; en_US?: string }
+  props: Array<{
+    property: string
+    description?: { zh_CN: string; en_US?: string }
+    type: string
+    defaultValue?: any
+  }>
+  events: Array<{
+    name: string
+    description?: { zh_CN: string; en_US?: string }
+  }>
+  slots: Array<{
+    name: string
+    description?: { zh_CN: string; en_US?: string }
+  }>
+}
+
+const toPascalCase = (str: string): string => {
+  if (!str.toLowerCase().startsWith('tiny')) return str
+  const result = str
+    .replace(/[-_]([a-z])/g, (_: string, char: string) => char.toUpperCase())
+    .replace(/^[a-z]/, (firstChar: string) => firstChar.toUpperCase())
+  return result
+}
+
+const nativeComponents = [
+  'p',
+  'a',
+  'hr',
+  'img',
+  'h1',
+  'video',
+  'button',
+  'input',
+  'form',
+  'form-item',
+  'select',
+  'table',
+  'container',
+  'text',
+  'image'
+]
+
+export const formatComponents = (snippets: any[], getComponent: (name: string) => ComponentMaterial): any[] => {
+  const ignoreGroups = ['model', 'element-plus']
+  const ignoreComponents = [
+    ...nativeComponents,
+    'Box',
+    'CanvasRowColContainer',
+    'CanvasFlexBox',
+    'CanvasSection',
+    'Collection',
+    'CanvasNavigation',
+    'TinyButtons',
+    'TinyCheckboxbuttonGroup',
+    'TinyNumeric' // 组件报错，先忽略
+  ]
+  const ignoreProperties = ['id', 'className', 'ref', 'attributes3']
+
+  const newComponents = snippets
+    .filter((item: any) => !ignoreGroups.includes(item.group))
+    .map((group) => group.children)
+    .flat()
+    .filter((item: any) => !ignoreComponents.includes(item.snippetName))
+    .map((child) => {
+      const component: ComponentMaterial = getComponent(toPascalCase(child.snippetName))
+      const schema: any = {}
+
+      if (component?.props?.length) {
+        schema.properties = component.props
+          ?.filter((prop) => !ignoreProperties.includes(prop.property))
+          .map((prop) => ({
+            name: prop.property,
+            description: prop.description?.en_US || prop.description?.zh_CN || '',
+            type: prop.type || 'string',
+            ...(prop.defaultValue === undefined ? {} : { default: prop.defaultValue })
+          }))
+          .reduce((acc: Record<string, any>, cur) => {
+            const type = cur.type && cur.type.toUpperCase() !== 'STRING' ? `(${cur.type})` : ''
+            const defaultValue =
+              cur.default !== undefined && cur.default !== '' ? `(defaultValue: ${JSON.stringify(cur.default)})` : ''
+            acc[cur.name] = `${cur.description}${type}${defaultValue}`
+            return acc
+          }, {})
+      }
+
+      if (component?.events?.length) {
+        schema.events = component.events
+          .map((event) => ({
+            name: event.name,
+            description: event.description?.en_US || event.description?.zh_CN || ''
+          }))
+          .reduce((acc: Record<string, any>, cur) => {
+            acc[cur.name] = cur.description
+            return acc
+          }, {})
+      }
+      if (component?.slots?.length) {
+        schema.slots = component.slots
+          .map((slot) => ({
+            name: slot.name,
+            description: slot.description?.en_US || slot.description?.zh_CN || ''
+          }))
+          .reduce((acc: Record<string, any>, cur) => {
+            acc[cur.name] = cur.description
+            return acc
+          }, {})
+      }
+
+      return {
+        component: toPascalCase(child.snippetName),
+        name: child.name?.zh_CN || child.name || toPascalCase(child.snippetName),
+        ...schema,
+        demo: child.schema
+      }
+    })
+  return newComponents
+}
+
 /**
  * Generate agent system prompt with dynamic components and examples
  */
-export const getAgentSystemPrompt = (currentPageSchema: object, referenceContext: string, imageAssets: any[]) => {
-  // Format components list
-  const ignoreComponents = ['TinyNumeric'] // 组件报错，先忽略
-  const componentsList = formatComponentsToJsonl(
-    componentsData.filter((component) => !ignoreComponents.includes(component.component))
-  )
+export const getAgentSystemPrompt = (
+  components = componentsData,
+  currentPageSchema: object,
+  referenceContext: string,
+  imageAssets: any[]
+) => {
+  const componentsList = formatComponentsToJsonl(components)
 
-  // Format examples section
   const examplesSection = formatExamples(examplesData)
 
-  // Format current page schema
   const currentPageSchemaStr = JSON.stringify(currentPageSchema)
 
-  // Replace all placeholders in the prompt template
   const prompt = agentPrompt
     .replace('{{COMPONENTS_LIST}}', componentsList)
     .replace('{{EXAMPLES_SECTION}}', examplesSection)
