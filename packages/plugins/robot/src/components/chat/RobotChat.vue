@@ -27,7 +27,11 @@
             @item-action="handleHistoryItemAction"
             @item-title-change="handleHistoryItemTitleChange"
             @item-click="handleHistoryItemClick"
-          ></tr-history>
+          >
+            <template #item-prefix="{ item }">
+              <slot name="history-list-prefix" :item="item"></slot>
+            </template>
+          </tr-history>
         </div>
       </span>
     </template>

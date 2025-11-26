@@ -18,6 +18,10 @@
           :beforeSubmit="checkApiKey"
           @fileSelected="handleFileSelected"
         >
+          <template #history-list-prefix="{ item }">
+            <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
+            <svg-icon v-else name="chat"></svg-icon>
+          </template>
           <template #operations>
             <tiny-popover
               width="290"
