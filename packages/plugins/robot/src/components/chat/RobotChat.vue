@@ -144,8 +144,8 @@ const emit = defineEmits(['fileSelected'])
 
 const singleAttachmentItems = ref([])
 
-const fullscreen = ref(false)
-const robotVisible = ref(false)
+const robotVisible = defineModel<boolean>('show', { required: true })
+const fullscreen = defineModel<boolean>('fullscreen')
 
 const {
   messages,
@@ -219,10 +219,6 @@ const handleSingleFileRemove = () => {
 
 const handleSingleFileRetry = (file: any) => {
   handleSingleFilesSelected(file.file, true)
-}
-
-const openAIRobot = () => {
-  robotVisible.value = !robotVisible.value
 }
 
 const getSvgIcon = (name: string, style?: CSSProperties) => {
@@ -366,12 +362,6 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
 onMounted(() => {
   createConversation()
-})
-
-defineExpose({
-  openAIRobot,
-  fullscreen,
-  createConversation
 })
 </script>
 

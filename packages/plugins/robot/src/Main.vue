@@ -10,7 +10,8 @@
     <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
       <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
         <robot-chat
-          ref="robotChatRef"
+          v-model:fullscreen="fullscreen"
+          v-model:show="robotVisible"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
@@ -64,10 +65,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, onMounted, ref, type Component } from 'vue'
+import { computed, h, onMounted, ref, watch, type Component } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyNotify, TinyPopover } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_APP, META_SERVICE, useLayout } from '@opentiny/tiny-engine-meta-register'
 import type { PromptProps } from '@opentiny/tiny-robot'
 import { IconThink } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
@@ -92,10 +93,11 @@ const { options } = defineProps({
 const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState, getAIModelOptions } =
   useModelConfig()
 
-const robotChatRef = ref(null)
+const robotVisible = ref(false)
+const fullscreen = ref(false)
 
-const fullscreen = computed(() => {
-  return robotChatRef.value?.fullscreen
+watch(robotVisible, (visible) => {
+  useLayout().layoutState.toolbars.render = visible ? META_APP.Robot : ''
 })
 
 const toggleActive = () => {
@@ -168,7 +170,8 @@ const closePanel = () => {
 }
 
 const openAIRobot = () => {
-  robotChatRef.value?.openAIRobot()
+  robotVisible.value = true
+  useLayout().closeSetting(true)
 }
 
 const bubbleRenderers = computed<Record<string, Component>>(() => {

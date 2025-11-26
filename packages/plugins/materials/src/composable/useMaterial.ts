@@ -506,6 +506,7 @@ const getComponentList = () => {
 
 const getComponentDetail = (name) => {
   const data = resource.get(name)
+  if (!data) return null
 
   const props = data.schema.properties
     .map((item) => {
