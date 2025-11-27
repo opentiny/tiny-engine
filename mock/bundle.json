@@ -6,6 +6,3851 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "评分"
+          },
+          "component": "TinyRate",
+          "icon": "line",
+          "description": "评分",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyRate",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "评分组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "modelValue",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "绑定值"
+                    },
+                    "defaultValue": 0,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大分值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "max",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "最大分值"
+                    },
+                    "defaultValue": 5,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "颜色数组"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "colors",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "icon 的颜色数组，为 Threshold 三个分段所对应的颜色"
+                    },
+                    "defaultValue": "['#FADB14', '#FADB14', '#FADB14']",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用未选中颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "ColorConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled-void-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "禁用状态下未选中 icon 的颜色"
+                    },
+                    "defaultValue": "#D9D9D9",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用未选中图标类"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入图标名称"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled-void-icon-class",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "只读状态下未选中的图标样式名"
+                    },
+                    "defaultValue": "icon-starActive",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标类数组"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "icon-classes",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "三个分段对应的图标样式名"
+                    },
+                    "defaultValue": "['icon-starActive', 'icon-starActive', 'icon-starActive']",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标大小"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "size",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "图标字体大小"
+                    },
+                    "defaultValue": "18px",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标间距"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "space",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "每个图标所占宽度"
+                    },
+                    "defaultValue": "24px",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文字颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "ColorConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "text-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "辅助文字的颜色"
+                    },
+                    "defaultValue": "#666666",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "未选中颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "ColorConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "void-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "未选中 icon 的颜色"
+                    },
+                    "defaultValue": "#BFBFBF",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "未选中图标类"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入图标名称"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "void-icon-class",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "未选中 icon 的图标样式名"
+                    },
+                    "defaultValue": "icon-starDisable",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "允许半选"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "allow-half",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否允许半选"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否为只读"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "高分阈值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "high-threshold",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "高分和中等分数的界限值，值本身被划分在高分中"
+                    },
+                    "defaultValue": 4,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "低分阈值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "low-threshold",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "低分和中等分数的界限值，值本身被划分在低分中"
+                    },
+                    "defaultValue": 2,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "单选形态"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "radio",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "评分其他形态单选"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "分数模板"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "score-template",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "分数显示模板，用“{value}”代表分数"
+                    },
+                    "defaultValue": "{value}",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示分数"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-score",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示当前分数，show-score 和 show-text 不能同时为真"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示文字"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-text",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示辅助文字，若为真，则会从 texts 数组中选取当前分数对应的文字内容"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文字在底部"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "text-on-bottom",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否在图标下显示对应的文字"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文字数组"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "texts",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "辅助文字数组，文字的数量应该与max属性一致"
+                    },
+                    "defaultValue": "['很差', '差', '一般', '好', '很好']",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              }
+            ],
+            "events": {
+              "onChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "分值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "分值改变时触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "number",
+                      "description": {
+                        "zh_CN": "改变后的分值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "滑块"
+          },
+          "component": "TinySlider",
+          "icon": "slider",
+          "description": "滑块",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinySlider",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "滑块组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "modelValue",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "设置单滑块的当前值，必需是整数或数组"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最小值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "min",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "设置最小值"
+                    },
+                    "defaultValue": 0,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "max",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "设置最大值，必需是整数，可以负数，必需大于所设置的最小值"
+                    },
+                    "defaultValue": 100,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "步长"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "step",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "设置滑块移动时，每步位移距离，必需是大于0的正整数"
+                    },
+                    "defaultValue": 1,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "高度"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "height",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "Slider 组件的高度，当 vertical 为 true 时有效"
+                    },
+                    "defaultValue": "300px",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示输入框"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-input",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示输入框"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示提示"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-tip",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示 tooltip"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "单位"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "unit",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "输入框后面显示的单位，仅在输入框模式下有效"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "竖向模式"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "vertical",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否竖向模式"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "3",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "格式化提示"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "format-tooltip",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "格式化 tooltip 提示"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "刻度"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "marks",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "设置滑杆的刻度值"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "总步数"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "num-pages",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "设置总步数，即按快捷键 PageDown/PageUp 时，每次移动的距离是 \"⌈(max-min)/num-pages⌉\""
+                    },
+                    "defaultValue": 1,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              }
+            ],
+            "events": {
+              "onStop": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "滑动结束时触发"
+                },
+                "description": {
+                  "zh_CN": "设置滑块滑动结束时，触发该事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "number | [number, number]",
+                      "description": {
+                        "zh_CN": "当前值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onStart": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "滑动开始时触发"
+                },
+                "description": {
+                  "zh_CN": "设置滑块滑动开始时，触发该事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "event",
+                      "type": "Event",
+                      "description": {
+                        "zh_CN": "事件对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "value",
+                      "type": "number | [number, number]",
+                      "description": {
+                        "zh_CN": "当前值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "值改变时触发"
+                },
+                "description": {
+                  "zh_CN": "值改变时触发（使用鼠标拖曳时，只在松开鼠标后触发）"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "number | [number, number]",
+                      "description": {
+                        "zh_CN": "当前值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "显示滑块值的插槽，仅仅 v-model 是单数值时才有效"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "级联选择器"
+          },
+          "component": "TinyCascader",
+          "icon": "cascader",
+          "description": "级联选择器",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyCascader",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "modelValue",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "选中项绑定值, 其类型由 props.multiple、props.emitPath 共同决定"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项数据"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "options",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "可选项数据源，键名可通过 Props 属性配置"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "占位文本"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "placeholder",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "输入框占位文本"
+                    },
+                    "defaultValue": "请选择",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "enum",
+                    "label": {
+                      "text": {
+                        "zh_CN": "尺寸"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "medium",
+                            "value": "medium"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          },
+                          {
+                            "label": "mini",
+                            "value": "mini"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "size",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "尺寸"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "分隔符"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "separator",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "选项分隔符"
+                    },
+                    "defaultValue": "/",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示所有层级"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-all-levels",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "输入框中是否显示选中值的完整路径"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可清空"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "clearable",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否支持清空选项"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "折叠标签"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "collapse-tags",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "多选模式下是否折叠 Tag"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可筛选"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "filterable",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否可搜索选项"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "去抖延迟"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "debounce",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "搜索关键词输入的去抖延迟，单位毫秒"
+                    },
+                    "defaultValue": 300,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "筛选前钩子"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "before-filter",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "筛选之前的钩子，参数为输入的值，若返回 false 或者返回 Promise 且被 reject，则停止筛选"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "筛选方法"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "filter-method",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "自定义搜索逻辑，第一个参数是节点 node，第二个参数是搜索关键词 keyword，通过返回布尔值表示是否命中"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "配置选项"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "props",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "配置选项，具体见 ICascaderPanelConfig 表"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "形状模式"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "shape",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "通过 shape='filter' 属性切换至过滤器模式"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "标签"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "label",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "shape='filter' 时生效，可传入 label 显示标题"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "提示信息"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "tip",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "shape='filter' 时生效，可传入 tip 显示提示信息"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "透明背景"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "blank",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "shape='filter' 时生效，设置过滤器模式背景为透明"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "弹出框插入 body"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "popper-append-to-body",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否将弹出框插入至 body 元素。在弹出框的定位出现问题时，可将该属性设置为 false (可参考 select 组件)"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "弹出框类名"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "popper-class",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "为 popper 添加类名(可参考 popover 组件)"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              }
+            ],
+            "events": {
+              "onBlur": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "当失去焦点时触发"
+                },
+                "description": {
+                  "zh_CN": "当失去焦点时触发"
+                },
+                "defaultValue": ""
+              },
+              "onFocus": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "当获得焦点时触发"
+                },
+                "description": {
+                  "zh_CN": "当获得焦点时触发"
+                },
+                "defaultValue": ""
+              },
+              "onChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "当选中节点变化时触发"
+                },
+                "description": {
+                  "zh_CN": "当选中节点变化时触发"
+                },
+                "defaultValue": ""
+              },
+              "onRemoveTag": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "在多选模式下，移除Tag时触发"
+                },
+                "description": {
+                  "zh_CN": "在多选模式下，移除Tag时触发"
+                },
+                "defaultValue": ""
+              },
+              "onExpandChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "当展开节点发生变化时触发"
+                },
+                "description": {
+                  "zh_CN": "当展开节点发生变化时触发"
+                },
+                "defaultValue": ""
+              },
+              "onVisibleChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "下拉框出现/隐藏时触发"
+                },
+                "description": {
+                  "zh_CN": "下拉框出现/隐藏时触发"
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "empty": {
+                "label": {
+                  "zh_CN": "空状态"
+                },
+                "description": {
+                  "zh_CN": "无匹配选项时的内容"
+                }
+              },
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "自定义备选项的节点内容，参数为 { node: ICascaderPanelNode, data: ICascaderPanelData }，分别为当前节点的 Node 对象和数据"
+                }
+              },
+              "no-data": {
+                "label": {
+                  "zh_CN": "无数据"
+                },
+                "description": {
+                  "zh_CN": "通过 no-data 插槽设置没有数据时显示的内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "单选组"
+          },
+          "component": "TinyRadioGroup",
+          "icon": "radiogroup",
+          "description": "单选组",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyRadioGroup",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "modelValue",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "单选组绑定值"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "尺寸"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "medium",
+                            "value": "medium"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          },
+                          {
+                            "label": "mini",
+                            "value": "mini"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "size",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "单选组尺寸"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "radio",
+                            "value": "radio"
+                          },
+                          {
+                            "label": "button",
+                            "value": "button"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "配置式单选组的展示形式"
+                    },
+                    "defaultValue": "radio",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "填充颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "ColorConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "fill",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "按钮形式单选选中时的背景颜色"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文本颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "ColorConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "text-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "按钮形式单选激活时的文本颜色"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否禁用单选组"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "只读"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "display-only",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否只读状态"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "垂直显示"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "vertical",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "垂直显示单选组"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "3",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项配置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "options",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "配置式单选组设置列表"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              }
+            ],
+            "events": {
+              "onChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "绑定值变化时触发"
+                },
+                "description": {
+                  "zh_CN": "绑定值变化时触发的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "value",
+                      "type": "number[] | string[]",
+                      "description": {
+                        "zh_CN": "变化后的值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "radio-group 的默认插槽"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "步骤条"
+          },
+          "component": "TinySteps",
+          "icon": "steps",
+          "description": "步骤条",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinySteps",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "步骤条",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "当前步骤"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "active",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "当前步骤索引，从0开始计数"
+                    },
+                    "defaultValue": -1,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "data",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "步骤条的数据"
+                    },
+                    "defaultValue": [],
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "名称字段"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入字段名"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "name-field",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "节点名称对应的字段名"
+                    },
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括当前步骤、数据等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "内容居中"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "content-center",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "使步骤条内容默认居中显示"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "点状样式"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "dot",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "点状形步骤条，当值只支持垂直样式"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自适应宽度"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "flex",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "节点是否自适应宽度"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "横向单链"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "line",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "通过 line 设置横向单链型步骤条"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "间距"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入宽度值"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "space",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "节点宽度, 可取值数字、带长度单位数值与百分比，传数字则默认以 px 为长度单位"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "高级模式"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "advanced",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否开启高级向导模式"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "持续时间"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "duration",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "节点滚动的持续时间（单位 ms），仅高级向导模式有效"
+                    },
+                    "defaultValue": 300,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可见节点数"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "visible-num",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "控制信息可见的节点数，默认可见5个"
+                    },
+                    "defaultValue": 5,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "3",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "计数字段"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入字段名"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "count-field",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "条形步骤条里徽标计数对应的字段名"
+                    },
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "状态字段"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入字段名"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "status-field",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "数据状态对应的字段名，用于条形步骤条"
+                    },
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              }
+            ],
+            "events": {
+              "onClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点点击事件"
+                },
+                "description": {
+                  "zh_CN": "节点点击事件，参数：index: 点击节点的索引node：点击节点的数据"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "index",
+                      "type": "number",
+                      "description": {
+                        "zh_CN": "点击节点的索引"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "node",
+                      "type": "IStepsItem",
+                      "description": {
+                        "zh_CN": "点击节点的数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "item": {
+                "label": {
+                  "zh_CN": "数据项"
+                },
+                "description": {
+                  "zh_CN": "步骤条数据项插槽，用于条形步骤条"
+                }
+              },
+              "itemFooter": {
+                "label": {
+                  "zh_CN": "itemFooter"
+                },
+                "description": {
+                  "zh_CN": "步骤条数据项底部插槽，用于条形步骤条"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "树形菜单"
+          },
+          "component": "TinyTreeMenu",
+          "icon": "tree",
+          "description": "树形菜单",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyTreeMenu",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "数据源"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "data",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "静态数据源"
+                    },
+                    "defaultValue": [],
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "节点键"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入节点键字段名"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "node-key",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "设置每个树节点唯一标识（key）的属性，在整棵树中都是唯一的"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "映射字段"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "props",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "映射字段"
+                    },
+                    "defaultValue": {
+                      "label": "label",
+                      "isLeaf": "isLeaf",
+                      "children": "children",
+                      "disabled": "disabled"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "默认勾选键"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "default-checked-keys",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "默认勾选节点的 key 的数组"
+                    },
+                    "defaultValue": [],
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "默认展开所有"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "default-expand-all",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否默认展开所有子节点"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "array",
+                    "label": {
+                      "text": {
+                        "zh_CN": "默认展开键"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "default-expanded-keys",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "默认展开节点的 key 的数组"
+                    },
+                    "defaultValue": [],
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "默认展开高亮键"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入高亮节点键"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "default-expanded-keys-highlight",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "设置默认展开节点中的某个节点高亮，配合 default-expanded-keys 属性使用"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 data、node-key、props 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "缩进距离"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "indent",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "子级相对于父级节点的水平缩进距离，单位 px"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "节点高度"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "node-height",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "节点高度"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文字省略"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "ellipsis",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否文字超长省略显示。优先级高于 wrap"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "换行显示"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "wrap",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否换行显示"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "component",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自定义图标"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "customIcon",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "设置带图标树形菜单"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "component",
+                    "label": {
+                      "text": {
+                        "zh_CN": "搜索图标"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "search-icon",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "自定义搜索图标"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "component",
+                    "label": {
+                      "text": {
+                        "zh_CN": "后缀图标"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "suffix-icon",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "全局设置带图标树形菜单"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示数字"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-number",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "右侧下拉图标区域是否显示为 number 属性定义的数字内容，建议不超过 4 个字符"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "width-adapt"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "width-adapt",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "通过 widthAdapt 属性，是否让组件宽度自适应父容器。"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 indent、node-height、ellipsis 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "手风琴效果"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "accordion",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否设置为手风琴效果（只能展开一个同级别的节点）"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "严格勾选"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "check-strictly",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否遵循父级和子级严格不相关联的做法，配合 show-checkbox 属性使用"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可清空"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "clearable",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "搜索框是否可清空"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可收起"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "collapsible",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否允许展开后的菜单收起，未和 show-number 配套使用时，仍可以点击图标收起"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可拖动"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "draggable",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否可拖动菜单节点"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "点击节点展开"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "expand-on-click-node",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否能点击节点即展开/收起。配置为 fasle 则只能点击下拉图标展开/收起"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "highlight-query"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "highlight-query",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "通过 highlightQuery 属性，是否在匹配的节点中，高亮搜索文字。"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "懒加载"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "lazy",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否懒加载子节点，配合 load 属性使用"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "侧边折叠按钮"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "menu-collapsible",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示侧边折叠与展开按钮"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "仅子级可选"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "only-check-children",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "父级是否不可选，只能展开不能跳转"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示复选框"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-checkbox",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "节点是否可被选择"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示展开收起"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-expand",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否启用一键展开/收起功能。点击左下角图标可展开/收起菜单注意：配合 customIcon 属性使用，纯文本菜单不支持此功能"
+                    },
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示搜索框"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-filter",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示搜索框，可搜索过滤节点"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示标题提示"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-title",
+                    "readOnly": false,
+                    "required": false,
+                    "description": {
+                      "zh_CN": "是否显示节点的 title 提示，鼠标悬浮节点之上触发"
+                    },
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 accordion、draggable、show-checkbox 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "3",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "允许拖拽回调"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "allow-drag",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "拖拽开始前的回调事件，定义节点是否允许拖拽的规则，返回 true 则允许拖拽，配合 draggable 属性使用"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "允许放置回调"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "allow-drop",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "拖拽结束前的回调事件，定义节点是否允许放置到模板节点的规则，返回 true 则允许放置，配合 draggable 属性使用"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "节点过滤方法"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "filter-node-method",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "自定义树节点过滤的方法，返回 true 表示这个节点可以显示，返回 false 则表示这个节点会被隐藏"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "获取数据方法"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "get-menu-data-sync",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "自定义获取服务端数据源的方法，返回一个 Promise 对象"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "function",
+                    "label": {
+                      "text": {
+                        "zh_CN": "加载子树方法"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "javascript"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "load",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "加载子树数据的方法，仅当 lazy 属性为 true 时生效"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              },
+              {
+                "name": "4",
+                "label": {
+                  "zh_CN": "其他属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "空文本"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入空文本"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "empty-text",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "内容为空时展示的文本"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "占位符"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入占位符"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "placeholder",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "当数据为空时的占位符"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "无法归属到 “基础/样式/行为/高级属性” 的特殊配置项，这类属性通常不具备前四类分组的明确功能共性"
+                }
+              }
+            ],
+            "events": {
+              "onNodeClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点点击"
+                },
+                "description": {
+                  "zh_CN": "监听节点被点击时的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "nodeData",
+                      "type": "ITreeNodeData",
+                      "description": {
+                        "zh_CN": "节点数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onNodeExpand": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点展开"
+                },
+                "description": {
+                  "zh_CN": "监听节点被点击展开时的事件;"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "nodeData",
+                      "type": "ITreeNodeData",
+                      "description": {
+                        "zh_CN": "节点数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onCheckChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "勾选状态变化"
+                },
+                "description": {
+                  "zh_CN": "监听可勾选节点的勾选状态发生变化时的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "checked",
+                      "type": "boolean",
+                      "description": {
+                        "zh_CN": "是否勾选"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "indeterminate",
+                      "type": "boolean",
+                      "description": {
+                        "zh_CN": "是否半选"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onNodeDragEnd": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点拖拽结束"
+                },
+                "description": {
+                  "zh_CN": "监听节点拖拽结束（可能未成功）的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "draggingNode",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "拖拽节点"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "targetNode",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "目标节点"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "dropType",
+                      "type": "IDropType",
+                      "description": {
+                        "zh_CN": "放置类型"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "event",
+                      "type": "DragEvent",
+                      "description": {
+                        "zh_CN": "拖拽事件"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onNodeCollapse": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点收起"
+                },
+                "description": {
+                  "zh_CN": "监听节点被点击收起时的事件;"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "nodeData",
+                      "type": "ITreeNodeData",
+                      "description": {
+                        "zh_CN": "节点数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onCurrentChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "当前节点变化"
+                },
+                "description": {
+                  "zh_CN": "监听当前选中节点发生变化时的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "nodeData",
+                      "type": "ITreeNodeData",
+                      "description": {
+                        "zh_CN": "节点数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onNodeDragStart": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "节点拖拽开始"
+                },
+                "description": {
+                  "zh_CN": "监听节点开始拖拽的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "node",
+                      "type": "ITreeNodeVm",
+                      "description": {
+                        "zh_CN": "节点对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "event",
+                      "type": "DragEvent",
+                      "description": {
+                        "zh_CN": "拖拽事件"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "void",
+                    "description": {
+                      "zh_CN": "无返回值"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "自定义树节点的内容，参数为 { node, data }"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "折线图"
           },
           "component": "TinyHuichartsLine",
@@ -15458,6 +19303,24 @@
             },
             {
               "name": {
+                "zh_CN": "单选组"
+              },
+              "icon": "radiogroup",
+              "screenshot": "",
+              "snippetName": "TinyRadioGroup",
+              "schema": {
+                "props": {
+                  "type": "radio",
+                  "modelValue": "1",
+                  "options": [
+                    { "label": "1", "text": "选项一" },
+                    { "label": "2", "text": "选项二" }
+                  ]
+                }
+              }
+            },
+            {
+              "name": {
                 "zh_CN": "复选框"
               },
               "icon": "checkbox",
@@ -15537,6 +19400,139 @@
                       "disabled": false
                     }
                   ]
+                }
+              }
+            },
+            {
+              "icon": "rate",
+              "name": {
+                "zh_CN": "评分"
+              },
+              "schema": {
+                "props": {
+                  "allow-half": true,
+                  "modelValue": 3,
+                  "show-score": true
+                }
+              },
+              "screenshot": "",
+              "snippetName": "TinyRate"
+            },
+            {
+              "name": {
+                "zh_CN": "滑块"
+              },
+              "icon": "slider",
+              "screenshot": "",
+              "snippetName": "TinySlider",
+              "schema": {
+                "componentName": "TinySlider",
+                "props": {
+                  "max": 100,
+                  "min": 0,
+                  "step": 1,
+                  "modelValue": 50
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "级联选择器"
+              },
+              "icon": "cascader",
+              "screenshot": "",
+              "snippetName": "TinyCascader",
+              "schema": {
+                "componentName": "TinyCascader",
+                "props": {
+                  "modelValue": "anzhuangcli",
+                  "options": [
+                    {
+                      "value": "zhinan",
+                      "label": "指南",
+                      "children": [
+                        {
+                          "value": "anzhuang",
+                          "label": "安装",
+                          "children": [
+                            {
+                              "value": "xiangmudengji",
+                              "label": "项目登记"
+                            },
+                            {
+                              "value": "huanjingzhunbei",
+                              "label": "环境准备"
+                            },
+                            {
+                              "value": "anzhuangcli",
+                              "label": "安装 CLI"
+                            },
+                            {
+                              "value": "chuangjianxiangmu",
+                              "label": "创建项目"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "kaifa",
+                          "label": "开发",
+                          "children": [
+                            {
+                              "value": "yinruzujian",
+                              "label": "引入组件"
+                            },
+                            {
+                              "value": "monishuju",
+                              "label": "模拟数据"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "value": "zujian",
+                      "label": "组件",
+                      "children": [
+                        {
+                          "value": "basic",
+                          "label": "框架风格",
+                          "children": [
+                            {
+                              "value": "layout",
+                              "label": "Layout 布局"
+                            },
+                            {
+                              "value": "color",
+                              "label": "Color 色彩"
+                            },
+                            {
+                              "value": "font",
+                              "label": "Font 字体"
+                            },
+                            {
+                              "value": "icon",
+                              "label": "Icon 图标"
+                            }
+                          ]
+                        },
+                        {
+                          "value": "data",
+                          "label": "数据组件",
+                          "children": [
+                            {
+                              "value": "tree",
+                              "label": "Tree 树形控件"
+                            },
+                            {
+                              "value": "pager",
+                              "label": "Pager 分页"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "placeholder": "请选择"
                 }
               }
             }
@@ -16073,6 +20069,69 @@
                     ]
                   }
                 ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "步骤条"
+              },
+              "icon": "steps",
+              "screenshot": "",
+              "snippetName": "TinySteps",
+              "schema": {
+                "componentName": "TinySteps",
+                "props": {
+                  "data": [
+                    {
+                      "name": "步骤一",
+                      "status": "wait"
+                    },
+                    {
+                      "name": "步骤二",
+                      "status": "process"
+                    },
+                    {
+                      "name": "步骤三",
+                      "status": "finish"
+                    }
+                  ],
+                  "active": 1
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "树形菜单"
+              },
+              "icon": "treemenu",
+              "screenshot": "",
+              "snippetName": "TinyTreeMenu",
+              "schema": {
+                "componentName": "TinyTreeMenu",
+                "props": {
+                  "data": [
+                    {
+                      "id": 1,
+                      "label": "一级节点1",
+                      "children": [
+                        {
+                          "id": 2,
+                          "label": "二级节点1-1"
+                        },
+                        {
+                          "id": 3,
+                          "label": "二级节点1-2"
+                        }
+                      ]
+                    },
+                    {
+                      "id": 4,
+                      "label": "一级节点2"
+                    }
+                  ],
+                  "placeholder": "输入关键字搜索",
+                  "node-key": "id"
+                }
               }
             }
           ]
