@@ -6,261 +6,6 @@
         {
           "version": "3.22.0",
           "name": {
-            "zh_CN": "漏斗图"
-          },
-          "component": "TinyHuichartsFunnel",
-          "icon": "funnel",
-          "description": "漏斗图",
-          "docUrl": "",
-          "screenshot": "",
-          "tags": "",
-          "keywords": "",
-          "devMode": "proCode",
-          "npm": {
-            "destructuring": true,
-            "exportName": "TinyHuichartsFunnel",
-            "name": "TinyVueHuicharts组件库",
-            "package": "@opentiny/vue-huicharts",
-            "version": "3.22.0",
-            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
-          },
-          "group": "chart",
-          "category": "图表组件",
-          "priority": 2,
-          "schema": {
-            "properties": [
-              {
-                "label": {
-                  "zh_CN": "基础信息"
-                },
-                "description": {
-                  "zh_CN": "基础信息"
-                },
-                "content": [
-                  {
-                    "property": "options",
-                    "label": {
-                      "text": {
-                        "zh_CN": "图表配置"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "CodeConfigurator",
-                      "props": {
-                        "language": "json"
-                      }
-                    },
-                    "description": {
-                      "zh_CN": "漏斗图配置"
-                    },
-                    "labelPosition": "left"
-                  }
-                ]
-              }
-            ],
-            "events": {}
-          },
-          "configure": {
-            "loop": true,
-            "condition": true,
-            "styles": true,
-            "isContainer": false,
-            "isModal": false,
-            "nestingRule": {
-              "childWhitelist": "",
-              "parentWhitelist": "",
-              "descendantBlacklist": "",
-              "ancestorWhitelist": ""
-            },
-            "isNullNode": false,
-            "isLayout": false,
-            "rootSelector": "",
-            "shortcuts": {
-              "properties": []
-            },
-            "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
-            }
-          }
-        },
-        {
-          "version": "3.22.0",
-          "name": {
-            "zh_CN": "散点图"
-          },
-          "component": "TinyHuichartsScatter",
-          "icon": "scatter",
-          "description": "散点图",
-          "docUrl": "",
-          "screenshot": "",
-          "tags": "",
-          "keywords": "",
-          "devMode": "proCode",
-          "npm": {
-            "destructuring": true,
-            "exportName": "TinyHuichartsScatter",
-            "name": "TinyVueHuicharts组件库",
-            "package": "@opentiny/vue-huicharts",
-            "version": "3.22.0",
-            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
-          },
-          "group": "chart",
-          "category": "图表组件",
-          "priority": 2,
-          "schema": {
-            "properties": [
-              {
-                "label": {
-                  "zh_CN": "基础信息"
-                },
-                "description": {
-                  "zh_CN": "基础信息"
-                },
-                "content": [
-                  {
-                    "property": "options",
-                    "label": {
-                      "text": {
-                        "zh_CN": "图表配置"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "CodeConfigurator",
-                      "props": {
-                        "language": "json"
-                      }
-                    },
-                    "description": {
-                      "zh_CN": "散点图配置"
-                    },
-                    "labelPosition": "left"
-                  }
-                ]
-              }
-            ],
-            "events": {}
-          },
-          "configure": {
-            "loop": true,
-            "condition": true,
-            "styles": true,
-            "isContainer": false,
-            "isModal": false,
-            "nestingRule": {
-              "childWhitelist": "",
-              "parentWhitelist": "",
-              "descendantBlacklist": "",
-              "ancestorWhitelist": ""
-            },
-            "isNullNode": false,
-            "isLayout": false,
-            "rootSelector": "",
-            "shortcuts": {
-              "properties": []
-            },
-            "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
-            }
-          }
-        },
-        {
-          "version": "3.22.0",
-          "name": {
-            "zh_CN": "瀑布图"
-          },
-          "component": "TinyHuichartsWaterfall",
-          "icon": "waterfall",
-          "description": "瀑布图",
-          "docUrl": "",
-          "screenshot": "",
-          "tags": "",
-          "keywords": "",
-          "devMode": "proCode",
-          "npm": {
-            "destructuring": true,
-            "exportName": "TinyHuichartsWaterfall",
-            "name": "TinyVueHuicharts组件库",
-            "package": "@opentiny/vue-huicharts",
-            "version": "3.22.0",
-            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
-          },
-          "group": "chart",
-          "category": "图表组件",
-          "priority": 2,
-          "schema": {
-            "properties": [
-              {
-                "label": {
-                  "zh_CN": "基础信息"
-                },
-                "description": {
-                  "zh_CN": "基础信息"
-                },
-                "content": [
-                  {
-                    "property": "options",
-                    "label": {
-                      "text": {
-                        "zh_CN": "图表配置"
-                      }
-                    },
-                    "required": true,
-                    "readOnly": false,
-                    "disabled": false,
-                    "cols": 12,
-                    "widget": {
-                      "component": "CodeConfigurator",
-                      "props": {
-                        "language": "json"
-                      }
-                    },
-                    "description": {
-                      "zh_CN": "瀑布图配置"
-                    },
-                    "labelPosition": "left"
-                  }
-                ]
-              }
-            ],
-            "events": {}
-          },
-          "configure": {
-            "loop": true,
-            "condition": true,
-            "styles": true,
-            "isContainer": false,
-            "isModal": false,
-            "nestingRule": {
-              "childWhitelist": "",
-              "parentWhitelist": "",
-              "descendantBlacklist": "",
-              "ancestorWhitelist": ""
-            },
-            "isNullNode": false,
-            "isLayout": false,
-            "rootSelector": "",
-            "shortcuts": {
-              "properties": []
-            },
-            "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
-            }
-          }
-        },
-        {
-          "version": "3.22.0",
-          "name": {
             "zh_CN": "折线图"
           },
           "component": "TinyHuichartsLine",
@@ -338,8 +83,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -423,8 +173,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -537,8 +292,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -622,8 +382,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -746,8 +511,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -870,8 +640,283 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "漏斗图"
+          },
+          "component": "TinyHuichartsFunnel",
+          "icon": "funnel",
+          "description": "漏斗图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsFunnel",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "漏斗图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "散点图"
+          },
+          "component": "TinyHuichartsScatter",
+          "icon": "scatter",
+          "description": "散点图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsScatter",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "散点图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "瀑布图"
+          },
+          "component": "TinyHuichartsWaterfall",
+          "icon": "waterfall",
+          "description": "瀑布图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsWaterfall",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "瀑布图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -913,13 +958,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["type", "size"]
+              "properties": [
+                "type",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1190,13 +1247,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["type", "size"]
+              "properties": [
+                "type",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1657,13 +1726,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["type", "size"]
+              "properties": [
+                "type",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -1966,7 +2047,9 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": ["ElFormItem"],
+              "childWhitelist": [
+                "ElFormItem"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -1975,13 +2058,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -2427,13 +2522,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -2764,7 +2871,9 @@
             "isModal": false,
             "isPopper": false,
             "nestingRule": {
-              "childWhitelist": ["ElTableColumn"],
+              "childWhitelist": [
+                "ElTableColumn"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -2773,13 +2882,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -4007,13 +4128,25 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["inline", "label-width"]
+              "properties": [
+                "inline",
+                "label-width"
+              ]
             },
             "contextMenu": {
-              "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+              "actions": [
+                "copy",
+                "remove",
+                "insert",
+                "updateAttr",
+                "bindEvent",
+                "createBlock"
+              ],
               "disable": []
             },
-            "invalidity": [""],
+            "invalidity": [
+              ""
+            ],
             "clickCapture": true,
             "framework": "Vue"
           },
@@ -4157,11 +4290,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4476,7 +4617,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyCarouselItem"],
+              "childWhitelist": [
+                "TinyCarouselItem"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -4485,11 +4628,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4643,7 +4794,14 @@
           "name": {
             "zh_CN": "标题"
           },
-          "component": ["h1", "h2", "h3", "h4", "h5", "h6"],
+          "component": [
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6"
+          ],
           "icon": "h16",
           "description": "标题",
           "docUrl": "",
@@ -4728,11 +4886,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -5091,11 +5257,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -5344,7 +5518,9 @@
             ],
             "events": {},
             "shortcuts": {
-              "properties": ["src"]
+              "properties": [
+                "src"
+              ]
             },
             "contentMenu": {
               "actions": []
@@ -5997,11 +6173,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "size"]
+              "properties": [
+                "disabled",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6145,11 +6329,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6242,7 +6434,10 @@
             "isContainer": true,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyRow", "TinyCol"],
+              "childWhitelist": [
+                "TinyRow",
+                "TinyCol"
+              ],
               "parentWhitelist": "",
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
@@ -6251,11 +6446,18 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled"]
+              "properties": [
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6603,11 +6805,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -6725,7 +6935,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyForm"],
+              "parentWhitelist": [
+                "TinyForm"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -6733,11 +6945,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label", "rules"]
+              "properties": [
+                "label",
+                "rules"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7009,11 +7229,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label", "rules"]
+              "properties": [
+                "label",
+                "rules"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7346,11 +7574,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["text", "size"]
+              "properties": [
+                "text",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7758,11 +7994,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -7993,11 +8237,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8396,11 +8648,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["multiple", "options"]
+              "properties": [
+                "multiple",
+                "options"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8593,11 +8853,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "mini"]
+              "properties": [
+                "disabled",
+                "mini"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8866,11 +9134,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["clearable", "mini"]
+              "properties": [
+                "clearable",
+                "mini"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9123,11 +9399,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["border", "disabled"]
+              "properties": [
+                "border",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9309,11 +9593,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["text", "size"]
+              "properties": [
+                "text",
+                "size"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9518,11 +9810,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "type"]
+              "properties": [
+                "disabled",
+                "type"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9794,11 +10094,19 @@
             "isLayout": false,
             "rootSelector": ".tiny-dialog-box",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10044,7 +10352,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyTabItem"],
+              "childWhitelist": [
+                "TinyTabItem"
+              ],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -10053,11 +10363,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["size", "tab-style"]
+              "properties": [
+                "size",
+                "tab-style"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10152,7 +10470,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyTab"],
+              "parentWhitelist": [
+                "TinyTab"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -10160,11 +10480,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["name", "title"]
+              "properties": [
+                "name",
+                "title"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10288,7 +10616,9 @@
             "clickCapture": false,
             "isModal": false,
             "nestingRule": {
-              "childWhitelist": ["TinyBreadcrumbItem"],
+              "childWhitelist": [
+                "TinyBreadcrumbItem"
+              ],
               "parentWhitelist": [],
               "descendantBlacklist": [],
               "ancestorWhitelist": []
@@ -10297,11 +10627,18 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["separator"]
+              "properties": [
+                "separator"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10376,7 +10713,9 @@
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
-              "parentWhitelist": ["TinyBreadcrumb"],
+              "parentWhitelist": [
+                "TinyBreadcrumb"
+              ],
               "descendantBlacklist": "",
               "ancestorWhitelist": ""
             },
@@ -10384,11 +10723,18 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["to"]
+              "properties": [
+                "to"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10509,11 +10855,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10618,11 +10972,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["label-width", "disabled"]
+              "properties": [
+                "label-width",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10835,7 +11197,10 @@
                             "widget": {
                               "component": "JsSlotConfigurator",
                               "props": {
-                                "slots": ["header", "default"]
+                                "slots": [
+                                  "header",
+                                  "default"
+                                ]
                               }
                             }
                           },
@@ -11507,10 +11872,15 @@
               }
             },
             "shortcuts": {
-              "properties": ["sortable", "columns"]
+              "properties": [
+                "sortable",
+                "columns"
+              ]
             },
             "contentMenu": {
-              "actions": ["create symbol"]
+              "actions": [
+                "create symbol"
+              ]
             },
             "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
           },
@@ -11530,11 +11900,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["sortable", "columns"]
+              "properties": [
+                "sortable",
+                "columns"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11563,7 +11941,9 @@
             "events": {},
             "shortcuts": {},
             "contentMenu": {
-              "actions": ["create symbol"]
+              "actions": [
+                "create symbol"
+              ]
             }
           },
           "configure": {
@@ -11583,8 +11963,13 @@
             "rootSelector": "",
             "shortcuts": {},
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -11811,11 +12196,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["currentPage", "total"]
+              "properties": [
+                "currentPage",
+                "total"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12193,11 +12586,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["modelValue", "disabled"]
+              "properties": [
+                "modelValue",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12526,11 +12927,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["data", "show-checkbox"]
+              "properties": [
+                "data",
+                "show-checkbox"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12702,11 +13111,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["active", "data"]
+              "properties": [
+                "active",
+                "data"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -12921,11 +13338,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["disabled", "content"]
+              "properties": [
+                "disabled",
+                "content"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -13414,11 +13839,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["visible", "width"]
+              "properties": [
+                "visible",
+                "width"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -13827,11 +14260,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -14268,11 +14709,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -14534,11 +14983,19 @@
             "isLayout": false,
             "rootSelector": "",
             "shortcuts": {
-              "properties": ["value", "disabled"]
+              "properties": [
+                "value",
+                "disabled"
+              ]
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         }
@@ -14923,7 +15380,10 @@
               "schema": {
                 "componentName": "TinyCheckboxGroup",
                 "props": {
-                  "modelValue": ["name1", "name2"],
+                  "modelValue": [
+                    "name1",
+                    "name2"
+                  ],
                   "type": "checkbox",
                   "options": [
                     {
@@ -15052,7 +15512,9 @@
               "schema": {
                 "componentName": "TinyTransfer",
                 "props": {
-                  "modelValue": [3],
+                  "modelValue": [
+                    3
+                  ],
                   "data": [
                     {
                       "key": 1,
@@ -15633,7 +16095,12 @@
                 "props": {
                   "options": {
                     "theme": "hdesign-light",
-                    "padding": [50, 30, 50, 20],
+                    "padding": [
+                      50,
+                      30,
+                      50,
+                      20
+                    ],
                     "legend": {
                       "show": true,
                       "icon": "line"
@@ -15722,7 +16189,12 @@
                 "props": {
                   "options": {
                     "theme": "hdesign-light",
-                    "padding": [50, 30, 50, 20],
+                    "padding": [
+                      50,
+                      30,
+                      50,
+                      20
+                    ],
                     "data": [
                       {
                         "Month": "Jan",
@@ -15807,20 +16279,73 @@
                 "props": {
                   "options": {
                     "theme": "hdesign-light",
-                    "padding": [50, 30, 50, 20],
+                    "padding": [
+                      50,
+                      30,
+                      50,
+                      20
+                    ],
                     "data": [
-                      { "Month": "Jan", "Domestic": 33, "Abroad": 1 },
-                      { "Month": "Feb", "Domestic": 27, "Abroad": 39 },
-                      { "Month": "Mar", "Domestic": 31, "Abroad": 20 },
-                      { "Month": "Apr", "Domestic": 30, "Abroad": 15 },
-                      { "Month": "May", "Domestic": 37, "Abroad": 1 },
-                      { "Month": "Jun", "Domestic": 36, "Abroad": 17 },
-                      { "Month": "Jul", "Domestic": 42, "Abroad": 22 },
-                      { "Month": "Aug", "Domestic": 22, "Abroad": 12 },
-                      { "Month": "Sep", "Domestic": 17, "Abroad": 30 },
-                      { "Month": "Oct", "Domestic": 40, "Abroad": 33 },
-                      { "Month": "Nov", "Domestic": 42, "Abroad": 22 },
-                      { "Month": "Dec", "Domestic": 32, "Abroad": 1 }
+                      {
+                        "Month": "Jan",
+                        "Domestic": 33,
+                        "Abroad": 1
+                      },
+                      {
+                        "Month": "Feb",
+                        "Domestic": 27,
+                        "Abroad": 39
+                      },
+                      {
+                        "Month": "Mar",
+                        "Domestic": 31,
+                        "Abroad": 20
+                      },
+                      {
+                        "Month": "Apr",
+                        "Domestic": 30,
+                        "Abroad": 15
+                      },
+                      {
+                        "Month": "May",
+                        "Domestic": 37,
+                        "Abroad": 1
+                      },
+                      {
+                        "Month": "Jun",
+                        "Domestic": 36,
+                        "Abroad": 17
+                      },
+                      {
+                        "Month": "Jul",
+                        "Domestic": 42,
+                        "Abroad": 22
+                      },
+                      {
+                        "Month": "Aug",
+                        "Domestic": 22,
+                        "Abroad": 12
+                      },
+                      {
+                        "Month": "Sep",
+                        "Domestic": 17,
+                        "Abroad": 30
+                      },
+                      {
+                        "Month": "Oct",
+                        "Domestic": 40,
+                        "Abroad": 33
+                      },
+                      {
+                        "Month": "Nov",
+                        "Domestic": 42,
+                        "Abroad": 22
+                      },
+                      {
+                        "Month": "Dec",
+                        "Domestic": 32,
+                        "Abroad": 1
+                      }
                     ],
                     "xAxis": {
                       "data": "Month"
@@ -15859,11 +16384,21 @@
                           }
                         },
                         "b": {
-                          "padding": [2, 4, 0, 0]
+                          "padding": [
+                            2,
+                            4,
+                            0,
+                            0
+                          ]
                         },
                         "c": {
                           "fontWeight": "bold",
-                          "padding": [2, 0, 0, 0]
+                          "padding": [
+                            2,
+                            0,
+                            0,
+                            0
+                          ]
                         }
                       }
                     },
@@ -15891,6 +16426,81 @@
             },
             {
               "name": {
+                "zh_CN": "环形图"
+              },
+              "icon": "ring",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsRing",
+              "schema": {
+                "componentName": "TinyHuichartsRing",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "type": "circle",
+                    "data": [
+                      {
+                        "value": 100,
+                        "name": "VPC"
+                      },
+                      {
+                        "value": 90,
+                        "name": "IM"
+                      },
+                      {
+                        "value": 49,
+                        "name": "EIP"
+                      },
+                      {
+                        "value": 14,
+                        "name": "SG"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "雷达图"
+              },
+              "icon": "radar",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsRadar",
+              "schema": {
+                "componentName": "TinyHuichartsRadar",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "legend": {
+                      "show": true,
+                      "position": {
+                        "left": "center",
+                        "bottom": 20.1
+                      }
+                    },
+                    "radarMax": 100,
+                    "data": {
+                      "Domestic": {
+                        "Equipment": 41,
+                        "VM": 91,
+                        "CSP": 81,
+                        "RD": 51,
+                        "Markets": 71
+                      },
+                      "Abroad": {
+                        "Equipment": 72,
+                        "VM": 55,
+                        "CSP": 93,
+                        "RD": 90,
+                        "Markets": 82
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
                 "zh_CN": "瀑布图"
               },
               "icon": "waterfall",
@@ -15900,7 +16510,12 @@
                 "componentName": "TinyHuichartsWaterfall",
                 "props": {
                   "options": {
-                    "padding": [50, 30, 20, 20],
+                    "padding": [
+                      50,
+                      30,
+                      20,
+                      20
+                    ],
                     "legend": {
                       "show": false
                     },
@@ -15989,7 +16604,12 @@
                 "componentName": "TinyHuichartsScatter",
                 "props": {
                   "options": {
-                    "padding": [50, 30, 50, 20],
+                    "padding": [
+                      50,
+                      30,
+                      50,
+                      20
+                    ],
                     "legend": {
                       "orient": "horizontal",
                       "show": true,
@@ -15998,93 +16618,123 @@
                         "bottom": 15
                       }
                     },
-                    "bubbleSize": [20, 100],
+                    "bubbleSize": [
+                      20,
+                      100
+                    ],
                     "xAxisType": "value",
                     "data": {
                       "1990": [
-                        [28604, 77, 1709866, "Australia", 1990],
-                        [31163, 77.4, 27662440, "Canada", 1990],
-                        [60001, 68, 1154605773, "China", 1990],
-                        [13670, 74.7, 10582082, "Cuba", 1990],
-                        [28599, 75, 4986705, "Finland", 1990]
+                        [
+                          28604,
+                          77,
+                          1709866,
+                          "Australia",
+                          1990
+                        ],
+                        [
+                          31163,
+                          77.4,
+                          27662440,
+                          "Canada",
+                          1990
+                        ],
+                        [
+                          60001,
+                          68,
+                          1154605773,
+                          "China",
+                          1990
+                        ],
+                        [
+                          13670,
+                          74.7,
+                          10582082,
+                          "Cuba",
+                          1990
+                        ],
+                        [
+                          28599,
+                          75,
+                          4986705,
+                          "Finland",
+                          1990
+                        ]
                       ],
                       "2000": [
-                        [19349, 69.6, 147568552, "Russia", 2000],
-                        [10670, 67.3, 53994606, "Turkey", 2000],
-                        [26424, 75.7, 57110117, "United Kingdom", 2000],
-                        [37062, 75.4, 252847810, "United States", 2000],
-                        [23038, 73.13, 143456918, "Russia", 2000]
+                        [
+                          19349,
+                          69.6,
+                          147568552,
+                          "Russia",
+                          2000
+                        ],
+                        [
+                          10670,
+                          67.3,
+                          53994606,
+                          "Turkey",
+                          2000
+                        ],
+                        [
+                          26424,
+                          75.7,
+                          57110117,
+                          "United Kingdom",
+                          2000
+                        ],
+                        [
+                          37062,
+                          75.4,
+                          252847810,
+                          "United States",
+                          2000
+                        ],
+                        [
+                          23038,
+                          73.13,
+                          143456918,
+                          "Russia",
+                          2000
+                        ]
                       ],
                       "2015": [
-                        [44056, 81.8, 23968976, "Australia", 2015],
-                        [43294, 81.7, 35939927, "Canada", 2015],
-                        [13334, 76.9, 1376048943, "Cuba", 2015],
-                        [21291, 78.5, 11389566, "Finland", 2015],
-                        [38923, 80.8, 5503457, "France", 2015]
+                        [
+                          44056,
+                          81.8,
+                          23968976,
+                          "Australia",
+                          2015
+                        ],
+                        [
+                          43294,
+                          81.7,
+                          35939927,
+                          "Canada",
+                          2015
+                        ],
+                        [
+                          13334,
+                          76.9,
+                          1376048943,
+                          "Cuba",
+                          2015
+                        ],
+                        [
+                          21291,
+                          78.5,
+                          11389566,
+                          "Finland",
+                          2015
+                        ],
+                        [
+                          38923,
+                          80.8,
+                          5503457,
+                          "France",
+                          2015
+                        ]
                       ]
-                    }
-                  }
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "环形图"
-              },
-              "icon": "ring",
-              "screenshot": "",
-              "snippetName": "TinyHuichartsRing",
-              "schema": {
-                "componentName": "TinyHuichartsRing",
-                "props": {
-                  "options": {
-                    "theme": "hdesign-light",
-                    "type": "circle",
-                    "data": [
-                      { "value": 100, "name": "VPC" },
-                      { "value": 90, "name": "IM" },
-                      { "value": 49, "name": "EIP" },
-                      { "value": 14, "name": "SG" }
-                    ]
-                  }
-                }
-              }
-            },
-            {
-              "name": {
-                "zh_CN": "雷达图"
-              },
-              "icon": "radar",
-              "screenshot": "",
-              "snippetName": "TinyHuichartsRadar",
-              "schema": {
-                "componentName": "TinyHuichartsRadar",
-                "props": {
-                  "options": {
-                    "theme": "hdesign-light",
-                    "legend": {
-                      "show": true,
-                      "position": {
-                        "left": "center",
-                        "bottom": 20.1
-                      }
-                    },
-                    "radarMax": 100,
-                    "data": {
-                      "Domestic": {
-                        "Equipment": 41,
-                        "VM": 91,
-                        "CSP": 81,
-                        "RD": 51,
-                        "Markets": 71
-                      },
-                      "Abroad": {
-                        "Equipment": 72,
-                        "VM": 55,
-                        "CSP": 93,
-                        "RD": 90,
-                        "Markets": 82
-                      }
                     }
                   }
                 }
