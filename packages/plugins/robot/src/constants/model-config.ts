@@ -88,5 +88,113 @@ export const DEFAULT_LLM_MODELS = [
         }
       }
     ]
+  },
+  {
+    provider: 'GLM',
+    label: '智谱模型',
+    baseUrl: 'https://open.bigmodel.cn/api/paas/v4',
+    allowEmptyApiKey: false,
+    models: [
+      {
+        label: 'GLM视觉理解模型',
+        name: 'glm-4.5v',
+        capabilities: {
+          vision: true,
+          reasoning: {
+            extraBody: {
+              enable: {
+                thinking: {
+                  type: 'enabled'
+                }
+              },
+              disable: null
+            }
+          }
+        }
+      },
+      {
+        label: 'GLM-4.5推理模型',
+        name: 'glm-4.5',
+        capabilities: {
+          toolCalling: true,
+          reasoning: {
+            extraBody: {
+              enable: {
+                thinking: {
+                  type: 'enabled'
+                }
+              },
+              disable: null
+            }
+          }
+        }
+      },
+      {
+        label: 'GLM-4.5 air推理模型',
+        name: 'glm-4.5-air',
+        capabilities: {
+          toolCalling: true,
+          reasoning: {
+            extraBody: {
+              enable: {
+                thinking: {
+                  type: 'enabled'
+                }
+              },
+              disable: null
+            }
+          }
+        }
+      }
+    ]
+  },
+  {
+    provider: 'Google',
+    label: 'Google',
+    baseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai',
+    allowEmptyApiKey: true,
+    models: [
+      {
+        label: 'Google: Gemini 3 Pro',
+        name: 'gemini-3-pro-preview',
+        capabilities: {
+          vision: true,
+          toolCalling: true,
+          reasoning: true
+        }
+      },
+      {
+        label: 'Google: Gemini 2.5 Pro',
+        name: 'gemini-2.5-pro',
+        capabilities: {
+          toolCalling: true,
+          reasoning: true
+        }
+      }
+    ]
+  },
+  {
+    provider: 'OpenRouter',
+    label: 'OpenRouter',
+    baseUrl: 'https://openrouter.ai/api/v1/chat/completions',
+    allowEmptyApiKey: false,
+    models: [
+      {
+        label: 'Google: Gemini 3 Pro',
+        name: 'gemini-3-pro-preview',
+        capabilities: {
+          toolCalling: true,
+          reasoning: true
+        }
+      },
+      {
+        label: 'Google: Gemini 2.5 Pro',
+        name: 'google/gemini-2.5-pro',
+        capabilities: {
+          toolCalling: true,
+          reasoning: true
+        }
+      }
+    ]
   }
 ]

@@ -19,6 +19,7 @@
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
           :beforeSubmit="checkApiKey"
+          :promptClickHandler="promptClickHandler"
           @fileSelected="handleFileSelected"
           @sendMessage="sendUserMessage"
           @abort="handleAbortRequest"
@@ -48,17 +49,9 @@
             </tiny-popover>
             <robot-history
               :conversation-state="conversationState"
-              @item-click="
-                (item) => {
-                  switchConversation(item.id)
-                }
-              "
-              @item-action="
-                (action, item) => {
-                  if (action.id === 'delete') deleteConversation(item.id)
-                }
-              "
-              @item-title-change="(title, item) => updateTitle(item.id, title)"
+              @item-click="(item) => switchConversation(item.id!)"
+              @item-action="handleDeleteConversation"
+              @item-title-change="(title, item) => updateTitle(item.id!, title)"
             >
               <template #history-list-prefix="{ item }">
                 <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
@@ -94,24 +87,21 @@
 </template>
 
 <script setup lang="ts">
-import { computed, h, onMounted, ref, watch, type Component } from 'vue'
+import { computed, h, onMounted, ref, watch } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { TinyNotify, TinyPopover } from '@opentiny/vue'
-import { getMetaApi, META_APP, META_SERVICE, useLayout } from '@opentiny/tiny-engine-meta-register'
-import { type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
+import { META_APP, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { type PopupConfig, type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
 import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
-import McpIconComponent from './components/icons/mcp-icon.vue'
-import PageIconComponent from './components/icons/page-icon.vue'
-import StudyIconComponent from './components/icons/study-icon.vue'
-import RobotSettingPopover from './components/header-extension/RobotSettingPopover.vue'
-import RobotHistory from './components/header-extension/History.vue'
-import RobotTypeSelect from './components/footer-extension/RobotTypeSelect.vue'
-import McpServer from './components/footer-extension/McpServer.vue'
-import AgentRenderer from './components/renderers/AgentRenderer.vue'
 import FooterButton from './components/chat/FooterButton.vue'
+import { IconMcp, IconPage, IconStudy } from './components/icons'
+import { History as RobotHistory, RobotSettingPopover } from './components/header-extension'
+import { RobotTypeSelect, McpServer } from './components/footer-extension'
+import { AgentRenderer } from './components/renderers'
 import useChat from './composables/useChat'
-import useModelConfig from './composables/useConfig'
+import useModelConfig from './composables/core/useConfig'
+import apiService from './services/api'
 
 const { options } = defineProps({
   options: {
@@ -130,12 +120,7 @@ watch(robotVisible, (visible) => {
   useLayout().layoutState.toolbars.render = visible ? META_APP.Robot : ''
 })
 
-const toggleActive = () => {
-  robotSettingState.enableThinking = !robotSettingState.enableThinking
-  saveRobotSettingState({ enableThinking: robotSettingState.enableThinking })
-}
-
-const mcpDrawerPosition = computed(() => {
+const mcpDrawerPosition = computed<PopupConfig>(() => {
   return {
     type: 'fixed',
     position: {
@@ -146,23 +131,26 @@ const mcpDrawerPosition = computed(() => {
   }
 })
 
-const promptItems: PromptProps[] = [
+const promptItems: Array<PromptProps & { mode?: 'chat' | 'agent' }> = [
   {
     label: '页面搭建场景',
     description: '在当前页面中生成一个满意度调查表单',
-    icon: h(PageIconComponent),
+    mode: 'agent',
+    icon: h(IconPage),
     badge: 'NEW'
   },
   {
     label: 'MCP工具',
     description: '帮我查询当前的页面列表',
-    icon: h(McpIconComponent),
+    mode: 'chat',
+    icon: h(IconMcp),
     badge: 'NEW'
   },
   {
     label: '日常开发问答',
     description: '如何实现前端节流与防抖？',
-    icon: h(StudyIconComponent)
+    mode: 'chat',
+    icon: h(IconStudy)
   }
 ]
 
@@ -183,6 +171,15 @@ const {
   deleteConversation,
   updateTitle
 } = useChat()
+
+const toggleActive = () => {
+  robotSettingState.enableThinking = !robotSettingState.enableThinking
+  saveRobotSettingState({ enableThinking: robotSettingState.enableThinking })
+}
+
+const handleDeleteConversation = (action: any, item: any) => {
+  if (action.id === 'delete') deleteConversation(item.id!)
+}
 
 const handleAbortRequest = () => {
   abortRequest()
@@ -211,45 +208,6 @@ const handleChatModeChange = (type: string) => {
   // imageUrl.value = ''
 }
 
-const saveSettingState = () => {}
-
-const closePanel = () => {
-  showSettingPopover.value = false
-}
-
-const openAIRobot = () => {
-  createConversation()
-  robotVisible.value = true
-  useLayout().closeSetting(true)
-}
-
-const bubbleRenderers = computed<Record<string, Component>>(() => {
-  return robotSettingState.chatMode === CHAT_MODE.Agent
-    ? { markdown: AgentRenderer, loading: AgentRenderer }
-    : ({} as Record<string, Component>)
-})
-
-const handleFileSelected = (formData: unknown, updateAttachment: (resourceUrl: string) => void) => {
-  try {
-    getMetaApi(META_SERVICE.Http)
-      .post('/material-center/api/resource/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      .then((res: any) => {
-        updateAttachment(res?.resourceUrl)
-        if (!inputMessage.value) {
-          inputMessage.value = '生成图片中UI效果'
-        }
-      })
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('上传失败', error)
-    updateAttachment('')
-  }
-}
-
 const checkApiKey = () => {
   const provider = getAIModelOptions().find((option) => option.baseUrl === robotSettingState.selectedModel.baseUrl)
   if (
@@ -270,6 +228,51 @@ const checkApiKey = () => {
   }
 
   return true
+}
+
+const promptClickHandler = (item: PromptProps & { mode?: 'chat' | 'agent' }) => {
+  if (!checkApiKey() || !item.mode) {
+    return
+  }
+  if (item.mode !== robotSettingState.chatMode) {
+    changeChatMode(item.mode)
+  }
+  messages.value.push({
+    role: 'user',
+    content: item.description || '',
+    renderContent: [{ type: 'text', content: item.description }]
+  })
+  sendUserMessage()
+}
+
+const saveSettingState = () => {}
+
+const closePanel = () => {
+  showSettingPopover.value = false
+}
+
+const openAIRobot = () => {
+  createConversation()
+  robotVisible.value = true
+  useLayout().closeSetting(true)
+}
+
+// 当前Robot的bubbleRenderers无法做到响应式更新，因此Agent模式的type要与Chat模式不同
+const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': AgentRenderer }
+
+const handleFileSelected = (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
+  try {
+    apiService.uploadFile(formData).then((res: any) => {
+      updateAttachment(res?.resourceUrl)
+      if (!inputMessage.value) {
+        inputMessage.value = '生成图片中UI效果'
+      }
+    })
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('上传失败', error)
+    updateAttachment('')
+  }
 }
 
 onMounted(async () => {

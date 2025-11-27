@@ -1,5 +1,5 @@
 import { HOOK_NAME } from '@opentiny/tiny-engine-meta-register'
-import useModelConfig from '../composables/useConfig'
+import useModelConfig from '../composables/core/useConfig'
 
 export const RobotService = {
   id: 'engine.service.robot',

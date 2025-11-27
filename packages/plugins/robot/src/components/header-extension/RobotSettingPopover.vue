@@ -69,6 +69,16 @@
           validate-type="text"
         >
           <tiny-form-item prop="baseUrl" label="大模型平台baseUrl" label-width="150px">
+            <template #label>
+              大模型平台baseUrl
+              <tiny-tooltip
+                effect="light"
+                content="支持末尾缺省/chat/completions，# 结尾强制使用输入地址"
+                placement="top"
+              >
+                <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
+              </tiny-tooltip>
+            </template>
             <tiny-input
               class="filedName"
               v-model="state.customizeFormData.baseUrl"
@@ -134,7 +144,7 @@ import {
   TinyTabItem,
   TinyAlert
 } from '@opentiny/vue'
-import useModelConfig from '../../composables/useConfig'
+import useModelConfig from '../../composables/core/useConfig'
 
 export default {
   components: {

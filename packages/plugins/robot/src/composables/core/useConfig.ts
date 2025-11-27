@@ -12,9 +12,8 @@
 
 /* metaService: engine.plugins.robot.useRobot */
 import { reactive } from 'vue'
-import { getOptions } from '@opentiny/tiny-engine-meta-register'
-import meta from '../../meta'
-import { DEFAULT_LLM_MODELS } from '../constants'
+import { DEFAULT_LLM_MODELS } from '../../constants'
+import { getRobotServiceOptions } from '../../utils'
 
 const EXISTING_MODELS = 'existingModels'
 const CUSTOMIZE = 'customize'
@@ -94,7 +93,7 @@ const mergeAIModelOptions = (defaults: any[], customs: any[]): any[] => {
 }
 
 const getAIModelOptions = () => {
-  const customAIModels = getOptions(meta.id)?.customCompatibleAIModels || []
+  const customAIModels = getRobotServiceOptions()?.customCompatibleAIModels || []
   if (!customAIModels.length) {
     return DEFAULT_LLM_MODELS
   }

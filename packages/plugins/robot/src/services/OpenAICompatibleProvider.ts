@@ -12,7 +12,7 @@ import { formatMessages } from '../utils'
 interface AxiosRequestConfig {
   url: string
   method: string
-  baseURL?: string
+  apiUrl?: string
   headers: Record<string, string>
   data?: unknown
   signal?: AbortSignal
@@ -24,23 +24,25 @@ interface AxiosInstance {
 }
 
 // 定义请求数据类型
-interface ChatRequestData {
+export interface ChatRequestData {
   model: string
   messages: unknown[]
   stream: boolean
   [key: string]: unknown
 }
 
-type ProviderConfig = Omit<AIModelConfig, 'provider' | 'providerImplementation'> & {
+export type ProviderConfig = Omit<AIModelConfig, 'provider' | 'providerImplementation'> & {
+  apiUrl?: string
   httpClientType?: 'axios' | 'fetch'
   axiosClient?: AxiosInstance | (() => AxiosInstance)
+  beforeRequest?: (request: ChatRequestData) => ChatRequestData | Promise<ChatRequestData>
 }
 
 export class OpenAICompatibleProvider extends BaseModelProvider {
-  private baseURL: string
-  private apiKey: string
+  private apiUrl: string = 'https://api.openai.com/v1/chat/completions'
+  private apiKey: string = ''
   private defaultModel: string = 'gpt-3.5-turbo'
-  private beforeRequest: (request: ChatRequestData) => ChatRequestData | Promise<ChatRequestData>
+  private beforeRequest: (request: ChatRequestData) => ChatRequestData | Promise<ChatRequestData> = (req) => req
   private httpClientType: 'axios' | 'fetch' = 'fetch'
   private axiosClient: AxiosInstance | (() => AxiosInstance) | undefined
 
@@ -48,36 +50,10 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
    * @param config AI模型配置
    * @param options 额外选项
    */
-  constructor(
-    config: ProviderConfig,
-    options?: { beforeRequest?: (request: ChatRequestData) => ChatRequestData | Promise<ChatRequestData> }
-  ) {
+  constructor(providerConfig: ProviderConfig) {
+    const { beforeRequest, httpClientType, axiosClient, ...config } = providerConfig
     super(config as AIModelConfig)
-    this.baseURL = config.apiUrl || 'https://api.openai.com/v1/chat/completions'
-    this.apiKey = config.apiKey || ''
-
-    // 设置请求前处理器
-    this.beforeRequest = options?.beforeRequest || ((params: ChatRequestData) => params)
-
-    // 设置默认模型
-    if (config.defaultModel) {
-      this.defaultModel = config.defaultModel
-    }
-
-    // 设置 HTTP 客户端类型
-    if (config.httpClientType) {
-      this.httpClientType = config.httpClientType
-    }
-
-    // 设置 axios 客户端
-    if (config.axiosClient) {
-      this.axiosClient = config.axiosClient
-    }
-
-    // 验证配置
-    if (this.httpClientType === 'axios' && !this.axiosClient) {
-      throw new Error('axiosClient is required when httpClientType is axios')
-    }
+    this.setConfig(providerConfig)
   }
 
   /**
@@ -170,8 +146,8 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     return async (config: AxiosRequestConfig) => {
       // 构建完整URL
       let url = config.url
-      if (!url.startsWith('http') && config.baseURL) {
-        url = new URL(url, config.baseURL).href
+      if (!url.startsWith('http') && config.apiUrl) {
+        url = new URL(url, config.apiUrl).href
       }
 
       try {
@@ -233,7 +209,7 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     headers: Record<string, string>,
     signal?: AbortSignal
   ): Promise<Response> {
-    const response = await fetch(this.baseURL, {
+    const response = await fetch(this.apiUrl, {
       method: 'POST',
       headers,
       body: JSON.stringify(requestData),
@@ -264,7 +240,7 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
 
     const requestOptions: AxiosRequestConfig = {
       method: 'POST',
-      url: this.baseURL,
+      url: this.apiUrl,
       headers,
       data: requestData,
       signal,
@@ -335,25 +311,54 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     }
   }
 
+  setConfig(providerConfig: ProviderConfig): void {
+    const { beforeRequest, httpClientType, axiosClient, ...config } = providerConfig
+
+    // 更新基础配置
+    super.updateConfig(config as AIModelConfig)
+
+    if (config.apiUrl) {
+      this.apiUrl = config.apiUrl
+    }
+
+    if (config.apiKey) {
+      this.apiKey = config.apiKey
+    }
+
+    if (config.defaultModel) {
+      this.defaultModel = config.defaultModel
+    }
+
+    if (beforeRequest) {
+      this.beforeRequest = beforeRequest
+    }
+
+    if (httpClientType === 'axios' && axiosClient) {
+      this.axiosClient = axiosClient
+    } else {
+      this.httpClientType = 'fetch'
+    }
+
+    // 验证配置
+    if (this.httpClientType === 'axios' && !this.axiosClient) {
+      throw new Error('axiosClient is required when httpClientType is axios')
+    }
+  }
+
+  getBaseConfig(): ProviderConfig {
+    return {
+      apiKey: this.apiKey,
+      apiUrl: this.apiUrl,
+      defaultModel: this.defaultModel,
+      httpClientType: this.httpClientType
+    }
+  }
+
   /**
    * 更新配置
    * @param config 新的AI模型配置
    */
   updateConfig(config: ProviderConfig): void {
-    // 更新基础配置
-    super.updateConfig(config as AIModelConfig)
-
-    // 更新自定义配置
-    if (config.apiUrl !== undefined) {
-      this.baseURL = config.apiUrl
-    }
-
-    if (config.apiKey !== undefined) {
-      this.apiKey = config.apiKey
-    }
-
-    if (config.defaultModel !== undefined) {
-      this.defaultModel = config.defaultModel
-    }
+    this.setConfig(config)
   }
 }

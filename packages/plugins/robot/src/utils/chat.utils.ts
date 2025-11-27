@@ -1,7 +1,6 @@
 import { toRaw } from 'vue'
-import { META_SERVICE, getMetaApi } from '@opentiny/tiny-engine-meta-register'
 import type { StreamHandler } from '@opentiny/tiny-robot-kit'
-import type { LLMMessage, LLMRequestBody, RequestOptions, RequestTool } from '../types'
+import type { LLMMessage, RobotMessage } from '../types'
 
 // 格式化LLM输入messages消息
 export const formatMessages = (messages: LLMMessage[]) => {
@@ -55,24 +54,6 @@ export const mergeStringFields = (target: Record<string, any>, source: Record<st
   return target
 }
 
-export const fetchLLM = async (messages: LLMMessage[], tools: RequestTool[], options: RequestOptions = {}) => {
-  const bodyObj: LLMRequestBody = {
-    baseUrl: options.baseUrl,
-    model: options?.model || 'deepseek-chat',
-    stream: false,
-    messages: toRaw(messages)
-  }
-  if (tools.length > 0) {
-    bodyObj.tools = toRaw(tools)
-  }
-  return getMetaApi(META_SERVICE.Http).post(options?.url || '/app-center/api/chat/completions', bodyObj, {
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers
-    }
-  })
-}
-
 export const processSSEStream = (data: string, handler: StreamHandler) => {
   let finishReason: string | undefined
   let latestFinishReason: string | undefined
@@ -101,5 +82,24 @@ export const processSSEStream = (data: string, handler: StreamHandler) => {
       // eslint-disable-next-line no-console
       console.error('Error parsing SSE message:', error, line)
     }
+  }
+}
+
+export const removeLoading = (messages: RobotMessage[], name?: string) => {
+  const renderContent = messages.at(-1)?.renderContent
+  if (!renderContent || !renderContent.length) return
+  const index = renderContent.findLastIndex(
+    (item) => item.type.includes('loading') && (name ? item.content === name : true)
+  )
+  if (index !== -1) {
+    renderContent?.splice(index, 1)
+  }
+}
+
+export const addSystemPrompt = (messages: LLMMessage[], prompt: string = '') => {
+  if (!messages.length || messages[0].role !== 'system') {
+    messages.unshift({ role: 'system', content: prompt })
+  } else if (messages[0].role === 'system' && messages[0].content !== prompt) {
+    messages[0].content = prompt
   }
 }
