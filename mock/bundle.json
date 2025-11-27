@@ -176,7 +176,7 @@
             "zh_CN": "柱状图"
           },
           "component": "TinyHuichartsHistogram",
-          "icon": "bar",
+          "icon": "histogram",
           "description": "柱状图",
           "docUrl": "",
           "screenshot": "",
@@ -298,6 +298,132 @@
                   "returns": {}
                 },
                 "defaultValue": ""
+              }
+            },
+            "slots": {
+              "prefix": {
+                "label": {
+                  "zh_CN": "前置内容"
+                }
+              },
+              "suffix": {
+                "label": {
+                  "zh_CN": "后置内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "条形图"
+          },
+          "component": "TinyHuichartsBar",
+          "icon": "bar",
+          "description": "条形图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsBar",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "条形图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onReady": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              },
+              "onReadyOnce": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
               }
             },
             "slots": {
@@ -476,6 +602,254 @@
               "suffix": {
                 "label": {
                   "zh_CN": "后置内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "环形图"
+          },
+          "component": "TinyHuichartsRing",
+          "icon": "ring",
+          "description": "环形图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsRing",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "环形图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onReady": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              },
+              "onReadyOnce": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "组件默认插槽"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "雷达图"
+          },
+          "component": "TinyHuichartsRadar",
+          "icon": "radar",
+          "description": "雷达图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsRadar",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "雷达图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {
+              "onReady": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              },
+              "onReadyOnce": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "图表渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "组件默认插槽"
                 }
               }
             }
@@ -15295,7 +15669,7 @@
               "name": {
                 "zh_CN": "柱状图"
               },
-              "icon": "bar",
+              "icon": "histogram",
               "screenshot": "",
               "snippetName": "TinyHuichartsHistogram",
               "schema": {
@@ -15330,6 +15704,44 @@
             },
             {
               "name": {
+                "zh_CN": "条形图"
+              },
+              "icon": "bar",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsBar",
+              "schema": {
+                "componentName": "TinyHuichartsBar",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "padding": [50, 30, 50, 20],
+                    "data": [
+                      { "Month": "Jan", "Domestic": 33, "Abroad": 1 },
+                      { "Month": "Feb", "Domestic": 27, "Abroad": 39 },
+                      { "Month": "Mar", "Domestic": 31, "Abroad": 20 },
+                      { "Month": "Apr", "Domestic": 30, "Abroad": 15 },
+                      { "Month": "May", "Domestic": 37, "Abroad": 1 },
+                      { "Month": "Jun", "Domestic": 36, "Abroad": 17 },
+                      { "Month": "Jul", "Domestic": 42, "Abroad": 22 },
+                      { "Month": "Aug", "Domestic": 22, "Abroad": 12 },
+                      { "Month": "Sep", "Domestic": 17, "Abroad": 30 },
+                      { "Month": "Oct", "Domestic": 40, "Abroad": 33 },
+                      { "Month": "Nov", "Domestic": 42, "Abroad": 22 },
+                      { "Month": "Dec", "Domestic": 32, "Abroad": 1 }
+                    ],
+                    "xAxis": {
+                      "data": "Month"
+                    },
+                    "yAxis": {
+                      "name": "Percentage(%)"
+                    },
+                    "direction": "horizontal"
+                  }
+                }
+              }
+            },
+            {
+              "name": {
                 "zh_CN": "圆盘图"
               },
               "icon": "pie",
@@ -15339,6 +15751,7 @@
                 "componentName": "TinyHuichartsPie",
                 "props": {
                   "options": {
+                    "type": "pie",
                     "theme": "hdesign-light",
                     "label": {
                       "show": true,
@@ -15367,6 +15780,69 @@
                       { "value": 49, "name": "EIP" },
                       { "value": 14, "name": "SG" }
                     ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "环形图"
+              },
+              "icon": "ring",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsRing",
+              "schema": {
+                "componentName": "TinyHuichartsRing",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "type": "circle",
+                    "data": [
+                      { "value": 100, "name": "VPC" },
+                      { "value": 90, "name": "IM" },
+                      { "value": 49, "name": "EIP" },
+                      { "value": 14, "name": "SG" }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "雷达图"
+              },
+              "icon": "radar",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsRadar",
+              "schema": {
+                "componentName": "TinyHuichartsRadar",
+                "props": {
+                  "options": {
+                    "theme": "hdesign-light",
+                    "legend": {
+                      "show": true,
+                      "position": {
+                        "left": "center",
+                        "bottom": 20.1
+                      }
+                    },
+                    "radarMax": 100,
+                    "data": {
+                      "Domestic": {
+                        "Equipment": 41,
+                        "VM": 91,
+                        "CSP": 81,
+                        "RD": 51,
+                        "Markets": 71
+                      },
+                      "Abroad": {
+                        "Equipment": 72,
+                        "VM": 55,
+                        "CSP": 93,
+                        "RD": 90,
+                        "Markets": 82
+                      }
+                    }
                   }
                 }
               }
