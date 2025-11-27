@@ -397,74 +397,33 @@
               }
             ],
             "events": {
-              "onChange": {
+              "onReady": {
+                "type": "event",
                 "label": {
-                  "zh_CN": "值改变时触发"
+                  "zh_CN": "图表渲染完成后触发"
                 },
                 "description": {
-                  "zh_CN": "在 Input 值改变时触发"
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
                 },
-                "type": "event",
+                "defaultValue": "",
                 "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "string",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "输入框改变后的值"
-                      }
-                    }
-                  ],
+                  "params": [],
                   "returns": {}
-                },
-                "defaultValue": ""
+                }
               },
-              "onInput": {
+              "onReadyOnce": {
+                "type": "event",
                 "label": {
-                  "zh_CN": "输入值改变时触发"
+                  "zh_CN": "图表渲染完成后触发"
                 },
                 "description": {
-                  "zh_CN": "在 Input 输入值改变时触发"
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
                 },
-                "type": "event",
+                "defaultValue": "",
                 "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "string",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "输入框输入的值"
-                      }
-                    }
-                  ],
+                  "params": [],
                   "returns": {}
-                },
-                "defaultValue": ""
-              },
-              "onUpdate:modelValue": {
-                "label": {
-                  "zh_CN": "双向绑定的值改变时触发"
-                },
-                "description": {
-                  "zh_CN": "在 Input 输入值改变时触发"
-                },
-                "type": "event",
-                "functionInfo": {
-                  "params": [
-                    {
-                      "name": "value",
-                      "type": "string",
-                      "defaultValue": "",
-                      "description": {
-                        "zh_CN": "双向绑定的值"
-                      }
-                    }
-                  ],
-                  "returns": {}
-                },
-                "defaultValue": ""
+                }
               }
             },
             "slots": {
