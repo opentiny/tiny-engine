@@ -2162,7 +2162,6 @@
         "destructuring": true,
         "version": "3.22.0"
       },
-      
       {
         "componentName": "TinyHuichartsWaterfall",
         "package": "@opentiny/vue-huicharts",
