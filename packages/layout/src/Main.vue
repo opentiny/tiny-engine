@@ -7,7 +7,7 @@
         @backToDesigner="setWorkspacePageId"
       ></design-workspace>
     </div>
-    <div id="tiny-engine" v-if="!isShowDefaultWorkspace">
+    <div id="tiny-engine" v-if="!isShowDefaultWorkspace && !clickedWorkspacePageId">
       <design-toolbars
         :layoutRegistry="layoutRegistry"
         :workspaceRegistry="workspaceRegistry"

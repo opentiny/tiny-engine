@@ -51,7 +51,9 @@ import {
   GlobalService,
   ThemeSwitchService,
   HttpService,
-  McpService
+  McpService,
+  ApplicationCenter,
+  TemplateCenter
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -173,8 +175,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
   ],
   workspace: [
-    // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
-    // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
   ],
   canvas: Canvas
 }

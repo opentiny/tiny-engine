@@ -45,7 +45,7 @@ props中没有以on开头的则是普通属性，如tinyInput组件中的placeho
 props的属性中值为对象，且包含type和value属性，type为JSExpression和JSFunction时，value的值则参考通用协议取用
 
 直接上下文如下：
-$codeBeforeCursor$<cursor>$codeAfterCursor$
-请从<cursor>（光标位置）后进行补全
+$codeBeforeCursor$<cursor/>$codeAfterCursor$
+请从<cursor/>（光标位置）后进行补全
 注意如果是函数时，须以function关键字开头，不使用箭头函数
 请只返回代码，且只返回一个示例，不需要思考过程和解释
