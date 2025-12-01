@@ -4,6 +4,7 @@ import { utils } from '@opentiny/tiny-engine-utils'
 import { useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
 import { useThrottleFn } from '@vueuse/core'
 import useModelConfig from './useConfig'
+import { ChatMode } from '../../types/mode.types'
 import { fixMethods, schemaAutoFix, getJsonObjectString, isValidFastJsonPatch, jsonPatchAutoFix } from '../../utils'
 
 const { deepClone } = utils
@@ -17,8 +18,8 @@ const setSchema = (schema: object) => {
 }
 
 const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
-  const { robotSettingState, CHAT_MODE } = useModelConfig()
-  if (robotSettingState.chatMode !== CHAT_MODE.Agent) {
+  const { getSelectedModelInfo } = useModelConfig()
+  if (getSelectedModelInfo().config?.chatMode !== ChatMode.Agent) {
     return
   }
 

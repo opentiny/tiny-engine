@@ -332,6 +332,7 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
   .tr-bubble-list {
     font-size: 14px;
+    --tr-bubble-text-font-size: 14px;
     flex: 1;
     .tr-bubble {
       word-break: break-word;

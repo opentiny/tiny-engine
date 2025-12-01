@@ -14,17 +14,16 @@ import useModelConfig from '../core/useConfig'
 import useAgentMode from './useAgentMode'
 import useChatMode from './useChatMode'
 import type { ModeHooks } from '../../types/mode.types'
+import { ChatMode } from '../../types/mode.types'
 import { getRobotServiceOptions } from '../../utils'
 
 /**
  * 模式注册表
  * 配置式管理所有聊天模式，便于扩展新模式
  */
-const { CHAT_MODE } = useModelConfig()
-
 const modeRegistry: Record<string, () => ModeHooks> = {
-  [CHAT_MODE.Agent]: useAgentMode,
-  [CHAT_MODE.Chat]: useChatMode
+  [ChatMode.Agent]: useAgentMode,
+  [ChatMode.Chat]: useChatMode
 }
 
 // 缓存模式实例，避免重复创建
@@ -48,8 +47,8 @@ const getModeInstance = (chatMode: string): ModeHooks => {
  * 获取当前激活的模式实例
  */
 const getCurrentMode = (): ModeHooks => {
-  const { robotSettingState } = useModelConfig()
-  return getModeInstance(robotSettingState.chatMode)
+  const { getSelectedModelInfo } = useModelConfig()
+  return getModeInstance(getSelectedModelInfo().config!.chatMode)
 }
 
 /**

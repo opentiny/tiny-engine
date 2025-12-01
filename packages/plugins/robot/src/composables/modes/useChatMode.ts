@@ -14,8 +14,7 @@ import { removeLoading } from '../../utils'
 import useModelConfig from '../core/useConfig'
 import useMcpServer from '../features/useMcp'
 import type { ModeHooks } from '../../types/mode.types'
-
-const logger = console
+import { ChatMode } from '../../types/mode.types'
 
 const updateToolCallRenderContent = (tool: Record<string, unknown>, renderContent: any[]) => {
   const currentToolCallContent = renderContent.find((item) => item.type === 'tool' && item.toolCallId === tool.id)
@@ -48,7 +47,7 @@ const updateToolCallRenderContent = (tool: Record<string, unknown>, renderConten
  * - 无需 schema 更新
  */
 export default function useChatMode(): ModeHooks {
-  const { robotSettingState, CHAT_MODE, getModelCapabilities } = useModelConfig()
+  const { getSelectedModelInfo } = useModelConfig()
 
   // ========== 配置方法 ==========
   const getApiUrl = () => '/app-center/api/chat/completions'
@@ -59,13 +58,11 @@ export default function useChatMode(): ModeHooks {
 
   // ========== 生命周期钩子 ==========
   const onConversationStart = (conversationState: any, messages: any[], apis: any) => {
-    logger.log('Chat mode: onConversationStart called', conversationState)
-
     const conversation = conversationState.conversations.find((item: any) => item.id === conversationState.currentId)
 
     // 确保会话元数据中记录为 Chat 模式
-    if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== CHAT_MODE.Chat) {
-      apis.updateMetadata(conversationState.currentId, { chatMode: CHAT_MODE.Chat })
+    if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Chat) {
+      apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Chat })
       apis.saveConversations()
     }
 
@@ -79,25 +76,20 @@ export default function useChatMode(): ModeHooks {
 
   const onBeforeRequest = async (requestParams: any) => {
     const tools = await useMcpServer().getLLMTools()
-    const modelCapabilities = getModelCapabilities(
-      robotSettingState.selectedModel.baseUrl,
-      robotSettingState.selectedModel.model
-    )
+    const { model, baseUrl, config, capabilities } = getSelectedModelInfo()
 
     // 添加 MCP 工具
-    if (!requestParams.tools && tools?.length && modelCapabilities?.toolCalling !== false) {
+    if (!requestParams.tools && tools?.length && capabilities?.toolCalling !== false) {
       Object.assign(requestParams, { tools })
     }
 
-    requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
-    requestParams.model = robotSettingState.selectedModel.model
+    requestParams.baseUrl = baseUrl
+    requestParams.model = model
 
-    if (modelCapabilities?.reasoning?.extraBody) {
+    if (capabilities?.reasoning?.extraBody) {
       Object.assign(
         requestParams,
-        robotSettingState.enableThinking
-          ? modelCapabilities.reasoning.extraBody.enable
-          : modelCapabilities.reasoning.extraBody.disable
+        config?.enableThinking ? capabilities.reasoning.extraBody.enable : capabilities.reasoning.extraBody.disable
       )
     }
 

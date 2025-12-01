@@ -8,8 +8,12 @@
     >
     </toolbar-base>
     <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
-      <div class="robot-chat-container" :class="{ 'robot-chat-container-fullscreen': fullscreen }">
+      <div
+        class="robot-chat-container"
+        :class="{ 'robot-chat-container-fullscreen': fullscreen, 'fullscreen-with-setting': fullscreen && showSetting }"
+      >
         <robot-chat
+          v-show="!showSetting || fullscreen"
           v-model:messages="messages"
           v-model:fullscreen="fullscreen"
           v-model:show="robotVisible"
@@ -17,7 +21,7 @@
           :status="messageState.status"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
-          :allowFiles="isVisualModel && robotSettingState.chatMode === CHAT_MODE.Agent"
+          :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
           :beforeSubmit="checkApiKey"
           :promptClickHandler="promptClickHandler"
           @fileSelected="handleFileSelected"
@@ -29,24 +33,10 @@
             <svg-icon v-else name="chat"></svg-icon>
           </template>
           <template #operations>
-            <tiny-popover
-              width="290"
-              trigger="manual"
-              v-model="showSettingPopover"
-              :visible-arrow="false"
-              popper-class="setting-popover"
-            >
-              <robot-setting-popover
-                v-if="showSettingPopover"
-                @changeType="saveSettingState"
-                @close="closePanel"
-              ></robot-setting-popover>
-              <template #reference>
-                <span class="setting-icon" @click.stop="showSettingPopover = !showSettingPopover">
-                  <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
-                </span>
-              </template>
-            </tiny-popover>
+            <span class="setting-icon" @click.stop="handleOpenSetting">
+              <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
+            </span>
+            <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
             <robot-history
               :conversation-state="conversationState"
               @item-click="(item) => switchConversation(item.id!)"
@@ -58,7 +48,6 @@
                 <svg-icon v-else name="chat"></svg-icon>
               </template>
             </robot-history>
-            <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
           </template>
           <template #footer-left>
             <robot-type-select
@@ -67,7 +56,7 @@
             ></robot-type-select>
             <mcp-server
               :position="mcpDrawerPosition"
-              v-if="robotSettingState.chatMode === CHAT_MODE.Chat && isToolsModel"
+              v-if="robotSettingState.chatMode === ChatMode.Chat && isToolsModel"
             ></mcp-server>
             <footer-button
               :active="robotSettingState.enableThinking"
@@ -81,6 +70,12 @@
             </footer-button>
           </template>
         </robot-chat>
+        <robot-setting
+          v-if="showSetting"
+          :fullscreen="fullscreen"
+          @close="handleCloseSetting"
+          @changeType="saveSettingState"
+        ></robot-setting>
       </div>
     </Teleport>
   </div>
@@ -89,18 +84,19 @@
 <script setup lang="ts">
 import { computed, h, onMounted, ref, watch } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { TinyNotify, TinyPopover } from '@opentiny/vue'
+import { TinyNotify } from '@opentiny/vue'
 import { META_APP, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { type PopupConfig, type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
 import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
 import FooterButton from './components/chat/FooterButton.vue'
 import { IconMcp, IconPage, IconStudy } from './components/icons'
-import { History as RobotHistory, RobotSettingPopover } from './components/header-extension'
+import { History as RobotHistory, RobotSetting } from './components/header-extension'
 import { RobotTypeSelect, McpServer } from './components/footer-extension'
 import { AgentRenderer } from './components/renderers'
 import useChat from './composables/useChat'
 import useModelConfig from './composables/core/useConfig'
+import { ChatMode } from './types/mode.types'
 import apiService from './services/api'
 
 const { options } = defineProps({
@@ -110,8 +106,7 @@ const { options } = defineProps({
   }
 })
 
-const { robotSettingState, CHAT_MODE, getModelCapabilities, saveRobotSettingState, getAIModelOptions } =
-  useModelConfig()
+const { robotSettingState, getModelCapabilities, updateThinkingState, getSelectedModelInfo } = useModelConfig()
 
 const robotVisible = ref(false)
 const fullscreen = ref(false)
@@ -155,7 +150,7 @@ const promptItems: Array<PromptProps & { mode?: 'chat' | 'agent' }> = [
 ]
 
 const showTeleport = ref(false)
-const showSettingPopover = ref(false)
+const showSetting = ref(false)
 
 const {
   inputMessage,
@@ -173,8 +168,7 @@ const {
 } = useChat()
 
 const toggleActive = () => {
-  robotSettingState.enableThinking = !robotSettingState.enableThinking
-  saveRobotSettingState({ enableThinking: robotSettingState.enableThinking })
+  updateThinkingState(!robotSettingState.enableThinking)
 }
 
 const handleDeleteConversation = (action: any, item: any) => {
@@ -188,16 +182,16 @@ const handleAbortRequest = () => {
 
 const isVisualModel = computed(() => {
   const modelCapabilities = getModelCapabilities(
-    robotSettingState.selectedModel.baseUrl,
-    robotSettingState.selectedModel.model
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
   )
   return modelCapabilities?.vision || false
 })
 
 const isToolsModel = computed(() => {
   const modelCapabilities = getModelCapabilities(
-    robotSettingState.selectedModel.baseUrl,
-    robotSettingState.selectedModel.model
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
   )
   return modelCapabilities?.toolCalling !== false
 })
@@ -209,11 +203,9 @@ const handleChatModeChange = (type: string) => {
 }
 
 const checkApiKey = () => {
-  const provider = getAIModelOptions().find((option) => option.baseUrl === robotSettingState.selectedModel.baseUrl)
-  if (
-    !robotSettingState.selectedModel.baseUrl ||
-    (!robotSettingState.selectedModel.apiKey && provider && !provider.allowEmptyApiKey)
-  ) {
+  const provider = getSelectedModelInfo().service
+
+  if (!provider?.baseUrl || (!provider?.apiKey && !provider?.allowEmptyApiKey)) {
     TinyNotify({
       type: 'warning',
       title: '未设置API Key，请检查设置',
@@ -222,7 +214,7 @@ const checkApiKey = () => {
       duration: 5000
     })
     setTimeout(() => {
-      showSettingPopover.value = true
+      showSetting.value = true
     }, 1000)
     return false
   }
@@ -247,8 +239,12 @@ const promptClickHandler = (item: PromptProps & { mode?: 'chat' | 'agent' }) => 
 
 const saveSettingState = () => {}
 
-const closePanel = () => {
-  showSettingPopover.value = false
+const handleOpenSetting = () => {
+  showSetting.value = true
+}
+
+const handleCloseSetting = () => {
+  showSetting.value = false
 }
 
 const openAIRobot = () => {
@@ -289,11 +285,6 @@ onMounted(async () => {
 }
 .robot-chat-container {
   height: 100%;
-}
-.setting-popover {
-  .robot-setting .bottom-buttons .tiny-button {
-    margin-left: 10px;
-  }
 }
 
 .setting-icon {
@@ -336,5 +327,20 @@ onMounted(async () => {
       padding: 0px 136px;
     }
   }
+
+  &.fullscreen-with-setting {
+    display: flex;
+
+    :deep(.tiny-container) {
+      flex: 1;
+      width: auto;
+    }
+  }
+}
+
+.robot-setting {
+  height: 100%;
+  background-color: #fff;
+  border-left: 1px solid var(--te-layout-common-border-color);
 }
 </style>

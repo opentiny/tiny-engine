@@ -19,6 +19,7 @@ import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../
 import { search, fetchAssets } from '../../services/agentServices'
 import { updateClientConfig as updateConfig, client } from '../../services/aiClient'
 import type { ModeHooks } from '../../types/mode.types'
+import { ChatMode } from '../../types/mode.types'
 
 const { deepClone } = utils
 const logger = console
@@ -56,7 +57,7 @@ const updateToolCallRenderContent = (tool: Record<string, unknown>, renderConten
  */
 export default function useAgentMode(): ModeHooks {
   let pageSchema: object | null = null
-  const { robotSettingState, CHAT_MODE, getModelCapabilities } = useModelConfig()
+  const { getSelectedModelInfo } = useModelConfig()
 
   // ========== 配置方法 ==========
   const getApiUrl = () => '/app-center/api/ai/chat'
@@ -72,8 +73,8 @@ export default function useAgentMode(): ModeHooks {
     const conversation = conversationState.conversations.find((item: any) => item.id === conversationState.currentId)
 
     // 确保会话元数据中记录为 Agent 模式
-    if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== CHAT_MODE.Agent) {
-      apis.updateMetadata(conversationState.currentId, { chatMode: CHAT_MODE.Agent })
+    if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Agent) {
+      apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Agent })
       apis.saveConversations()
     }
 
@@ -111,25 +112,20 @@ export default function useAgentMode(): ModeHooks {
       )
     }
 
+    const { baseUrl, model, config, capabilities } = getSelectedModelInfo()
+
     // Agent 模式默认使用 JSON 对象格式
-    if (!robotSettingState.enableThinking) {
+    if (!config?.enableThinking) {
       Object.assign(requestParams, { response_format: { type: 'json_object' } })
     }
 
-    requestParams.baseUrl = robotSettingState.selectedModel.baseUrl
-    requestParams.model = robotSettingState.selectedModel.model
+    requestParams.baseUrl = baseUrl
+    requestParams.model = model
 
-    const modelCapabilities = getModelCapabilities(
-      robotSettingState.selectedModel.baseUrl,
-      robotSettingState.selectedModel.model
-    )
-
-    if (modelCapabilities?.reasoning?.extraBody) {
+    if (capabilities?.reasoning?.extraBody) {
       Object.assign(
         requestParams,
-        robotSettingState.enableThinking
-          ? modelCapabilities.reasoning.extraBody.enable
-          : modelCapabilities.reasoning.extraBody.disable
+        config?.enableThinking ? capabilities.reasoning.extraBody.enable : capabilities.reasoning.extraBody.disable
       )
     }
 
@@ -187,17 +183,14 @@ export default function useAgentMode(): ModeHooks {
       abortControllerMap.errorFix = new AbortController()
       try {
         const beforeRequest = (requestParams: any) => {
-          const modelCapabilities = getModelCapabilities(
-            robotSettingState.selectedModel.baseUrl,
-            robotSettingState.selectedModel.model
-          )
-          if (modelCapabilities?.reasoning?.extraBody?.disable) {
-            Object.assign(requestParams, modelCapabilities.reasoning.extraBody.disable)
+          const { capabilities, model, baseUrl } = getSelectedModelInfo()
+          if (capabilities?.reasoning?.extraBody?.disable) {
+            Object.assign(requestParams, capabilities.reasoning.extraBody.disable)
           }
           Object.assign(requestParams, {
             response_format: { type: 'json_object' },
-            model: robotSettingState.selectedModel.model,
-            baseUrl: robotSettingState.selectedModel.baseUrl
+            model,
+            baseUrl
           })
           return requestParams
         }

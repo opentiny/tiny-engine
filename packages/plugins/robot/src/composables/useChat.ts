@@ -30,7 +30,7 @@ const {
   onConversationEnd
 } = useMode()
 
-const { robotSettingState, saveRobotSettingState } = useModelConfig()
+const { robotSettingState, updateChatModeState, getSelectedModelInfo } = useModelConfig()
 
 // 本次对话的状态，从用户发送消息开始到AI返回或用户主动终止结束
 enum CHAT_STATUS {
@@ -61,9 +61,10 @@ const handleStreamData = createStreamDataHandler({
 
 const beforeRequest = async (params: ChatRequestData): Promise<ChatRequestData> => {
   const requestParams = await onBeforeRequest(params)
+  const { service } = getSelectedModelInfo()
 
-  if (getConfig().apiKey !== robotSettingState.selectedModel.apiKey) {
-    updateConfig({ apiKey: robotSettingState.selectedModel.apiKey })
+  if (getConfig().apiKey !== service!.apiKey) {
+    updateConfig({ apiKey: service!.apiKey })
   }
   if (getConfig().apiUrl !== getApiUrl()) {
     updateConfig({ apiUrl: getApiUrl() })
@@ -72,10 +73,12 @@ const beforeRequest = async (params: ChatRequestData): Promise<ChatRequestData> 
 }
 
 const initChatClient = () => {
+  const { service, model } = getSelectedModelInfo()
+
   const config: ProviderConfig = {
-    apiKey: robotSettingState.selectedModel.apiKey || '',
+    apiKey: service?.apiKey || '',
     apiUrl: getApiUrl(),
-    defaultModel: robotSettingState.selectedModel.model || 'deepseek-v3',
+    defaultModel: model || 'deepseek-v3',
     axiosClient: () => apiService.getHttpClient(),
     httpClientType: 'axios',
     beforeRequest
@@ -213,8 +216,7 @@ const changeChatMode = (chatMode: string) => {
     conversationMethods.saveConversations()
   }
 
-  robotSettingState.chatMode = chatMode
-  saveRobotSettingState({ chatMode })
+  updateChatModeState(chatMode)
   updateConfig({ apiUrl: getApiUrl() })
 }
 
