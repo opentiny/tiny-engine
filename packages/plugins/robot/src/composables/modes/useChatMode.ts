@@ -10,7 +10,7 @@
  *
  */
 
-import { removeLoading } from '../../utils'
+import { removeLoading, serializeError } from '../../utils'
 import useModelConfig from '../core/useConfig'
 import useMcpServer from '../features/useMcp'
 import type { ModeHooks } from '../../types/mode.types'
@@ -104,9 +104,15 @@ export default function useChatMode(): ModeHooks {
     // Chat 模式不需要处理流式数据
   }
 
-  const onRequestEnd = async (finishReason: string, _content: string, messages: any[]) => {
+  const onRequestEnd = async (
+    finishReason: string,
+    _content: string,
+    messages: any[],
+    extraData?: Record<string, unknown>
+  ) => {
     if (finishReason === 'aborted' || finishReason === 'error') {
       removeLoading(messages)
+      messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(extraData.error) })
     }
   }
 

@@ -1,6 +1,6 @@
 import { nextTick } from 'vue'
 import { STATUS, type ChatMessage } from '@opentiny/tiny-robot-kit'
-import { formatMessages, removeLoading, serializeError } from '../utils'
+import { formatMessages, removeLoading } from '../utils'
 import { getClientConfig as getConfig, updateClientConfig as updateConfig, client } from '../services/aiClient'
 import useModelConfig from './core/useConfig'
 import useMode from './modes/useMode'
@@ -107,11 +107,7 @@ const handleFinishRequest = async (finishReason, messages, contextMessages, mess
 
 const handleRequestError = async (error, messages, messageState) => {
   chatStatus = CHAT_STATUS.FINISHED
-
-  await onRequestEnd('error', messages.at(-1).content, messages) // 本次请求结束
-
-  messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(error) })
-
+  await onRequestEnd('error', messages.at(-1).content, messages, { error }) // 本次请求结束
   messageState.status = STATUS.ERROR
 }
 
@@ -173,27 +169,25 @@ const autoSetTitle = () => {
 }
 
 const sendUserMessage = async () => {
-  try {
-    nextTick(() => {
-      const assistantMessage: ChatMessage = {
-        role: 'assistant',
-        content: '',
-        renderContent: [{ type: getLoadingType() }]
-      }
-      messageManager.messages.value.push(assistantMessage)
-    })
-    await messageManager.send()
-    onMessageSent()
-    autoSetTitle()
-  } catch (error) {
-    removeLoading(messageManager.messages.value)
-    const lastMessage = messageManager.messages.value.at(-1)
-    if (lastMessage) {
-      lastMessage.renderContent.push({ type: 'text', content: serializeError(error) })
+  nextTick(() => {
+    const assistantMessage: ChatMessage = {
+      role: 'assistant',
+      content: '',
+      renderContent: [{ type: getLoadingType() }]
     }
-    // eslint-disable-next-line no-console
-    console.error(error)
+    messageManager.messages.value.push(assistantMessage)
+  })
+  await messageManager.send()
+  if (messageManager.messageState.status === STATUS.ERROR) {
+    removeLoading(messageManager.messages.value)
+    await handleRequestError(
+      messageManager.messageState.errorMsg,
+      messageManager.messages.value,
+      messageManager.messageState
+    )
   }
+  onMessageSent()
+  autoSetTitle()
 }
 
 const abortRequest = () => {

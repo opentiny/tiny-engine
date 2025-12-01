@@ -53,7 +53,7 @@ export default {
       },
       failed: {
         title: '页面生成失败',
-        content: '页面生成失败',
+        content: () => props.content?.slice(-30) || '页面生成失败',
         icon: 'failed.svg'
       }
     }

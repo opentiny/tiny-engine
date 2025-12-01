@@ -141,10 +141,20 @@ export default function useAgentMode(): ModeHooks {
     updatePageSchema(content, pageSchema!)
   }
 
-  const onRequestEnd = async (finishReason: string, content: string, messages: any[]) => {
+  const onRequestEnd = async (
+    finishReason: string,
+    content: string,
+    messages: any[],
+    extraData?: Record<string, unknown>
+  ) => {
     if (finishReason === 'aborted' || finishReason === 'error') {
       removeLoading(messages)
-      messages.at(-1).renderContent.at(-1).status = 'failed'
+      const errorInfo = { content: extraData?.error || '请求失败', status: 'failed' }
+      if (messages.at(-1).renderContent.at(-1)) {
+        Object.assign(messages.at(-1).renderContent.at(-1), errorInfo)
+      } else {
+        messages.at(-1).renderContent = [{ type: getContentType(), ...errorInfo }]
+      }
     }
   }
 

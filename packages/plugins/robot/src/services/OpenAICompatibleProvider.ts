@@ -160,7 +160,11 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
 
         if (!fetchResponse.ok) {
           const errorText = await fetchResponse.text()
-          throw new Error(`HTTP error! status: ${fetchResponse.status}, details: ${errorText}`)
+          const customError: any = new Error(
+            `HTTP error! status: ${fetchResponse.status}${errorText ? ', details: ' + errorText : ''}`
+          )
+          customError.response = fetchResponse
+          throw customError
         }
 
         if (isStream) {
@@ -218,7 +222,12 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
 
     if (!response.ok) {
       const errorText = await response.text()
-      throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`)
+      const customError: any = new Error(
+        `HTTP error! status: ${response.status}${errorText ? ', details: ' + errorText : ''}`
+      )
+      customError.response = response
+
+      throw customError
     }
 
     return response
@@ -307,7 +316,7 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
       if (signal?.aborted) {
         return
       }
-      handler.onError(this.toAIAdapterError(error))
+      throw error
     }
   }
 
@@ -335,8 +344,9 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     }
 
     if (httpClientType === 'axios' && axiosClient) {
+      this.httpClientType = 'axios'
       this.axiosClient = axiosClient
-    } else {
+    } else if (httpClientType) {
       this.httpClientType = 'fetch'
     }
 
