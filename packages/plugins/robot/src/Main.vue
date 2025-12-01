@@ -70,12 +70,7 @@
             </footer-button>
           </template>
         </robot-chat>
-        <robot-setting
-          v-if="showSetting"
-          :fullscreen="fullscreen"
-          @close="handleCloseSetting"
-          @changeType="saveSettingState"
-        ></robot-setting>
+        <robot-setting v-if="showSetting" :fullscreen="fullscreen" @close="handleCloseSetting"></robot-setting>
       </div>
     </Teleport>
   </div>
@@ -236,8 +231,6 @@ const promptClickHandler = (item: PromptProps & { mode?: 'chat' | 'agent' }) => 
   })
   sendUserMessage()
 }
-
-const saveSettingState = () => {}
 
 const handleOpenSetting = () => {
   showSetting.value = true

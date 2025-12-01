@@ -16,6 +16,7 @@ import { DEFAULT_LLM_MODELS } from '../../constants'
 import { getRobotServiceOptions } from '../../utils'
 import { ChatMode } from '../../types/mode.types'
 import type { ModelConfig, ModelService, RobotSettings, SelectedModelInfo } from '../../types/setting.types'
+import apiService from '../../services/api'
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
 const SETTING_VERSION = 2 // 新版本号
@@ -332,22 +333,39 @@ const updateChatModeState = (value: string) => {
   saveRobotSettingState({ chatMode: robotSettingState.chatMode })
 }
 
+const encryptServiceApiKey = async (apiKey: string): Promise<string> => {
+  if (!apiKey || !getRobotServiceOptions()?.encryptServiceApiKey || apiKey.startsWith('EKEY_')) return apiKey
+
+  try {
+    const { token } = await apiService.encryptKey(apiKey)
+    return token
+  } catch (error) {
+    const logger = console
+    logger.error('加密API密钥失败', error)
+    return apiKey
+  }
+}
+
 // 服务管理方法
-const addCustomService = (service: Omit<ModelService, 'id' | 'isBuiltIn'>) => {
+const addCustomService = async (service: Omit<ModelService, 'id' | 'isBuiltIn'>) => {
   const newService: ModelService = {
     ...service,
     id: `custom_${Date.now()}`,
-    isBuiltIn: false
+    isBuiltIn: false,
+    apiKey: await encryptServiceApiKey(service.apiKey)
   }
   robotSettingState.services.push(newService)
   saveRobotSettingState({ services: robotSettingState.services }, false)
   return newService.id
 }
 
-const updateService = (serviceId: string, updates: Partial<ModelService>) => {
+const updateService = async (serviceId: string, updates: Partial<ModelService>) => {
   const index = robotSettingState.services.findIndex((s) => s.id === serviceId)
   if (index !== -1) {
-    Object.assign(robotSettingState.services[index], updates)
+    Object.assign(robotSettingState.services[index], {
+      ...updates,
+      apiKey: await encryptServiceApiKey(updates.apiKey || '')
+    })
     saveRobotSettingState({ services: robotSettingState.services }, false)
   }
 }

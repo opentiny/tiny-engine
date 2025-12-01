@@ -41,6 +41,7 @@
                 v-model="state.modelSelection.quickModel"
                 :options="compactModelOptions"
                 placeholder="请选择"
+                @change="handleCompactModelChange"
               ></tiny-select>
             </tiny-form-item>
 
@@ -118,11 +119,6 @@
       </tiny-tabs>
     </div>
 
-    <div class="bottom-buttons">
-      <tiny-button @click="closePanel" class="close">取消</tiny-button>
-      <tiny-button type="primary" @click="confirm">确定</tiny-button>
-    </div>
-
     <!-- 服务编辑对话框 -->
     <service-edit-dialog
       v-model:visible="state.showServiceDialog"
@@ -157,7 +153,7 @@ const { fullscreen } = defineProps({
   }
 })
 
-const emit = defineEmits(['close', 'changeType'])
+const emit = defineEmits(['close'])
 
 const {
   robotSettingState,
@@ -215,25 +211,46 @@ const selectedDefaultModelInfo = computed(() => {
   }
 })
 
-const closePanel = () => {
+const handleBack = () => {
   state.showServiceDialog = false
   emit('close')
 }
 
-const handleBack = () => {
-  emit('close')
-}
-
 const handleModelChange = () => {
-  // 当默认模型改变时，自动选择同一服务下的快速模型（如果有）
-  const [serviceId] = state.modelSelection.defaultModel.split('::')
-  const service = getServiceById(serviceId)
-  if (service) {
-    const compactModel = service.models.find((m) => m.capabilities?.compact)
-    if (compactModel) {
-      state.modelSelection.quickModel = `${serviceId}::${compactModel.name}`
+  const [defaultServiceId, defaultModelName] = state.modelSelection.defaultModel.split('::')
+
+  // 检查API Key
+  const defaultService = getServiceById(defaultServiceId)
+  if (defaultService && !defaultService.apiKey && !defaultService.allowEmptyApiKey) {
+    TinyNotify({
+      type: 'warning',
+      title: '未配置API Key',
+      message: `请先为 ${defaultService.label} 配置API Key`,
+      position: 'top-right',
+      duration: 3000
+    })
+    state.activeTab = 'services'
+    return
+  }
+
+  const updatedState = {
+    defaultModel: {
+      serviceId: defaultServiceId,
+      modelName: defaultModelName
     }
   }
+  saveRobotSettingState(updatedState)
+}
+
+const handleCompactModelChange = () => {
+  const [quickServiceId, quickModelName] = state.modelSelection.quickModel.split('::')
+  const updatedState = {
+    quickModel: {
+      serviceId: quickServiceId,
+      modelName: quickModelName
+    }
+  }
+  saveRobotSettingState(updatedState)
 }
 
 const addService = () => {
@@ -258,41 +275,6 @@ const handleServiceConfirm = (serviceData: Partial<ModelService>) => {
     // 添加新服务
     addCustomService(serviceData as any)
   }
-}
-
-const confirm = () => {
-  // 解析选择的模型
-  const [defaultServiceId, defaultModelName] = state.modelSelection.defaultModel.split('::')
-  const [quickServiceId, quickModelName] = state.modelSelection.quickModel.split('::')
-
-  // 检查API Key
-  const defaultService = getServiceById(defaultServiceId)
-  if (defaultService && !defaultService.apiKey && !defaultService.allowEmptyApiKey) {
-    TinyNotify({
-      type: 'warning',
-      title: '未配置API Key',
-      message: `请先为 ${defaultService.label} 配置API Key`,
-      position: 'top-right',
-      duration: 3000
-    })
-    state.activeTab = 'services'
-    return
-  }
-
-  // 保存配置
-  saveRobotSettingState({
-    defaultModel: {
-      serviceId: defaultServiceId,
-      modelName: defaultModelName
-    },
-    quickModel: {
-      serviceId: quickServiceId,
-      modelName: quickModelName
-    }
-  })
-
-  emit('changeType', {})
-  closePanel()
 }
 </script>
 
@@ -499,19 +481,6 @@ const confirm = () => {
   .add-service-btn {
     width: 100%;
     flex-shrink: 0;
-  }
-
-  .bottom-buttons {
-    display: flex;
-    justify-content: center;
-    padding: 16px 24px;
-    border-top: 1px solid var(--te-base-color-border, #dcdcdc);
-    background-color: #fff;
-    flex-shrink: 0;
-
-    .tiny-button {
-      min-width: 40px;
-    }
   }
 
   .close {
