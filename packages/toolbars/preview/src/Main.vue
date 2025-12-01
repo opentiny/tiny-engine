@@ -1,11 +1,22 @@
 <template>
-  <div class="toolbar-save toolbar-helpGuid">
-    <toolbar-base content="预览页面" :icon="options.icon?.default || options?.icon" :options="options" trigger="hover">
+  <div class="toolbar-preview">
+    <toolbar-base
+      content="预览"
+      :icon="options.icon?.default || options?.icon"
+      :options="options"
+      trigger="hover"
+      @click-api="preview('page')"
+    >
       <template #button>
-        <div class="toolbar-preview-item">
-          <span @click="preview('page')">页面预览</span>
-          <span @click="preview('app')">应用预览</span>
-        </div>
+        <tiny-popover width="85" trigger="hover" :open-delay="OPEN_DELAY.Default">
+          <template #reference>
+            <svg-icon :name="iconExpand"></svg-icon>
+          </template>
+          <div class="toolbar-preview-item">
+            <span @click="preview('page')">页面预览</span>
+            <span @click="preview('app')">应用预览</span>
+          </div>
+        </tiny-popover>
       </template>
     </toolbar-base>
   </div>
@@ -15,14 +26,23 @@
 /* metaService: engine.toolbars.preview.Main */
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
+import { constants } from '@opentiny/tiny-engine-utils'
+import type { Component } from 'vue'
+import { Popover } from '@opentiny/vue'
 import meta from '../meta'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+const { OPEN_DELAY } = constants
 
 export default {
   components: {
+    TinyPopover: Popover as Component,
     ToolbarBase
   },
   props: {
+    iconExpand: {
+      type: String,
+      default: 'down-arrow'
+    },
     options: {
       type: Object,
       default: () => ({})
@@ -74,7 +94,8 @@ export default {
     }
 
     return {
-      preview
+      preview,
+      OPEN_DELAY
     }
   }
 }

@@ -7,7 +7,7 @@
       @click-api="openApi"
     >
       <template #button>
-        <tiny-popover :visible-arrow="false" width="203" trigger="click" :open-delay="OPEN_DELAY.Default">
+        <tiny-popover width="203" trigger="click" :open-delay="OPEN_DELAY.Default">
           <template #reference>
             <svg-icon :name="iconExpand"></svg-icon>
           </template>
