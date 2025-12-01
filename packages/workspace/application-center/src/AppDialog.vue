@@ -1,12 +1,5 @@
 <template>
-  <tiny-dialog-box
-    :visible="visible"
-    title="新建应用"
-    width="400px"
-    append-to-body
-    destroy-on-close
-    @update:visible="setVisible"
-  >
+  <tiny-dialog-box :visible="visible" title="新建应用" width="400px" append-to-body destroy-on-close @close="cancle">
     <tiny-form
       ref="editAppInfoRef"
       label-position="left"
@@ -44,6 +37,7 @@
       </tiny-form-item>
       <tiny-form-item label="缩略图">
         <div class="form-item-icon-wrapper">
+          <div class="form-item-icon-mask" v-if="isOpen"></div>
           <svg-icon :name="formState.assetsUrl" class="form-item-icon" @click="handleOpen"></svg-icon>
           <transition name="dropdown">
             <div v-if="isOpen" class="dropdown-menu">
@@ -64,7 +58,7 @@
     </tiny-form>
     <template #footer>
       <tiny-button type="primary" @click="confirm"> 确定 </tiny-button>
-      <tiny-button @click="setVisible(false)">取消</tiny-button>
+      <tiny-button @click="cancle">取消</tiny-button>
     </template>
   </tiny-dialog-box>
 </template>
@@ -183,6 +177,11 @@ export default {
       isOpen.value = false
     }
 
+    const cancle = () => {
+      isOpen.value = false
+      setVisible(false)
+    }
+
     const confirm = () => {
       editAppInfoRef.value.validate((valid: boolean) => {
         if (valid) {
@@ -196,7 +195,7 @@ export default {
               : formState
           )
 
-          setVisible(false)
+          cancle()
         }
       })
     }
@@ -214,7 +213,8 @@ export default {
       setVisible,
       handleOpen,
       handleSelectIcon,
-      confirm
+      confirm,
+      cancle
     }
   }
 }
@@ -227,13 +227,21 @@ export default {
     font-size: 40px;
     cursor: pointer;
   }
+  .form-item-icon-mask {
+    background-color: var(--te-app-center-mask-modal-bg-color);
+    transition: background-color, 0.2s, ease-in-out;
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+  }
   .dropdown-menu {
     position: absolute;
     bottom: 100%;
     left: 0;
     padding: 16px;
     margin-bottom: 5px;
-    width: 216px;
+    width: 192px;
     border-radius: 4px;
     z-index: 1000;
     overflow: hidden;

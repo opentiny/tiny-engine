@@ -41,7 +41,7 @@ import {
   Datasource,
   Robot,
   Resource,
-  ModelManager,
+  // ModelManager,
   Props,
   Events,
   Styles,
@@ -52,6 +52,8 @@ import {
   ThemeSwitchService,
   HttpService,
   McpService
+  // ApplicationCenter,
+  // TemplateCenter
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -164,8 +166,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.resource'] === false ? null : Resource,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.modelmanager'] === false ? null : ModelManager
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.resource'] === false ? null : Resource
+    // __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.modelmanager'] === false ? null : ModelManager
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,

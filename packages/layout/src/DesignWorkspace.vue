@@ -95,7 +95,7 @@ export default {
     justify-content: space-between;
     height: calc(100vh - 49px);
     .manager-menu {
-      font-size: 14px;
+      font-size: 12px;
       padding-top: 24px;
       width: 220px;
       border-right: 1px solid var(--te-common-border-bg-divider);

@@ -57,6 +57,9 @@ const syncUtilsItemToAppSchemaState = (data: IUtilItem) => {
 }
 
 const refreshUtils = async () => {
+  if (!getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id) {
+    return
+  }
   const result = (await fetchResourceList(
     getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
     RESOURCE_CATEGORY.Util
