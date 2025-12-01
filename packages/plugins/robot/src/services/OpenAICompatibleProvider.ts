@@ -321,7 +321,8 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
       this.apiUrl = config.apiUrl
     }
 
-    if (config.apiKey) {
+    // apikey允许为空
+    if (typeof config.apiKey === 'string') {
       this.apiKey = config.apiKey
     }
 

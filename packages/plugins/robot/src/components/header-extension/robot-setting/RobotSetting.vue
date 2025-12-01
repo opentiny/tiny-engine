@@ -18,10 +18,22 @@
             <tiny-form-item prop="defaultModel" label="默认助手模型" label-width="150px">
               <tiny-select
                 v-model="state.modelSelection.defaultModel"
-                :options="allModelOptions"
+                filterable
                 placeholder="请选择"
                 @change="handleModelChange"
+                popper-class="model-select-popper"
               >
+                <template v-for="item in allModelOptions" :key="item.value">
+                  <tiny-option :label="item.label" :value="item.value">
+                    <span class="left">{{ item.label }}</span>
+                    <div>
+                      <tiny-tag v-if="item.capabilities?.toolCalling" type="info" effect="light" size="small"
+                        >工具</tiny-tag
+                      >
+                      <tiny-tag v-if="item.capabilities?.vision" size="mini" type="success">视觉</tiny-tag>
+                    </div>
+                  </tiny-option>
+                </template>
               </tiny-select>
             </tiny-form-item>
 
@@ -40,6 +52,7 @@
                 clearable
                 v-model="state.modelSelection.quickModel"
                 :options="compactModelOptions"
+                filterable
                 placeholder="请选择"
                 @change="handleCompactModelChange"
               ></tiny-select>
@@ -135,6 +148,7 @@ import {
   TinyFormItem,
   TinyButton,
   TinySelect,
+  TinyOption,
   TinyTooltip,
   TinyTabs,
   TinyTabItem,
@@ -486,5 +500,12 @@ const handleServiceConfirm = (serviceData: Partial<ModelService>) => {
   .close {
     margin-right: 8px;
   }
+}
+</style>
+<style lang="less">
+.model-select-popper .tiny-option .tiny-option-wrapper {
+  padding-right: 4px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>

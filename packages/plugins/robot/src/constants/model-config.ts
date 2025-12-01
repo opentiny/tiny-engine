@@ -54,6 +54,7 @@ export const DEFAULT_LLM_MODELS = [
         label: 'Qwen 通用模型（Flash）',
         name: 'qwen-flash',
         capabilities: {
+          toolCalling: true,
           compact: true
         }
       },
@@ -61,11 +62,12 @@ export const DEFAULT_LLM_MODELS = [
         label: 'Qwen Coder编程模型（Flash）',
         name: 'qwen3-coder-flash',
         capabilities: {
+          toolCalling: true,
           compact: true
         }
       },
-      { label: 'Qwen3（14b）', name: 'qwen3-14b', capabilities: { compact: true } },
-      { label: 'Qwen3（8b）', name: 'qwen3-8b', capabilities: { compact: true } }
+      { label: 'Qwen3（14b）', name: 'qwen3-14b', capabilities: { compact: true, toolCalling: true } },
+      { label: 'Qwen3（8b）', name: 'qwen3-8b', capabilities: { compact: true, toolCalling: true } }
     ]
   },
   {
