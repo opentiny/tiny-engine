@@ -42,6 +42,10 @@ export default {
   padding: 0 8px;
   border-radius: 4px;
   margin-right: 4px;
+  .svg-icon {
+    font-size: 20px !important;
+    color: var(--te-component-common-icon-color-primary) !important;
+  }
 }
 
 .svg-wrap {
@@ -57,11 +61,7 @@ export default {
     right: 2px;
     z-index: 100;
   }
-  .svg-icon.svg-icon.svg-icon {
-    color: var(--te-component-common-icon-color-primary);
-  }
 }
-
 .tiny-popover.no-arrow {
   margin-top: 12px;
 }

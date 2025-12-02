@@ -8,9 +8,12 @@
       @click-api="preview('page')"
     >
       <template #button>
-        <tiny-popover width="85" trigger="hover" :open-delay="OPEN_DELAY.Default">
+        <tiny-popover width="85" trigger="manual" :open-delay="OPEN_DELAY.Default" v-model="poperVisible">
           <template #reference>
-            <svg-icon :name="iconExpand"></svg-icon>
+            <span @click.stop="openPopover">
+              <tiny-icon-up-ward v-if="poperVisible"></tiny-icon-up-ward>
+              <tiny-icon-down-ward v-else></tiny-icon-down-ward>
+            </span>
           </template>
           <div class="toolbar-preview-item">
             <span @click="preview('page')">页面预览</span>
@@ -27,8 +30,10 @@
 import { previewPage } from '@opentiny/tiny-engine-common/js/preview'
 import { useLayout, useNotify, getOptions } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
+import { ref } from 'vue'
 import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
+import { iconUpWard, iconDownWard } from '@opentiny/vue-icon'
 import meta from '../meta'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 const { OPEN_DELAY } = constants
@@ -36,19 +41,21 @@ const { OPEN_DELAY } = constants
 export default {
   components: {
     TinyPopover: Popover as Component,
+    TinyIconUpWard: iconUpWard(),
+    TinyIconDownWard: iconDownWard(),
     ToolbarBase
   },
   props: {
-    iconExpand: {
-      type: String,
-      default: 'down-arrow'
-    },
     options: {
       type: Object,
       default: () => ({})
     }
   },
   setup() {
+    const poperVisible = ref(false)
+    const openPopover = () => {
+      poperVisible.value = !poperVisible.value
+    }
     const preview = async (previewType: string) => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
 
@@ -94,6 +101,8 @@ export default {
     }
 
     return {
+      poperVisible,
+      openPopover,
       preview,
       OPEN_DELAY
     }
@@ -105,10 +114,14 @@ export default {
   display: flex;
   justify-content: center;
   flex-direction: column;
-  gap: 8px;
 
   span {
     cursor: pointer;
+    line-height: 28px;
+    padding: 0 2px;
+    &:first-child {
+      border-bottom: 1px solid #ebebeb;
+    }
   }
 }
 </style>
