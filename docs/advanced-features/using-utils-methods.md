@@ -13,7 +13,7 @@
 
 提供输入框，直接编写函数代码
 
-![添加工具类教程图](not-found/zh-cn_image_0000001994511922.png)
+![添加工具类教程图](./imgs/use-function.png)
 
 如上图：
 - 第一步，点击添加工具类，选择 function 

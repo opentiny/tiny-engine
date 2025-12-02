@@ -21,7 +21,8 @@ export const META_SERVICE = {
   Style: 'engine.service.style',
   McpService: 'engine.service.mcpService',
   UseUtils: 'engine.service.useUtils',
-  Robot: 'engine.service.robot'
+  Robot: 'engine.service.robot',
+  GlobalStateService: 'engine.service.globalStateService'
 }
 
 export const META_APP = {
@@ -82,5 +83,8 @@ export const META_APP = {
   Container: 'engine.canvas.container',
   // 画布
   Canvas: 'engine.canvas',
-  Tutorial: 'engine.plugins.tutorial'
+  Tutorial: 'engine.plugins.tutorial',
+  // 首页菜单
+  AppCenter: 'engine.workspace.application-center',
+  TemplateCenter: 'engine.workspace.template-center'
 }

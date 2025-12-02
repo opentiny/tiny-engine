@@ -89,6 +89,8 @@
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@opentiny/tiny-engine-workspace-template-center": "workspace:*",
+    "@opentiny/tiny-engine-workspace-application-center": "workspace:*",
     "@vue/repl": "4.6.1",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",

@@ -2016,6 +2016,48 @@
         "version": "3.20.0"
       },
       {
+        "componentName": "TinyRate",
+        "package": "@opentiny/vue",
+        "exportName": "TinyRate",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySlider",
+        "package": "@opentiny/vue",
+        "exportName": "TinySlider",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCascader",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCascader",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySteps",
+        "package": "@opentiny/vue",
+        "exportName": "TinySteps",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyTreeMenu",
+        "package": "@opentiny/vue",
+        "exportName": "TinyTreeMenu",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyRadioGroup",
+        "package": "@opentiny/vue",
+        "exportName": "TinyRadioGroup",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "ElInput",
         "package": "element-plus",
         "exportName": "ElInput",
@@ -2056,6 +2098,118 @@
         "exportName": "ElTableColumn",
         "destructuring": true,
         "version": "2.4.2"
+      },
+      {
+        "componentName": "TinyProgress",
+        "package": "@opentiny/vue",
+        "exportName": "TinyProgress",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinySkeleton",
+        "package": "@opentiny/vue",
+        "exportName": "TinySkeleton",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCard",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCard",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyCalendar",
+        "package": "@opentiny/vue",
+        "exportName": "TinyCalendar",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyBadge",
+        "package": "@opentiny/vue",
+        "exportName": "TinyBadge",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyTag",
+        "package": "@opentiny/vue",
+        "exportName": "TinyTag",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyStatistic",
+        "package": "@opentiny/vue",
+        "exportName": "TinyStatistic",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsFunnel",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsFunnel",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsScatter",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsScatter",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsWaterfall",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsWaterfall",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsLine",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsLine",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsHistogram",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsHistogram",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsPie",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsPie",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsBar",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsBar",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsRing",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsRing",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsRadar",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsRadar",
+        "destructuring": true,
+        "version": "3.22.0"
       },
       {
         "componentName": "PortalHome",
@@ -2135,14 +2289,6 @@
           "subName": "",
           "destructuring": true,
           "main": ""
-        }
-      },
-      {
-        "name": "npm",
-        "type": "function",
-        "content": {
-          "type": "JSFunction",
-          "value": "''"
         }
       },
       {

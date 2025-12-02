@@ -360,10 +360,9 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
   }) => {
     const searchParams = new URLSearchParams(location.search)
     const previewType = searchParams.get('previewType')
+    const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
 
     if (previewType === 'page') {
-      const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
-
       previewState.currentPage = params.currentPage
       previewState.ancestors = params.ancestors
 
@@ -415,7 +414,6 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
     } else if (previewType === 'app') {
       const appId = searchParams.get('id')
       const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
-      const importMap = await getImportMap(JSON.parse(searchParams.get('scripts') || '{}'))
 
       let appSchema
 
@@ -611,14 +609,10 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
         prev[fileName] = formatCode(item.fileContent, fileName)
         return prev
       }, {})
-      srcFiles['import-map.json'] = JSON.stringify(importMap)
+      srcFiles['import-map.json'] = JSON.stringify(importMapData)
       const newFiles = store.getFiles()
       const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
-      const appJsCode = processAppJsCode(
-        newFiles['app.js'],
-        JSON.parse(searchParams.get('styles') || '[]'),
-        enableTailwindCSS
-      )
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
       srcFiles['app.js'] = appJsCode
       srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
       srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')

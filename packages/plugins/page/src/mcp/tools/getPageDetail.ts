@@ -12,7 +12,6 @@ const inputSchema = z.object({
 
 export const getPageDetail = {
   name: 'get_page_detail',
-  label: 'Get Page Detail',
   title: '获取页面详情',
   order: 8,
   description:

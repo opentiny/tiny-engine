@@ -1,7 +1,7 @@
 <template>
   <tiny-popover
     :trigger="trigger"
-    :open-delay="1000"
+    :open-delay="500"
     popper-class="toolbar-right-popover"
     append-to-body
     :content="content"

@@ -14,9 +14,18 @@ import path from 'path'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import vitePluginCssInjectedByJs from 'vite-plugin-css-injected-by-js'
+import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-  plugins: [vue(), vueJsx(), vitePluginCssInjectedByJs()],
+  plugins: [
+    vue(),
+    vueJsx(),
+    vitePluginCssInjectedByJs(),
+    dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.json'),
+      rollupTypes: true
+    })
+  ],
   publicDir: false,
   build: {
     sourcemap: true,

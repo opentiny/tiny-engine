@@ -5,7 +5,6 @@ const inputSchema = z.object({})
 
 export const getPageList = {
   name: 'get_page_list',
-  label: 'Get Page List',
   title: '获取页面列表',
   order: 8,
   description:

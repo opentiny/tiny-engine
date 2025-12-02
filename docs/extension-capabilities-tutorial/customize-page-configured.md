@@ -18,11 +18,11 @@
 import { handleClickDelete } from './tests/utils'
 export default {
   // ...
-  plugins: [
-    // ...
-    [Page, { options: { ...Page.options, customPageOperations: [{type: 'delete', label: '删除',  action: handleClickDelete}] } }]
-    // ...
-  ]
+  [META_APP.AppManage]: {
+    options: {
+      customPageOperations: [{type: 'delete', label: '删除',  action: handleClickDelete}]
+    }
+  }
   // ...
 }
 ```
