@@ -12,7 +12,7 @@ import { formatMessages } from '../utils'
 interface AxiosRequestConfig {
   url: string
   method: string
-  apiUrl?: string
+  baseURL?: string
   headers: Record<string, string>
   data?: unknown
   signal?: AbortSignal
@@ -146,8 +146,8 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
     return async (config: AxiosRequestConfig) => {
       // 构建完整URL
       let url = config.url
-      if (!url.startsWith('http') && config.apiUrl) {
-        url = new URL(url, config.apiUrl).href
+      if (!url.startsWith('http') && config.baseURL) {
+        url = new URL(url, config.baseURL).href
       }
 
       try {

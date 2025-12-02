@@ -16,16 +16,6 @@ import './src/styles/vars.less'
 import '@opentiny/tiny-robot/dist/style.css'
 import { RobotService } from './src/metas'
 
-import { useMaterial } from '@opentiny/tiny-engine-meta-register'
-
-import { formatComponents } from './src/constants/prompts'
-
-window.getMaterialState = () => useMaterial().materialState
-
-window.getMaterial = () => useMaterial().getComponentDetail
-
-window.getComponents = () => formatComponents(window.getMaterialState().components, window.getMaterial())
-
 export default {
   ...metaData,
   entry,
