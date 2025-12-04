@@ -1,5 +1,5 @@
 import { nextTick } from 'vue'
-import { STATUS, type ChatMessage } from '@opentiny/tiny-robot-kit'
+import { GeneratingStatus, STATUS, type ChatMessage, type MessageState } from '@opentiny/tiny-robot-kit'
 import { formatMessages, removeLoading } from '../utils'
 import { getClientConfig as getConfig, updateClientConfig as updateConfig, client } from '../services/aiClient'
 import useModelConfig from './core/useConfig'
@@ -34,12 +34,12 @@ const { robotSettingState, updateChatModeState, getSelectedModelInfo } = useMode
 
 // 本次对话的状态，从用户发送消息开始到AI返回或用户主动终止结束
 enum CHAT_STATUS {
-  IDLE = 'idle', // 本轮对话开始后，没有请求在流式返回（可能是等待请求，也可能是请求间隙）
+  PROCESSING = 'processing', // 本轮对话开始后，没有请求在流式返回（可能是等待请求，也可能是请求间隙）
   STREAMING = 'streaming', // 当前有请求正在流式返回
   FINISHED = 'finished' // 本轮对话结束
 }
 
-let chatStatus: CHAT_STATUS = CHAT_STATUS.IDLE
+let chatStatus: CHAT_STATUS = CHAT_STATUS.PROCESSING
 
 const abortControllerMap: Record<string, AbortController> = {}
 
@@ -63,8 +63,8 @@ const beforeRequest = async (params: ChatRequestData): Promise<ChatRequestData> 
   const requestParams = await onBeforeRequest(params)
   const { service } = getSelectedModelInfo()
 
-  if (getConfig().apiKey !== service!.apiKey) {
-    updateConfig({ apiKey: service!.apiKey })
+  if (service && getConfig().apiKey !== service.apiKey) {
+    updateConfig({ apiKey: service.apiKey })
   }
   if (getConfig().apiUrl !== getApiUrl()) {
     updateConfig({ apiUrl: getApiUrl() })
@@ -86,10 +86,16 @@ const initChatClient = () => {
   updateConfig(config)
 }
 
-const handleFinishRequest = async (finishReason, messages, contextMessages, messageState) => {
-  chatStatus = CHAT_STATUS.IDLE
+const handleFinishRequest = async (
+  finishReason: string,
+  messages: ChatMessage[],
+  contextMessages: ChatMessage[],
+  messageState: MessageState
+) => {
+  chatStatus = CHAT_STATUS.PROCESSING
   const lastMessage = messages.at(-1)
 
+  delete abortControllerMap.main
   await onRequestEnd(finishReason, lastMessage.content, messages) // 本次请求结束
 
   if (finishReason === 'tool_calls' && lastMessage.tool_calls?.length) {
@@ -98,15 +104,12 @@ const handleFinishRequest = async (finishReason, messages, contextMessages, mess
 
   if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
     messageState.status = STATUS.ABORTED
-  } else {
-    messageState.status = STATUS.FINISHED
   }
-
-  chatStatus = CHAT_STATUS.FINISHED
 }
 
-const handleRequestError = async (error, messages, messageState) => {
+const handleRequestError = async (error: Error, messages: ChatMessage[], messageState: MessageState) => {
   chatStatus = CHAT_STATUS.FINISHED
+  delete abortControllerMap.main
   await onRequestEnd('error', messages.at(-1).content, messages, { error }) // 本次请求结束
   messageState.status = STATUS.ERROR
 }
@@ -124,7 +127,14 @@ const {
   onStreamData: handleStreamData,
   onFinishRequest: handleFinishRequest,
   onMessageProcessed: async (finishReason, content, messages) => {
-    await onMessageProcessed(finishReason, content, messages, { abortControllerMap })
+    await onMessageProcessed(finishReason, content, messages, {
+      abortControllerMap,
+      messageState: messageManager.messageState
+    })
+    if (GeneratingStatus.includes(messageManager.messageState.status)) {
+      messageManager.messageState.status = STATUS.FINISHED
+    }
+    chatStatus = CHAT_STATUS.FINISHED
   }
 })
 
@@ -168,15 +178,29 @@ const autoSetTitle = () => {
   }
 }
 
-const sendUserMessage = async () => {
-  nextTick(() => {
-    const assistantMessage: ChatMessage = {
-      role: 'assistant',
-      content: '',
-      renderContent: [{ type: getLoadingType() }]
-    }
-    messageManager.messages.value.push(assistantMessage)
+const addMainAbortController = () => {
+  const mainAbortController = new AbortController()
+  mainAbortController.signal.addEventListener('abort', () => {
+    messageManager.abortRequest()
+    messageManager.messageState.status = STATUS.ABORTED
   })
+  abortControllerMap.main = mainAbortController
+}
+
+const addLoading = (messages: ChatMessage[]) => {
+  const assistantMessage: ChatMessage = {
+    role: 'assistant',
+    content: '',
+    renderContent: [{ type: getLoadingType() }]
+  }
+  messages.push(assistantMessage)
+}
+
+const sendUserMessage = async () => {
+  onMessageSent()
+  await nextTick()
+  addMainAbortController()
+  addLoading(messageManager.messages.value)
   await messageManager.send()
   if (messageManager.messageState.status === STATUS.ERROR) {
     removeLoading(messageManager.messages.value)
@@ -186,7 +210,6 @@ const sendUserMessage = async () => {
       messageManager.messageState
     )
   }
-  onMessageSent()
   autoSetTitle()
 }
 
@@ -196,8 +219,6 @@ const abortRequest = () => {
     delete abortControllerMap[key]
   }
 
-  messageManager.abortRequest()
-  messageManager.messageState.status = STATUS.ABORTED
   onRequestEnd('aborted', messageManager.messages.value.at(-1)?.content as string, messageManager.messages.value)
 }
 

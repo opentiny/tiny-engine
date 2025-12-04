@@ -5,13 +5,13 @@
       <div><h3 style="padding-left: 12px">历史对话</h3></div>
       <tr-icon-button
         :icon="IconClose"
+        class="tr-history-close-button"
         size="28"
         svgSize="20"
         @click="showHistory = false"
-        style="position: absolute; right: 14px; top: 14px"
       />
       <tr-history
-        :selected="conversationState.currentId || undefined"
+        :selected="props.conversationState.currentId || undefined"
         :search-bar="true"
         :data="conversationsData"
         @item-action="handleHistoryItemAction"
@@ -44,52 +44,44 @@ interface HistoryProps {
   onItemTitleChange?: (title: string, item: HistoryItem) => void
 }
 
-const { conversationState } = defineProps<HistoryProps>()
+const props = defineProps<HistoryProps>()
 
 // 将平铺格式的历史会话数据转换为分组格式（基于createdAt时间戳）
 const convertFlatToGrouped = (flatData: Conversation[]): Array<{ group: string; items: Conversation[] }> => {
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-  const yesterday = new Date(today)
-  yesterday.setDate(yesterday.getDate() - 1)
-  const threeDaysAgo = new Date(today)
-  threeDaysAgo.setDate(threeDaysAgo.getDate() - 3)
-  const sevenDaysAgo = new Date(today)
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
-
-  const groups: Record<string, { group: string; items: Conversation[] }> = {
-    today: { group: '今天', items: [] },
-    yesterday: { group: '昨天', items: [] },
-    lastThreeDays: { group: '近3天', items: [] },
-    lastSevenDays: { group: '近7天', items: [] },
-    earlier: { group: '更早', items: [] }
+  const getDate = (days: number) => {
+    const date = new Date(today)
+    date.setDate(date.getDate() - days)
+    return date
   }
+
+  const groupConfigs = [
+    { group: '今天', threshold: today },
+    { group: '近3天', threshold: getDate(3) },
+    { group: '近7天', threshold: getDate(7) },
+    { group: '近30天', threshold: getDate(30) },
+    { group: '更早', threshold: new Date(0) }
+  ]
+
+  const groups = groupConfigs.map((config) => ({ ...config, items: [] as Conversation[] }))
 
   flatData.forEach((item) => {
     const itemDate = new Date(item.createdAt)
-
-    if (itemDate >= today) {
-      groups.today.items.push(item)
-    } else if (itemDate >= yesterday) {
-      groups.yesterday.items.push(item)
-    } else if (itemDate >= threeDaysAgo) {
-      groups.lastThreeDays.items.push(item)
-    } else if (itemDate >= sevenDaysAgo) {
-      groups.lastSevenDays.items.push(item)
-    } else {
-      groups.earlier.items.push(item)
-    }
+    const targetGroup = groups.find((g) => itemDate >= g.threshold)
+    targetGroup?.items.push(item)
   })
 
-  Object.values(groups).forEach((group) => {
-    group.items.sort((a, b) => b.createdAt - a.createdAt)
-  })
-
-  return Object.values(groups).filter((group) => group.items.length > 0)
+  return groups
+    .filter((group) => group.items.length > 0)
+    .map((group) => ({
+      group: group.group,
+      items: group.items.sort((a, b) => b.createdAt - a.createdAt)
+    }))
 }
 
 const conversationsData = computed(() => {
-  return convertFlatToGrouped(conversationState.conversations)
+  return convertFlatToGrouped(props.conversationState.conversations)
 })
 
 const emit = defineEmits<{
@@ -128,6 +120,11 @@ const handleHistoryItemTitleChange = (title: string, item: HistoryItem) => {
   :deep(.tr-history) {
     height: calc(100% - 36px);
     overflow-y: auto;
+  }
+  .tr-history-close-button {
+    position: absolute;
+    right: 14px;
+    top: 14px;
   }
 }
 </style>

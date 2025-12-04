@@ -17,7 +17,16 @@ const setSchema = (schema: object) => {
   setSaved(false)
 }
 
-const _updatePageSchema = (streamContent: string, currentPageSchema: object, isFinial: boolean = false) => {
+type UpdateResult =
+  | undefined
+  | { isError: false; schema: object; error?: undefined }
+  | { isError: true; schema?: undefined; error: unknown }
+
+const _updatePageSchema = (
+  streamContent: string,
+  currentPageSchema: object,
+  isFinal: boolean = false
+): UpdateResult => {
   const { getSelectedModelInfo } = useModelConfig()
   if (getSelectedModelInfo().config?.chatMode !== ChatMode.Agent) {
     return
@@ -27,22 +36,22 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
   let content = getJsonObjectString(streamContent)
   let jsonPatches = []
   try {
-    if (!isFinial) {
+    if (!isFinal) {
       content = jsonrepair(content)
     }
     jsonPatches = JSON.parse(content)
   } catch (error) {
-    if (isFinial) {
+    if (isFinal) {
       logger.error('parse json patch error:', error)
     }
     return { isError: true, error }
   }
 
   // 过滤有效的json patch
-  if (!isFinial && !isValidFastJsonPatch(jsonPatches)) {
+  if (!isFinal && !isValidFastJsonPatch(jsonPatches)) {
     return { isError: true, error: 'format error: not a valid json patch.' }
   }
-  const validJsonPatches = jsonPatchAutoFix(jsonPatches, isFinial)
+  const validJsonPatches = jsonPatchAutoFix(jsonPatches, isFinal)
 
   // 生成新schema
   const originSchema = deepClone(currentPageSchema)
@@ -50,7 +59,7 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
     try {
       return jsonpatch.applyPatch(acc, [patch], false, false).newDocument
     } catch (error) {
-      if (isFinial) {
+      if (isFinal) {
         logger.error('apply patch error:', error, patch)
       }
       return acc
@@ -63,7 +72,7 @@ const _updatePageSchema = (streamContent: string, currentPageSchema: object, isF
 
   // 更新Schema
   setSchema(newSchema)
-  if (isFinial) {
+  if (isFinal) {
     useHistory().addHistory()
   }
 

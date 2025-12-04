@@ -23,7 +23,7 @@
         "path": "/children/0",
         "value": {
           "componentName": "div",
-          "id": "25153243",
+          "id": "a7Kp9sN9",
           "props": {
             "className": "component-base-style"
           },
@@ -34,7 +34,7 @@
                 "className": "component-base-style"
               },
               "children": "消息列表",
-              "id": "53222591"
+              "id": "bR7m1x4N"
             },
             {
               "componentName": "div",
@@ -69,7 +69,7 @@
                         "className": "component-base-style"
                       },
                       "children": [],
-                      "id": "43312441"
+                      "id": "s32pKwJ5"
                     }
                   ],
                   "id": "f2525253",
@@ -80,7 +80,7 @@
                   "loopArgs": ["message", "index"]
                 }
               ],
-              "id": "544265d9"
+              "id": "tNkfHvY8"
             },
             {
               "componentName": "div",
@@ -101,7 +101,7 @@
                     "type": "textarea"
                   },
                   "children": [],
-                  "id": "24651354"
+                  "id": "3sji2FD0"
                 },
                 {
                   "componentName": "TinyButton",
@@ -114,10 +114,10 @@
                     }
                   },
                   "children": [],
-                  "id": "46812433"
+                  "id": "xjeu39F0"
                 }
               ],
-              "id": "3225416b"
+              "id": "02kuxy2J"
             }
           ]
         }

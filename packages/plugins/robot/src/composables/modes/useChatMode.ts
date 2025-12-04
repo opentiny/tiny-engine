@@ -16,21 +16,25 @@ import useMcpServer from '../features/useMcp'
 import type { ModeHooks } from '../../types/mode.types'
 import { ChatMode } from '../../types/mode.types'
 
-const updateToolCallRenderContent = (tool: Record<string, unknown>, renderContent: any[]) => {
+const updateToolCallRenderContent = (tool: Record<string, unknown>, renderContent: any[], { status, result } = {}) => {
   const currentToolCallContent = renderContent.find((item) => item.type === 'tool' && item.toolCallId === tool.id)
   if (currentToolCallContent) {
-    currentToolCallContent.status = 'running'
+    currentToolCallContent.status = status || 'running'
     if (!currentToolCallContent.content) {
       currentToolCallContent.content = {}
     }
     currentToolCallContent.content.params = tool.parsedArgs || tool.function!.arguments || {}
+    if (result) {
+      currentToolCallContent.content.result = result
+    }
   } else {
     renderContent.push({
       type: 'tool',
       name: tool.name || tool.function!.name,
-      status: 'running',
+      status: status || 'running',
       content: {
-        params: tool.parsedArgs || tool.function!.arguments || {}
+        params: tool.parsedArgs || tool.function!.arguments || {},
+        ...(result ? { result } : {})
       },
       formatPretty: true,
       toolCallId: tool.id
@@ -87,10 +91,12 @@ export default function useChatMode(): ModeHooks {
     requestParams.model = model
 
     if (capabilities?.reasoning?.extraBody) {
-      Object.assign(
-        requestParams,
-        config?.enableThinking ? capabilities.reasoning.extraBody.enable : capabilities.reasoning.extraBody.disable
-      )
+      const extraBody = config?.enableThinking
+        ? capabilities.reasoning.extraBody.enable
+        : capabilities.reasoning.extraBody.disable
+      if (extraBody) {
+        Object.assign(requestParams, extraBody)
+      }
     }
 
     return requestParams
@@ -112,7 +118,7 @@ export default function useChatMode(): ModeHooks {
   ) => {
     if (finishReason === 'aborted' || finishReason === 'error') {
       removeLoading(messages)
-      messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(extraData.error) })
+      messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(extraData?.error) })
     }
   }
 
@@ -130,15 +136,11 @@ export default function useChatMode(): ModeHooks {
     toolCallStatus: string,
     { currentMessage }: { currentMessage: any }
   ) => {
-    currentMessage.renderContent.at(-1)!.status = toolCallStatus
-    currentMessage.renderContent.at(-1)!.content = {
-      params: tool.parsedArgs,
-      result: toolCallResult
-    }
+    updateToolCallRenderContent(tool, currentMessage.renderContent, { status: toolCallStatus, result: toolCallResult })
   }
 
   const onPostCallTools = (_toolsResult: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {
-    currentMessage.renderContent.push({ type: 'loading', content: '' })
+    currentMessage.renderContent.push({ type: getLoadingType(), content: '' })
   }
 
   const onMessageProcessed = async (

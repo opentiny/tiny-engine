@@ -15,7 +15,7 @@
         <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
         </tr-welcome>
         <tr-prompts
-          :items="promptItems"
+          :items="props.promptItems"
           :wrap="true"
           item-class="prompt-item"
           class="tiny-prompts"
@@ -33,26 +33,25 @@
           ref="senderRef"
           mode="multiple"
           v-model="inputMessage"
-          :placeholder="GeneratingStatus.includes(status) ? '正在思考中...' : '请输入您的问题'"
+          :placeholder="GeneratingStatus.includes(props.status) ? '正在思考中...' : '请输入您的问题'"
           :clearable="true"
-          :loading="GeneratingStatus.includes(status)"
+          :loading="GeneratingStatus.includes(props.status)"
           :showWordLimit="true"
           :maxLength="4000"
           @submit="handleSendMessage"
           @cancel="handleAbortRequest"
-          :allowFiles="singleAttachmentItems.length < 1 && allowFiles"
+          :allowFiles="selectedAttachments.length < 1 && props.allowFiles"
           uploadTooltip="支持上传1张图片"
           @files-selected="handleSingleFilesSelected"
         >
-          <template #header v-if="singleAttachmentItems.length > 0">
+          <template #header v-if="selectedAttachments.length > 0">
             <div>
               <tr-attachments
                 ref="singleAttachmentRef"
-                v-model:items="singleAttachmentItems"
+                v-model:items="selectedAttachments"
                 variant="card"
                 wrap
-                @file-remove="handleSingleFileRemove"
-                @file-retry="handleSingleFileRetry"
+                @retry="handleSingleFileRetry"
               >
               </tr-attachments>
             </div>
@@ -67,8 +66,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, h, resolveComponent, type Component, type CSSProperties, type PropType } from 'vue'
-import { Notify } from '@opentiny/vue'
+import { ref, computed, h, resolveComponent, type Component, type CSSProperties, type PropType, watch } from 'vue'
 import {
   TrBubbleList,
   TrBubbleProvider,
@@ -78,12 +76,14 @@ import {
   TrWelcome,
   TrAttachments,
   type BubbleRoleConfig,
-  type PromptProps
+  type PromptProps,
+  type RawFileAttachment
 } from '@opentiny/tiny-robot'
 import { type ChatMessage, GeneratingStatus } from '@opentiny/tiny-robot-kit'
 import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
-const { promptItems, status, promptClickHandler, allowFiles, bubbleRenderers, beforeSubmit } = defineProps({
+const props = defineProps({
   promptItems: {
     type: Array as PropType<PromptProps[]>,
     default: () => []
@@ -108,71 +108,69 @@ const { promptItems, status, promptClickHandler, allowFiles, bubbleRenderers, be
 
 const emit = defineEmits(['fileSelected', 'sendMessage', 'abort'])
 
-const singleAttachmentItems = ref([])
+const selectedAttachments = ref([])
 
 const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
 const inputMessage = defineModel<string>('input', { required: true })
 const messages = defineModel<ChatMessage[]>('messages', { required: true })
 
-const imageUrl = ref('')
+watch(
+  () => props.allowFiles,
+  (value) => {
+    if (!value) {
+      selectedAttachments.value = []
+    }
+  }
+)
 
 // 处理文件选择事件
-const handleSingleFilesSelected = (files: FileList | null, retry = false) => {
+const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
+  if (!files?.length) return
   if (retry) {
-    singleAttachmentItems.value[0].status = 'uploading'
-    singleAttachmentItems.value[0].isUploading = true
-    singleAttachmentItems.value[0].messageType = 'uploading'
+    Object.assign(selectedAttachments.value[0], {
+      status: 'uploading'
+    })
   } else {
-    if (!files.length) return
-
-    if (files && files.length > 1) {
-      Notify({
+    if (files.length > 1) {
+      useNotify({
         type: 'error',
-        message: '当前仅支持上传一张图片',
-        position: 'top-right',
-        duration: 5000
+        message: '当前仅支持上传一张图片'
       })
       return
     }
 
-    if (files && files.length > 0) {
-      // 将选中的文件转换为 Attachment 格式并添加到附件列表
-      const newAttachments = Array.from(files).map((file) => ({
-        size: file.size,
-        rawFile: file
-      }))
-      singleAttachmentItems.value.push(...newAttachments)
-    }
+    // 将选中的文件转换为 Attachment 格式并添加到附件列表
+    const newAttachments = Array.from(files).map((file) => ({
+      size: file.size,
+      rawFile: file
+    }))
+    selectedAttachments.value.push(...newAttachments)
   }
 
   // 开始上传
   const formData = new FormData()
-  const fileData = retry ? files : files[0]
+  const fileData = files[0]
   formData.append('file', fileData)
 
   const updateAttachment = (resourceUrl: string) => {
     if (resourceUrl) {
-      singleAttachmentItems.value[0].status = 'done'
-      singleAttachmentItems.value[0].isUploading = false
-      singleAttachmentItems.value[0].messageType = 'success'
-      singleAttachmentItems.value[0].url = resourceUrl
+      Object.assign(selectedAttachments.value[0], {
+        status: 'success',
+        url: resourceUrl
+      })
     } else {
-      singleAttachmentItems.value[0].status = 'error'
-      singleAttachmentItems.value[0].isUploading = false
-      singleAttachmentItems.value[0].messageType = 'error'
+      Object.assign(selectedAttachments.value[0], {
+        status: 'error'
+      })
     }
   }
 
   emit('fileSelected', formData, updateAttachment)
 }
 
-const handleSingleFileRemove = () => {
-  imageUrl.value = ''
-}
-
-const handleSingleFileRetry = (file: any) => {
-  handleSingleFilesSelected(file.file, true)
+const handleSingleFileRetry = (file: RawFileAttachment) => {
+  handleSingleFilesSelected([file.rawFile], true)
 }
 
 const getSvgIcon = (name: string, style?: CSSProperties) => {
@@ -185,7 +183,7 @@ const contentRenderers = computed(() => ({
   markdown: MarkdownRenderer,
   loading: LoadingRenderer,
   img: ImgRenderer,
-  ...bubbleRenderers
+  ...props.bubbleRenderers
 }))
 
 const roles: Record<string, BubbleRoleConfig> = {
@@ -214,7 +212,7 @@ const handleSendMessage = async (content: string) => {
     return
   }
 
-  let result = beforeSubmit?.(content)
+  let result = props.beforeSubmit?.(content)
   if (result && typeof result.then === 'function') {
     result = await result
   }
@@ -226,7 +224,7 @@ const handleSendMessage = async (content: string) => {
     role: 'user',
     content: messageContent
   }
-  const files = singleAttachmentItems.value.filter((item) => item.status === 'done')
+  const files = selectedAttachments.value.filter((item) => item.status === 'done')
   if (files.length > 0) {
     const fileMessages: ChatMessage[] = files.map((file) => ({
       role: 'user',
@@ -259,7 +257,7 @@ const handleSendMessage = async (content: string) => {
   }
   messages.value.push(userMessage)
   inputMessage.value = ''
-  singleAttachmentItems.value = []
+  selectedAttachments.value = []
   emit('sendMessage')
 }
 
@@ -268,8 +266,8 @@ const handleAbortRequest = () => {
 }
 
 const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
-  if (promptClickHandler && typeof promptClickHandler === 'function') {
-    promptClickHandler(item)
+  if (props.promptClickHandler && typeof props.promptClickHandler === 'function') {
+    props.promptClickHandler(item)
   } else {
     handleSendMessage(item.description)
   }

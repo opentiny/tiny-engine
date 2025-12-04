@@ -1,6 +1,5 @@
 import agentPrompt from './templates/agent-prompt.md?raw'
 import chatPrompt from './templates/chat-prompt.md?raw'
-import componentsData from './data/components.json'
 import examplesData from './data/examples.json'
 
 /**
@@ -19,7 +18,7 @@ const formatExamples = (examples: Record<string, any>): string => {
       const { name, description, note, patch } = example
       const header = `### ${name}\n${description ? `${description}\n` : ''}${note ? `**Note**: ${note}\n` : ''}`
       const patchContent = JSON.stringify(patch)
-      return `${header}\n${patchContent}`
+      return `${header}\n\`\`\`json\n${patchContent}\n\`\`\``
     })
     .join('\n\n')
 }
@@ -149,7 +148,7 @@ export const formatComponents = (snippets: any[], getComponent: (name: string) =
  * Generate agent system prompt with dynamic components and examples
  */
 export const getAgentSystemPrompt = (
-  components = componentsData,
+  components: any[],
   currentPageSchema: object,
   referenceContext: string,
   imageAssets: any[]

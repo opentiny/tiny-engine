@@ -48,7 +48,7 @@ const getModeInstance = (chatMode: string): ModeHooks => {
  */
 const getCurrentMode = (): ModeHooks => {
   const { getSelectedModelInfo } = useModelConfig()
-  return getModeInstance(getSelectedModelInfo().config!.chatMode)
+  return getModeInstance(getSelectedModelInfo().config!.chatMode ?? ChatMode.Agent)
 }
 
 /**

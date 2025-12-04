@@ -96,8 +96,12 @@ export function createStreamDataHandler(options: StreamDataHandlerOptions) {
     handleDeltaToolCalls(choice, lastMessage)
 
     // 触发钩子
-    hooks.onStreamData(data, lastMessage.content, messages)
-    hooks.onStreamTools(lastMessage.tool_calls || [], { currentMessage: lastMessage })
+    if (typeof choice.delta.content === 'string' && choice.delta.content) {
+      hooks.onStreamData(data, lastMessage.content, messages)
+    }
+    if (choice.delta.tool_calls?.length) {
+      hooks.onStreamTools(lastMessage.tool_calls || [], { currentMessage: lastMessage })
+    }
   }
 }
 

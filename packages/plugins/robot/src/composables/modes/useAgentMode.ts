@@ -10,16 +10,17 @@
  *
  */
 
-import { useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isValidJsonPatchObjectString, getRobotServiceOptions, removeLoading, addSystemPrompt } from '../../utils'
 import { updatePageSchema } from '../core/pageUpdater'
 import useModelConfig from '../core/useConfig'
 import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../constants/prompts'
 import { search, fetchAssets } from '../../services/agentServices'
-import { updateClientConfig as updateConfig, client } from '../../services/aiClient'
+import { client } from '../../services/aiClient'
 import type { ModeHooks } from '../../types/mode.types'
 import { ChatMode } from '../../types/mode.types'
+import { STATUS, type MessageState } from '@opentiny/tiny-robot-kit'
 
 const { deepClone } = utils
 const logger = console
@@ -68,8 +69,6 @@ export default function useAgentMode(): ModeHooks {
 
   // ========== 生命周期钩子 ==========
   const onConversationStart = (conversationState: any, messages: any[], apis: any) => {
-    logger.log('Agent mode: onConversationStart called', conversationState)
-
     const conversation = conversationState.conversations.find((item: any) => item.id === conversationState.currentId)
 
     // 确保会话元数据中记录为 Agent 模式
@@ -87,12 +86,10 @@ export default function useAgentMode(): ModeHooks {
   }
 
   const onMessageSent = () => {
-    // Agent 模式暂无特殊处理
+    pageSchema = deepClone(useCanvas().pageState.pageSchema)
   }
 
   const onBeforeRequest = async (requestParams: any) => {
-    const pageSchema = deepClone(useCanvas().pageState.pageSchema)
-
     let referenceContext = ''
     let imageAssets: any[] = []
 
@@ -102,7 +99,8 @@ export default function useAgentMode(): ModeHooks {
         referenceContext = await search(requestParams.messages?.at(-1)?.content)
       }
       if (getRobotServiceOptions()?.enableResourceContext !== false) {
-        imageAssets = await fetchAssets()
+        const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+        imageAssets = await fetchAssets(appId)
       }
       const { materialState, getComponentDetail } = useMaterial()
       const components = formatComponents(materialState.components, getComponentDetail)
@@ -123,10 +121,12 @@ export default function useAgentMode(): ModeHooks {
     requestParams.model = model
 
     if (capabilities?.reasoning?.extraBody) {
-      Object.assign(
-        requestParams,
-        config?.enableThinking ? capabilities.reasoning.extraBody.enable : capabilities.reasoning.extraBody.disable
-      )
+      const extraBody = config?.enableThinking
+        ? capabilities.reasoning.extraBody.enable
+        : capabilities.reasoning.extraBody.disable
+      if (extraBody) {
+        Object.assign(requestParams, extraBody)
+      }
     }
 
     return requestParams
@@ -134,7 +134,6 @@ export default function useAgentMode(): ModeHooks {
 
   const onStreamStart = (messages: any[]) => {
     removeLoading(messages)
-    pageSchema = deepClone(useCanvas().pageState.pageSchema)
   }
 
   const onStreamData = (data: object, content: string | object, _messages: any[]) => {
@@ -183,11 +182,19 @@ export default function useAgentMode(): ModeHooks {
     finishReason: string,
     content: string,
     messages: any[],
-    { abortControllerMap }: { abortControllerMap: Record<string, AbortController> }
+    {
+      abortControllerMap,
+      messageState
+    }: { abortControllerMap: Record<string, AbortController>; messageState: MessageState }
   ) => {
     const lastMessage = messages.at(-1)
-    const jsonValidResult = isValidJsonPatchObjectString(content)
 
+    if (finishReason === 'aborted' || finishReason === 'error') {
+      lastMessage.renderContent.at(-1).status = 'failed'
+      return
+    }
+
+    const jsonValidResult = isValidJsonPatchObjectString(content)
     // JSON 修复机制
     if (jsonValidResult.isError) {
       abortControllerMap.errorFix = new AbortController()
@@ -204,11 +211,11 @@ export default function useAgentMode(): ModeHooks {
           })
           return requestParams
         }
-        updateConfig({ apiUrl: '/app-center/api/chat/completions' })
-        messages.at(-1).renderContent.at(-1).status = 'fix'
+        const apiUrl = '/app-center/api/chat/completions'
+        lastMessage.renderContent.at(-1).status = 'fix'
         const fixedResponse = await client.chat({
           messages: [{ role: 'user', content: getJsonFixPrompt(content, jsonValidResult.error) }],
-          options: { signal: abortControllerMap.errorFix?.signal, beforeRequest: beforeRequest as any }
+          options: { signal: abortControllerMap.errorFix?.signal, beforeRequest: beforeRequest as any, apiUrl }
         })
         if (!isValidJsonPatchObjectString(fixedResponse.choices[0].message.content).isError) {
           lastMessage.originContent = lastMessage.content
@@ -216,21 +223,29 @@ export default function useAgentMode(): ModeHooks {
         }
       } catch (error) {
         logger.error('json fix failed', error)
+        lastMessage.renderContent.at(-1).status = 'failed'
+        if (error instanceof Error && error.message.includes('canceled')) {
+          messageState.status = STATUS.ABORTED
+        } else {
+          messageState.status = STATUS.ERROR
+          messageState.errorMsg = `JSON 修复失败：${error}`
+        }
+        delete abortControllerMap.errorFix
+        return
       }
-      updateConfig({ apiUrl: getApiUrl() })
+      delete abortControllerMap.errorFix
     }
 
     // 更新页面 schema
     const result = await updatePageSchema(lastMessage.content, pageSchema, true)
     if (result.schema) {
-      messages.at(-1).renderContent.at(-1).status = 'success'
-      messages.at(-1).renderContent.at(-1).schema = result.schema
+      lastMessage.renderContent.at(-1).status = 'success'
+      lastMessage.renderContent.at(-1).schema = result.schema
     } else {
-      messages.at(-1).renderContent.at(-1).status = 'failed'
+      lastMessage.renderContent.at(-1).status = 'failed'
     }
 
     pageSchema = null
-    abortControllerMap.errorFix = null
   }
 
   const onPostCallTools = (toolsResult: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {

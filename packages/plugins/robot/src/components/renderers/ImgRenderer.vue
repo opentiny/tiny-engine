@@ -1,16 +1,16 @@
 <template>
   <tiny-image
-    v-if="content"
+    v-if="props.content"
     class="img-renderer-container"
-    :src="content"
-    :preview-src-list="[content]"
+    :src="props.content"
+    :preview-src-list="[props.content]"
     fit="cover"
   ></tiny-image>
 </template>
 
 <script setup lang="ts">
 import { TinyImage } from '@opentiny/vue'
-const { content } = defineProps({
+const props = defineProps({
   content: {
     type: String,
     default: ''

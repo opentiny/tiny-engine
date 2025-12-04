@@ -2,8 +2,8 @@
   <div class="robot">
     <toolbar-base
       content="AI对话框"
-      :icon="options.icon?.default || options?.icon"
-      :options="options"
+      :icon="props.options.icon?.default || props.options?.icon"
+      :options="props.options"
       @click-api="openAIRobot"
     >
     </toolbar-base>
@@ -79,8 +79,7 @@
 <script setup lang="ts">
 import { computed, h, onMounted, ref, watch } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { TinyNotify } from '@opentiny/vue'
-import { META_APP, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { META_APP, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { type PopupConfig, type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
 import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
@@ -94,7 +93,7 @@ import useModelConfig from './composables/core/useConfig'
 import { ChatMode } from './types/mode.types'
 import apiService from './services/api'
 
-const { options } = defineProps({
+const props = defineProps({
   options: {
     type: Object,
     default: () => ({})
@@ -172,7 +171,9 @@ const handleDeleteConversation = (action: any, item: any) => {
 
 const handleAbortRequest = () => {
   abortRequest()
-  messages.value.at(-1)!.aborted = true
+  if (messages.value.at(-1)) {
+    messages.value.at(-1)!.aborted = true
+  }
 }
 
 const isVisualModel = computed(() => {
@@ -193,20 +194,16 @@ const isToolsModel = computed(() => {
 
 const handleChatModeChange = (type: string) => {
   changeChatMode(type)
-  // singleAttachmentItems.value = []
-  // imageUrl.value = ''
 }
 
 const checkApiKey = () => {
   const provider = getSelectedModelInfo().service
 
   if (!provider?.baseUrl || (!provider?.apiKey && !provider?.allowEmptyApiKey)) {
-    TinyNotify({
+    useNotify({
       type: 'warning',
       title: '未设置API Key，请检查设置',
-      message: '请先设置大模型API Key后重试。',
-      position: 'top-right',
-      duration: 5000
+      message: '请先设置大模型API Key后重试。'
     })
     setTimeout(() => {
       showSetting.value = true
@@ -249,18 +246,21 @@ const openAIRobot = () => {
 // 当前Robot的bubbleRenderers无法做到响应式更新，因此Agent模式的type要与Chat模式不同
 const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': AgentRenderer }
 
-const handleFileSelected = (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
+const handleFileSelected = async (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
   try {
-    apiService.uploadFile(formData).then((res: any) => {
-      updateAttachment(res?.resourceUrl)
-      if (!inputMessage.value) {
-        inputMessage.value = '生成图片中UI效果'
-      }
-    })
+    const { resourceUrl } = await apiService.uploadFile(formData)
+    updateAttachment(resourceUrl)
+    if (!inputMessage.value) {
+      inputMessage.value = '生成图片中UI效果'
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('上传失败', error)
     updateAttachment('')
+    useNotify({
+      message: '文件上传失败，请重试',
+      type: 'error'
+    })
   }
 }
 

@@ -4,7 +4,7 @@ import { OpenAICompatibleProvider, type ProviderConfig } from './OpenAICompatibl
 const createClient = (config: ProviderConfig) => {
   const provider: OpenAICompatibleProvider = new OpenAICompatibleProvider(config)
 
-  const client = new AIClient({
+  const client: AIClient = new AIClient({
     ...config,
     provider: 'custom',
     providerImplementation: provider
@@ -15,7 +15,7 @@ const createClient = (config: ProviderConfig) => {
 
 const { client, provider } = createClient({} as ProviderConfig)
 
-const getClientConfig = provider.getBaseConfig.bind(provider)
-const updateClientConfig = provider.updateConfig.bind(provider)
+const getClientConfig: () => ProviderConfig = provider.getBaseConfig.bind(provider)
+const updateClientConfig: (config: ProviderConfig) => void = provider.updateConfig.bind(provider)
 
 export { client, getClientConfig, updateClientConfig }

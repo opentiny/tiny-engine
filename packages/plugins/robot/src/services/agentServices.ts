@@ -44,10 +44,12 @@ export const search = async (content: string): Promise<string> => {
  * 获取资源列表
  * @returns 格式化的资源列表
  */
-export const fetchAssets = async () => {
+export const fetchAssets = async (appId: string) => {
   try {
-    const res = (await apiService.getResourceList('1')) || []
+    const res = (await apiService.getResourceList(appId)) || []
     return res
+      .map((group: any) => group.resources)
+      .flat()
       .filter((item: any) => item.description)
       .map((item: any) => ({
         url: item.resourceUrl,

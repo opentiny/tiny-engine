@@ -49,7 +49,7 @@ export const fixMethods = (methods: Record<string, any>) => {
   if (methods && Object.keys(methods).length) {
     Object.entries(methods).forEach(([methodName, methodValue]: [string, any]) => {
       if (
-        typeof methodValue !== 'object' ||
+        typeof methodValue?.value !== 'string' ||
         methodValue?.type !== 'JSFunction' ||
         !methodValue?.value.startsWith('function')
       ) {

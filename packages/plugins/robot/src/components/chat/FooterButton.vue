@@ -1,6 +1,6 @@
 <template>
-  <tiny-tooltip :content="tooltipContent" placement="top" effect="light" :open-delay="500">
-    <div :class="['footer-button-wrapper', active ? 'active' : '']" @click="handleVisibleToggle">
+  <tiny-tooltip :content="props.tooltipContent" placement="top" effect="light" :open-delay="500">
+    <div :class="['footer-button-wrapper', props.active ? 'active' : '']" @click="handleVisibleToggle">
       <div class="button">
         <slot name="icon"></slot>
         <span class="text">
@@ -14,7 +14,7 @@
 <script lang="ts" setup>
 import { TinyTooltip } from '@opentiny/vue'
 
-const { active, tooltipContent } = defineProps({
+const props = defineProps({
   active: {
     type: Boolean,
     default: false
@@ -28,7 +28,7 @@ const { active, tooltipContent } = defineProps({
 const emit = defineEmits(['update:active'])
 
 const handleVisibleToggle = () => {
-  emit('update:active', !active)
+  emit('update:active', !props.active)
 }
 </script>
 
@@ -44,7 +44,7 @@ const handleVisibleToggle = () => {
   border: 1px solid rgb(194, 194, 194);
   cursor: pointer;
   box-sizing: border-box;
-  background-color: var(--te-common-bg-container);
+  background-color: var(--te-base-gray-10);
 
   &:hover {
     background-color: rgba(0, 0, 0, 0.08);

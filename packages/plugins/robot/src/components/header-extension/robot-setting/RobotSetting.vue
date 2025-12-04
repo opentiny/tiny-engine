@@ -1,12 +1,12 @@
 <template>
-  <div ref="robotSetting" :class="['robot-setting', { 'robot-setting-fullscreen': fullscreen }]">
+  <div ref="robotSetting" :class="['robot-setting', { 'robot-setting-fullscreen': props.fullscreen }]">
     <div class="setting-header">
       <div class="header-left">
-        <svg-icon v-if="!fullscreen" name="back" class="back-icon" @click="handleBack"></svg-icon>
+        <svg-icon v-if="!props.fullscreen" name="back" class="back-icon" @click="handleBack"></svg-icon>
       </div>
       <div class="header-title">设置</div>
       <div class="header-right">
-        <svg-icon v-if="fullscreen" name="cross" class="close-icon" @click="handleBack"></svg-icon>
+        <svg-icon v-if="props.fullscreen" name="cross" class="close-icon" @click="handleBack"></svg-icon>
       </div>
     </div>
 
@@ -153,14 +153,14 @@ import {
   TinyTabs,
   TinyTabItem,
   TinyTag,
-  TinyNotify,
   TinyPopconfirm
 } from '@opentiny/vue'
 import useModelConfig from '../../../composables/core/useConfig'
 import type { ModelService } from '../../../types/setting.types'
 import ServiceEditDialog from './ServiceEditDialog.vue'
+import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
-const { fullscreen } = defineProps({
+const props = defineProps({
   fullscreen: {
     type: Boolean,
     default: false
@@ -236,12 +236,10 @@ const handleModelChange = () => {
   // 检查API Key
   const defaultService = getServiceById(defaultServiceId)
   if (defaultService && !defaultService.apiKey && !defaultService.allowEmptyApiKey) {
-    TinyNotify({
+    useNotify({
       type: 'warning',
       title: '未配置API Key',
-      message: `请先为 ${defaultService.label} 配置API Key`,
-      position: 'top-right',
-      duration: 3000
+      message: `请先为 ${defaultService.label} 配置API Key`
     })
     state.activeTab = 'services'
     return

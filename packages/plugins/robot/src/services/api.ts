@@ -49,10 +49,29 @@ export const aiChatApi = {
    * AI搜索请求
    * @param content 搜索内容
    */
-  aiSearch: (content: string) => {
+  aiSearch: (content: string): Promise<Array<{ score: number; content: string; doc_name: string }>> => {
     return getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
   }
 }
+
+interface Resource {
+  id: string
+  name: string
+  description: string | null
+  resourceUrl: string
+  resourceData: string
+  thumbnailUrl: string
+  thumbnailData: string
+}
+
+interface ResourceGroup {
+  id: string
+  name: string
+  description: string | null
+  resources: Array<Resource>
+}
+
+type ResourceGroupList = Array<ResourceGroup>
 
 /**
  * 资源管理相关API
@@ -62,7 +81,7 @@ export const resourceApi = {
    * 上传文件
    * @param formData 文件表单数据
    */
-  uploadFile: (formData: FormData) => {
+  uploadFile: (formData: FormData): Promise<Resource> => {
     return getMetaApi(META_SERVICE.Http).post('/material-center/api/resource/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
@@ -72,10 +91,18 @@ export const resourceApi = {
 
   /**
    * 获取资源列表
-   * @param resourceId 资源ID，默认为'1'
+   * @param appId 应用ID
    */
-  getResourceList: (resourceId: string = '1') => {
-    return getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource/find/${resourceId}`)
+  getResourceList: (appId: string): Promise<ResourceGroupList> => {
+    return getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource-group/${appId}`)
+  },
+
+  /**
+   * 获取资源列表
+   * @param groupId 组ID
+   */
+  getResourceListByGroup: (groupId: string): Promise<ResourceGroup> => {
+    return getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource/find/${groupId}`)
   }
 }
 

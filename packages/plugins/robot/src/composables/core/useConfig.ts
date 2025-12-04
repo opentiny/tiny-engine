@@ -364,7 +364,7 @@ const updateService = async (serviceId: string, updates: Partial<ModelService>) 
   if (index !== -1) {
     Object.assign(robotSettingState.services[index], {
       ...updates,
-      apiKey: await encryptServiceApiKey(updates.apiKey || '')
+      ...('apiKey' in updates ? { apiKey: await encryptServiceApiKey(updates.apiKey || '') } : {})
     })
     saveRobotSettingState({ services: robotSettingState.services }, false)
   }
@@ -390,7 +390,7 @@ const getSelectedModelInfo = (): SelectedModelInfo => {
   )
   const { name = '', label = '', capabilities = {} } = currentModel || {}
 
-  const { models, ...service } = currentService! || {}
+  const { models, ...service } = currentService ?? ({} as Partial<ModelService>)
 
   return {
     // 模型
@@ -398,7 +398,7 @@ const getSelectedModelInfo = (): SelectedModelInfo => {
     label,
     capabilities,
     // 服务
-    service: currentService ? service : null,
+    service: (currentService ? service : null) as ModelService | null,
 
     // 配置
     config: {
@@ -421,7 +421,7 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
   )
   const { name = '', label = '', capabilities = {} } = currentModel || {}
 
-  const { models, ...service } = currentService! || {}
+  const { models, ...service } = currentService ?? ({} as Partial<ModelService>)
 
   return {
     // 模型
@@ -429,7 +429,7 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
     label,
     capabilities,
     // 服务
-    service: currentService ? service : null,
+    service: (currentService ? service : null) as ModelService | null,
 
     // 模型兼容字段
     model: robotSettingState.quickModel.modelName,
