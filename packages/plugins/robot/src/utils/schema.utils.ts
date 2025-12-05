@@ -14,15 +14,12 @@ import { jsonrepair } from 'jsonrepair'
 import SvgICons from '@opentiny/vue-icon'
 import { serializeError } from './chat.utils'
 
-const logger = console
-
 /**
  * 修复图标组件，如果图标不存在则使用警告图标
  */
 export const fixIconComponent = (data: any) => {
   if (data?.componentName === 'Icon' && data.props?.name && !SvgICons[data.props.name as keyof typeof SvgICons]) {
     data.props.name = 'IconWarning'
-    logger.log('autofix icon to warning:', data)
   }
 }
 
@@ -38,7 +35,6 @@ const isPlainObject = (value: unknown) =>
 export const fixComponentName = (data: any) => {
   if (isPlainObject(data) && !data.componentName && !data.op && !data.path) {
     data.componentName = 'div'
-    logger.log('autofix component to div:', data)
   }
 }
 
@@ -57,7 +53,6 @@ export const fixMethods = (methods: Record<string, any>) => {
           type: 'JSFunction',
           value: 'function ' + methodName + '() {\n  console.log("' + methodName + '");\n}'
         }
-        logger.log('autofix method to empty function:', methodName, methods[methodName])
       }
     })
   }

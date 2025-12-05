@@ -8,6 +8,10 @@ export interface ConversationAdapterOptions {
   onStreamData: (data: any, messages: any[]) => void
   onFinishRequest: (finishReason: string, messages: any[], contextMessages: any[], messageState: any) => Promise<void>
   onMessageProcessed: (finishReason: string, content: any, messages: any[], context: any) => Promise<void>
+  statusManager: {
+    isProcessing: () => boolean
+    setProcessing: () => void
+  }
 }
 
 export interface ConversationMetadata {
@@ -20,7 +24,7 @@ export interface ConversationMetadata {
  * 将 tiny-robot-kit 的 useConversation 与业务逻辑解耦
  */
 export function useConversationAdapter(options: ConversationAdapterOptions) {
-  const { client, onStreamData, onFinishRequest, onMessageProcessed } = options
+  const { client, onStreamData, onFinishRequest, onMessageProcessed, statusManager } = options
 
   // 构建 events 适配器，连接业务回调
   const events: UseMessageOptions['events'] = {
@@ -30,6 +34,12 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
     },
     async onFinish(finishReason, { messages, messageState }, preventDefault) {
       preventDefault()
+      if (statusManager.isProcessing()) {
+        // 无效场景，直接返回，例如返回流中出现了多次 [Done], 只响应第一次
+        return
+      } else {
+        statusManager.setProcessing()
+      }
       const contextMessages = toRaw(messages.value.slice(0, -1))
       await onFinishRequest(finishReason ?? 'unknown', messages.value, contextMessages, messageState)
       const lastMessage = messages.value.at(-1)

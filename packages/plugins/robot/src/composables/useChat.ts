@@ -92,7 +92,6 @@ const handleFinishRequest = async (
   contextMessages: ChatMessage[],
   messageState: MessageState
 ) => {
-  chatStatus = CHAT_STATUS.PROCESSING
   const lastMessage = messages.at(-1)
 
   delete abortControllerMap.main
@@ -135,6 +134,12 @@ const {
       messageManager.messageState.status = STATUS.FINISHED
     }
     chatStatus = CHAT_STATUS.FINISHED
+  },
+  statusManager: {
+    isProcessing: () => chatStatus === CHAT_STATUS.PROCESSING,
+    setProcessing: () => {
+      chatStatus = CHAT_STATUS.PROCESSING
+    }
   }
 })
 
@@ -161,8 +166,13 @@ const handleToolCall = createToolCallHandler({
 
 // 包装 conversation 方法，添加业务特定逻辑
 const createConversation = (title = '新会话', chatMode = robotSettingState.chatMode) => {
-  onConversationEnd(conversationState.currentId!)
-  return createConversationBase(title, { chatMode })
+  const currentConversationId = conversationState.currentId!
+  const newConversationId = createConversationBase(title, { chatMode })
+  if (newConversationId !== currentConversationId) {
+    onConversationEnd(currentConversationId)
+  }
+  onConversationStart(conversationState, messageManager.messages.value, conversationMethods)
+  return newConversationId
 }
 
 const switchConversation = (conversationId: string) => {
