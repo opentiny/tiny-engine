@@ -255,7 +255,7 @@ const handleModelChange = () => {
 }
 
 const handleCompactModelChange = () => {
-  const [quickServiceId, quickModelName] = state.modelSelection.quickModel.split('::')
+  const [quickServiceId = '', quickModelName = ''] = (state.modelSelection.quickModel || '').split('::')
   const updatedState = {
     quickModel: {
       serviceId: quickServiceId,

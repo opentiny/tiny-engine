@@ -224,7 +224,7 @@ const handleSendMessage = async (content: string) => {
     role: 'user',
     content: messageContent
   }
-  const files = selectedAttachments.value.filter((item) => item.status === 'done')
+  const files = selectedAttachments.value.filter((item) => item.status === 'success')
   if (files.length > 0) {
     const fileMessages: ChatMessage[] = files.map((file) => ({
       role: 'user',
