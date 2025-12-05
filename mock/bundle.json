@@ -21269,7 +21269,7 @@
                 "zh_CN": "表单"
               },
               "screenshot": "",
-              "snippetName": "tiny-form",
+              "snippetName": "TinyForm",
               "icon": "form",
               "schema": {
                 "componentName": "TinyForm",
@@ -21709,7 +21709,7 @@
               },
               "icon": "grid",
               "screenshot": "",
-              "snippetName": "tinyGrid",
+              "snippetName": "TinyGrid",
               "schema": {
                 "componentName": "TinyGrid",
                 "props": {
@@ -21791,7 +21791,7 @@
                 "zh_CN": "走马灯"
               },
               "screenshot": "",
-              "snippetName": "tiny-carousel",
+              "snippetName": "TinyCarousel",
               "icon": "carousel",
               "schema": {
                 "componentName": "TinyCarousel",
