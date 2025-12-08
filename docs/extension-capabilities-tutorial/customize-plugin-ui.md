@@ -8,24 +8,18 @@
 
 - `title`。标题
 - `icon`。图标，可以为字符串或者组件。如果是字符串，则会使用 tiny-engine 自带的 svg 图标
-- `align`。对齐位置，根据插件位置的不同可以为不同的值。如果是顶部工具栏，可以为 `left`, `center`, `right`；如果是左侧插件栏，可以为 `top`, `bottom`
 
 比如替换 Page 插件的图标和对齐位置
 
 ```js
 // registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 export default {
   // ...
-  plugins: [
-    // ...
-    {
-      ...Page,
-      title: '定制页面插件位置',
-      icon: 'box',
-      align: 'bottom'
-    }
-    // ...
-  ]
+  [META_APP.AppManage]: {
+    title: '定制页面插件位置',
+    icon: 'box'
+  }
   // ...
 }
 ```
@@ -40,14 +34,13 @@ export default {
 
 ```js
 // registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 import CustomPage from './custom-page'
 export default {
   // ...
-  plugins: [
-    // ...
-    { ...Page, entry: CustomPage }
-    // ...
-  ]
+  [META_APP.AppManage]: {
+    entry: CustomPage
+  }
   // ...
 }
 ```

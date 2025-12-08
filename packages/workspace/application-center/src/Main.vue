@@ -47,9 +47,6 @@
                 <div v-if="item.framework" class="tag">{{ item.framework }}</div>
               </div>
               <div class="app-desc">{{ item.description }}</div>
-              <div class="app-view">
-                <tiny-button round @click="openApplication(item)">开发应用</tiny-button>
-              </div>
               <tiny-popover
                 :visible-arrow="false"
                 trigger="hover"
@@ -63,7 +60,7 @@
                   </div>
                 </template>
                 <div class="options">
-                  <div class="option" @click="handleEdit(item)">编辑应用</div>
+                  <div class="option" @click="openApplication(item)">开发应用</div>
                   <div class="option" @click="handleDelete(item)">删除应用</div>
                 </div>
               </tiny-popover>
@@ -84,9 +81,8 @@
           <tiny-grid-column field="description" title="应用描述" show-overflow></tiny-grid-column>
           <tiny-grid-column width="180" field="operation" title="操作">
             <template #default="data">
-              <tiny-button type="text" @click="handleEdit(data.row)"> 编辑 </tiny-button>
-              <tiny-button type="text" @click="handleDelete(data.row)"> 删除 </tiny-button>
               <tiny-button type="text" @click="openApplication(data.row)"> 开发应用 </tiny-button>
+              <tiny-button type="text" @click="handleDelete(data.row)"> 删除应用 </tiny-button>
             </template>
           </tiny-grid-column>
         </tiny-grid>
@@ -103,7 +99,7 @@
         @current-change="currentChange"
       ></tiny-pager>
     </div>
-    <app-dialog v-model:visible="state.appVisible" :template="currentTemplate" @confirm="confirmApp"></app-dialog>
+    <app-dialog v-model:visible="state.appVisible" @confirm="confirmApp"></app-dialog>
   </div>
 </template>
 
@@ -131,8 +127,6 @@ export default {
 
   setup() {
     const appList = ref([])
-
-    const currentTemplate = ref()
 
     const appFilterOptions = [
       {
@@ -198,11 +192,6 @@ export default {
     }
 
     const creatApp = () => {
-      state.appVisible = true
-    }
-
-    const handleEdit = (template) => {
-      currentTemplate.value = template
       state.appVisible = true
     }
 
@@ -299,14 +288,12 @@ export default {
     return {
       state,
       appList,
-      currentTemplate,
       appFilterOptions,
       appOrderByOptions,
       arrangeOptions,
       creatApp,
       getApplicationList,
       typeClick,
-      handleEdit,
       handleDelete,
       openApplication,
       confirmApp,
@@ -334,7 +321,7 @@ export default {
   .app-center-filter {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 12px;
   }
   .app-center-search {
     min-width: 300px;
@@ -374,7 +361,11 @@ export default {
     padding: 24px;
     border-radius: 8px;
     background: var(--te-template-center-common-item-bg-color);
+    border: 1px solid var(--te-template-app-center-item-border-color);
     position: relative;
+    &:hover {
+      border-color: var(--te-template-app-center-item-border-color-hover);
+    }
     .app-name {
       display: flex;
       gap: 8px;
@@ -406,11 +397,6 @@ export default {
       white-space: nowrap;
       text-overflow: ellipsis;
     }
-    .app-view {
-      position: absolute;
-      bottom: 24px;
-      right: 24px;
-    }
     .app-operation {
       display: none;
     }
@@ -422,6 +408,7 @@ export default {
         height: 20px;
         border-radius: 4px;
         background: var(--te-template-center-common-item-operation-bg-color);
+        color: var(--te-template-center-common-item-operation-icon-color);
         display: inline-flex;
         justify-content: center;
         align-items: center;
