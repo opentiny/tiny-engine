@@ -16,8 +16,8 @@
 
 export interface Capability {
   extraBody: {
-    enable: any
-    disable: any
+    enable: Record<string, unknown> | null
+    disable: Record<string, unknown> | null
   }
   [key: string]: any
 }
