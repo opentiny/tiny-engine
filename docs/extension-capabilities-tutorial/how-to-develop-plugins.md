@@ -81,12 +81,12 @@ import { PluginPanel } from '@opentiny/tiny-engine-common'
       这里是头部插槽
     </template>
     <template #content>
-      这里是内容插槽（上面 PluginPanel 示意图中 content 内容区域（蓝色背景））
+      这里是内容插槽（上面 PluginPanel 示意图中 content 内容区域）
     </template>
 </plugin-panel>
 ```
 
-头部插槽示意图(天蓝色背景区域)：
+头部插槽示意图(红框区域)：
 
 ![头部插槽示意图](./imgs/plugin4.png)
 

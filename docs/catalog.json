@@ -16,8 +16,8 @@
           "title": "基础功能",
           "name": "basic-features",
           "articles": [
-            { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
             { "title": "设计器界面模块简介", "name": "designer-ui-modules.md" },
+            { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
             { "title": "页面管理", "name": "page-management.md" },
             { "title": "使用组件", "name": "using-components.md" },
             { "title": "样式设置", "name": "style-settings.md" },
