@@ -130,7 +130,7 @@ export default {
     line-height: 28px;
     padding: 0 2px;
     &:first-child {
-      border-bottom: 1px solid var(--te-common-border-divide);
+      border-bottom: 1px solid var(--te-common-border-divider);
     }
   }
 }
