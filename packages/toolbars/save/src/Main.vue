@@ -7,9 +7,15 @@
       @click-api="openApi"
     >
       <template #button>
-        <tiny-popover width="203" trigger="manual" :open-delay="OPEN_DELAY.Default" v-model="poperVisible">
+        <tiny-popover
+          :visible-arrow="false"
+          width="203"
+          trigger="manual"
+          :open-delay="OPEN_DELAY.Default"
+          v-model="poperVisible"
+        >
           <template #reference>
-            <span @click.stop="openPopover">
+            <span @click.stop="clickPopover">
               <tiny-icon-up-ward v-if="poperVisible"></tiny-icon-up-ward>
               <tiny-icon-down-ward v-else></tiny-icon-down-ward>
             </span>
@@ -118,7 +124,7 @@ export default {
 
     const originSchema = ref(null)
 
-    const openPopover = () => {
+    const clickPopover = () => {
       poperVisible.value = !poperVisible.value
     }
 
@@ -218,7 +224,7 @@ export default {
       editorOptions,
       isLoading,
       isSaved,
-      openPopover,
+      clickPopover,
       close,
       openApi,
       saveApi,

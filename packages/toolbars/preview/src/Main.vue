@@ -8,9 +8,15 @@
       @click-api="preview('page')"
     >
       <template #button>
-        <tiny-popover width="85" trigger="manual" :open-delay="OPEN_DELAY.Default" v-model="poperVisible">
+        <tiny-popover
+          :visible-arrow="false"
+          width="85"
+          trigger="manual"
+          :open-delay="OPEN_DELAY.Default"
+          v-model="poperVisible"
+        >
           <template #reference>
-            <span @click.stop="openPopover">
+            <span @click.stop="clickPopover">
               <tiny-icon-up-ward v-if="poperVisible"></tiny-icon-up-ward>
               <tiny-icon-down-ward v-else></tiny-icon-down-ward>
             </span>
@@ -53,8 +59,12 @@ export default {
   },
   setup() {
     const poperVisible = ref(false)
-    const openPopover = () => {
+    const clickPopover = () => {
       poperVisible.value = !poperVisible.value
+    }
+
+    const closePopover = () => {
+      poperVisible.value = false
     }
     const preview = async (previewType: string) => {
       const { beforePreview, previewMethod, afterPreview } = getOptions(meta.id)
@@ -87,7 +97,7 @@ export default {
       }
 
       previewPage({ previewType })
-
+      closePopover()
       if (typeof afterPreview === 'function') {
         try {
           await afterPreview()
@@ -102,7 +112,7 @@ export default {
 
     return {
       poperVisible,
-      openPopover,
+      clickPopover,
       preview,
       OPEN_DELAY
     }
@@ -120,7 +130,7 @@ export default {
     line-height: 28px;
     padding: 0 2px;
     &:first-child {
-      border-bottom: 1px solid #ebebeb;
+      border-bottom: 1px solid var(--te-common-border-divide);
     }
   }
 }

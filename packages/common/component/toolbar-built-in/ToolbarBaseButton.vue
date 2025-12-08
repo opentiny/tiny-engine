@@ -43,7 +43,6 @@ export default {
   border-radius: 4px;
   margin-right: 4px;
   .svg-icon {
-    font-size: 20px !important;
     color: var(--te-component-common-icon-color-primary) !important;
   }
 }
