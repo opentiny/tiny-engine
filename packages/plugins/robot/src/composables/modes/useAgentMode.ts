@@ -61,7 +61,7 @@ export default function useAgentMode(): ModeHooks {
   const { getSelectedModelInfo } = useModelConfig()
 
   // ========== 配置方法 ==========
-  const getApiUrl = () => '/app-center/api/ai/chat'
+  const getApiUrl = () => 'app-center/api/ai/chat'
 
   const getContentType = () => 'agent-content'
 
@@ -112,11 +112,6 @@ export default function useAgentMode(): ModeHooks {
 
     const { baseUrl, model, config, capabilities } = getSelectedModelInfo()
 
-    // Agent 模式默认使用 JSON 对象格式
-    if (!config?.enableThinking) {
-      Object.assign(requestParams, { response_format: { type: 'json_object' } })
-    }
-
     requestParams.baseUrl = baseUrl
     requestParams.model = model
 
@@ -127,6 +122,11 @@ export default function useAgentMode(): ModeHooks {
       if (extraBody) {
         Object.assign(requestParams, extraBody)
       }
+    }
+
+    // Agent 模式默认使用 JSON 对象格式
+    if (capabilities?.jsonOutput?.extraBody?.enable) {
+      Object.assign(requestParams, capabilities.jsonOutput.extraBody.enable)
     }
 
     return requestParams
@@ -204,14 +204,16 @@ export default function useAgentMode(): ModeHooks {
           if (capabilities?.reasoning?.extraBody?.disable) {
             Object.assign(requestParams, capabilities.reasoning.extraBody.disable)
           }
+          if (capabilities?.jsonOutput?.extraBody?.enable) {
+            Object.assign(requestParams, capabilities.jsonOutput.extraBody.enable)
+          }
           Object.assign(requestParams, {
-            response_format: { type: 'json_object' },
             model,
             baseUrl
           })
           return requestParams
         }
-        const apiUrl = '/app-center/api/chat/completions'
+        const apiUrl = 'app-center/api/chat/completions'
         lastMessage.renderContent.at(-1).status = 'fix'
         const fixedResponse = await client.chat({
           messages: [{ role: 'user', content: getJsonFixPrompt(content, jsonValidResult.error) }],

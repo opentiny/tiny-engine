@@ -23,7 +23,7 @@ export const aiChatApi = {
    * @param options 请求选项
    */
   chatCompletions: (body: LLMRequestBody, options: RequestOptions = {}) => {
-    return getMetaApi(META_SERVICE.Http).post(options?.url || '/app-center/api/chat/completions', body, {
+    return getMetaApi(META_SERVICE.Http).post(options?.url || 'app-center/api/chat/completions', body, {
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers
@@ -37,7 +37,7 @@ export const aiChatApi = {
    * @param options 请求选项
    */
   agentChat: (body: LLMRequestBody, options: RequestOptions = {}) => {
-    return getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/chat', body, {
+    return getMetaApi(META_SERVICE.Http).post('app-center/api/ai/chat', body, {
       headers: {
         'Content-Type': 'application/json',
         ...options?.headers
@@ -50,7 +50,7 @@ export const aiChatApi = {
    * @param content 搜索内容
    */
   aiSearch: (content: string): Promise<Array<{ score: number; content: string; doc_name: string }>> => {
-    return getMetaApi(META_SERVICE.Http).post('/app-center/api/ai/search', { content })
+    return getMetaApi(META_SERVICE.Http).post('app-center/api/ai/search', { content })
   }
 }
 
@@ -82,7 +82,7 @@ export const resourceApi = {
    * @param formData 文件表单数据
    */
   uploadFile: (formData: FormData): Promise<Resource> => {
-    return getMetaApi(META_SERVICE.Http).post('/material-center/api/resource/upload', formData, {
+    return getMetaApi(META_SERVICE.Http).post('material-center/api/resource/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -94,7 +94,7 @@ export const resourceApi = {
    * @param appId 应用ID
    */
   getResourceList: (appId: string): Promise<ResourceGroupList> => {
-    return getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource-group/${appId}`)
+    return getMetaApi(META_SERVICE.Http).get(`material-center/api/resource-group/${appId}`)
   },
 
   /**
@@ -102,7 +102,7 @@ export const resourceApi = {
    * @param groupId 组ID
    */
   getResourceListByGroup: (groupId: string): Promise<ResourceGroup> => {
-    return getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource/find/${groupId}`)
+    return getMetaApi(META_SERVICE.Http).get(`material-center/api/resource/find/${groupId}`)
   }
 }
 
@@ -120,7 +120,7 @@ export const httpApi = {
 
 export const encryptApi = {
   encryptKey: (apiKey: string): Promise<{ token: string }> =>
-    getMetaApi(META_SERVICE.Http).post('/app-center/api/encrypt-key', { apiKey })
+    getMetaApi(META_SERVICE.Http).post('app-center/api/encrypt-key', { apiKey })
 }
 
 export const apiService = {

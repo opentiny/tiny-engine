@@ -97,7 +97,14 @@ const handleFinishRequest = async (
   delete abortControllerMap.main
   await onRequestEnd(finishReason, lastMessage.content, messages) // 本次请求结束
 
-  if (finishReason === 'tool_calls' && lastMessage.tool_calls?.length) {
+  // 部分模型返回格式不太标准，例如finishReason没有返回tool_calls而是stop，这里做下兼容
+  if (['tool_calls', 'stop'].includes(finishReason) && lastMessage.tool_calls?.length) {
+    lastMessage!.tool_calls.forEach((toolCall) => {
+      if (toolCall.type !== 'function') {
+        // 修复，兼容部分场景返回格式不标准，流式中多次返回type字段
+        toolCall.type = 'function'
+      }
+    })
     await handleToolCall(lastMessage.tool_calls, messages, contextMessages) // eslint-disable-line
   }
 

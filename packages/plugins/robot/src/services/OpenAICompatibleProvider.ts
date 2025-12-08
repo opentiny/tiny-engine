@@ -163,7 +163,9 @@ export class OpenAICompatibleProvider extends BaseModelProvider {
       // 构建完整URL
       let url = config.url
       if (!url.startsWith('http') && config.baseURL) {
-        url = new URL(url, config.baseURL).href
+        const baseURL =
+          config.baseURL.startsWith('http') && !config.baseURL.endsWith('/') ? `${config.baseURL}/` : config.baseURL
+        url = new URL(url, baseURL).href
       }
 
       try {

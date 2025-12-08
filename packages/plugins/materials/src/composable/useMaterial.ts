@@ -509,7 +509,7 @@ const getComponentDetail = (name) => {
   if (!data) return null
 
   const props = data.schema.properties
-    .map((item) => {
+    ?.map((item) => {
       return item.content.map((content) => {
         return {
           property: content.property,
