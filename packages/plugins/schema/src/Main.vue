@@ -145,11 +145,42 @@ export default {
       true
     )
 
+    const getCurrentSchemaLine = () => {
+      const currentSchema = pageState.currentSchema
+      if (state.pageData && currentSchema) {
+        // 获取currentSchema的id行到首行的距离
+        const currentSchemaString = obj2String(currentSchema)
+        const index = currentSchemaString!.indexOf(`"id": "${currentSchema.id}"`)
+        const currentSchemaLines = currentSchemaString!.match(/\n/g)?.length
+        const currentSchemaIdLineNumber = currentSchemaString!.substring(0, index).match(/\n/g)?.length
+        // 获取页面schema首行到currentSchema的id行的距离
+        const currentSchemaIndex = state.pageData.indexOf(`"id": "${currentSchema.id}"`)
+        const schemaIdLineNumber = state.pageData.substring(0, currentSchemaIndex).match(/\n/g)?.length
+        return schemaIdLineNumber && currentSchemaIdLineNumber && currentSchemaLines
+          ? {
+              startColumn: 1,
+              endColumn: 1,
+              startLineNumber: schemaIdLineNumber - currentSchemaIdLineNumber,
+              endLineNumber: schemaIdLineNumber - currentSchemaIdLineNumber + currentSchemaLines
+            }
+          : null
+      }
+      return null
+    }
+
     onActivated(() => {
       state.pageData = obj2String(pageState.pageSchema)
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
+        const position = getCurrentSchemaLine()
+        if (position) {
+          app.refs.container.getEditor().setPosition({
+            lineNumber: position.startLineNumber + 2,
+            column: 1
+          })
+          app.refs.container.getEditor().revealRange(position)
+        }
       })
 
       subscribe({
