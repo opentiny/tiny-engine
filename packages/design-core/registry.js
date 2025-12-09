@@ -17,7 +17,7 @@ import {
   Fullscreen,
   Lang,
   ViewSetting,
-  Logo,
+  // Logo,
   Lock,
   Media,
   Redoundo,
@@ -138,7 +138,7 @@ export default {
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.themeSwitch'] === false ? null : ThemeSwitch,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
+    //__TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.breadcrumb'] === false ? null : Breadcrumb,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lock'] === false ? null : Lock,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.media'] === false ? null : Media,

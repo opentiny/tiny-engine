@@ -16,7 +16,7 @@
 
 ### 前端代码改动
 
-在`tiny-engine/packages/plugins/robot/src/js/useRobot.ts`文件改动如下
+在`tiny-engine/packages/plugins/robot/src/composables/useRobot.ts`文件改动如下
 
 ![](./imgs/ai-image23.png)
 

@@ -14,10 +14,12 @@ import entry from './src/Main.vue'
 import metaData from './meta'
 import './src/styles/vars.less'
 import '@opentiny/tiny-robot/dist/style.css'
-import { RobotService } from './src/js/index'
+import { RobotService } from './src/metas'
 
 export default {
   ...metaData,
   entry,
   metas: [RobotService]
 }
+
+export * from './src/types'

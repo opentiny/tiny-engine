@@ -21,6 +21,7 @@ export const META_SERVICE = {
   Style: 'engine.service.style',
   McpService: 'engine.service.mcpService',
   UseUtils: 'engine.service.useUtils',
+  Robot: 'engine.service.robot',
   GlobalStateService: 'engine.service.globalStateService'
 }
 

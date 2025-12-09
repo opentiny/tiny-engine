@@ -68,6 +68,7 @@ export interface ILayoutState {
   settings: ISettings
   toolbars: {
     visiblePopover: boolean
+    render: string
   }
   pageStatus: any
 }
@@ -133,7 +134,8 @@ const layoutState = reactive<ILayoutState>({
     showDesignSettings: true
   },
   toolbars: {
-    visiblePopover: false
+    visiblePopover: false,
+    render: ''
   },
   pageStatus: {
     state: '',
