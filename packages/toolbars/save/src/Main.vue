@@ -7,9 +7,18 @@
       @click-api="openApi"
     >
       <template #button>
-        <tiny-popover :visible-arrow="false" width="203" trigger="click" :open-delay="OPEN_DELAY.Default">
+        <tiny-popover
+          :visible-arrow="false"
+          width="203"
+          trigger="manual"
+          :open-delay="OPEN_DELAY.Default"
+          v-model="poperVisible"
+        >
           <template #reference>
-            <svg-icon :name="iconExpand"></svg-icon>
+            <span @click.stop="clickPopover">
+              <tiny-icon-up-ward v-if="poperVisible"></tiny-icon-up-ward>
+              <tiny-icon-down-ward v-else></tiny-icon-down-ward>
+            </span>
           </template>
           <div class="save-style">
             <div class="save-setting">保存设置</div>
@@ -60,6 +69,7 @@ import { reactive, ref, onUnmounted, onMounted } from 'vue'
 import type { Component } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
+import { iconUpWard, iconDownWard } from '@opentiny/vue-icon'
 import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
@@ -79,13 +89,11 @@ export default {
     TinyDialogBox: DialogBox,
     TinyCheckbox: Checkbox as Component,
     TinySelect: Select,
+    TinyIconUpWard: iconUpWard(),
+    TinyIconDownWard: iconDownWard(),
     ToolbarBase
   },
   props: {
-    iconExpand: {
-      type: String,
-      default: 'down-arrow'
-    },
     options: {
       type: Object,
       default: () => ({})
@@ -107,6 +115,7 @@ export default {
     })
 
     const editor = ref(null)
+    const poperVisible = ref(false)
 
     const { isSaved, setSaved, getSchema } = useCanvas()
 
@@ -114,6 +123,10 @@ export default {
     const subscriber = 'toolbar-save'
 
     const originSchema = ref(null)
+
+    const clickPopover = () => {
+      poperVisible.value = !poperVisible.value
+    }
 
     onMounted(() => {
       // 订阅页面/区块初始化事件
@@ -207,9 +220,11 @@ export default {
     return {
       state,
       editor,
+      poperVisible,
       editorOptions,
       isLoading,
       isSaved,
+      clickPopover,
       close,
       openApi,
       saveApi,

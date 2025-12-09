@@ -7,7 +7,9 @@
       <component :is="ToolbarMedia" :isCanvas="false" @setViewPort="setViewPort"></component>
     </div>
     <div class="toolbar-right">
-      <span v-if="debugMode === null || debugMode === 'show'"><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span>
+      <span v-if="debugMode === null || debugMode === 'show'"
+        ><tiny-switch v-model="debugSwitch"></tiny-switch><span class="toolbar-button-text">调试模式</span></span
+      >
       <component :is="ChangeLang" :langChannel="previewLangChannel" :options="langOptions"></component>
     </div>
   </div>
