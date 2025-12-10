@@ -41,7 +41,7 @@
 
 <script lang="tsx">
 /* metaService: engine.plugins.schema.Main */
-import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide, watch } from 'vue'
 import type { Component } from 'vue'
 import { Popover, Button } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
@@ -151,21 +151,36 @@ export default {
         // 获取currentSchema的id行到首行的距离
         const currentSchemaString = obj2String(currentSchema)
         const index = currentSchemaString!.indexOf(`"id": "${currentSchema.id}"`)
-        const currentSchemaLines = currentSchemaString!.match(/\n/g)?.length
         const currentSchemaIdLineNumber = currentSchemaString!.substring(0, index).match(/\n/g)?.length
         // 获取页面schema首行到currentSchema的id行的距离
         const currentSchemaIndex = state.pageData.indexOf(`"id": "${currentSchema.id}"`)
         const schemaIdLineNumber = state.pageData.substring(0, currentSchemaIndex).match(/\n/g)?.length
-        return schemaIdLineNumber && currentSchemaIdLineNumber && currentSchemaLines
-          ? {
-              startColumn: 1,
-              endColumn: 1,
-              startLineNumber: schemaIdLineNumber - currentSchemaIdLineNumber,
-              endLineNumber: schemaIdLineNumber - currentSchemaIdLineNumber + currentSchemaLines
-            }
+        return schemaIdLineNumber && currentSchemaIdLineNumber
+          ? schemaIdLineNumber - currentSchemaIdLineNumber + 1
           : null
       }
       return null
+    }
+
+    const highlightField = ref([])
+    const highlightFirstLine = () => {
+      const startLine = getCurrentSchemaLine()
+      if (!startLine) {
+        return
+      }
+      const editor = app.refs.container.getEditor()
+      const monaco = app.refs.container.getMonaco()
+      // 清除上次的高亮行
+      highlightField.value = editor.deltaDecorations(highlightField.value, [])
+      highlightField.value = editor.deltaDecorations(highlightField.value, [
+        {
+          range: new monaco.Range(startLine + 1, 1, startLine + 1, editor.getModel().getLineMaxColumn(startLine + 1)),
+          options: {
+            inlineClassName: 'current-code-highlight'
+          }
+        }
+      ])
+      editor.revealLineInCenter(startLine)
     }
 
     onActivated(() => {
@@ -173,14 +188,8 @@ export default {
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
-        const position = getCurrentSchemaLine()
-        if (position) {
-          app.refs.container.getEditor().setPosition({
-            lineNumber: position.startLineNumber + 2,
-            column: 1
-          })
-          app.refs.container.getEditor().revealRange(position)
-        }
+        // 高亮当前行
+        highlightFirstLine()
       })
 
       subscribe({
@@ -196,6 +205,13 @@ export default {
         subscriber: 'schema-plugin'
       })
     })
+
+    watch(
+      () => pageState.currentSchema,
+      () => {
+        highlightFirstLine()
+      }
+    )
 
     return {
       PLUGIN_NAME,
@@ -270,5 +286,10 @@ export default {
       cursor: pointer;
     }
   }
+}
+</style>
+<style lang="less">
+.current-code-highlight {
+  background: var(--te-common-bg-info);
 }
 </style>
