@@ -85,6 +85,7 @@ export default {
 
     const isEdit = false
     const showRed = ref(true)
+
     const enableSchemaScroll = ref(false)
     const isSchemaScrollActive = ref(false)
     const highlightField = ref([])
