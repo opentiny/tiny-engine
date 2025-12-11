@@ -11,6 +11,7 @@
       <span class="icon-wrap">
         <i v-show="!showRed" class="red"></i>
         <tiny-button type="primary" @click="saveSchema">保存</tiny-button>
+        <tiny-button type="text" @click="schemaScrollControl">{{ enableSchemaScroll ? '关闭' : '打开' }}</tiny-button>
       </span>
       <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
         <template #reference>
@@ -84,6 +85,9 @@ export default {
 
     const isEdit = false
     const showRed = ref(true)
+    const enableSchemaScroll = ref(false)
+    const isSchemaScrollActive = ref(false)
+    const highlightField = ref([])
 
     const close = () => {
       const strs = app.refs.container.getEditor().getValue()
@@ -162,8 +166,15 @@ export default {
       return null
     }
 
-    const highlightField = ref([])
+    const clearHighlight = () => {
+      highlightField.value = app.refs.container.getEditor().deltaDecorations(highlightField.value, [])
+    }
+
     const highlightFirstLine = () => {
+      if (!isSchemaScrollActive.value || !enableSchemaScroll.value) {
+        clearHighlight()
+        return
+      }
       const startLine = getCurrentSchemaLine()
       if (!startLine) {
         return
@@ -171,7 +182,7 @@ export default {
       const editor = app.refs.container.getEditor()
       const monaco = app.refs.container.getMonaco()
       // 清除上次的高亮行
-      highlightField.value = editor.deltaDecorations(highlightField.value, [])
+      clearHighlight()
       highlightField.value = editor.deltaDecorations(highlightField.value, [
         {
           range: new monaco.Range(startLine + 1, 1, startLine + 1, editor.getModel().getLineMaxColumn(startLine + 1)),
@@ -183,8 +194,18 @@ export default {
       editor.revealLineInCenter(startLine)
     }
 
+    const schemaScrollControl = () => {
+      enableSchemaScroll.value = !enableSchemaScroll.value
+      if (enableSchemaScroll.value) {
+        highlightFirstLine()
+      } else {
+        clearHighlight()
+      }
+    }
+
     onActivated(() => {
       state.pageData = obj2String(pageState.pageSchema)
+      isSchemaScrollActive.value = true
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
@@ -200,6 +221,8 @@ export default {
     })
 
     onDeactivated(() => {
+      isSchemaScrollActive.value = false
+      clearHighlight()
       unsubscribe({
         topic: 'schemaChange',
         subscriber: 'schema-plugin'
@@ -217,6 +240,8 @@ export default {
       PLUGIN_NAME,
       state,
       isEdit,
+      enableSchemaScroll,
+      schemaScrollControl,
       saveSchema,
       editorChange,
       close,
@@ -287,9 +312,7 @@ export default {
     }
   }
 }
-</style>
-<style lang="less">
-.current-code-highlight {
+:deep(.current-code-highlight) {
   background: var(--te-common-bg-info);
 }
 </style>
