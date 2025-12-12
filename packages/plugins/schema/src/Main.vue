@@ -8,10 +8,13 @@
     @close="close"
   >
     <template #header>
+      <div class="schema-scroll-switch">
+        <tiny-checkbox v-model="enableSchemaScroll" @change="schemaScrollControl"></tiny-checkbox>
+        <span>跟随画布</span>
+      </div>
       <span class="icon-wrap">
         <i v-show="!showRed" class="red"></i>
         <tiny-button type="primary" @click="saveSchema">保存</tiny-button>
-        <tiny-button type="text" @click="schemaScrollControl">{{ enableSchemaScroll ? '关闭' : '打开' }}</tiny-button>
       </span>
       <tiny-popover v-show="false" placement="bottom" trigger="hover" append-to-body content="导入 Schema">
         <template #reference>
@@ -44,7 +47,7 @@
 /* metaService: engine.plugins.schema.Main */
 import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide, watch } from 'vue'
 import type { Component } from 'vue'
-import { Popover, Button } from '@opentiny/vue'
+import { Popover, Button, Checkbox as TinyCheckbox } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useNotify, useMessage, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -58,6 +61,7 @@ export default {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover as Component,
     TinyButton: Button as Component,
+    TinyCheckbox: TinyCheckbox as Component,
     PluginPanel,
     IconDownloadLink: iconDownloadLink()
   },
@@ -196,7 +200,6 @@ export default {
     }
 
     const schemaScrollControl = () => {
-      enableSchemaScroll.value = !enableSchemaScroll.value
       if (enableSchemaScroll.value) {
         highlightFirstLine()
       } else {
@@ -265,6 +268,12 @@ export default {
   border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
+  .schema-scroll-switch {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    font-weight: normal;
+  }
 
   .icon-wrap {
     position: relative;
