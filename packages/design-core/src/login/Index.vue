@@ -5,10 +5,10 @@
     </div>
     <div class="login-right">
       <div class="login-form">
-        <login v-if="state.loginStatus === LOGIN" @toForgot="toForgot" @toRegister="toRegister"></login>
-        <register v-if="state.loginStatus === REGISTER" @toLogin="toLogin" @toSuccess="toSuccess"></register>
-        <forgot-password v-if="state.loginStatus === FORGOT" @toLogin="toLogin"></forgot-password>
-        <register-success v-if="state.loginStatus === SUCCESS" @toLogin="toLogin"></register-success>
+        <login v-if="state.loginStatus === LOGIN" @changeStatus="changeStatus"></login>
+        <register v-if="state.loginStatus === REGISTER" @changeStatus="changeStatus"></register>
+        <forgot-password v-if="state.loginStatus === FORGOT" @changeStatus="changeStatus"></forgot-password>
+        <register-success v-if="state.loginStatus === SUCCESS" @changeStatus="changeStatus"></register-success>
       </div>
     </div>
   </div>
@@ -34,29 +34,12 @@ export default {
     RegisterSuccess
   },
   setup() {
-    const LOGIN = 'login'
-    const REGISTER = 'register'
-    const FORGOT = 'forgot'
-    const SUCCESS = 'success'
-
     const state = reactive({
       loginStatus: FORGOT
     })
 
-    const toLogin = () => {
-      state.loginStatus = LOGIN
-    }
-
-    const toRegister = () => {
-      state.loginStatus = REGISTER
-    }
-
-    const toForgot = () => {
-      state.loginStatus = FORGOT
-    }
-
-    const toSuccess = () => {
-      state.loginStatus = SUCCESS
+    const changeStatus = (status) => {
+      state.loginStatus = status
     }
 
     return {
@@ -65,10 +48,7 @@ export default {
       REGISTER,
       FORGOT,
       SUCCESS,
-      toLogin,
-      toRegister,
-      toForgot,
-      toSuccess
+      changeStatus
     }
   }
 }

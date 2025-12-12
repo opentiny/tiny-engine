@@ -32,6 +32,7 @@
 import { reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import useLogin from './js/useLogin'
 
 export default {
   components: {
@@ -40,7 +41,7 @@ export default {
     TinyInput,
     TinyButton
   },
-  emits: ['toRegister', 'toForgot'],
+  emits: ['changeStatus'],
   setup(props, { emit }) {
     const state = reactive({
       loginData: {
@@ -59,11 +60,11 @@ export default {
     }
 
     const toRegister = () => {
-      emit('toRegister')
+      emit('changeStatus', useLogin().REGISTER)
     }
 
     const toForgot = () => {
-      emit('toForgot')
+      emit('changeStatus', useLogin().FORGOT)
     }
     return {
       state,

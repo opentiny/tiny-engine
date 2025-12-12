@@ -72,7 +72,7 @@ export default {
     TinyButton,
     TinyTooltip
   },
-  emits: ['toLogin'],
+  emits: ['changeStatus'],
   setup(props, { emit }) {
     const state = reactive({
       forgotData: {
@@ -108,7 +108,7 @@ export default {
           publicKey: state.forgotData.key
         })
         .then((data) => {
-          emit('toLogin')
+          emit('changeStatus', useLogin().LOGIN)
         })
     }
 

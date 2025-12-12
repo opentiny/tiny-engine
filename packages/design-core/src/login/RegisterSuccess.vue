@@ -15,20 +15,21 @@
 <script lang="ts">
 import { reactive } from 'vue'
 import { TinyCheckbox, TinyButton } from '@opentiny/vue'
+import useLogin from './js/useLogin'
 
 export default {
   components: {
     TinyCheckbox,
     TinyButton
   },
-  emits: ['toLogin'],
+  emits: ['changeStatus'],
   setup(props, { emit }) {
     const state = reactive({
       checked: false
     })
 
     const toLogin = () => {
-      emit('toLogin')
+      emit('changeStatus', useLogin().LOGIN)
     }
 
     return {

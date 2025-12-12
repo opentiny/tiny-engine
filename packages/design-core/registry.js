@@ -51,7 +51,8 @@ import {
   GlobalService,
   ThemeSwitchService,
   HttpService,
-  McpService
+  McpService,
+  User
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -149,7 +150,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.save'] === false ? null : Save,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.fullscreen'] === false ? null : Fullscreen,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lang'] === false ? null : Lang,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.user'] === false ? null : User
   ],
   plugins: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.materials'] === false ? null : Materials,

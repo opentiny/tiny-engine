@@ -87,6 +87,7 @@
     "@opentiny/tiny-engine-toolbar-setting": "workspace:*",
     "@opentiny/tiny-engine-toolbar-theme-switch": "workspace:*",
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-user": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@opentiny/tiny-engine-workspace-template-center": "workspace:*",

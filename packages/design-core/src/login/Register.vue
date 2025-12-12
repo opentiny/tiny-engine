@@ -85,7 +85,7 @@ export default {
     TinyButton,
     TinyTooltip
   },
-  emits: ['toLogin', 'toSuccess'],
+  emits: ['changeStatus'],
   setup(props, { emit }) {
     const state = reactive({
       registerData: {
@@ -119,7 +119,7 @@ export default {
           password: state.registerData.password
         })
         .then((data) => {
-          emit('toSuccess')
+          emit('changeStatus', useLogin().SUCCESS)
         })
     }
 
@@ -143,7 +143,7 @@ export default {
     }
 
     const toLogin = () => {
-      emit('toLogin')
+      emit('changeStatus', useLogin().LOGIN)
     }
 
     watch(

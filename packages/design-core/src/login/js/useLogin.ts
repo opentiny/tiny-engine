@@ -18,8 +18,17 @@ const passwordRules = [
   }
 ]
 
+const LOGIN = 'login'
+const REGISTER = 'register'
+const FORGOT = 'forgot'
+const SUCCESS = 'success'
+
 export default () => {
   return {
-    passwordRules
+    passwordRules,
+    LOGIN,
+    REGISTER,
+    FORGOT,
+    SUCCESS
   }
 }
