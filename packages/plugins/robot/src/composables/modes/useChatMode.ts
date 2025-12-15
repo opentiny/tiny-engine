@@ -54,7 +54,7 @@ export default function useChatMode(): ModeHooks {
   const { getSelectedModelInfo } = useModelConfig()
 
   // ========== 配置方法 ==========
-  const getApiUrl = () => '/app-center/api/chat/completions'
+  const getApiUrl = () => 'app-center/api/chat/completions'
 
   const getContentType = () => 'markdown'
 

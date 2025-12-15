@@ -13,14 +13,24 @@
 /**
  * 模型配置接口
  */
+
+export interface Capability {
+  extraBody: {
+    enable: Record<string, unknown> | null
+    disable: Record<string, unknown> | null
+  }
+  [key: string]: any
+}
+
 export interface ModelConfig {
   name: string
   label: string
   capabilities?: {
     toolCalling?: boolean
     vision?: boolean
-    reasoning?: boolean | object
+    reasoning?: boolean | Capability
     compact?: boolean
+    jsonOutput?: boolean | Capability
   }
 }
 

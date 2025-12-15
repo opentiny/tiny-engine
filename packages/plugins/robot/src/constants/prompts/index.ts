@@ -88,7 +88,7 @@ export const formatComponents = (snippets: any[], getComponent: (name: string) =
     .filter((item: any) => !ignoreGroups.includes(item.group))
     .map((group) => group.children)
     .flat()
-    .filter((item: any) => !ignoreComponents.includes(item.snippetName))
+    .filter((item: any) => item.snippetName && !ignoreComponents.includes(item.snippetName))
     .map((child) => {
       const component: ComponentMaterial = getComponent(toPascalCase(child.snippetName))
       const schema: any = {}

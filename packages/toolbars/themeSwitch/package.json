@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-toolbar-theme-switch",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "publishConfig": {
     "access": "public"
   },

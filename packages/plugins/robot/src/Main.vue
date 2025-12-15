@@ -79,7 +79,7 @@
 <script setup lang="ts">
 import { computed, h, onMounted, ref, watch } from 'vue'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { META_APP, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { META_APP, META_SERVICE, getMetaApi, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { type PopupConfig, type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
 import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
 import RobotChat from './components/chat/RobotChat.vue'
@@ -189,7 +189,7 @@ const isToolsModel = computed(() => {
     robotSettingState.defaultModel.serviceId,
     robotSettingState.defaultModel.modelName
   )
-  return modelCapabilities?.toolCalling !== false
+  return modelCapabilities?.toolCalling || false
 })
 
 const handleChatModeChange = (type: string) => {
@@ -248,6 +248,8 @@ const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': Agent
 
 const handleFileSelected = async (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
   try {
+    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    formData.append('appId', appId)
     const { resourceUrl } = await apiService.uploadFile(formData)
     updateAttachment(resourceUrl)
     if (!inputMessage.value) {

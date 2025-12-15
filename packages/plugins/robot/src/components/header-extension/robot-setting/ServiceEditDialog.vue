@@ -104,7 +104,7 @@ const dialogVisible = defineModel<boolean>('visible', {
 })
 
 const formRef = ref<any>(null)
-const isEdit = computed(() => !!props.service)
+const isEdit = computed(() => Boolean(props.service))
 const isBuiltIn = computed(() => props.service?.isBuiltIn ?? false)
 
 const createEmptyModel = (): ModelConfig => ({

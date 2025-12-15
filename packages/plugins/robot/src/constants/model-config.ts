@@ -8,6 +8,23 @@ const reasoningExtraBody = {
   }
 }
 
+const jsonOutputExtraBody = {
+  extraBody: {
+    enable: { response_format: { type: 'json_object' } },
+    disable: null
+  }
+}
+
+const bailianJsonOutputExtraBody = {
+  extraBody: {
+    enable: {
+      response_format: { type: 'json_object' },
+      enable_thinking: false // 千问模型不支持思考模式下输出json
+    },
+    disable: null
+  }
+}
+
 export const DEFAULT_LLM_MODELS = [
   {
     provider: 'bailian',
@@ -21,7 +38,8 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen-plus',
         capabilities: {
           toolCalling: true,
-          reasoning: reasoningExtraBody
+          reasoning: reasoningExtraBody,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
       // 备注：千问多模态模型不支持工具调用；
@@ -30,7 +48,8 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen3-vl-plus',
         capabilities: {
           vision: true,
-          reasoning: reasoningExtraBody
+          reasoning: reasoningExtraBody,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
       {
@@ -38,7 +57,8 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen3-coder-plus',
         capabilities: {
           toolCalling: true,
-          reasoning: reasoningExtraBody
+          reasoning: reasoningExtraBody,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
       {
@@ -46,7 +66,8 @@ export const DEFAULT_LLM_MODELS = [
         name: 'deepseek-v3.2-exp',
         capabilities: {
           toolCalling: true,
-          reasoning: reasoningExtraBody
+          reasoning: reasoningExtraBody,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
       // 小参数模型
@@ -55,7 +76,8 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen-flash',
         capabilities: {
           toolCalling: true,
-          compact: true
+          compact: true,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
       {
@@ -63,11 +85,20 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen3-coder-flash',
         capabilities: {
           toolCalling: true,
-          compact: true
+          compact: true,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       },
-      { label: 'Qwen3（14b）', name: 'qwen3-14b', capabilities: { compact: true, toolCalling: true } },
-      { label: 'Qwen3（8b）', name: 'qwen3-8b', capabilities: { compact: true, toolCalling: true } }
+      {
+        label: 'Qwen3（14b）',
+        name: 'qwen3-14b',
+        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
+      },
+      {
+        label: 'Qwen3（8b）',
+        name: 'qwen3-8b',
+        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
+      }
     ]
   },
   {
@@ -86,7 +117,8 @@ export const DEFAULT_LLM_MODELS = [
               enable: { model: 'deepseek-reasoner' },
               disable: { model: 'deepseek-chat' }
             }
-          }
+          },
+          jsonOutput: jsonOutputExtraBody
         }
       }
     ]
