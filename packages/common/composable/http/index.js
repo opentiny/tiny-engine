@@ -29,6 +29,11 @@ const createInterceptorHandler =
     }
   }
 
+const setHeaders = () => {
+  const enableRouter = getMergeMeta('engine.config')?.enableRouter
+  return enableRouter ? { Authorization: `Benear 123` } : {}
+}
+
 export default defineService({
   id: META_SERVICE.Http,
   type: 'MetaService',
@@ -37,7 +42,7 @@ export default defineService({
       // axios 配置
       baseURL: '',
       withCredentials: false, // 跨域请求时是否需要使用凭证
-      headers: {} // 请求头
+      headers: setHeaders() // 请求头
     },
     interceptors: {
       // 拦截器

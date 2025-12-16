@@ -119,6 +119,8 @@ export default {
           password: state.registerData.password
         })
         .then((data) => {
+          useLogin().userState.publicKey = data?.publicKey
+
           emit('changeStatus', useLogin().SUCCESS)
         })
     }

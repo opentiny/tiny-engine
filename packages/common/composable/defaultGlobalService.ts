@@ -1,9 +1,9 @@
 import { useMessage, useModal, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { watch } from 'vue'
+import { reactive, watch } from 'vue'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
-  const id = paramsMap.get('id')
+  const id = paramsMap.get('id') // appId
   const blockId = paramsMap.get('blockid')
   const pageId = paramsMap.get('pageid')
   const previewId = paramsMap.get('previewid')
@@ -42,10 +42,34 @@ const initialState = {
   appList: [] as any[]
 }
 
-const getUserInfo = () => {
+const userState = reactive({
+  userInfo: {
+    username: '',
+    token: '',
+    expireTime: null,
+    tenantId: ''
+  } as Object
+})
+
+const getUserInfo = () => userState.userInfo
+
+const setUserInfo = (data: any) => {
+  userState.userInfo = { ...userState.userInfo, ...data }
+}
+
+const fetchUserInfo = () => {
   // 获取登录用户信息
   return getMetaApi(META_SERVICE.Http)
     .get('/platform-center/api/user/me')
+    .catch((error: { message: any }) => {
+      useModal().message({ message: error.message, status: 'error' })
+    })
+}
+
+const setTenantInfo = (params: any) => {
+  // 设置组织
+  return getMetaApi(META_SERVICE.Http)
+    .post('/platform-center/api/user/tenant', params)
     .catch((error: { message: any }) => {
       useModal().message({ message: error.message, status: 'error' })
     })
@@ -205,7 +229,7 @@ export default defineService({
       }
     })
 
-    getUserInfo().then((data: any) => {
+    fetchUserInfo().then((data: any) => {
       if (data) {
         state.userInfo = data
       }
@@ -213,6 +237,10 @@ export default defineService({
     })
   },
   apis: () => ({
+    getUserInfo,
+    setUserInfo,
+    fetchUserInfo,
+    setTenantInfo,
     getBaseInfo,
     postLocationHistoryChanged,
     updateParams,

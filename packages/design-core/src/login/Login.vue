@@ -31,7 +31,7 @@
 <script lang="ts">
 import { reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
 import useLogin from './js/useLogin'
 
 export default {
@@ -56,7 +56,28 @@ export default {
           username: state.loginData.username,
           password: state.loginData.password
         })
-        .then((data) => {})
+        .then((data: any) => {
+          getMetaApi(META_SERVICE.GlobalService)
+            .getUserInfo()
+            .then((infoData: any) => {
+              if (infoData) {
+                getMetaApi(META_SERVICE.GlobalService).userInfo = [...data, ...infoData]
+                getMetaApi(META_SERVICE.GlobalService)
+                  .setTenantInfo({
+                    tenantId: infoData.tenant?.id
+                  })
+                  .then((tenantData) => {
+                    console.log('tenantData',tenantData)
+                  })
+                  .catch((error) => {
+                    useModal().message({ message: error.message, status: 'error' })
+                  })
+              }
+            })
+        })
+        .catch((error) => {
+          useModal().message({ message: error.message, status: 'error' })
+        })
     }
 
     const toRegister = () => {

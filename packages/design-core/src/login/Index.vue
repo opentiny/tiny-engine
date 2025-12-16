@@ -21,6 +21,7 @@ import Login from './Login.vue'
 import Register from './Register.vue'
 import ForgotPassword from './ForgotPassword.vue'
 import RegisterSuccess from './RegisterSuccess.vue'
+import useLogin from './js/useLogin'
 
 export default {
   components: {
@@ -34,8 +35,12 @@ export default {
     RegisterSuccess
   },
   setup() {
+    const LOGIN = useLogin().LOGIN
+    const REGISTER = useLogin().REGISTER
+    const FORGOT = useLogin().FORGOT
+    const SUCCESS = useLogin().SUCCESS
     const state = reactive({
-      loginStatus: FORGOT
+      loginStatus: useLogin().REGISTER
     })
 
     const changeStatus = (status) => {
