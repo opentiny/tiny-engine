@@ -34,8 +34,14 @@ export const initRouter = (routes = defaultRoutes) => {
   // 路由守卫示例
   router.beforeEach((to, from, next) => {
     console.log(`Navigating to ${to.path}`);
-    next();
+    const token = localStorage.getItem('engineToken');
+    if (to.meta.requiresAuth && !token) {
+      next('/login');
+    } else {
+      next();
+    }
   });
+  
 
   return router;
 };

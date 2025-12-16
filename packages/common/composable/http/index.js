@@ -1,4 +1,4 @@
-import { defineService, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { defineService, META_SERVICE, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import axios from 'axios'
 
 let http = null
@@ -29,11 +29,6 @@ const createInterceptorHandler =
     }
   }
 
-const setHeaders = () => {
-  const enableRouter = getMergeMeta('engine.config')?.enableRouter
-  return enableRouter ? { Authorization: `Benear 123` } : {}
-}
-
 export default defineService({
   id: META_SERVICE.Http,
   type: 'MetaService',
@@ -42,7 +37,7 @@ export default defineService({
       // axios 配置
       baseURL: '',
       withCredentials: false, // 跨域请求时是否需要使用凭证
-      headers: setHeaders() // 请求头
+      headers: {} // 请求头
     },
     interceptors: {
       // 拦截器
@@ -58,6 +53,24 @@ export default defineService({
     const addInterceptors = createInterceptorHandler(http)
     addInterceptors({ data: request, type: 'request' })
     addInterceptors({ data: response, type: 'response' })
+
+    const enableRouter = getMergeMeta('engine.config')?.enableRouter
+    if (enableRouter) {
+      // 添加请求拦截器验证 token 状态
+      http.interceptors.request.use(
+        (config) => {
+          const token = localStorage.getItem('engineToken')
+          if (!token) {
+            return Promise.reject(new Error('未登录或 token 无效'))
+          }
+          config.headers.Authorization = `Bearer ${token}`
+          return config
+        },
+        (error) => {
+          return Promise.reject(error)
+        }
+      )
+    }
   },
   apis: () => ({
     getHttp: () => http,

@@ -58,7 +58,7 @@ export default {
         })
         .then((data: any) => {
           getMetaApi(META_SERVICE.GlobalService)
-            .getUserInfo()
+            .fetchUserInfo()
             .then((infoData: any) => {
               if (infoData) {
                 getMetaApi(META_SERVICE.GlobalService).userInfo = [...data, ...infoData]
@@ -67,7 +67,8 @@ export default {
                     tenantId: infoData.tenant?.id
                   })
                   .then((tenantData) => {
-                    console.log('tenantData',tenantData)
+                    console.log('tenantData', tenantData)
+                    localStorage.setItem('engineToken', data.token)
                   })
                   .catch((error) => {
                     useModal().message({ message: error.message, status: 'error' })
