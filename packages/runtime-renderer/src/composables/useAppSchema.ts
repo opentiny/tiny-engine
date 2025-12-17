@@ -1,9 +1,9 @@
 import { ref, computed, readonly } from 'vue'
-import type { IAppSchema, Util, I18nConfig, ComponentMap, PackageConfig } from '../types/index.ts'
 import i18n from '@opentiny/tiny-engine-common/js/i18n'
+import type { IAppSchema, Util, I18nConfig, ComponentMap, PackageConfig } from '../types/index.ts'
 import { addTagTask, getComponents, initDataSource, initImportMap, initUtils } from '../renderer/app-function/index.ts'
+import { fetchAppSchema, fetchAppPackages, fetchAppPages, fetchBlockByName } from './service.ts'
 import config from '../../config.ts'
-import { fetchAppSchema, fetchAppPackages, fetchAppPages, fetchAllBlocks, fetchBlockByName } from './service.ts'
 
 const appSchema = ref<IAppSchema | null>(null)
 const isLoading = ref(false)
@@ -82,15 +82,11 @@ export function useAppSchema() {
     initGlobalCSS(schema?.css)
   }
 
+  // 初始化应用数据
   const initAppData = async (id: string) => {
-    await Promise.all([
-      fetchAppSchema(id),
-      fetchAppPages(id),
-      fetchAllBlocks(),
-      fetchAppPackages(config.material[0])
-    ]).then((rss) => {
-      const [schema, pages, blocks, packages] = rss
-      appSchema.value = { ...schema, pages, blocks, packages }
+    await Promise.all([fetchAppSchema(id), fetchAppPages(id), fetchAppPackages(config.material[0])]).then((rss) => {
+      const [schema, pages, packages] = rss
+      appSchema.value = { ...appSchema.value!, ...schema, pages, packages, blocks: {} }
     })
     await setAppConfig(appSchema.value!)
   }

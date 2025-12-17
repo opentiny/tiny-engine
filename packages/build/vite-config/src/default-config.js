@@ -12,8 +12,9 @@ import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import { getBaseUrlFromCli, copyBundleDeps, importMapLocalPlugin } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
-import { canvasDevExternal } from './canvas-dev-external.js'
 import { treeShakingPlugin } from './vite-plugins/treeShakingPlugin.js'
+import { canvasDevExternal } from './canvas-dev-external.js'
+import { runtimeExternal } from './runtime-external.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -186,6 +187,10 @@ export function useTinyEngineBaseConfig(engineConfig) {
 
   if (engineConfig.useSourceAlias && command === 'serve') {
     config.plugins.push(canvasDevExternal())
+  }
+
+  if (engineConfig.useSourceAlias && command !== 'serve') {
+    config.plugins.push(runtimeExternal())
   }
 
   return config

@@ -3,8 +3,8 @@ import type { BlockItem, IBlockItem } from '../types'
 export async function fetchAppSchema(id: string | number) {
   let appSchema = {}
   try {
-    const res: any = await fetch(`/app-center/v1/api/apps/schema/${id}`)
-    appSchema = (await res?.json()?.data) || {}
+    const res: any = await fetch(`/app-center/v1/api/apps/schema/${id}`).then((res) => res.json())
+    appSchema = res?.data || {}
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('获取应用Schema信息错误:', error)
@@ -15,8 +15,7 @@ export async function fetchAppSchema(id: string | number) {
 export async function fetchAppPackages(pkgUrl: string) {
   let packages = []
   try {
-    const res = await fetch(pkgUrl)
-    const bundleJson: any = await res.json()
+    const bundleJson = await fetch(pkgUrl).then((res) => res.json())
     packages = bundleJson?.data?.materials?.packages || []
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -28,8 +27,8 @@ export async function fetchAppPackages(pkgUrl: string) {
 export async function fetchAppPages(id: string | number) {
   let pages = []
   try {
-    const res: any = await fetch(`/app-center/api/pages/list/${id}`)
-    pages = (await res.json()?.data) || []
+    const res: any = await fetch(`/app-center/api/pages/list/${id}`).then((res) => res.json())
+    pages = res?.data || []
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('获取应用页面错误:', error)
@@ -39,8 +38,8 @@ export async function fetchAppPages(id: string | number) {
 export async function fetchAllBlocks() {
   const blocksMap: Record<string, IBlockItem> = {}
   try {
-    const res: any = await fetch('/material-center/api/blocks')
-    const blocks: BlockItem[] = await res.json()?.data
+    const res: any = await fetch('/material-center/api/blocks').then((res) => res.json())
+    const blocks: BlockItem[] = res?.data || []
     blocks.forEach((block) => {
       if (block.content) {
         blocksMap[block.label] = {
@@ -64,8 +63,8 @@ export async function fetchAllBlocks() {
 export async function fetchBlockByName(name: string) {
   let block = {}
   try {
-    const res: any = await fetch(`/material-center/api/block?label=${name}`)
-    block = await res.json()?.data?.[0]
+    const res: any = await fetch(`/material-center/api/block?label=${name}`).then((res) => res.json())
+    block = res?.data?.[0] || {}
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`获取区块[${name}]错误:`, error)

@@ -121,14 +121,11 @@ export function addTagTask(props: ITagProps) {
     if (isCreate) {
       document.head.appendChild(el)
     }
-    const success = () => {
-      resolve(true)
-      // eslint-disable-next-line no-console
-      console.error('添加并加载脚本:', props)
-    }
+    const success = () => resolve(true)
+    const error = () => reject(new Error(`添加并加载${tag}失败: ${props}`))
     if (onload) {
       el.onload = success
-      el.onerror = reject
+      el.onerror = error
     } else {
       setTimeout(() => success())
     }
