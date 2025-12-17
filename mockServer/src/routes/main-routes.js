@@ -224,4 +224,16 @@ router.post('block-history/create', async (ctx) => {
   ctx.body = await mockService.blockHistoryService.create(ctx.request.body)
 })
 
+router.post('/app-center/api/i18n/entries/bulk/delete', async (ctx) => {
+  ctx.body = await mockService.i18nService.delete(ctx.request.body)
+})
+
+router.post('/app-center/api/i18n/entries/update', async (ctx) => {
+  ctx.body = await mockService.i18nService.update(ctx.request.body)
+})
+
+router.post('/app-center/api/i18n/entries/create', async (ctx) => {
+  ctx.body = await mockService.i18nService.create(ctx.request.body)
+})
+
 export default router

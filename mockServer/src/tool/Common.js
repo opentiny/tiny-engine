@@ -80,3 +80,76 @@ export const getDatabasePath = (fileName) => {
   const databasePath = process.env.DATABASE_PATH || path.resolve(__dirname, '../database')
   return path.resolve(databasePath, fileName)
 }
+
+export const transformI18nMock = (sourceData, startId = 123) => {
+  /**
+   * 生成随机日期字符串 (ISO 格式)
+   * @returns {string} e.g., "2023-05-15T00:48:10.000Z"
+   */
+  const getRandomDate = () => {
+    const start = new Date(2022, 0, 1)
+    const end = new Date()
+    const date = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
+    return date.toISOString()
+  }
+
+  /**
+   * 转换 i18n 数据为 Mock 列表格式
+   * @param {Object} sourceData - 原始 i18n 对象
+   * @param {number} startId - 起始 ID
+   * @returns {Array}
+   */
+  const transform = (sourceData, startId = 123) => {
+    // 1. 语言基础配置 (用于填充 lang 对象中的静态字段)
+    const langConfig = {
+      zh_HK: { id: 1, label: '繁體中文' },
+      en_US: { id: 2, label: '美式英文' },
+      zh_CN: { id: 3, label: '简体中文' }
+      // 可以根据需要补充更多
+    }
+
+    let currentId = startId
+    const result = []
+
+    // 2. 遍历语言 (zh_HK, en_US...)
+    if (sourceData && sourceData.i18n) {
+      Object.entries(sourceData.i18n).forEach(([langCode, translations]) => {
+        // 获取语言元数据，如果没有配置则给默认值
+        const langMeta = langConfig[langCode] || { id: 99, label: langCode }
+
+        // 生成语言对象的通用时间戳 (假设同一种语言创建时间一致，也可以移到下方循环内随机)
+        const langTimestamp = getRandomDate()
+
+        // 3. 遍历该语言下的所有 Key (lowcode.xxx)
+        Object.entries(translations).forEach(([key, content]) => {
+          const record = {
+            id: currentId++,
+            key: key,
+            content: content,
+            host: 1, // 固定值
+            host_type: 'app', // 固定值
+            lang: {
+              id: langMeta.id,
+              lang: langCode,
+              label: langMeta.label,
+              created_by: null,
+              updated_by: null,
+              created_at: langTimestamp,
+              updated_at: langTimestamp
+            },
+            created_by: null,
+            updated_by: null,
+            created_at: getRandomDate(),
+            updated_at: getRandomDate()
+          }
+
+          result.push(record)
+        })
+      })
+    }
+
+    return result
+  }
+
+  return transform(sourceData, startId)
+}
