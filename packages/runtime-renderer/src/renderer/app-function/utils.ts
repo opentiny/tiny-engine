@@ -26,18 +26,17 @@ async function loadNpmUtil(util: Util) {
   if (utilValues.has(util.name)) return
 
   const key = `${c.package}@${c.version || ''}`
-  let mod = npmCache.get(key)
-  if (!mod) {
-    const url =
-      c.cdnLink || (c.version ? `https://unpkg.com/${c.package}@${c.version}` : `https://unpkg.com/${c.package}`)
-    mod = await import(/* @vite-ignore */ url)
-    npmCache.set(key, mod)
+  let modules: any = npmCache.get(key)
+  if (!modules) {
+    const url = c.cdnLink || c.package
+    modules = await import(/* @vite-ignore */ url)
+    npmCache.set(key, modules)
   }
   let exported: any
   if (c.destructuring) {
-    exported = c.exportName ? mod[c.exportName as keyof typeof mod] : mod
+    exported = c.exportName ? modules[c.exportName] : modules.default || modules
   } else {
-    exported = (c.exportName && mod[c.exportName]) || mod.default || mod
+    exported = (c.exportName && modules[c.exportName]) || modules.default || modules
   }
   if (c.subName && exported) exported = exported[c.subName]
   utilValues.set(util.name, exported)

@@ -12,7 +12,7 @@ export const generateStoresConfig = () => {
     actions: Object.fromEntries(
       Object.keys(store.actions || {}).map((key) => {
         // 使用 parseJSFunction ，但是上下文由pinia内部绑定
-        const fn = parseJSFunction(store.actions[key], {}, {})
+        const fn = parseJSFunction(store.actions[key])
         if (!fn) {
           // eslint-disable-next-line no-console
           console.error(`Failed to parse action: ${key} in store: ${store.id}`)
@@ -24,7 +24,7 @@ export const generateStoresConfig = () => {
     getters: Object.fromEntries(
       Object.keys(store.getters || {}).map((key) => {
         // 同样处理 getters
-        const fn = parseJSFunction(store.getters[key], {}, {})
+        const fn = parseJSFunction(store.getters[key])
         if (!fn) {
           // eslint-disable-next-line no-console
           console.error(`Failed to parse getter: ${key} in store: ${store.id}`)

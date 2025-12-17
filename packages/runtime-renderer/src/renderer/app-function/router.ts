@@ -10,6 +10,7 @@ interface PageSchema {
   name: string
   route: string
   parentId: string
+  isPage: boolean
   isHome: boolean
   isDefault: boolean
   depth: number
@@ -31,7 +32,7 @@ function createRouterConfig() {
       pageRouteMap.set(pageIdStr, {
         path: `${page.route}`,
         name: pageIdStr,
-        component: withPageRenderer({ pageId: page.id }),
+        component: withPageRenderer({ pageId: page.id, isPage: page?.isPage }),
         children: [],
         meta: {
           pageId: pageIdStr,
