@@ -88,11 +88,7 @@ import engineConfig from './engine.config'
 
 export default {
 	// ...
---  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
-++  plugins: [DemoPlugin, Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
-  dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [Props, Styles, Events],
-  canvas: Canvas
+++  [DemoPlugin.id]: DemoPlugin
 }
 
 ```

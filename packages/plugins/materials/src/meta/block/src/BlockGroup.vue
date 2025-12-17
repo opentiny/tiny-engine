@@ -127,6 +127,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.materials.block.BlockGroup */
 import { inject, reactive, ref, nextTick } from 'vue'
+import type { Component } from 'vue'
 import {
   Input,
   Option,
@@ -154,8 +155,8 @@ export default {
     TinyOption: Option,
     SvgButton,
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
-    TinyPopover: Popover
+    TinyButton: Button as Component,
+    TinyPopover: Popover as Component
   },
   props: {
     modelValue: {

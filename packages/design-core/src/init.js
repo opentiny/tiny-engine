@@ -151,4 +151,6 @@ export const init = async ({
 
   app.mount(selector)
   appMounted?.({ app })
+
+  return app
 }

@@ -28,11 +28,15 @@ export { default as Bridge } from '@opentiny/tiny-engine-plugin-bridge'
 export { default as Block, BlockService } from '@opentiny/tiny-engine-plugin-block'
 export { default as Datasource, DataSourceService } from '@opentiny/tiny-engine-plugin-datasource'
 export { default as Robot } from '@opentiny/tiny-engine-plugin-robot'
+export { default as Resource } from '@opentiny/tiny-engine-plugin-resource'
+export { default as ModelManager } from '@opentiny/tiny-engine-plugin-model-manager'
 export { default as Props, PropertiesService, PropertyService } from '@opentiny/tiny-engine-setting-props'
 export { default as Events } from '@opentiny/tiny-engine-setting-events'
 export { default as Styles } from '@opentiny/tiny-engine-setting-styles'
 export { default as Layout, LayoutService } from '@opentiny/tiny-engine-layout'
 export { default as Canvas } from '@opentiny/tiny-engine-canvas'
+export { default as ApplicationCenter } from '@opentiny/tiny-engine-workspace-application-center'
+export { default as TemplateCenter } from '@opentiny/tiny-engine-workspace-template-center'
 export { initPreview } from './src/preview/src/main'
 export {
   GenerateCodeService,
@@ -40,7 +44,8 @@ export {
   PluginSetting,
   ToolbarBase,
   GlobalService,
-  HttpService
+  HttpService,
+  McpService
 } from '@opentiny/tiny-engine-common'
 
 export { default as defaultRegistry } from './registry'

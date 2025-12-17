@@ -11,6 +11,7 @@ import type { BreadcrumbService } from '@opentiny/tiny-engine-toolbar-breadcrumb
 import type { SaveLocalService } from '@opentiny/tiny-engine-toolbar-generate-code'
 import type { HistoryService } from '@opentiny/tiny-engine-toolbar-redoundo'
 import type { Modal, Notify } from '@opentiny/tiny-engine-common'
+import type { RobotService } from '@opentiny/tiny-engine-plugin-robot'
 
 export type UseCanvasApi = ReturnType<typeof useCanvasApi>
 export type UseLayoutApi = typeof LayoutService['apis']
@@ -23,6 +24,7 @@ export type UseTranslateApi = typeof TranslateService['apis']
 export type UseMaterialApi = typeof MaterialService['apis']
 export type UseResourceApi = typeof ResourceService['apis']
 export type UsePageApi = typeof PageService['apis']
+export type UseRobotApi = typeof RobotService['apis']
 
 // setting
 export type UsePropertiesApi = typeof PropertiesService['apis']

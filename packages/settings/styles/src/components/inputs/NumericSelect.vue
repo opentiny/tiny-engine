@@ -122,7 +122,7 @@ export default {
       padding-right: 22px;
     }
 
-    .tiny-numeric__unit {
+    .tiny-numeric__unit.tiny-numeric__unit {
       font-size: 12px;
       color: var(--te-styles-common-text-color-weaken);
       background-color: var(--te-styles-common-bg-color);

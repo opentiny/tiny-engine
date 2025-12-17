@@ -6,7 +6,8 @@ export default {
     icon: {
       default: 'preview'
     },
-    renderType: 'icon',
+    renderType: 'button',
+    showTitle: false,
     previewUrl: ''
   }
 }

@@ -27,7 +27,10 @@
               row.label
             }}</span>
             <template v-if="row.id !== 'body'">
-              <svg-icon :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'" @mouseup="showNode(row.rawData)"></svg-icon>
+              <svg-icon
+                :name="eyeOpen(row.id) ? 'eye' : 'eye-invisible'"
+                @click="showNode($event, row.rawData)"
+              ></svg-icon>
               <svg-icon name="delete" @mouseup="delNode(row.rawData)"></svg-icon>
             </template>
           </div>
@@ -96,7 +99,6 @@ export default {
       const translateChild = (data) => {
         data.forEach((item) => {
           item.show = pageState.nodesStatus[item.id] !== false
-          item.showEye = !item.show
           const child = item.children
           if (Array.isArray(child)) {
             translateChild(item.children)
@@ -150,14 +152,17 @@ export default {
       return pageState.nodesStatus[id] !== false
     }
 
-    const showNode = (data) => {
-      data.show = !data.show
-      pageState.nodesStatus[data.id] = data.show
-
+    const showNode = (event, data) => {
+      pageState.nodesStatus[data.id] = !(pageState.nodesStatus[data.id] !== false)
+      data.show = pageState.nodesStatus[data.id]
       const { getRenderer, clearSelect } = useCanvas().canvasApi.value
 
       getRenderer().setCondition(data.id, data.show)
-      clearSelect()
+
+      if (!data.show) {
+        event?.stopPropagation()
+        clearSelect()
+      }
     }
 
     const delNode = (data) => {

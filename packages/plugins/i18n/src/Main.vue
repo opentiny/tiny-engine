@@ -132,6 +132,7 @@
 <script lang="tsx">
 /* metaService: engine.plugins.i18n.Main */
 import { computed, ref, watchEffect, reactive, onMounted, nextTick, resolveComponent, watch, provide } from 'vue'
+import type { Component } from 'vue'
 import useClipboard from 'vue-clipboard3'
 import { Grid, GridColumn, Input, Popover, Button, FileUpload, Loading, Tooltip, Select } from '@opentiny/vue'
 import { iconLoadingShadow } from '@opentiny/vue-icon'
@@ -151,10 +152,10 @@ const { OPEN_DELAY } = constants
 
 export default {
   components: {
-    TinyPopover: Popover,
-    TinyTooltip: Tooltip,
+    TinyPopover: Popover as Component,
+    TinyTooltip: Tooltip as Component,
     TinyInput: Input,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
     PluginPanel,

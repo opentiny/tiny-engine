@@ -85,12 +85,12 @@ const registryApiAndOptionsMap = (id: string, value: any) => {
   }
 }
 
-const genDefaultHashMap = (registry: any) => {
+const genDefaultHashMap = (registry: Record<string, any>) => {
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value && !isRef(value)) {
       const { id } = value
       // 如果匹配到了id，说明是元服务配置，对元服务配置做读取和写入
-      if (id && key !== 'metaData') {
+      if (typeof id === 'string' && id && key !== 'metaData') {
         registryApiAndOptionsMap(id, value)
         metaHashMap.set(id, value)
       }

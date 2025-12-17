@@ -1,11 +1,16 @@
 import { reactive } from 'vue'
-import { transformSync } from '@babel/core'
-import vueJsx from '@vue/babel-plugin-jsx'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
 import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { fetchMetaData, fetchAppSchema, fetchBlockSchema, getPageById, getBlockById, fetchPageHistory } from './http'
-import { PanelType } from '../constant'
+import {
+  fetchMetaData,
+  fetchAppSchema,
+  fetchBlockSchema,
+  getPageById,
+  getBlockById,
+  fetchPageHistory,
+  fetchPageList
+} from './http'
 import generateMetaFiles, { processAppJsCode } from './generate'
 import srcFiles from './srcFiles'
 
@@ -17,6 +22,7 @@ interface IPage {
   id: number
   name: string
   parentId: number | string
+  isPage: boolean
   page_content: {
     [key: string]: any
     componentName: string
@@ -79,7 +85,12 @@ const getPageOrBlockByApi = async (): Promise<{ currentPage: IPage | null; ances
   const history = searchParams.get('history')
 
   if (pageId) {
-    let ancestors = (await getPageRecursively(pageId)).reverse()
+    let ancestors = (await getPageRecursively(pageId)).reverse().filter((item) => item.isPage)
+    // 避免祖先页面第一个为文件夹，导致没有 ROOT_ID，导致设置 Main.vue 失败
+    if (ancestors.length && ancestors[0]?.parentId !== ROOT_ID) {
+      ancestors[0].parentId = ROOT_ID
+    }
+
     let currentPage = await getPageById(pageId)
     if (history) {
       const historyList: IPage[] = await fetchPageHistory(pageId)
@@ -202,6 +213,13 @@ const getPageAncestryFiles = (
     }
   }
 
+  const hasMainPage = familyPages.some((item) => item.panelName === 'Main.vue' && item.index)
+
+  if (!hasMainPage && familyPages.length) {
+    familyPages[0].index = true
+    familyPages[0].panelName = 'Main.vue'
+  }
+
   return familyPages
 }
 
@@ -307,18 +325,6 @@ const getBasicData = async (basicFilesPromise: Promise<any>, scripts: Record<str
   }
 }
 
-// [@vue/repl] `Only lang="ts" is supported for <script> blocks.`
-const langReg = /lang="jsx"/
-const fixScriptLang = (generatedCode: IPanelType) => {
-  const fixedCode = { ...generatedCode }
-
-  if (generatedCode.panelType === PanelType.VUE) {
-    fixedCode.panelValue = generatedCode.panelValue.replace(langReg, '')
-  }
-
-  return fixedCode
-}
-
 interface IMetaDataParams {
   platform: string
   app: string
@@ -331,9 +337,10 @@ interface IMetaDataParams {
 interface IUsePreviewData {
   setFiles: (files: Record<string, string>, mainFileName?: string) => Promise<void>
   store: any
+  setImportMap: (importMap: Record<string, string>) => void
 }
 
-export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
+export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewData) => {
   const basicFiles = setFiles(srcFiles, 'src/Main.vue')
 
   const assignFiles = ({ panelName, panelValue, index }: IPanelType, newFiles: Record<string, string>) => {
@@ -341,27 +348,7 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
       panelName = 'Main.vue'
     }
 
-    const newPanelValue = panelValue.replace(/<script\s*setup\s*>([\s\S]*)<\/script>/, (match, p1) => {
-      if (!p1) {
-        // eslint-disable-next-line no-useless-escape
-        return '<script setup></script>'
-      }
-
-      const transformedScript = transformSync(p1, {
-        babelrc: false,
-        plugins: [[vueJsx, { pragma: 'h' }]],
-        sourceMaps: false,
-        configFile: false
-      })
-
-      const res = `<script setup>${transformedScript?.code || ''}`
-      // eslint-disable-next-line no-useless-escape
-      const endTag = '</script>'
-
-      return `${res}${endTag}`
-    })
-
-    newFiles[panelName] = newPanelValue
+    newFiles[panelName] = panelValue
   }
 
   // 根据新的参数更新预览
@@ -371,58 +358,266 @@ export const usePreviewData = ({ setFiles, store }: IUsePreviewData) => {
     scripts: Record<string, string>
     styles: string[]
   }) => {
+    const searchParams = new URLSearchParams(location.search)
+    const previewType = searchParams.get('previewType')
     const { appData, metaData, importMapData } = await getBasicData(basicFiles, params.scripts)
 
-    previewState.currentPage = params.currentPage
-    previewState.ancestors = params.ancestors
+    if (previewType === 'page') {
+      previewState.currentPage = params.currentPage
+      previewState.ancestors = params.ancestors
 
-    // importMap 发生变化才更新 importMap
-    if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
-      store.setImportMap(importMapData)
-      previewState.importMap = importMapData
-    }
+      // importMap 发生变化才更新 importMap
+      if (JSON.stringify(previewState.importMap) !== JSON.stringify(importMapData)) {
+        setImportMap(importMapData)
+        previewState.importMap = importMapData
+      }
 
-    const blockSet = new Set()
+      const blockSet = new Set()
 
-    let blocks = []
-    const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
+      let blocks = []
+      const { getAllNestedBlocksSchema, generatePageCode } = getMetaApi('engine.service.generateCode')
 
-    if (params.ancestors?.length) {
-      const promises = params.ancestors.map((item) =>
-        getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet)
+      if (params.ancestors?.length) {
+        const promises = params.ancestors.map((item) =>
+          getAllNestedBlocksSchema(item.page_content, fetchBlockSchema, blockSet)
+        )
+        blocks = (await Promise.all(promises)).flat()
+      }
+
+      const currentPageBlocks = await getAllNestedBlocksSchema(
+        params.currentPage?.page_content || {},
+        fetchBlockSchema,
+        blockSet
       )
-      blocks = (await Promise.all(promises)).flat()
-    }
+      blocks = blocks.concat(currentPageBlocks)
+      const pageCode = [
+        ...getPageAncestryFiles(appData, params),
+        ...(blocks || []).map((blockSchema) => {
+          return {
+            panelName: `${blockSchema.fileName}.vue`,
+            panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
+            panelType: 'vue'
+          }
+        })
+      ]
 
-    const currentPageBlocks = await getAllNestedBlocksSchema(
-      params.currentPage?.page_content || {},
-      fetchBlockSchema,
-      blockSet
-    )
-    blocks = blocks.concat(currentPageBlocks)
+      const newFiles = store.getFiles()
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
 
-    const pageCode = [
-      ...getPageAncestryFiles(appData, params),
-      ...(blocks || []).map((blockSchema) => {
-        return {
-          panelName: `${blockSchema.fileName}.vue`,
-          panelValue: generatePageCode(blockSchema, appData?.componentsMap || [], { blockRelativePath: './' }) || '',
-          panelType: 'vue'
+      newFiles['app.js'] = appJsCode
+      pageCode.forEach((item) => assignFiles(item, newFiles))
+
+      const metaFiles = generateMetaFiles(metaData)
+      Object.assign(newFiles, metaFiles)
+      setFiles(newFiles, 'App.vue')
+    } else if (previewType === 'app') {
+      const appId = searchParams.get('id')
+      const { getAllNestedBlocksSchema, generateAppCode } = getMetaApi('engine.service.generateCode')
+
+      let appSchema
+
+      const getPreGenerateInfo = async () => {
+        const promises = [
+          getMetaApi(META_SERVICE.Http).get(`/app-center/v1/api/apps/schema/${appId}`),
+          fetchPageList(appId)
+        ]
+
+        const [appData, pageList] = await Promise.all(promises)
+        const pageDetailList = pageList
+
+        // 这里需要手动传入 blockSet 的原因是多页面可能会存在重复的区块
+        const blockSet = new Set()
+        const list = pageDetailList.map((page) =>
+          getAllNestedBlocksSchema(page.page_content, fetchBlockSchema, blockSet)
+        )
+        const blocks = await Promise.allSettled(list)
+
+        const blockSchema = []
+        blocks.forEach((item) => {
+          if (item.status === 'fulfilled' && Array.isArray(item.value)) {
+            blockSchema.push(...item.value)
+          }
+        })
+
+        appSchema = {
+          dataSource: appData.dataSource,
+          utils: appData.utils,
+          i18n: appData.i18n,
+          globalState: appData.globalState,
+          // 页面 schema
+          pageSchema: pageDetailList.map((item) => {
+            const { page_content, ...meta } = item
+
+            return {
+              ...page_content,
+              meta: {
+                ...meta,
+                router: meta.route
+              }
+            }
+          }),
+          blockSchema,
+          // 物料数据
+          componentsMap: [...(appData.componentsMap || [])],
+          // 物料依赖
+          packages: [...(appData.packages || [])],
+          meta: {
+            ...(appData.meta || {})
+          }
         }
-      })
-    ]
 
-    const newFiles = store.getFiles()
-    const appJsCode = processAppJsCode(newFiles['app.js'], params.styles)
+        const res = await generateAppCode(appSchema)
 
-    newFiles['app.js'] = appJsCode
+        const { genResult = [] } = res || {}
+        const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
+          const slash = path.endsWith('/') || path === '.' ? '' : '/'
+          let filePath = `${path}${slash}`
+          if (filePath.startsWith('./')) {
+            filePath = filePath.slice(2)
+          }
+          if (filePath.startsWith('.')) {
+            filePath = filePath.slice(1)
+          }
 
-    pageCode.map(fixScriptLang).forEach((item) => assignFiles(item, newFiles))
+          if (filePath.startsWith('/')) {
+            filePath = filePath.slice(1)
+          }
 
-    const metaFiles = generateMetaFiles(metaData)
-    Object.assign(newFiles, metaFiles)
+          return {
+            fileContent,
+            filePath: `${filePath}${fileName}`,
+            fileType
+          }
+        })
 
-    setFiles(newFiles)
+        return fileRes
+      }
+
+      const buildTreeRoutes = (routes) => {
+        const tree = []
+        const routeMap = new Map()
+
+        // 首先将所有路由存入一个 Map 中，以便快速查找
+        routes.forEach((route) => {
+          routeMap.set(route.path, route)
+        })
+
+        // 递归构建树状结构
+        const buildTree = (route) => {
+          const children = routes.filter((childRoute) => {
+            return childRoute.path.startsWith(route.path) && childRoute.path !== route.path
+          })
+
+          if (children.length > 0) {
+            route.children = children.map((childRoute) => {
+              const child = { ...childRoute }
+              buildTree(child)
+              return child
+            })
+          }
+        }
+
+        // 找到所有根路由
+        routes.forEach((route) => {
+          if (!routes.some((otherRoute) => otherRoute.path !== route.path && route.path.startsWith(otherRoute.path))) {
+            const root = { ...route }
+            buildTree(root)
+            tree.push(root)
+          }
+        })
+
+        return tree
+      }
+
+      const getRoutesAndImportSet = (schema) => {
+        const importSet = new Set()
+        const pageSchema = (schema.pageSchema || []).sort((a, b) => a.meta?.router?.length - b.meta?.router?.length)
+        const result = []
+        const home = {
+          path: '/'
+        }
+        let isGetHome = false
+        pageSchema.forEach((item) => {
+          if ((item.meta?.isHome || item.meta?.isDefault) && !isGetHome) {
+            home.redirect = { name: `${item.meta.id}` }
+            isGetHome = true
+          }
+          importSet.add(
+            `import ${item.fileName} from './views${item.path ? `/${item.path}` : ''}/${item.fileName}.vue'`
+          )
+          const newNode = {
+            path: `/${item.meta.router}`,
+            component: item.fileName,
+            name: `${item.meta.id}`
+          }
+          result.push(newNode)
+        })
+        if (!isGetHome) {
+          isGetHome = true
+          home.redirect = { name: result[0]?.name }
+        }
+
+        return { routes: [home, ...buildTreeRoutes(result)], importSet }
+      }
+
+      const getRouterFile = (schema) => {
+        const { routes, importSet } = getRoutesAndImportSet(schema)
+        const resultStr = JSON.stringify(routes, null, 2).replace(
+          /("component":\s*)"(.*?)"/g,
+          (match, p1, p2) => p1 + p2
+        )
+
+        // TODO: 支持 hash 模式、history 模式
+        const importSnippet = `import { createRouter, createMemoryHistory } from 'vue-router'\n${[...importSet].join(
+          '\n'
+        )}`
+        const exportSnippet = `export default createRouter({history: createMemoryHistory(),routes })`
+
+        const routeSnippets = `const routes = ${resultStr}`
+
+        return `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
+      }
+
+      const formatCode = (fileContent, fileName) => {
+        if (fileName === 'src/router/index.js') {
+          fileContent = getRouterFile(appSchema)
+        } else {
+          fileContent = fileContent.replace(/(from\s*')(@)(\/.*')/g, '$1.$3')
+        }
+        if (fileName === 'src/App.vue') {
+          fileContent = fileContent.replace(
+            '<router-view></router-view>',
+            `<tiny-select v-model="currentRoute" placeholder="请选择路由" render-type="tree" :tree-op="{ data: $router.options.routes.filter(item => item.path !== '/') }" text-field="path" value-field="path" @change="routeChange"></tiny-select>\n<router-view></router-view>`
+          )
+          fileContent = fileContent.replace(
+            `import { provide } from 'vue'`,
+            `import { Select as TinySelect } from '@opentiny/vue'\nimport { ref, provide, watchEffect } from 'vue'\nimport { useRoute, useRouter } from 'vue-router'`
+          )
+          fileContent = fileContent.replace(
+            `provide(I18nInjectionKey, i18n)`,
+            `const route = useRoute()\nconst router = useRouter()\nconst currentRoute = ref()\n\nwatchEffect(() => {\n\tcurrentRoute.value = route.path\n})\n\nconst routeChange = () => {\n\trouter.push(currentRoute.value)\n}\nprovide(I18nInjectionKey, i18n)`
+          )
+        }
+        return fileContent
+      }
+
+      const fileRes = await getPreGenerateInfo()
+      const newFileRes = fileRes.filter((item) => item.filePath.includes('src/'))
+      const srcFiles = newFileRes.reduce((prev, item) => {
+        const fileName = item.filePath
+        prev[fileName] = formatCode(item.fileContent, fileName)
+        return prev
+      }, {})
+      srcFiles['import-map.json'] = JSON.stringify(importMapData)
+      const newFiles = store.getFiles()
+      const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
+      const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
+      srcFiles['app.js'] = appJsCode
+      srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
+      srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')
+      setFiles(srcFiles, 'src/main.js')
+    }
   }
 
   const loadInitialData = async () => {

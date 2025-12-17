@@ -1,5 +1,5 @@
 import { watchEffect, type WatchStopHandle } from 'vue'
-import { generateFunction } from '../../utils/data-utils'
+import { generateFunction } from '../data-function'
 
 type IAccessorType = 'getter' | 'setter'
 interface IAccessor {

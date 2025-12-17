@@ -12,141 +12,72 @@
 
 import postcss from 'postcss'
 import scopedPlugin from './scope-css-plugin'
+import config from '../../../config.ts'
 
-interface CSSHandlerOptions {
-  pageId?: string
-  enableScoped?: boolean
-  enableModernCSS?: boolean
+export function getBlockCssScopeId(fileName?: string): string {
+  const invalidateCharRE = /[^a-z0-9-]/g
+  const normalized = String(fileName || 'default')
+    .toLowerCase()
+    .replace(invalidateCharRE, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '')
+  return `data-render-block-${normalized}`
 }
 
-type AdoptedSheets = CSSStyleSheet[] | undefined
-
-const supportsAdoptedStyleSheet =
-  typeof document !== 'undefined' && Array.isArray((document as any)?.adoptedStyleSheets)
-const styleSheetMap = new Map<string, CSSStyleSheet>()
-const fallbackStyleMap = new Map<string, HTMLStyleElement>()
-let enableScoped = true
-
-function normalizeScopeKey(pageId?: string): string {
-  if (!pageId) {
-    return 'data-te-page-default'
+export function normalizeScopeKey(pageId?: string, isBlock?: boolean): string {
+  const id = String(pageId)
+  if (!id) {
+    return 'data-render-page-default'
+  } else if (id.startsWith('data-render-')) {
+    return id
+  } else if (isBlock) {
+    return getBlockCssScopeId(id)
+  } else {
+    return `data-render-page-${id}`
   }
-  return pageId.startsWith('data-te-page-') ? pageId : `data-te-page-${pageId}`
 }
 
-function ensureAdoptedStyleSheet(key: string): CSSStyleSheet {
-  let sheet = styleSheetMap.get(key)
-  if (!sheet) {
-    sheet = new CSSStyleSheet()
-    styleSheetMap.set(key, sheet)
-    const adoptedSheets = ((document as any).adoptedStyleSheets || []) as AdoptedSheets
-    if (!adoptedSheets?.includes(sheet)) {
-      ;(document as any).adoptedStyleSheets = [...(adoptedSheets || []), sheet]
+export function handleScopedCss(id: string, content: string) {
+  const plugins = id ? [scopedPlugin(id)] : []
+  return postcss(plugins).process(content, { from: undefined })
+}
+
+export function addStyle(key: string, content: string) {
+  if (!content) return
+  let styleSheet = document.querySelector(`#${key}`)
+
+  if (!styleSheet) {
+    styleSheet = document.createElement('style')
+    styleSheet.setAttribute('id', key)
+    if (config.enableTailwindCSS) {
+      styleSheet.setAttribute('type', 'text/tailwindcss')
     }
+    document.head.appendChild(styleSheet)
   }
-  return sheet
+  const id = { [key]: key, 'app-global-css': '' }[key]
+  handleScopedCss(id, content).then((scopedCss) => {
+    styleSheet.textContent = scopedCss.css
+  })
 }
-
-function ensureFallbackStyleElement(key: string): HTMLStyleElement {
-  let styleElement = fallbackStyleMap.get(key)
-  if (!styleElement) {
-    styleElement = document.createElement('style')
-    styleElement.type = 'text/css'
-    styleElement.setAttribute('data-te-page', key)
-    document.head?.appendChild(styleElement)
-    fallbackStyleMap.set(key, styleElement)
-  }
-  return styleElement
-}
-
-function processScopedCss(key: string, css: string): Promise<string> {
-  if (!enableScoped) {
-    return Promise.resolve(css)
-  }
-
-  return postcss([scopedPlugin(key)])
-    .process(css, { from: undefined })
-    .then((result) => result.css)
-}
-
-function applyCss(key: string, css: string): void {
-  if (supportsAdoptedStyleSheet && typeof CSSStyleSheet !== 'undefined') {
-    const sheet = ensureAdoptedStyleSheet(key)
-    processScopedCss(key, css)
-      .then((scopedCss) => {
-        sheet.replaceSync(scopedCss)
-      })
-      .catch(() => {
-        sheet.replaceSync(css)
-      })
-    return
-  }
-
-  const styleElement = ensureFallbackStyleElement(key)
-  processScopedCss(key, css)
-    .then((scopedCss) => {
-      styleElement.textContent = scopedCss
-    })
-    .catch(() => {
-      styleElement.textContent = css
-    })
-}
-
-function removePageCss(key: string): void {
-  const sheet = styleSheetMap.get(key)
-  if (sheet) {
-    styleSheetMap.delete(key)
-    const adoptedSheets = ((document as any).adoptedStyleSheets || []) as AdoptedSheets
-    if (adoptedSheets?.length) {
-      ;(document as any).adoptedStyleSheets = adoptedSheets.filter((item) => item !== sheet)
-    }
-  }
-
-  const styleElement = fallbackStyleMap.get(key)
-  if (styleElement?.parentNode) {
-    styleElement.parentNode.removeChild(styleElement)
-    fallbackStyleMap.delete(key)
-  }
-}
-
-function clearAllStyles(): void {
-  styleSheetMap.forEach((_, key) => removePageCss(key))
-  fallbackStyleMap.forEach((_, key) => removePageCss(key))
-}
-
 export function setPageCss(css: string = '', pageId?: string): void {
-  const key = normalizeScopeKey(pageId)
-
-  if (!css) {
-    removePageCss(key)
-    return
-  }
-  //console.log('setPageCss key', key, css)
-
-  applyCss(key, css)
+  addStyle(normalizeScopeKey(pageId), css)
 }
 
-export function clearAllPageCSS(): void {
-  clearAllStyles()
-}
-
-export function getCSSHandler(options?: CSSHandlerOptions): {
-  setPageCss: (css?: string, pageId?: string) => void
-  clearAllStyles: () => void
-  removePageCss: (key: string) => void
-} {
-  if (options?.enableScoped !== undefined) {
-    enableScoped = options.enableScoped
-  }
-
-  return {
-    setPageCss,
-    clearAllStyles,
-    removePageCss: (key: string) => removePageCss(normalizeScopeKey(key))
+function clearPageCss(key: string): void {
+  const styleSheet = document.querySelector(`#${key}`)
+  if (styleSheet) {
+    styleSheet.remove()
   }
 }
 
+function clearAllPageCSS(): void {
+  const styleSheets = document.head.querySelectorAll('[id^="data-render-page-"]')
+  styleSheets?.forEach((styleSheet) => {
+    styleSheet.remove()
+  })
+}
 export default {
   setPageCss,
+  clearPageCss,
   clearAllPageCSS
 }

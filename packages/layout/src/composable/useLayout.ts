@@ -14,7 +14,7 @@
 import { reactive, nextTick } from 'vue'
 import { useStorage } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { META_APP as PLUGIN_NAME, getMetaApi, getMergeMeta, getAllMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import defaultLayout from '../defaultLayout'
 import { utils } from '@opentiny/tiny-engine-utils'
 
@@ -68,6 +68,7 @@ export interface ILayoutState {
   settings: ISettings
   toolbars: {
     visiblePopover: boolean
+    render: string
   }
   pageStatus: any
 }
@@ -133,7 +134,8 @@ const layoutState = reactive<ILayoutState>({
     showDesignSettings: true
   },
   toolbars: {
-    visiblePopover: false
+    visiblePopover: false,
+    render: ''
   },
   pageStatus: {
     state: '',
@@ -501,6 +503,18 @@ export default () => {
     return finalLayoutConfig
   }
 
+  const getAllPlugins = () => {
+    return getAllMergeMeta()
+      .filter((item) => item.type === 'plugins')
+      .map((item) => {
+        return {
+          id: item.id,
+          title: item.title,
+          type: item.type
+        }
+      })
+  }
+
   return {
     isPanelWidthResizable,
     getFixedPanelsStatus,
@@ -539,6 +553,7 @@ export default () => {
     getMoveDragBarState,
     changeMoveDragBarState,
     getPluginsByPosition,
-    getFinalLayoutConfig
+    getFinalLayoutConfig,
+    getAllPlugins
   }
 }

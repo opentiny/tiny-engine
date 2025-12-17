@@ -466,6 +466,34 @@ const setSelectRect = (
   )
 }
 
+const getElementDurationTime = (elementId?: string) => {
+  const element = elementId ? querySelectById(elementId) : getDocument().body
+  const transitionDuration = window.getComputedStyle(element).getPropertyValue('transition-duration')
+  const transitionDelay = window.getComputedStyle(element).getPropertyValue('transition-delay')
+  let delayTime = 0
+  const getMaxMillisecondNumber = (arr: string[]) => {
+    const millisecondNumber = arr.map((item) => {
+      if (item.endsWith('ms')) {
+        return parseFloat(item)
+      } else {
+        return parseFloat(item) * 1000
+      }
+    })
+    return millisecondNumber.length ? Math.max(...millisecondNumber) : 0
+  }
+  if (transitionDuration) {
+    const transitionDurations = transitionDuration.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDurations)
+  }
+
+  if (transitionDelay) {
+    const transitionDelays = transitionDelay.split(',')
+    delayTime += getMaxMillisecondNumber(transitionDelays)
+  }
+
+  return delayTime
+}
+
 export const updateRect = (id?: string) => {
   id = (typeof id === 'string' && id) || getCurrent().schema?.id
   clearHover()
@@ -481,7 +509,9 @@ export const updateRect = (id?: string) => {
   const isBodySelected = !selectState.componentName && selectState.width > 0
 
   if (id || isBodySelected) {
-    setTimeout(() => setSelectRect(id))
+    // 获取元素动画持续时间
+    const waitTime = getElementDurationTime(id)
+    setTimeout(() => setSelectRect(id), waitTime)
   } else {
     clearSelect()
   }
@@ -816,7 +846,6 @@ export const dragMove = (event: DragEvent, isHover: boolean) => {
 // type == clickTree, 为点击大纲; type == loop-id=xxx ,为点击循环数据
 export const selectNode = async (id: string, type?: string, isMultiple = false) => {
   const { node } = useCanvas().getNodeWithParentById(id) || {}
-
   let element = querySelectById(id)
 
   if (element && node) {
@@ -825,7 +854,6 @@ export const selectNode = async (id: string, type?: string, isMultiple = false) 
   }
 
   const nodeIsSelected = setSelectRect(id, element, { isMultiple, type, schema: node })
-
   // 执行setSelectRect之后再去判断multiSelectedStates的长度
   if (multiSelectedStates.value.length === 1) {
     const { schema: node, parent, type } = multiSelectedStates.value[0]
@@ -851,6 +879,7 @@ export const selectNode = async (id: string, type?: string, isMultiple = false) 
   if (multiSelectedStates.value.length === 1) {
     const { schema: node, parent, type, id } = multiSelectedStates.value[0]
     canvasState.emit('selected', node, parent, type, id)
+
     return node
   } else {
     canvasState.emit('selected')

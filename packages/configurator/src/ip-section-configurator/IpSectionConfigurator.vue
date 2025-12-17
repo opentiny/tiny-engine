@@ -46,9 +46,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, computed, ref, watch } from 'vue'
 import { Input, Form, FormItem, Select, Option, Tooltip } from '@opentiny/vue'
+import type { Component } from 'vue'
 
 export default {
   name: 'IpSectionConfigurator',
@@ -58,7 +59,7 @@ export default {
     TinyFormItem: FormItem,
     TinySelect: Select,
     TinyOption: Option,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     modelValue: {

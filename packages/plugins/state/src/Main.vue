@@ -81,11 +81,11 @@
 <script lang="ts">
 /* metaService: engine.plugins.state.Main */
 import { reactive, ref, computed, onActivated, watch, provide } from 'vue'
+import type { Component } from 'vue'
 import { Button, Search, Tabs, TabItem } from '@opentiny/vue'
 import {
   useCanvas,
   useHistory,
-  useResource,
   useNotify,
   useHelp,
   useLayout,
@@ -99,14 +99,16 @@ import { CloseIcon, PluginPanel } from '@opentiny/tiny-engine-common'
 import DataSourceList from './DataSourceList.vue'
 import CreateVariable from './CreateVariable.vue'
 import CreateStore from './CreateStore.vue'
-import { updateGlobalState } from './js/http'
 import { STATE, OPTION_TYPE } from './js/constants'
 import { validateMonacoEditorData } from './js/common'
+
+type StoreRefInstance = InstanceType<typeof CreateStore>
+type VariableRefInstance = InstanceType<typeof CreateVariable>
 
 export default {
   components: {
     TinySearch: Search,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     DataSourceList,
     CreateVariable,
     CloseIcon,
@@ -122,8 +124,8 @@ export default {
     }
   },
   setup(props, { emit }) {
-    const variableRef = ref(null)
-    const storeRef = ref(null)
+    const variableRef = ref<VariableRefInstance | null>(null)
+    const storeRef = ref<StoreRefInstance | null>(null)
     const isPanelShow = ref(false)
     const errorMessage = ref('')
     const flag = ref('')
@@ -136,7 +138,14 @@ export default {
     const { openCommon } = getMetaApi(META_APP.Save)
     const docsUrl = useHelp().getDocsUrl('data')
     const docsContent = '对 state 的响应式变量进行系统管理，包含添加、删除、搜索、编辑 state。'
-    const state = reactive({
+    const state = reactive<{
+      dataSource: Record<string, any>
+      createData: {
+        name: string
+        description: string
+        variable: string
+      }
+    }>({
       dataSource: {},
       createData: {
         name: '',
@@ -144,7 +153,14 @@ export default {
         variable: ''
       }
     })
-    const selectedKey = ref(null)
+    const selectedKey = ref<string>('')
+    const { getGlobalState, updateGlobalState, addGlobalState, deleteGlobalState } = getMetaApi(
+      META_SERVICE.GlobalStateService
+    )
+    const globalState = computed(() => {
+      const list = getGlobalState()
+      return list.reduce((acc: Record<string, any>, store: Record<string, any>) => ({ ...acc, [store.id]: store }), {})
+    })
 
     const { PLUGIN_NAME, getPluginWidth, getPluginByLayout } = useLayout()
 
@@ -165,10 +181,10 @@ export default {
     provide('panelState', panelState)
 
     watch(activeName, () => {
-      selectedKey.value = null
+      selectedKey.value = ''
     })
 
-    const openPanel = (flagValue, key = '') => {
+    const openPanel = (flagValue: typeof OPTION_TYPE[keyof typeof OPTION_TYPE], key = '') => {
       updateKey.value = key
       flag.value = flagValue
       const isCurrent = activeName.value === STATE.CURRENT_STATE
@@ -188,16 +204,16 @@ export default {
       }
 
       isPanelShow.value = true
-      selectedKey.value = flagValue === OPTION_TYPE.UPDATE ? key : null
+      selectedKey.value = flagValue === OPTION_TYPE.UPDATE ? key : ''
     }
 
     const cancel = () => {
       errorMessage.value = ''
       isPanelShow.value = false
-      selectedKey.value = null
+      selectedKey.value = ''
     }
 
-    const add = (name, variable) => {
+    const add = (name: string, variable: Record<string, any>) => {
       const { getSchema } = useCanvas()
 
       if (getSchema()) {
@@ -208,11 +224,11 @@ export default {
       }
     }
 
-    const validName = (name) => {
+    const validName = (name: string) => {
       errorMessage.value = name
     }
 
-    const notifySaveError = (message) => {
+    const notifySaveError = (message: string) => {
       useNotify({
         title: '保存错误',
         type: 'error',
@@ -220,17 +236,82 @@ export default {
       })
     }
 
-    const updateName = (value) => {
+    const updateName = (value: string) => {
       state.createData.name = value
     }
 
-    const confirm = () => {
+    // 删除应用状态
+    const removeStore = async (key: string) => {
+      try {
+        await deleteGlobalState(key)
+
+        // 如果删除的是当前编辑的状态变量，则需要关闭二级面板
+        if (state.createData.name === key) {
+          isPanelShow.value = false
+        }
+      } catch (error) {
+        useNotify({
+          title: '删除失败',
+          type: 'error',
+          message: error instanceof Error ? error.message : '删除失败'
+        })
+      }
+    }
+
+    // 更新或添加应用状态
+    const updateOrAddGlobalState = async () => {
+      try {
+        if (!storeRef.value) {
+          return
+        }
+        await storeRef.value.validateForm()
+        const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
+
+        if (!validateResult.success) {
+          notifySaveError(validateResult.message)
+          return
+        }
+
+        const editor = storeRef.value.getEditor() as { getValue: () => string }
+        const storeState = editor?.getValue?.()
+        const getters = storeRef.value.saveMethods('gettersEditor')
+        const actions = storeRef.value.saveMethods('actionsEditor')
+        const { name } = state.createData
+        const store = {
+          id: name,
+          state: storeState,
+          getters,
+          actions
+        }
+
+        const isUpdate = Boolean(globalState.value[name])
+
+        if (isUpdate) {
+          await updateGlobalState(store)
+        } else {
+          await addGlobalState(store)
+        }
+
+        isPanelShow.value = false
+        useNotify({ message: '保存成功!', type: 'success' })
+        openCommon()
+      } catch (error) {
+        useNotify({ message: '保存失败!', type: 'error' })
+      }
+    }
+
+    const confirm = async () => {
       const { name } = state.createData
       const { getSchema, updateSchema } = useCanvas()
 
       if (activeName.value === STATE.CURRENT_STATE) {
-        // 校验
-        variableRef.value.validateForm().then(() => {
+        if (!variableRef.value) {
+          return
+        }
+
+        try {
+          // 校验
+          await variableRef.value.validateForm()
           // 获取数据
           const variable = variableRef.value.getFormData()
 
@@ -243,46 +324,26 @@ export default {
           updateSchema({ state: { ...(schema.state || {}), [name]: variable } })
 
           useHistory().addHistory()
-          openCommon()
-        })
+
+          const isFixed = props.fixedPanels?.includes(PLUGIN_NAME.State)
+          // 如果面板没有固定，临时固定，避免因保存时清空选中状态导致的面板关闭
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
+          await openCommon()
+          // 恢复原来固定的状态
+          if (!isFixed) {
+            useLayout().changeLeftFixedPanels(PLUGIN_NAME.State)
+          }
+        } catch (error) {
+          useNotify({ message: '保存失败!', type: 'error' })
+        }
       } else {
-        storeRef.value.validateForm().then(() => {
-          const validateResult = validateMonacoEditorData(storeRef.value.getEditor(), 'state字段', { required: true })
-          if (!validateResult.success) {
-            notifySaveError(validateResult.message)
-            return
-          }
-
-          const storeState = storeRef.value.getEditor().getValue()
-          const getters = storeRef.value.saveMethods('gettersEditor')
-          const actions = storeRef.value.saveMethods('actionsEditor')
-          const store = {
-            [name]: {
-              id: name,
-              state: storeState,
-              getters,
-              actions
-            }
-          }
-
-          if (updateKey.value !== name && flag.value === OPTION_TYPE.UPDATE) {
-            delete state.dataSource[updateKey.value]
-          }
-
-          Object.assign(state.dataSource, store)
-          const storeList = Object.values(state.dataSource)
-
-          const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-          updateGlobalState(id, { global_state: storeList }).then((res) => {
-            isPanelShow.value = false
-            useResource().appSchemaState.globalState = res.global_state || []
-          })
-          openCommon()
-        })
+        await updateOrAddGlobalState()
       }
     }
 
-    const search = (value) => {
+    const search = (value: string) => {
       if (value === undefined) {
         return
       }
@@ -323,38 +384,6 @@ export default {
       setSaved(false)
     }
 
-    const setGlobalStateToDataSource = () => {
-      const globalState = useResource().appSchemaState.globalState
-
-      if (!globalState) {
-        state.dataSource = {}
-
-        return
-      }
-
-      state.dataSource = globalState.reduce((acc, store) => ({ ...acc, [store.id]: store }), {})
-    }
-
-    const removeStore = (key) => {
-      const storeList = [...useResource().appSchemaState.globalState] || []
-      const index = storeList.findIndex((store) => store.id === key)
-
-      if (index !== -1) {
-        const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-
-        storeList.splice(index, 1)
-        updateGlobalState(id, { global_state: storeList }).then((res) => {
-          useResource().appSchemaState.globalState = res.global_state || []
-          setGlobalStateToDataSource()
-        })
-
-        // 如果删除的是当前编辑的状态变量，则需要关闭二级面板
-        if (state.createData.name === key) {
-          isPanelShow.value = false
-        }
-      }
-    }
-
     const closePanel = () => {
       emit('close')
     }
@@ -363,7 +392,7 @@ export default {
       const { getSchema } = useCanvas()
 
       if (tabsName === STATE.GLOBAL_STATE) {
-        setGlobalStateToDataSource()
+        state.dataSource = globalState.value || {}
       } else {
         const pageSchema = getSchema() || {}
 
@@ -386,6 +415,33 @@ export default {
     onActivated(() => {
       initDataSource()
     })
+
+    // 应用状态发生变化时，同步到 state.dataSource
+    watch(globalState, () => {
+      if (activeName.value !== STATE.GLOBAL_STATE) {
+        return
+      }
+
+      state.dataSource = globalState.value
+    })
+
+    // 切换 tab，切换显示页面状态或者是应用状态
+    watch(
+      () => activeName.value,
+      () => {
+        const { getSchema } = useCanvas()
+        const pageSchema = getSchema() || {}
+
+        if (activeName.value === STATE.GLOBAL_STATE) {
+          state.dataSource = globalState.value || {}
+        } else {
+          state.dataSource = pageSchema.state || {}
+        }
+      },
+      {
+        immediate: true
+      }
+    )
 
     return {
       alignStyle,
@@ -415,7 +471,6 @@ export default {
       removeStore,
       storeRef,
       OPTION_TYPE,
-      open,
       docsUrl,
       docsContent,
       onMouseLeaveVariable,

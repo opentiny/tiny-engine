@@ -9,23 +9,12 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import CanvasText from './CanvasText.vue'
-import CanvasIcon from './CanvasIcon.vue'
-import CanvasSlot from './CanvasSlot.vue'
-import CanvasImg from './CanvasImg.vue'
-import CanvasPlaceholder from './CanvasPlaceholder.vue'
-import CanvasRouterLink from './CanvasRouterLink.vue'
-import CanvasRouterView from './CanvasRouterView.vue'
-import CanvasCollection from './CanvasCollection.vue'
-
-export {
-  CanvasText,
-  CanvasIcon,
-  CanvasSlot,
-  CanvasImg,
-  CanvasPlaceholder,
-  CanvasRouterLink,
-  CanvasRouterView,
-  CanvasCollection
-}
+export { default as CanvasBox } from './CanvasBox.vue'
+export { default as CanvasText } from './CanvasText.vue'
+export { default as CanvasIcon } from './CanvasIcon.vue'
+export { default as CanvasSlot } from './CanvasSlot.vue'
+export { default as CanvasImg } from './CanvasImg.vue'
+export { default as CanvasPlaceholder } from './CanvasPlaceholder.vue'
+export { default as CanvasRouterLink } from './CanvasRouterLink.vue'
+export { default as CanvasRouterView } from './CanvasRouterView.vue'
+export { default as CanvasCollection } from './CanvasCollection.vue'

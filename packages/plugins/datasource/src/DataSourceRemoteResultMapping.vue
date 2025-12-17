@@ -30,6 +30,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.collections.DataSourceRemoteMapping */
 import { reactive, watchEffect, ref } from 'vue'
+import type { Component } from 'vue'
 import { TinyInput, TinySelect, TinyCheckbox } from '@opentiny/vue'
 import mappingType from './config.js'
 
@@ -47,7 +48,7 @@ export default {
   components: {
     TinySelect,
     TinyInput,
-    TinyCheckbox
+    TinyCheckbox: TinyCheckbox as Component
   },
   props: {
     modelValue: {

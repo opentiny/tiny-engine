@@ -6,15 +6,15 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import nodeGlobalsPolyfillPluginCjs from '@esbuild-plugins/node-globals-polyfill'
 import nodeModulesPolyfillPluginCjs from '@esbuild-plugins/node-modules-polyfill'
 import nodePolyfill from 'rollup-plugin-polyfill-node'
-import esbuildCopy from 'esbuild-plugin-copy'
 import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
 import visualizerCjs from 'rollup-plugin-visualizer'
 import generateComment from '@opentiny/tiny-engine-vite-plugin-meta-comments'
 import { getBaseUrlFromCli, copyBundleDeps, importMapLocalPlugin } from './localCdnFile/index.js'
 import { devAliasPlugin } from './vite-plugins/devAliasPlugin.js'
 import { htmlUpgradeHttpsPlugin } from './vite-plugins/upgradeHttpsPlugin.js'
-import { canvasDevExternal } from './canvas-dev-external.js'
 import { treeShakingPlugin } from './vite-plugins/treeShakingPlugin.js'
+import { canvasDevExternal } from './canvas-dev-external.js'
+import { runtimeExternal } from './runtime-external.js'
 
 const monacoEditorPlugin = monacoEditorPluginCjs.default
 const nodeGlobalsPolyfillPlugin = nodeGlobalsPolyfillPluginCjs.default
@@ -78,24 +78,20 @@ const getDefaultConfig = (engineConfig) => {
       vueJsx()
     ],
     optimizeDeps: {
+      // 避免  @vue/repl 的 monaco-editor 等依赖被优化掉
+      exclude: ['@vue/repl'],
       esbuildOptions: {
         plugins: [
           nodeGlobalsPolyfillPlugin({
             process: true,
             buffer: true
           }),
-          nodeModulesPolyfillPlugin(),
-          esbuildCopy({
-            //@vue/repl monaco编辑器需要
-            resolveFrom: 'cwd',
-            assets: {
-              from: ['./node_modules/@vue/repl/dist/assets/*'], // worker.js文件以url形式引用不会被esbuild拉起，需要手动复制
-              to: ['./node_modules/.vite/assets'] // 开发态，js文件被缓存在.vite/deps，请求相对路径为.vite/assets
-            },
-            watch: true
-          })
+          nodeModulesPolyfillPlugin()
         ]
       }
+    },
+    define: {
+      'process.env': {}
     },
     build: {
       commonjsOptions: {
@@ -191,6 +187,10 @@ export function useTinyEngineBaseConfig(engineConfig) {
 
   if (engineConfig.useSourceAlias && command === 'serve') {
     config.plugins.push(canvasDevExternal())
+  }
+
+  if (engineConfig.useSourceAlias && command !== 'serve') {
+    config.plugins.push(runtimeExternal())
   }
 
   return config

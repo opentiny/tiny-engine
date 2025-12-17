@@ -11,45 +11,29 @@
  */
 
 import { createApp } from 'vue'
+import defaultConfig from './config'
+import { createAppRouter, createAppStores } from './src/renderer/app-function'
 import { useAppSchema } from './src/composables/useAppSchema'
-import { createAppRouter } from './src/router'
-import { createPinia } from 'pinia'
-import { createStores, generateStoresConfig } from './src/stores'
+import i18n from '@opentiny/tiny-engine-common/js/i18n'
 import App from './src/App.vue'
-import i18n from '@opentiny/tiny-engine-i18n-host'
 
 // 初始化运行时渲染器
-export const initRuntimeRenderer = async () => {
+export const initRuntimeRenderer = async (config: any) => {
+  Object.assign(defaultConfig, config || {})
   const searchParams = new URLSearchParams(location.search)
   const appId = searchParams.get('id')
-
   if (!appId) {
     throw new Error('Missing required "id" query parameter')
   }
-
-  const { fetchAppSchema, fetchBlocks } = useAppSchema()
-  await fetchAppSchema(appId)
-  await fetchBlocks()
-  const router = await createAppRouter()
-
-  const pinia = createPinia()
-  const storesConfig = generateStoresConfig()
-  const stores = createStores(storesConfig, pinia)
-
+  const { initAppData } = useAppSchema()
+  await initAppData(appId)
+  const router = createAppRouter()
+  const pinia = createAppStores()
   const app = createApp(App)
-  app.provide('stores', stores)
-
+  app.use(pinia).use(i18n).use(router).mount('#app')
   // 全局错误处理（防止 scheduler 被打断）
-  app.config.errorHandler = (err, instance, info) => {
+  app.config.errorHandler = (err, _instance, info) => {
     // eslint-disable-next-line no-console
-    console.error('[GlobalErrorHandler]', err, info)
-    if ((err as any)?.stack) {
-      // eslint-disable-next-line no-console
-      console.error('[GlobalErrorHandler stack]', (err as any).stack)
-    }
+    console.error(err, _instance, info)
   }
-
-  app.use(pinia).use(router).use(i18n).mount('#app')
-
-  return app
 }

@@ -1,5 +1,5 @@
 <template>
-  <div class="canvas-container">
+  <div class="page-router-view-container">
     <router-view />
   </div>
 </template>

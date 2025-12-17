@@ -21,8 +21,8 @@
 
       <!-- 错误信息 -->
       <div class="not-found-text">
-        <h1>页面未找到</h1>
-        <p>抱歉，您访问的页面不存在或已被删除。</p>
+        <h1>应用没有设置主页</h1>
+        <p>请手动补全应用路由去访问页面、或者在编辑页设置应用主页</p>
         <p class="error-details">
           请求的路径: <code>{{ currentPath }}</code>
         </p>

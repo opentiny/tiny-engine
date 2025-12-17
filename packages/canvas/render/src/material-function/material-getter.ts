@@ -7,7 +7,11 @@ import {
   CanvasCol,
   CanvasRowColContainer,
   CanvasFlexBox,
-  CanvasSection
+  CanvasSection,
+  CanvasNavigation,
+  FormModel,
+  TableModel,
+  PageModel
 } from '@opentiny/tiny-engine-builtin-component'
 import {
   CanvasBox,
@@ -38,8 +42,12 @@ export const Mapper = {
   CanvasCol,
   CanvasRowColContainer,
   CanvasPlaceholder,
+  FormModel,
+  TableModel,
+  PageModel,
   RouterView: CanvasRouterView,
-  RouterLink: CanvasRouterLink
+  RouterLink: CanvasRouterLink,
+  CanvasNavigation
 }
 const getNative = (name) => {
   return window.TinyLowcodeComponent?.[name]

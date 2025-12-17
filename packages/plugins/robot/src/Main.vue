@@ -1,667 +1,341 @@
 <template>
   <div class="robot">
-    <div title="AI对话框" class="robot-img">
-      <svg-icon name="AI" @click="openAIRobot"></svg-icon>
-    </div>
-    <Teleport to="body">
-      <div v-if="robotVisible" class="robot-dialog">
-        <div class="bind-chatgpt" id="bind-chatgpt">
-          <section>
-            <div class="chat-title-icons">
-              <svg-icon name="close" class="common-svg opt-button" @click="robotVisible = false"></svg-icon>
-              <svg-icon
-                :name="chatWindowOpened ? 'chat-maximize' : 'chat-minimize'"
-                class="common-svg opt-button"
-                @click="resizeChatWindow"
-              ></svg-icon>
-            </div>
-          </section>
-          <header class="chat-title">
-            <tiny-popover
-              width="270"
-              trigger="manual"
-              v-model="showPopover"
-              :visible-arrow="false"
-              popper-class="chat-popover"
+    <toolbar-base
+      content="AI对话框"
+      :icon="props.options.icon?.default || props.options?.icon"
+      :options="props.options"
+      @click-api="openAIRobot"
+    >
+    </toolbar-base>
+    <Teleport v-if="showTeleport" defer :to="fullscreen ? 'body' : '.tiny-engine-right-robot'">
+      <div
+        class="robot-chat-container"
+        :class="{ 'robot-chat-container-fullscreen': fullscreen, 'fullscreen-with-setting': fullscreen && showSetting }"
+      >
+        <robot-chat
+          v-show="!showSetting || fullscreen"
+          v-model:messages="messages"
+          v-model:fullscreen="fullscreen"
+          v-model:show="robotVisible"
+          v-model:input="inputMessage"
+          :status="messageState.status"
+          :prompt-items="promptItems"
+          :bubble-renderers="bubbleRenderers"
+          :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
+          :beforeSubmit="checkApiKey"
+          :promptClickHandler="promptClickHandler"
+          @fileSelected="handleFileSelected"
+          @sendMessage="sendUserMessage"
+          @abort="handleAbortRequest"
+        >
+          <template #history-list-prefix="{ item }">
+            <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
+            <svg-icon v-else name="chat"></svg-icon>
+          </template>
+          <template #operations>
+            <span class="setting-icon" @click.stop="handleOpenSetting">
+              <svg-icon name="setting" class="operations-setting ml8"> </svg-icon>
+            </span>
+            <tr-icon-button :icon="IconNewSession" size="28" svgSize="20" @click="createConversation()" />
+            <robot-history
+              :conversation-state="conversationState"
+              @item-click="(item) => switchConversation(item.id!)"
+              @item-action="handleDeleteConversation"
+              @item-title-change="(title, item) => updateTitle(item.id!, title)"
             >
-              <robot-setting-popover
-                v-if="showPopover"
-                :typeValue="selectedModel"
-                :tokenValue="tokenValue"
-                @changeType="changeModel"
-                @close="closePanel"
-              ></robot-setting-popover>
-              <template #reference>
-                <span class="chat-title-dropdown" @click.stop="showPopover = true">
-                  <span class="chat-title-label">{{ selectedModel.label }}</span>
-                  <svg-icon name="setting" class="ml8"> </svg-icon>
-                </span>
+              <template #history-list-prefix="{ item }">
+                <svg-icon v-if="item?.metadata?.chatMode === 'agent'" name="intelligent-construction"></svg-icon>
+                <svg-icon v-else name="chat"></svg-icon>
               </template>
-            </tiny-popover>
-          </header>
-          <div class="robot-dialog-content">
-            <div class="robot-dialog-content-top">
-              <div class="robot-dialog-content-top-title">我是你的开发小助手</div>
-              <span class="robot-dialog-content-top-icon"><svg-icon name="AI" class="icon-ai"></svg-icon>智能对话</span>
-              <article class="chat-tips">
-                <span @click="sendContent('需要一个注册表单？', true)">需要一个注册表单？</span>
-                <span @click="sendContent('如何将表单嵌进我的网站？', true)">如何将表单嵌进我的网站？</span>
-              </article>
-            </div>
-            <article
-              :class="[
-                'chat-window',
-                'lowcode-scrollbar-hide',
-                chatWindowOpened ? 'max-chat-window' : 'min-chat-window'
-              ]"
-              id="chatgpt-window"
+            </robot-history>
+          </template>
+          <template #footer-left>
+            <robot-type-select
+              :chatMode="robotSettingState.chatMode"
+              @typeChange="handleChatModeChange"
+            ></robot-type-select>
+            <mcp-server
+              :position="mcpDrawerPosition"
+              v-if="robotSettingState.chatMode === ChatMode.Chat && isToolsModel"
+            ></mcp-server>
+            <footer-button
+              :active="robotSettingState.enableThinking"
+              tooltip-content="深度思考"
+              @update:active="toggleActive"
             >
-              <tiny-layout>
-                <tiny-row
-                  v-for="(item, index) in activeMessages"
-                  :key="index"
-                  :flex="true"
-                  :order="item.role === 'user' ? 'des' : 'asc'"
-                  :justify="item.role === 'user' ? 'end' : 'start'"
-                  class="chat-message-row"
-                >
-                  <tiny-col
-                    :span="1"
-                    :no="1"
-                    class="chat-avatar-wrap"
-                    :class="{ 'chat-avatar-wrap-ai': item.role !== 'user' }"
-                  >
-                    <svg-icon v-if="item.role !== 'user'" class="chat-avatar chat-avatar-ai" name="AI"></svg-icon>
-                    <svg-icon v-else class="chat-avatar" name="user-head"></svg-icon>
-                  </tiny-col>
-                  <tiny-col :span="22" :no="2">
-                    <div
-                      :class="[
-                        'chat-content',
-                        item.role === 'user'
-                          ? 'chat-content-user'
-                          : connectedFailed
-                          ? 'chat-content-ai-unconnected'
-                          : 'chat-content-ai'
-                      ]"
-                    >
-                      <span>{{ item.content }}</span>
-                    </div>
-                  </tiny-col>
-                </tiny-row>
-              </tiny-layout>
-            </article>
-
-            <footer class="chat-submit">
-              <tiny-input
-                @keydown.enter="sendContent(inputContent, false)"
-                placeholder="请输入问题或“/”唤起指令，支持粘贴文档"
-                v-model="inputContent"
-              >
-                <template #suffix>
-                  <svg-icon name="chat-send" class="common-svg" @click="sendContent(inputContent, false)"></svg-icon>
-                </template>
-              </tiny-input>
-              <tiny-button @click="endContent"><svg-icon name="add"></svg-icon><span>新对话</span></tiny-button>
-            </footer>
-          </div>
-        </div>
+              <template #icon>
+                <IconThink class="icon-think" />
+              </template>
+              <template #text>深度思考</template>
+            </footer-button>
+          </template>
+        </robot-chat>
+        <robot-setting v-if="showSetting" :fullscreen="fullscreen" @close="handleCloseSetting"></robot-setting>
       </div>
     </Teleport>
   </div>
 </template>
 
-<script lang="ts">
-/* metaService: engine.plugins.robot.Main */
-import { ref, onMounted, watchEffect } from 'vue'
-import { TinyLayout, TinyRow, TinyCol, TinyButton, TinyInput, Notify, Loading, TinyPopover } from '@opentiny/vue'
-import { useCanvas, useHistory, usePage, useModal, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { extend } from '@opentiny/vue-renderless/common/object'
-import RobotSettingPopover from './RobotSettingPopover.vue'
-import { getBlockContent, initBlockList, AIModelOptions } from './js/robotSetting'
+<script setup lang="ts">
+import { computed, h, onMounted, ref, watch } from 'vue'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import { META_APP, META_SERVICE, getMetaApi, useLayout, useNotify } from '@opentiny/tiny-engine-meta-register'
+import { type PopupConfig, type PromptProps, TrIconButton } from '@opentiny/tiny-robot'
+import { IconThink, IconNewSession } from '@opentiny/tiny-robot-svgs'
+import RobotChat from './components/chat/RobotChat.vue'
+import FooterButton from './components/chat/FooterButton.vue'
+import { IconMcp, IconPage, IconStudy } from './components/icons'
+import { History as RobotHistory, RobotSetting } from './components/header-extension'
+import { RobotTypeSelect, McpServer } from './components/footer-extension'
+import { AgentRenderer } from './components/renderers'
+import useChat from './composables/useChat'
+import useModelConfig from './composables/core/useConfig'
+import { ChatMode } from './types/mode.types'
+import apiService from './services/api'
 
-export default {
-  components: {
-    TinyLayout,
-    TinyButton,
-    TinyRow,
-    TinyCol,
-    TinyInput,
-    TinyPopover,
-    RobotSettingPopover
-  },
-  emits: ['close-chat'],
-  setup() {
-    const { initData, isBlock, isSaved, clearCurrentState } = useCanvas()
-    const robotVisible = ref(false)
-    const avatarUrl = ref('')
-    const chatWindowOpened = ref(true)
-    let sessionProcess = null
-    const messages = ref([])
-    const activeMessages = ref([])
-    const connectedFailed = ref(false)
-    const inputContent = ref('')
-    const inProcesing = ref(false)
-    const selectedModel = ref(AIModelOptions[0])
-    const { confirm } = useModal()
-    const tokenValue = ref('')
-    const showPopover = ref(false)
+const props = defineProps({
+  options: {
+    type: Object,
+    default: () => ({})
+  }
+})
 
-    const { pageSettingState, getDefaultPage } = usePage()
-    const ROOT_ID = pageSettingState.ROOT_ID
-    const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
-    watchEffect(() => {
-      avatarUrl.value = 'img/defaultAvator.png'
-    })
+const { robotSettingState, getModelCapabilities, updateThinkingState, getSelectedModelInfo } = useModelConfig()
 
-    const setContextSession = () => {
-      localStorage.setItem(
-        'aiChat',
-        sessionProcess
-          ? JSON.stringify(sessionProcess)
-          : JSON.stringify({
-              foundationModel: {
-                manufacturer: selectedModel.value.manufacturer,
-                model: selectedModel.value.value,
-                token: tokenValue.value
-              },
-              messages: [],
-              displayMessages: [] // 专门用来进行展示的消息，非原始消息，仅作为展示但是不作为请求的发送
-            })
-      )
-    }
+const robotVisible = ref(false)
+const fullscreen = ref(false)
 
-    const createNewPage = (schema) => {
-      if (!(pageSettingState.isNew && pageSettingState.isAIPage)) {
-        pageSettingState.isNew = true
-        pageSettingState.isAIPage = true
-        pageSettingState.currentPageData = {
-          ...getDefaultPage(),
-          parentId: ROOT_ID,
-          route: 'temporaryPage',
-          name: 'TemporaryPage',
-          group: 'staticPages'
-        }
-      }
-      pageSettingState.currentPageData['page_content'] = schema
-      pageSettingState.currentPageDataCopy = extend(true, {}, pageSettingState.currentPageData)
-      clearCurrentState()
-      // 已经创建过临时页面只更新schema
-      initData(pageSettingState.currentPageData['page_content'], pageSettingState.currentPageData)
-      useHistory().addHistory()
-    }
+watch(robotVisible, (visible) => {
+  useLayout().layoutState.toolbars.render = visible ? META_APP.Robot : ''
+})
 
-    const codeRules = `
-    请扮演一名前端开发专家，生成代码时遵从以下几条要求:
-###
-1. 只使用element-ui组件库完成代码编写
-2. 使用vue2技术栈
-3. 回复中只能有一个代码块
-4. el-table标签内不得出现el-table-column
-###
-  `
-
-    // 在每一次发送请求之前，都把引入区块的内容，给放到第一条消息中
-    // 为了不污染存储在localstorage里的用户的原始消息，这里进行了简单的对象拷贝
-    // 引入区块不存放在localstorage的原因：因为区块是可以变化的，用户可能在同一个会话中，对区块进行了删除和创建。那么存放的数据就不是即时数据了。
-    const getSendSeesionProcess = () => {
-      const sendProcess = { ...sessionProcess }
-      const firstMessage = sendProcess.messages[0]
-      sendProcess.messages = [
-        { ...firstMessage, content: `${getBlockContent()}\n${codeRules}\n${firstMessage.content}` },
-        ...sendProcess.messages.slice(1)
-      ]
-      delete sendProcess.displayMessages
-      return sendProcess
-    }
-
-    const getAiRespMessage = (role = 'assistant', content) => ({
-      role,
-      content,
-      name: 'AI'
-    })
-    const sendRequest = () => {
-      getMetaApi(META_SERVICE.Http)
-        .post('/app-center/api/ai/chat', getSendSeesionProcess(), { timeout: 600000 })
-        .then((res) => {
-          const { originalResponse, schema, replyWithoutCode } = res
-          const responseMessage = getAiRespMessage(originalResponse.role, originalResponse.content)
-          const respDisplayMessage = getAiRespMessage(originalResponse.role, replyWithoutCode)
-          sessionProcess.messages.push(responseMessage)
-          sessionProcess.displayMessages.push(respDisplayMessage)
-          messages.value[messages.value.length - 1].content = replyWithoutCode
-          setContextSession()
-          if (schema?.schema) {
-            createNewPage(schema.schema)
-          }
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
-        .catch(() => {
-          messages.value[messages.value.length - 1].content = '连接失败'
-          localStorage.removeItem('aiChat')
-          inProcesing.value = false
-          connectedFailed.value = false
-        })
-    }
-    const scrollContent = async () => {
-      await sleep(100)
-      const scrollElement = document.getElementById('chatgpt-window')
-      if (scrollElement) {
-        scrollElement.scrollTop = scrollElement.scrollHeight
-      }
-    }
-
-    const resetContent = async () => {
-      activeMessages.value = messages.value
-      await scrollContent()
-    }
-
-    const resizeChatWindow = async () => {
-      chatWindowOpened.value = !chatWindowOpened.value
-      showPopover.value = false
-      await resetContent()
-    }
-
-    const getMessage = (content) => ({
-      role: 'user',
-      content,
-      name: 'John'
-    })
-
-    const sendContent = async (content, isModel) => {
-      if (!isSaved() && !pageSettingState.isNew) {
-        Notify({
-          type: 'error',
-          message: `当前${isBlock() ? '区块' : '页面'}尚未保存，请保存后再试！`,
-          position: 'top-right',
-          duration: 5000
-        })
-        return
-      }
-      if (inProcesing.value) {
-        Notify({
-          type: 'error',
-          message: '请等待当前会话完成后再试!',
-          position: 'top-right',
-          duration: 5000
-        })
-        return
-      }
-      const realContent = content.trim()
-      if (realContent) {
-        if (chatWindowOpened.value === false) {
-          await resizeChatWindow()
-        }
-        const message = getMessage(realContent)
-        inProcesing.value = true
-
-        messages.value.push(message)
-        sessionProcess?.messages.push(message)
-        sessionProcess?.displayMessages.push(message)
-        if (!isModel) {
-          inputContent.value = ''
-        }
-        await scrollContent()
-        await sleep(1000)
-        messages.value.push({ role: 'assistant', content: '好的，正在执行相关操作，请稍等片刻...', name: 'AI' })
-        await scrollContent()
-        sendRequest()
-      }
-    }
-
-    // 根据localstorage初始化AI大模型
-    const initCurrentModel = (aiSession) => {
-      const currentModelValue = JSON.parse(aiSession)?.foundationModel?.model
-      selectedModel.value = AIModelOptions.find((item) => item.value === currentModelValue)
-      tokenValue.value = JSON.parse(aiSession)?.foundationModel?.token
-    }
-
-    const initChat = () => {
-      const aiChatSession = localStorage.getItem('aiChat')
-      if (!aiChatSession) {
-        setContextSession()
-      } else {
-        initCurrentModel(aiChatSession) // 如果当前缓存有值，那么则需要根据缓存里的内容去初始化当前选择的模型
-      }
-      sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
-      messages.value = [...(sessionProcess?.displayMessages || [])]
-      resetContent()
-    }
-
-    onMounted(async () => {
-      const loadingInstance = Loading.service({
-        text: '初始化中，请稍等...',
-        customClass: 'chat-loading',
-        background: 'rgba(0, 0, 0, 0.15)',
-        target: '#bind-chatgpt',
-        size: 'large'
-      })
-
-      await initBlockList()
-      loadingInstance.close()
-      initChat()
-    })
-
-    const endContent = () => {
-      localStorage.removeItem('aiChat')
-      sessionProcess = null
-      initChat()
-    }
-
-    const changeTokenValue = () => {
-      localStorage.removeItem('aiChat')
-      sessionProcess = null
-      setContextSession()
-      sessionProcess = JSON.parse(localStorage.getItem('aiChat'))
-    }
-
-    const changeModel = (model) => {
-      if (selectedModel.value.value !== model.type) {
-        confirm({
-          title: '切换AI大模型',
-          message: '切换AI大模型将导致当前会话被清空，重新开启新会话，是否继续？',
-          exec() {
-            selectedModel.value = AIModelOptions.find((item) => item.value === model.type)
-            tokenValue.value = model.tokenVal
-            endContent()
-          }
-        })
-      } else if (tokenValue.value !== model.tokenVal && selectedModel.value.value === model.type) {
-        tokenValue.value = model.tokenVal
-        changeTokenValue()
-      }
-    }
-
-    const openAIRobot = () => {
-      robotVisible.value = !robotVisible.value
-    }
-
-    const closePanel = () => {
-      showPopover.value = false
-    }
-
-    return {
-      robotVisible,
-      avatarUrl,
-      chatWindowOpened,
-      activeMessages,
-      inputContent,
-      connectedFailed,
-      sendContent,
-      endContent,
-      changeTokenValue,
-      resizeChatWindow,
-      AIModelOptions,
-      selectedModel,
-      changeModel,
-      openAIRobot,
-      closePanel,
-      tokenValue,
-      showPopover
+const mcpDrawerPosition = computed<PopupConfig>(() => {
+  return {
+    type: 'fixed',
+    position: {
+      top: 'var(--base-top-panel-height)',
+      bottom: 0,
+      ...(fullscreen.value ? { left: 0 } : { right: 'var(--tr-container-width)' })
     }
   }
+})
+
+const promptItems: Array<PromptProps & { mode?: 'chat' | 'agent' }> = [
+  {
+    label: '页面搭建场景',
+    description: '在当前页面中生成一个满意度调查表单',
+    mode: 'agent',
+    icon: h(IconPage),
+    badge: 'NEW'
+  },
+  {
+    label: 'MCP工具',
+    description: '帮我查询当前的页面列表',
+    mode: 'chat',
+    icon: h(IconMcp),
+    badge: 'NEW'
+  },
+  {
+    label: '日常开发问答',
+    description: '如何实现前端节流与防抖？',
+    mode: 'chat',
+    icon: h(IconStudy)
+  }
+]
+
+const showTeleport = ref(false)
+const showSetting = ref(false)
+
+const {
+  inputMessage,
+  messages,
+  messageState,
+  changeChatMode,
+  abortRequest,
+  initChatClient,
+  sendUserMessage,
+  conversationState,
+  createConversation,
+  switchConversation,
+  deleteConversation,
+  updateTitle
+} = useChat()
+
+const toggleActive = () => {
+  updateThinkingState(!robotSettingState.enableThinking)
 }
+
+const handleDeleteConversation = (action: any, item: any) => {
+  if (action.id === 'delete') deleteConversation(item.id!)
+}
+
+const handleAbortRequest = () => {
+  abortRequest()
+  if (messages.value.at(-1)) {
+    messages.value.at(-1)!.aborted = true
+  }
+}
+
+const isVisualModel = computed(() => {
+  const modelCapabilities = getModelCapabilities(
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
+  )
+  return modelCapabilities?.vision || false
+})
+
+const isToolsModel = computed(() => {
+  const modelCapabilities = getModelCapabilities(
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
+  )
+  return modelCapabilities?.toolCalling || false
+})
+
+const handleChatModeChange = (type: string) => {
+  changeChatMode(type)
+}
+
+const checkApiKey = () => {
+  const provider = getSelectedModelInfo().service
+
+  if (!provider?.baseUrl || (!provider?.apiKey && !provider?.allowEmptyApiKey)) {
+    useNotify({
+      type: 'warning',
+      title: '未设置API Key，请检查设置',
+      message: '请先设置大模型API Key后重试。'
+    })
+    setTimeout(() => {
+      showSetting.value = true
+    }, 1000)
+    return false
+  }
+
+  return true
+}
+
+const promptClickHandler = (item: PromptProps & { mode?: 'chat' | 'agent' }) => {
+  if (!checkApiKey() || !item.mode) {
+    return
+  }
+  if (item.mode !== robotSettingState.chatMode) {
+    changeChatMode(item.mode)
+  }
+  messages.value.push({
+    role: 'user',
+    content: item.description || '',
+    renderContent: [{ type: 'text', content: item.description }]
+  })
+  sendUserMessage()
+}
+
+const handleOpenSetting = () => {
+  showSetting.value = true
+}
+
+const handleCloseSetting = () => {
+  showSetting.value = false
+}
+
+const openAIRobot = () => {
+  createConversation()
+  robotVisible.value = true
+  useLayout().closeSetting(true)
+}
+
+// 当前Robot的bubbleRenderers无法做到响应式更新，因此Agent模式的type要与Chat模式不同
+const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': AgentRenderer }
+
+const handleFileSelected = async (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
+  try {
+    const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+    formData.append('appId', appId)
+    const { resourceUrl } = await apiService.uploadFile(formData)
+    updateAttachment(resourceUrl)
+    if (!inputMessage.value) {
+      inputMessage.value = '生成图片中UI效果'
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('上传失败', error)
+    updateAttachment('')
+    useNotify({
+      message: '文件上传失败，请重试',
+      type: 'error'
+    })
+  }
+}
+
+onMounted(async () => {
+  initChatClient()
+  setTimeout(() => {
+    showTeleport.value = true
+  }, 1000)
+})
 </script>
 
-<style lang="less" scope>
-.robot-img {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 26px;
-  height: 26px;
-  .chatgpt-icon {
-    width: 18px;
-    height: 18px;
-  }
+<style scoped lang="less">
+.robot {
+  margin-right: 8px;
+}
+.robot-chat-container {
+  height: 100%;
 }
 
-.robot-dialog {
-  position: fixed;
-  width: 450px;
-  z-index: 5;
-  right: 40px;
-  bottom: 40px;
-  background-image: linear-gradient(
-    var(--te-chat-bg-top-color),
-    var(--te-chat-bg-mid-color),
-    var(--te-chat-bg-bottom-color)
-  );
-  box-shadow: 0px 0px 12px 0px rgba(0, 0, 0, 0.15);
-  padding: 16px;
-  border-radius: 12px;
-}
-.common-svg {
-  color: var(--te-chat-model-common-icon);
+.setting-icon {
+  cursor: pointer;
 }
 
-.chat-title-icons {
-  font-size: 20px;
-  height: 20px;
-  margin-bottom: 20px;
-  svg {
-    float: right;
-    margin: 0 6px;
-    cursor: pointer;
-    color: var(--te-chat-model-icon);
-    &:hover {
-      opacity: 0.8;
-    }
-    &:first-child {
-      margin-right: 0;
+.operations-setting {
+  font-size: 28px;
+  padding: 4px;
+}
+
+.robot-chat-container-fullscreen {
+  :deep(.tiny-container) {
+    container-type: inline-size;
+
+    &.tr-container.tr-container {
+      top: var(--base-top-panel-height);
+      position: fixed;
+      height: auto;
     }
   }
-}
-.chat-title {
-  position: absolute;
-  top: 16px;
-  left: 28px;
-  font-weight: bold;
-  color: var(--te-chat-model-text);
-  .chat-title-dropdown {
+  .operations-setting {
+    font-size: 20px;
+  }
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  @media (min-width: 1080px) {
+    :deep(.robot-chat-container-content) {
+      width: 1080px;
+      margin: 0 auto;
+    }
+    :deep(.tiny-sender) {
+      width: 1080px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+    :deep(.tr-prompts) {
+      padding: 0px 136px;
+    }
+  }
+
+  &.fullscreen-with-setting {
     display: flex;
-    align-items: center;
-    height: 24px;
-    cursor: pointer;
-  }
-  .chat-title-label,
-  .ml8 {
-    color: var(--te-chat-model-text);
-    font-weight: 700;
-    font-size: 16px;
-  }
-  .ml8 {
-    margin-left: 8px;
-    outline: none;
+
+    :deep(.tiny-container) {
+      flex: 1;
+      width: auto;
+    }
   }
 }
 
-.robot-dialog-content {
-  background: var(--te-chat-model-bg);
-  border-radius: 6px;
-  padding: 16px;
-  &-top {
-    margin-bottom: 30px;
-    &-title {
-      color: var(--te-chat-model-helper-text);
-      font-size: 12px;
-      margin-bottom: 12px;
-    }
-    &-icon {
-      color: var(--te-chat-model-text);
-    }
-    .icon-ai {
-      width: 16px;
-      height: 16px;
-      margin-right: 6px;
-    }
-    .chat-tips {
-      text-align: left;
-      font-size: 12px;
-      margin-top: 10px;
-      color: var(--te-chat-model-tips-text);
-      span {
-        display: inline-block;
-        height: 28px;
-        line-height: 28px;
-        padding: 0 8px;
-        margin-right: 8px;
-        border-radius: 4px;
-        background: var(--te-chat-model-tips-bg);
-        cursor: pointer;
-        &:hover {
-          border-color: var(--te-chat-model-text);
-        }
-      }
-    }
-  }
-}
-.chat-window {
-  overflow: scroll;
-  .chat-avatar-wrap {
-    width: 40px;
-    color: var(--te-chat-model-avatar-border);
-    .chat-avatar {
-      width: 24px;
-      height: 24px;
-      font-size: 26px;
-      margin-top: 6px;
-      border-radius: 50px;
-      border: none;
-    }
-  }
-  .chat-avatar-wrap-ai {
-    padding-left: 0;
-  }
-  .chat-content {
-    max-width: 465px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: normal;
-    line-height: 20px;
-    padding: 12px;
-
-    &.chat-content-user {
-      background-color: var(--te-chat-model-user-text-bg);
-      color: var(--te-chat-model-user-text);
-    }
-  }
-  .chat-message-row {
-    margin-bottom: 20px;
-  }
-  &.max-chat-window {
-    height: 520px;
-  }
-  &.min-chat-window {
-    height: 80px;
-  }
-}
-
-.chat-content-ai {
-  background-color: var(--te-chat-model-ai-text-bg);
-  border: 1px solid var(--te-chat-model-ai-text-border);
-  color: var(--te-chat-model-ai-text);
-}
-
-.chat-content-ai-unconnected {
-  background-color: var(--te-chat-model-ai-fail-text-bg);
-  border: 1px solid var(--te-chat-model-ai-fail-text-border);
-  color: var(--te-chat-model-ai-fail-text);
-}
-
-.chat-submit.chat-submit {
-  margin-top: 14px;
-  font-size: 14px;
-  display: flex;
-  .tiny-input {
-    .tiny-input__inner {
-      padding-left: 12px;
-      color: var(--te-chat-model-helper-text);
-      height: 40px;
-      border: 2px solid var(--te-chat-model-input-border);
-      border-radius: 8px;
-      padding-right: 44px;
-    }
-    .tiny-input__inner:hover {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__inner:focus {
-      border-color: var(--te-chat-model-input-border);
-    }
-    .tiny-input__prefix,
-    .tiny-input__suffix {
-      padding-right: 8px;
-    }
-    clip-path: inset(0 0 round 2px);
-    svg {
-      font-size: 16px;
-    }
-  }
-
-  .tiny-button.tiny-button.tiny-button {
-    margin-left: 12px;
-    background-image: linear-gradient(
-      to bottom right,
-      var(--te-chat-model-button-bg-1),
-      var(--te-chat-model-button-bg-2),
-      var(--te-chat-model-button-bg-3)
-    );
-    border: none;
-    color: var(--te-chat-model-button-text) !important;
-    font-size: 14px;
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    border-radius: 50%;
-    float: right;
-    padding: 0;
-    transition: all 0.1s linear;
-    .svg-icon {
-      fill: var(--te-chat-model-button-text);
-      margin-right: 0;
-    }
-    span {
-      display: none;
-    }
-    &:hover {
-      transform: scale(1);
-      border-radius: 8px;
-      width: 105px;
-      padding: 0 12px;
-      span {
-        display: inline-block;
-        margin-left: 4px;
-      }
-    }
-  }
-}
-.hidden-text {
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
-
-.chat-loading .tiny-loading__spinner svg {
-  fill: var(--te-chat-loading-svg-color);
-}
-.chat-loading .tiny-loading__spinner .tiny-loading__text {
-  color: var(--te-chat-loading-text-color);
-}
-.chat-model-popover.chat-model-popover {
-  width: 220px;
-  background-color: var(--te-chat-model-popover-bg);
-  .tiny-dropdown-item {
-    color: var(--te-chat-model-popover-color);
-    max-width: 220px;
-    &:hover {
-      color: var(--te-chat-model-popover-color);
-      background-color: var(--te-chat-model-popover-active-bg);
-    }
-  }
-  .selected-model {
-    color: var(--te-chat-model-popover-color);
-    background-color: var(--te-chat-model-popover-active-bg);
-  }
+.robot-setting {
+  height: 100%;
+  background-color: #fff;
+  border-left: 1px solid var(--te-layout-common-border-color);
 }
 </style>

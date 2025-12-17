@@ -35,7 +35,7 @@ export const basePropertyOptions = {
           cols: 12,
           rules: [],
           widget: {
-            component: 'InputConfigurator',
+            component: 'ClassConfigurator',
             props: {}
           },
           labelPosition: 'left'

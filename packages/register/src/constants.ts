@@ -18,7 +18,11 @@ export const META_SERVICE = {
   Property: 'engine.service.property',
   Properties: 'engine.service.properties',
   ThemeSwitch: 'engine.service.themeSwitch',
-  Style: 'engine.service.style'
+  Style: 'engine.service.style',
+  McpService: 'engine.service.mcpService',
+  UseUtils: 'engine.service.useUtils',
+  Robot: 'engine.service.robot',
+  GlobalStateService: 'engine.service.globalStateService'
 }
 
 export const META_APP = {
@@ -32,6 +36,7 @@ export const META_APP = {
   Media: 'engine.toolbars.media',
   Collaboration: 'engine.toolbars.collaboration',
   Clean: 'engine.toolbars.clean',
+  Robot: 'engine.toolbars.robot',
   ThemeSwitch: 'engine.toolbars.themeSwitch',
   Refresh: 'engine.toolbars.refresh',
   Save: 'engine.toolbars.save',
@@ -64,10 +69,12 @@ export const META_APP = {
   State: 'engine.plugins.state',
   // 页面 schema 插件
   Schema: 'engine.plugins.schema',
+  // 资源管理 插件
+  Resource: 'engine.plugins.resource',
   // 新手帮助/帮助文档
   Help: 'engine.plugins.editorhelp',
-  // AI 插件
-  Robot: 'engine.plugins.robot',
+  // 模型管理插件
+  ModelManager: 'engine.plugins.modelmanager',
   // 属性设置面板
   Props: 'engine.setting.props',
   // 样式设置面板
@@ -77,5 +84,8 @@ export const META_APP = {
   Container: 'engine.canvas.container',
   // 画布
   Canvas: 'engine.canvas',
-  Tutorial: 'engine.plugins.tutorial'
+  Tutorial: 'engine.plugins.tutorial',
+  // 首页菜单
+  AppCenter: 'engine.workspace.application-center',
+  TemplateCenter: 'engine.workspace.template-center'
 }

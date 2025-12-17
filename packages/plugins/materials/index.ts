@@ -18,6 +18,7 @@ import MaterialBlock from './src/meta/block/index'
 import MaterialComponent from './src/meta/component/index'
 import MaterialHeader from './src/components/header/Main.vue'
 import { basePropertyOptions } from './src/js/options'
+import mcp from './src/mcp'
 import './src/styles/vars.less'
 
 export default {
@@ -36,13 +37,15 @@ export default {
     componentBaseStyle: {
       className: 'component-base-style',
       style: 'margin: 8px;'
-    }
+    },
+    hiddenBuiltinMaterials: []
   },
   components: {
     header: MaterialHeader
   },
   apis: { ...MaterialBlock.apis },
-  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService]
+  metas: [MaterialBlock, MaterialComponent, ResourceService, MaterialService],
+  mcp
 }
 
 export { entry, ResourceService, MaterialService }
