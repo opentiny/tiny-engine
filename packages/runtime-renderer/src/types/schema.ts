@@ -1,5 +1,6 @@
 // 应用级Schema类型定义
 export interface IAppSchema {
+  id: string
   pages: any[]
   bridge: any[]
   componentsMap: ComponentMap[]
@@ -13,6 +14,7 @@ export interface IAppSchema {
   constants: string
   i18n: I18nConfig
   version: string
+  blocks: Record<string, BlockSchema>
 }
 
 // 组件映射表
@@ -278,6 +280,16 @@ export interface BlockItem {
   histories_length: number
   is_published: boolean
   current_version?: any
+}
+
+export interface IBlockItem {
+  schema: BlockContent
+  meta: {
+    id: number
+    label: string
+    framework: string
+    version: string
+  }
 }
 
 // 区块内容

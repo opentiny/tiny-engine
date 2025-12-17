@@ -9,17 +9,13 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-
-import { h, computed, provide, nextTick, reactive, watch, defineComponent, inject } from 'vue'
-import Loading from '../components/Loading.vue'
-import { parseData } from './parser'
-import { renderer } from './render.ts'
-import { setPageCss, useState } from './page-function'
-import useContext from './useContext.ts'
-import { useRouter, useRoute } from 'vue-router'
-import { useAppSchema } from '../composables/useAppSchema'
-import type { PageContent as Schema } from '../types/schema'
-import { getDataSource, getUtilsAll } from '../app-function'
+import { defaultRenderer } from './render.ts'
+import { useContextPage } from './context/index.ts'
+import { useLowcode } from './context/useLowcode.ts'
+import { useAppSchema } from '../composables/useAppSchema.ts'
+import type { PageContent as Schema } from '../types/index.ts'
+import { computed, provide, reactive, watch, defineComponent } from 'vue'
+import { I18nInjectionKey } from '@opentiny/tiny-engine-common/js/i18n'
 
 interface Props {
   pageId: string
@@ -29,85 +25,40 @@ export default defineComponent({
   name: 'RenderMain',
   props: {
     pageId: {
-      type: String,
+      type: [String, Number],
       default: '0'
     }
   },
-  setup(props: Props) {
+  setup(props: Props, ctx: any) {
     const { getPageById } = useAppSchema()
-
+    // 通过 pageId 获取最新的页面对象
     const currentSchema = computed(() => {
-      const page = getPageById(props.pageId) // 通过 pageId 获取最新的页面对象
+      const page = getPageById(props.pageId)
       const pageContent = page?.page_content
       if (!pageContent) return null
       return JSON.parse(JSON.stringify(pageContent))
     })
-
-    const route = useRoute()
-    const router = useRouter()
-    const { context, setContext, getContext } = useContext()
-    const reset = (obj: Record<string, any>) => {
-      Object.keys(obj).forEach((key) => delete obj[key])
-    }
-    const stores = inject('stores')
-    provide('pageContext', context)
-
     const pageSchema = reactive<Schema>({} as Schema)
-    const methods: Record<string, any> = {}
-    const { state, setState } = useState({ getContext })
-
-    const setMethods = (data: Record<string, any> = {}, clear?: boolean) => {
-      if (clear) reset(methods)
-      // 这里有些方法在画布还是有执行的必要的，比如说表格的renderer和formatText方法，包括一些自定义渲染函数
-      Object.assign(
-        methods,
-        Object.fromEntries(
-          Object.keys(data).map((key) => {
-            return [key, parseData(data[key], {}, getContext())]
-          })
-        )
-      )
-      setContext(methods)
+    // TODO 暂时置空解决区块编译后获取报错问题
+    provide('page-ancestors', [])
+    // 提供翻译及区块Lowcode函数上下文
+    const { TinyI18nHost } = useLowcode()
+    provide(I18nInjectionKey, TinyI18nHost)
+    // 提供页面级上下文
+    const { state, methods, context, initContext } = useContextPage()
+    provide('pageContext', context)
+    const initPage = async (newSchema: Schema) => {
+      initContext({ schema: newSchema, props: props, ctx }, () => {
+        Object.assign(pageSchema, newSchema)
+      })
     }
-
-    const setSchema = async (data: Schema) => {
-      if (!data) {
-        return
-      }
-
-      const newSchema = JSON.parse(JSON.stringify(data))
-
-      const cssScopeId = `data-te-page-${String(props.pageId) || 'render-main'}`
-      const contextData = {
-        state,
-        route,
-        router,
-        stores,
-        dataSourceMap: getDataSource(),
-        utils: getUtilsAll(),
-        cssScopeId,
-        getCssScopeId: () => cssScopeId
-      }
-      // 此处提升很重要，因为setState、initProps也会触发画布重新渲染，所以需要提升上下文环境的设置时间
-      setContext(contextData, true)
-
-      // 设置方法调用上下文
-      setMethods(newSchema.methods, true)
-
-      // 这里setState（会触发画布渲染），是因为状态管理里面的变量会用到props、utils、bridge、stores、methods
-      setState(newSchema.state, true)
-      await nextTick()
-      setPageCss(data.css || '', cssScopeId)
-      Object.assign(pageSchema, newSchema)
-    }
-
     // 监听 schema 变化
     watch(
       () => currentSchema.value,
-      async (schema) => {
-        if (!schema) return
-        if (Object.keys(schema).length === 0) return
-        await setSchema(schema)
+      (schema) => {
+        if (schema && Object.keys(schema).length !== 0) {
+          initPage(JSON.parse(JSON.stringify(schema)))
+        }
       },
       { immediate: true }
     )
@@ -118,18 +69,6 @@ export default defineComponent({
     }
   },
   render(): any {
-    const { pageSchema }: { pageSchema: Schema } = this as any
-
-    // 渲染画布增加根节点，与出码和预览保持一致
-    const rootChildrenSchema: any = {
-      componentName: 'div',
-      // 把页级 props（主要是页面样式）挂到根容器
-      props: { ...(pageSchema.props || {}) },
-      children: pageSchema.children
-    }
-
-    return this.pageSchema.children?.length
-      ? h(renderer, { schema: rootChildrenSchema, parent: this.pageSchema })
-      : [h(Loading)]
+    return defaultRenderer(this.pageSchema as any)
   }
 })

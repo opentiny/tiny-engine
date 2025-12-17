@@ -1,8 +1,7 @@
-const fun_ctor = Function
-
+import { newFn } from './parser'
 export function generateFunction(rawCode: any, context = {}) {
   try {
-    return fun_ctor(`return (${rawCode})`).call(context).bind(context)
+    return newFn(`return (${rawCode})`).call(context).bind(context)
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(`generateFunction error: ${JSON.stringify(error)}`)
@@ -11,12 +10,6 @@ export function generateFunction(rawCode: any, context = {}) {
 }
 export const reset = (obj) => {
   Object.keys(obj).forEach((key) => delete obj[key])
-}
-
-// 规避创建function eslint报错
-export const newFn = (...argv) => {
-  const Fn = Function
-  return new Fn(...argv)
 }
 
 // 用于解析store中的actions和getters

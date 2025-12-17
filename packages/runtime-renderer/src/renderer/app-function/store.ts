@@ -1,9 +1,8 @@
-import { defineStore, type Pinia } from 'pinia'
+import { createPinia, defineStore } from 'pinia'
 import { shallowReactive } from 'vue'
-import type { StoreConfig } from '../types/config'
-import { useAppSchema } from '../composables/useAppSchema'
-import { parseJSFunction } from '../utils/data-utils'
-
+import { useAppSchema } from '../../composables/useAppSchema'
+import { parseJSFunction } from '../data-function'
+const stores = shallowReactive<Record<string, any>>({})
 export const generateStoresConfig = () => {
   const { globalStates } = useAppSchema()
   if (globalStates.value.length === 0) return []
@@ -37,9 +36,9 @@ export const generateStoresConfig = () => {
   }))
 }
 
-export const createStores = (storesConfig: StoreConfig[], pinia: Pinia) => {
-  const stores = shallowReactive<Record<string, any>>({})
-
+export const createAppStores = () => {
+  const pinia = createPinia()
+  const storesConfig = generateStoresConfig()
   storesConfig.forEach((config) => {
     // 使用 defineStore 创建 Pinia store
     const useStore = defineStore(config.id, {
@@ -52,6 +51,9 @@ export const createStores = (storesConfig: StoreConfig[], pinia: Pinia) => {
     // 使用useStore创建 store 实例并绑定到 pinia
     stores[config.id] = useStore(pinia)
   })
+  return pinia
+}
 
+export function getStore() {
   return stores
 }

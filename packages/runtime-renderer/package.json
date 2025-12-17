@@ -15,15 +15,14 @@
   },
   "dependencies": {
     "@opentiny/tiny-engine-builtin-component": "workspace:*",
-    "@opentiny/tiny-engine-i18n-host": "workspace:*",
-    "@vue/babel-plugin-jsx": "^1.2.5",
-    "@babel/core": "^7.18.13",
-    "@vue/shared": "^3.3.4",
+    "@opentiny/tiny-engine-block-compiler": "workspace:*",
+    "@opentiny/tiny-engine-dsl-vue": "workspace:*",
+    "@opentiny/tiny-engine-common": "workspace:*",
+    "@opentiny/tiny-engine-utils": "workspace:*",
     "axios": "^1.10.0",
-    "axios-mock-adapter": "^1.19.0",
     "pinia": "^2.1.0",
-    "vue-router": "^4.2.0",
     "postcss": "^8.4.31",
+    "axios-mock-adapter": "^1.19.0",
     "postcss-selector-parser": "^7.0.0"
   },
   "devDependencies": {
@@ -32,11 +31,15 @@
     "vite": "^5.4.2"
   },
   "peerDependencies": {
-    "@opentiny/vue": "^3.20.0",
-    "@opentiny/vue-icon": "^3.20.0",
+    "@babel/core": "^7.26.0",
+    "@opentiny/vue": "~3.20.0",
+    "@opentiny/vue-icon": "~3.20.0",
     "@opentiny/vue-locale": "~3.20.0",
     "@opentiny/vue-theme": "~3.20.0",
+    "@vue/babel-plugin-jsx": "^1.2.5",
+    "@vue/shared": "^3.3.4",
     "vue": "^3.4.15",
-    "vue-i18n": "^9.9.0"
+    "vue-i18n": "^9.9.0",
+    "vue-router": "^4.2.0"
   }
 }

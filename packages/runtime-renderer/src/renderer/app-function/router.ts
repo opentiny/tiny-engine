@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import { useAppSchema } from '../composables/useAppSchema'
-import type { IRouteConfig } from '../types/config'
-import type { PageMeta } from '../types/schema'
+import { useAppSchema } from '../../composables/useAppSchema.ts'
+import type { IRouteConfig } from '../../types/index.ts'
+import { withPageRenderer } from '../../components/PageRenderer.ts'
+import type { PageMeta } from '../../types/index.ts'
 
 // 定义页面结构类型
 interface PageSchema {
@@ -17,9 +18,8 @@ interface PageSchema {
 }
 
 // 异步初始化路由配置
-async function createRouterConfig() {
+function createRouterConfig() {
   const { pages } = useAppSchema()
-
   // 通过pages生成路由配置
   const generateRoutesByPages = (pages: Array<PageSchema>): Array<IRouteConfig> => {
     // 建立路由-页面id映射
@@ -31,8 +31,7 @@ async function createRouterConfig() {
       pageRouteMap.set(pageIdStr, {
         path: `${page.route}`,
         name: pageIdStr,
-        component: () => import('../components/PageRenderer.ts'),
-        props: { pageId: page.id },
+        component: withPageRenderer({ pageId: page.id }),
         children: [],
         meta: {
           pageId: pageIdStr,
@@ -85,14 +84,14 @@ async function createRouterConfig() {
 
   routes.push({
     path: '/:pathMatch(.*)*',
-    component: () => import('../components/NotFound.vue')
+    component: () => import('../../components/NotFound.vue')
   })
 
   return routes
 }
 
-export async function createAppRouter() {
-  const routes = await createRouterConfig()
+export function createAppRouter() {
+  const routes = createRouterConfig()
   const router = createRouter({
     history: createWebHashHistory('/runtime.html'),
     routes

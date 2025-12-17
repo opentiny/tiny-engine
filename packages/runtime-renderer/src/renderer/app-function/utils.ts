@@ -1,5 +1,5 @@
-import type { Util } from '../types/schema'
-import { parseJSFunction } from '../utils/data-utils'
+import type { Util } from '../../types/index.ts'
+import { parseJSFunction } from '../data-function/index.ts'
 
 interface npmContent {
   package?: string
