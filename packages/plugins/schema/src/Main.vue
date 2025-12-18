@@ -8,6 +8,10 @@
     @close="close"
   >
     <template #header>
+      <div class="schema-scroll-switch">
+        <tiny-checkbox v-model="enableSchemaScroll" @change="schemaScrollControl"></tiny-checkbox>
+        <span>跟随画布</span>
+      </div>
       <span class="icon-wrap">
         <i v-show="!showRed" class="red"></i>
         <tiny-button type="primary" @click="saveSchema">保存</tiny-button>
@@ -41,9 +45,9 @@
 
 <script lang="tsx">
 /* metaService: engine.plugins.schema.Main */
-import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide } from 'vue'
+import { nextTick, reactive, getCurrentInstance, onActivated, ref, onDeactivated, provide, watch } from 'vue'
 import type { Component } from 'vue'
-import { Popover, Button } from '@opentiny/vue'
+import { Popover, Button, Checkbox as TinyCheckbox } from '@opentiny/vue'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useCanvas, useModal, useNotify, useMessage, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
@@ -57,6 +61,7 @@ export default {
     MonacoEditor: VueMonaco,
     TinyPopover: Popover as Component,
     TinyButton: Button as Component,
+    TinyCheckbox: TinyCheckbox as Component,
     PluginPanel,
     IconDownloadLink: iconDownloadLink()
   },
@@ -84,6 +89,10 @@ export default {
 
     const isEdit = false
     const showRed = ref(true)
+
+    const enableSchemaScroll = ref(false)
+    const isSchemaScrollActive = ref(false)
+    const highlightField = ref([])
 
     const close = () => {
       const strs = app.refs.container.getEditor().getValue()
@@ -145,11 +154,67 @@ export default {
       true
     )
 
+    const getCurrentSchemaLine = () => {
+      const currentSchema = pageState.currentSchema
+      if (state.pageData && currentSchema) {
+        // 获取currentSchema的id行到首行的距离
+        const currentSchemaString = obj2String(currentSchema)
+        const index = currentSchemaString!.indexOf(`"id": "${currentSchema.id}"`)
+        const currentSchemaIdLineNumber = currentSchemaString!.substring(0, index).match(/\n/g)?.length
+        // 获取页面schema首行到currentSchema的id行的距离
+        const currentSchemaIndex = state.pageData.indexOf(`"id": "${currentSchema.id}"`)
+        const schemaIdLineNumber = state.pageData.substring(0, currentSchemaIndex).match(/\n/g)?.length
+        return schemaIdLineNumber && currentSchemaIdLineNumber
+          ? schemaIdLineNumber - currentSchemaIdLineNumber + 1
+          : null
+      }
+      return null
+    }
+
+    const clearHighlight = () => {
+      highlightField.value = app.refs.container.getEditor().deltaDecorations(highlightField.value, [])
+    }
+
+    const highlightFirstLine = () => {
+      if (!isSchemaScrollActive.value || !enableSchemaScroll.value) {
+        clearHighlight()
+        return
+      }
+      const startLine = getCurrentSchemaLine()
+      if (!startLine) {
+        return
+      }
+      const editor = app.refs.container.getEditor()
+      const monaco = app.refs.container.getMonaco()
+      // 清除上次的高亮行
+      clearHighlight()
+      highlightField.value = editor.deltaDecorations(highlightField.value, [
+        {
+          range: new monaco.Range(startLine + 1, 1, startLine + 1, editor.getModel().getLineMaxColumn(startLine + 1)),
+          options: {
+            inlineClassName: 'current-code-highlight'
+          }
+        }
+      ])
+      editor.revealLineInCenter(startLine)
+    }
+
+    const schemaScrollControl = () => {
+      if (enableSchemaScroll.value) {
+        highlightFirstLine()
+      } else {
+        clearHighlight()
+      }
+    }
+
     onActivated(() => {
       state.pageData = obj2String(pageState.pageSchema)
+      isSchemaScrollActive.value = true
       nextTick(() => {
         window.dispatchEvent(new Event('resize'))
         showRed.value = state.pageData === app.refs.container.getEditor().getValue()
+        // 高亮当前行
+        highlightFirstLine()
       })
 
       subscribe({
@@ -160,16 +225,27 @@ export default {
     })
 
     onDeactivated(() => {
+      isSchemaScrollActive.value = false
+      clearHighlight()
       unsubscribe({
         topic: 'schemaChange',
         subscriber: 'schema-plugin'
       })
     })
 
+    watch(
+      () => pageState.currentSchema,
+      () => {
+        highlightFirstLine()
+      }
+    )
+
     return {
       PLUGIN_NAME,
       state,
       isEdit,
+      enableSchemaScroll,
+      schemaScrollControl,
       saveSchema,
       editorChange,
       close,
@@ -192,6 +268,12 @@ export default {
   border-right: none;
   box-shadow: 6px 0px 3px 0px var(--te-schema-panel-shadow-color);
   z-index: 1000;
+  .schema-scroll-switch {
+    display: flex;
+    align-items: center;
+    margin-right: 12px;
+    font-weight: normal;
+  }
 
   .icon-wrap {
     position: relative;
@@ -239,5 +321,8 @@ export default {
       cursor: pointer;
     }
   }
+}
+:deep(.current-code-highlight) {
+  background: var(--te-common-bg-info);
 }
 </style>

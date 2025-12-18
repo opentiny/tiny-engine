@@ -13,6 +13,9 @@ import { META_SERVICE, META_APP } from '@opentiny/tiny-engine-meta-register'
 import engineConfig from './engine.config'
 import { HttpService } from './src/composable'
 
+const baseURL = import.meta.env.BASE_URL || '.'
+const baseURLWithoutSlash = baseURL.replace(/\/$/, '')
+
 export default {
   [META_SERVICE.Http]: HttpService,
   'engine.config': {
@@ -42,6 +45,13 @@ export default {
           insertAfter: META_APP.ViewSetting
         }
       }
+    }
+  },
+  [META_APP.Preview]: {
+    options: {
+      // 配置预览跳转的 url：根据实际业务需求进行配置
+      // 文档：https://opentiny.design/tiny-engine#/help-center/course/dev/preview-api
+      previewUrl: ['prod', 'alpha'].includes(import.meta.env.MODE) ? `${baseURLWithoutSlash}/preview.html` : ''
     }
   }
 }

@@ -221,7 +221,7 @@ const selectedDefaultModelInfo = computed(() => {
 
   return {
     serviceName: service.label,
-    hasApiKey: !!service.apiKey
+    hasApiKey: Boolean(service.apiKey)
   }
 })
 
