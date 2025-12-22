@@ -1,0 +1,276 @@
+{
+  "version": "3.20.0",
+  "icon": "col",
+  "name": {
+    "zh_CN": "col"
+  },
+  "component": "TinyCol",
+  "description": "列配置信息",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Col",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "span",
+            "label": {
+              "text": {
+                "zh_CN": "栅格列格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "整行",
+                    "value": 12
+                  },
+                  {
+                    "label": "6格",
+                    "value": 6
+                  },
+                  {
+                    "label": "4格",
+                    "value": 4
+                  },
+                  {
+                    "label": "3格",
+                    "value": 3
+                  },
+                  {
+                    "label": "1格",
+                    "value": 1
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "当一行分为12格时，一列可占位多少格"
+            }
+          },
+          {
+            "property": "move",
+            "label": {
+              "text": {
+                "zh_CN": "栅格移动格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": -12,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "栅格左右移动格数（正数向右，负数向左）"
+            }
+          },
+          {
+            "property": "no",
+            "label": {
+              "text": {
+                "zh_CN": "排序编号"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "排序编号（row中启用order生效）"
+            }
+          },
+          {
+            "property": "offset",
+            "label": {
+              "text": {
+                "zh_CN": "间隔格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 0,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "栅格左侧的间隔格数"
+            }
+          },
+          {
+            "property": "xs",
+            "label": {
+              "text": {
+                "zh_CN": "超小屏格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 1,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "<768px 响应式栅格数"
+            }
+          },
+          {
+            "property": "sm",
+            "label": {
+              "text": {
+                "zh_CN": "小屏格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 1,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "≥768px 响应式栅格数"
+            }
+          },
+          {
+            "property": "md",
+            "label": {
+              "text": {
+                "zh_CN": "中屏格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 1,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "≥992px 响应式栅格数"
+            }
+          },
+          {
+            "property": "lg",
+            "label": {
+              "text": {
+                "zh_CN": "大屏格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 1,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "≥1200px 响应式栅格数"
+            }
+          },
+          {
+            "property": "xl",
+            "label": {
+              "text": {
+                "zh_CN": "超大屏格数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {
+                "min": 1,
+                "max": 12
+              }
+            },
+            "description": {
+              "zh_CN": "≥1920px 响应式栅格数"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {}
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["label", "rules"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

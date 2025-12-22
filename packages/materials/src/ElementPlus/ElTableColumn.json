@@ -1,0 +1,65 @@
+{
+  "id": 1,
+  "version": "2.4.2",
+  "name": {
+    "zh_CN": "表单"
+  },
+  "component": "ElTableColumn",
+  "icon": "table",
+  "description": "用于展示多条结构类似的数据， 可对数据进行排序、筛选、对比或其他自定义操作",
+  "doc_url": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "dev_mode": "proCode",
+  "npm": {
+    "package": "element-plus",
+    "exportName": "ElTableColumn",
+    "destructuring": true
+  },
+  "group": "表单组件",
+  "category": "element-plus",
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "isPopper": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["inline", "label-width"]
+    },
+    "contextMenu": {
+      "actions": ["copy", "remove", "insert", "updateAttr", "bindEvent", "createBlock"],
+      "disable": []
+    },
+    "invalidity": [""],
+    "clickCapture": true,
+    "framework": "Vue"
+  },
+  "schema": {
+    "properties": [
+      {
+        "name": "0",
+        "label": {
+          "zh_CN": "基础属性"
+        },
+        "content": [],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {},
+    "slots": {}
+  }
+}

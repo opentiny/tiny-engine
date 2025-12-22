@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "icon": "table",
+  "name": {
+    "zh_CN": "表格"
+  },
+  "component": "table",
+  "container": false,
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 80,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表格的宽度"
+            }
+          },
+          {
+            "property": "border",
+            "label": {
+              "text": {
+                "zh_CN": "边框宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表格边框的宽度"
+            }
+          },
+          {
+            "property": "attributes3",
+            "label": {
+              "text": {
+                "zh_CN": "原生属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlAttributesConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "原生属性"
+            },
+            "labelPosition": "none"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "点击时触发"
+        },
+        "description": {
+          "zh_CN": "点击时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

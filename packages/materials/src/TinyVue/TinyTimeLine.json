@@ -1,0 +1,204 @@
+{
+  "version": "3.20.0",
+  "icon": "timeline",
+  "name": {
+    "zh_CN": "时间线"
+  },
+  "component": "TinyTimeLine",
+  "description": "TimeLine 时间线",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "TimeLine",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 3,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "vertical",
+            "type": "Boolean",
+            "defaultValue": {
+              "type": "i18n",
+              "zh_CN": "垂直布局",
+              "en_US": "layout",
+              "key": ""
+            },
+            "label": {
+              "text": {
+                "zh_CN": "垂直布局"
+              }
+            },
+            "cols": 12,
+            "rules": [],
+            "hidden": false,
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "节点和文字垂直布局"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "active",
+            "label": {
+              "text": {
+                "zh_CN": "选中值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "步骤条的选中步骤值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "data",
+            "label": {
+              "text": {
+                "zh_CN": "步骤条数据"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "defaultValue": [
+              {
+                "name": "配置基本信息",
+                "status": "ready"
+              },
+              {
+                "name": "配置报价",
+                "status": "wait"
+              },
+              {
+                "name": "完成报价",
+                "status": "wait"
+              }
+            ],
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            },
+            "description": {
+              "zh_CN": "时间线步骤条数据"
+            },
+            "labelPosition": "top"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "节点的点击时触发"
+        },
+        "description": {
+          "zh_CN": "节点的点击时触发的回调函数"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "type",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "点击节点的下标"
+              }
+            },
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前节点对象：{ name: 节点名称, time: 时间 }"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["active", "data"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "时间线"
+      },
+      "icon": "timeline",
+      "screenshot": "",
+      "snippetName": "TinyTimeLine",
+      "schema": {
+        "componentName": "TinyTimeLine",
+        "props": {
+          "active": "2",
+          "data": [
+            {
+              "name": "已下单"
+            },
+            {
+              "name": "运输中"
+            },
+            {
+              "name": "已签收"
+            }
+          ]
+        }
+      },
+      "category": "navigation"
+    }
+  ]
+}

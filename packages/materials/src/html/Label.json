@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "icon": "label",
+  "name": {
+    "zh_CN": "表单标签"
+  },
+  "component": "label",
+  "container": false,
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 110,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "for",
+            "label": {
+              "text": {
+                "zh_CN": "label绑定表单元素"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "label 绑定到哪个表单元素"
+            }
+          },
+          {
+            "property": "form",
+            "label": {
+              "text": {
+                "zh_CN": "label字段所属表单"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "label 字段所属的一个或多个表单"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  }
+}

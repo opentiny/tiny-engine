@@ -1,0 +1,107 @@
+{
+  "version": "3.20.0",
+  "icon": "tabitem",
+  "name": {
+    "zh_CN": "tab页签"
+  },
+  "component": "TinyTabItem",
+  "description": "tab 标签页",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "TabItem",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "name",
+            "label": {
+              "text": {
+                "zh_CN": "唯一标识"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "唯一标识"
+            }
+          },
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标题"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "slots": {
+      "title": {
+        "label": {
+          "zh_CN": "标题"
+        },
+        "description": {
+          "zh_CN": "自定义标题"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": ["TinyTab"],
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["name", "title"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

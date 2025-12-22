@@ -1,0 +1,124 @@
+{
+  "version": "1.0.0",
+  "icon": "form",
+  "name": {
+    "zh_CN": "表单"
+  },
+  "component": "form",
+  "container": false,
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 100,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "name",
+            "label": {
+              "text": {
+                "zh_CN": "名称"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单的名称"
+            }
+          },
+          {
+            "property": "action",
+            "label": {
+              "text": {
+                "zh_CN": "提交地址"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "提交表单时向何处发送表单数据"
+            }
+          },
+          {
+            "property": "method",
+            "label": {
+              "text": {
+                "zh_CN": "HTTP方法"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "get",
+                    "value": "get"
+                  },
+                  {
+                    "label": "post",
+                    "value": "post"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "用于发送 form-data 的 HTTP 方法"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onClick": {
+        "label": {
+          "zh_CN": "点击时触发"
+        },
+        "description": {
+          "zh_CN": "点击时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": []
+    },
+    "contentMenu": {
+      "actions": []
+    }
+  },
+  "configure": {
+    "isContainer": true
+  }
+}

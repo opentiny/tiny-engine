@@ -1,0 +1,462 @@
+{
+  "version": "3.20.0",
+  "name": {
+    "zh_CN": "弹出编辑"
+  },
+  "component": "TinyPopeditor",
+  "icon": "popEditor",
+  "description": "该组件只能在弹出的面板中选择数据，不能手动输入数据；弹出面板中显示为 Tree 组件或者 Grid 组件",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Popeditor",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 6,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "双向绑定值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "placeholder",
+            "label": {
+              "text": {
+                "zh_CN": "占位文本"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "输入框占位文本"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "show-clear-btn",
+            "label": {
+              "text": {
+                "zh_CN": "清除按钮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示清除按钮"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "auto-lookup",
+            "label": {
+              "text": {
+                "zh_CN": "自动请求数据"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "defaultValue": true,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "初始化时是否自动请求数据,默认 true"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "name": "1",
+        "label": {
+          "zh_CN": "其他"
+        },
+        "content": [
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置弹出面板的宽度（单位像素）"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "conditions",
+            "label": {
+              "text": {
+                "zh_CN": "过滤条件"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当弹出面板配置的是表格时，设置弹出面板中的过滤条件"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "grid-op",
+            "label": {
+              "text": {
+                "zh_CN": "面板表格配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置弹出面板中表格组件的配置信息"
+            }
+          },
+          {
+            "property": "pager-op",
+            "label": {
+              "text": {
+                "zh_CN": "分页配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置弹出编辑框中分页配置"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "multi",
+            "label": {
+              "text": {
+                "zh_CN": "多选"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置弹出面板中的数据是否可多选"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "show-pager",
+            "label": {
+              "text": {
+                "zh_CN": "启用分页"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "当 popseletor 为 grid 时才能生效，配置为 true 后还需配置 pagerOp 属性"
+            },
+            "labelPosition": "left"
+          }
+        ],
+        "description": {
+          "zh_CN": ""
+        }
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "选中值改变时触发"
+        },
+        "description": {
+          "zh_CN": "在 Input 值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前选中项的值"
+              }
+            },
+            {
+              "name": "value",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前选中对象"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onUpdate:modelValue": {
+        "label": {
+          "zh_CN": "双向绑定的值改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前选中的值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的当前选中值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onClose": {
+        "label": {
+          "zh_CN": "弹框关闭时触发的事件"
+        },
+        "description": {
+          "zh_CN": "弹框关闭时触发的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onPageChange": {
+        "label": {
+          "zh_CN": "分页切换事件"
+        },
+        "description": {
+          "zh_CN": "表格模式下分页切换事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "String",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "当前页码数"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["modelValue", "disabled"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "弹出编辑"
+      },
+      "icon": "popeditor",
+      "screenshot": "",
+      "snippetName": "TinyPopeditor",
+      "schema": {
+        "componentName": "TinyPopeditor",
+        "props": {
+          "modelValue": "",
+          "placeholder": "请选择",
+          "grid-op": {
+            "columns": [
+              {
+                "field": "id",
+                "title": "ID",
+                "width": 40
+              },
+              {
+                "field": "name",
+                "title": "名称",
+                "showOverflow": "tooltip"
+              },
+              {
+                "field": "province",
+                "title": "省份",
+                "width": 80
+              },
+              {
+                "field": "city",
+                "title": "城市",
+                "width": 80
+              }
+            ],
+            "data": [
+              {
+                "id": "1",
+                "name": "GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司GFD科技有限公司",
+                "city": "福州",
+                "province": "福建"
+              },
+              {
+                "id": "2",
+                "name": "WWW科技有限公司",
+                "city": "深圳",
+                "province": "广东"
+              },
+              {
+                "id": "3",
+                "name": "RFV有限责任公司",
+                "city": "中山",
+                "province": "广东"
+              },
+              {
+                "id": "4",
+                "name": "TGB科技有限公司",
+                "city": "龙岩",
+                "province": "福建"
+              },
+              {
+                "id": "5",
+                "name": "YHN科技有限公司",
+                "city": "韶关",
+                "province": "广东"
+              },
+              {
+                "id": "6",
+                "name": "WSX科技有限公司",
+                "city": "黄冈",
+                "province": "武汉"
+              }
+            ]
+          }
+        }
+      },
+      "category": "data-display"
+    }
+  ]
+}

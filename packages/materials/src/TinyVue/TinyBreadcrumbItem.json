@@ -1,0 +1,87 @@
+{
+  "version": "3.20.0",
+  "icon": "breadcrumb",
+  "name": {
+    "zh_CN": "面包屑项"
+  },
+  "component": "TinyBreadcrumbItem",
+  "description": "",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "BreadcrumbItem",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 1,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "to",
+            "label": {
+              "text": {
+                "zh_CN": "路由跳转"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "路由跳转对象，同 vue-router 的 to"
+            }
+          }
+        ]
+      }
+    ],
+    "slots": {
+      "default": {
+        "label": {
+          "zh_CN": "面包屑项标签"
+        },
+        "description": {
+          "zh_CN": "面包屑项"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": ["TinyBreadcrumb"],
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["to"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

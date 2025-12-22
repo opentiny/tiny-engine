@@ -1,0 +1,375 @@
+{
+  "version": "3.20.0",
+  "name": {
+    "zh_CN": "走马灯"
+  },
+  "component": "TinyCarousel",
+  "icon": "carousel",
+  "description": "常用于一组图片或卡片轮播，当内容空间不足时，可以用走马灯的形式进行收纳，进行轮播展现。",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Carousel",
+    "destructuring": true
+  },
+  "group": "component",
+  "category": "容器组件",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "arrow",
+            "label": {
+              "text": {
+                "zh_CN": "箭头显示时机"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "总是显示",
+                    "value": "always"
+                  },
+                  {
+                    "label": "鼠标悬停时显示",
+                    "value": "hover"
+                  },
+                  {
+                    "label": "从不显示",
+                    "value": "never"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "切换箭头的显示时机"
+            }
+          },
+          {
+            "property": "autoplay",
+            "label": {
+              "text": {
+                "zh_CN": "自动切换"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否自动切换"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "tabs",
+            "label": {
+              "text": {
+                "zh_CN": "选项卡"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "defaultValue": "",
+            "cols": 12,
+            "bindState": false,
+            "widget": {
+              "component": "ContainerConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "tabs 选项卡"
+            },
+            "labelPosition": "none"
+          },
+          {
+            "property": "height",
+            "label": {
+              "text": {
+                "zh_CN": "高度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "走马灯的高度"
+            }
+          },
+          {
+            "property": "indicator-position",
+            "label": {
+              "text": {
+                "zh_CN": "位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "走马灯外部",
+                    "value": "outside"
+                  },
+                  {
+                    "label": "不显示",
+                    "value": "none"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "指示器的位置"
+            }
+          },
+          {
+            "property": "initial-index",
+            "label": {
+              "text": {
+                "zh_CN": "初始索引"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "初始状态激活的幻灯片的索引，从 0 开始 "
+            }
+          },
+          {
+            "property": "interval",
+            "label": {
+              "text": {
+                "zh_CN": "自动切换间隔"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "自动切换的时间间隔，单位为毫秒"
+            }
+          },
+          {
+            "property": "loop",
+            "label": {
+              "text": {
+                "zh_CN": "循环显示"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否循环显示"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "show-title",
+            "label": {
+              "text": {
+                "zh_CN": "显示标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示标题"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "trigger",
+            "label": {
+              "text": {
+                "zh_CN": "触发方式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "点击",
+                    "value": "click"
+                  },
+                  {
+                    "label": "悬停",
+                    "value": "hover"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "指示器的触发方式，默认为 hover"
+            }
+          },
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "水平",
+                    "value": "horizontal"
+                  },
+                  {
+                    "label": "垂直",
+                    "value": "vertical"
+                  },
+                  {
+                    "label": "卡片",
+                    "value": "card"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "走马灯的类型"
+            }
+          }
+        ]
+      }
+    ],
+    "events": {}
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "clickCapture": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": ["TinyCarouselItem"],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["disabled", "size"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "走马灯"
+      },
+      "screenshot": "",
+      "snippetName": "tiny-carousel",
+      "icon": "carousel",
+      "schema": {
+        "componentName": "TinyCarousel",
+        "props": {
+          "height": "180px"
+        },
+        "children": [
+          {
+            "componentName": "TinyCarouselItem",
+            "props": {
+              "title": "carousel-item-a"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "margin:10px 0 0 30px"
+                }
+              }
+            ]
+          },
+          {
+            "componentName": "TinyCarouselItem",
+            "props": {
+              "title": "carousel-item-b"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "style": "margin:10px 0 0 30px"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "category": "data-display"
+    }
+  ]
+}

@@ -1,0 +1,269 @@
+{
+  "version": "3.20.0",
+  "icon": "tooltip",
+  "name": {
+    "zh_CN": "文字提示框"
+  },
+  "component": "TinyTooltip",
+  "description": "动态显示提示信息，一般通过鼠标事件进行响应；提供 warning、error、info、success 四种类型显示不同类别的信",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Tooltip",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 11,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "placement",
+            "label": {
+              "text": {
+                "zh_CN": "提示位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "top",
+                    "value": "top"
+                  },
+                  {
+                    "label": "top-start",
+                    "value": "top-start"
+                  },
+                  {
+                    "label": "top-end",
+                    "value": "top-end"
+                  },
+                  {
+                    "label": "bottom",
+                    "value": "bottom"
+                  },
+                  {
+                    "label": "bottom-start",
+                    "value": "bottom-start"
+                  },
+                  {
+                    "label": "bottom-end",
+                    "value": "bottom-end"
+                  },
+                  {
+                    "label": "left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "left-start",
+                    "value": "left-start"
+                  },
+                  {
+                    "label": "left-end",
+                    "value": "left-end"
+                  },
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "right-start",
+                    "value": "right-start"
+                  },
+                  {
+                    "label": "right-end",
+                    "value": "right-end"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "Tooltip 的出现位置"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "content",
+            "label": {
+              "text": {
+                "zh_CN": "内容"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "defaultValue": "提示信息",
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "显示的内容，也可以通过 slot#content 传入 DOM"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "render-content",
+            "label": {
+              "text": {
+                "zh_CN": "渲染函数"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "disabled": true,
+                "placeholder": "请使用变量绑定来绑定函数"
+              }
+            },
+            "description": {
+              "zh_CN": "自定义渲染函数，返回需要渲染的节点内容"
+            }
+          },
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "是否可见"
+              }
+            },
+            "defaultValue": true,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "状态是否可见"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "manual",
+            "label": {
+              "text": {
+                "zh_CN": "手动控制"
+              }
+            },
+            "defaultValue": true,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "手动控制模式，设置为 true 后，mouseenter 和 mouseleave 事件将不会生效"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "slots": {
+      "content": {
+        "label": {
+          "zh_CN": "提示内容"
+        },
+        "description": {
+          "zh_CN": "自定义提示内容"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "isPopper": true,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["disabled", "content"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "文字提示框"
+      },
+      "icon": "tooltip",
+      "screenshot": "",
+      "snippetName": "TinyTooltip",
+      "schema": {
+        "componentName": "TinyTooltip",
+        "props": {
+          "content": "Top Left 提示文字",
+          "placement": "top-start",
+          "manual": true,
+          "modelValue": true
+        },
+        "children": [
+          {
+            "componentName": "span",
+            "children": [
+              {
+                "componentName": "div",
+                "props": {}
+              }
+            ]
+          },
+          {
+            "componentName": "Template",
+            "props": {
+              "slot": "content"
+            },
+            "children": [
+              {
+                "componentName": "span",
+                "children": [
+                  {
+                    "componentName": "div",
+                    "props": {
+                      "placeholder": "提示内容"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "category": "data-display"
+    }
+  ]
+}

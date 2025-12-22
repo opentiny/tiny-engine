@@ -1,0 +1,973 @@
+{
+  "version": "3.20.0",
+  "icon": "grid",
+  "name": {
+    "zh_CN": "表格"
+  },
+  "component": "TinyGrid",
+  "description": "提供了非常强大数据表格功能，可以展示数据列表，可以对数据列表进行选择、编辑等",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Grid",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础属性"
+        },
+        "description": {
+          "zh_CN": "基础属性"
+        },
+        "content": [
+          {
+            "property": "data",
+            "label": {
+              "text": {
+                "zh_CN": "表格数据"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            },
+            "onChange": "this.delProp('fetchData')",
+            "description": {
+              "zh_CN": "设置表格的数据"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "columns",
+            "label": {
+              "text": {
+                "zh_CN": "表格列"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "默认分组"
+                },
+                "content": [
+                  {
+                    "property": "title",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "列标题"
+                      }
+                    },
+                    "widget": {
+                      "component": "I18nConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "field",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "列键值"
+                      }
+                    },
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "sortable",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "label": {
+                      "text": {
+                        "zh_CN": "是否排序"
+                      }
+                    },
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "width",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "列宽"
+                      }
+                    },
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "formatText",
+                    "type": "string",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "内置渲染器"
+                      }
+                    },
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "整数",
+                            "value": "integer"
+                          },
+                          {
+                            "label": "小数",
+                            "value": "number"
+                          },
+                          {
+                            "label": "金额",
+                            "value": "money"
+                          },
+                          {
+                            "label": "百分比",
+                            "value": "rate"
+                          },
+                          {
+                            "label": "布尔",
+                            "value": "boole"
+                          },
+                          {
+                            "label": "年月日",
+                            "value": "date"
+                          },
+                          {
+                            "label": "年月日时分",
+                            "value": "dateTime"
+                          },
+                          {
+                            "label": "时间",
+                            "value": "time"
+                          },
+                          {
+                            "label": "省略",
+                            "value": "ellipsis"
+                          }
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "property": "renderer",
+                    "type": "object",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "渲染函数"
+                      }
+                    },
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "dataType": "JSFunction"
+                      }
+                    }
+                  },
+                  {
+                    "property": "slots",
+                    "type": "object",
+                    "defaultValue": "",
+                    "label": {
+                      "text": {
+                        "zh_CN": "插槽"
+                      }
+                    },
+                    "labelPosition": "none",
+                    "widget": {
+                      "component": "JsSlotConfigurator",
+                      "props": {
+                        "slots": ["header", "default"]
+                      }
+                    }
+                  },
+                  {
+                    "property": "type",
+                    "label": {
+                      "text": {
+                        "zh_CN": "列类型"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "索引列",
+                            "value": "index"
+                          },
+                          {
+                            "label": "单选列",
+                            "value": "radio"
+                          },
+                          {
+                            "label": "多选列",
+                            "value": "selection"
+                          },
+                          {
+                            "label": "展开列",
+                            "value": "expand"
+                          }
+                        ],
+                        "clearable": true
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置内置列的类型，该属性的可选值为 index（序号）/ selection（复选框）/ radio（单选框）/ expand（展开行）"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "editor",
+                    "label": {
+                      "text": {
+                        "zh_CN": "编辑配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "单元格编辑渲染配置项，也可以是函数 Function(h, params)"
+                    }
+                  },
+                  {
+                    "property": "filter",
+                    "label": {
+                      "text": {
+                        "zh_CN": "筛选配置"
+                      }
+                    },
+                    "required": false,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置表格列的筛选配置信息。默认值为 false 不配置筛选信息"
+                    }
+                  },
+                  {
+                    "property": "showOverflow",
+                    "label": {
+                      "text": {
+                        "zh_CN": "内容超出部分省略号配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "SelectConfigurator",
+                      "props": {
+                        "options": [
+                          {
+                            "label": "只显示省略号",
+                            "value": "ellipsis"
+                          },
+                          {
+                            "label": "显示为原生 title",
+                            "value": "title"
+                          },
+                          {
+                            "label": "显示为 tooltip 提示",
+                            "value": "tooltip"
+                          }
+                        ],
+                        "clearable": true
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置内置列的内容超出部分显示省略号配置，该属性的可选值为 ellipsis（只显示省略号）/ title（显示为原生 title）/ tooltip（显示为 tooltip 提示）"
+                    },
+                    "labelPosition": "top"
+                  }
+                ]
+              }
+            ],
+            "widget": {
+              "component": "ArrayItemConfigurator",
+              "props": {
+                "type": "object",
+                "textField": "title",
+                "language": "json",
+                "buttonText": "编辑列配置",
+                "title": "编辑列配置",
+                "expand": true
+              }
+            },
+            "description": {
+              "zh_CN": "表格列的配置信息"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "fetchData",
+            "label": {
+              "text": {
+                "zh_CN": "服务端查询"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "onChange": "function () { this.delProp('data') } ",
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "name": "fetchData",
+                "dataType": "JSExpression"
+              }
+            },
+            "description": {
+              "zh_CN": "服务端数据查询方法"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "pager",
+            "label": {
+              "text": {
+                "zh_CN": "分页配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "defaultValue": {
+              "attrs": {
+                "currentPage": 1
+              }
+            },
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "name": "pager",
+                "dataType": "JSExpression"
+              }
+            },
+            "description": {
+              "zh_CN": "分页配置，需结合fetchData使用"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "resizable",
+            "label": {
+              "text": {
+                "zh_CN": "调整列宽"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否允许调整列宽"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "row-id",
+            "label": {
+              "text": {
+                "zh_CN": "行数据主键"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "placeholder": "比如：id"
+              }
+            },
+            "description": {
+              "zh_CN": "自定义行数据唯一主键的字段名（行数据必须要有唯一主键，默认自动生成）"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "select-config",
+            "label": {
+              "text": {
+                "zh_CN": "行复选框配置"
+              }
+            },
+            "required": false,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "dataType": "JSExpression"
+              }
+            },
+            "description": {
+              "zh_CN": "表格行数据复选框配置项"
+            }
+          },
+          {
+            "property": "edit-rules",
+            "label": {
+              "text": {
+                "zh_CN": "校验规则"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表格校验规则配置项"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "edit-config",
+            "label": {
+              "text": {
+                "zh_CN": "编辑配置项"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表格编辑配置项"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "expand-config",
+            "label": {
+              "text": {
+                "zh_CN": "展开行配置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "展开行配置项"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "sortable",
+            "label": {
+              "text": {
+                "zh_CN": "可排序"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否允许列数据排序。默认为 true 可排序"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      },
+      {
+        "label": {
+          "zh_CN": "其他"
+        },
+        "description": {
+          "zh_CN": "其他属性"
+        },
+        "content": [
+          {
+            "property": "auto-resize",
+            "label": {
+              "text": {
+                "zh_CN": "响应式监听"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表格属性设置 autoResize 属性开启响应式表格宽高的同时，将高度height设置为auto就可以自动跟随父容器高度。"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "border",
+            "label": {
+              "text": {
+                "zh_CN": "边框"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否带有纵向边框"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "seq-serial",
+            "label": {
+              "text": {
+                "zh_CN": "行号连续"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置行序号是否连续，开启分页时有效，该属性的默认值为 false"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "highlight-current-row",
+            "label": {
+              "text": {
+                "zh_CN": "高亮当前行"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "高亮当前行"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "highlight-hover-row",
+            "label": {
+              "text": {
+                "zh_CN": "移入行高亮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "鼠标移到行是否要高亮显示"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "row-class-name",
+            "label": {
+              "text": {
+                "zh_CN": "设置行高亮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "给行附加 className，也可以是函数 Function({seq, row, rowIndex, $rowIndex})"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "max-height",
+            "label": {
+              "text": {
+                "zh_CN": "内容最大高度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置表格内容区域（不含表格头部，底部）的最大高度。"
+            }
+          },
+          {
+            "property": "row-span",
+            "label": {
+              "text": {
+                "zh_CN": "行合并"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "设置行合并,该属性仅适用于普通表格，不可与 tree-config 同时使用"
+            },
+            "labelPosition": "top"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onFilterChange": {
+        "label": {
+          "zh_CN": "筛选条件改变时触发改事件"
+        },
+        "description": {
+          "zh_CN": "配置 remote-filter 开启服务端过滤，服务端过滤会调用表格 fetch-data 进行查询，filter-change 服务端过滤后触发的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "table",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "{$table,filters} 包含 table 实例对象和过滤条件的对象"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": "function onClick(e) {}"
+      },
+      "onSortChange": {
+        "label": {
+          "zh_CN": "点击列头，执行数据排序前触发的事件"
+        },
+        "description": {
+          "zh_CN": "配置 remote-filter 开启服务端过滤，服务端过滤会调用表格 fetch-data 进行查询，filter-change 服务端过滤后触发的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "table",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "{$table,filters} 包含 table 实例对象和过滤条件的对象"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": "function onClick(e) {}"
+      },
+      "onSelectAll": {
+        "label": {
+          "zh_CN": "当手动勾选全选时触发的事件"
+        },
+        "description": {
+          "zh_CN": "只对 type=selection 有效，当手动勾选全选时触发的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "table",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": " 包含 table 实例对象"
+              }
+            },
+            {
+              "name": "checked",
+              "type": "boolean",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "勾选状态"
+              }
+            },
+            {
+              "name": "selction",
+              "type": "Array",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "选中的表格数据数组"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": "function onClick(e) {}"
+      },
+      "onSelectChange": {
+        "label": {
+          "zh_CN": "手动勾选并且值发生改变时触发的事件"
+        },
+        "description": {
+          "zh_CN": "只对 type=selection 有效，当手动勾选并且值发生改变时触发的事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "table",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": " table 实例对象"
+              }
+            },
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": " 原生 Event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": "function onClick(e) {}"
+      },
+      "onToggleExpandChange": {
+        "label": {
+          "zh_CN": "当行展开或收起时会触发该事件"
+        },
+        "description": {
+          "zh_CN": "当行展开或收起时会触发该事件"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "table",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "{$table,row,rowIndex} 包含 table 实例对象和当前行数据的对象"
+              }
+            },
+            {
+              "name": "event",
+              "type": "Object",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": " 原生 Event"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": "function onClick(e) {}"
+      },
+      "onCurrentChange": {
+        "label": {
+          "zh_CN": "行点击时触发"
+        },
+        "description": {
+          "zh_CN": "行点击时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "shortcuts": {
+      "properties": ["sortable", "columns"]
+    },
+    "contentMenu": {
+      "actions": ["create symbol"]
+    },
+    "onBeforeMount": "console.log('table on load'); this.pager = source.pager; this.fetchData = source.fetchData; this.data = source.data ;this.columns = source.columns"
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["sortable", "columns"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "表格"
+      },
+      "icon": "grid",
+      "screenshot": "",
+      "snippetName": "tinyGrid",
+      "schema": {
+        "componentName": "TinyGrid",
+        "props": {
+          "editConfig": {
+            "trigger": "click",
+            "mode": "cell",
+            "showStatus": true
+          },
+          "columns": [
+            {
+              "type": "index",
+              "width": 60
+            },
+            {
+              "type": "selection",
+              "width": 60
+            },
+            {
+              "field": "employees",
+              "title": "员工数"
+            },
+            {
+              "field": "created_date",
+              "title": "创建日期"
+            },
+            {
+              "field": "city",
+              "title": "城市"
+            }
+          ],
+          "data": [
+            {
+              "id": "1",
+              "name": "GFD科技有限公司",
+              "city": "福州",
+              "employees": 800,
+              "created_date": "2014-04-30 00:56:00",
+              "boole": false
+            },
+            {
+              "id": "2",
+              "name": "WWW科技有限公司",
+              "city": "深圳",
+              "employees": 300,
+              "created_date": "2016-07-08 12:36:22",
+              "boole": true
+            }
+          ]
+        }
+      },
+      "category": "table"
+    }
+  ]
+}

@@ -1,0 +1,148 @@
+{
+  "version": "3.20.0",
+  "icon": "row",
+  "name": {
+    "zh_CN": "row"
+  },
+  "component": "TinyRow",
+  "description": "定义 Layout 的行配置信息",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Row",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 5,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "layout",
+            "label": {
+              "text": {
+                "zh_CN": "布局"
+              }
+            },
+            "cols": 12,
+            "widget": {
+              "component": "LayoutGridConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "选择布局方式"
+            },
+            "labelPosition": "none"
+          },
+          {
+            "property": "align",
+            "label": {
+              "text": {
+                "zh_CN": "子项对齐方式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "top",
+                    "value": "top"
+                  },
+                  {
+                    "label": "middle",
+                    "value": "middle"
+                  },
+                  {
+                    "label": "bottom",
+                    "value": "bottom"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "子项的副轴对齐方向，可取值：top, middle, bottom"
+            }
+          },
+          {
+            "property": "flex",
+            "label": {
+              "text": {
+                "zh_CN": "flex容器"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否为flex容器"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "gutter",
+            "label": {
+              "text": {
+                "zh_CN": "子项间隔"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "子项的间隔的像素"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": [],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["label-width", "disabled"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

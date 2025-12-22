@@ -1,0 +1,160 @@
+{
+  "version": "1.0.0",
+  "icon": "link",
+  "name": {
+    "zh_CN": "提示框"
+  },
+  "component": "a",
+  "description": "链接",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "group": "component",
+  "priority": 7,
+  "npm": {},
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "children",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlTextConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "类型"
+            },
+            "labelPosition": "none"
+          },
+          {
+            "property": "href",
+            "label": {
+              "text": {
+                "zh_CN": "链接"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "指定链接的 URL"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "target",
+            "label": {
+              "text": {
+                "zh_CN": "打开方式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "ButtonGroupConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "当前页面",
+                    "value": "_self"
+                  },
+                  {
+                    "label": "打开新页面",
+                    "value": "_blank"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "指定链接的打开方式，例如在当前窗口中打开或在新窗口中打开。"
+            }
+          },
+          {
+            "property": "attributes3",
+            "label": {
+              "text": {
+                "zh_CN": "原生属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlAttributesConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "原生属性"
+            },
+            "labelPosition": "none"
+          }
+        ]
+      }
+    ]
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "slots": [],
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": []
+    },
+    "contextMenu": {
+      "actions": [],
+      "disable": []
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "链接"
+      },
+      "icon": "link",
+      "screenshot": "",
+      "snippetName": "a",
+      "schema": {
+        "componentName": "a",
+        "children": "链接"
+      },
+      "category": "basic"
+    }
+  ]
+}

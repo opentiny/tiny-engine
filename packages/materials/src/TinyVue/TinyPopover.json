@@ -1,0 +1,543 @@
+{
+  "version": "3.20.0",
+  "icon": "popover",
+  "name": {
+    "zh_CN": "提示框"
+  },
+  "component": "TinyPopover",
+  "description": "Popover可通过对一个触发源操作触发弹出框,支持自定义弹出内容，延迟触发和渐变动画",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "Popover",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 7,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "双向绑定，手动控制是否可见的状态值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "placement",
+            "label": {
+              "text": {
+                "zh_CN": "位置"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "top",
+                    "value": "top"
+                  },
+                  {
+                    "label": "top-start",
+                    "value": "top-start"
+                  },
+                  {
+                    "label": "top-end",
+                    "value": "top-end"
+                  },
+                  {
+                    "label": "bottom",
+                    "value": "bottom"
+                  },
+                  {
+                    "label": "bottom-start",
+                    "value": "bottom-start"
+                  },
+                  {
+                    "label": "bottom-end",
+                    "value": "bottom-end"
+                  },
+                  {
+                    "label": "left",
+                    "value": "left"
+                  },
+                  {
+                    "label": "left-start",
+                    "value": "left-start"
+                  },
+                  {
+                    "label": "left-end",
+                    "value": "left-end"
+                  },
+                  {
+                    "label": "right",
+                    "value": "right"
+                  },
+                  {
+                    "label": "right-start",
+                    "value": "right-start"
+                  },
+                  {
+                    "label": "right-end",
+                    "value": "right-end"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "提示框位置"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "trigger",
+            "label": {
+              "text": {
+                "zh_CN": "触发方式"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "SelectConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "click",
+                    "value": "click"
+                  },
+                  {
+                    "label": "focus",
+                    "value": "focus"
+                  },
+                  {
+                    "label": "hover",
+                    "value": "hover"
+                  },
+                  {
+                    "label": "manual",
+                    "value": "manual"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "触发方式，该属性的可选值为 click / focus / hover / manual，该属性的默认值为 click"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "popper-class",
+            "label": {
+              "text": {
+                "zh_CN": "自定义类"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "为 popper 添加类名"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "visible-arrow",
+            "label": {
+              "text": {
+                "zh_CN": "显示箭头"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示 Tooltip 箭头"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "append-to-body",
+            "label": {
+              "text": {
+                "zh_CN": "添加到body上"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "Popover弹窗是否添加到body上"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "arrow-offset",
+            "label": {
+              "text": {
+                "zh_CN": "箭头的位置偏移"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "箭头的位置偏移，该属性的默认值为 0"
+            }
+          },
+          {
+            "property": "close-delay",
+            "label": {
+              "text": {
+                "zh_CN": "延迟隐藏"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "触发方式为 hover 时的隐藏延迟，单位为毫秒"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "content",
+            "label": {
+              "text": {
+                "zh_CN": "显示的内容"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "显示的内容，也可以通过 slot 传入 DOM"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "Popover 是否可用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "offset",
+            "label": {
+              "text": {
+                "zh_CN": "位置偏移量"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "出现位置的偏移量"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "open-delay",
+            "label": {
+              "text": {
+                "zh_CN": "显示延迟"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "触发方式为 hover 时的显示延迟，单位为毫秒"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "popper-options",
+            "label": {
+              "text": {
+                "zh_CN": "弹出层参数"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "popper.js 的参数"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "提示内容标题"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "transform-origin",
+            "label": {
+              "text": {
+                "zh_CN": "旋转中心点"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "组件的旋转中心点,组件的旋转中心点"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "transition",
+            "label": {
+              "text": {
+                "zh_CN": "渐变动画"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "该属性的默认值为 fade-in-linear"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "NumberConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "宽度"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onUpdate:modelValue": {
+        "label": {
+          "zh_CN": "双向绑定的值改变时触发"
+        },
+        "description": {
+          "zh_CN": "手动控制是否可见的状态值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "boolean",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的可见状态值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "isPopper": true,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["visible", "width"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "提示框"
+      },
+      "icon": "popover",
+      "screenshot": "",
+      "snippetName": "TinyPopover",
+      "schema": {
+        "componentName": "TinyPopover",
+        "props": {
+          "width": 200,
+          "title": "弹框标题",
+          "trigger": "manual",
+          "modelValue": true
+        },
+        "children": [
+          {
+            "componentName": "Template",
+            "props": {
+              "slot": "reference"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "placeholder": "触发源"
+                }
+              }
+            ]
+          },
+          {
+            "componentName": "Template",
+            "props": {
+              "slot": "default"
+            },
+            "children": [
+              {
+                "componentName": "div",
+                "props": {
+                  "placeholder": "提示内容"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "category": "data-display"
+    }
+  ]
+}

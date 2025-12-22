@@ -1,0 +1,300 @@
+{
+  "version": "3.20.0",
+  "icon": "dialogbox",
+  "name": {
+    "zh_CN": "对话框"
+  },
+  "component": "TinyDialogBox",
+  "description": "模态对话框，在浮层中显示，引导用户进行相关操作。",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "DialogBox",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 4,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "title",
+            "label": {
+              "text": {
+                "zh_CN": "标题"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框标题"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "visible",
+            "label": {
+              "text": {
+                "zh_CN": "显示与隐藏"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "控制弹出框显示与关闭"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框的宽度"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "draggable",
+            "label": {
+              "text": {
+                "zh_CN": "可拖拽"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否开启弹窗的拖拽功能，默认值为 false 。"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "center",
+            "label": {
+              "text": {
+                "zh_CN": "居中"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "弹出框的头部与底部内容会自动居中"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "dialog-class",
+            "label": {
+              "text": {
+                "zh_CN": "自定义类名"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "自定义配置弹窗类名"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "append-to-body",
+            "label": {
+              "text": {
+                "zh_CN": "插入到Body"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "DialogBox 本身是否插入到 body 上，嵌套的 Dialog 必须指定该属性并赋值为 true"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "show-close",
+            "label": {
+              "text": {
+                "zh_CN": "关闭按钮"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示关闭按钮，默认值为 true 。"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "selector": ".TinyDialogBox",
+    "events": {
+      "onClose": {
+        "label": {
+          "zh_CN": "关闭弹窗时触发"
+        },
+        "description": {
+          "zh_CN": "Dialog 关闭的回调"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onUpdate:visible": {
+        "label": {
+          "zh_CN": "双向绑定的状态改变时触发"
+        },
+        "description": {
+          "zh_CN": "显示或隐藏的状态值，发生改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "boolean",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的显示或隐藏的状态值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    },
+    "slots": {
+      "title": {
+        "label": {
+          "zh_CN": "标题区"
+        },
+        "description": {
+          "zh_CN": "Dialog 标题区的内容"
+        }
+      },
+      "footer": {
+        "label": {
+          "zh_CN": "按钮操作区"
+        },
+        "description": {
+          "zh_CN": "Dialog 按钮操作区的内容"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": true,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": ".tiny-dialog-box",
+    "shortcuts": {
+      "properties": ["visible", "width"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "对话框"
+      },
+      "screenshot": "",
+      "snippetName": "TinyDialogBox",
+      "icon": "dialogbox",
+      "schema": {
+        "componentName": "TinyDialogBox",
+        "props": {
+          "visible": true,
+          "show-close": true,
+          "title": "dialogBox title"
+        },
+        "children": [
+          {
+            "componentName": "div"
+          }
+        ]
+      },
+      "category": "data-display"
+    }
+  ]
+}

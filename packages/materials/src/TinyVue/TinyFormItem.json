@@ -1,0 +1,130 @@
+{
+  "version": "3.20.0",
+  "icon": "formitem",
+  "name": {
+    "zh_CN": "表单项"
+  },
+  "component": "TinyFormItem",
+  "description": "由按钮、输入框、选择器、单选框、多选框等控件组成，用以收集、校验、提交数据",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "FormItem",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 12,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "label",
+            "label": {
+              "text": {
+                "zh_CN": "标签文本"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "defaultValue": "标签",
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "标签文本"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "prop",
+            "label": {
+              "text": {
+                "zh_CN": "校验字段"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "表单域 model 字段，在使用 validate、resetFields 方法的情况下，该属性是必填的"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "required",
+            "label": {
+              "text": {
+                "zh_CN": "必填"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否必填"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {},
+    "slots": {
+      "label": {
+        "label": {
+          "zh_CN": "字段名"
+        },
+        "description": {
+          "zh_CN": "自定义显示字段名称"
+        }
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": true,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": ["TinyForm"],
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["label", "rules"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  }
+}

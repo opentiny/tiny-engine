@@ -1,0 +1,266 @@
+{
+  "version": "3.20.0",
+  "icon": "checkboxgroup",
+  "name": {
+    "zh_CN": "复选按钮组"
+  },
+  "component": "TinyCheckboxGroup",
+  "description": "用于配置不同场景的选项，提供用户可在一组选项中进行多选",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {
+    "package": "@opentiny/vue",
+    "exportName": "CheckboxGroup",
+    "destructuring": true
+  },
+  "group": "component",
+  "priority": 2,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "modelValue",
+            "label": {
+              "text": {
+                "zh_CN": "绑定值"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {
+                "dataType": "Array"
+              }
+            },
+            "description": {
+              "zh_CN": "双向绑定的当前选中值"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "disabled",
+            "label": {
+              "text": {
+                "zh_CN": "禁用"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否禁用"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "options",
+            "label": {
+              "text": {
+                "zh_CN": "选项列表"
+              }
+            },
+            "defaultValue": [
+              {
+                "label": "标签2"
+              },
+              {
+                "label": "标签2"
+              }
+            ],
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CodeConfigurator",
+              "props": {
+                "language": "json"
+              }
+            },
+            "description": {
+              "zh_CN": "checkbox组件列表"
+            },
+            "labelPosition": "top"
+          },
+          {
+            "property": "type",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "ButtonGroupConfigurator",
+              "props": {
+                "options": [
+                  {
+                    "label": "button",
+                    "value": "button"
+                  },
+                  {
+                    "label": "checkbox",
+                    "value": "checkbox"
+                  }
+                ]
+              }
+            },
+            "description": {
+              "zh_CN": "checkbox组件类型（button/checkbox），该属性的默认值为 checkbox,配合 options 属性一起使用"
+            },
+            "labelPosition": "left"
+          }
+        ]
+      }
+    ],
+    "events": {
+      "onChange": {
+        "label": {
+          "zh_CN": "勾选值改变后将触发"
+        },
+        "description": {
+          "zh_CN": "勾选值改变后将触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "string",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "选中项的值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      },
+      "onUpdate:modelValue": {
+        "label": {
+          "zh_CN": "双向绑定的值改变时触发"
+        },
+        "description": {
+          "zh_CN": "当前选中的值改变时触发"
+        },
+        "type": "event",
+        "functionInfo": {
+          "params": [
+            {
+              "name": "value",
+              "type": "array",
+              "defaultValue": "",
+              "description": {
+                "zh_CN": "双向绑定的当前选中值"
+              }
+            }
+          ],
+          "returns": {}
+        },
+        "defaultValue": ""
+      }
+    }
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": "",
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": ["disabled", "type"]
+    },
+    "contextMenu": {
+      "actions": ["create symbol"],
+      "disable": ["copy", "remove"]
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "复选框组"
+      },
+      "icon": "checkboxs",
+      "screenshot": "",
+      "snippetName": "TinyCheckboxGroup",
+      "schema": {
+        "componentName": "TinyCheckboxGroup",
+        "props": {
+          "modelValue": ["name1", "name2"],
+          "type": "checkbox",
+          "options": [
+            {
+              "text": "复选框1",
+              "label": "name1"
+            },
+            {
+              "text": "复选框2",
+              "label": "name2"
+            },
+            {
+              "text": "复选框3",
+              "label": "name3"
+            }
+          ]
+        }
+      },
+      "category": "form"
+    },
+    {
+      "name": {
+        "zh_CN": "复选框拖拽按钮组"
+      },
+      "icon": "checkboxgroup",
+      "screenshot": "",
+      "snippetName": "TinyCheckboxbuttonGroup",
+      "schema": {
+        "componentName": "TinyCheckboxGroup",
+        "props": {
+          "modelValue": []
+        },
+        "children": [
+          {
+            "componentName": "TinyCheckboxButton",
+            "children": [
+              {
+                "componentName": "div"
+              }
+            ]
+          }
+        ]
+      },
+      "category": "form"
+    }
+  ]
+}

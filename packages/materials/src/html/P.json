@@ -1,0 +1,111 @@
+{
+  "version": "1.0.0",
+  "name": {
+    "zh_CN": "段落"
+  },
+  "component": "p",
+  "icon": "paragraph",
+  "description": "段落",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 30,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "children",
+            "label": {
+              "text": {
+                "zh_CN": "类型"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlTextConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "类型"
+            },
+            "labelPosition": "none"
+          },
+          {
+            "property": "attributes3",
+            "label": {
+              "text": {
+                "zh_CN": "原生属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlAttributesConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "原生属性"
+            },
+            "labelPosition": "none"
+          }
+        ]
+      }
+    ],
+    "events": {}
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": [],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": []
+    },
+    "contextMenu": {
+      "actions": [],
+      "disable": []
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "段落"
+      },
+      "icon": "paragraph",
+      "screenshot": "",
+      "snippetName": "p",
+      "schema": {
+        "componentName": "p",
+        "children": "TinyEngine 前端可视化设计器致力于通过友好的用户交互提升业务应用的开发效率。"
+      },
+      "category": "basic"
+    }
+  ]
+}

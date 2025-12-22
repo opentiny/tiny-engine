@@ -1,0 +1,193 @@
+{
+  "version": "1.0.0",
+  "name": {
+    "zh_CN": "视频"
+  },
+  "component": "video",
+  "icon": "video",
+  "description": "视频",
+  "docUrl": "",
+  "screenshot": "",
+  "tags": "",
+  "keywords": "",
+  "devMode": "proCode",
+  "npm": {},
+  "group": "component",
+  "category": "html",
+  "priority": 50,
+  "schema": {
+    "properties": [
+      {
+        "label": {
+          "zh_CN": "基础信息"
+        },
+        "description": {
+          "zh_CN": "基础信息"
+        },
+        "content": [
+          {
+            "property": "src",
+            "label": {
+              "text": {
+                "zh_CN": "资源"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "视频的 URL"
+            }
+          },
+          {
+            "property": "width",
+            "label": {
+              "text": {
+                "zh_CN": "播放器宽度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "视频播放器的宽度"
+            }
+          },
+          {
+            "property": "height",
+            "label": {
+              "text": {
+                "zh_CN": "播放器高度"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "InputConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "视频播放器的高度"
+            }
+          },
+          {
+            "property": "controls",
+            "label": {
+              "text": {
+                "zh_CN": "显示控件"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否显示控件"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "autoplay",
+            "label": {
+              "text": {
+                "zh_CN": "马上播放"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "CheckBoxConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "是否马上播放"
+            },
+            "labelPosition": "left"
+          },
+          {
+            "property": "attributes3",
+            "label": {
+              "text": {
+                "zh_CN": "原生属性"
+              }
+            },
+            "required": true,
+            "readOnly": false,
+            "disabled": false,
+            "cols": 12,
+            "widget": {
+              "component": "HtmlAttributesConfigurator",
+              "props": {}
+            },
+            "description": {
+              "zh_CN": "原生属性"
+            },
+            "labelPosition": "none"
+          }
+        ]
+      }
+    ],
+    "events": {}
+  },
+  "configure": {
+    "loop": true,
+    "condition": true,
+    "styles": true,
+    "isContainer": false,
+    "isModal": false,
+    "nestingRule": {
+      "childWhitelist": [],
+      "parentWhitelist": "",
+      "descendantBlacklist": "",
+      "ancestorWhitelist": ""
+    },
+    "isNullNode": false,
+    "isLayout": false,
+    "rootSelector": "",
+    "shortcuts": {
+      "properties": []
+    },
+    "contextMenu": {
+      "actions": [],
+      "disable": []
+    }
+  },
+  "snippets": [
+    {
+      "name": {
+        "zh_CN": "视频"
+      },
+      "icon": "video",
+      "screenshot": "",
+      "snippetName": "video",
+      "schema": {
+        "componentName": "video",
+        "props": {
+          "src": "https://tinyengine-assets.obs.myhuaweicloud.com/files/in-action.mp4#t=1.5",
+          "width": "200",
+          "height": "100",
+          "style": "border:1px solid #ccc"
+        }
+      },
+      "category": "basic"
+    }
+  ]
+}
