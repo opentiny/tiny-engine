@@ -21,10 +21,10 @@
       <div @click="toRegister">注册账号</div>
       <div @click="toForgot">忘记密码</div>
     </div>
-    <div class="login-other">其他方式登录</div>
+    <!-- <div class="login-other">其他方式登录</div>
     <div class="github-link">
       <svg-icon class="github" name="github"></svg-icon>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -43,6 +43,9 @@ export default {
   },
   emits: ['changeStatus'],
   setup(props, { emit }) {
+    const { fetchUserInfo, setUserInfo, setTenantInfo, setNeedToLogin, getBaseInfo } = getMetaApi(
+      META_SERVICE.GlobalService
+    )
     const state = reactive({
       loginData: {
         username: '',
@@ -57,27 +60,21 @@ export default {
           password: state.loginData.password
         })
         .then((data: any) => {
-          getMetaApi(META_SERVICE.GlobalService)
-            .fetchUserInfo()
-            .then((infoData: any) => {
-              if (infoData) {
-                getMetaApi(META_SERVICE.GlobalService).userInfo = [...data, ...infoData]
-                getMetaApi(META_SERVICE.GlobalService)
-                  .setTenantInfo({
-                    tenantId: infoData.tenant?.id
-                  })
-                  .then((tenantData) => {
-                    console.log('tenantData', tenantData)
-                    localStorage.setItem('engineToken', data.token)
-                  })
-                  .catch((error) => {
-                    useModal().message({ message: error.message, status: 'error' })
-                  })
-              }
-            })
-        })
-        .catch((error) => {
-          useModal().message({ message: error.message, status: 'error' })
+          localStorage.setItem('engineToken', data.token)
+          fetchUserInfo().then((infoData: any) => {
+            if (infoData) {
+              const tenantId = getBaseInfo().tenantId ? getBaseInfo().tenantId : infoData.tenant[0]?.id
+              setUserInfo({ ...data, ...infoData })
+              setTenantInfo(tenantId)
+                .then((tenantData) => {
+                  localStorage.setItem('engineToken', tenantData.token)
+                  setNeedToLogin(false, tenantId)
+                })
+                .catch((error) => {
+                  useModal().message({ message: error.message, status: 'error' })
+                })
+            }
+          })
         })
     }
 

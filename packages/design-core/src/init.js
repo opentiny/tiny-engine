@@ -66,14 +66,10 @@ const defaultLifeCycles = {
     // 这里暴露到 window 是为了让 canvas 可以读取
     window.TinyGlobalConfig = config || {}
   },
-  appCreated: ({ app, router }) => {
+  appCreated: ({ app }) => {
     initSvgs(app)
     window.lowcodeI18n = i18n
     app.use(i18n).use(injectGlobalComponents)
-    // 初始化路由
-    if (router) {
-      app.use(router)
-    }
 
     const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
     const theme = localStorage.getItem(`tiny-engine-theme-${appId}`) || getMergeMeta('engine.config').theme
@@ -130,7 +126,6 @@ const subscribeSignalFinish = (createAppSignal, timeout = 30000) => {
 export const init = async ({
   selector = '#app',
   registry = [],
-  router = [],
   lifeCycles = {},
   configurators = {},
   createAppSignal = [],
@@ -143,19 +138,20 @@ export const init = async ({
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
 
-  if (Array.isArray(createAppSignal) && createAppSignal.length) {
-    if (typeof initTimeout !== 'number' || initTimeout <= 0) {
-      throw new Error('initTimeout must be a positive number')
-    }
-    await subscribeSignalFinish(createAppSignal, initTimeout)
-  }
-
   const app = createApp(App)
-  defaultLifeCycles.appCreated({ app, router })
+  defaultLifeCycles.appCreated({ app })
   appCreated?.({ app })
 
   app.mount(selector)
   appMounted?.({ app })
+
+  if (Array.isArray(createAppSignal) && createAppSignal.length) {
+    try {
+      await subscribeSignalFinish(createAppSignal, initTimeout)
+    } catch (error) {
+      console.warn('信号等待超时或出错:', error)
+    }
+  }
 
   return app
 }

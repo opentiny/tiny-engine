@@ -52,7 +52,8 @@ import {
   ThemeSwitchService,
   HttpService,
   McpService,
-  User
+  User,
+  ApplicationCenter
 } from './re-export'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
@@ -133,7 +134,7 @@ export default {
       }
     ],
     enableTailwindCSS: true,
-    enableRouter: true
+    enableLogin: true
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
@@ -176,7 +177,7 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
   ],
   workspace: [
-    // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
     // __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
   ],
   canvas: Canvas

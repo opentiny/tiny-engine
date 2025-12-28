@@ -6,6 +6,6 @@ export default {
   styles: [],
   // 是否开启 TailWindCSS 特性
   enableTailwindCSS: true,
-  // 是否启用路由
-  enableRouter: true
+  // 是否启用登录
+  enableLogin: true
 }

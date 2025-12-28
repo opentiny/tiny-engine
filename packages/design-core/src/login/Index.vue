@@ -40,7 +40,7 @@ export default {
     const FORGOT = useLogin().FORGOT
     const SUCCESS = useLogin().SUCCESS
     const state = reactive({
-      loginStatus: useLogin().REGISTER
+      loginStatus: LOGIN
     })
 
     const changeStatus = (status) => {
