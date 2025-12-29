@@ -215,8 +215,6 @@ export default defineService({
     subscribe({
       topic: 'app_id_changed',
       callback: (appId: string) => {
-        console.log('appLogin', getLoginStatus())
-
         if (!appId) {
           // eslint-disable-next-line no-console
           console.error('Invalid appId received in app_id_changed event')

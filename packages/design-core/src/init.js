@@ -144,6 +144,7 @@ export const init = async ({
       try {
         await subscribeSignalFinish(createAppSignal, initTimeout)
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('信号等待超时或出错:', error)
       }
     }
@@ -161,6 +162,7 @@ export const init = async ({
       try {
         await subscribeSignalFinish(createAppSignal, initTimeout)
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('信号等待超时或出错:', error)
       }
     }

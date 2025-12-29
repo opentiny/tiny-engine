@@ -16,7 +16,6 @@
 
 <script lang="ts">
 import { reactive } from 'vue'
-import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
 import Login from './Login.vue'
 import Register from './Register.vue'
 import ForgotPassword from './ForgotPassword.vue'
@@ -25,10 +24,6 @@ import useLogin from './js/useLogin'
 
 export default {
   components: {
-    TinyForm,
-    TinyFormItem,
-    TinyInput,
-    TinyButton,
     Login,
     Register,
     ForgotPassword,

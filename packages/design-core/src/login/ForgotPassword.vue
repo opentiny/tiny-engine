@@ -12,13 +12,13 @@
         <tiny-tooltip v-model="state.pwManualShow" placement="bottom" effect="light" manual>
           <template #content>
             <div>
-              <div class="pw-tips" v-for="item in state.rules">
+              <div class="pw-tips" v-for="item in state.rules" :key="item.content">
                 <div class="pw-icon">
                   <svg-icon v-if="item.pass" class="pw-success" name="pw-success"></svg-icon>
                   <svg-icon v-else class="pw-error" name="pw-error"></svg-icon>
                 </div>
                 <div class="pw-content">
-                  <div class="pw-content-item" v-for="content in item.content">{{ content }}</div>
+                  <div class="pw-content-item" v-for="content in item.content" :key="content">{{ content }}</div>
                 </div>
               </div>
             </div>
@@ -87,6 +87,14 @@ export default {
       rules: [...useLogin().passwordRules]
     })
 
+    const handleConfirmPwChange = () => {
+      if (state.forgotData.confirmPassword !== state.forgotData.password) {
+        state.confirmManualShow = true
+      } else {
+        state.confirmManualShow = false
+      }
+    }
+
     const handleForgot = () => {
       if (state.pwManualShow) {
         return
@@ -107,7 +115,7 @@ export default {
           password: state.forgotData.password,
           publicKey: state.forgotData.key
         })
-        .then((data) => {
+        .then(() => {
           emit('changeStatus', useLogin().LOGIN)
         })
     }
@@ -120,14 +128,6 @@ export default {
         state.pwManualShow = false
       } else {
         state.pwManualShow = true
-      }
-    }
-
-    const handleConfirmPwChange = () => {
-      if (state.forgotData.confirmPassword !== state.forgotData.password) {
-        state.confirmManualShow = true
-      } else {
-        state.confirmManualShow = false
       }
     }
 

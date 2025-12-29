@@ -34,7 +34,7 @@
 import { reactive, computed } from 'vue'
 import type { Component } from 'vue'
 import { Popover, Select, Input } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
