@@ -57,25 +57,24 @@ const syncUtilsItemToAppSchemaState = (data: IUtilItem) => {
 }
 
 const refreshUtils = async () => {
-  const { getLoginStatus } = getMetaApi(META_SERVICE.GlobalService)
-  
-  if (!getLoginStatus()) {
-    const result = (await fetchResourceList(
-      getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
-      RESOURCE_CATEGORY.Util
-    )) as IUtilItem[]
-
-    state.utils = result.map(({ category, content, id, name, type, app }) => {
-      return {
-        category,
-        content,
-        id,
-        name,
-        type,
-        app
-      } as IUtilItem
-    })
+  if (!getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id) {
+    return
   }
+  const result = (await fetchResourceList(
+    getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
+    RESOURCE_CATEGORY.Util
+  )) as IUtilItem[]
+
+  state.utils = result.map(({ category, content, id, name, type, app }) => {
+    return {
+      category,
+      content,
+      id,
+      name,
+      type,
+      app
+    } as IUtilItem
+  })
 }
 
 const getUtilById = (id: number) => {

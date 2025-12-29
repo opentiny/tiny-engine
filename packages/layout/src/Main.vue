@@ -7,7 +7,7 @@
         @backToDesigner="setWorkspacePageId"
       ></design-workspace>
     </div>
-    <div id="tiny-engine" v-if="!isShowDefaultWorkspace">
+    <div id="tiny-engine" v-if="!isShowDefaultWorkspace && !clickedWorkspacePageId">
       <design-toolbars
         :layoutRegistry="layoutRegistry"
         :workspaceRegistry="workspaceRegistry"
@@ -185,6 +185,7 @@ export default {
     display: flex;
     flex-flow: row nowrap;
     z-index: 4;
+    position: relative;
   }
   :deep(.monaco-editor .suggest-widget) {
     border-width: 0;

@@ -9,6 +9,8 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": true,
     "baseUrl": "./",
+    "jsx": "preserve",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "paths": {
       "@/*": ["packages/*"],
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],

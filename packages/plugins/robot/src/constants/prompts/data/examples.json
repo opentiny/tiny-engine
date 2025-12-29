@@ -1,0 +1,148 @@
+{
+  "chatMessageList": {
+    "name": "Chat Message List Example",
+    "description": "A complete example of adding a chat message list with input and send functionality",
+    "note": "All JavaScript code uses string concatenation, not template literals",
+    "patch": [
+      {
+        "op": "add",
+        "path": "/state/messages",
+        "value": [
+          {
+            "content": "hello"
+          }
+        ]
+      },
+      {
+        "op": "add",
+        "path": "/state/inputMessage",
+        "value": ""
+      },
+      {
+        "op": "add",
+        "path": "/children/0",
+        "value": {
+          "componentName": "div",
+          "id": "a7Kp9sN9",
+          "props": {
+            "className": "component-base-style"
+          },
+          "children": [
+            {
+              "componentName": "h1",
+              "props": {
+                "className": "component-base-style"
+              },
+              "children": "消息列表",
+              "id": "bR7m1x4N"
+            },
+            {
+              "componentName": "div",
+              "props": {
+                "className": "component-base-style div-uhqto",
+                "alignItems": "flex-start"
+              },
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "className": "component-base-style div-vinko",
+                    "onClick": {
+                      "type": "JSExpression",
+                      "value": "this.onClickMessage",
+                      "params": ["message", "index"]
+                    },
+                    "key": {
+                      "type": "JSExpression",
+                      "value": "index"
+                    }
+                  },
+                  "children": [
+                    {
+                      "componentName": "Text",
+                      "props": {
+                        "style": "display: inline-block;",
+                        "text": {
+                          "type": "JSExpression",
+                          "value": "message.content"
+                        },
+                        "className": "component-base-style"
+                      },
+                      "children": [],
+                      "id": "s32pKwJ5"
+                    }
+                  ],
+                  "id": "f2525253",
+                  "loop": {
+                    "type": "JSExpression",
+                    "value": "this.state.messages"
+                  },
+                  "loopArgs": ["message", "index"]
+                }
+              ],
+              "id": "tNkfHvY8"
+            },
+            {
+              "componentName": "div",
+              "props": {
+                "className": "component-base-style div-iarpn"
+              },
+              "children": [
+                {
+                  "componentName": "TinyInput",
+                  "props": {
+                    "placeholder": "请输入",
+                    "modelValue": {
+                      "type": "JSExpression",
+                      "value": "this.state.inputMessage",
+                      "model": true
+                    },
+                    "className": "component-base-style",
+                    "type": "textarea"
+                  },
+                  "children": [],
+                  "id": "3sji2FD0"
+                },
+                {
+                  "componentName": "TinyButton",
+                  "props": {
+                    "text": "发送",
+                    "className": "component-base-style",
+                    "onClick": {
+                      "type": "JSExpression",
+                      "value": "this.sendMessage"
+                    }
+                  },
+                  "children": [],
+                  "id": "xjeu39F0"
+                }
+              ],
+              "id": "02kuxy2J"
+            }
+          ]
+        }
+      },
+      {
+        "op": "replace",
+        "path": "/css",
+        "value": ".page-base-style {\n  padding: 24px;\n  background: #ffffff;\n}\n.block-base-style {\n  margin: 16px;\n}\n.component-base-style {\n  margin: 8px;\n}\n.div-vinko {\n  margin: 8px;\n  border-width: 1px;\n  border-color: #ebeaea;\n  border-style: solid;\n  border-top-left-radius: 0;\n  border-top-right-radius: 0;\n  border-bottom-left-radius: 0;\n  border-bottom-right-radius: 0;\n  border-radius: 50px;\n}\n.div-iarpn {\n  margin: 8px;\n  display: flex;\n  align-items: center;\n}\n.div-uhqto {\n  margin: 8px;\n  display: flex;\n  flex-direction: column;\n}\n"
+      },
+      {
+        "op": "add",
+        "path": "/methods/sendMessage",
+        "value": {
+          "type": "JSFunction",
+          "value": "function sendMessage(event) {\n  this.state.messages.push({ content: this.state.inputMessage })\n  this.state.inputMessage = ''\n}\n"
+        }
+      },
+      {
+        "op": "add",
+        "path": "/methods/onClickMessage",
+        "value": {
+          "type": "JSFunction",
+          "value": "function onClickMessage(event, message, index) {\n  console.log('这是第' + (index + 1) + '条消息, 消息内容：' + message.content)\n}\n"
+        }
+      }
+    ]
+  }
+}

@@ -116,6 +116,8 @@ export default {
 
     watch(() => useLayout().rightFixedPanelsStorage.value, setScale, { flush: 'post' })
 
+    watch(() => useLayout().layoutState.toolbars.render, setScale, { flush: 'post' })
+
     watch(
       () => useLayout().getSettingState().render,
       (value) => {
