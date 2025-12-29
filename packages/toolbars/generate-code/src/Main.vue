@@ -5,6 +5,7 @@
         <generate-file-selector
           :visible="state.showDialogbox"
           :tree-data="state.saveFilesTree"
+          :data="state.saveFilesInfo"
           @confirm="confirm"
           @cancel="cancel"
         ></generate-file-selector>
@@ -50,6 +51,7 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
+      saveFilesInfo: [],
       saveFilesTree: []
     })
 
@@ -171,11 +173,11 @@ export default {
       fileList.forEach((fileItem) => {
         let pathArray = fileItem.path.split('/')
         pathArray.shift()
+        pathArray = pathArray.filter((item: any) => item)
         fileItem.filePath = `${pathArray.join('/')}${pathArray.length ? '/' : ''}${fileItem.fileName}`
         if (fileItem.path === '.') {
           directTree[fileItem.fileName] = fileItem
         } else {
-          pathArray = pathArray.filter((item: any) => item)
           getPathDepth({ pathArray, ...fileItem }, directTree)
         }
       })
@@ -250,7 +252,7 @@ export default {
       // 将文件目录处理成树状结构
       const fileTreeInfo = fileListToTreeObject(genResult)
 
-      return fileTreeInfo
+      return [fileTreeInfo, genResult]
     }
 
     const saveCodeToLocal = async (filesInfo) => {
@@ -278,10 +280,11 @@ export default {
 
       try {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
-        const fileTreeInfo = await getPreGenerateInfo()
+        const [fileTreeInfo, genResult] = await getPreGenerateInfo()
 
         // 暂存待生成代码文件树
         state.saveFilesTree = fileTreeInfo
+        state.saveFilesInfo = genResult
 
         // 打开弹窗选中待生成文件
         state.showDialogbox = true

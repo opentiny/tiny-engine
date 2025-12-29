@@ -19,6 +19,7 @@
           :expand-icon="expandIcon"
           :shrink-icon="shrinkIcon"
           show-checkbox
+          default-expand-all
           highlight-current
           @node-click="nodeClick"
         ></tiny-tree>
@@ -45,7 +46,7 @@
 import { DialogBox, Button, Tree } from '@opentiny/vue'
 import { iconPutAway, iconExpand } from '@opentiny/vue-icon'
 import { reactive, ref, nextTick } from 'vue'
-import { useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {
@@ -109,8 +110,13 @@ export default {
     }
 
     const initdialogBox = () => {
-      const initCheckedNode = props.treeData.treeArray.find((item: any) => item.id === 'index.html')
-      nodeClick(initCheckedNode)
+      const currentPage = useCanvas().getCurrentPage()
+      const initCurrentNode: any = props.data.find((item: any) => item.fileName === `${currentPage.name}.vue`)
+      nodeClick({
+        id: initCurrentNode.fileName,
+        label: initCurrentNode.fileName,
+        originData: initCurrentNode
+      })
     }
 
     return {
