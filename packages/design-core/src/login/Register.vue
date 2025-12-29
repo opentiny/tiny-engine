@@ -3,19 +3,7 @@
     <div class="register-title">注册账号</div>
     <tiny-form :model="state.registerData">
       <tiny-form-item prop="username">
-        <tiny-tooltip v-model="state.usernameManualShow" placement="bottom" effect="light" manual>
-          <template #content>
-            <div>
-              <div class="pw-tips">
-                <div class="pw-icon">
-                  <svg-icon class="pw-error" name="pw-error"></svg-icon>
-                </div>
-                <div class="pw-content">用户名重复。</div>
-              </div>
-            </div>
-          </template>
-          <tiny-input v-model="state.registerData.username" placeholder="请输入用户名"></tiny-input>
-        </tiny-tooltip>
+        <tiny-input v-model="state.registerData.username" placeholder="请输入用户名"></tiny-input>
       </tiny-form-item>
       <tiny-form-item prop="password">
         <tiny-tooltip v-model="state.pwManualShow" placement="bottom" effect="light" manual>
@@ -40,7 +28,7 @@
           ></tiny-input>
         </tiny-tooltip>
       </tiny-form-item>
-      <tiny-form-item prop="password">
+      <tiny-form-item prop="confirmPassword">
         <tiny-tooltip v-model="state.confirmManualShow" placement="bottom" effect="light" manual>
           <template #content>
             <div>
@@ -93,7 +81,6 @@ export default {
         password: '',
         confirmPassword: ''
       },
-      usernameManualShow: false,
       pwManualShow: false,
       confirmManualShow: false,
       rules: [...useLogin().passwordRules]
