@@ -601,8 +601,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1106,8 +1111,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1760,8 +1770,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2124,8 +2139,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2577,8 +2597,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3843,8 +3868,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4728,6 +4758,276 @@
                     },
                     "description": {
                       "zh_CN": "瀑布图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "热力图"
+          },
+          "component": "TinyHuichartsHeatmap",
+          "icon": "scatter",
+          "description": "热力图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsHeatmap",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "热力图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "K线图"
+          },
+          "component": "TinyHuichartsCandle",
+          "icon": "scatter",
+          "description": "K线图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsCandle",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "K线图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "树图"
+          },
+          "component": "TinyHuichartsTree",
+          "icon": "scatter",
+          "description": "树图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsTree",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "树图配置"
                     },
                     "labelPosition": "left"
                   }
@@ -8376,8 +8676,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8677,8 +8982,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8950,8 +9260,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9179,8 +9494,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9527,8 +9847,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9912,8 +10237,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10166,8 +10496,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -21472,8 +21807,14 @@
                   "type": "radio",
                   "modelValue": "1",
                   "options": [
-                    { "label": "1", "text": "选项一" },
-                    { "label": "2", "text": "选项二" }
+                    {
+                      "label": "1",
+                      "text": "选项一"
+                    },
+                    {
+                      "label": "2",
+                      "text": "选项二"
+                    }
                   ]
                 }
               }
@@ -23077,6 +23418,248 @@
                         ]
                       ]
                     }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "热力图"
+              },
+              "icon": "scatter",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsHeatmap",
+              "schema": {
+                "componentName": "TinyHuichartsHeatmap",
+                "props": {
+                  "options": {
+                    "type": "ReacangularHeatMapChat",
+                    "color": "#F43146",
+                    "rectangleSize": 8,
+                    "xAxisName": "手机市场占比%",
+                    "data": [
+                      [
+                        11,
+                        10,
+                        10,
+                        "Australia"
+                      ],
+                      [
+                        30,
+                        20,
+                        21,
+                        "Canada"
+                      ],
+                      [
+                        40,
+                        60,
+                        29,
+                        "China"
+                      ],
+                      [
+                        50,
+                        5,
+                        30,
+                        "Cuba"
+                      ],
+                      [
+                        55,
+                        10,
+                        31,
+                        "Finland"
+                      ],
+                      [
+                        11,
+                        30,
+                        35,
+                        "France"
+                      ],
+                      [
+                        32,
+                        50,
+                        48,
+                        "Germany"
+                      ],
+                      [
+                        12,
+                        33,
+                        60,
+                        "Iceland"
+                      ],
+                      [
+                        12,
+                        33,
+                        60,
+                        "India"
+                      ],
+                      [
+                        11,
+                        58,
+                        50,
+                        "Japan"
+                      ]
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "K线图"
+              },
+              "icon": "scatter",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsCandle",
+              "schema": {
+                "componentName": "TinyHuichartsCandle",
+                "props": {
+                  "options": {
+                    "data": [
+                      {
+                        "date": "2004-01-05",
+                        "open": 10411.85,
+                        "close": 10544.07,
+                        "lowest": 10411.85,
+                        "highest": 10575.92,
+                        "volumn": 221290000
+                      },
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "树图"
+              },
+              "icon": "scatter",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsTree",
+              "schema": {
+                "componentName": "TinyHuichartsTree",
+                "props": {
+                  "options": {
+                    "type": "LineTreeChart",
+                    "padding": [
+                      20,
+                      80,
+                      20,
+                      80
+                    ],
+                    "symbolSize": 10,
+                    "lineType": "curve",
+                    "initialTreeDepth": 2,
+                    "direction": "left",
+                    "data": [
+                      {
+                        "name": "节点",
+                        "data": [
+                          {
+                            "name": "flares",
+                            "children": [
+                              {
+                                "name": "datas",
+                                "children": [
+                                  {
+                                    "name": "converters",
+                                    "children": [
+                                      {
+                                        "name": "Converters",
+                                        "value": 721
+                                      },
+                                      {
+                                        "name": "DelimitedTextConveter",
+                                        "value": 4291
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "name": "DataUtil",
+                                    "value": 3321
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "display",
+                                "children": [
+                                  {
+                                    "name": "DirtySprite",
+                                    "value": 8831
+                                  },
+                                  {
+                                    "name": "LineSprite",
+                                    "value": 171
+                                  },
+                                  {
+                                    "name": "RectSprite",
+                                    "value": 3621
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "flex",
+                                "children": [
+                                  {
+                                    "name": "FlareVis",
+                                    "value": 4111
+                                  }
+                                ]
+                              },
+                              {
+                                "name": "query",
+                                "children": [
+                                  {
+                                    "name": "AggregateExpression",
+                                    "value": 1611
+                                  },
+                                  {
+                                    "name": "And",
+                                    "value": 1021
+                                  },
+                                  {
+                                    "name": "Average",
+                                    "value": 891
+                                  },
+                                  {
+                                    "name": "Arithmetic",
+                                    "value": 3891
+                                  },
+                                  {
+                                    "name": "BinaryExpression",
+                                    "value": 2891
+                                  },
+                                  {
+                                    "name": "methods",
+                                    "children": [
+                                      {
+                                        "name": "add",
+                                        "value": 591
+                                      },
+                                      {
+                                        "name": "and",
+                                        "value": 331
+                                      },
+                                      {
+                                        "name": "average",
+                                        "value": 28
+                                      },
+                                      {
+                                        "name": "count",
+                                        "value": 271
+                                      },
+                                      {
+                                        "name": "distinct",
+                                        "value": 291
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
                   }
                 }
               }
