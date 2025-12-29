@@ -20,7 +20,7 @@ import {
 import { isVsCodeEnv } from '@opentiny/tiny-engine-common/js/environments'
 import { useBroadcastChannel } from '@vueuse/core'
 import { constants } from '@opentiny/tiny-engine-utils'
-import Login from './login'
+import Login from './login.vue'
 
 const { BROADCAST_CHANNEL } = constants
 

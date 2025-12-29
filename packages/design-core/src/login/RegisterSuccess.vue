@@ -4,7 +4,8 @@
     <div class="success-title">注册成功</div>
     <div class="success-text">
       <div class="success-key">
-        您的账户恢复代码已生成： {{ publicKey }}<svg-icon class="login-copy" name="login-copy"></svg-icon>
+        您的账户恢复代码已生成：
+        <span>{{ publicKey }}<svg-icon class="login-copy" name="login-copy" @click="copy"></svg-icon></span>
       </div>
       <div class="success-tips">请立即妥善保存，这是您在忘记密码时重新获取账户访问权的唯一凭证。</div>
     </div>
@@ -36,10 +37,21 @@ export default {
       emit('changeStatus', useLogin().LOGIN)
     }
 
+    const copy = () => {
+      const textarea = document.createElement('textarea')
+
+      textarea.value = `${publicKey}`
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+    }
+
     return {
       state,
       publicKey,
-      toLogin
+      toLogin,
+      copy
     }
   }
 }
@@ -69,8 +81,11 @@ export default {
   }
   .success-key {
     display: flex;
+    flex-direction: column;
     word-break: break-word;
     .login-copy {
+      width: 16px;
+      height: 16px;
       margin-left: 4px;
       cursor: pointer;
     }

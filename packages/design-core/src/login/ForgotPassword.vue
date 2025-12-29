@@ -5,14 +5,14 @@
       <tiny-form-item prop="username">
         <tiny-input v-model="state.forgotData.username" placeholder="请输入用户名"></tiny-input>
       </tiny-form-item>
-      <tiny-form-item prop="username">
+      <tiny-form-item prop="key">
         <tiny-input v-model="state.forgotData.key" placeholder="请输入账户恢复代码"></tiny-input>
       </tiny-form-item>
       <tiny-form-item prop="password">
         <tiny-tooltip v-model="state.pwManualShow" placement="bottom" effect="light" manual>
           <template #content>
             <div>
-              <div class="pw-tips" v-for="item in state.rules" :key="item.content">
+              <div class="pw-tips" v-for="(item, idx) in state.rules" :key="idx">
                 <div class="pw-icon">
                   <svg-icon v-if="item.pass" class="pw-success" name="pw-success"></svg-icon>
                   <svg-icon v-else class="pw-error" name="pw-error"></svg-icon>
@@ -31,7 +31,7 @@
           ></tiny-input>
         </tiny-tooltip>
       </tiny-form-item>
-      <tiny-form-item prop="password">
+      <tiny-form-item prop="confirmPassword">
         <tiny-tooltip v-model="state.confirmManualShow" placement="bottom" effect="light" manual>
           <template #content>
             <div>
