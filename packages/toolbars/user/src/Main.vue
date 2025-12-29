@@ -34,7 +34,7 @@
 import { reactive, computed } from 'vue'
 import type { Component } from 'vue'
 import { Popover, Select, Input } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -69,7 +69,7 @@ export default {
         return {
           ...item,
           value: item.id,
-          label: item.nameCn
+          label: item.nameEn
         }
       })
     })
@@ -84,12 +84,15 @@ export default {
         .post('/platform-center/api/tenant/create', {
           nameEn: state.newTenant
         })
-        .then(() => {
-          fetchUserInfo().then((data: any) => {
-            if (data) {
-              setUserInfo(data)
-            }
-          })
+        .then((data) => {
+          if (data) {
+            useModal().message({ message: '创建组织成功', status: 'success' })
+            fetchUserInfo().then((data: any) => {
+              if (data) {
+                setUserInfo(data)
+              }
+            })
+          }
         })
     }
 
@@ -121,7 +124,7 @@ export default {
 }
 .user-setting {
   padding-bottom: 8px;
-  border-bottom: 1px solid #dbdbdb;
+  border-bottom: 1px solid var(--te-toolbars-user-border-bottom-color);
   font-size: 12px;
   .user-name {
     height: 40px;

@@ -124,18 +124,18 @@ export default {
 .login-other::after {
   content: '';
   position: absolute;
-  top: 50%; /* 或者你想要的具体位置 */
-  width: 38%; /* 横线的长度 */
-  height: 1px; /* 横线的厚度 */
-  background-color: #dbdbdb; /* 横线的颜色 */
+  top: 50%;
+  width: 38%;
+  height: 1px;
+  background-color: #dbdbdb;
 }
 
 .login-other::before {
-  left: 0; /* 让横线贴合文本左侧 */
+  left: 0;
 }
 
 .login-other::after {
-  right: 0; /* 让横线贴合文本右侧 */
+  right: 0;
 }
 .github-link {
   width: 100%;
