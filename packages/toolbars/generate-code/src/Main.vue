@@ -137,7 +137,7 @@ export default {
             label: value.fileName,
             originData: {
               fileName: value.fileName,
-              filePath: value.path,
+              filePath: value.filePath,
               fileContent: value?.fileContent
             }
           })
@@ -168,11 +168,12 @@ export default {
     const fileListToTreeObject = (fileList: any[]) => {
       const directTree: any = {}
       fileList.forEach((fileItem) => {
+        let pathArray = fileItem.path.split('/')
+        pathArray.shift()
+        fileItem.filePath = `${pathArray.join('/')}${pathArray.length ? '/' : ''}${fileItem.fileName}`
         if (fileItem.path === '.') {
           directTree[fileItem.fileName] = fileItem
         } else {
-          let pathArray = fileItem.path.split('/')
-          pathArray.shift()
           pathArray = pathArray.filter((item: any) => item)
           getPathDepth({ pathArray, ...fileItem }, directTree)
         }
