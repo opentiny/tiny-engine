@@ -135,7 +135,11 @@ export default {
           treeArray.push({
             id: key,
             label: value.fileName,
-            originData: { fileType: 'json', ...value }
+            originData: {
+              fileName: value.fileName,
+              filePath: value.path,
+              fileContent: value?.fileContent
+            }
           })
         } else {
           treeArray.push({
