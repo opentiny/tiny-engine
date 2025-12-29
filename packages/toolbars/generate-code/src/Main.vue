@@ -274,7 +274,6 @@ export default {
         useNotify({ type: 'info', title: '代码生成中, 请稍后...' })
         return
       } else {
-        useNotify({ type: 'info', title: '代码生成中...' })
         state.generating = true
       }
 

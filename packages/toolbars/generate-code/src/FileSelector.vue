@@ -13,21 +13,21 @@
       <div class="tree-wrap">
         <tiny-tree
           ref="fileTreeRef"
-          :data="treeData.treeArray"
+          :data="fileTree"
           node-key="id"
-          :default-checked-keys="treeData.checkedTreeData"
+          :default-checked-keys="fileTreeAllCheckedKeys"
           :expand-icon="expandIcon"
           :shrink-icon="shrinkIcon"
           show-checkbox
           default-expand-all
           highlight-current
+          :current-node-key="currentNodeKey"
           @node-click="nodeClick"
         ></tiny-tree>
       </div>
       <div class="editor-wrap">
         <monaco-editor
           v-if="options.language"
-          ref="container"
           class="code-edit-content"
           :value="fileContent"
           :options="options"
@@ -45,7 +45,7 @@
 /* metaService: engine.toolbars.generate-code.FileSelector */
 import { DialogBox, Button, Tree } from '@opentiny/vue'
 import { iconPutAway, iconExpand } from '@opentiny/vue-icon'
-import { reactive, ref, nextTick } from 'vue'
+import { reactive, computed, ref, nextTick } from 'vue'
 import { useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 
@@ -71,6 +71,21 @@ export default {
   setup(props, { emit }) {
     const shrinkIcon = iconExpand()
     const expandIcon = iconPutAway()
+    const currentNodeKey = ref()
+
+    const fileTree = computed(() => {
+      return [
+        {
+          id: '1',
+          label: '所有文件',
+          children: props.treeData.treeArray
+        }
+      ]
+    })
+
+    const fileTreeAllCheckedKeys = computed(() => {
+      return ['1'].concat(props.treeData.checkedTreeData)
+    })
 
     const fileTreeRef = ref<any>(null)
 
@@ -79,7 +94,8 @@ export default {
       readOnly: true,
       minimap: {
         enabled: false
-      }
+      },
+      theme: 'customTheme'
     })
 
     const fileContent = ref('')
@@ -88,6 +104,7 @@ export default {
       if (node?.originData) {
         nextTick(() => {
           fileContent.value = node.originData.fileContent
+          fileTreeRef.value.setCurrentKey(node.id)
         })
       }
     }
@@ -110,18 +127,23 @@ export default {
     }
 
     const initdialogBox = () => {
+      // 初始化显示的文件
       const currentPage = useCanvas().getCurrentPage()
       const initCurrentNode: any = props.data.find((item: any) => item.fileName === `${currentPage.name}.vue`)
-      nodeClick({
-        id: initCurrentNode.fileName,
-        label: initCurrentNode.fileName,
-        originData: initCurrentNode
-      })
+      if (initCurrentNode) {
+        nextTick(() => {
+          fileContent.value = initCurrentNode.fileContent
+          fileTreeRef.value.setCurrentKey(initCurrentNode.fileName)
+        })
+      }
     }
 
     return {
       shrinkIcon,
       expandIcon,
+      currentNodeKey,
+      fileTree,
+      fileTreeAllCheckedKeys,
       options,
       fileContent,
       fileTreeRef,
@@ -170,8 +192,14 @@ export default {
     .tree-wrap {
       overflow: scroll;
       .tiny-tree {
-        max-width: 400px;
+        width: 300px;
         height: 480px;
+        overflow-x: scroll;
+      }
+      :deep(.tiny-tree-node__content) {
+        .tiny-tree-node__content-left {
+          background-color: transparent;
+        }
       }
     }
     .editor-wrap {
@@ -180,6 +208,29 @@ export default {
       .code-edit-content {
         width: 100%;
         height: 480px;
+        :deep(.monaco-editor) {
+          .margin-view-overlays,
+          .sticky-line-number,
+          .view-lines,
+          .sticky-line-content {
+            background-color: var(--te-common-bg-container-weaken);
+          }
+          .scrollbar.vertical,
+          .decorationsOverviewRuler {
+            width: 8px !important;
+            .slider {
+              border-radius: 4px;
+              width: 8px !important;
+            }
+          }
+          .scrollbar.horizontal {
+            height: 8px !important;
+            .slider {
+              border-radius: 4px;
+              height: 8px !important;
+            }
+          }
+        }
       }
     }
   }
