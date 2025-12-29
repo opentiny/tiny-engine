@@ -4,27 +4,32 @@
     :visible="visible"
     :close-on-click-modal="false"
     :append-to-body="true"
-    width="800"
+    width="1000"
     title="请选择生成到本地的文件"
     @close="$emit('cancel')"
-    @open="openDialog"
   >
     <div class="dialog-grid">
-      <tiny-grid
-        :data="tableData"
-        ref="gridRef"
-        size="mini"
-        :max-height="500"
-        :tree-config="{ children: 'children' }"
-        :expand-config="{ expandAll: true }"
-        :auto-resize="true"
-      >
-        <tiny-grid-column width="40" tree-node></tiny-grid-column>
-        <tiny-grid-column type="selection" width="60"></tiny-grid-column>
-        <tiny-grid-column field="fileType" title="文件类型" width="100"></tiny-grid-column>
-        <tiny-grid-column field="filePath" title="文件路径" width="250"></tiny-grid-column>
-        <tiny-grid-column field="fileContent" title="文件内容" show-overflow="ellipsis"></tiny-grid-column>
-      </tiny-grid>
+      <div class="tree-wrap">
+        <tiny-tree
+          ref="fileTreeRef"
+          :data="treeData.treeArray"
+          node-key="id"
+          :default-checked-keys="treeData.checkedTreeData"
+          :expand-icon="expandIcon"
+          :shrink-icon="shrinkIcon"
+          show-checkbox
+          @node-click="nodeClick"
+        ></tiny-tree>
+      </div>
+      <div class="editor-wrap">
+        <monaco-editor
+          v-if="options.language"
+          ref="container"
+          class="code-edit-content"
+          :value="fileContent"
+          :options="options"
+        ></monaco-editor>
+      </div>
     </div>
     <template #footer>
       <tiny-button type="primary" @click="confirm">确定</tiny-button>
@@ -35,60 +40,60 @@
 
 <script lang="ts">
 /* metaService: engine.toolbars.generate-code.FileSelector */
-import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
-import { reactive, computed, ref, nextTick } from 'vue'
+import { DialogBox, Button, Tree } from '@opentiny/vue'
+import { iconPutAway, iconExpand } from '@opentiny/vue-icon'
+import { reactive, ref, nextTick } from 'vue'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
+    MonacoEditor: VueMonaco,
     TinyDialogBox: DialogBox,
     TinyButton: Button,
-    TinyGrid: Grid,
-    TinyGridColumn: GridColumn
+    TinyTree: Tree
   },
   props: {
     visible: { type: Boolean, default: false },
     data: {
       type: Array,
       default: () => []
+    },
+    treeData: {
+      type: Object,
+      default: () => {}
     }
   },
   emits: ['cancel', 'confirm'],
   setup(props, { emit }) {
-    const getTableTreeData = (data: any[]) => {
-      const res: any[] = []
-      data.forEach((item) => {
-        const folder = item.filePath.split('/').slice(0, -1)
+    const shrinkIcon = iconExpand()
+    const expandIcon = iconPutAway()
 
-        if (!folder.length) {
-          res.push(item)
-          return
-        }
+    const fileTreeRef = ref<any>(null)
 
-        const parentFolder = folder.reduce((parent: any[], curPath: any) => {
-          let curItem = parent.find((parItem) => parItem.path === curPath)
+    const options = reactive({
+      language: 'javascript',
+      readOnly: true,
+      minimap: {
+        enabled: false
+      }
+    })
 
-          if (!curItem) {
-            curItem = { path: curPath, filePath: curPath, children: [] }
-            parent.push(curItem)
-          }
+    const fileContent = ref('')
 
-          return curItem.children
-        }, res)
-
-        parentFolder.push(item)
-      })
-
-      return res
+    const nodeClick = (node: any) => {
+      if (node?.originData) {
+        nextTick(() => {
+          fileContent.value = node.originData.fileContent
+        })
+      }
     }
 
-    const tableData = computed(() => getTableTreeData(props.data))
-    const gridRef = ref<any>(null)
-
-    const state = reactive({})
-
     const confirm = () => {
-      const selectedData = gridRef.value.getSelectRecords().filter((item: { children: any }) => !item.children)
+      const selectedData = fileTreeRef.value
+        .getCheckedNodes()
+        .map((node: any) => node.originData)
+        .filter((node: any) => node !== undefined)
       if (!selectedData?.length) {
         useNotify({
           type: 'error',
@@ -101,19 +106,14 @@ export default {
       emit('confirm', selectedData)
     }
 
-    const openDialog = () => {
-      nextTick(() => {
-        gridRef.value.setAllTreeExpansion(true)
-        gridRef.value.setAllSelection(true)
-      })
-    }
-
     return {
-      state,
-      tableData,
-      gridRef,
-      confirm,
-      openDialog
+      shrinkIcon,
+      expandIcon,
+      options,
+      fileContent,
+      fileTreeRef,
+      nodeClick,
+      confirm
     }
   }
 }
@@ -121,6 +121,9 @@ export default {
 
 <style lang="less" scoped>
 .dialog-box {
+  :deep(.tiny-dialog-box__body) {
+    height: 480px;
+  }
   :deep(.tiny-dialog-box__content) {
     background-color: var(--te-toolbars-generate-code-bg-color);
 
@@ -149,67 +152,21 @@ export default {
   }
 
   .dialog-grid {
-    :deep(.tiny-grid-cell) {
-      position: relative;
-    }
-
-    :deep(.tiny-grid-tree-wrapper) {
-      position: relative;
-      top: 2px;
-    }
-
-    :deep(.tiny-grid) {
-      .tiny-grid__header-wrapper {
-        .tiny-grid-header__column {
-          color: var(--te-toolbars-generate-code-text-color);
-          height: 30px;
-
-          .tiny-grid-resizable.is__line:before {
-            background-color: var(--te-toolbars-generate-code-bg-color);
-          }
-        }
-
-        .tiny-grid-checkbox__icon,
-        .icon-checked-sur {
-          svg {
-            color: var(--te-toolbars-generate-code-border-color-checked) !important;
-          }
-        }
+    display: flex;
+    .tree-wrap {
+      overflow: scroll;
+      .tiny-tree {
+        max-width: 400px;
+        height: 480px;
       }
-
-      .tiny-grid__body-wrapper {
-        &::-webkit-scrollbar {
-          height: 10px;
-        }
-
-        &::-webkit-scrollbar-track-piece {
-          background: unset;
-        }
-
-        .tiny-grid-body__column {
-          height: 32px;
-        }
-
-        .tiny-grid-body__row {
-          background-color: var(--te-toolbars-generate-code-bg-color);
-        }
-
-        .tiny-grid-body__row {
-          &.row__selected {
-            .tiny-grid-checkbox__icon {
-              svg {
-                color: var(--te-toolbars-generate-code-border-color-checked);
-                fill: currentColor;
-                width: 100%;
-                height: 100%;
-              }
-            }
-          }
-        }
-      }
-
-      .tiny-grid__empty-text {
-        color: var(--te-toolbars-generate-code-text-color);
+    }
+    .editor-wrap {
+      width: 100%;
+      max-width: 744px;
+      background-color: #f8f8f8;
+      .code-edit-content {
+        width: 100%;
+        height: 480px;
       }
     }
   }
