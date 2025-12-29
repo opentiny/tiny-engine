@@ -7,6 +7,7 @@
     width="1000"
     title="请选择生成到本地的文件"
     @close="$emit('cancel')"
+    @open="initdialogBox"
   >
     <div class="dialog-grid">
       <div class="tree-wrap">
@@ -18,6 +19,7 @@
           :expand-icon="expandIcon"
           :shrink-icon="shrinkIcon"
           show-checkbox
+          highlight-current
           @node-click="nodeClick"
         ></tiny-tree>
       </div>
@@ -106,6 +108,11 @@ export default {
       emit('confirm', selectedData)
     }
 
+    const initdialogBox = () => {
+      const initCheckedNode = props.treeData.treeArray.find((item: any) => item.id === 'index.html')
+      nodeClick(initCheckedNode)
+    }
+
     return {
       shrinkIcon,
       expandIcon,
@@ -113,7 +120,8 @@ export default {
       fileContent,
       fileTreeRef,
       nodeClick,
-      confirm
+      confirm,
+      initdialogBox
     }
   }
 }

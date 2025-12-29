@@ -138,7 +138,8 @@ export default {
             originData: {
               fileName: value.fileName,
               filePath: value.filePath,
-              fileContent: value?.fileContent
+              fileContent: value?.fileContent,
+              fileType: value?.fileType
             }
           })
         } else {
