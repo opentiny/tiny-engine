@@ -177,7 +177,6 @@ export default {
     .editor-wrap {
       width: 100%;
       max-width: 744px;
-      background-color: #f8f8f8;
       .code-edit-content {
         width: 100%;
         height: 480px;
