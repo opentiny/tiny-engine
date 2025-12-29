@@ -69,6 +69,7 @@ export default {
   }
   .success-key {
     display: flex;
+    word-break: break-word;
     .login-copy {
       margin-left: 4px;
       cursor: pointer;

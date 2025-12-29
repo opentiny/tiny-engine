@@ -138,6 +138,17 @@ export const init = async ({
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
 
+  const token = localStorage.getItem('engineToken')
+  if (token) {
+    if (Array.isArray(createAppSignal) && createAppSignal.length) {
+      try {
+        await subscribeSignalFinish(createAppSignal, initTimeout)
+      } catch (error) {
+        console.warn('信号等待超时或出错:', error)
+      }
+    }
+  }
+
   const app = createApp(App)
   defaultLifeCycles.appCreated({ app })
   appCreated?.({ app })
@@ -145,13 +156,14 @@ export const init = async ({
   app.mount(selector)
   appMounted?.({ app })
 
-  if (Array.isArray(createAppSignal) && createAppSignal.length) {
-    try {
-      await subscribeSignalFinish(createAppSignal, initTimeout)
-    } catch (error) {
-      console.warn('信号等待超时或出错:', error)
+  if (!token) {
+    if (Array.isArray(createAppSignal) && createAppSignal.length) {
+      try {
+        await subscribeSignalFinish(createAppSignal, initTimeout)
+      } catch (error) {
+        console.warn('信号等待超时或出错:', error)
+      }
     }
   }
-
   return app
 }

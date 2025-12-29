@@ -82,7 +82,7 @@ export default {
     const createTenant = () => {
       getMetaApi(META_SERVICE.Http)
         .post('/platform-center/api/tenant/create', {
-          nameCn: state.newTenant
+          nameEn: state.newTenant
         })
         .then(() => {
           fetchUserInfo().then((data: any) => {
