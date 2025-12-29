@@ -21,7 +21,7 @@ const getComponentsSet = (schema) => {
   return new Set(allComponents)
 }
 
-const parseSchema = (schema) => {
+const parseSchema = (schema, mcpConfig) => {
   const { utils = [], componentsMap = [], packages = [] } = schema
   const resDeps = {}
   const componentsSet = getComponentsSet(schema)
@@ -54,6 +54,15 @@ const parseSchema = (schema) => {
   // 处理内置 Icon，如果使用了 tinyvue 组件，则默认添加 @opentiny/vue-icon 依赖，且依赖与 @opentiny/vue 依赖版本一致
   if (resDeps['@opentiny/vue']) {
     resDeps['@opentiny/vue-icon'] = resDeps['@opentiny/vue']
+    resDeps['@opentiny/vue-common'] = resDeps['@opentiny/vue']
+  }
+
+  // 只有在 MCP 明确启用时才添加相关依赖
+  if (mcpConfig && mcpConfig.enabled === true) {
+    resDeps['@opentiny/next-remoter'] = '0.0.2'
+    resDeps['@opentiny/next-sdk'] = '^0.1.0'
+    resDeps['@opentiny/tiny-robot'] = '^0.3.0-alpha.16'
+    resDeps['@opentiny/tiny-vue-mcp'] = '~0.0.3'
   }
 
   return resDeps
@@ -72,8 +81,10 @@ function genDependenciesPlugin(options = {}) {
      * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
-    run(schema) {
-      const dependencies = parseSchema(schema)
+    run(schema, context) {
+      // 从上下文中获取 MCP 配置
+      const mcpConfig = context?.pluginConfig?.mcp
+      const dependencies = parseSchema(schema, mcpConfig)
       const originPackageItem = this.getFile(path, fileName)
 
       if (!originPackageItem) {

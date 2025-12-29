@@ -17710,6 +17710,38 @@
                     "labelPosition": "top"
                   }
                 ]
+              },
+              {
+                "label": {
+                  "zh_CN": "MCP 配置"
+                },
+                "description": {
+                  "zh_CN": "MCP 配置"
+                },
+                "content": [
+                  {
+                    "property": "tiny_mcp_config",
+                    "label": {
+                      "text": {
+                        "zh_CN": "组件MCP化配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置表格的基础 mcp 信息"
+                    },
+                    "labelPosition": "top"
+                  }
+                ]
               }
             ],
             "events": {

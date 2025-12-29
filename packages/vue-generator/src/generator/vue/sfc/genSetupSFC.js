@@ -24,6 +24,7 @@ import {
   handleJsxModelValueUpdate,
   handleJSFunctionAttrHook
 } from './generateAttribute'
+import { handleTinyMcpConfigAttrHook } from '@/plugins/genMcpPlugin'
 import {
   GEN_SCRIPT_HOOKS,
   genScriptByHook,
@@ -227,6 +228,7 @@ export const genSFCWithDefaultPlugin = (schema, componentsMap, config = {}, next
     handleSlotBindAttrHook,
     handleAttrKeyHook,
     handlePrimitiveAttributeHook,
+    handleTinyMcpConfigAttrHook,
     handleExpressionAttrHook,
     handleJSFunctionAttrHook,
     handleI18nAttrHook,

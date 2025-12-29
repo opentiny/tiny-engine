@@ -18,7 +18,7 @@ function genBlockPlugin(options = {}) {
      * @param {import('@opentiny/tiny-engine-dsl-vue').IAppSchema} schema
      * @returns
      */
-    run(schema) {
+    run(schema, context) {
       const blocks = schema?.blockSchema || []
       const componentsMap = schema?.componentsMap
 
@@ -28,8 +28,16 @@ function genBlockPlugin(options = {}) {
 
       const resBlocks = []
 
+      // 从上下文中获取 MCP 配置
+      const mcpEnabled = context?.pluginConfig?.mcp?.enabled || false
+
       for (const block of blocks) {
-        const res = genSFCWithDefaultPlugin(block, componentsMap, { blockRelativePath: './', ...sfcConfig })
+        // 将 MCP 配置传递给 SFC 生成器
+        const res = genSFCWithDefaultPlugin(block, componentsMap, {
+          blockRelativePath: './',
+          ...sfcConfig,
+          mcpEnabled
+        })
 
         resBlocks.push({
           fileType: 'vue',

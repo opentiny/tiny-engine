@@ -10,7 +10,8 @@ import {
   formatCodePlugin,
   parseSchemaPlugin,
   genGlobalState,
-  appendElePlusStylePlugin
+  appendElePlusStylePlugin,
+  genMcpPlugin
 } from '../plugins'
 import CodeGenerator from './codeGenerator'
 
@@ -32,7 +33,8 @@ export function generateApp(config = {}) {
     router: genRouterPlugin(config.pluginConfig?.router || {}),
     utils: genUtilsPlugin(config.pluginConfig?.utils || {}),
     formatCode: formatCodePlugin(config.pluginConfig?.formatCode || {}),
-    parseSchema: parseSchemaPlugin(config.pluginConfig?.parseSchema || {})
+    parseSchema: parseSchemaPlugin(config.pluginConfig?.parseSchema || {}),
+    mcp: genMcpPlugin(config.pluginConfig?.mcp || {})
   }
 
   const { customPlugins = {} } = config
@@ -48,6 +50,7 @@ export function generateApp(config = {}) {
     formatCode,
     parseSchema,
     globalState,
+    mcp,
     transformStart = [],
     transform = [],
     transformEnd = []
@@ -61,7 +64,8 @@ export function generateApp(config = {}) {
     i18n: i18n || defaultPlugins.i18n,
     router: router || defaultPlugins.router,
     utils: utils || defaultPlugins.utils,
-    globalState: globalState || defaultPlugins.globalState
+    globalState: globalState || defaultPlugins.globalState,
+    mcp: mcp || defaultPlugins.mcp
   }
 
   // 默认支持 element-plus 注入样式
@@ -75,7 +79,10 @@ export function generateApp(config = {}) {
       transform: [...Object.values(mergeWithDefaultPlugin), ...transform],
       transformEnd: [formatCode || defaultPlugins.formatCode, ...transformEnd]
     },
-    context: config?.customContext || {}
+    context: {
+      ...(config?.customContext || {}),
+      pluginConfig: config?.pluginConfig || {}
+    }
   })
 
   return codeGenInstance
