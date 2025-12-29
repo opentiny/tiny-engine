@@ -40,7 +40,7 @@ export default {
     const copy = () => {
       const textarea = document.createElement('textarea')
 
-      textarea.value = `${publicKey}`
+      textarea.value = `${publicKey.value}`
       document.body.appendChild(textarea)
       textarea.select()
       document.execCommand('copy')
