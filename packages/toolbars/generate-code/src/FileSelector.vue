@@ -64,7 +64,7 @@ export default {
     },
     treeData: {
       type: Object,
-      default: () => {}
+      default: () => ({ treeArray: [], checkedTreeData: [] })
     }
   },
   emits: ['cancel', 'confirm'],
@@ -76,7 +76,7 @@ export default {
     const fileTree = computed(() => {
       return [
         {
-          id: '1',
+          id: 'all',
           label: '所有文件',
           children: props.treeData.treeArray
         }
@@ -84,7 +84,7 @@ export default {
     })
 
     const fileTreeAllCheckedKeys = computed(() => {
-      return ['1'].concat(props.treeData.checkedTreeData)
+      return ['all'].concat(props.treeData.checkedTreeData)
     })
 
     const fileTreeRef = ref<any>(null)
@@ -129,8 +129,8 @@ export default {
     const initdialogBox = () => {
       // 初始化显示的文件
       const currentPage = useCanvas().getCurrentPage()
-      const initCurrentNode: any = props.data.find((item: any) => item.fileName === `${currentPage.name}.vue`)
-      if (initCurrentNode) {
+      if (currentPage) {
+        const initCurrentNode: any = props.data.find((item: any) => item.fileName === `${currentPage.name}.vue`)
         nextTick(() => {
           fileContent.value = initCurrentNode.fileContent
           fileTreeRef.value.setCurrentKey(initCurrentNode.fileName)
