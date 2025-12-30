@@ -36,7 +36,7 @@
               <div class="app-name">
                 <svg-icon :name="item.assetsUrl || 'template-cover-1'" class="app-img"></svg-icon>
                 <div class="app-name-content">
-                  <span class="app-name-text">{{ item.name }}</span>
+                  <div class="app-name-text">{{ item.name }}</div>
                   <div class="app-desc">{{ item.description }}</div>
                 </div>
               </div>
@@ -46,7 +46,10 @@
                   <span class="option-text">开发应用</span>
                 </div>
                 <tiny-divider direction="vertical"></tiny-divider>
-                <div class="option" @click="handleDelete(item)"><svg-icon name="delete"></svg-icon>删除应用</div>
+                <div class="option" @click="handleDelete(item)">
+                  <svg-icon name="delete"></svg-icon>
+                  <span class="option-text">删除应用</span>
+                </div>
               </div>
             </div>
           </template>
@@ -365,6 +368,9 @@ export default {
           font-size: 18px;
           font-weight: 600;
           line-height: 28px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
         .app-desc {
           margin-top: 4px;
@@ -389,6 +395,11 @@ export default {
         align-items: center;
         gap: 6px;
         cursor: pointer;
+        &:hover {
+          .option-text {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }
