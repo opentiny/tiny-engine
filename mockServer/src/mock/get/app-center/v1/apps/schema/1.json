@@ -2233,6 +2233,13 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyHuichartsLiquidfill",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsLiquidfill",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "PortalHome",
         "main": "common/components/home",
         "destructuring": false,

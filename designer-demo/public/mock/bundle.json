@@ -176,6 +176,91 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "水球图"
+          },
+          "component": "TinyHuichartsLiquidfill",
+          "icon": "liquidfill",
+          "description": "水球图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsLiquidfill",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "水球图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": ["create symbol"],
+              "disable": ["copy", "remove"]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "拓扑图"
           },
           "component": "TinyHuichartsGraph",
@@ -22945,6 +23030,53 @@
                     "legend": {
                       "show": false
                     }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "水球图"
+              },
+              "icon": "liquidfill",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsLiquidfill",
+              "schema": {
+                "componentName": "TinyHuichartsLiquidfill",
+                "props": {
+                  "options": {
+                    "label": {
+                      "formatter": "购房比",
+                      "fontSize": 40
+                    },
+                    "legend": {
+                      "show": false
+                    },
+                    "series": [
+                      {
+                        "name": "广东深圳",
+                        "data": [
+                          0.6,
+                          {
+                            "value": 0.5,
+                            "itemStyle": {
+                              "color": "red"
+                            }
+                          },
+                          0.4
+                        ],
+                        "center": ["25%", "50%"],
+                        "shape": "circle",
+                        "waveAnimation": false
+                      },
+                      {
+                        "name": "江苏南京",
+                        "data": [0.7, 0.5, 0.4, 0.3],
+                        "color": ["#BD72f0", "#6D8FF0", "#6D8FF0"],
+                        "center": ["75%", "50%"],
+                        "shape": "rect"
+                      }
+                    ]
                   }
                 }
               }
