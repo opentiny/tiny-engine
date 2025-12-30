@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tiny-popover :visible-arrow="false" width="188" trigger="click">
+    <tiny-popover :visible-arrow="false" width="200" trigger="click">
       <template #reference>
         <div>
           <svg-icon class="user-icon" name="default-user"></svg-icon>
@@ -14,11 +14,16 @@
           </div>
           <div class="user-tenant">
             <div class="tenant-label">创建组织</div>
-            <tiny-input v-model="state.newTenant" placeholder="输入组织名" @blur="createTenant"> </tiny-input>
+            <div class="tenant-item">
+              <tiny-input v-model="state.newTenant" placeholder="输入组织名"> </tiny-input>
+              <svg-icon class="plus-circle" name="plus-circle" @click="createTenant"></svg-icon>
+            </div>
           </div>
           <div class="user-tenant">
             <div class="tenant-label">选择组织</div>
-            <tiny-select v-model="state.tenantValue" :options="tenantList" @change="changeTenant"> </tiny-select>
+            <div class="tenant-item">
+              <tiny-select v-model="state.tenantValue" :options="tenantList" @change="changeTenant"> </tiny-select>
+            </div>
           </div>
         </div>
         <div class="user-out" @click="logOut">
@@ -86,6 +91,7 @@ export default {
         })
         .then((data) => {
           if (data) {
+            state.newTenant = ''
             useModal().message({ message: '创建组织成功', status: 'success' })
             fetchUserInfo().then((data: any) => {
               if (data) {
@@ -140,11 +146,22 @@ export default {
     align-items: center;
     margin-top: 6px;
     height: 40px;
+    .tenant-item {
+      width: 108px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .plus-circle {
+      margin-left: 6px;
+      width: 28px;
+      cursor: pointer;
+    }
   }
   .tenant-label {
     font-size: 12px;
     margin-right: 6px;
-    width: 80px;
+    width: 50px;
   }
 }
 .user-out {
