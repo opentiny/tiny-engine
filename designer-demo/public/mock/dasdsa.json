@@ -1,0 +1,173 @@
+{
+  a:{
+              "name": {
+                "zh_CN": "仪表盘"
+              },
+              "icon": "gauge",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsGauge",
+              "schema": {
+                "componentName": "TinyHuichartsGauge",
+                "props": {
+                  "options": {
+                    "splitColor": [
+                      [0.25, "#0d9458"],
+                      [0.5, "#eeba18"],
+                      [0.75, "#ec6f1a"],
+                      [1, "#f43146"]
+                    ],
+                    "pointer": true,
+                    "data": [
+                      {
+                        "value": 71,
+                        "name": "Utilization rate"
+                      }
+                    ]
+                  }
+                }
+              }
+            }，
+  b: {
+              "name": {
+                "zh_CN": "拓扑图"
+              },
+              "icon": "graph",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsGraph",
+              "schema": {
+                "componentName": "TinyHuichartsGraph",
+                "props": {
+                  "options": {
+                    "animationDurationUpdate": 1600,
+                    "animationEasingUpdate": "quinticInOut",
+                    "series": [
+                      {
+                        "type": "graph",
+                        "layout": "none",
+                        "symbolSize": 48,
+                        "color": "#42A5F5",
+                        "roam": true,
+                        "label": {
+                          "normal": {
+                            "show": true
+                          }
+                        },
+                        "edgeSymbol": ["circle", "arrow"],
+                        "edgeSymbolSize": [3, 10],
+                        "edgeLabel": {
+                          "normal": {
+                            "textStyle": {
+                              "fontSize": 18
+                            }
+                          }
+                        },
+                        "data": [
+                          {
+                            "name": "节点 1",
+                            "x": 300,
+                            "y": 300
+                          },
+                          {
+                            "name": "节点 2",
+                            "x": 800,
+                            "y": 300
+                          },
+                          {
+                            "name": "节点 3",
+                            "x": 550,
+                            "y": 100
+                          },
+                          {
+                            "name": "节点 4",
+                            "x": 550,
+                            "y": 500
+                          }
+                        ],
+                        "links": [
+                          {
+                            "source": 0,
+                            "target": 1,
+                            "symbolSize": [5, 20],
+                            "label": {
+                              "normal": {
+                                "show": true
+                              }
+                            },
+                            "lineStyle": {
+                              "normal": {
+                                "width": 5,
+                                "curveness": 0.2
+                              }
+                            }
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 1",
+                            "label": {
+                              "normal": {
+                                "show": true
+                              }
+                            },
+                            "lineStyle": {
+                              "normal": {
+                                "curveness": 0.2
+                              }
+                            }
+                          },
+                          {
+                            "source": "节点 1",
+                            "target": "节点 3"
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 3"
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 4"
+                          },
+                          {
+                            "source": "节点 1",
+                            "target": "节点 4"
+                          }
+                        ],
+                        "lineStyle": {
+                          "normal": {
+                            "opacity": 0.9,
+                            "width": 2,
+                            "curveness": 0
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+c: {
+              "name": {
+                "zh_CN": "进度图"
+              },
+              "icon": "process",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsProcess",
+              "schema": {
+                "componentName": "TinyHuichartsProcess",
+                "props": {
+                  "options": {
+                    "name": "ProcessBarChart",
+                    "theme": "light",
+                    "padding": [32, 32, 0, 32],
+                    "color": ["#fa2a2d", "#ff7500", "#ffbf00", "#41ba41", "#00aaee"],
+                    "data": [
+                      { "name": "UniEPMgr", "value": 80 },
+                      { "name": "SMLoglic", "value": 65 },
+                      { "name": "SSO", "value": 45 },
+                      { "name": "APIMgr", "value": 20 },
+                      { "name": "Logtransfer", "value": 12 }
+                    ]
+                  }
+                }
+              }
+            }
+}
