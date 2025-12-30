@@ -145,7 +145,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       pageSizes: [10, 20, 30, 40],
-      defaultImg: 'img/default-template-cover.png'
+      defaultImg: './default-template-cover.png'
     })
 
     const getTagsList = async () => {

@@ -360,6 +360,7 @@ export default {
         height: 48px;
       }
       .app-name-content {
+        width: calc(100% - 64px);
         .app-name-text {
           font-size: 18px;
           font-weight: 600;
