@@ -39,15 +39,14 @@
 <script lang="ts">
 import { reactive, computed } from 'vue'
 import type { Component } from 'vue'
-import { Popover, Select, Input, Tooltip } from '@opentiny/vue'
+import { Popover, Select, Input} from '@opentiny/vue'
 import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinyPopover: Popover as Component,
     TinySelect: Select,
-    TinyInput: Input,
-    TinyTooltip: Tooltip
+    TinyInput: Input
   },
   props: {
     iconExpand: {
