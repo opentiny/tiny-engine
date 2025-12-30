@@ -60,6 +60,7 @@ export const registerTools = (state: IState, tools: ToolItem[]) => {
 
     if (toolInstance) {
       state.toolInstanceMap.set(name, toolInstance)
+      state.toolList.push(tool)
     }
 
     return toolInstance

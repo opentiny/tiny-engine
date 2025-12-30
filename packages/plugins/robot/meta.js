@@ -15,6 +15,16 @@ export default {
       // 支持通过注册表传入chat和agent模式的实现
       // chat: useCustomChatMode
       // agent: useCustomAgentMode
+    },
+    mcpConfig: {
+      mcpServers: {
+        // 支持添加自定义MCP Server服务器
+        // 'img-search': {
+        //   type: 'SSE', // 支持SSE和StreamableHttp两种类型
+        //   icon: 'https://xxx', // 自定义图标
+        //   url: 'https://xxxx/mcp' // 自定义MCP Server地址
+        // }
+      }
     }
   }
 }

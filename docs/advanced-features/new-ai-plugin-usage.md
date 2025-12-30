@@ -248,6 +248,23 @@ customCompatibleAIModels: [
 ]
 ```
 
+#### 自定义添加 MCP Servers
+在options参数中可以通过如下参数配置MCP:
+- mcpConfig.mcpServers: 该参数配置添加自定义MCP 服务器，添加后的 MCP 服务器可以在AI插件的Sender输入框MCP配置中进行管理（控制服务器开关、查看并切换工具开关）。
+配置示例格式如下：
+```javascript
+mcpConfig: {
+  mcpServers: {
+    // 支持添加自定义MCP Server服务器
+    'img-search': {
+      type: 'SSE', // 支持SSE和StreamableHttp两种类型
+      icon: 'https://xxx', // 自定义图标
+      url: 'https://xxxx/mcp' // 自定义MCP Server地址
+    }
+  }
+}
+```
+
 #### 自定义 Agent 模式上下文功能
 
 - enableResourceContext: 该参数配置是否在提示词上下文携带资源插件图片，AI 会在生成的页面中自动匹配合适的图片资源，默认开启

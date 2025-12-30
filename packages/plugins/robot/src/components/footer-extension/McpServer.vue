@@ -51,12 +51,13 @@ const {
   inUseMcpServers: installedPlugins,
   refreshMcpServerTools,
   updateMcpServerToolStatus,
-  updateMcpServerStatus
+  updateMcpServerStatus,
+  updateMcpServerToggle
 } = useMcpServer()
 
 // 插件状态切换
 const handlePluginToggle = (plugin: PluginInfo, enabled: boolean) => {
-  plugin.enabled = enabled
+  updateMcpServerToggle(plugin, enabled)
 }
 
 // 插件展开状态变化

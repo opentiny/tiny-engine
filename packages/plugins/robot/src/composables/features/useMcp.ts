@@ -3,13 +3,17 @@ import type { PluginInfo, PluginTool } from '@opentiny/tiny-robot'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import type { McpTool } from '../../types/mcp.types'
 import type { RequestTool } from '../../types/chat.types'
+import { getRobotServiceOptions } from '../../utils'
+import { MCPHost } from '../../services/MCPHost'
+
+const mcpHost = new MCPHost()
 
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',
   name: 'Tiny Engine MCP 工具',
   icon: 'https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/opentiny-tinyengine-logo-4f8a3801.svg',
   description: '使用TinyEngine设计器能力，如操作画布、编辑页面等',
-  added: true
+  addState: 'added'
 }
 
 const inUseMcpServers = ref<PluginInfo[]>([{ ...ENGINE_MCP_SERVER, enabled: true, expanded: true, tools: [] }])
@@ -18,6 +22,9 @@ const updateServerTools = (serverId: string, tools: PluginTool[]) => {
   const mcpServer = inUseMcpServers.value.find((item) => item.id === serverId)
   if (mcpServer) {
     mcpServer.tools = tools
+    if (!mcpHost.getClient(serverId) && serverId === ENGINE_MCP_SERVER.id) {
+      mcpHost.setClient(serverId, getMetaApi(META_SERVICE.McpService)?.getMcpClient())
+    }
   }
 }
 
@@ -31,13 +38,14 @@ const updateEngineTools = async () => {
     enabled: tool.status === 'enabled'
   }))
   updateServerTools(ENGINE_MCP_SERVER.id, engineTools)
+  return engineTools
 }
 
 const convertMCPToOpenAITools = (mcpTools: McpTool[]): RequestTool[] => {
   return mcpTools.map((tool: McpTool) => ({
     type: 'function',
     function: {
-      name: tool.name,
+      name: tool.id || tool.name,
       description: tool.description || '',
       parameters: {
         type: 'object',
@@ -50,12 +58,6 @@ const convertMCPToOpenAITools = (mcpTools: McpTool[]): RequestTool[] => {
   })) as RequestTool[]
 }
 
-const getEngineServer = () => {
-  return inUseMcpServers.value.find((item) => item.id === ENGINE_MCP_SERVER.id)
-}
-
-const isToolsEnabled = computed(() => getEngineServer()?.tools?.some((tool) => tool.enabled))
-
 const updateEngineServerToolStatus = (toolId: string, enabled: boolean) => {
   getMetaApi(META_SERVICE.McpService)?.updateTool?.(toolId, { enabled })
 }
@@ -67,15 +69,38 @@ const updateEngineServer = (engineServer: PluginInfo, enabled: boolean) => {
   })
 }
 
+const updateMcpServerToggle = async (server: PluginInfo, enabled: boolean) => {
+  if (server.id === ENGINE_MCP_SERVER.id) {
+    server.enabled = enabled
+    return
+  }
+  const inuseServer = inUseMcpServers.value.find((s) => s.id === server.id)
+  if (!inuseServer) {
+    return
+  }
+  try {
+    if (enabled) {
+      const { tools } = await connectMcpServer(inuseServer) // eslint-disable-line
+      inuseServer.tools = tools.map((tool) => ({ ...tool, enabled: true }))
+    } else {
+      await disconnectMcpServer(inuseServer.id) // eslint-disable-line
+      inuseServer.tools = []
+    }
+    inuseServer.enabled = enabled
+  } catch (error) {
+    inuseServer.enabled = false
+  }
+}
+
 const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
   // 市场添加状态修改
-  server.added = added
+  server.addState = added ? 'added' : 'idle'
   if (added) {
     const newServer: PluginInfo = {
       ...server,
       id: server.id || `mcp-server-${Date.now()}`,
       enabled: true,
-      added: true,
+      addState: 'added',
       expanded: false,
       tools: server.tools || []
     }
@@ -103,25 +128,104 @@ const updateMcpServerToolStatus = (currentServer: PluginInfo, toolId: string, en
   }
 }
 
+const updateCustomMcpServers = async () => {
+  const customMcpServers = getRobotServiceOptions().mcpConfig?.mcpServers || {}
+  if (Object.keys(customMcpServers).length > 0) {
+    if (
+      Object.values(customMcpServers).some(
+        (server) => !['streamablehttp', 'sse'].includes(server.type?.toLowerCase()) || !server.url
+      )
+    ) {
+      return {
+        result: 'failed',
+        message: '解析JSON失败，缺少type或url字段'
+      }
+    }
+    for (const [serverName, server] of Object.entries(customMcpServers)) {
+      if (inUseMcpServers.value.find((s) => s.id === serverName)) {
+        continue
+      }
+      const newServer: PluginInfo = {
+        id: serverName,
+        name: serverName,
+        icon: server.icon,
+        description: server.description,
+        enabled: false,
+        addState: 'added',
+        expanded: false,
+        type: server.type,
+        url: server.url,
+        tools: []
+      }
+      inUseMcpServers.value.push(newServer)
+    }
+  }
+}
+
+const connectMcpServer = (server: PluginInfo) => {
+  return mcpHost.connectToServer({
+    id: server.id,
+    url: server.url,
+    type: server.type
+  })
+}
+
+const disconnectMcpServer = (serverId: string) => {
+  return mcpHost.disconnect(serverId)
+}
+
 const refreshMcpServerTools = () => {
   updateEngineTools()
+  updateCustomMcpServers()
 }
 
-let llmTools: RequestTool[] | null = null
+const toolsMap = computed(() => {
+  return inUseMcpServers.value
+    .filter((server) => server.enabled)
+    .reduce((acc, server) => {
+      server.tools
+        .filter((tool) => tool.enabled)
+        .forEach((tool) => {
+          acc[tool.id || tool.name] = {
+            server: server.id,
+            ...tool
+          }
+        })
+      return acc
+    }, {})
+})
 
-const listTools = async (): Promise<McpTool[]> => {
-  const mcpTools = await getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.listTools()
-  return mcpTools?.tools || []
+const callTool = async (toolId: string, args: Record<string, unknown>) => {
+  return mcpHost.getClient(toolsMap.value[toolId]?.server)?.callTool({ name: toolId, arguments: args || {} }) || {}
 }
 
-const callTool = async (toolId: string, args: Record<string, unknown>) =>
-  getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.callTool({ name: toolId, arguments: args }) || {}
+const tools = computed(() => {
+  return convertMCPToOpenAITools(
+    inUseMcpServers.value
+      .filter((server) => server.enabled)
+      .map((server) => server.tools.filter((tool) => tool.enabled))
+      .flat()
+  )
+})
 
 const getLLMTools = async () => {
-  const mcpTools = await getMetaApi(META_SERVICE.McpService)?.getMcpClient()?.listTools()
-  llmTools = convertMCPToOpenAITools(mcpTools?.tools || [])
-  return llmTools
+  const servers = inUseMcpServers.value.filter((server) => server.enabled && server.tools.length > 0)
+  const tools = await Promise.all(
+    servers.map(async (server) => {
+      const enabledTools = server.tools?.filter((tool) => tool.enabled).map((tool) => tool.id || tool.name) || []
+      const client = mcpHost.getClient(server.id)
+      if (client) {
+        const listToolResult: { tools: McpTool[] } = await client.listTools()
+        return listToolResult.tools.filter((tool) => enabledTools.includes(tool.name))
+      }
+      return []
+    })
+  )
+
+  return convertMCPToOpenAITools(tools.flat())
 }
+
+const isToolsEnabled = computed(() => tools.value.length > 0)
 
 export default function useMcpServer() {
   return {
@@ -129,7 +233,7 @@ export default function useMcpServer() {
     refreshMcpServerTools,
     updateMcpServerStatus,
     updateMcpServerToolStatus,
-    listTools,
+    updateMcpServerToggle,
     callTool,
     getLLMTools,
     isToolsEnabled
