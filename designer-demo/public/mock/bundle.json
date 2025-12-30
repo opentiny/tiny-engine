@@ -4766,6 +4766,276 @@
           }
         },
         {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "仪表盘"
+          },
+          "component": "TinyHuichartsGauge",
+          "icon": "gauge",
+          "description": "仪表盘",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsGauge",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "仪表盘配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "拓扑图"
+          },
+          "component": "TinyHuichartsGraph",
+          "icon": "graph",
+          "description": "拓扑图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsGraph",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "拓扑图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "进度图"
+          },
+          "component": "TinyHuichartsProcess",
+          "icon": "process",
+          "description": "进度图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsProcess",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "进度图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
           "id": 1,
           "version": "2.4.2",
           "name": {
