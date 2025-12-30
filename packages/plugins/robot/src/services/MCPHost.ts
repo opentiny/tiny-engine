@@ -18,7 +18,7 @@ export class MCPHost {
   private clients: Map<string, Client> = new Map()
   private transports: Map<string, Transport> = new Map()
 
-  async connectToServer(serverConfig: ServerConfig): Promise<{ name: string; tools: Tool[] }> {
+  async connectToServer(serverConfig: ServerConfig): Promise<{ id: string; tools: Tool[] }> {
     if (!serverConfig || !serverConfig.url) {
       throw new Error(`Server configuration not found`)
     }
