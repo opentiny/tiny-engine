@@ -357,7 +357,6 @@ export default {
     .app-name {
       display: flex;
       gap: 16px;
-      align-items: center;
       .app-img {
         width: 48px;
         height: 48px;
