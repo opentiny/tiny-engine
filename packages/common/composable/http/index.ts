@@ -104,6 +104,7 @@ const whiteList = [
   '/platform-center/api/user/me',
   '/platform-center/api/user/tenant'
 ]
+const LoginErrorCode = ['CM004', 'CM005', 'CM006', 'CM007', 'CM336', 'CM339']
 
 // 创建 AbortController 并关联到请求
 const createAbortController = (config) => {
@@ -131,6 +132,15 @@ const showError = (url, message) => {
     title: '接口报错',
     message: `报错接口: ${url} \n报错信息: ${message ?? ''}`
   })
+}
+
+const toLogin = () => {
+  const { setNeedToLogin } = getMetaApi(META_SERVICE.GlobalService)
+  isUnauthorized = true
+
+  abortAllRequests('认证失败，需要重新登录')
+  setNeedToLogin(true)
+  localStorage.removeItem('engineToken')
 }
 
 const requestHandler = (config) => {
@@ -198,6 +208,17 @@ const responseSuccessHandler = (res) => {
 
   if (res.data?.error) {
     showError(res.config?.url, res?.data?.error?.message)
+    const error = res.data?.error
+    if (error.code && LoginErrorCode.includes(error.code)) {
+      toLogin()
+
+      return Promise.reject({
+        type: 'AUTH_ERROR',
+        code: error.code,
+        message: error.message || '认证失败，请重新登录',
+        skipShowError: true
+      })
+    }
 
     return Promise.reject(res.data.error)
   }
@@ -221,16 +242,10 @@ const responseErrorHandler = (error) => {
   const { response } = error
 
   if (response) {
-    const { setNeedToLogin } = getMetaApi(META_SERVICE.GlobalService)
     const { data } = response
-    const LoginErrorCode = ['CM004', 'CM005', 'CM006', 'CM007', 'CM336', 'CM339']
+
     if (data && data.code && LoginErrorCode.includes(data.code)) {
-      isUnauthorized = true
-
-      abortAllRequests('认证失败，需要重新登录')
-
-      setNeedToLogin(true)
-      localStorage.removeItem('engineToken')
+      toLogin()
 
       return Promise.reject({
         type: 'AUTH_ERROR',
