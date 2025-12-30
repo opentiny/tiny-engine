@@ -1,0 +1,21 @@
+name: Auto Deploy Docs
+
+on:
+  push:
+    branches: [develop]
+    paths:
+      - 'docs/**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger main repo workflow
+      env:
+        PAT: ${{ secrets.PAT_TOKEN }}
+      run: |
+        curl -X POST \
+          -H "Authorization: token $PAT" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/opentiny/docs/dispatches \
+          -d '{"event_type":"submodule-updated"}'
