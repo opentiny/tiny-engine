@@ -145,7 +145,7 @@ export default {
       currentPage: 1,
       pageSize: 10,
       pageSizes: [10, 20, 30, 40],
-      defaultImg: './default-template-cover.png'
+      defaultImg: 'https://tinyengine-assets.obs.myhuaweicloud.com/files/images/img-251230.png'
     })
 
     const getTagsList = async () => {
