@@ -4801,7 +4801,7 @@
             "zh_CN": "热力图"
           },
           "component": "TinyHuichartsHeatmap",
-          "icon": "scatter",
+          "icon": "heatmap",
           "description": "热力图",
           "docUrl": "",
           "screenshot": "",
@@ -4891,7 +4891,7 @@
             "zh_CN": "K线图"
           },
           "component": "TinyHuichartsCandle",
-          "icon": "scatter",
+          "icon": "candle",
           "description": "K线图",
           "docUrl": "",
           "screenshot": "",
@@ -4981,7 +4981,7 @@
             "zh_CN": "树图"
           },
           "component": "TinyHuichartsTree",
-          "icon": "scatter",
+          "icon": "tree-chart",
           "description": "树图",
           "docUrl": "",
           "screenshot": "",
@@ -23426,7 +23426,7 @@
               "name": {
                 "zh_CN": "热力图"
               },
-              "icon": "scatter",
+              "icon": "heatmap",
               "screenshot": "",
               "snippetName": "TinyHuichartsHeatmap",
               "schema": {
@@ -23507,7 +23507,7 @@
               "name": {
                 "zh_CN": "K线图"
               },
-              "icon": "scatter",
+              "icon": "candle",
               "screenshot": "",
               "snippetName": "TinyHuichartsCandle",
               "schema": {
@@ -23828,7 +23828,7 @@
               "name": {
                 "zh_CN": "树图"
               },
-              "icon": "scatter",
+              "icon": "tree-chart",
               "screenshot": "",
               "snippetName": "TinyHuichartsTree",
               "schema": {
