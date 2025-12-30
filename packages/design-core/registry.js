@@ -57,6 +57,7 @@ import {
   TemplateCenter
 } from './re-export'
 
+const isDevelopEnv = import.meta.env.MODE?.includes('dev')
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
 export default {
@@ -135,7 +136,7 @@ export default {
       }
     ],
     enableTailwindCSS: true,
-    enableLogin: true
+    enableLogin: isDevelopEnv ? false : true
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [

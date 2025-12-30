@@ -19,6 +19,7 @@
               <svg-icon class="plus-circle" name="plus-circle" @click="createTenant"></svg-icon>
             </div>
           </div>
+          <div class="tenant-tip" v-if="state.isShowTenantTip">组织名不能为空</div>
           <div class="user-tenant">
             <div class="tenant-label">选择组织</div>
             <div class="tenant-item">
@@ -38,14 +39,15 @@
 <script lang="ts">
 import { reactive, computed } from 'vue'
 import type { Component } from 'vue'
-import { Popover, Select, Input } from '@opentiny/vue'
+import { Popover, Select, Input, Tooltip } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
     TinyPopover: Popover as Component,
     TinySelect: Select,
-    TinyInput: Input
+    TinyInput: Input,
+    TinyTooltip: Tooltip
   },
   props: {
     iconExpand: {
@@ -63,20 +65,23 @@ export default {
     )
     const state = reactive({
       tenantValue: getBaseInfo().tenantId,
-      newTenant: ''
+      newTenant: '',
+      isShowTenantTip: false
     })
 
     const userInfo = computed(() => getUserInfo())
     const tenantList = computed(() => {
       const info = getUserInfo()
 
-      return info.tenant?.map((item) => {
-        return {
-          ...item,
-          value: item.id,
-          label: item.nameEn
-        }
-      })
+      return Array.isArray(info?.tenant)
+        ? info.tenant?.map((item) => {
+            return {
+              ...item,
+              value: item.id,
+              label: item.nameEn
+            }
+          })
+        : []
     })
 
     const logOut = () => {
@@ -85,6 +90,15 @@ export default {
     }
 
     const createTenant = () => {
+      if (!state.newTenant.length) {
+        state.isShowTenantTip = true
+        setTimeout(() => {
+          state.isShowTenantTip = false
+        }, 2000)
+
+        return
+      }
+
       getMetaApi(META_SERVICE.Http)
         .post('/platform-center/api/tenant/create', {
           nameEn: state.newTenant
@@ -157,6 +171,10 @@ export default {
       width: 28px;
       cursor: pointer;
     }
+  }
+  .tenant-tip {
+    color: var(--te-toolbars-user-text-color-error);
+    padding-left: 60px;
   }
   .tenant-label {
     font-size: 12px;

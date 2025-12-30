@@ -104,6 +104,8 @@ const whiteList = [
   '/platform-center/api/user/me',
   '/platform-center/api/user/tenant'
 ]
+// 不鉴权名单
+const notAuthList = ['app-center/api/chat/completions', 'app-center/api/ai/chat', 'app-center/api/ai/search']
 const LoginErrorCode = ['CM004', 'CM005', 'CM006', 'CM007', 'CM336', 'CM339']
 
 // 创建 AbortController 并关联到请求
@@ -189,7 +191,9 @@ const requestHandler = (config) => {
       return new Promise(() => {})
     }
   } else {
-    config.headers.Authorization = `Bearer ${token}`
+    if (!notAuthList.some((url) => config.url.includes(url))) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
   }
 
   // 请求结束时清理 AbortController
