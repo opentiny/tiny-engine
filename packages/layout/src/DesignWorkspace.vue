@@ -21,7 +21,7 @@
         </template>
       </div>
       <div class="manager-container">
-        <component :is="activeNode.entry" />
+        <component :is="activeNode.entry" @handleToMenu="handleMenuClick" />
       </div>
     </div>
   </div>
