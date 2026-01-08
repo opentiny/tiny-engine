@@ -35,35 +35,22 @@
             <div class="item">
               <div class="app-name">
                 <svg-icon :name="item.assetsUrl || 'template-cover-1'" class="app-img"></svg-icon>
-                <span class="app-name-text">{{ item.name }}</span>
+                <div class="app-name-content">
+                  <div class="app-name-text">{{ item.name }}</div>
+                  <div class="app-desc">{{ item.description }}</div>
+                </div>
               </div>
-              <div class="app-tag">
-                <div v-if="item.sceneId" class="tag">
-                  {{ item.scene[0]?.name }}
+              <div class="app-operation">
+                <div class="option" @click="openApplication(item)">
+                  <svg-icon name="cloud-shell"></svg-icon>
+                  <span class="option-text">开发应用</span>
                 </div>
-                <div v-if="item.industryId" class="tag">
-                  {{ item.industry[0]?.name }}
+                <tiny-divider direction="vertical"></tiny-divider>
+                <div class="option" @click="handleDelete(item)">
+                  <svg-icon name="delete"></svg-icon>
+                  <span class="option-text">删除应用</span>
                 </div>
-                <div v-if="item.framework" class="tag">{{ item.framework }}</div>
               </div>
-              <div class="app-desc">{{ item.description }}</div>
-              <tiny-popover
-                :visible-arrow="false"
-                trigger="hover"
-                placement="bottom-start"
-                popper-class="operation-popover"
-                ref="popoverRef"
-              >
-                <template #reference>
-                  <div class="app-operation">
-                    <svg-icon name="ellipsis"></svg-icon>
-                  </div>
-                </template>
-                <div class="options">
-                  <div class="option" @click="openApplication(item)">开发应用</div>
-                  <div class="option" @click="handleDelete(item)">删除应用</div>
-                </div>
-              </tiny-popover>
             </div>
           </template>
         </div>
@@ -105,7 +92,7 @@
 
 <script>
 import { reactive, ref, onMounted } from 'vue'
-import { Button, Select, Pager, Grid, GridColumn, Popover, Search, Modal, Notify } from '@opentiny/vue'
+import { Button, Select, Pager, Grid, GridColumn, Divider, Search, Modal, Notify } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import AppDialog from './AppDialog.vue'
@@ -118,7 +105,7 @@ export default {
     TinyPager: Pager,
     TinyGrid: Grid,
     TinyGridColumn: GridColumn,
-    TinyPopover: Popover,
+    TinyDivider: Divider,
     TinySearch: Search,
     SearchEmpty,
     TinyIconSearch: iconSearch(),
@@ -162,6 +149,8 @@ export default {
         assetsUrl: 'small-list'
       }
     ]
+
+    const queryParams = new URLSearchParams(location.search)
 
     const state = reactive({
       appFilter: 'all',
@@ -219,7 +208,7 @@ export default {
 
     const openApplication = (template) => {
       const href = window.location.href.split('?')[0] || './'
-      window.open(`${href}?type=app&id=${template.id}&tenant=${template.tenantId}`)
+      window.open(`${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`)
     }
 
     const typeClick = (type) => {
@@ -358,9 +347,8 @@ export default {
   flex-wrap: wrap;
   .item {
     width: 252px;
-    padding: 24px;
+    padding: 24px 24px 12px;
     border-radius: 8px;
-    background: var(--te-template-center-common-item-bg-color);
     border: 1px solid var(--te-template-app-center-item-border-color);
     position: relative;
     &:hover {
@@ -368,53 +356,49 @@ export default {
     }
     .app-name {
       display: flex;
-      gap: 8px;
-      align-items: center;
+      gap: 16px;
       .app-img {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
       }
-      .app-name-text {
-        font-size: 18px;
-        font-weight: 600;
+      .app-name-content {
+        width: calc(100% - 64px);
+        .app-name-text {
+          font-size: 18px;
+          font-weight: 600;
+          line-height: 28px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
+        .app-desc {
+          margin-top: 4px;
+          font-size: 12px;
+          line-height: 18px;
+          color: var(--te-template-center-common-item-desc-text-color);
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+        }
       }
-    }
-    .app-tag {
-      display: flex;
-      gap: 4px;
-      height: 20px;
-      margin-top: 12px;
-      .tag {
-        padding: 2px 4px;
-        border-radius: 2px;
-        background: var(--te-template-center-common-item-tag-bg-color);
-      }
-    }
-    .app-desc {
-      margin-top: 12px;
-      color: var(--te-template-center-common-item-desc-text-color);
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
     .app-operation {
-      display: none;
-    }
-    &:hover {
-      .app-operation {
-        display: block;
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        background: var(--te-template-center-common-item-operation-bg-color);
-        color: var(--te-template-center-common-item-operation-icon-color);
-        display: inline-flex;
-        justify-content: center;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 12px;
+      margin-top: 16px;
+      border-top: 1px dashed var(--te-template-app-center-item-border-color);
+      .option {
+        display: flex;
         align-items: center;
+        gap: 6px;
         cursor: pointer;
-        top: 16px;
-        right: 16px;
+        &:hover {
+          .option-text {
+            text-decoration: underline;
+          }
+        }
       }
     }
   }
@@ -451,11 +435,5 @@ export default {
       background: var(--te-template-common-bg-color-hover);
     }
   }
-}
-</style>
-<style lang="less">
-.tiny-pager__selector.tiny-popover.tiny-popper[x-placement],
-.operation-popover.tiny-popover.tiny-popper[x-placement] {
-  padding: 8px 0;
 }
 </style>

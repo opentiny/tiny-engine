@@ -15,26 +15,6 @@
       <tiny-form-item label="应用描述" prop="description">
         <tiny-input v-model="formState.description" type="textarea" placeholder="请输入此次发布的修改点"></tiny-input>
       </tiny-form-item>
-      <tiny-form-item label="场景" prop="sceneId">
-        <tiny-select
-          v-model="formState.sceneId"
-          placeholder="请选择"
-          :options="tagsList.scene"
-          :disabled="template?.sceneId"
-          value-field="id"
-          text-field="name"
-        ></tiny-select>
-      </tiny-form-item>
-      <tiny-form-item label="行业" prop="industryId">
-        <tiny-select
-          v-model="formState.industryId"
-          placeholder="请选择"
-          :options="tagsList.industry"
-          :disabled="template?.industryId"
-          value-field="id"
-          text-field="name"
-        ></tiny-select>
-      </tiny-form-item>
       <tiny-form-item label="缩略图">
         <div class="form-item-icon-wrapper">
           <div class="form-item-icon-mask" v-if="isOpen"></div>
@@ -64,26 +44,21 @@
 </template>
 
 <script lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive } from 'vue'
 import {
   Input as TinyInput,
   Button as TinyButton,
   DialogBox as TinyDialogBox,
   Form as TinyForm,
-  FormItem as TinyFormItem,
-  Select as TinySelect,
-  Notify
+  FormItem as TinyFormItem
 } from '@opentiny/vue'
-import { fetchBusinessCategoryByGroup } from './js/http'
-
 export default {
   components: {
     TinyInput,
     TinyButton,
     TinyDialogBox,
     TinyForm,
-    TinyFormItem,
-    TinySelect
+    TinyFormItem
   },
   props: {
     visible: {
@@ -108,11 +83,6 @@ export default {
     })
 
     const isOpen = ref(false)
-
-    const tagsList = reactive({
-      scene: [],
-      industry: []
-    })
 
     const validRules = {
       name: [
@@ -151,28 +121,10 @@ export default {
             }
           }
         }
-      ],
-      sceneId: [{ required: true, message: '场景必选', trigger: 'change' }],
-      industryId: [{ required: true, message: '行业必选', trigger: 'change' }]
+      ]
     }
 
     const setVisible = (visible: boolean) => emit('update:visible', visible)
-
-    const getTagsList = async () => {
-      Promise.all([fetchBusinessCategoryByGroup('场景'), fetchBusinessCategoryByGroup('行业')])
-        .then((res) => {
-          tagsList.scene = res[0] || []
-          tagsList.industry = res[1] || []
-        })
-        .catch((error) => {
-          Notify({
-            type: 'error',
-            message: error,
-            position: 'top-right',
-            duration: 5000
-          })
-        })
-    }
 
     const handleOpen = () => {
       isOpen.value = true
@@ -201,16 +153,11 @@ export default {
       })
     }
 
-    onMounted(() => {
-      getTagsList()
-    })
-
     return {
       isOpen,
       editAppInfoRef,
       formState,
       validRules,
-      tagsList,
       setVisible,
       handleOpen,
       handleSelectIcon,

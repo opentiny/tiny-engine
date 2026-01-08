@@ -76,9 +76,7 @@ export default {
             title: '创建成功'
           }).then((res: string) => {
             if (res === 'confirm') {
-              const currentUrl = new URL(window.location.href)
-              currentUrl.searchParams.set('type', 'app')
-              window.location.href = currentUrl.toString()
+              emit('handleMenu')
             }
           })
           Notify({
