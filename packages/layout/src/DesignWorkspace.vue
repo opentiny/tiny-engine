@@ -69,7 +69,7 @@
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { iconArrowLeft } from '@opentiny/vue-icon'
 import { getMetaApi, META_SERVICE, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
@@ -135,6 +135,17 @@ export default {
     const handleMenuClick = (menu) => {
       activeNode.value = menu
     }
+
+    onMounted(() => {
+      if (enableLogin) {
+        const tenantId = getBaseInfo().tenantId || tenantList.value[0].id
+        const url = new URL(window.location.href)
+        if (!url.searchParams.has('tenant')) {
+          url.searchParams.append('tenant', tenantId)
+          window.history.replaceState({}, '', url.toString())
+        }
+      }
+    })
 
     return {
       activeNode,
