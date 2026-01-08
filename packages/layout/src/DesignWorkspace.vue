@@ -122,7 +122,6 @@ export default {
     const changeTenant = (id) => {
       setTenantInfo(id).then((tenantData) => {
         setUserInfo(tenantData)
-        localStorage.setItem('engineToken', tenantData.token)
         const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
         window.location.href = `${baseUrl}tenant=${id}`
       })

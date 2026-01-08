@@ -39,7 +39,7 @@
 <script lang="ts">
 import { reactive, computed } from 'vue'
 import type { Component } from 'vue'
-import { Popover, Select, Input} from '@opentiny/vue'
+import { Popover, Select, Input } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
 
 export default {
@@ -118,7 +118,6 @@ export default {
     const changeTenant = (id) => {
       setTenantInfo(id).then((tenantData) => {
         setUserInfo(tenantData)
-        localStorage.setItem('engineToken', tenantData.token)
         const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
         window.location.href = `${baseUrl}tenant=${id}`
       })
