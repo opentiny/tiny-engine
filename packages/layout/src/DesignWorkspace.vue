@@ -96,9 +96,7 @@ export default {
     )
 
     const enableLogin = getMergeMeta('engine.config')?.enableLogin
-    const { getUserInfo, setUserInfo, setTenantInfo, setNeedToLogin, getBaseInfo } = getMetaApi(
-      META_SERVICE.GlobalService
-    )
+    const { getUserInfo, setNeedToLogin, getBaseInfo } = getMetaApi(META_SERVICE.GlobalService)
 
     const userInfo = computed(() => getUserInfo())
     const tenantList = computed(() => {
@@ -120,11 +118,8 @@ export default {
     )
 
     const changeTenant = (id) => {
-      setTenantInfo(id).then((tenantData) => {
-        setUserInfo(tenantData)
-        const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
-        window.location.href = `${baseUrl}tenant=${id}`
-      })
+      const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
+      window.location.href = `${baseUrl}tenant=${id}`
     }
 
     const logOut = () => {
