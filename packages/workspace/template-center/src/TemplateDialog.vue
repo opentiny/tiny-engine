@@ -79,7 +79,8 @@ export default {
       description: props.template.description || '',
       sceneId: props.template.sceneId || null,
       industryId: props.template.industryId || null,
-      assetsUrl: props.template.assetsUrl || 'template-cover-1'
+      assetsUrl: props.template.assetsUrl || 'template-cover-1',
+      framework: 'vue'
     })
 
     const isOpen = ref(false)
