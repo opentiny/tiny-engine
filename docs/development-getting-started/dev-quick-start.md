@@ -88,11 +88,7 @@ import engineConfig from './engine.config'
 
 export default {
 	// ...
---  plugins: [Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
-++  plugins: [DemoPlugin, Materials, Tree, Page, Block, Datasource, Bridge, I18n, Script, State, Schema, Help, Robot],
-  dsls: [{ id: 'engine.dsls.dslvue' }],
-  settings: [Props, Styles, Events],
-  canvas: Canvas
+++  [DemoPlugin.id]: DemoPlugin
 }
 
 ```
@@ -117,7 +113,7 @@ export default {
 
 ### 3.1 克隆或下载源码
 
-前往[Tiny Engine github](https://github.com/opentiny/tiny-engine/tree/v2.0.0) 地址，选择分支为：`refactor/develop`，或者选择Tags为 v2.0.0或者其他2.0版本，克隆或下载源码。
+前往[Tiny Engine github](https://github.com/opentiny/tiny-engine/tree/v2.0.0) 地址，选择分支为：`develop`，或者选择Tags为 v2.0.0或者其他2.0版本，克隆或下载源码。
 
 克隆下来可以看到我们的目录结构如下
 

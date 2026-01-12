@@ -13,6 +13,7 @@
 **接口描述：**
 
 <p>作为npm包使用generateCode方法生成代码示例:</p>
+
 <pre><code data-language="js" class="lang-js">const path = require('path')
 const fs = require('fs')
 const { generateCode } = require('@opentiny/tiny-engine-dsl-ng-tiny/lib/generate-code.js')
@@ -24,6 +25,7 @@ result.forEach((item) =&gt; fs.writeFileSync(`dist/${item.filePath}/${item.panel
 </code></pre>
 
 <p>输入示例: { pageInfo, blocksData };</p>
+
 <pre><code data-language="js" class="lang-js">// pageInfo为页面的schema信息， 
 // pageInfo: { schema, name });
 {

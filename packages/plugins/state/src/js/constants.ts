@@ -19,4 +19,4 @@ export const OPTION_TYPE = {
   ADD: 'add',
   UPDATE: 'update',
   COPY: 'copy'
-}
+} as const

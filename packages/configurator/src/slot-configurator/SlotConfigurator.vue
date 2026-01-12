@@ -22,15 +22,16 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, watchEffect, nextTick } from 'vue'
+import type { Component } from 'vue'
 import { Popover } from '@opentiny/vue'
 import { useProperties, useModal, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { iconHelpCircle } from '@opentiny/vue-icon'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     IconHelpCircle: iconHelpCircle()
   },
   props: {
@@ -185,7 +186,7 @@ export default {
 .e__switch-core::after {
   content: '';
   position: absolute;
-  top: 1px;
+  top: 2px;
   left: 1px;
   border-radius: 100%;
   transition: all 0.3s;

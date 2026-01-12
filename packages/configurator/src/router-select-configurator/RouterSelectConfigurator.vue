@@ -50,10 +50,10 @@ onMounted(() => {
 })
 
 const pageToTreeData = (page) => {
-  const { id, name, isPage, children } = page
+  const { id, name, route, isPage, children } = page
 
   // id 可能为数字，需要转换成字符串
-  const result = { id: String(id), name, isPage, disabled: !isPage }
+  const result = { id: String(id), name, route, isPage, disabled: !isPage }
 
   if (Array.isArray(children)) {
     result.children = children.map((page) => pageToTreeData(page))
@@ -94,8 +94,22 @@ const treeFolderOp = computed(() => {
   return options
 })
 
+const treeToArray = (treeData) => {
+  let res = []
+  for (const item of treeData) {
+    const { children, ...i } = item
+    if (children && children.length) {
+      res = res.concat(treeToArray(children))
+    }
+    res.push(i)
+  }
+  return res
+}
+
 const handleChange = () => {
-  emit('update:modelValue', { name: state.selected })
+  const treeData = treeFolderOp?.value?.data
+  const selectedData = treeToArray(treeData)?.find((item) => item.id === state.selected) || {}
+  emit('update:modelValue', { name: state.selected, path: selectedData.route })
 }
 </script>
 

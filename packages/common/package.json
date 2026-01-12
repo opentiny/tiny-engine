@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-common",
-  "version": "2.7.0",
+  "version": "2.9.0",
   "publishConfig": {
     "access": "public"
   },
@@ -11,8 +11,14 @@
   "module": "dist/index.js",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./js/": "./dist/js/"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./js/*": {
+      "types": "./dist/js/*.d.ts",
+      "import": "./dist/js/*.js"
+    }
   },
   "files": [
     "dist",
@@ -34,6 +40,8 @@
     "@babel/parser": "~7.23.2",
     "@babel/traverse": "~7.23.2",
     "@eslint/js": "^8.57.1",
+    "@modelcontextprotocol/sdk": "^1.17.0",
+    "@opentiny/next": "^0.2.1",
     "@opentiny/tiny-engine-dsl-vue": "workspace:*",
     "@opentiny/tiny-engine-i18n-host": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
@@ -45,14 +53,20 @@
     "eslint-linter-browserify": "8.57.0",
     "monaco-editor": "0.51.0",
     "prettier": "2.7.1",
-    "vue-draggable-next": "2.2.1"
+    "vue-draggable-next": "2.2.1",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__traverse": "^7.28.0",
+    "@types/css-tree": "2.3.11",
+    "@types/prettier": "^2.7.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "glob": "^10.3.4",
     "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-static-copy": "^1.0.6"
   },
   "peerDependencies": {

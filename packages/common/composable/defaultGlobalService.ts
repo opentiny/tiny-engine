@@ -1,14 +1,15 @@
-import { useMessage, useModal, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { watch } from 'vue'
+import { useMessage, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { reactive, watch } from 'vue'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
-  const id = paramsMap.get('id')
+  const id = paramsMap.get('id') // appId
   const blockId = paramsMap.get('blockid')
   const pageId = paramsMap.get('pageid')
   const previewId = paramsMap.get('previewid')
   const type = paramsMap.get('type')
   const version = paramsMap.get('version')
+  const tenantId = paramsMap.get('tenant')
 
   return {
     type: type || 'app',
@@ -16,7 +17,8 @@ const getBaseInfo = () => {
     pageId,
     previewId,
     blockId,
-    version
+    version,
+    tenantId
   }
 }
 
@@ -42,13 +44,54 @@ const initialState = {
   appList: [] as any[]
 }
 
-const getUserInfo = () => {
+const userState = reactive({
+  userInfo: {
+    username: '',
+    token: null,
+    expireTime: null,
+    tenantId: ''
+  },
+  needToLogin: false
+})
+
+const getLoginStatus = () => userState.needToLogin
+
+const setNeedToLogin = (value: boolean, tenantId: any) => {
+  userState.needToLogin = value
+  if (!value) {
+    const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
+    const id = getBaseInfo().id
+    const baseTenantId = getBaseInfo().tenantId
+
+    // 浏览器Url没有组织id，都默认公共组织，应用id默认为公共组织的应用1
+    if (!baseTenantId) {
+      window.location.href = `${baseUrl}id=1&tenant=${tenantId}`
+    }
+
+    if (baseTenantId && !id) {
+      window.location.href = `${baseUrl}tenant=${baseTenantId}`
+    }
+
+    if (baseTenantId && id) {
+      window.location = window.location
+    }
+  }
+}
+
+const getUserInfo = () => userState.userInfo
+
+const setUserInfo = (data: any) => {
+  userState.userInfo = { ...userState.userInfo, ...data }
+}
+
+const fetchUserInfo = () => {
   // 获取登录用户信息
-  return getMetaApi(META_SERVICE.Http)
-    .get('/platform-center/api/user/me')
-    .catch((error: { message: any }) => {
-      useModal().message({ message: error.message, status: 'error' })
-    })
+  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me')
+}
+
+const setTenantInfo = (id: any) => {
+  // 设置组织
+  return getMetaApi(META_SERVICE.Http).get(`/platform-center/api/user/tenant?tenantId=${id}`)
 }
 
 // 获取当前应用的信息
@@ -205,14 +248,21 @@ export default defineService({
       }
     })
 
-    getUserInfo().then((data: any) => {
+    fetchUserInfo().then((data: any) => {
       if (data) {
         state.userInfo = data
+        userState.userInfo = data
       }
       publish({ topic: 'global_service_init_finish' })
     })
   },
   apis: () => ({
+    getLoginStatus,
+    setNeedToLogin,
+    getUserInfo,
+    setUserInfo,
+    fetchUserInfo,
+    setTenantInfo,
     getBaseInfo,
     postLocationHistoryChanged,
     updateParams,

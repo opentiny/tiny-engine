@@ -404,12 +404,34 @@ const getBlockDeps = (dependencies: { scripts?: Dependency[]; styles?: any[] } =
   }
 }
 
+/**
+ * 过滤内置物料，用户配置隐藏的内置物料，不显示在物料面板
+ * @param materials 物料
+ * @returns 过滤后的物料
+ */
+const filterBuiltinMaterials = (materials: Material) => {
+  const hiddenBuiltinMaterials = getOptions(meta.id).hiddenBuiltinMaterials || []
+
+  return {
+    ...materials,
+    snippets: materials.snippets?.map((item) => {
+      return {
+        ...item,
+        children: item.children?.filter((child) => !hiddenBuiltinMaterials.includes(child.snippetName))
+      }
+    })
+  }
+}
+
 const initBuiltinMaterial = () => {
   const { Builtin } = useCanvas().canvasApi.value
+  const builtinMaterials = filterBuiltinMaterials(Builtin!.data.materials)
+  const builtinComponentMaterials = filterBuiltinMaterials(BuiltinComponentMaterials)
+
   // 添加画布物料
-  addMaterials(Builtin!.data.materials)
+  addMaterials(builtinMaterials)
   // 添加builtin-component NPM包物料
-  addMaterials(BuiltinComponentMaterials)
+  addMaterials(builtinComponentMaterials)
 }
 
 const initMaterial = ({ isInit = true, appData = {} }: InitMaterialOptions = {}) => {
@@ -471,6 +493,58 @@ export const addBlockResources = (id: string, resource: BlockResource) => {
   blockResource.set(id, resource)
 }
 
+const getComponentList = () => {
+  return Array.from(resource.values())
+    .filter((item) => item.type === MATERIAL_TYPE.Component)
+    .map((dataItem) => {
+      return {
+        component: dataItem.component,
+        name: dataItem.name
+      }
+    })
+}
+
+const getComponentDetail = (name) => {
+  const data = resource.get(name)
+  if (!data) return null
+
+  const props = data.schema.properties
+    ?.map((item) => {
+      return item.content.map((content) => {
+        return {
+          property: content.property,
+          description: content.description,
+          type: content.type,
+          defaultValue: content.defaultValue
+        }
+      })
+    })
+    .flat()
+
+  const events = Object.entries(data.schema.events || {}).map(([key, value]) => {
+    return {
+      name: key,
+      description: value?.description || ''
+    }
+  })
+
+  const slots = Object.entries(data.schema.slots || {}).map(([key, value]) => {
+    return {
+      name: key,
+      description: value?.description || ''
+    }
+  })
+
+  return {
+    component: data.component,
+    name: data.name,
+    configure: data.configure,
+    props,
+    events,
+    slots
+  }
+}
+
 export default function () {
   return {
     materialState, // 存放着组件、物料侧区块、第三方依赖信息
@@ -491,6 +565,8 @@ export default function () {
     addBlockResources,
     updateBlockCompileCache,
     getComponentsByGroup,
-    refreshMaterial
+    refreshMaterial,
+    getComponentList,
+    getComponentDetail
   }
 }

@@ -1,5 +1,19 @@
-## 物料同步方案
+# 物料同步方案
 
+## 方案一 (推荐使用)
+通过前端脚本上传编辑好的bundle.json文件。
+```shell
+pnpm uploadMaterials
+```
+
+### 注意事项
+1. bundle.json文件内组件版本version字段为必须字段，缺少的需要补充不然上传接口报错
+2. bundle.json文件内组件版本version与数据库t_component内version不一致时为新增，一致为更新，也可根据自身需求更改相关代码逻辑
+3. .env.local中配置访问后端接口的路径，默认java后端路径 http://localhost:9090/material-center/api/component/bundle/create
+
+![注意事项图](./imgs/component_create_code.png '注意事项图')
+
+## 方案二
 由于当前情况下物料无法通过页面交互维护，提供一个临时方案，由前端托管物料。
 在本地运行时提供nodejs脚本维护物料，执行脚本保证mockServer工程和前端工程物料的同步。如果启动了后端服务，还可以连接数据库，保证本地json文件和数据库的一致性。
 
@@ -32,6 +46,7 @@ pnpm buildMaterials
 2. 单个组件文件需要遵循物料协议，更新文件后保存即可触发重新构建物料资产包，刷新页面后生效
 3. 连接数据库失败，不影响构建本地物料资产包即bundle.json
 4. 连接数据库需要的配置项在`.env.local`中
+5. 数据关联关系可能没有入库，如果查询不到新添加的组件，需要手动在数据库表r_material_component、r_material_history_component添加关联关系数据
 
 ### 部署建议
 

@@ -14,6 +14,7 @@ import entry, { api } from './src/Main.vue'
 import metaData from './meta'
 import { PageService } from './src/composable/index'
 import PageGeneral from './src/PageGeneral.vue'
+import mcp from './src/mcp'
 import './src/styles/vars.less'
 
 export default {
@@ -29,7 +30,8 @@ export default {
   components: {
     PageGeneral
   },
-  metas: [PageService]
+  metas: [PageService],
+  mcp
 }
 
 export { PageService }

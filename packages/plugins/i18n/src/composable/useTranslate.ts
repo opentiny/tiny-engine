@@ -115,7 +115,7 @@ const ensureI18n = (obj: { [x: string]: any; key: string }, send?: boolean) => {
 
   langs[key] = { key, ...contents, type: PROP_DATA_TYPE.I18N }
 
-  return langs[contents.key]
+  return langs[key]
 }
 
 const getI18nData = () => {

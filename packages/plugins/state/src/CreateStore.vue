@@ -37,11 +37,11 @@
             </template>
             <template #fullscreenFooter>
               <div class="fullscreen-footer-content">
-                <state-tips></state-tips>
+                <state-tips type="app"></state-tips>
               </div>
             </template>
           </monaco-editor>
-          <state-tips></state-tips>
+          <state-tips type="app"></state-tips>
         </tiny-form-item>
       </tiny-collapse-item>
       <tiny-collapse-item :title="GETTERS" :name="GETTERS">
@@ -157,12 +157,40 @@ export default {
       }
       emit('nameInput', errorMessage)
     }
+
+    const validateState = (rule: any, value: string, callback: (error?: Error) => void) => {
+      const stateValue = variableEditor.value
+        .getEditor()
+        .getValue()
+        .replace(new RegExp('\\r\\n', 'g'), '')
+        .replace(/\s/g, '')
+
+      if (!stateValue || !stateValue.trim()) {
+        callback(new Error('状态内容不能为空'))
+        return
+      }
+
+      try {
+        const parsed = JSON.parse(stateValue)
+
+        // 检查是否为对象且不是数组和null
+        if (typeof parsed !== 'object' || Array.isArray(parsed) || parsed === null) {
+          callback(new Error('状态必须是一个JSON对象'))
+          return
+        }
+
+        callback()
+      } catch (error) {
+        callback(new Error('状态格式不正确，请输入有效的JSON对象'))
+      }
+    }
+
     const rules = {
       name: { validator: validateName, required: true },
-      STATE: { required: true }
+      [STATE]: { validator: validateState, required: true }
     }
     const editorCode = computed(() => {
-      const { state: storeState } = state.storeData.variable || {}
+      const { state: storeState = {} } = state.storeData.variable || {}
       if (storeState) {
         return JSON.stringify(storeState, null, 2)
       }

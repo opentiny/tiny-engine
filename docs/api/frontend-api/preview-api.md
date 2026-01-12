@@ -74,11 +74,14 @@ const registry = {
 
 <pre>
 <code>
-import { Preview } from '@opentiny/tiny-engine'
+// registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 export default {
-   toolbars: [
-     [Preview, { options: { ...Preview.options,  previewUrl:  import.meta<wbr>.env.MODE.includes('prod') ? 'http://tiny-engine-preview.com/customPreview' : '' } }]
-   ]
+  [META_APP.Preview]: {
+    options: {
+      previewUrl:  import.meta<wbr>.env.MODE.includes('prod') ? 'http://tiny-engine-preview.com/customPreview' : '' 
+    }
+  }
 }
 </code>
 </pre>
@@ -91,22 +94,17 @@ export default {
 
 例如：
 ```javascript
-import { Preview } from '@opentiny/tiny-engine'
+// registry.js
+import { META_APP } from '@opentiny/tiny-engine-meta-register'
 export default {
-   toolbars: [
-     [
-       Preview,
-       {
-          options: { 
-              ...Preview.options,
-              previewUrl: (originUrl, query) => {
-                // 这里我们增加了自定义的 query： `test=1`
-                return `http://tiny-engine-preview.com/customPreview?test=1&${query}`
-             }
-          }
-       }
-    ]
-   ]
+  [META_APP.Preview]: {
+    options: { 
+        previewUrl: (originUrl, query) => {
+          // 这里我们增加了自定义的 query： `test=1`
+          return `http://tiny-engine-preview.com/customPreview?test=1&${query}`
+        }
+    }
+  }
 }
 ```
 
@@ -119,7 +117,12 @@ export default {
 
 initPreview({
   registry: {
-    config: { id: 'engine.config', theme: 'light', previewHotReload: false },
+    'engine.config': {
+      id: 'engine.config',
+      theme: 'light',
+      // 配置 false 关闭热更新
+      previewHotReload: false
+    }
     // ... other config
   }
 })

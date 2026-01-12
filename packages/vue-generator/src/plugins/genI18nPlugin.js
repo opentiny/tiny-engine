@@ -37,7 +37,7 @@ function genI18nPlugin(options = {}) {
 
       const langs = Object.keys(i18n)
       const importStatements = langs.map((lang) =>
-        generateImportStatement({ moduleName: `./${lang}.json`, exportName: lang })
+        generateImportStatement({ moduleName: `@/i18n/${lang}.json`, exportName: lang })
       )
 
       // 生成 locale.js
@@ -57,8 +57,8 @@ export default { ${langs.join(',')} }`
         path,
         fileContent: `
 import i18n from '@opentiny/tiny-engine-i18n-host'
-import lowcode from '../lowcodeConfig/lowcode'
-import locale from './${localeFileName}'
+import lowcode from '@/lowcodeConfig/lowcode.js'
+import locale from '@/i18n/${localeFileName}'
 
 i18n.lowcode = lowcode
 ${langs.map((langItem) => `i18n.global.mergeLocaleMessage('${langItem}', locale.${langItem})`).join('\n')}

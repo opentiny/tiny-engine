@@ -1,0 +1,20 @@
+<svg viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="28.000000" height="28.000000" fill="none">
+	<defs>
+		<linearGradient id="paint_linear_8" x1="5.59997463" x2="19.3251076" y1="13.9999714" y2="13.1910925" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(255,255,255)" offset="0" stop-opacity="0.858823538" />
+			<stop stop-color="rgb(255,255,255)" offset="0.251693994" stop-opacity="0.800000012" />
+			<stop stop-color="rgb(255,255,255)" offset="1" stop-opacity="1" />
+		</linearGradient>
+		<linearGradient id="paint_linear_9" x1="11.9347496" x2="10.4522305" y1="19.8667526" y2="14.6523361" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(0,0,0)" offset="0" stop-opacity="0" />
+			<stop stop-color="rgb(0,0,0)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<rect id="下载.svg" width="28.000000" height="28.000000" x="0.000000" y="0.000000" />
+	<rect id="矩形备份 5" width="28.000000" height="28.000000" x="0.000000" y="0.000000" rx="7.000000" fill="rgb(20,118,255)" />
+	<path id="路径" d="M18.2 5.59998C19.3598 5.59998 20.3 6.54018 20.3 7.69998C20.3 8.85977 19.3598 9.79998 18.2 9.79998L14 9.79998C11.676 9.79998 9.79998 11.676 9.79998 14C9.79998 16.317 11.676 18.2 14 18.2L18.2 18.2C19.3598 18.2 20.3 19.1402 20.3 20.3C20.3 21.4598 19.3598 22.4 18.2 22.4L14 22.4C9.35898 22.4 5.59998 18.634 5.59998 14C5.59998 9.35898 9.35898 5.59998 14 5.59998L18.2 5.59998Z" fill="url(#paint_linear_8)" fill-rule="evenodd" />
+	<path id="矩形备份 6" d="M14.8969 11.9L16.625 11.9C17.7848 11.9 18.725 12.8402 18.725 14C18.725 15.1598 17.7848 16.1 16.625 16.1L14.8969 16.1C13.6259 16.1 12.6 15.155 12.6 14C12.6 12.838 13.6259 11.9 14.8969 11.9Z" fill="rgb(255,255,255)" fill-rule="evenodd" />
+	<g id="g" style="mix-blend-mode:soft-light">
+		<path id="路径 42" d="M14 9.80005C5.99897 9.80005 4.95597 16.968 8.01497 19.873C11.081 22.785 13.65 22.372 15.428 22.4C17.206 22.421 16.611 18.2 14 18.2C11.382 18.2 9.77897 15.862 9.77897 14C9.77897 12.131 11.284 9.80005 14 9.80005Z" fill="url(#paint_linear_9)" fill-rule="evenodd" />
+	</g>
+</svg>

@@ -12,21 +12,31 @@ async function fetchPageSchema(pageId: string) {
       return res.page_content
     })
 }
-const styleSheetMap = new Map()
+
+// tailwindcss function and directive 特性需要使用 <style type="text/tailwindcss"> 标签
+// https://tailwindcss.com/docs/functions-and-directives
+// 所以原来 new CSSStyleSheet 的方式改成了 document.createElement('style') 的方式
 export function initStyle(key: string, content: string) {
   if (!content) {
     return
   }
-  let styleSheet = styleSheetMap.get(key)
+
+  let styleSheet = document.querySelector(`#${key}`)
+
   if (!styleSheet) {
-    styleSheet = new CSSStyleSheet()
-    styleSheetMap.set(key, styleSheet)
-    document.adoptedStyleSheets.push(styleSheet)
+    styleSheet = document.createElement('style')
+    styleSheet.setAttribute('id', key)
+    if (getController().enableTailwindCSS) {
+      styleSheet.setAttribute('type', 'text/tailwindcss')
+    }
+    document.head.appendChild(styleSheet)
   }
+
   handleScopedCss(key, content).then((scopedCss) => {
-    styleSheet.replaceSync(scopedCss)
+    styleSheet.textContent = scopedCss.css
   })
 }
+
 export const wrapPageComponent = (pageId: string) => {
   const key = `data-te-page-${pageId}`
   const asyncData = ref(null)

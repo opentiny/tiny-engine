@@ -92,6 +92,7 @@
 <script lang="ts">
 /* metaService: engine.plugins.state.CreateRemoteAPI */
 import { getCurrentInstance, reactive } from 'vue'
+import type { Component } from 'vue'
 import { ButtonGroup, Form, FormItem, Input, Popover, Switch, Button } from '@opentiny/vue'
 import { VueMonaco as MonacoEditor, MetaDescription } from '@opentiny/tiny-engine-common'
 import { iconPlus } from '@opentiny/vue-icon'
@@ -105,10 +106,10 @@ export default {
     TinyFormItem: FormItem,
     TinyInput: Input,
     TinySwitch: Switch,
-    TinyButtonGroup: ButtonGroup,
-    TinyPopover: Popover,
+    TinyButtonGroup: ButtonGroup as Component,
+    TinyPopover: Popover as Component,
     IconPlus: iconPlus(),
-    TinyButton: Button,
+    TinyButton: Button as Component,
     MetaDescription
   },
   props: {

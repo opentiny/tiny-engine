@@ -12,10 +12,17 @@
 
 import { defineConfig } from 'vite'
 import path from 'path'
+import dts from 'vite-plugin-dts'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   publicDir: false,
+  plugins: [
+    dts({
+      tsconfigPath: path.resolve(__dirname, './tsconfig.json'),
+      rollupTypes: true
+    })
+  ],
   build: {
     sourcemap: true,
     lib: {

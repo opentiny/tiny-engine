@@ -125,9 +125,12 @@ export default {
 
     const { subscribe, unsubscribe } = useMessage()
 
+    const refreshPageList = (appId: string) => getPageList(appId)
+
     let subscriber = null
 
     onMounted(() => {
+      refreshPageList(getAppId())
       subscriber = subscribe({
         topic: 'locationHistoryChanged',
         callback: (data) => {
@@ -146,12 +149,6 @@ export default {
         unsubscribe(subscriber)
       }
     })
-
-    const refreshPageList = async (appId) => {
-      const pages = await getPageList(appId)
-
-      return pages
-    }
 
     pageSettingState.updateTreeData = async () => {
       const pageList = await refreshPageList(getAppId())
@@ -273,7 +270,7 @@ export default {
       if (groupId === COMMON_PAGE_GROUP_ID) {
         return rowOperations.slice(0, 1)
       }
-      if (!node.rawData.isPage || node.rawData.group === 'public') {
+      if (!node.rawData.isPage || node.rawData.group === 'public' || String(node.parentId) !== '0') {
         return rowOperations.filter((item) => item.type !== 'settingHome')
       }
       // TODO 复制逻辑暂时屏蔽

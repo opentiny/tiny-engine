@@ -70,6 +70,7 @@
                 :value="state.variable"
                 :options="editorOptions"
                 @editorDidMount="editorDidMount"
+                @change="editorChange"
               ></monaco-editor>
               <div v-if="isDataSource" class="datasource-poll-wrap">
                 <tiny-tooltip
@@ -109,17 +110,19 @@
 
     <template #footer>
       <div class="bind-dialog-footer">
-        <tiny-button type="danger" plain @click="remove">移除绑定</tiny-button>
+        <tiny-button type="danger" plain :disabled="modelValue?.type !== 'JSExpression'" @click="remove"
+          >移除绑定</tiny-button
+        >
         <div class="right">
           <tiny-button @click="cancel">取 消</tiny-button>
-          <tiny-button type="info" @click="confirm">确 定</tiny-button>
+          <tiny-button type="info" :disabled="confirmDisabled" @click="confirm">确 定</tiny-button>
         </div>
       </div>
     </template>
   </tiny-dialog-box>
 </template>
 
-<script>
+<script lang="ts">
 import { VueMonaco as MonacoEditor, SvgButton } from '@opentiny/tiny-engine-common'
 import {
   useCanvas,
@@ -136,6 +139,7 @@ import { constants } from '@opentiny/tiny-engine-utils'
 import { Alert, Button, DialogBox, Input, Search, Switch, Tooltip } from '@opentiny/vue'
 import { camelize, capitalize } from '@vue/shared'
 import { computed, nextTick, reactive, ref, watch } from 'vue'
+import type { Component } from 'vue'
 
 const { EXPRESSION_TYPE } = constants
 
@@ -176,11 +180,11 @@ export default {
   components: {
     MonacoEditor,
     TinyDialogBox: DialogBox,
-    TinyButton: Button,
+    TinyButton: Button as Component,
     TinySearch: Search,
     TinySwitch: Switch,
     TinyInput: Input,
-    TinyTooltip: Tooltip,
+    TinyTooltip: Tooltip as Component,
     SvgButton,
     TinyAlert: Alert
   },
@@ -259,6 +263,8 @@ export default {
 
     const isDataSource = computed(() => state.active === CONSTANTS.DATASOUCE)
 
+    const confirmDisabled = computed(() => !state.variable?.trim())
+
     // 每次弹窗打开时都记录下绑定变量的旧值，用来判断保存按钮状态
     watch(
       () => state.isVisible,
@@ -306,6 +312,10 @@ export default {
         noSyntaxValidation: true,
         noSemanticValidation: true
       })
+    }
+
+    const editorChange = (value) => {
+      state.variable = value
     }
 
     const removeInterval = (start, end, intervalId, pageSchema) => {
@@ -450,7 +460,7 @@ export default {
       if (
         props.modelValue?.value &&
         props.modelValue?.type === EXPRESSION_TYPE.JS_EXPRESSION &&
-        Object.keys(props.modelValue || {}).length === 2
+        Object.keys(props.modelValue || {}).length <= 3
       ) {
         return String(props.modelValue?.value)
       }
@@ -542,7 +552,9 @@ export default {
     }
 
     return {
+      confirmDisabled,
       editorDidMount,
+      editorChange,
       editorOptions,
       variableClick,
       remove,

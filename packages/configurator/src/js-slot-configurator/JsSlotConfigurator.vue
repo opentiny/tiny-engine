@@ -34,8 +34,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { ref, inject, watchEffect, reactive } from 'vue'
+import type { Component } from 'vue'
 import { Input, Tooltip, Form, FormItem } from '@opentiny/vue'
 import { useProperties, useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
 import SvgICons from '@opentiny/vue-icon'
@@ -46,7 +47,7 @@ export default {
     TinyInput: Input,
     TinyForm: Form,
     TinyFormItem: FormItem,
-    TinyTooltip: Tooltip
+    TinyTooltip: Tooltip as Component
   },
   props: {
     modelValue: {

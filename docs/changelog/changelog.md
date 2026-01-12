@@ -23,8 +23,8 @@
 #### 📚 Documentation
 
 - 新增 [v2.7 升级指南](./v2.7-upgrade-guide.md)
-- 新增 [新注册表](../extension-capabilities-overview/new-registry.md) 文档
-- 新增 [注册表高级配置](../extension-capabilities-overview/new-registry-advanced.md) 文档
+- 新增 [新注册表](../extension-capabilities-overview/new-registry.md "dev") 文档
+- 新增 [注册表高级配置](../extension-capabilities-overview/new-registry-advanced.md "dev") 文档
 
 #### ⚙️ Other changes
 

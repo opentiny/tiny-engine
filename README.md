@@ -6,6 +6,8 @@
 
 <p align="center">TinyEngine enables developers to customize low-code platforms, build low-code platforms online in real time, and support secondary development or integration of low-code platform capabilities.</p>
 
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/opentiny/tiny-engine)
+
 English | [简体中文](README.zh-CN.md)
 
 🌈 Features:

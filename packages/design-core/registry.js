@@ -17,7 +17,7 @@ import {
   Fullscreen,
   Lang,
   ViewSetting,
-  Logo,
+  // Logo,
   Lock,
   Media,
   Redoundo,
@@ -41,6 +41,8 @@ import {
   Block,
   Datasource,
   Robot,
+  Resource,
+  ModelManager,
   Props,
   Events,
   Styles,
@@ -49,15 +51,20 @@ import {
   GenerateCodeService,
   GlobalService,
   ThemeSwitchService,
-  HttpService
+  HttpService,
+  McpService,
+  User,
+  ApplicationCenter,
+  TemplateCenter
 } from './re-export'
 
+const isDevelopEnv = import.meta.env.MODE?.includes('dev')
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
 export default {
   root: {
     id: 'engine.root',
-    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
+    metas: [HttpService, GenerateCodeService, GlobalService, ThemeSwitchService, McpService] // GlobalService 依赖 HttpService，HttpService需要在前面处理
   },
   config: {
     id: 'engine.config',
@@ -128,12 +135,14 @@ export default {
         icon: 'dark',
         oppositeTheme: 'light'
       }
-    ]
+    ],
+    enableTailwindCSS: true,
+    enableLogin: isDevelopEnv ? false : true
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.themeSwitch'] === false ? null : ThemeSwitch,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
+    //__TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.breadcrumb'] === false ? null : Breadcrumb,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lock'] === false ? null : Lock,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.media'] === false ? null : Media,
@@ -147,7 +156,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.save'] === false ? null : Save,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.fullscreen'] === false ? null : Fullscreen,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lang'] === false ? null : Lang,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.user'] === false ? null : User
   ],
   plugins: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.materials'] === false ? null : Materials,
@@ -161,12 +171,18 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.state'] === false ? null : State,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.schema'] === false ? null : Schema,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.editorhelp'] === false ? null : Help,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.robot'] === false ? null : Robot,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.resource'] === false ? null : Resource,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.modelmanager'] === false ? null : ModelManager
   ],
   settings: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
+  ],
+  workspace: [
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
   ],
   canvas: Canvas
 }

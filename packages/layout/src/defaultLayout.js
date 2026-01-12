@@ -12,7 +12,9 @@ export default {
         META_APP.Bridge,
         META_APP.I18n,
         META_APP.Page,
-        META_APP.State
+        META_APP.State,
+        META_APP.Resource,
+        META_APP.ModelManager
       ],
       bottom: [META_APP.Schema, META_APP.Help, META_APP.Robot]
     },
@@ -24,7 +26,7 @@ export default {
     left: [META_APP.Breadcrumb, META_APP.Lock, META_APP.Logo],
     center: [META_APP.Media],
     right: [
-      [META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
+      [META_APP.Robot, META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
       [META_APP.Preview],
       [META_APP.RuntimeDeploy],
       [META_APP.GenerateCode, META_APP.Save]
@@ -34,6 +36,9 @@ export default {
       [META_APP.Refresh, META_APP.Fullscreen],
       [META_APP.Lang],
       [META_APP.ViewSetting]
+    ],
+    setting: [
+      [META_APP.User]
     ]
   }
 }

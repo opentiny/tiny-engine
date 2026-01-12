@@ -38,10 +38,11 @@
 import { Popover } from '@opentiny/vue'
 import { useHistory } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import type { Component } from 'vue'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     ToolbarBase
   },
   props: {

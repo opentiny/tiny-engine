@@ -29,6 +29,8 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-plugin-bridge': path.resolve(basePath, 'packages/plugins/bridge/index.ts'),
     '@opentiny/tiny-engine-plugin-tutorial': path.resolve(basePath, 'packages/plugins/tutorial/index.ts'),
     '@opentiny/tiny-engine-plugin-robot': path.resolve(basePath, 'packages/plugins/robot/index.ts'),
+    '@opentiny/tiny-engine-plugin-resource': path.resolve(basePath, 'packages/plugins/resource/index.ts'),
+    '@opentiny/tiny-engine-plugin-model-manager': path.resolve(basePath, 'packages/plugins/model-manager/index.ts'),
     '@opentiny/tiny-engine-settings-panel': path.resolve(basePath, 'packages/settings/panel/index.ts'),
     '@opentiny/tiny-engine-setting-events': path.resolve(basePath, 'packages/settings/events/index.ts'),
     '@opentiny/tiny-engine-setting-props': path.resolve(basePath, 'packages/settings/props/index.ts'),
@@ -51,18 +53,26 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.ts'),
     '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.ts'),
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.ts'),
+    '@opentiny/tiny-engine-toolbar-user': path.resolve(basePath, 'packages/toolbars/user/index.ts'),
     '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.ts'),
     '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.ts'),
     '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
     '@opentiny/tiny-engine-canvas': path.resolve(basePath, 'packages/canvas/index.ts'),
     '@opentiny/tiny-engine-utils': path.resolve(basePath, 'packages/utils/src/index.ts'),
-    '@opentiny/tiny-engine-webcomponent-core': path.resolve(basePath, 'packages/webcomponent/src/lib.js'),
     '@opentiny/tiny-engine-i18n-host': path.resolve(basePath, 'packages/i18n/src/lib.ts'),
     '@opentiny/tiny-engine-builtin-component': path.resolve(basePath, 'packages/builtinComponent/index.ts'),
     '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.ts'),
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
-    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')
+    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts'),
+    '@opentiny/tiny-engine-workspace-application-center': path.resolve(
+      basePath,
+      'packages/workspace/application-center/index.ts'
+    ),
+    '@opentiny/tiny-engine-workspace-template-center': path.resolve(
+      basePath,
+      'packages/workspace/template-center/index.ts'
+    )
   }
 }
 

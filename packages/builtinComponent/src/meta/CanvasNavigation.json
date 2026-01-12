@@ -1,0 +1,193 @@
+{
+  "component": {
+    "icon": "navigation",
+    "name": {
+      "zh_CN": "导航条"
+    },
+    "component": "CanvasNavigation",
+    "schema": {
+      "slots": {},
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": [
+            {
+              "property": "type",
+              "label": {
+                "text": {
+                  "zh_CN": "类型"
+                }
+              },
+              "description": {
+                "zh_CN": "类型"
+              },
+              "cols": 12,
+              "labelPosition": "left",
+              "type": "string",
+              "defaultValue": "horizontal",
+              "widget": {
+                "component": "SelectConfigurator",
+                "props": {
+                  "options": [
+                    {
+                      "label": "horizontal",
+                      "value": "horizontal"
+                    },
+                    {
+                      "label": "vertical",
+                      "value": "vertical"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "property": "tabs",
+              "label": {
+                "text": {
+                  "zh_CN": "选项卡"
+                }
+              },
+              "required": true,
+              "readOnly": false,
+              "disabled": false,
+              "defaultValue": "",
+              "cols": 12,
+              "bindState": false,
+              "widget": {
+                "component": "TabBarConfigurator",
+                "props": {}
+              },
+              "description": {
+                "zh_CN": "tabs 选项卡"
+              },
+              "labelPosition": "none"
+            }
+          ]
+        }
+      ],
+      "events": {
+        "onClick": {
+          "label": {
+            "zh_CN": "点击事件"
+          },
+          "description": {
+            "zh_CN": "点击时触发的回调函数"
+          },
+          "type": "event",
+          "functionInfo": {
+            "params": [],
+            "returns": {}
+          },
+          "defaultValue": ""
+        }
+      },
+      "shortcuts": {
+        "properties": []
+      },
+      "contentMenu": {
+        "actions": []
+      }
+    },
+    "configure": {
+      "loop": true,
+      "isContainer": true,
+      "nestingRule": {
+        "childWhitelist": [],
+        "descendantBlacklist": []
+      }
+    }
+  },
+  "snippet": {
+    "name": {
+      "zh_CN": "导航条"
+    },
+    "snippetName": "CanvasNavigation",
+    "icon": "navigation",
+    "schema": {
+      "componentName": "CanvasNavigation",
+      "props": {
+        "style": "text-align: center; padding: 8px 12px; box-shadow: 0 0 4px #0003;"
+      },
+      "children": [
+        {
+          "componentName": "RouterLink",
+          "props": {
+            "to": "",
+            "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+          },
+          "children": [
+            {
+              "componentName": "Icon",
+              "props": {
+                "name": "IconPublicHome",
+                "style": "margin-top: 3px;"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "首页"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "RouterLink",
+          "props": {
+            "to": "",
+            "style": "display: inline-flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+          },
+          "children": [
+            {
+              "componentName": "Icon",
+              "props": {
+                "name": "IconTaskCooperation",
+                "style": "margin-top: 3px;"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "介绍"
+              }
+            }
+          ]
+        },
+        {
+          "componentName": "RouterLink",
+          "props": {
+            "to": "",
+            "style": "display: flex; gap: 8px; padding: 10px 20px; color: inherit; text-decoration: none;"
+          },
+          "children": [
+            {
+              "componentName": "Icon",
+              "props": {
+                "name": "IconText",
+                "style": "margin-top: 3px;"
+              }
+            },
+            {
+              "componentName": "Text",
+              "props": {
+                "text": "文档"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

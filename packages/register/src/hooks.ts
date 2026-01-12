@@ -15,7 +15,8 @@ import type {
   UsePropertyApi,
   UseResourceApi,
   UseSaveLocalApi,
-  UseTranslateApi
+  UseTranslateApi,
+  UseRobotApi
 } from './types'
 
 export const HOOK_NAME = {
@@ -38,7 +39,8 @@ export const HOOK_NAME = {
   useNotify: 'notify',
   useCustom: 'custom',
   useMaterial: 'material',
-  useStyle: 'style'
+  useStyle: 'style',
+  useRobot: 'robot'
 } as const
 
 type HookName = typeof HOOK_NAME[keyof typeof HOOK_NAME]
@@ -63,7 +65,8 @@ const hooksState = {
   [HOOK_NAME.useModal]: {},
   [HOOK_NAME.useMaterial]: {},
   [HOOK_NAME.useStyle]: {},
-  [HOOK_NAME.useCustom]: {} // 自定义
+  [HOOK_NAME.useCustom]: {},
+  [HOOK_NAME.useRobot]: {} // 自定义
 }
 
 const getHook = (hookName: HookName, args: any[]) => {
@@ -91,6 +94,7 @@ export const useEnv = (...args: any[]): ImportMetaEnv => getHook(HOOK_NAME.useEn
 export const useModal = (...args: any[]): UseModalApi => getHook(HOOK_NAME.useModal, args)
 export const useNotify = (...args: NotifyParams): NotifyResult => getHook(HOOK_NAME.useNotify, args)
 export const useMaterial = (...args: any[]): UseMaterialApi => getHook(HOOK_NAME.useMaterial, args)
+export const useRobot = (...args: any[]): UseRobotApi => getHook(HOOK_NAME.useRobot, args)
 export const useStyle = (...args: any[]) => getHook(HOOK_NAME.useStyle, args)
 export const useCustom = (...args: any[]) => getHook(HOOK_NAME.useCustom, args)
 

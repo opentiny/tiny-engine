@@ -13,7 +13,7 @@
 
 提供输入框，直接编写函数代码
 
-![添加工具类教程图](not-found/zh-cn_image_0000001994511922.png)
+![添加工具类教程图](./imgs/use-function.png)
 
 如上图：
 - 第一步，点击添加工具类，选择 function 
@@ -79,7 +79,7 @@ cdn 链接就是 npm 包在浏览器直接可用的链接，如：[https://unpkg
 
 假设我们添加了 lodash 工具类
 
-![添加 lodash 工具类示例](./imgs/ScreenShot_20241029195609.png)
+![添加 lodash 工具类示例](./imgs/use-npm-lodash.png)
 
 则实际出码结果为：
 

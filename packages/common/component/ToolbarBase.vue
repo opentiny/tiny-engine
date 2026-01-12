@@ -1,5 +1,5 @@
 <template>
-  <span class="toolbar-item-wrap" @click="click">
+  <span class="toolbar-item-wrap" @click="click($event)">
     <component :is="getRender()" v-bind="state">
       <template #default>
         <slot name="button"></slot>
@@ -32,6 +32,10 @@ export default {
     options: {
       type: Object,
       default: () => ({})
+    },
+    trigger: {
+      type: String,
+      default: 'hover'
     }
   },
   emits: ['click-api'],
@@ -39,11 +43,13 @@ export default {
     const state = reactive({
       icon: computed(() => props.icon),
       content: computed(() => props.content),
-      options: computed(() => props.options)
+      options: computed(() => props.options),
+      trigger: computed(() => props.trigger)
     })
 
-    const click = () => {
+    const click = (e: any) => {
       emit('click-api')
+      e.stopPropagation()
     }
 
     const getRender = () => {

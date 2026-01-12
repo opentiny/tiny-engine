@@ -1,6 +1,24 @@
 <template>
   <div class="tiny-engine-toolbar">
     <div class="toolbar-left">
+      <tiny-popover
+        v-if="workspaceRegistry.length"
+        :visible-arrow="false"
+        trigger="hover"
+        placement="bottom-start"
+        popper-class="center-popover"
+      >
+        <template #reference>
+          <div class="app-center-icon">
+            <svg-icon name="small-list"></svg-icon>
+          </div>
+        </template>
+        <div class="app-center-item">
+          <span v-for="node in workspaceRegistry" :key="node.id" @click="$emit('openWorkspace', node.id)">{{
+            node.title
+          }}</span>
+        </div>
+      </tiny-popover>
       <component
         :is="getMergeMeta(comp)?.entry"
         v-for="comp in toolbars.left"
@@ -42,6 +60,19 @@
         :collapseBar="toolbars.collapse"
         v-if="layoutRegistry.options?.isShowCollapse"
       ></toolbar-collapse>
+      <div class="toolbar-right-setting">
+        <div class="toolbar-right-item" v-for="(item, idx) in toolbars.setting" :key="idx">
+          <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
+            <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
+              <component
+                :is="getMergeMeta(comp)?.entry"
+                :options="getMergeMeta(comp)?.options"
+                position="right"
+              ></component>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -49,19 +80,26 @@
 <script lang="ts">
 /* metaService: engine.layout.DesignToolbars */
 import { computed } from 'vue'
+import { Popover } from '@opentiny/vue'
 import { getMergeMeta, useLayout } from '@opentiny/tiny-engine-meta-register'
 import ToolbarCollapse from './ToolbarCollapse.vue'
 
 export default {
   components: {
-    ToolbarCollapse
+    ToolbarCollapse,
+    TinyPopover: Popover
   },
   props: {
     layoutRegistry: {
       type: Object,
       default: () => ({})
+    },
+    workspaceRegistry: {
+      type: Array,
+      default: () => []
     }
   },
+  emits: ['openWorkspace'],
   setup() {
     const { getFinalLayoutConfig } = useLayout()
 
@@ -135,6 +173,22 @@ export default {
         background: var(--te-layout-common-icon-bg-color-hover);
       }
     }
+    .app-center-icon {
+      background: var(--te-layout-common-active-bg);
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      vertical-align: middle;
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      position: relative;
+      margin-left: 4px;
+
+      .svg-icon {
+        font-size: 16px;
+      }
+    }
   }
 
   .toolbar-right {
@@ -191,11 +245,26 @@ export default {
         }
       }
     }
+    .toolbar-right-setting {
+      margin-left: 10px;
+    }
   }
 }
 .toolbar-right-content .toolbar-right-item:last-child {
   .toolbar-right-line {
     display: none;
+  }
+}
+.center-popover {
+  .app-center-item {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+
+    span {
+      cursor: pointer;
+    }
   }
 }
 
