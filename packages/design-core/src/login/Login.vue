@@ -31,7 +31,7 @@
 <script lang="ts">
 import { reactive } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE, useModal } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import useLogin from './js/useLogin'
 
 export default {
@@ -43,9 +43,7 @@ export default {
   },
   emits: ['changeStatus'],
   setup(props, { emit }) {
-    const { fetchUserInfo, setUserInfo, setTenantInfo, setNeedToLogin, getBaseInfo } = getMetaApi(
-      META_SERVICE.GlobalService
-    )
+    const { fetchUserInfo, setUserInfo, setNeedToLogin, getBaseInfo } = getMetaApi(META_SERVICE.GlobalService)
     const state = reactive({
       loginData: {
         username: '',
@@ -65,14 +63,7 @@ export default {
             if (infoData) {
               const tenantId = getBaseInfo().tenantId ? getBaseInfo().tenantId : infoData.tenant[0]?.id
               setUserInfo({ ...data, ...infoData })
-              setTenantInfo(tenantId)
-                .then((tenantData) => {
-                  localStorage.setItem('engineToken', tenantData.token)
-                  setNeedToLogin(false, tenantId)
-                })
-                .catch((error) => {
-                  useModal().message({ message: error.message, status: 'error' })
-                })
+              setNeedToLogin(false, tenantId)
             }
           })
         })
