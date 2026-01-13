@@ -73,7 +73,7 @@ const setNeedToLogin = (value: boolean, tenantId: any) => {
     }
 
     if (baseTenantId && id) {
-      window.location = window.location
+      window.location.reload()
     }
   }
 }
@@ -86,7 +86,12 @@ const setUserInfo = (data: any) => {
 
 const fetchUserInfo = () => {
   // 获取登录用户信息
-  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me')
+  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me', {
+    transformRequest: (data: any, headers: any) => {
+      delete headers['x-lowcode-org']
+      return data
+    }
+  })
 }
 
 const setTenantInfo = (id: any) => {
