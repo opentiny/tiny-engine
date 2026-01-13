@@ -34,11 +34,14 @@
 /* metaService: engine.plugins.pagecontroller.Main */
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
-import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
-import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { registerCompletion } from 'monacopilot'
+import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common/component'
+import { useHelp, useLayout, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
+import { requestManager } from './js/requestManager'
+import { shouldTriggerCompletion } from './js/completionTrigger'
 
 export const api = {
   saveMethod,
@@ -59,7 +62,7 @@ export default {
     }
   },
   emits: ['close'],
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
     const docsContent = '同一页面/区块的添加事件会统一保存到对应的页面JS中。'
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
@@ -101,24 +104,112 @@ export default {
       wordWrapStrategy: 'advanced'
     }
 
-    const editorDidMount = (editor) => {
-      if (!monaco.value) {
-        return
+    const editorDidMount = (editor: any) => {
+      const monacoRef = monaco as any
+      if (!monacoRef.value) return
+
+      // 保留原有的 Lowcode API 提示
+      state.completionProvider = initCompletion(
+        monacoRef.value.getMonaco(),
+        monacoRef.value.getEditor()?.getModel()
+      ) as any
+
+      // 保留原有的 ESLint
+      state.linterWorker = initLinter(editor, monacoRef.value.getMonaco(), state) as any
+
+      // 🆕 新增: 注册 AI 补全
+      try {
+        const monacoInstance = monacoRef.value.getMonaco()
+        const editorInstance = monacoRef.value.getEditor()
+
+        // 构建低代码上下文
+        const getLowcodeContext = () => {
+          const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState || {}
+          const { state: pageState = {}, methods = {} } = useCanvas().getPageSchema() || {}
+          const currentSchema = useCanvas().getCurrentSchema()
+
+          return {
+            dataSource,
+            utils,
+            globalState,
+            state: pageState,
+            methods,
+            currentSchema
+          }
+        }
+
+        // 配置请求管理器
+        requestManager.setEndpoint('http://localhost:3000/code-completion')
+        requestManager.setDebounceDelay(300) // 设置防抖延迟为 300ms
+        requestManager.setDebounceEnabled(true)
+
+        // 创建增强的请求处理器
+        const baseRequestHandler = requestManager.createRequestHandler()
+
+        registerCompletion(monacoInstance, editorInstance, {
+          language: 'javascript',
+          endpoint: 'http://localhost:3000/code-completion',
+          filename: 'page.js',
+          trigger: 'onTyping',
+          maxContextLines: 50,
+          enableCaching: true,
+          allowFollowUpCompletions: true,
+
+          // 🎯 智能触发判断（在请求前执行，避免不必要的请求）
+          triggerIf: (params) => {
+            const model = editorInstance.getModel()
+            const position = editorInstance.getPosition()
+
+            if (!model || !position) return false
+
+            return shouldTriggerCompletion({
+              text: model.getValue(),
+              position: {
+                lineNumber: position.lineNumber,
+                column: position.column
+              },
+              triggerType: params.triggerType || 'onTyping'
+            })
+          },
+
+          // 🚀 请求处理器：防抖 + 请求取消 + 低代码元数据
+          requestHandler: async (params) => {
+            try {
+              // 添加低代码元数据
+              const lowcodeMetadata = getLowcodeContext()
+              const enhancedParams = {
+                body: {
+                  completionMetadata: {
+                    ...params.body.completionMetadata,
+                    lowcodeMetadata
+                  }
+                }
+              }
+
+              // 使用请求管理器发送请求（带防抖和取消功能）
+              return await baseRequestHandler(enhancedParams)
+            } catch (error: any) {
+              return {
+                completion: null,
+                error: error.message
+              }
+            }
+          }
+        })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('❌ AI 补全注册失败:', error)
       }
-
-      // Lowcode API 提示
-      state.completionProvider = initCompletion(monaco.value.getMonaco(), monaco.value.getEditor()?.getModel())
-
-      // 初始化 ESLint worker
-      state.linterWorker = initLinter(editor, monaco.value.getMonaco(), state)
     }
 
     onBeforeUnmount(() => {
-      state.completionProvider?.forEach((provider) => {
-        provider.dispose()
+      ;(state.completionProvider as any)?.forEach?.((provider: any) => {
+        provider?.dispose?.()
       })
       // 终止 ESLint worker
-      state.linterWorker?.terminate?.()
+      ;(state.linterWorker as any)?.terminate?.()
+      // 清理请求管理器
+      requestManager.reset()
     })
 
     return {
