@@ -67,6 +67,9 @@ export default {
             }
           })
         })
+        .catch(() => {
+          setNeedToLogin(true)
+        })
     }
 
     const toRegister = () => {
