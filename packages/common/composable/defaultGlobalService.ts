@@ -63,7 +63,7 @@ const setNeedToLogin = (value: boolean) => {
     const defaultTenantId = userState.userInfo.tenant?.[0]?.id
     if (defaultTenantId) {
       const currentUrl = new URL(window.location.href)
-      const currentTenant = new URLSearchParams(location.search).get('tenant')
+      const currentTenant = getBaseInfo().tenantId
 
       const filterList = userState.userInfo.tenant.filter((item) => item.id === currentTenant) || []
       // 只有当tenant值不存在时才更新
