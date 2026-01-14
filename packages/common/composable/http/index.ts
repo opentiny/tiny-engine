@@ -117,7 +117,7 @@ const createAbortController = (config) => {
 
 // 取消所有进行中的请求
 const abortAllRequests = (message = '用户未登录，请求已取消') => {
-  abortControllers.forEach((controller, key) => {
+  abortControllers.forEach((controller) => {
     controller.abort(message)
   })
   abortControllers.clear()
