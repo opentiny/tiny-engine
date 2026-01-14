@@ -49,7 +49,8 @@ const userState = reactive({
     username: '',
     token: null,
     expireTime: null,
-    tenantId: ''
+    tenantId: '',
+    tenant: []
   },
   needToLogin: false
 })
