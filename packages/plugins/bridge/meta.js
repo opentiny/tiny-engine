@@ -1,6 +1,6 @@
 export default {
   id: 'engine.plugins.bridge',
-  title: '资源管理',
+  title: '工具管理',
   type: 'plugins',
-  icon: 'plugin-icon-sresources'
+  icon: 'plugin-icon-tool'
 }
