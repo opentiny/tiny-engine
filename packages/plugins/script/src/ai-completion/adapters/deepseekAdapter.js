@@ -13,9 +13,6 @@ import { API_ENDPOINTS, HTTP_CONFIG } from '../constants.js'
  * @returns {{ messages: Array, cursorContext: null }} Messages 和上下文
  */
 export function buildDeepSeekMessages(context, instruction, fileContent) {
-  // eslint-disable-next-line no-console
-  console.log('🎯 使用 DeepSeek Chat 格式')
-
   const systemPrompt = `${context}\n\n${SYSTEM_BASE_PROMPT}`
   const userPrompt = createUserPrompt(instruction, fileContent)
 

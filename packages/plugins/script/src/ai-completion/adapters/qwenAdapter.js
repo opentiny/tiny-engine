@@ -13,13 +13,6 @@ import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
 export function buildQwenMessages(fileContent, fimBuilder) {
   const { fimPrompt, cursorContext } = fimBuilder.buildOptimizedFIMPrompt(fileContent)
 
-  // eslint-disable-next-line no-console
-  console.log('🎯 使用 Qwen FIM 格式')
-  // eslint-disable-next-line no-console
-  console.log('📊 FIM 上下文:', cursorContext.type)
-  // eslint-disable-next-line no-console
-  console.log('📏 FIM Prompt 长度:', fimPrompt.length)
-
   return {
     messages: [
       {
@@ -42,9 +35,6 @@ export function buildQwenMessages(fileContent, fimBuilder) {
 export async function callQwenAPI(messages, config, apiKey, baseUrl) {
   // 构建完整的 Completions API URL
   const completionsUrl = `${baseUrl}${QWEN_CONFIG.COMPLETION_PATH}`
-
-  // eslint-disable-next-line no-console
-  console.log('📦 模型:', config.model)
 
   const requestBody = {
     model: config.model,

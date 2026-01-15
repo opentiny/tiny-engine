@@ -28,8 +28,6 @@ class DebounceManager {
    */
   clearDebounceTimer() {
     if (this.debounceTimer) {
-      // eslint-disable-next-line no-console
-      console.log('⏱️ [DebounceManager] 清理防抖定时器')
       clearTimeout(this.debounceTimer)
       this.debounceTimer = null
     }
@@ -58,8 +56,6 @@ class DebounceManager {
 
       // 如果启用了防抖且不应该立即执行
       if (this.isDebounceEnabled && !this.shouldExecuteImmediately()) {
-        // eslint-disable-next-line no-console
-        console.log(`⏳ [DebounceManager] 防抖延迟 ${this.debounceDelay}ms`)
         // 清理之前的防抖定时器
         this.clearDebounceTimer()
 
@@ -67,14 +63,9 @@ class DebounceManager {
         await new Promise((resolve) => {
           this.debounceTimer = setTimeout(() => {
             this.debounceTimer = null
-            // eslint-disable-next-line no-console
-            console.log('✅ [DebounceManager] 防抖延迟结束，准备执行请求')
             resolve()
           }, this.debounceDelay)
         })
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('⚡ [DebounceManager] 立即执行（无防抖）')
       }
 
       // 执行实际的请求处理器
@@ -90,8 +81,6 @@ class DebounceManager {
    * 重置状态（用于清理）
    */
   reset() {
-    // eslint-disable-next-line no-console
-    console.log('🔄 [DebounceManager] 重置状态')
     this.clearDebounceTimer()
   }
 }

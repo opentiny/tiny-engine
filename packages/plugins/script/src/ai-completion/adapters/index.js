@@ -81,18 +81,12 @@ export function createCompletionHandler() {
         // 构建 DeepSeek FIM 端点：将 /v1 替换为 /beta
         const completionBaseUrl = baseUrl.replace(DEEPSEEK_CONFIG.PATH_REPLACE, DEEPSEEK_CONFIG.COMPLETION_PATH)
 
-        // eslint-disable-next-line no-console
-        console.log('🔧 DeepSeek FIM 端点:', completionBaseUrl)
-
         completionText = await callDeepSeekAPI(messages, config, apiKey, completionBaseUrl, httpClient)
       }
 
       // 6. 处理补全结果
       if (completionText) {
         completionText = completionText.trim()
-
-        // eslint-disable-next-line no-console
-        console.log('✅ 收到补全:', completionText.substring(0, DEFAULTS.LOG_PREVIEW_LENGTH))
 
         completionText = cleanCompletion(completionText, modelType, cursorContext)
 

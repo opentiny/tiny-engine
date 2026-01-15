@@ -184,7 +184,8 @@ export function createSmartPrompt(completionMetadata) {
     const validation = validateLowcodeContext(lowcodeContext)
 
     if (!validation.valid) {
-      // console.warn('⚠️ Lowcode context validation warnings:', validation.warnings);
+      // eslint-disable-next-line no-console
+      console.warn('⚠️ Lowcode context validation warnings:', validation.warnings)
     }
 
     instruction = createLowcodeInstruction(language, lowcodeContext)
