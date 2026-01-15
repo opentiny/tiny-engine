@@ -81,8 +81,8 @@ export const DEFAULT_LLM_MODELS = [
         }
       },
       {
-        label: 'Qwen Coder编程模型（Flash）',
-        name: 'qwen3-coder-flash',
+        label: 'Qwen2.5 Coder编程模型-最快响应',
+        name: 'qwen-coder-turbo-latest',
         capabilities: {
           toolCalling: true,
           compact: true,
@@ -90,14 +90,13 @@ export const DEFAULT_LLM_MODELS = [
         }
       },
       {
-        label: 'Qwen3（14b）',
-        name: 'qwen3-14b',
-        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
-      },
-      {
-        label: 'Qwen3（8b）',
-        name: 'qwen3-8b',
-        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
+        label: 'Qwen2.5 Coder编程模型（32B）',
+        name: 'qwen2.5-coder-32b-instruct',
+        capabilities: {
+          toolCalling: true,
+          compact: true,
+          jsonOutput: bailianJsonOutputExtraBody
+        }
       }
     ]
   },
@@ -119,6 +118,16 @@ export const DEFAULT_LLM_MODELS = [
             }
           },
           jsonOutput: jsonOutputExtraBody
+        }
+      },
+      {
+        // TODO: https://api.deepseek.com/beta 支持 FIM
+        label: 'Deepseek Coder编程模型',
+        name: 'deepseek-chat',
+        capabilities: {
+          toolCalling: true,
+          compact: true,
+          jsonOutput: bailianJsonOutputExtraBody
         }
       }
     ]

@@ -36,12 +36,12 @@ import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { registerCompletion } from 'monacopilot'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common/component'
-import { useHelp, useLayout, useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
-import { requestManager } from './js/requestManager'
-import { shouldTriggerCompletion } from './js/completionTrigger'
+import { shouldTriggerCompletion } from './ai-completion/triggers/completionTrigger'
+import { createCompletionHandler } from './ai-completion/adapters/index'
 
 export const api = {
   saveMethod,
@@ -122,33 +122,9 @@ export default {
         const monacoInstance = monacoRef.value.getMonaco()
         const editorInstance = monacoRef.value.getEditor()
 
-        // 构建低代码上下文
-        const getLowcodeContext = () => {
-          const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState || {}
-          const { state: pageState = {}, methods = {} } = useCanvas().getPageSchema() || {}
-          const currentSchema = useCanvas().getCurrentSchema()
-
-          return {
-            dataSource,
-            utils,
-            globalState,
-            state: pageState,
-            methods,
-            currentSchema
-          }
-        }
-
-        // 配置请求管理器
-        requestManager.setEndpoint('http://localhost:3000/code-completion')
-        requestManager.setDebounceDelay(300) // 设置防抖延迟为 300ms
-        requestManager.setDebounceEnabled(true)
-
-        // 创建增强的请求处理器
-        const baseRequestHandler = requestManager.createRequestHandler()
-
         registerCompletion(monacoInstance, editorInstance, {
           language: 'javascript',
-          endpoint: 'http://localhost:3000/code-completion',
+          endpoint: '/app-center/api/chat/completions',
           filename: 'page.js',
           trigger: 'onTyping',
           maxContextLines: 50,
@@ -172,29 +148,8 @@ export default {
             })
           },
 
-          // 🚀 请求处理器：防抖 + 请求取消 + 低代码元数据
-          requestHandler: async (params) => {
-            try {
-              // 添加低代码元数据
-              const lowcodeMetadata = getLowcodeContext()
-              const enhancedParams = {
-                body: {
-                  completionMetadata: {
-                    ...params.body.completionMetadata,
-                    lowcodeMetadata
-                  }
-                }
-              }
-
-              // 使用请求管理器发送请求（带防抖和取消功能）
-              return await baseRequestHandler(enhancedParams)
-            } catch (error: any) {
-              return {
-                completion: null,
-                error: error.message
-              }
-            }
-          }
+          // 🚀 请求处理器：支持 DeepSeek 和 Qwen 模型
+          requestHandler: createCompletionHandler() as any
         })
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -208,8 +163,6 @@ export default {
       })
       // 终止 ESLint worker
       ;(state.linterWorker as any)?.terminate?.()
-      // 清理请求管理器
-      requestManager.reset()
     })
 
     return {
