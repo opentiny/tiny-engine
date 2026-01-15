@@ -601,8 +601,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1106,8 +1111,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1760,8 +1770,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2124,8 +2139,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2577,8 +2597,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3843,8 +3868,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3983,16 +4013,102 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "direction",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体方向"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "language": "json",
+                                "options": [
+                                  {
+                                    "label": "vertical",
+                                    "value": "vertical"
+                                  },
+                                  {
+                                    "label": "horizontal",
+                                    "value": "horizontal"
+                                  }
+                                ]
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "柱体方向"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "ObjectDepthConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "柱状图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -8376,8 +8492,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8677,8 +8798,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8950,8 +9076,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9179,8 +9310,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9527,8 +9663,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9912,8 +10053,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10166,8 +10312,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -21472,8 +21623,14 @@
                   "type": "radio",
                   "modelValue": "1",
                   "options": [
-                    { "label": "1", "text": "选项一" },
-                    { "label": "2", "text": "选项二" }
+                    {
+                      "label": "1",
+                      "text": "选项一"
+                    },
+                    {
+                      "label": "2",
+                      "text": "选项二"
+                    }
                   ]
                 }
               }
