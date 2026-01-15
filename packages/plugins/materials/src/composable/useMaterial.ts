@@ -22,7 +22,8 @@ import {
   useMessage,
   useResource,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  useEnv
 } from '@opentiny/tiny-engine-meta-register'
 import meta from '../../meta'
 import { getBlockCompileRes, getBlockByName, updateBlockCompileCache } from './block-compile'
@@ -361,7 +362,7 @@ export const getMaterialsRes = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(
     bundleUrls.map((url: any) =>
-      typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url, { baseURL: '' }) : url
+      typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url, { baseURL: useEnv().BASE_URL || '' }) : url
     )
   )
   return materials
