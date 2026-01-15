@@ -8,7 +8,7 @@ import { detectModelType, calculateTokens, getStopSequences } from '../utils/mod
 import { cleanCompletion, buildLowcodeMetadata } from '../utils/completionUtils.js'
 import { buildQwenMessages, callQwenAPI } from './qwenAdapter.js'
 import { buildDeepSeekMessages, callDeepSeekAPI } from './deepseekAdapter.js'
-import { QWEN_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } from '../constants.js'
+import { QWEN_CONFIG, DEEPSEEK_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } from '../constants.js'
 
 /**
  * 创建请求处理器
@@ -71,10 +71,20 @@ export function createCompletionHandler() {
         // ===== DeepSeek 流程（默认） =====
         const { messages } = buildDeepSeekMessages(context, instruction, fileContent)
 
-        const config = { model: completeModel }
+        // DeepSeek 使用 Chat API，也需要 stop 序列
+        const config = {
+          model: completeModel,
+          stopSequences: getStopSequences(null, MODEL_CONFIG.DEEPSEEK.TYPE)
+        }
         const httpClient = getMetaApi(META_SERVICE.Http)
 
-        completionText = await callDeepSeekAPI(messages, config, apiKey, baseUrl, httpClient)
+        // 构建 DeepSeek FIM 端点：将 /v1 替换为 /beta
+        const completionBaseUrl = baseUrl.replace(DEEPSEEK_CONFIG.PATH_REPLACE, DEEPSEEK_CONFIG.COMPLETION_PATH)
+
+        // eslint-disable-next-line no-console
+        console.log('🔧 DeepSeek FIM 端点:', completionBaseUrl)
+
+        completionText = await callDeepSeekAPI(messages, config, apiKey, completionBaseUrl, httpClient)
       }
 
       // 6. 处理补全结果

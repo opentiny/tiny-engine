@@ -121,7 +121,6 @@ export const DEFAULT_LLM_MODELS = [
         }
       },
       {
-        // TODO: https://api.deepseek.com/beta 支持 FIM
         label: 'Deepseek Coder编程模型',
         name: 'deepseek-chat',
         capabilities: {

@@ -1,44 +1,6 @@
 /**
- * 智能补全触发条件判断（JS/TS 专用）
+ * 智能补全触发条件判断
  */
-
-/**
- * 检测是否在注释中
- */
-function isInComment(beforeCursor, fullText) {
-  const trimmed = beforeCursor.trim()
-
-  // 单行注释
-  if (trimmed.startsWith('//') || trimmed.startsWith('*')) {
-    return true
-  }
-
-  // 块注释
-  const lastBlockStart = fullText.lastIndexOf('/*', fullText.indexOf(beforeCursor))
-  const lastBlockEnd = fullText.lastIndexOf('*/', fullText.indexOf(beforeCursor))
-  if (lastBlockStart > lastBlockEnd) {
-    return true
-  }
-
-  return false
-}
-
-/**
- * 检测是否在字符串中
- */
-function isInString(beforeCursor) {
-  const singleQuotes = (beforeCursor.match(/'/g) || []).length
-  const doubleQuotes = (beforeCursor.match(/"/g) || []).length
-  return singleQuotes % 2 === 1 || doubleQuotes % 2 === 1
-}
-
-/**
- * 检测是否在模板字符串中
- */
-function isInTemplateString(beforeCursor) {
-  const backticks = (beforeCursor.match(/`/g) || []).length
-  return backticks % 2 === 1
-}
 
 /**
  * 检测光标是否在语句结束符后（分号后）
@@ -87,7 +49,6 @@ function isAfterBlockEnd(beforeCursor) {
  * @param {Object} params.position - 光标位置
  * @param {number} params.position.lineNumber - 行号
  * @param {number} params.position.column - 列号
- * @param {string} params.triggerType - 触发类型
  * @returns {boolean} 是否触发补全
  */
 export function shouldTriggerCompletion(params) {
@@ -95,34 +56,18 @@ export function shouldTriggerCompletion(params) {
   const lines = text.split('\n')
   const currentLine = lines[position.lineNumber - 1] || ''
   const beforeCursor = currentLine.substring(0, position.column - 1)
-  const trimmedLine = beforeCursor.trim()
 
-  // 1. 避免在注释中触发
-  if (isInComment(beforeCursor, text)) {
+  // 1. 代码太短不触发
+  if (text.trim().length < 2) {
     return false
   }
 
-  // 2. 避免在普通字符串中触发（但允许模板字符串）
-  if (isInString(beforeCursor) && !isInTemplateString(beforeCursor)) {
-    return false
-  }
-
-  // 3. 代码太短不触发（降低阈值）
-  if (text.trim().length < 5) {
-    return false
-  }
-
-  // 4. 完全空行不触发
-  if (trimmedLine.length === 0) {
-    return false
-  }
-
-  // 5. 分号后不触发（语句已结束）
+  // 2. 分号后不触发（语句已结束）
   if (isAfterStatementEnd(beforeCursor)) {
     return false
   }
 
-  // 6. 右花括号后不触发（块已结束）
+  // 3. 右花括号后不触发（块已结束）
   if (isAfterBlockEnd(beforeCursor)) {
     return false
   }

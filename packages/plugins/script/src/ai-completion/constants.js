@@ -2,8 +2,7 @@
  * Qwen Coder API 配置（阿里云百炼）
  */
 export const QWEN_CONFIG = {
-  API_URL: 'https://dashscope.aliyuncs.com/compatible-mode/v1/completions',
-  MODEL: 'qwen2.5-coder-32b-instruct',
+  COMPLETION_PATH: '/completions', // Completions API 路径（追加到 baseUrl）
   DEFAULT_TEMPERATURE: 0.05,
   TOP_P: 0.95,
   PRESENCE_PENALTY: 0.2,
@@ -16,12 +15,29 @@ export const QWEN_CONFIG = {
 }
 
 /**
+ * DeepSeek Coder API 配置
+ */
+export const DEEPSEEK_CONFIG = {
+  COMPLETION_PATH: '/beta', // FIM 补全 API 路径
+  PATH_REPLACE: '/v1', // 需要从 baseUrl 中替换的路径
+  DEFAULT_TEMPERATURE: 0,
+  TOP_P: 1.0,
+
+  // FIM (Fill-In-the-Middle) 配置
+  FIM: {
+    MAX_PREFIX_LINES: 100,
+    MAX_SUFFIX_LINES: 50,
+    MAX_TOKENS: 4096 // FIM 最大补全长度 4K
+  }
+}
+
+/**
  * 模型配置
  */
 export const MODEL_CONFIG = {
   QWEN: {
     TYPE: 'qwen',
-    KEYWORDS: ['qwen'] // 移除 'coder'，避免误匹配 deepseek-coder
+    KEYWORDS: ['qwen']
   },
   DEEPSEEK: {
     TYPE: 'deepseek',
@@ -37,8 +53,7 @@ export const MODEL_CONFIG = {
  * API 端点配置
  */
 export const API_ENDPOINTS = {
-  COMPLETIONS_PATH: '/completions',
-  CHAT_COMPLETIONS: '/app-center/api/chat/completions'
+  CHAT_COMPLETIONS: '/app-center/api/chat/completions' // 后端代理端点（DeepSeek 使用）
 }
 
 /**

@@ -2,7 +2,7 @@
  * Qwen 专用适配器
  * 使用 Completions API + FIM (Fill-In-the-Middle)
  */
-import { QWEN_CONFIG, API_ENDPOINTS, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
+import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
 
 /**
  * 构建 Qwen FIM 格式的 messages
@@ -40,7 +40,8 @@ export function buildQwenMessages(fileContent, fimBuilder) {
  * @returns {Promise<string>} 补全文本
  */
 export async function callQwenAPI(messages, config, apiKey, baseUrl) {
-  const completionsUrl = `${baseUrl}${API_ENDPOINTS.COMPLETIONS_PATH}`
+  // 构建完整的 Completions API URL
+  const completionsUrl = `${baseUrl}${QWEN_CONFIG.COMPLETION_PATH}`
 
   // eslint-disable-next-line no-console
   console.log('📦 模型:', config.model)
