@@ -601,8 +601,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1106,8 +1111,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -1760,8 +1770,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2124,8 +2139,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -2577,8 +2597,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -3843,8 +3868,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -4728,6 +4758,276 @@
                     },
                     "description": {
                       "zh_CN": "瀑布图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "仪表盘"
+          },
+          "component": "TinyHuichartsGauge",
+          "icon": "gauge",
+          "description": "仪表盘",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsGauge",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "仪表盘配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "拓扑图"
+          },
+          "component": "TinyHuichartsGraph",
+          "icon": "graph",
+          "description": "拓扑图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsGraph",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "拓扑图配置"
+                    },
+                    "labelPosition": "left"
+                  }
+                ]
+              }
+            ],
+            "events": {}
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "进度图"
+          },
+          "component": "TinyHuichartsProcess",
+          "icon": "process",
+          "description": "进度图",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "destructuring": true,
+            "exportName": "TinyHuichartsProcess",
+            "name": "TinyVueHuicharts组件库",
+            "package": "@opentiny/vue-huicharts",
+            "version": "3.22.0",
+            "script": "https://registry.npmmirror.com/@opentiny/vue-runtime/3.22/files/dist3/tiny-vue-huicharts.mjs"
+          },
+          "group": "chart",
+          "category": "图表组件",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "label": {
+                  "zh_CN": "基础信息"
+                },
+                "description": {
+                  "zh_CN": "基础信息"
+                },
+                "content": [
+                  {
+                    "property": "options",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图表配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "进度图配置"
                     },
                     "labelPosition": "left"
                   }
@@ -8376,8 +8676,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8677,8 +8982,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -8950,8 +9260,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9179,8 +9494,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9527,8 +9847,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -9912,8 +10237,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -10166,8 +10496,13 @@
               "properties": []
             },
             "contextMenu": {
-              "actions": ["create symbol"],
-              "disable": ["copy", "remove"]
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
             }
           }
         },
@@ -21472,8 +21807,14 @@
                   "type": "radio",
                   "modelValue": "1",
                   "options": [
-                    { "label": "1", "text": "选项一" },
-                    { "label": "2", "text": "选项二" }
+                    {
+                      "label": "1",
+                      "text": "选项一"
+                    },
+                    {
+                      "label": "2",
+                      "text": "选项二"
+                    }
                   ]
                 }
               }
@@ -23077,6 +23418,224 @@
                         ]
                       ]
                     }
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "仪表盘"
+              },
+              "icon": "gauge",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsGauge",
+              "schema": {
+                "componentName": "TinyHuichartsGauge",
+                "props": {
+                  "options": {
+                    "splitColor": [
+                      [
+                        0.25,
+                        "#0d9458"
+                      ],
+                      [
+                        0.5,
+                        "#eeba18"
+                      ],
+                      [
+                        0.75,
+                        "#ec6f1a"
+                      ],
+                      [
+                        1,
+                        "#f43146"
+                      ]
+                    ],
+                    "pointer": true,
+                    "data": [
+                      {
+                        "value": 71,
+                        "name": "Utilization rate"
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "拓扑图"
+              },
+              "icon": "graph",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsGraph",
+              "schema": {
+                "componentName": "TinyHuichartsGraph",
+                "props": {
+                  "options": {
+                    "animationDurationUpdate": 1600,
+                    "animationEasingUpdate": "quinticInOut",
+                    "series": [
+                      {
+                        "type": "graph",
+                        "layout": "none",
+                        "symbolSize": 48,
+                        "color": "#42A5F5",
+                        "roam": true,
+                        "label": {
+                          "normal": {
+                            "show": true
+                          }
+                        },
+                        "edgeSymbol": [
+                          "circle",
+                          "arrow"
+                        ],
+                        "edgeSymbolSize": [
+                          3,
+                          10
+                        ],
+                        "edgeLabel": {
+                          "normal": {
+                            "textStyle": {
+                              "fontSize": 18
+                            }
+                          }
+                        },
+                        "data": [
+                          {
+                            "name": "节点 1",
+                            "x": 300,
+                            "y": 300
+                          },
+                          {
+                            "name": "节点 2",
+                            "x": 800,
+                            "y": 300
+                          },
+                          {
+                            "name": "节点 3",
+                            "x": 550,
+                            "y": 100
+                          },
+                          {
+                            "name": "节点 4",
+                            "x": 550,
+                            "y": 500
+                          }
+                        ],
+                        "links": [
+                          {
+                            "source": 0,
+                            "target": 1,
+                            "symbolSize": [
+                              5,
+                              20
+                            ],
+                            "label": {
+                              "normal": {
+                                "show": true
+                              }
+                            },
+                            "lineStyle": {
+                              "normal": {
+                                "width": 5,
+                                "curveness": 0.2
+                              }
+                            }
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 1",
+                            "label": {
+                              "normal": {
+                                "show": true
+                              }
+                            },
+                            "lineStyle": {
+                              "normal": {
+                                "curveness": 0.2
+                              }
+                            }
+                          },
+                          {
+                            "source": "节点 1",
+                            "target": "节点 3"
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 3"
+                          },
+                          {
+                            "source": "节点 2",
+                            "target": "节点 4"
+                          },
+                          {
+                            "source": "节点 1",
+                            "target": "节点 4"
+                          }
+                        ],
+                        "lineStyle": {
+                          "normal": {
+                            "opacity": 0.9,
+                            "width": 2,
+                            "curveness": 0
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "进度图"
+              },
+              "icon": "process",
+              "screenshot": "",
+              "snippetName": "TinyHuichartsProcess",
+              "schema": {
+                "componentName": "TinyHuichartsProcess",
+                "props": {
+                  "options": {
+                    "name": "ProcessBarChart",
+                    "theme": "light",
+                    "padding": [
+                      32,
+                      32,
+                      0,
+                      32
+                    ],
+                    "color": [
+                      "#fa2a2d",
+                      "#ff7500",
+                      "#ffbf00",
+                      "#41ba41",
+                      "#00aaee"
+                    ],
+                    "data": [
+                      {
+                        "name": "UniEPMgr",
+                        "value": 80
+                      },
+                      {
+                        "name": "SMLoglic",
+                        "value": 65
+                      },
+                      {
+                        "name": "SSO",
+                        "value": 45
+                      },
+                      {
+                        "name": "APIMgr",
+                        "value": 20
+                      },
+                      {
+                        "name": "Logtransfer",
+                        "value": 12
+                      }
+                    ]
                   }
                 }
               }

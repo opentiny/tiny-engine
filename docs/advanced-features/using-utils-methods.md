@@ -79,7 +79,7 @@ cdn 链接就是 npm 包在浏览器直接可用的链接，如：[https://unpkg
 
 假设我们添加了 lodash 工具类
 
-![添加 lodash 工具类示例](./imgs/ScreenShot_20241029195609.png)
+![添加 lodash 工具类示例](./imgs/use-npm-lodash.png)
 
 则实际出码结果为：
 

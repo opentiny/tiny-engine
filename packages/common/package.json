@@ -11,8 +11,14 @@
   "module": "dist/index.js",
   "type": "module",
   "exports": {
-    ".": "./dist/index.js",
-    "./js/": "./dist/js/"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./js/*": {
+      "types": "./dist/js/*.d.ts",
+      "import": "./dist/js/*.js"
+    }
   },
   "files": [
     "dist",
@@ -52,10 +58,15 @@
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@types/babel__generator": "^7.27.0",
+    "@types/babel__traverse": "^7.28.0",
+    "@types/css-tree": "2.3.11",
+    "@types/prettier": "^2.7.0",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
     "glob": "^10.3.4",
     "vite": "^5.4.2",
+    "vite-plugin-dts": "^4.5.4",
     "vite-plugin-static-copy": "^1.0.6"
   },
   "peerDependencies": {

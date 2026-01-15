@@ -10,7 +10,11 @@
  *
  */
 
-export const getCommentByKey = (key) => ({
-  start: `start-${key} 设计器生成的代码，为了避免出现问题，请勿修改`,
-  end: `end-${key}`
-})
+import entry from './src/Main.vue'
+import metaData from './meta'
+import './src/styles/vars.less'
+
+export default {
+  ...metaData,
+  entry
+}

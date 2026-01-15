@@ -4,6 +4,7 @@
       <template #default>
         <generate-file-selector
           :visible="state.showDialogbox"
+          :tree-data="state.saveFilesTree"
           :data="state.saveFilesInfo"
           @confirm="confirm"
           @cancel="cancel"
@@ -50,7 +51,8 @@ export default {
       dirHandle: null,
       generating: false,
       showDialogbox: false,
-      saveFilesInfo: []
+      saveFilesInfo: [],
+      saveFilesTree: []
     })
 
     const getParams = () => {
@@ -117,6 +119,75 @@ export default {
       }
     }
 
+    const getPathDepth = (file, tree, index = 0) => {
+      if (!tree[file.pathArray[index]]) {
+        tree[file.pathArray[index]] = {}
+      }
+      if (index === file.pathArray.length - 1) {
+        tree[file.pathArray[index]][file.fileName] = file
+        return
+      }
+      getPathDepth(file, tree[file.pathArray[index]], index + 1)
+    }
+
+    const treeObjectToArray = (treeObj: any, treeArray: any[], checkedData: string[]) => {
+      Object.entries(treeObj).forEach(([key, value]: [string, any]) => {
+        checkedData.push(key)
+        if (value.path) {
+          treeArray.push({
+            id: key,
+            label: value.fileName,
+            originData: {
+              fileName: value.fileName,
+              filePath: value.filePath,
+              fileContent: value?.fileContent,
+              fileType: value?.fileType
+            }
+          })
+        } else {
+          treeArray.push({
+            id: key,
+            label: key,
+            children: []
+          })
+          treeObjectToArray(treeObj[key], treeArray[treeArray.length - 1].children, checkedData)
+        }
+      })
+    }
+
+    const sortTreeArray = (treeArray) => {
+      treeArray.sort((a, b) => {
+        return (a.children ? -1 : 0) - (b.children ? -1 : 0)
+      })
+
+      treeArray.forEach((item) => {
+        if (item.children && item.children.length > 0) {
+          sortTreeArray(item.children)
+        }
+      })
+      return treeArray
+    }
+
+    const fileListToTreeObject = (fileList: any[]) => {
+      const directTree: any = {}
+      fileList.forEach((fileItem) => {
+        let pathArray = fileItem.path.split('/')
+        pathArray.shift()
+        pathArray = pathArray.filter((item: any) => item)
+        fileItem.filePath = `${pathArray.join('/')}${pathArray.length ? '/' : ''}${fileItem.fileName}`
+        if (fileItem.path === '.') {
+          directTree[fileItem.fileName] = fileItem
+        } else {
+          getPathDepth({ pathArray, ...fileItem }, directTree)
+        }
+      })
+      const treeArray: any[] = []
+      const checkedTreeData: string[] = []
+      treeObjectToArray(directTree, treeArray, checkedTreeData)
+      sortTreeArray(treeArray)
+      return { treeArray, checkedTreeData }
+    }
+
     const getPreGenerateInfo = async () => {
       const params = getParams()
       const { id } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
@@ -126,13 +197,7 @@ export default {
         fetchPageList(params.app)
       ]
 
-      const isDirHandleValid = await validateDirHandle()
-
-      if (!isDirHandleValid) {
-        promises.push(fs.getUserBaseDirHandle())
-      }
-
-      const [appData, metaData, pageList, dirHandle] = await Promise.all(promises)
+      const [appData, metaData, pageList] = await Promise.all(promises)
       const pageDetailList = await getAllPageDetails(pageList)
 
       // 这里需要手动传入 blockSet 的原因是多页面可能会存在重复的区块
@@ -184,28 +249,10 @@ export default {
       const res = await generateAppCode(appSchema)
 
       const { genResult = [] } = res || {}
-      const fileRes = genResult.map(({ fileContent, fileName, path, fileType }) => {
-        const slash = path.endsWith('/') || path === '.' ? '' : '/'
-        let filePath = `${path}${slash}`
-        if (filePath.startsWith('./')) {
-          filePath = filePath.slice(2)
-        }
-        if (filePath.startsWith('.')) {
-          filePath = filePath.slice(1)
-        }
+      // 将文件目录处理成树状结构
+      const fileTreeInfo = fileListToTreeObject(genResult)
 
-        if (filePath.startsWith('/')) {
-          filePath = filePath.slice(1)
-        }
-
-        return {
-          fileContent,
-          filePath: `${filePath}${fileName}`,
-          fileType
-        }
-      })
-
-      return [dirHandle, fileRes]
+      return [fileTreeInfo, genResult]
     }
 
     const saveCodeToLocal = async (filesInfo) => {
@@ -227,19 +274,16 @@ export default {
         useNotify({ type: 'info', title: '代码生成中, 请稍后...' })
         return
       } else {
-        useNotify({ type: 'info', title: '代码生成中...' })
         state.generating = true
       }
 
       try {
         // 保存代码前置任务：调用接口生成代码并获取用户本地文件夹授权
-        const [dirHandle, fileRes] = await getPreGenerateInfo()
+        const [fileTreeInfo, genResult] = await getPreGenerateInfo()
 
-        // 暂存待生成代码文件信息
-        state.saveFilesInfo = fileRes
-
-        // 保存用户授权的文件夹句柄
-        initDirHandle(dirHandle)
+        // 暂存待生成代码文件树
+        state.saveFilesTree = fileTreeInfo
+        state.saveFilesInfo = genResult
 
         // 打开弹窗选中待生成文件
         state.showDialogbox = true
@@ -252,8 +296,14 @@ export default {
     }
 
     const confirm = async (saveData) => {
-      useNotify({ type: 'info', title: '代码保存中...' })
-      state.showDialogbox = false
+      const isDirHandleValid = await validateDirHandle()
+      if (!isDirHandleValid) {
+        const dirHandle = await fs.getUserBaseDirHandle()
+        // 保存用户授权的文件夹句柄
+        initDirHandle(dirHandle)
+        useNotify({ type: 'info', title: '代码保存中...' })
+        state.showDialogbox = false
+      }
 
       try {
         // 生成代码到本地
@@ -277,6 +327,7 @@ export default {
       state.showDialogbox = false
       state.generating = false
       state.saveFilesInfo = []
+      state.saveFilesTree = []
     }
 
     return {

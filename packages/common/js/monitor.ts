@@ -10,7 +10,7 @@
  *
  */
 
-import { requestEvent } from './http.js'
+import { requestEvent } from './http'
 
 let monitorUrl = ''
 
@@ -24,10 +24,10 @@ let monitorUrl = ''
  */
 const getUrlUnit = () => {
   const urlUnit = window.location?.search?.substring(1)?.split('&')
-  const unit = {}
+  const unit: Record<string, string> = {}
   if (urlUnit.length) {
     urlUnit.forEach((item) => {
-      let unitItem = item.split('=')
+      const unitItem = item.split('=')
       unit[unitItem[0]] = unitItem[1]
     })
   }
@@ -36,7 +36,7 @@ const getUrlUnit = () => {
 }
 
 const globalMonitoring = () => {
-  window.onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
+  window.onerror = function (errorMessage, scriptURI, _lineNo, columnNo, error) {
     requestEvent(monitorUrl, {
       event_type: 'design_JSError',
       url: window.location.href,
@@ -59,7 +59,7 @@ const promiseMonitoring = () => {
       event.preventDefault()
       let message
       let matchResult = ''
-      let reason = event.reason
+      const reason = event.reason
       if (typeof reason === 'string') {
         message = reason
       } else if (typeof reason === 'object') {
@@ -97,7 +97,7 @@ export const iframeMonitoring = () => {
     return false
   }
 
-  window.frames[0].onerror = function (errorMessage, scriptURI, lineNo, columnNo, error) {
+  window.frames[0].onerror = function (errorMessage, scriptURI, _lineNo, columnNo, error) {
     requestEvent(monitorUrl, {
       event_type: 'design_iframeError',
       url: window.location.href,
@@ -112,7 +112,7 @@ export const iframeMonitoring = () => {
   }
 }
 
-export const initMonitor = (url) => {
+export const initMonitor = (url: string) => {
   monitorUrl = url
   globalMonitoring()
   promiseMonitoring()

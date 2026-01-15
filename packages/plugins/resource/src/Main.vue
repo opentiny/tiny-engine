@@ -25,7 +25,7 @@
             :class="['resource-item', { 'active-item': item.active }]"
             @click="openResourceList(item)"
           >
-            <span>
+            <span class="resource-item-content">
               <svg-icon name="plugin-icon-resource"></svg-icon>
               <span>{{ item.name }}</span>
             </span>
@@ -170,6 +170,13 @@ export default {
         display: inline;
       }
     }
+    .resource-item-content {
+      display: flex;
+      align-items: center;
+      .svg-icon {
+        margin-right: 8px;
+      }
+    }
   }
 
   .active-item {
@@ -180,5 +187,6 @@ export default {
 }
 .plugin-resource {
   width: 100%;
+  height: 100%;
 }
 </style>

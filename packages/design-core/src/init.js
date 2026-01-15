@@ -138,11 +138,16 @@ export const init = async ({
   defaultLifeCycles.beforeAppCreate({ registry })
   beforeAppCreate?.({ registry })
 
-  if (Array.isArray(createAppSignal) && createAppSignal.length) {
-    if (typeof initTimeout !== 'number' || initTimeout <= 0) {
-      throw new Error('initTimeout must be a positive number')
+  const token = localStorage.getItem('engineToken')
+  if (token) {
+    if (Array.isArray(createAppSignal) && createAppSignal.length) {
+      try {
+        await subscribeSignalFinish(createAppSignal, initTimeout)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('信号等待超时或出错:', error)
+      }
     }
-    await subscribeSignalFinish(createAppSignal, initTimeout)
   }
 
   const app = createApp(App)
@@ -152,5 +157,15 @@ export const init = async ({
   app.mount(selector)
   appMounted?.({ app })
 
+  if (!token) {
+    if (Array.isArray(createAppSignal) && createAppSignal.length) {
+      try {
+        await subscribeSignalFinish(createAppSignal, initTimeout)
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.warn('信号等待超时或出错:', error)
+      }
+    }
+  }
   return app
 }

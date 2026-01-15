@@ -62,7 +62,7 @@
         <template v-for="item in templateList" :key="item.id">
           <div class="item" @click="handleClickTemplate(item)">
             <div class="template-img">
-              <img :src="item.image_url || '/default-template-cover.png'" />
+              <img :src="item.image_url || state.defaultImg" />
             </div>
             <div class="item-content">
               <div class="template-name">
@@ -102,6 +102,7 @@
       :placement="'bottom'"
       height="85vh"
       :mask-closable="false"
+      @handleMenu="handleMenu"
     ></template-detail>
   </div>
 </template>
@@ -113,6 +114,7 @@ import { iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import TemplateDetail from './TemplateDetail.vue'
 import { fetchBusinessCategoryByGroup, fetchTemplateList } from './js/http'
+import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -123,7 +125,7 @@ export default {
     TinyIconSearch: iconSearch()
   },
 
-  setup() {
+  setup(props, { emit }) {
     const templateList = ref([])
 
     const tagList = reactive({
@@ -142,7 +144,8 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 10,
-      pageSizes: [10, 20, 30, 40]
+      pageSizes: [10, 20, 30, 40],
+      defaultImg: 'https://tinyengine-assets.obs.myhuaweicloud.com/files/images/img-251230.png'
     })
 
     const getTagsList = async () => {
@@ -209,6 +212,11 @@ export default {
       getTemplateList()
     }
 
+    const handleMenu = () => {
+      const menu = getMergeMeta('engine.workspace.application-center')
+      emit('handleToMenu', menu)
+    }
+
     onMounted(async () => {
       await getTagsList()
       getTemplateList()
@@ -222,7 +230,8 @@ export default {
       handleClickTemplate,
       pageSizeChange,
       currentChange,
-      getTemplateList
+      getTemplateList,
+      handleMenu
     }
   }
 }

@@ -11,6 +11,7 @@
  */
 
 import * as cssTree from 'css-tree'
+import type { StyleSheet, Rule } from 'css-tree'
 import { utils } from '@opentiny/tiny-engine-utils'
 
 const { hyphenate } = utils
@@ -22,13 +23,13 @@ const { hyphenate } = utils
  * @param {string} styleStr css 字符串
  * @returns object { [string]: string }
  */
-export const getCssObjectFromStyleStr = (styleStr) => {
-  const ast = cssTree.parse(styleStr)
-  const cssObject = {}
+export const getCssObjectFromStyleStr = (styleStr: string): Record<string, string> => {
+  const ast = cssTree.parse(styleStr) as StyleSheet
+  const cssObject: Record<string, string> = {}
 
   ast.children
-    .filter(({ type }) => type === 'Rule')
-    .forEach((item) => {
+    .filter((node): node is Rule => node.type === 'Rule')
+    .forEach((item: Rule) => {
       const matchCode = cssTree.generate(item).match(/^(.+){(.+)}$/)
 
       if (!matchCode) {
@@ -47,7 +48,7 @@ export const styleStrAddRoot = (str = '') => {
   return `:root { ${str}\n}`
 }
 
-export const obj2StyleStr = (obj = {}, addRoot = true) => {
+export const obj2StyleStr = (obj: Record<string, string> = {}, addRoot = true) => {
   const list = Object.entries(obj).map(([key, value]) => (value ? `${hyphenate(key)}: ${value};` : ''))
 
   return addRoot ? styleStrAddRoot(list.join('\n  ')) : ` { \n ${list.join('\n  ')} \n}`

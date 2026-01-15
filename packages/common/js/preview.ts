@@ -27,14 +27,44 @@ import { isDevelopEnv } from './environments'
 
 const { deepClone } = utils
 
-// 保存预览窗口引用
-let previewWindow = null
+// 消息事件数据接口
+interface PreviewMessageEventData {
+  source?: 'preview' | 'designer'
+  event?: string
+  type?: string
+  data?: any
+}
 
-const getScriptAndStyleDeps = () => {
+// 预览参数接口
+interface PreviewParams {
+  previewType?: string
+  history?: string
+  [key: string]: any
+}
+
+interface PackageDep {
+  name: string
+  package: string
+  version: string
+  script: string
+  css?: string
+}
+// 脚本依赖项接口
+interface ScriptDep {
+  [key: string]: PackageDep
+}
+
+// 保存预览窗口引用
+let previewWindow: Window | null = null
+
+const getScriptAndStyleDeps = (): {
+  scripts: ScriptDep
+  styles: string[]
+} => {
   const { scripts, styles } = useMaterial().getCanvasDeps()
   const utilsDeps = useResource().getUtilsDeps()
 
-  const scriptsDeps = [...scripts, ...utilsDeps].reduce((res, item) => {
+  const scriptsDeps = [...scripts, ...utilsDeps].reduce<ScriptDep>((res, item: PackageDep) => {
     res[item.package] = res[item.package] || item.script
 
     return res
@@ -47,7 +77,12 @@ const getScriptAndStyleDeps = () => {
   }
 }
 
-const getSchemaParams = async () => {
+const getSchemaParams = async (): Promise<{
+  currentPage: any
+  ancestors: any[]
+  scripts: Record<string, string>
+  styles: string[]
+}> => {
   const { isBlock, getPageSchema, getCurrentPage, getSchema } = useCanvas()
   const isBlockPreview = isBlock()
   const { scripts, styles } = getScriptAndStyleDeps()
@@ -88,14 +123,14 @@ const getSchemaParams = async () => {
 }
 
 // 当 schema 变化时发送更新
-const sendSchemaUpdate = (data) => {
-  previewWindow.postMessage(
+const sendSchemaUpdate = (data: Awaited<ReturnType<typeof getSchemaParams>>) => {
+  previewWindow!.postMessage(
     {
       source: 'designer',
       type: 'schema',
       data
     },
-    previewWindow.origin || window.location.origin
+    previewWindow!.origin || window.location.origin
   )
 }
 
@@ -163,7 +198,7 @@ export const setupSchemaChangeListener = () => {
 
 // 监听来自预览页面的消息
 const setupMessageListener = () => {
-  window.addEventListener('message', async (event) => {
+  window.addEventListener('message', async (event: MessageEvent<PreviewMessageEventData>) => {
     const parsedOrigin = new URL(event.origin)
     const parsedHost = new URL(window.location.href)
     // 确保消息来源安全
@@ -171,7 +206,7 @@ const setupMessageListener = () => {
       const { event: eventType, source } = event.data || {}
       // 通过 heartbeat 消息来重新建立连接，避免刷新页面后 previewWindow 为 null
       if (source === 'preview' && eventType === 'connect' && !previewWindow) {
-        previewWindow = event.source
+        previewWindow = event.source as Window
         setupSchemaChangeListener()
       }
 
@@ -197,9 +232,12 @@ const setupMessageListener = () => {
 // 初始化消息监听
 setupMessageListener()
 
-const handleHistoryPreview = (params, url) => {
-  let historyPreviewWindow = null
-  const handlePreviewReady = (event) => {
+const handleHistoryPreview = (
+  params: PreviewParams & Partial<Awaited<ReturnType<typeof getSchemaParams>>>,
+  url: string
+) => {
+  let historyPreviewWindow: Window | null = null
+  const handlePreviewReady = (event: MessageEvent<PreviewMessageEventData>): void => {
     if (event.origin === window.location.origin || event.origin.includes(window.location.hostname)) {
       const { event: eventType, source } = event.data || {}
       if (source === 'preview' && eventType === 'onMounted' && historyPreviewWindow) {
@@ -230,7 +268,7 @@ const handleHistoryPreview = (params, url) => {
   historyPreviewWindow = window.open(url, '_blank')
 }
 
-const getQueryParams = (params = {}, isHistory = false) => {
+const getQueryParams = (params: PreviewParams = {}, isHistory: boolean = false): string => {
   const paramsMap = new URLSearchParams(location.search)
   const tenant = paramsMap.get('tenant') || ''
   const pageId = paramsMap.get('pageid')
@@ -260,7 +298,7 @@ const getQueryParams = (params = {}, isHistory = false) => {
   return query
 }
 
-const open = (params = {}, isHistory = false) => {
+const open = (params: PreviewParams = {}, isHistory: boolean = false) => {
   const href = window.location.href.split('?')[0] || './'
   const { scripts, styles } = getScriptAndStyleDeps()
   const query = getQueryParams(params, isHistory)
@@ -300,6 +338,6 @@ const open = (params = {}, isHistory = false) => {
   setupSchemaChangeListener()
 }
 
-export const previewPage = (params = {}, isHistory = false) => {
+export const previewPage = (params: PreviewParams = {}, isHistory: boolean = false) => {
   open(params, isHistory)
 }
