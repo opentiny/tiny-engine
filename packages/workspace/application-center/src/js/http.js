@@ -23,7 +23,7 @@ export const fetchBusinessCategoryByGroup = (group) =>
 
 // 应用管理 -- 获取应用列表
 export const fetchApplicationList = (params) =>
-  getMetaApi(META_SERVICE.Http).get(`app-center/api/apps/page`, { params }) // currentPage pageSize
+  getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/page`, { params }) // currentPage pageSize
 
 // 应用管理 -- 创建应用
 export const createApplication = (params) => getMetaApi(META_SERVICE.Http).post(`/app-center/api/apps/create`, params)

@@ -35,6 +35,9 @@ export default {
       [META_APP.Refresh, META_APP.Fullscreen],
       [META_APP.Lang],
       [META_APP.ViewSetting]
+    ],
+    setting: [
+      [META_APP.User]
     ]
   }
 }

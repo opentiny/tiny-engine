@@ -60,6 +60,19 @@
         :collapseBar="toolbars.collapse"
         v-if="layoutRegistry.options?.isShowCollapse"
       ></toolbar-collapse>
+      <div class="toolbar-right-setting">
+        <div class="toolbar-right-item" v-for="(item, idx) in toolbars.setting" :key="idx">
+          <div class="toolbar-right-item-arr" v-if="Array.isArray(item)">
+            <div class="toolbar-right-item-comp" v-for="comp in item" :key="comp">
+              <component
+                :is="getMergeMeta(comp)?.entry"
+                :options="getMergeMeta(comp)?.options"
+                position="right"
+              ></component>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -231,6 +244,9 @@ export default {
           opacity: 0.8;
         }
       }
+    }
+    .toolbar-right-setting {
+      margin-left: 10px;
     }
   }
 }

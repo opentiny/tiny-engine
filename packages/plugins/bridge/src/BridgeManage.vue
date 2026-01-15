@@ -14,7 +14,7 @@
         :class="['list-item', index === state.activeIndex ? 'active' : '']"
         @click.stop="openEdit(item, index)"
       >
-        <svg-icon name="plugin-icon-sresources" class="list-item-icon"></svg-icon>
+        <svg-icon name="plugin-icon-tool" class="list-item-icon"></svg-icon>
         <div class="item-label">{{ item.name }}</div>
         <svg-button
           class="setting-icon"

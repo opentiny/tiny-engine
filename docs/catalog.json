@@ -2,7 +2,7 @@
   "chapters": [
     {
       "title": "使用指南",
-      "type": "engine",
+      "type": "guide",
       "sections": [
         {
           "title": "新手指引",
@@ -16,9 +16,8 @@
           "title": "基础功能",
           "name": "basic-features",
           "articles": [
-            { "title": "初识设计器", "name": "intro-to-designer.md" },
-            { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
             { "title": "设计器界面模块简介", "name": "designer-ui-modules.md" },
+            { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
             { "title": "页面管理", "name": "page-management.md" },
             { "title": "使用组件", "name": "using-components.md" },
             { "title": "样式设置", "name": "style-settings.md" },
@@ -40,7 +39,6 @@
             { "title": "如何使用插槽", "name": "how-to-use-slots.md" },
             { "title": "循环渲染", "name": "loop-rendering.md" },
             { "title": "条件渲染", "name": "conditional-rendering.md" },
-            { "title": "集成ChatGPT搭建简单页面能力", "name": "integrating-chatgpt-for-simple-pages.md" },
             { "title": "新版AI插件使用", "name": "new-ai-plugin-usage.md" },
             { "title": "数据源和Collection—远程字段", "name": "data-source-and-collection-remote-fields.md" },
             { "title": "数据源和Collection—mock数据", "name": "data-source-and-collection-mock-data.md" },
@@ -155,7 +153,9 @@
                 { "title": "全局布局API", "name": "global-layout-api.md" },
                 { "title": "物料API", "name": "material-api.md" },
                 { "title": "设置面板API", "name": "settings-panel-api.md" },
-                { "title": "预览API", "name": "preview-api.md" }
+                { "title": "预览API", "name": "preview-api.md" },
+                { "title": "元服务API", "name": "globalService-api.md" },
+                { "title": "注册表API", "name": "registry-api.md" }
               ]
             },
             {

@@ -12,19 +12,19 @@
 
 export const REGEXP_EVENT_NAME = /^[a-z]+([A-Z][a-z]*)*$/
 
-export const verifyEventName = (name) => REGEXP_EVENT_NAME.test(name)
+export const verifyEventName = (name: string) => REGEXP_EVENT_NAME.test(name)
 
 export const REGEXP_BLOCK_NAME = /^([A-Z][a-z0-9]*){2,}$/
 
-export const verifyBlockName = (string) => REGEXP_BLOCK_NAME.test(string)
+export const verifyBlockName = (string: string) => REGEXP_BLOCK_NAME.test(string)
 
 export const REGEXP_BLOCK_ID = /^[A-Za-z]+$/
 
-export const verifyBlockId = (string) => REGEXP_BLOCK_ID.test(string)
+export const verifyBlockId = (string: string) => REGEXP_BLOCK_ID.test(string)
 
 export const REGEXP_BLOCK_PATH = /^[\w-][/\w-]*?[\w-]*?$/
 
-export const verifyBlockPath = (string) => !string || REGEXP_BLOCK_PATH.test(string)
+export const verifyBlockPath = (string: string) => !string || REGEXP_BLOCK_PATH.test(string)
 
 export const REGEXP_GROUP_NAME = /^[\u4e00-\u9fa5a-zA-Z0-9_-]+$/
 
@@ -42,6 +42,6 @@ export const REGEXP_JS_VAR = /^[a-zA-Z_]\w*$/
 
 export const REGEXP_JS_VAR_SYMBOL = /^[a-zA-Z_$][0-9a-zA-Z_$]*$/
 
-export const verifyJsVarName = (name) => REGEXP_JS_VAR.test(name)
+export const verifyJsVarName = (name: string) => REGEXP_JS_VAR.test(name)
 
-export const verifyJsVarSymbolName = (name) => REGEXP_JS_VAR_SYMBOL.test(name)
+export const verifyJsVarSymbolName = (name: string) => REGEXP_JS_VAR_SYMBOL.test(name)

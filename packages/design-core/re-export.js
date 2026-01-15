@@ -15,6 +15,7 @@ export { default as GenerateCode, SaveLocalService } from '@opentiny/tiny-engine
 export { default as Refresh } from '@opentiny/tiny-engine-toolbar-refresh'
 export { default as Collaboration } from '@opentiny/tiny-engine-toolbar-collaboration'
 export { default as Setting } from '@opentiny/tiny-engine-toolbar-setting'
+export { default as User } from '@opentiny/tiny-engine-toolbar-user'
 export { default as Materials, ResourceService, MaterialService } from '@opentiny/tiny-engine-plugin-materials'
 export { default as State } from '@opentiny/tiny-engine-plugin-state'
 export { default as Script } from '@opentiny/tiny-engine-plugin-script'
