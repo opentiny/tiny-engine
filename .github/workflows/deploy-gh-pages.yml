@@ -3,6 +3,16 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [develop]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Backend environment'
+        required: true
+        default: 'alpha'
+        type: choice
+        options:
+          - alpha
+          - production
 
 jobs:
   deploy-gh-pages:
@@ -31,10 +41,17 @@ jobs:
 
       - name: add environment variable
         run: |
-          cat <<'EOF' >> designer-demo/env/.env.alpha
-          // ---- appended by CI (gh-pages) ----
-          VITE_ORIGIN=https://agent.opentiny.design/
+          ENV=${{ github.event.inputs.environment || 'alpha' }}
+          VITE_ORIGIN_URL="https://agent-alpha.opentiny.design/"
+          if [ "$ENV" = "production" ]; then
+            VITE_ORIGIN_URL="https://agent.opentiny.design/"
+          fi
+          cat <<EOF >> designer-demo/env/.env.alpha
+          # ---- appended by CI (gh-pages) ----
+          VITE_ORIGIN=$VITE_ORIGIN_URL
           EOF
+          echo "DEPLOY_ENV=$ENV"
+          echo "VITE_ORIGIN_URL=$VITE_ORIGIN_URL"
       - name: Run Build
         run: |
           set -eo pipefail
