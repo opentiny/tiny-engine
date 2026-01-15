@@ -254,7 +254,9 @@ const addScriptAndStyle = (scripts: Map<string, string>, styles: Set<string>, pk
 const getMaterialDeps = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(
-    bundleUrls.map((url: any) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
+    bundleUrls.map((url: any) =>
+      typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url, { baseURL: '' }) : url
+    )
   )
 
   const scripts = new Map<string, string>()

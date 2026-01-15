@@ -35,10 +35,6 @@ jobs:
           // ---- appended by CI (gh-pages) ----
           VITE_ORIGIN=https://agent.opentiny.design/
           EOF
-      - name: change material url
-        run: |
-          sed -i "s#material: \['/mock/bundle.json'\]#material: \['https://opentiny.github.io/tiny-engine/mock/bundle.json'\]#g" designer-demo/engine.config.js
-          echo "Updated material url in designer-demo/engine.config.js"
       - name: Run Build
         run: |
           set -eo pipefail
