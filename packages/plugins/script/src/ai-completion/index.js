@@ -3,5 +3,4 @@
  */
 export { createCompletionHandler } from './adapters/index.js'
 export { shouldTriggerCompletion } from './triggers/completionTrigger.js'
-export { debounceManager } from './utils/debounceManager.js'
 export { createSmartPrompt, FIMPromptBuilder } from './builders/index.js'

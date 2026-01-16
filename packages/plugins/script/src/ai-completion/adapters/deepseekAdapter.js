@@ -32,7 +32,7 @@ export function buildDeepSeekMessages(context, instruction, fileContent) {
 }
 
 /**
- * 调用 DeepSeek Chat API（通过后端代理）
+ * 调用 DeepSeek Chat API
  * @param {Array} messages - Messages 数组
  * @param {Object} config - 配置对象
  * @param {string} apiKey - API 密钥

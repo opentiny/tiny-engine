@@ -53,7 +53,7 @@ export const MODEL_CONFIG = {
  * API 端点配置
  */
 export const API_ENDPOINTS = {
-  CHAT_COMPLETIONS: '/app-center/api/chat/completions' // 后端代理端点（DeepSeek 使用）
+  CHAT_COMPLETIONS: '/app-center/api/chat/completions'
 }
 
 /**

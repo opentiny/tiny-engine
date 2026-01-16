@@ -34,7 +34,7 @@
 /* metaService: engine.plugins.pagecontroller.Main */
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
-import { registerCompletion, type CompletionRegistration } from 'monacopilot'
+import { registerCompletion, type CompletionRegistration, type RegisterCompletionOptions } from 'monacopilot'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common/component'
 import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
@@ -42,7 +42,6 @@ import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
 import { createCompletionHandler } from './ai-completion/adapters/index'
 import { shouldTriggerCompletion } from './ai-completion/triggers/completionTrigger'
-import { debounceManager } from './ai-completion/utils/debounceManager'
 
 export const api = {
   saveMethod,
@@ -70,8 +69,8 @@ export default {
 
     const { PLUGIN_NAME } = useLayout()
 
-    // 存储 AI 补全注册信息
-    let completionRegistration: CompletionRegistration | null = null
+    type RequestHandler = NonNullable<RegisterCompletionOptions['requestHandler']>
+    let completion: CompletionRegistration | null = null
 
     const panelState = reactive({
       emitEvent: emit
@@ -123,42 +122,32 @@ export default {
 
       // 🆕 新增: 注册 AI 补全
       try {
-        const monacoInstance = monacoRef.value.getMonaco()
-        const editorInstance = monacoRef.value.getEditor()
+        const monaco = monacoRef.value.getMonaco()
+        const editor = monacoRef.value.getEditor()
 
-        // 配置防抖管理器
-        debounceManager.setDebounceDelay(300) // 防抖延迟 300ms
-        debounceManager.setDebounceEnabled(true)
-
-        completionRegistration = registerCompletion(monacoInstance, editorInstance, {
+        completion = registerCompletion(monaco, editor, {
           language: 'javascript',
           filename: 'page.js',
           maxContextLines: 50,
           enableCaching: true,
-          allowFollowUpCompletions: true,
-
-          // 🎯 智能触发判断（在请求前执行，避免不必要的请求）
-          triggerIf: () => {
-            const model = editorInstance.getModel()
-            const position = editorInstance.getPosition()
-
-            if (!model || !position) return false
-
+          allowFollowUpCompletions: false,
+          trigger: 'onIdle',
+          triggerIf: ({ text, position }) => {
             return shouldTriggerCompletion({
-              text: model.getValue(),
-              position: {
-                lineNumber: position.lineNumber,
-                column: position.column
-              }
+              text,
+              position
             })
           },
-
-          requestHandler: debounceManager.createRequestHandler(createCompletionHandler())
+          requestHandler: createCompletionHandler() as RequestHandler
         })
 
-        // 注册快捷键：Ctrl+Space 触发 AI 补全
-        editorInstance.addCommand(monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyCode.Space, () => {
-          completionRegistration?.trigger?.()
+        monaco.editor.addEditorAction({
+          id: 'monacopilot.triggerCompletion',
+          label: 'Complete Code',
+          contextMenuGroupId: 'navigation',
+          run: () => {
+            completion!.trigger()
+          }
         })
       } catch (error) {
         // eslint-disable-next-line no-console
@@ -167,9 +156,7 @@ export default {
     }
 
     onBeforeUnmount(() => {
-      // 清理 AI 补全
-      completionRegistration?.deregister?.()
-      debounceManager.reset()
+      completion?.deregister?.()
       ;(state.completionProvider as any)?.forEach?.((provider: any) => {
         provider?.dispose?.()
       })
