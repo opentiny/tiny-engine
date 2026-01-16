@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "cross-env vite",
+    "dev:withAuth": "cross-env VITE_AUTH=true vite",
     "build:alpha": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build --mode alpha",
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=10240 vite build",
     "test": "vitest run",
