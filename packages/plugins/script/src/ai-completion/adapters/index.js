@@ -1,6 +1,3 @@
-/**
- * AI 补全适配器主入口
- */
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import { createSmartPrompt } from '../builders/promptBuilder.js'
 import { FIMPromptBuilder } from '../builders/fimPromptBuilder.js'

@@ -1,7 +1,3 @@
-/**
- * DeepSeek 专用适配器
- * 使用 Chat Completions API（通过后端代理）
- */
 import { SYSTEM_BASE_PROMPT, createUserPrompt } from '../prompts/templates.js'
 import { API_ENDPOINTS, HTTP_CONFIG } from '../constants.js'
 

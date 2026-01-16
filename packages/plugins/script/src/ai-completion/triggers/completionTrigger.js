@@ -1,8 +1,4 @@
 /**
- * 智能补全触发条件判断
- */
-
-/**
  * 检测光标是否在语句结束符后（分号后）
  */
 function isAfterStatementEnd(beforeCursor) {

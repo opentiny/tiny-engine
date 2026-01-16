@@ -35,7 +35,7 @@
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { registerCompletion, type CompletionRegistration, type RegisterCompletionOptions } from 'monacopilot'
-import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common/component'
+import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
 import { useHelp, useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'

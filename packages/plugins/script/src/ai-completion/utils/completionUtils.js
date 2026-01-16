@@ -1,6 +1,3 @@
-/**
- * 补全处理工具函数
- */
 import { useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { MODEL_COMMON_CONFIG, FIM_CONFIG } from '../constants.js'
 

@@ -1,6 +1,3 @@
-/**
- * 模型相关工具函数
- */
 import { MODEL_CONFIG, MODEL_COMMON_CONFIG, STOP_SEQUENCES, FIM_CONFIG } from '../constants.js'
 
 /**

@@ -1,7 +1,3 @@
-/**
- * Qwen 专用适配器
- * 使用 Completions API + FIM (Fill-In-the-Middle)
- */
 import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
 
 /**

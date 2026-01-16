@@ -1,11 +1,4 @@
 /**
- * AI Prompt 模板集合
- *
- * 这个文件包含所有用于代码补全的提示词模板。
- * 提示词的调整不会影响业务逻辑，可以独立进行 A/B 测试。
- */
-
-/**
  * 系统 Prompt - 定义 AI 的角色和基本规则
  */
 export const SYSTEM_BASE_PROMPT = `You are an AI code completion assistant specialized in JavaScript and TypeScript.
