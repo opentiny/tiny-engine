@@ -6,7 +6,8 @@ export default {
   width: 600,
   widthResizable: true,
   options: {
-    enableAICompletion: false // 禁用旧的 AI 补全系统，使用新的 monacopilot
+    aiCompletionEnabled: true
+    // aiCompletionTrigger: 'onIdle' // 可选：触发模式 'onIdle'(默认) | 'onTyping' | 'onDemand'
   },
   confirm: 'close' // 当点击插件栏切换或关闭前是否需要确认, 会调用插件中confirm值指定的方法，e.g. 此处指向 close方法，会调用插件的close方法执行确认逻辑
 }

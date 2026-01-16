@@ -57,6 +57,7 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen3-coder-plus',
         capabilities: {
           toolCalling: true,
+          codeCompletion: true,
           reasoning: reasoningExtraBody,
           jsonOutput: bailianJsonOutputExtraBody
         }
@@ -86,6 +87,7 @@ export const DEFAULT_LLM_MODELS = [
         capabilities: {
           toolCalling: true,
           compact: true,
+          codeCompletion: true,
           jsonOutput: bailianJsonOutputExtraBody
         }
       },
@@ -95,6 +97,7 @@ export const DEFAULT_LLM_MODELS = [
         capabilities: {
           toolCalling: true,
           compact: true,
+          codeCompletion: true,
           jsonOutput: bailianJsonOutputExtraBody
         }
       }
@@ -122,11 +125,12 @@ export const DEFAULT_LLM_MODELS = [
       },
       {
         label: 'Deepseek Coder编程模型',
-        name: 'deepseek-chat',
+        name: 'deepseek-coder',
         capabilities: {
           toolCalling: true,
           compact: true,
-          jsonOutput: bailianJsonOutputExtraBody
+          codeCompletion: true,
+          jsonOutput: jsonOutputExtraBody
         }
       }
     ]

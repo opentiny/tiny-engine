@@ -42,7 +42,7 @@
                 快速模型
                 <tiny-tooltip
                   effect="light"
-                  content="用于代码补全、话题命名等场景。建议选择轻量模型以实现更快的响应速度，例如flash类型或8b/14b模型。"
+                  content="用于代码补全、话题命名等快速响应场景。推荐选择带「代码」标签的模型以获得更好的代码补全效果。"
                   placement="top"
                 >
                   <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
@@ -51,11 +51,25 @@
               <tiny-select
                 clearable
                 v-model="state.modelSelection.quickModel"
-                :options="compactModelOptions"
                 filterable
                 placeholder="请选择"
                 @change="handleCompactModelChange"
-              ></tiny-select>
+                popper-class="model-select-popper"
+              >
+                <template v-for="item in compactModelOptions" :key="item.value">
+                  <tiny-option :label="item.label" :value="item.value">
+                    <span class="left">{{ item.label }}</span>
+                    <div>
+                      <tiny-tag v-if="item.capabilities?.codeCompletion" type="success" effect="light" size="small"
+                        >代码</tiny-tag
+                      >
+                      <tiny-tag v-if="item.capabilities?.compact" type="info" effect="light" size="small"
+                        >轻量</tiny-tag
+                      >
+                    </div>
+                  </tiny-option>
+                </template>
+              </tiny-select>
             </tiny-form-item>
 
             <div v-if="selectedDefaultModelInfo" class="model-info">
@@ -172,8 +186,8 @@ const emit = defineEmits(['close'])
 const {
   robotSettingState,
   saveRobotSettingState,
-  getAllAvailableModels,
   getCompactModels,
+  getNonCodeCompletionModels,
   addCustomService,
   updateService,
   deleteService,
@@ -196,9 +210,9 @@ const state = reactive({
   editingService: undefined as ModelService | undefined
 })
 
-// 获取所有可用模型选项
+// 获取所有可用模型选项（排除代码补全专用模型）
 const allModelOptions = computed(() => {
-  return getAllAvailableModels().map((model) => ({
+  return getNonCodeCompletionModels().map((model) => ({
     label: model.displayLabel,
     value: model.value,
     capabilities: model.capabilities
@@ -207,10 +221,14 @@ const allModelOptions = computed(() => {
 
 // 获取快速模型选项
 const compactModelOptions = computed(() => {
-  return getCompactModels().map((model) => ({
+  const models = getCompactModels().map((model) => ({
     label: model.displayLabel,
-    value: model.value
+    value: model.value,
+    capabilities: model.capabilities,
+    serviceName: model.serviceName
   }))
+
+  return models.sort((a, b) => a.serviceName.localeCompare(b.serviceName, 'zh-CN'))
 })
 
 // 获取当前选择的默认模型信息
@@ -270,8 +288,8 @@ const addService = () => {
   state.showServiceDialog = true
 }
 
-const editService = (service: ModelService) => {
-  state.editingService = JSON.parse(JSON.stringify(service))
+const editService = (service: any) => {
+  state.editingService = JSON.parse(JSON.stringify(service)) as ModelService
   state.showServiceDialog = true
 }
 

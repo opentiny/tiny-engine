@@ -318,9 +318,19 @@ const getAllAvailableModels = () => {
   )
 }
 
-// 获取快速模型列表
+// 获取快速模型列表（包含 compact 或 codeCompletion 的模型）
 const getCompactModels = () => {
-  return getAllAvailableModels().filter((model) => model.capabilities?.compact)
+  return getAllAvailableModels().filter((model) => model.capabilities?.compact || model.capabilities?.codeCompletion)
+}
+
+// 获取代码补全优化模型列表
+const getCodeCompletionModels = () => {
+  return getAllAvailableModels().filter((model) => model.capabilities?.codeCompletion)
+}
+
+// 获取非代码补全模型列表（用于默认助手模型）
+const getNonCodeCompletionModels = () => {
+  return getAllAvailableModels().filter((model) => !model.capabilities?.codeCompletion)
 }
 
 const updateThinkingState = (value: boolean) => {
@@ -456,6 +466,8 @@ export default () => {
     getModelCapabilities,
     getAllAvailableModels,
     getCompactModels,
+    getCodeCompletionModels, // 代码补全模型列表
+    getNonCodeCompletionModels, // 非代码补全模型列表
     getSelectedModelInfo, // 对话模型信息
     getSelectedQuickModelInfo, // 快速模型信息
 

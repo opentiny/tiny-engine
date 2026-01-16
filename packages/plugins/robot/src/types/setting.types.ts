@@ -30,6 +30,7 @@ export interface ModelConfig {
     vision?: boolean
     reasoning?: boolean | Capability
     compact?: boolean
+    codeCompletion?: boolean
     jsonOutput?: boolean | Capability
   }
 }

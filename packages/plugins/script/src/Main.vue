@@ -36,7 +36,7 @@ import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
 import { registerCompletion, type CompletionRegistration, type RegisterCompletionOptions } from 'monacopilot'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common/component'
-import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useHelp, useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
@@ -70,6 +70,7 @@ export default {
     const { PLUGIN_NAME } = useLayout()
 
     type RequestHandler = NonNullable<RegisterCompletionOptions['requestHandler']>
+    type TriggerMode = NonNullable<RegisterCompletionOptions['trigger']>
     let completion: CompletionRegistration | null = null
 
     const panelState = reactive({
@@ -120,43 +121,50 @@ export default {
       // 保留原有的 ESLint
       state.linterWorker = initLinter(editor, monacoRef.value.getMonaco(), state) as any
 
-      // 🆕 新增: 注册 AI 补全
-      try {
-        const monaco = monacoRef.value.getMonaco()
-        const editor = monacoRef.value.getEditor()
+      const { aiCompletionEnabled, aiCompletionTrigger = 'onIdle' } =
+        getMergeMeta('engine.plugins.pagecontroller')?.options || {}
 
-        completion = registerCompletion(monaco, editor, {
-          language: 'javascript',
-          filename: 'page.js',
-          maxContextLines: 50,
-          enableCaching: true,
-          allowFollowUpCompletions: false,
-          trigger: 'onIdle',
-          triggerIf: ({ text, position }) => {
-            return shouldTriggerCompletion({
-              text,
-              position
-            })
-          },
-          requestHandler: createCompletionHandler() as RequestHandler
-        })
+      if (aiCompletionEnabled) {
+        try {
+          const monaco = monacoRef.value.getMonaco()
+          const editor = monacoRef.value.getEditor()
 
-        monaco.editor.addEditorAction({
-          id: 'monacopilot.triggerCompletion',
-          label: 'Complete Code',
-          contextMenuGroupId: 'navigation',
-          run: () => {
-            completion!.trigger()
-          }
-        })
-      } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('❌ AI 补全注册失败:', error)
+          completion = registerCompletion(monaco, editor, {
+            language: 'javascript',
+            filename: 'page.js',
+            maxContextLines: 50,
+            enableCaching: true,
+            allowFollowUpCompletions: false,
+            trigger: aiCompletionTrigger as TriggerMode,
+            triggerIf: ({ text, position }) => {
+              return shouldTriggerCompletion({
+                text,
+                position
+              })
+            },
+            requestHandler: createCompletionHandler() as RequestHandler
+          })
+
+          monaco.editor.addEditorAction({
+            id: 'monacopilot.triggerCompletion',
+            label: 'Complete Code',
+            contextMenuGroupId: 'navigation',
+            run: () => {
+              completion!.trigger()
+            }
+          })
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('❌ AI 补全注册失败:', error)
+        }
       }
     }
 
     onBeforeUnmount(() => {
-      completion?.deregister?.()
+      // 清理 AI 补全
+      if (completion) {
+        completion.deregister()
+      }
       ;(state.completionProvider as any)?.forEach?.((provider: any) => {
         provider?.dispose?.()
       })
