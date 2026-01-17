@@ -10,8 +10,29 @@ env:
   HUAWEI_CLOUD_BUCKET: ${{ secrets.HUAWEI_CLOUD_BUCKET }}
 
 jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      secrets-ready: ${{ steps.check.outputs.secrets-ready }}
+    steps:
+      - name: Check required secrets
+        id: check
+        run: |
+          if [[ -z "${{ secrets.HUAWEI_CLOUD_AK }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_SK }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_ENDPOINT }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_BUCKET }}" ]]; then
+            echo "secrets-ready=false" >> $GITHUB_OUTPUT
+            echo "::error::Required Huawei Cloud secrets are not configured."
+            echo "::error::Please set: HUAWEI_CLOUD_AK, HUAWEI_CLOUD_SK, HUAWEI_CLOUD_ENDPOINT, HUAWEI_CLOUD_BUCKET"
+            exit 1
+          fi
+          echo "secrets-ready=true" >> $GITHUB_OUTPUT
+          echo "✅ All required secrets are configured"
+
   build:
     runs-on: ubuntu-latest
+    needs: check-secrets
     outputs:
       version-timestamp: ${{ steps.prepare-version.outputs.version_timestamp }}
       cdn-base: ${{ steps.prepare-version.outputs.cdn_base }}
@@ -93,12 +114,7 @@ jobs:
 
   deploy-cdn:
     runs-on: ubuntu-latest
-    needs: build
-    if: |
-      secrets.HUAWEI_CLOUD_AK != '' &&
-      secrets.HUAWEI_CLOUD_SK != '' &&
-      secrets.HUAWEI_CLOUD_ENDPOINT != '' &&
-      secrets.HUAWEI_CLOUD_BUCKET != ''
+    needs: [check-secrets, build]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
