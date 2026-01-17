@@ -103,7 +103,7 @@ jobs:
           set -eo pipefail
           pnpm run build:plugin 2>&1 | tee /tmp/build-plugin.log
           # Run build:alpha equivalent with --base parameter
-          pnpm --filter designer-demo build:alpha -- --base=${{ env.CDN_BASE }} 2>&1 | tee /tmp/build-alpha.log
+          pnpm run build:alpha --base=${{ env.CDN_BASE }} 2>&1 | tee /tmp/build-alpha.log
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
