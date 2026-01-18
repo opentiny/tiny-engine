@@ -2,6 +2,12 @@ name: Deploy to CDN
 
 on:
   workflow_dispatch:
+    inputs:
+      is_latest_release:
+        description: '当前分支是否是最新release版本'
+        required: true
+        default: true
+        type: boolean
 
 env:
   HUAWEI_CLOUD_AK: ${{ secrets.HUAWEI_CLOUD_AK }}
@@ -36,7 +42,9 @@ jobs:
     outputs:
       version-timestamp: ${{ steps.prepare-version.outputs.version_timestamp }}
       cdn-base: ${{ steps.prepare-version.outputs.cdn_base }}
+      cdn-base-latest: ${{ steps.prepare-version.outputs.cdn_base_latest }}
       obs-path: ${{ steps.prepare-version.outputs.obs_path }}
+      obs-path-latest: ${{ steps.prepare-version.outputs.obs_path_latest }}
     concurrency:
       group: deploy-cdn
       cancel-in-progress: true
@@ -75,14 +83,16 @@ jobs:
           VERSION=$(node -p "require('./designer-demo/package.json').version")
 
           # Generate timestamp in YYYYMMDD-HHMMSS format
-          TIMESTAMP=$(date +%Y%m%d-%H%M%S)
+          TIMESTAMP=$(TZ="Asia/Shanghai" date +%Y%m%d-%H%M%S)
 
           # Combine for version-timestamp
           VERSION_TIMESTAMP="${VERSION}-${TIMESTAMP}"
 
           # Set CDN base path
           CDN_BASE="https://res-static.opentiny.design/tiny-engine-designer/${VERSION_TIMESTAMP}/"
+          CDN_BASE_LATEST="https://res-static.opentiny.design/tiny-engine-designer/latest/"
           OBS_PATH="tiny-engine-designer/${VERSION_TIMESTAMP}/"
+          OBS_PATH_LATEST="tiny-engine-designer/latest"
 
           # Export as environment variables for subsequent steps
           echo "VERSION_TIMESTAMP=$VERSION_TIMESTAMP" >> $GITHUB_ENV
@@ -92,7 +102,9 @@ jobs:
           # Set outputs for job-level export
           echo "version_timestamp=$VERSION_TIMESTAMP" >> $GITHUB_OUTPUT
           echo "cdn_base=$CDN_BASE" >> $GITHUB_OUTPUT
+          echo "cdn_base_latest=$CDN_BASE_LATEST" >> $GITHUB_OUTPUT
           echo "obs_path=$OBS_PATH" >> $GITHUB_OUTPUT
+          echo "obs_path_latest=$OBS_PATH_LATEST" >> $GITHUB_OUTPUT
 
           echo "Version-Timestamp: $VERSION_TIMESTAMP"
           echo "CDN Base: $CDN_BASE"
@@ -140,7 +152,17 @@ jobs:
           # Upload to versioned path
           obsutil cp ./designer-demo/dist \
                     obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }} \
-                    -r -f
+                    -r -f -flat
+
+          # If is_latest_release is true, also upload to latest path
+          if [ "${{ github.event.inputs.is_latest_release }}" = "true" ]; then
+            # use cdn-base-latest replace cdn-base in all ./designer-demo/dist files
+            find ./designer-demo/dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.mjs" -o -name "*.css" \) \
+              -exec sed -i "s|${{ needs.build.outputs.cdn-base }}|${{ needs.build.outputs.cdn-base-latest }}|g" {} +
+            obsutil cp ./designer-demo/dist \
+                      obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path-latest }} \
+                      -r -f -flat
+          fi
 
           echo "Uploaded to: obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }}"
           echo "CDN URL: https://res-static.opentiny.design/${{ needs.build.outputs.obs-path }}"
