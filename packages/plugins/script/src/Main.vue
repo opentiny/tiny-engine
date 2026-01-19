@@ -149,6 +149,7 @@ export default {
             id: 'monacopilot.triggerCompletion',
             label: 'Complete Code',
             contextMenuGroupId: 'navigation',
+            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space],
             run: () => {
               completion!.trigger()
             }
