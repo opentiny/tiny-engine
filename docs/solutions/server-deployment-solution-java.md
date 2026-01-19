@@ -7,7 +7,7 @@
 - **安装 jdk 8**
 
 ```
-suto yum install java-1.8.0-openjdk-devel
+sudo yum install java-1.8.0-openjdk-devel
 ```
 
 安装完成后，可以使用`java -version`命令来验证 JDK 是否安装成功
@@ -21,7 +21,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 再使用 source 命令使配置生效`source ~/.bash_profile`
 
-- **安装 maven** `suto yum install maven`
+- **安装 maven** `sudo yum install maven`
 
 若执行命令后报错如下，那么就进行手动安装
 
