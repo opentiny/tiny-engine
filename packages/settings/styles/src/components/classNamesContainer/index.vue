@@ -108,7 +108,6 @@ import { Select as TinySelect } from '@opentiny/vue'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
 import { stringify, getSelectorArr } from '../../js/parser'
 
@@ -448,15 +447,40 @@ watchEffect(() => {
   selectorValidator(classNameState.newSelector)
 })
 
+const cssStringToObject = (cssString) => {
+  cssString = cssString.replace(/\s+/g, ' ').trim()
+  const result = {}
+  const regex = /([^{]+)\{([^}]+)\}/g
+
+  let match
+  while ((match = regex.exec(cssString)) !== null) {
+    const selector = match[1].trim()
+    const properties = match[2].trim()
+
+    const propertiesObj = {}
+
+    const propertyRegex = /([^{;]+):([^;]+)/g
+    let propertyMatch
+
+    while ((propertyMatch = propertyRegex.exec(properties)) !== null) {
+      const key = propertyMatch[1].trim()
+      const value = propertyMatch[2].trim()
+      propertiesObj[key] = value
+    }
+
+    result[selector] = propertiesObj
+  }
+  return result
+}
+
 const save = ({ content }) => {
-  const cssString = formatString(content.replace(/"/g, "'"), 'css')
+  const cssString = cssStringToObject(content)
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()
 
   updateSchema({ css: cssString })
   state.schemaUpdateKey++
-
   addHistory()
   updateRect()
 }

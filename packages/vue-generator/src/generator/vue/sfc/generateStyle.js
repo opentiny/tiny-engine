@@ -1,3 +1,6 @@
+import { utils } from '@opentiny/tiny-engine-utils'
+
+const { obJectCssToString } = utils
 export const generateStyleTag = (schema, config = {}) => {
   const { css } = schema
   const { scoped = true, lang = '' } = config
@@ -12,6 +15,6 @@ export const generateStyleTag = (schema, config = {}) => {
   if (lang) {
     langDesc = `lang=${langDesc}`
   }
-
-  return `<style ${langDesc} ${scopedStr}> ${css || ''} </style>`
+  const cssString = obJectCssToString(css)
+  return `<style ${langDesc} ${scopedStr}> ${cssString || ''} </style>`
 }
