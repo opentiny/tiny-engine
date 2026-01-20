@@ -43,7 +43,7 @@ export default {
   },
   emits: ['changeStatus'],
   setup(props, { emit }) {
-    const { fetchUserInfo, setUserInfo, setNeedToLogin, getBaseInfo } = getMetaApi(META_SERVICE.GlobalService)
+    const { fetchUserInfo, setUserInfo, setNeedToLogin } = getMetaApi(META_SERVICE.GlobalService)
     const state = reactive({
       loginData: {
         username: '',
@@ -61,11 +61,13 @@ export default {
           localStorage.setItem('engineToken', data.token)
           fetchUserInfo().then((infoData: any) => {
             if (infoData) {
-              const tenantId = getBaseInfo().tenantId ? getBaseInfo().tenantId : infoData.tenant[0]?.id
               setUserInfo({ ...data, ...infoData })
-              setNeedToLogin(false, tenantId)
+              setNeedToLogin(false)
             }
           })
+        })
+        .catch(() => {
+          setNeedToLogin(true)
         })
     }
 

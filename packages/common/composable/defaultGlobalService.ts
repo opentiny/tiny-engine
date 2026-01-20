@@ -49,32 +49,30 @@ const userState = reactive({
     username: '',
     token: null,
     expireTime: null,
-    tenantId: ''
+    tenantId: '',
+    tenant: []
   },
   needToLogin: false
 })
 
 const getLoginStatus = () => userState.needToLogin
 
-const setNeedToLogin = (value: boolean, tenantId: any) => {
+const setNeedToLogin = (value: boolean) => {
   userState.needToLogin = value
   if (!value) {
-    const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
-    const id = getBaseInfo().id
-    const baseTenantId = getBaseInfo().tenantId
+    const defaultTenantId = userState.userInfo.tenant?.[0]?.id
+    if (defaultTenantId) {
+      const currentUrl = new URL(window.location.href)
+      const currentTenant = getBaseInfo().tenantId
 
-    // 浏览器Url没有组织id，都默认公共组织，应用id默认为公共组织的应用1
-    if (!baseTenantId) {
-      window.location.href = `${baseUrl}id=1&tenant=${tenantId}`
+      const filterList = userState.userInfo.tenant.filter((item) => item.id === currentTenant) || []
+      // 只有当tenant值不存在时才更新
+      if (!filterList?.length) {
+        currentUrl.searchParams.set('tenant', String(defaultTenantId))
+        window.history.replaceState(window.history.state, '', currentUrl.href)
+      }
     }
-
-    if (baseTenantId && !id) {
-      window.location.href = `${baseUrl}tenant=${baseTenantId}`
-    }
-
-    if (baseTenantId && id) {
-      window.location = window.location
-    }
+    window.location.reload()
   }
 }
 
@@ -86,7 +84,12 @@ const setUserInfo = (data: any) => {
 
 const fetchUserInfo = () => {
   // 获取登录用户信息
-  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me')
+  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me', {
+    transformRequest: (data: any, headers: any) => {
+      delete headers['x-lowcode-org']
+      return data
+    }
+  })
 }
 
 const setTenantInfo = (id: any) => {

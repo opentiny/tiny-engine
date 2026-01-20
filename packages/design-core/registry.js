@@ -58,6 +58,8 @@ import {
 } from './re-export'
 
 const isDevelopEnv = import.meta.env.MODE?.includes('dev')
+const useAuth = import.meta.env.VITE_AUTH === 'true'
+
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
 export default {
@@ -136,7 +138,7 @@ export default {
       }
     ],
     enableTailwindCSS: true,
-    enableLogin: isDevelopEnv ? false : true
+    enableLogin: useAuth || !isDevelopEnv
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
