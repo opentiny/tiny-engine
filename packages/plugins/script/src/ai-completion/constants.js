@@ -165,10 +165,7 @@ export const FIM_CONFIG = {
     EXPRESSION: [';', '\n)', ','],
     STATEMENT: [], // 使用通用停止符即可
     OBJECT: [] // 使用通用停止符即可
-  },
-
-  META_INFO_PATTERN:
-    /^(\/\/ File:.*\n)?(\/\/ Language:.*\n)?(\/\/ Current .*\n)*(\/\/ IMPORTANT:.*\n)*(\/\/ Technologies:.*\n)?(\/\/ NOTE:.*\n)*\n*/
+  }
 }
 
 /**

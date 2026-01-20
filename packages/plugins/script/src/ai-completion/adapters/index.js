@@ -4,7 +4,7 @@ import { FIMPromptBuilder } from '../builders/fimPromptBuilder.js'
 import { detectModelType, calculateTokens, getStopSequences } from '../utils/modelUtils.js'
 import { cleanCompletion, buildLowcodeMetadata } from '../utils/completionUtils.js'
 import { buildQwenMessages, callQwenAPI } from './qwenAdapter.js'
-import { buildDeepSeekMessages, callDeepSeekAPI } from './deepseekAdapter.js'
+import { buildDeepSeekFIMParams, callDeepSeekAPI } from './deepseekAdapter.js'
 import { QWEN_CONFIG, DEEPSEEK_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } from '../constants.js'
 
 /**
@@ -12,7 +12,9 @@ import { QWEN_CONFIG, DEEPSEEK_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } 
  * @returns {Function} 请求处理函数
  */
 export function createCompletionHandler() {
-  const fimBuilder = new FIMPromptBuilder(QWEN_CONFIG)
+  // 为不同模型创建 FIM 构建器
+  const qwenFimBuilder = new FIMPromptBuilder(QWEN_CONFIG)
+  const deepseekFimBuilder = new FIMPromptBuilder(DEEPSEEK_CONFIG)
 
   return async (params) => {
     try {
@@ -36,7 +38,7 @@ export function createCompletionHandler() {
 
       // 3. 构建低代码元数据和 prompt
       const lowcodeMetadata = buildLowcodeMetadata()
-      const { context, instruction, fileContent } = createSmartPrompt({
+      const { fileContent } = createSmartPrompt({
         textBeforeCursor,
         textAfterCursor,
         language,
@@ -45,43 +47,67 @@ export function createCompletionHandler() {
         lowcodeMetadata
       })
 
-      // 4. 检测模型类型
+      // 4. 检测模型类型并构建 FIM 参数
       const modelType = detectModelType(completeModel)
 
-      let completionText = null
-      let cursorContext = null
-
-      // 5. 根据模型类型调用不同的 API
-      if (modelType === MODEL_CONFIG.QWEN.TYPE) {
-        // ===== Qwen 流程 =====
-        const { messages, cursorContext: ctx } = buildQwenMessages(fileContent, fimBuilder)
-        cursorContext = ctx
-
-        const config = {
-          model: completeModel,
-          maxTokens: calculateTokens(cursorContext),
-          stopSequences: getStopSequences(cursorContext, MODEL_CONFIG.QWEN.TYPE)
-        }
-
-        completionText = await callQwenAPI(messages, config, apiKey, baseUrl)
-      } else {
-        // ===== DeepSeek 流程（默认） =====
-        const { messages } = buildDeepSeekMessages(context, instruction, fileContent)
-
-        // DeepSeek 使用 Chat API，也需要 stop 序列
-        const config = {
-          model: completeModel,
-          stopSequences: getStopSequences(null, MODEL_CONFIG.DEEPSEEK.TYPE)
-        }
-        const httpClient = getMetaApi(META_SERVICE.Http)
-
-        // 构建 DeepSeek FIM 端点：将 /v1 替换为 /beta
-        const completionBaseUrl = baseUrl.replace(DEEPSEEK_CONFIG.PATH_REPLACE, DEEPSEEK_CONFIG.COMPLETION_PATH)
-
-        completionText = await callDeepSeekAPI(messages, config, apiKey, completionBaseUrl, httpClient)
+      // 5. 准备元数据（用于增强 FIM prompt）
+      const fimMetadata = {
+        language,
+        isComment: textBeforeCursor.trim().endsWith('//') || textBeforeCursor.includes('/*'),
+        lowcodeContext: lowcodeMetadata
+          ? {
+              dataSource: lowcodeMetadata.dataSource || [],
+              utils: lowcodeMetadata.utils || [],
+              globalState: lowcodeMetadata.globalState || [],
+              state: lowcodeMetadata.state || {},
+              methods: lowcodeMetadata.methods || {},
+              currentSchema: lowcodeMetadata.currentSchema || null
+            }
+          : null
       }
 
-      // 6. 处理补全结果
+      // 6. 根据模型类型构建请求参数
+      let completionText
+      let cursorContext
+
+      if (modelType === MODEL_CONFIG.QWEN.TYPE) {
+        // ===== Qwen 流程 =====
+        const { messages, cursorContext: ctx } = buildQwenMessages(fileContent, qwenFimBuilder, fimMetadata)
+        cursorContext = ctx
+
+        completionText = await callQwenAPI(
+          messages,
+          {
+            model: completeModel,
+            maxTokens: calculateTokens(ctx),
+            stopSequences: getStopSequences(ctx, modelType)
+          },
+          apiKey,
+          baseUrl
+        )
+      } else {
+        // ===== DeepSeek 流程（使用 FIM API） =====
+        const {
+          prompt,
+          suffix,
+          cursorContext: ctx
+        } = buildDeepSeekFIMParams(fileContent, deepseekFimBuilder, fimMetadata)
+        cursorContext = ctx
+
+        completionText = await callDeepSeekAPI(
+          prompt,
+          suffix,
+          {
+            model: completeModel,
+            maxTokens: calculateTokens(ctx),
+            stopSequences: getStopSequences(ctx, modelType)
+          },
+          apiKey,
+          baseUrl
+        )
+      }
+
+      // 7. 处理补全结果
       if (completionText) {
         completionText = completionText.trim()
 

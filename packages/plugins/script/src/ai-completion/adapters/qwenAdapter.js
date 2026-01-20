@@ -4,10 +4,11 @@ import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
  * 构建 Qwen FIM 格式的 messages
  * @param {string} fileContent - 文件内容（包含 [CURSOR] 标记）
  * @param {Object} fimBuilder - FIM 构建器实例
+ * @param {Object} metadata - 元数据（language, lowcodeMetadata 等）
  * @returns {{ messages: Array, cursorContext: Object }} Messages 和上下文
  */
-export function buildQwenMessages(fileContent, fimBuilder) {
-  const { fimPrompt, cursorContext } = fimBuilder.buildOptimizedFIMPrompt(fileContent)
+export function buildQwenMessages(fileContent, fimBuilder, metadata = {}) {
+  const { fimPrompt, cursorContext } = fimBuilder.buildOptimizedFIMPrompt(fileContent, metadata)
 
   return {
     messages: [
