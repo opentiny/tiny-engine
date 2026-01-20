@@ -4064,6 +4064,44 @@
                             "labelPosition": "left"
                           },
                           {
+                            "property": "dataRules",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据规则"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataZoom",
+                            "label": {
+                              "text": {
+                                "zh_CN": "区域缩放轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
                             "property": "direction",
                             "label": {
                               "text": {
@@ -4094,6 +4132,273 @@
                               "zh_CN": "柱体方向"
                             },
                             "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "label",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体文本"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "柱体文本，默认不显示"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "legend",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图例配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图例配置，默认显示"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "lineDataName",
+                            "label": {
+                              "text": {
+                                "zh_CN": "更改数据名"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "柱状图更改为折线图的数据名"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "markline",
+                            "label": {
+                              "text": {
+                                "zh_CN": "阈值线配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "type",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱状图类型"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "bar",
+                                    "value": "bar"
+                                  },
+                                  {
+                                    "label": "range",
+                                    "value": "range"
+                                  },
+                                  {
+                                    "label": "water-fall",
+                                    "value": "water-fall"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
                           }
                         ]
                       }
@@ -4113,7 +4418,36 @@
                 ]
               }
             ],
-            "events": {}
+            "events": {
+              "onReady": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "每次渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              },
+              "onReadyOnce": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "首次渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              }
+            }
           },
           "configure": {
             "loop": true,

@@ -6,7 +6,7 @@
         :property="data"
         :data-prop-index="idx"
         :data-group-index="index"
-        @update:modelValue="onValueChange(data.property, $event)"
+        @update:modelValue="itemChange(data.property, $event)"
       >
         <slot name="prefix" :data="data" />
         <slot name="suffix" :data="data" />
@@ -45,13 +45,13 @@ export default {
       }
       return result
     })
-    const onValueChange = (property, value) => {
+    const itemChange = (property, value) => {
       emit('update:modelValue', { ...props.meta.widget.props.modelValue, [property]: value })
     }
 
     return {
       properties,
-      onValueChange
+      itemChange
     }
   }
 }
