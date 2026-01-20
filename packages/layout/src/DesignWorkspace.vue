@@ -113,7 +113,9 @@ export default {
     })
     const tenantValue = computed(() =>
       enableLogin
-        ? tenantList.value.find((item) => item.id === getBaseInfo().tenantId) || tenantList.value[0]
+        ? getBaseInfo().tenantId
+          ? tenantList.value.find((item) => item.id === getBaseInfo().tenantId) || { id: '', label: '请选择组织' }
+          : tenantList.value[0]
         : { ...getBaseInfo(), label: 'Public' }
     )
 

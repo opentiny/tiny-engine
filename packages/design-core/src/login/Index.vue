@@ -66,6 +66,7 @@ export default {
     flex: 2;
     .login-img {
       max-height: 500px;
+      min-height: 298px;
       width: 100%;
       height: 100%;
       background-image: url(../../assets/login-bg.svg);
@@ -83,6 +84,7 @@ export default {
       max-width: 440px;
       min-width: 340px;
       max-height: 500px;
+      min-height: 298px;
       width: 100%;
       height: 100%;
       background: #fff;

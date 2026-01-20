@@ -1,6 +1,6 @@
 import { reactive } from 'vue'
 
-const characters = `!@#$%^&*()_+-=[};":\|,'<>?。`
+const characters = `!@#$%^&*()_+-=[};":|,'<>?。`
 const passwordRules = [
   {
     content: ['密码长度8-20个字符。', '密码必须包含：大写字母、小写字母、数字。'],
@@ -9,7 +9,7 @@ const passwordRules = [
   },
   {
     content: [`密码必须包含特殊字符：${characters}`],
-    rule: /^(?=.*[!@#$%^&*()_+\-=[\}\]{;":|,.'<>?]).+$/,
+    rule: /^(?=.*[!@#$%^&*()_+\-=[}\]{;":|,.'<>?]).+$/,
     pass: false
   },
   {
