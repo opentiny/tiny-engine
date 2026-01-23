@@ -208,19 +208,17 @@ export default {
 
     const openApplication = (template) => {
       const href = window.location.href.split('?')[0] || './'
+      const newUrl = `${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`
       if (window.self !== window.top) {
         window.parent.postMessage(
           {
             type: 'openAppNewTab',
-            data: {
-              id: template.id,
-              tenantId: template.tenantId || queryParams.get('tenant')
-            }
+            url: newUrl
           },
           '*'
         )
       } else {
-        window.open(`${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`)
+        window.open(newUrl)
       }
     }
 
