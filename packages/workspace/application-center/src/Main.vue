@@ -212,7 +212,7 @@ export default {
       if (window.self !== window.top) {
         window.parent.postMessage(
           {
-            type: 'openAppNewTab',
+            type: 'openNewTab',
             url: newUrl
           },
           '*'
