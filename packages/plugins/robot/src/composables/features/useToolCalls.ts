@@ -35,7 +35,7 @@ export const callTools = async (tool_calls: any, hooks: CallToolHooks, signal: A
   const result = []
   for (const tool of tool_calls) {
     const { name, arguments: args } = tool.function
-    const parsedArgs = parseArgs(args)
+    const parsedArgs = parseArgs(args) ?? {}
     tool.parsedArgs = parsedArgs
     tool.name = name
 
