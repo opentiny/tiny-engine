@@ -60,9 +60,9 @@ java 服务端代码仓库：https://github.com/opentiny/tiny-engine-backend-jav
 
 启动 Java 服务端进行前后端联调：
 
-[前后端联调文档](https://opentiny.design/tiny-engine#/help-center/course/dev/debugging-of-java-backend)
+[前后端联调文档](https://docs.opentiny.design/tiny-engine/dev/debugging-of-java-backend)
 
-### 物料同步[方案](https://opentiny.design/tiny-engine#/help-center/course/dev/material-sync-solution)
+### 物料同步[方案](https://docs.opentiny.design/tiny-engine/dev/material-sync-solution)
 
 ```sh
 $ pnpm splitMaterials
