@@ -252,7 +252,8 @@ export default {
             page_content: item.content,
             id: item.blockId || item.block_id,
             history: item.id,
-            name: item.label
+            name: item.label,
+            previewType: 'page'
           },
           true
         )
