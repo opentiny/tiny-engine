@@ -302,9 +302,10 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { nameEn: pageModel.value.nameEn, ...data })
+  return axios
+    .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         Notify({
           type: 'success',
           message: res.data.message,
@@ -325,9 +326,16 @@ const updateApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { nameEn: pageModel.value.nameEn, ...data })
+  const id = data.id
+  delete data.id
+  return axios
+    .post(apiInfo.url, {
+      nameEn: pageModel.value.nameEn,
+      data: data,
+      params: { id }
+    })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         Notify({
           type: 'success',
           message: res.data.message,
@@ -348,12 +356,17 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: { nameEn: pageModel.value.nameEn, ...(data || formData.value) }
-  })
+  return axios
+    .post(apiInfo.url, {
+      currentPage: currentPage || 1,
+      pageSize: pageSize || 10,
+      nameEn: pageModel.value.nameEn,
+      nameCn: pageModel.value.nameCn,
+      params: data
+    })
     .then((res) => {
-      if (res.status === 200) {
-        tableData.value = res.data.data
+      if (res.code === 200) {
+        tableData.value = res.data.list
         pagerState.total = res.data.total
         emit('update:tableData', tableData.value)
         return res.data
@@ -370,9 +383,10 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: pageModel.value.nameEn } })
+  return axios
+    .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         Notify({
           type: 'success',
           message: res.data.message,

@@ -169,9 +169,10 @@ const insertApi = (data = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { ...data, nameEn: pageModel.value.nameEn })
+  return axios
+    .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       } else {
         throw new Error('request fail')
@@ -187,9 +188,16 @@ const updateApi = (data) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { ...data, nameEn: pageModel.value.nameEn })
+  const id = data.id
+  delete data.id
+  return axios
+    .post(apiInfo.url, {
+      nameEn: tableModel.value.nameEn,
+      data: data,
+      params: { id }
+    })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       } else {
         throw new Error('request fail')
@@ -207,16 +215,19 @@ const queryApi = (
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage}&pageSize=${pageSize}`, {
-    params: { ...data, nameEn: pageModel.value.nameEn }
-  })
+  return axios
+    .post(apiInfo.url, {
+      currentPage: currentPage || 1,
+      pageSize: pageSize || 10,
+      nameEn: tableModel.value.nameEn,
+      nameCn: tableModel.value.nameCn,
+      params: data
+    })
     .then((res) => {
-      if (res.status === 200) {
-        if (res.data.code === 200) {
-          tableData.value = res.data.data
-          pagerState.total = res.data.total
-          return res.data
-        }
+      if (res.code === 200) {
+        tableData.value = res.data.list
+        pagerState.total = res.data.total
+        return res.data
       }
       throw new Error('request fail')
     })
@@ -230,7 +241,7 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: pageModel.value.nameEn } })
+  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: tableModel.value.nameEn } })
     .then((res) => {
       if (res.status === 200) {
         return res.data

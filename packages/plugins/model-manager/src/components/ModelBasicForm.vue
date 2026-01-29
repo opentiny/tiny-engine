@@ -39,7 +39,7 @@ const props = defineProps({
 })
 
 // 创建本地副本，直接编辑本地数据
-const localValue = ref({ modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api`, ...props.model })
+const localValue = ref({ modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api/model-data`, ...props.model })
 
 const ruleFormRef = ref()
 

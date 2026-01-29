@@ -115,9 +115,10 @@ const insertApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { nameEn: formModel.value.nameEn, ...data })
+  return axios
+    .post(apiInfo.url, { nameEn: formModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       } else {
         throw new Error('request fail')
@@ -133,9 +134,16 @@ const updateApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { nameEn: formModel.value.nameEn, ...data })
+  const id = data.id
+  delete data.id
+  return axios
+    .post(apiInfo.url, {
+      nameEn: formModel.value.nameEn,
+      data: data,
+      params: { id }
+    })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       } else {
         throw new Error('request fail')
@@ -151,11 +159,16 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: { nameEn: formModel.value.nameEn, ...(data || modelData.value) }
-  })
+  return axios
+    .post(apiInfo.url, {
+      currentPage: currentPage || 1,
+      pageSize: pageSize || 10,
+      nameEn: formModel.value.nameEn,
+      nameCn: formModel.value.nameCn,
+      params: data || modelData.value
+    })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       }
       throw new Error('request fail')
@@ -170,9 +183,10 @@ const deleteApi = () => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: { id: modelData.value?.id, nameEn: formModel.value.nameEn } })
+  return axios
+    .post(apiInfo.url, { id: modelData.value?.id, nameEn: formModel.value.nameEn })
     .then((res) => {
-      if (res.status === 200) {
+      if (res.code === 200) {
         return res.data
       } else {
         throw new Error('request fail')
