@@ -117,54 +117,28 @@ export const MODEL_COMMON_CONFIG = {
   }
 }
 
-/**
- * 通用停止符配置（JS/TS）
- */
-export const STOP_SEQUENCES = [
-  // 通用停止符
-  '\n\n',
-  '```',
+// 停止符配置（API 限制：最多 16 个）
+export const STOP_SEQUENCES = {
+  CORE: ['\n\n', '```'],
+  NEW_SCOPE: ['\nfunction ', '\nclass ', '\nexport ', '\nimport '],
+  BLOCK_END: ['\n}', '\n};']
+}
 
-  // JS/TS 语言特性
-  '\nfunction ',
-  '\nclass ',
-  '\nconst ',
-  '\nlet ',
-  '\nvar ',
-  '\nexport ',
-  '\nimport ',
-  '\ninterface ',
-  '\ntype ',
-  '\nenum ',
+// 上下文特定停止符
+export const CONTEXT_STOP_SEQUENCES = {
+  EXPRESSION: [';', ',', '\n)'],
+  COMMENT: ['\n\n', '*/'],
+  OBJECT: ['\n}', '\n};'],
+  FUNCTION: ['\n}', '\nfunction ', '\nreturn ']
+}
 
-  // 注释边界
-  '\n//',
-  '\n/*',
-
-  // 代码块边界
-  '\n}',
-  '\n};'
-]
-
-/**
- * FIM (Fill-In-the-Middle) 配置
- */
+// FIM 标记配置
 export const FIM_CONFIG = {
   MARKERS: {
     PREFIX: '<|fim_prefix|>',
     SUFFIX: '<|fim_suffix|>',
     MIDDLE: '<|fim_middle|>',
     CURSOR: '[CURSOR]'
-  },
-
-  // FIM 专用停止符（会与 STOP_SEQUENCES 合并）
-  FIM_MARKERS_STOPS: ['<|fim_prefix|>', '<|fim_suffix|>', '<|fim_middle|>'],
-
-  // 上下文特定的额外停止符
-  CONTEXT_STOPS: {
-    EXPRESSION: [';', '\n)', ','],
-    STATEMENT: [], // 使用通用停止符即可
-    OBJECT: [] // 使用通用停止符即可
   }
 }
 
