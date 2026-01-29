@@ -88,9 +88,10 @@
         </tiny-grid-column>
         <tiny-grid-column field="defaultValue" title="默认值" width="120">
           <template #default="{ row }">
-            <div class="editing-cell">
+            <div v-if="row.isEditing" class="editing-cell">
               <tiny-input v-model="row.defaultValue" placeholder="请输入默认值" size="small" />
             </div>
+            <div v-else class="readonly-cell">{{ row.defaultValue }}</div>
           </template>
         </tiny-grid-column>
         <tiny-grid-column field="required" title="必填" width="60">
