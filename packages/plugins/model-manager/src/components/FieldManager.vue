@@ -86,6 +86,13 @@
             <div v-else class="readonly-cell">{{ getFieldTypeLabel(row.type) }}</div>
           </template>
         </tiny-grid-column>
+        <tiny-grid-column field="defaultValue" title="默认值" width="120">
+          <template #default="{ row }">
+            <div class="editing-cell">
+              <tiny-input v-model="row.defaultValue" placeholder="请输入默认值" size="small" />
+            </div>
+          </template>
+        </tiny-grid-column>
         <tiny-grid-column field="required" title="必填" width="60">
           <template #default="{ row }">
             <div v-if="row.isEditing" class="editing-cell">

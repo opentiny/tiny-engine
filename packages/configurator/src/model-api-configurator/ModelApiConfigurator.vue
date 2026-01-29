@@ -174,7 +174,7 @@ const closePopover = () => {
 
 const getModel = (data) => {
   selectedModel.value = data
-  methodBasicData.url = data.baseUrl
+  methodBasicData.url = `${data.baseUrl}/${data.method.nameEn}`
 }
 
 const setModelFunction = async () => {

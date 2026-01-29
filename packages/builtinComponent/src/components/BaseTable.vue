@@ -169,7 +169,7 @@ const insertApi = (data = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { ...data, nameEn: pageModel.value.nameEn })
     .then((res) => {
       if (res.status === 200) {
         return res.data
@@ -187,7 +187,7 @@ const updateApi = (data) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { ...data, nameEn: pageModel.value.nameEn })
     .then((res) => {
       if (res.status === 200) {
         return res.data
@@ -207,7 +207,9 @@ const queryApi = (
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage}&pageSize=${pageSize}`, { params: data })
+  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage}&pageSize=${pageSize}`, {
+    params: { ...data, nameEn: pageModel.value.nameEn }
+  })
     .then((res) => {
       if (res.status === 200) {
         if (res.data.code === 200) {
@@ -228,7 +230,7 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: evidence })
+  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: pageModel.value.nameEn } })
     .then((res) => {
       if (res.status === 200) {
         return res.data

@@ -115,7 +115,7 @@ const insertApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { nameEn: formModel.value.nameEn, ...data })
     .then((res) => {
       if (res.status === 200) {
         return res.data
@@ -133,7 +133,7 @@ const updateApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { nameEn: formModel.value.nameEn, ...data })
     .then((res) => {
       if (res.status === 200) {
         return res.data
@@ -152,7 +152,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
     return undefined
   }
   return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: data || modelData.value
+    params: { nameEn: formModel.value.nameEn, ...(data || modelData.value) }
   })
     .then((res) => {
       if (res.status === 200) {
@@ -165,12 +165,12 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
     })
 }
 
-const deleteApi = (evidence = { id: modelData.value?.id }) => {
+const deleteApi = () => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'deleteApi')
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: evidence })
+  return axios[apiInfo.method](apiInfo.url, { params: { id: modelData.value?.id, nameEn: formModel.value.nameEn } })
     .then((res) => {
       if (res.status === 200) {
         return res.data

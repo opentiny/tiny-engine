@@ -302,7 +302,7 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { nameEn: pageModel.value.nameEn, ...data })
     .then((res) => {
       if (res.status === 200) {
         Notify({
@@ -325,7 +325,7 @@ const updateApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return axios[apiInfo.method](apiInfo.url, { nameEn: pageModel.value.nameEn, ...data })
     .then((res) => {
       if (res.status === 200) {
         Notify({
@@ -349,7 +349,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
     return undefined
   }
   return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: data || formData.value
+    params: { nameEn: pageModel.value.nameEn, ...(data || formData.value) }
   })
     .then((res) => {
       if (res.status === 200) {
@@ -370,7 +370,7 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: evidence })
+  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: pageModel.value.nameEn } })
     .then((res) => {
       if (res.status === 200) {
         Notify({
