@@ -11,6 +11,8 @@
  */
 
 import { GenerateCodeService, Breadcrumb, Media, Lang, HttpService } from '../../../re-export'
+const isDevelopEnv = import.meta.env.MODE?.includes('dev')
+const useAuth = import.meta.env.VITE_AUTH === 'true'
 
 export default {
   root: {
@@ -87,7 +89,8 @@ export default {
         oppositeTheme: 'light'
       }
     ],
-    enableTailwindCSS: true
+    enableTailwindCSS: true,
+    enableLogin: useAuth || !isDevelopEnv
   },
   toolbars: [Breadcrumb, Media, Lang]
 }

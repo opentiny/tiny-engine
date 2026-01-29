@@ -208,7 +208,18 @@ export default {
 
     const openApplication = (template) => {
       const href = window.location.href.split('?')[0] || './'
-      window.open(`${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`)
+      const newUrl = `${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`
+      if (window.self !== window.top) {
+        window.parent.postMessage(
+          {
+            type: 'openNewTab',
+            url: newUrl
+          },
+          '*'
+        )
+      } else {
+        window.open(newUrl)
+      }
     }
 
     const typeClick = (type) => {
