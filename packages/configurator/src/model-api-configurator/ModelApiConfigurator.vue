@@ -136,7 +136,7 @@ const activeNames = ref(['request', 'response'])
 const ruleFormRef = ref(null)
 const methodBasicData = reactive({
   url: '',
-  method: '',
+  method: 'post',
   options: [
     {
       label: 'GET',
@@ -174,6 +174,7 @@ const closePopover = () => {
 
 const getModel = (data) => {
   selectedModel.value = data
+  methodBasicData.method = 'post'
 }
 
 const setModelFunction = async () => {
@@ -185,7 +186,6 @@ const setModelFunction = async () => {
         position: 'top-right'
       })
     } else {
-      methodBasicData.url = `${selectedModel.value.baseUrl}/${selectedFunction.value.nameEn}`
       modelValue.value.push({
         modelName: selectedModel.value.nameCn,
         url: methodBasicData.url,
@@ -207,6 +207,7 @@ const removeApi = (apiItem) => {
 
 const selectModelFunction = (data) => {
   selectedFunction.value = data.row
+  methodBasicData.url = `${selectedModel.value.baseUrl}/${selectedFunction.value.nameEn}`
 }
 </script>
 
