@@ -2,7 +2,9 @@ import { defineComponent, h, ref, onMounted } from 'vue'
 import { getController } from '../canvas-function'
 import RenderMain from '../RenderMain'
 import { handleScopedCss } from './handle-scoped-css'
+import { utils } from '@opentiny/tiny-engine-utils'
 
+const { objectCssToString } = utils
 const pageSchema: Record<string, any> = {}
 
 async function fetchPageSchema(pageId: string) {
@@ -16,7 +18,7 @@ async function fetchPageSchema(pageId: string) {
 // tailwindcss function and directive 特性需要使用 <style type="text/tailwindcss"> 标签
 // https://tailwindcss.com/docs/functions-and-directives
 // 所以原来 new CSSStyleSheet 的方式改成了 document.createElement('style') 的方式
-export function initStyle(key: string, content: string) {
+export function initStyle(key: string, content: string | object) {
   if (!content) {
     return
   }
@@ -32,7 +34,7 @@ export function initStyle(key: string, content: string) {
     document.head.appendChild(styleSheet)
   }
 
-  handleScopedCss(key, content).then((scopedCss) => {
+  handleScopedCss(key, objectCssToString(content)).then((scopedCss) => {
     styleSheet.textContent = scopedCss.css
   })
 }

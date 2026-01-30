@@ -57,7 +57,8 @@ export default {
         const params = {
           ...item,
           id: Number(item.page),
-          history: item.id
+          history: item.id,
+          previewType: 'page'
         }
         params.ancestors = await getFamily(params)
         previewPage(params, true)

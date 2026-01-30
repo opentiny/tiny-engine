@@ -108,9 +108,8 @@ import { Select as TinySelect } from '@opentiny/vue'
 import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-engine-meta-register'
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
-import { formatString } from '@opentiny/tiny-engine-common/js/ast'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
-import { stringify, getSelectorArr } from '../../js/parser'
+import { stringify, getSelectorArr, parser } from '../../js/parser'
 
 const { getSchema, propsUpdateKey, setProp } = useProperties()
 
@@ -449,14 +448,17 @@ watchEffect(() => {
 })
 
 const save = ({ content }) => {
-  const cssString = formatString(content.replace(/"/g, "'"), 'css')
+  const { styleObject } = parser(content)
+  const cssObject = {}
+  for (const styleKey in styleObject) {
+    cssObject[styleKey] = styleObject[styleKey].rules
+  }
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()
 
-  updateSchema({ css: cssString })
+  updateSchema({ css: cssObject })
   state.schemaUpdateKey++
-
   addHistory()
   updateRect()
 }

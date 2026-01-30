@@ -172,7 +172,8 @@ export default defineComponent({
         () => activeSchema.css,
         (value) => {
           setPageCss(value)
-        }
+        },
+        { deep: true }
       )
 
       const utilsWatchCanceler = window.host.watch(
