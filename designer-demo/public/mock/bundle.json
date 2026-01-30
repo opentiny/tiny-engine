@@ -4404,7 +4404,7 @@
                       }
                     ],
                     "widget": {
-                      "component": "ObjectDepthConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
                         "type": "object",
                         "language": "json"
