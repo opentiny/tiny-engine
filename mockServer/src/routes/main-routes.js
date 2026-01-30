@@ -238,4 +238,13 @@ router.get('/app-center/api/apps/delete/:id', async (ctx) => {
   ctx.body = await mockService.appsService.delete(id)
 })
 
+router.get('/app-center/api/app-template/list', async (ctx) => {
+  ctx.body = await mockService.templateService.list(ctx.request.body)
+})
+
+router.get('/material-center/api/business-category/find', async (ctx) => {
+  const { group } = ctx.query
+  ctx.body = await mockService.templateService.searchGroup(group)
+})
+
 export default router

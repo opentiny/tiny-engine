@@ -87,15 +87,14 @@ export default class AppsService {
   }
 
   async update(id, params) {
-    const index = this.appList.apps.findIndex((item) => item.id === id)
+    const index = this.appList.apps.findIndex((item) => Number(item.id) === Number(id))
     if (index === -1) {
       return getResponseData({ success: false, message: '未找到应用' })
     }
 
     this.appList.apps[index] = {
       ...this.appList.apps[index],
-      ...params,
-      updateTime: new Date().toISOString()
+      ...params
     }
 
     return getResponseData(this.appList.apps[index])
