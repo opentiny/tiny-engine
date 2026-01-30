@@ -115,22 +115,31 @@ export interface MaterialsOptions {
 }
 
 const generateCssString = (pageOptions: PageOptions, materialsOptions: MaterialsOptions) => {
-  if (!pageOptions?.pageBaseStyle?.className || !pageOptions?.pageBaseStyle?.style) {
-    return ''
+  let cssObject: Record<string, any> = {}
+  const parseStyle = (styleString: string) => {
+    const styleObj: Record<string, string> = {}
+    const styleItems = styleString.split(';')
+    styleItems.forEach((item: string) => {
+      if (item) {
+        const stylekeyValue = item.split(':')
+        styleObj[stylekeyValue[0].trim()] = stylekeyValue[1].trim()
+      }
+    })
+    return styleObj
+  }
+  if (pageOptions?.pageBaseStyle?.className && pageOptions?.pageBaseStyle?.style) {
+    cssObject[`.${pageOptions.pageBaseStyle.className}`] = parseStyle(pageOptions.pageBaseStyle.style)
   }
 
-  const formatCssRule = (className: string, style: string) => `.${className} {\n  ${style.trim()}\n}\n`
-  const baseStyle = `.${pageOptions.pageBaseStyle.className}{\r\n ${pageOptions.pageBaseStyle.style}\r\n}\r\n`
-
-  if (!materialsOptions.useBaseStyle) {
-    return baseStyle
+  if (materialsOptions.useBaseStyle) {
+    cssObject = {
+      ...cssObject,
+      [`.${materialsOptions.blockBaseStyle.className}`]: parseStyle(materialsOptions.blockBaseStyle.style),
+      [`.${materialsOptions.componentBaseStyle.className}`]: parseStyle(materialsOptions.componentBaseStyle.style)
+    }
   }
 
-  return [
-    formatCssRule(pageOptions.pageBaseStyle.className, pageOptions.pageBaseStyle.style),
-    formatCssRule(materialsOptions.blockBaseStyle.className, materialsOptions.blockBaseStyle.style),
-    formatCssRule(materialsOptions.componentBaseStyle.className, materialsOptions.componentBaseStyle.style)
-  ].join('\n')
+  return cssObject
 }
 
 const getDefaultPage = () => {

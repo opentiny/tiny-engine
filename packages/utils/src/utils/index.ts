@@ -452,3 +452,29 @@ export const obj2StyleString = (obj: any) => {
       .join('; ')
   )
 }
+
+/**
+ * JSON转样式字符串
+ * @param {*} object
+ * @returns
+ */
+
+export const objectCssToString = (css) => {
+  if (typeof css === 'string') {
+    return css
+  }
+  let cssString = ''
+
+  for (const selector in css) {
+    const properties = css[selector]
+    let ruleString = `${selector} {\r\n`
+
+    for (const property in properties) {
+      ruleString += ` ${property}: ${properties[property]};\r\n`
+    }
+
+    ruleString += '}\n'
+    cssString += ruleString
+  }
+  return cssString
+}
