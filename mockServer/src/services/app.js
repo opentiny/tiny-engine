@@ -10,8 +10,10 @@
  *
  */
 
+import fs from 'fs-extra'
+import path from 'path'
 import { mockService } from '../routes/main-routes'
-import { getResponseData } from '../tool/Common'
+import { getResponseData, transformI18nMock } from '../tool/Common'
 export default class AppService {
   async lock(query) {
     const { id, state } = query
@@ -27,7 +29,11 @@ export default class AppService {
   getAppPreviewMetaData() {
     const appMetaData = require('../assets/json/appinfo.json')
 
-    const { i18n: i18nEntries, source = [], extension = [], app } = appMetaData
+    const schemaFilePath = path.resolve(process.cwd(), './src/mock/get/app-center/v1/apps/schema/1.json')
+    const schemaData = fs.readJSONSync(schemaFilePath)
+    const i18nEntries = transformI18nMock(schemaData?.data || {})
+
+    const { source = [], extension = [], app } = appMetaData
     // 拼装数据源
     const dataSource = {
       list: source,
