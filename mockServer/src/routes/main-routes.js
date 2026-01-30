@@ -224,4 +224,18 @@ router.post('block-history/create', async (ctx) => {
   ctx.body = await mockService.blockHistoryService.create(ctx.request.body)
 })
 
+router.get('/app-center/api/apps/page', async (ctx) => {
+  const { appId } = ctx.params
+  ctx.body = await mockService.appsService.list(appId)
+})
+
+router.post('/app-center/api/apps/create', async (ctx) => {
+  ctx.body = await mockService.appsService.create(ctx.request.body)
+})
+
+router.get('/app-center/api/apps/delete/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.appsService.delete(id)
+})
+
 export default router
