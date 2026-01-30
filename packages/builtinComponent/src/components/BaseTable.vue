@@ -172,11 +172,7 @@ const insertApi = (data = {}) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -197,11 +193,7 @@ const updateApi = (data) => {
       params: { id }
     })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -224,12 +216,9 @@ const queryApi = (
       params: data
     })
     .then((res) => {
-      if (res.code === 200) {
-        tableData.value = res.data.list
-        pagerState.total = res.data.total
-        return res.data
-      }
-      throw new Error('request fail')
+      tableData.value = res.data.list
+      pagerState.total = res.data.total
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -244,11 +233,7 @@ const deleteApi = (evidence) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
     .then((res) => {
-      if (res.status === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)

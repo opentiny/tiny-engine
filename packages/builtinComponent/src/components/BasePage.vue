@@ -305,17 +305,12 @@ const insertApi = (data = addFormData.value) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
-      console.log(res)
-      if (res.code === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '新增成功',
+        position: 'top-right'
+      })
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -336,17 +331,12 @@ const updateApi = (data = addFormData.value) => {
       params: { id }
     })
     .then((res) => {
-      console.log(res)
-      if (res.code === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '修改成功',
+        position: 'top-right'
+      })
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -367,14 +357,10 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
       params: data
     })
     .then((res) => {
-      console.log(res)
-      if (res.code === 200) {
-        tableData.value = res.data.list
-        pagerState.total = res.data.total
-        emit('update:tableData', tableData.value)
-        return res.data
-      }
-      throw new Error('request fail')
+      tableData.value = res.data.list
+      pagerState.total = res.data.total
+      emit('update:tableData', tableData.value)
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -389,17 +375,12 @@ const deleteApi = (evidence) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
-      console.log(res)
-      if (res.code === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '已删除',
+        position: 'top-right'
+      })
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)

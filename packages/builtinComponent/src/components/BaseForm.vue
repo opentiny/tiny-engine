@@ -118,11 +118,7 @@ const insertApi = (data = modelData.value) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: formModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -143,11 +139,7 @@ const updateApi = (data = modelData.value) => {
       params: { id }
     })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -168,10 +160,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
       params: data || modelData.value
     })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      }
-      throw new Error('request fail')
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
@@ -186,11 +175,7 @@ const deleteApi = () => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { id: modelData.value?.id, nameEn: formModel.value.nameEn })
     .then((res) => {
-      if (res.code === 200) {
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      return res.data
     })
     .catch((err) => {
       throw new Error(err)
