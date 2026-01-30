@@ -109,7 +109,7 @@ import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-en
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
-import { stringify, getSelectorArr } from '../../js/parser'
+import { stringify, getSelectorArr, parser } from '../../js/parser'
 
 const { getSchema, propsUpdateKey, setProp } = useProperties()
 
@@ -447,39 +447,17 @@ watchEffect(() => {
   selectorValidator(classNameState.newSelector)
 })
 
-const cssStringToObject = (cssString) => {
-  cssString = cssString.replace(/\s+/g, ' ').trim()
-  const result = {}
-  const regex = /([^{]+)\{([^}]+)\}/g
-
-  let match
-  while ((match = regex.exec(cssString)) !== null) {
-    const selector = match[1].trim()
-    const properties = match[2].trim()
-
-    const propertiesObj = {}
-
-    const propertyRegex = /([^{;]+):([^;]+)/g
-    let propertyMatch
-
-    while ((propertyMatch = propertyRegex.exec(properties)) !== null) {
-      const key = propertyMatch[1].trim()
-      const value = propertyMatch[2].trim()
-      propertiesObj[key] = value
-    }
-
-    result[selector] = propertiesObj
-  }
-  return result
-}
-
 const save = ({ content }) => {
-  const cssString = cssStringToObject(content)
+  const { styleObject } = parser(content)
+  const cssObject = {}
+  for (const styleKey in styleObject) {
+    cssObject[styleKey] = styleObject[styleKey].rules
+  }
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()
 
-  updateSchema({ css: cssString })
+  updateSchema({ css: cssObject })
   state.schemaUpdateKey++
   addHistory()
   updateRect()

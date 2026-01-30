@@ -18,7 +18,7 @@ import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { parser, stringify, getSelectorArr } from './parser'
 
 const { EXPRESSION_TYPE } = constants
-const { generateRandomLetters, parseExpression, obJectCssToString } = utils
+const { generateRandomLetters, parseExpression, objectCssToString } = utils
 
 const state = reactive({
   // 当前选中节点的  style，解析成对象返回
@@ -177,7 +177,7 @@ export const initStylePanelWatch = () => {
   watch(
     () => useCanvas().getPageSchema?.()?.css,
     (value) => {
-      state.cssContent = obJectCssToString(value) || ''
+      state.cssContent = objectCssToString(value) || ''
 
       // 解析css
       const { parseList, selectors, styleObject } = parser(state.cssContent)

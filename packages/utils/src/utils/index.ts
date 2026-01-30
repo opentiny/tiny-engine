@@ -455,11 +455,11 @@ export const obj2StyleString = (obj: any) => {
 
 /**
  * JSON转样式字符串
- * @param {*} string
+ * @param {*} object
  * @returns
  */
 
-export const obJectCssToString = (css) => {
+export const objectCssToString = (css) => {
   if (typeof css === 'string') {
     return css
   }

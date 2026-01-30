@@ -4,7 +4,7 @@ import RenderMain from '../RenderMain'
 import { handleScopedCss } from './handle-scoped-css'
 import { utils } from '@opentiny/tiny-engine-utils'
 
-const { obJectCssToString } = utils
+const { objectCssToString } = utils
 const pageSchema: Record<string, any> = {}
 
 async function fetchPageSchema(pageId: string) {
@@ -34,7 +34,7 @@ export function initStyle(key: string, content: string | object) {
     document.head.appendChild(styleSheet)
   }
 
-  handleScopedCss(key, obJectCssToString(content)).then((scopedCss) => {
+  handleScopedCss(key, objectCssToString(content)).then((scopedCss) => {
     styleSheet.textContent = scopedCss.css
   })
 }

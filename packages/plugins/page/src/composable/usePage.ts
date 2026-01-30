@@ -115,14 +115,14 @@ export interface MaterialsOptions {
 }
 
 const generateCssString = (pageOptions: PageOptions, materialsOptions: MaterialsOptions) => {
-  let cssObject: any = {}
+  let cssObject: Record<string, any> = {}
   const parseStyle = (styleString: string) => {
-    const styleObj: any = {}
+    const styleObj: Record<string, string> = {}
     const styleItems = styleString.split(';')
     styleItems.forEach((item: string) => {
       if (item) {
         const stylekeyValue = item.split(':')
-        styleObj[stylekeyValue[0]] = stylekeyValue[1].trim()
+        styleObj[stylekeyValue[0].trim()] = stylekeyValue[1].trim()
       }
     })
     return styleObj
