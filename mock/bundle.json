@@ -3923,16 +3923,241 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataZoom",
+                            "label": {
+                              "text": {
+                                "zh_CN": "区域缩放轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据点文本样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "折线图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4013,21 +4238,441 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataRules",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据规则"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataZoom",
+                            "label": {
+                              "text": {
+                                "zh_CN": "区域缩放轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "direction",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体方向"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "language": "json",
+                                "options": [
+                                  {
+                                    "label": "vertical",
+                                    "value": "vertical"
+                                  },
+                                  {
+                                    "label": "horizontal",
+                                    "value": "horizontal"
+                                  }
+                                ]
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "柱体方向"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "label",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体文本"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "柱体文本，默认不显示"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "legend",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图例配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图例配置，默认显示"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "lineDataName",
+                            "label": {
+                              "text": {
+                                "zh_CN": "更改数据名"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "柱状图更改为折线图的数据名"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "markline",
+                            "label": {
+                              "text": {
+                                "zh_CN": "阈值线配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "type",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱状图类型"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "bar",
+                                    "value": "bar"
+                                  },
+                                  {
+                                    "label": "range",
+                                    "value": "range"
+                                  },
+                                  {
+                                    "label": "water-fall",
+                                    "value": "water-fall"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "柱状图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
             ],
-            "events": {}
+            "events": {
+              "onReady": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "每次渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，每次渲染都会触发一次"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              },
+              "onReadyOnce": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "首次渲染完成后触发"
+                },
+                "description": {
+                  "zh_CN": "图表渲染完成后触发，只会在首次渲染完成后触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                }
+              }
+            }
           },
           "configure": {
             "loop": true,
@@ -4103,16 +4748,241 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataZoom",
+                            "label": {
+                              "text": {
+                                "zh_CN": "区域缩放轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "条形图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4222,16 +5092,198 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "title",
+                            "label": {
+                              "text": {
+                                "zh_CN": "中心文本配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "描边配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "position",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表位置及大小"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "圆盘图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4312,16 +5364,198 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "position",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图标位置及大小"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "描边位置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "title",
+                            "label": {
+                              "text": {
+                                "zh_CN": "中心文本配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
-                      "zh_CN": "环形图配置"
+                      "zh_CN": "折线图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4441,16 +5675,199 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "area",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图形区域配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "radar",
+                            "label": {
+                              "text": {
+                                "zh_CN": "坐标系配置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "position",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表位置及大小"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{\n\r center: ['50%', '50%'], \n\r radius: '50%' \n\r}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "雷达图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4570,16 +5987,179 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "position",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表位置"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "size",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表大小"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "漏斗图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4660,16 +6240,241 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "bubbleSize",
+                            "label": {
+                              "text": {
+                                "zh_CN": "气泡大小范围"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[10, 70]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "节点图形样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "散点图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -4750,16 +6555,241 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "dataZoom",
+                            "label": {
+                              "text": {
+                                "zh_CN": "区域缩放轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "itemStyle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "柱体样式"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "xAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置x轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "默认值：图表数据data中data[0]对象的第一个key值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "yAxis",
+                            "label": {
+                              "text": {
+                                "zh_CN": "配置y轴"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "瀑布图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -5020,16 +7050,199 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "name",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表数据（必填）"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "state",
+                            "label": {
+                              "text": {
+                                "zh_CN": "根据状态设置颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "padding",
+                            "label": {
+                              "text": {
+                                "zh_CN": "图表内边距"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "[50, 20, 50, 20]",
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "进度图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
