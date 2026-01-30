@@ -1,5 +1,15 @@
 <template>
   <div class="object-group-container">
+    <div class="overall-conf-wrap">
+      <component
+        :is="CodeConfigurator"
+        :model-value="bindValue"
+        language="json"
+        label="整体配置"
+        @update:modelValue="onOptionsUpdate"
+      >
+      </component>
+    </div>
     <div v-for="(data, idx) in properties" :key="idx" class="meta-config-item">
       <config-item
         :key="idx"
@@ -15,8 +25,9 @@
   </div>
 </template>
 <script>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { ConfigItem } from '@opentiny/tiny-engine-common'
+import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'NestedPropertyConfigurator',
@@ -31,6 +42,8 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const CodeConfigurator = getConfigurator('CodeConfigurator')
+    const bindValue = ref(props.meta.widget.props?.modelValue)
     const properties = computed(() => {
       const result = [...(props.meta?.properties?.[0]?.content || [])]
       const propsModelValue = props.meta.widget.props?.modelValue
@@ -44,12 +57,19 @@ export default {
       }
       return result
     })
+
+    const onOptionsUpdate = (data) => {
+      emit('update:modelValue', data)
+    }
     const itemChange = (property, value) => {
       emit('update:modelValue', { ...props.meta.widget.props.modelValue, [property]: value })
     }
 
     return {
+      CodeConfigurator,
+      bindValue,
       properties,
+      onOptionsUpdate,
       itemChange
     }
   }
@@ -62,7 +82,11 @@ export default {
   flex-direction: column;
   height: calc(100% - 34px); // 34为头部+底部的高度
   overflow-y: auto;
-
+  .overall-conf-wrap {
+    top: -30px;
+    position: absolute;
+    right: 45px;
+  }
   .meta-config-item {
     flex: 1;
     padding: 0 10px;
