@@ -5,7 +5,7 @@
         :is="CodeConfigurator"
         :model-value="bindValue"
         language="json"
-        label="整体配置"
+        buttonText="整体配置"
         @update:modelValue="onOptionsUpdate"
       >
       </component>
