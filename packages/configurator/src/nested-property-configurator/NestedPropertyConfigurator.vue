@@ -19,7 +19,7 @@ import { computed } from 'vue'
 import { ConfigItem } from '@opentiny/tiny-engine-common'
 
 export default {
-  name: 'ObjectDepthConfigurator',
+  name: 'NestedPropertyConfigurator',
   components: {
     ConfigItem
   },
