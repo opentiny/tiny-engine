@@ -26,21 +26,20 @@ export default {
   props: {
     meta: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const properties = computed(() => {
-      const result = props.meta?.properties?.[0]?.content || []
+      const result = [...(props.meta?.properties?.[0]?.content || [])]
       const propsModelValue = props.meta.widget.props?.modelValue
 
       if (result.length && propsModelValue) {
         result.forEach((item) => {
           const modelValue = propsModelValue
           const model_value_property = modelValue[item.property]
-          item.widget.props.modelValue =
-            typeof model_value_property === 'boolean' ? model_value_property : model_value_property || null
+          item.widget.props.modelValue = typeof model_value_property === 'undefined' ? null : model_value_property
         })
       }
       return result
