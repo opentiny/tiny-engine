@@ -63,7 +63,7 @@ import {
   Popover as TinyPopover
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import axios from 'axios'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const props = defineProps({
   style: {
@@ -169,7 +169,7 @@ const insertApi = (data = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
     .then((res) => {
       if (res.code === 200) {
@@ -190,7 +190,7 @@ const updateApi = (data) => {
   }
   const id = data.id
   delete data.id
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       nameEn: tableModel.value.nameEn,
       data: data,
@@ -215,7 +215,7 @@ const queryApi = (
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
@@ -241,7 +241,8 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: { ...evidence, nameEn: tableModel.value.nameEn } })
+  return getMetaApi(META_SERVICE.Http)
+    .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
     .then((res) => {
       if (res.status === 200) {
         return res.data

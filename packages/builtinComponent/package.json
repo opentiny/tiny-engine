@@ -22,7 +22,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.28.0",
+    "@opentiny/tiny-engine-meta-register": "workspace:*",
     "vite-plugin-css-injected-by-js": "^3.3.1"
   },
   "devDependencies": {

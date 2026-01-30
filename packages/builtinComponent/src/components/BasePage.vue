@@ -179,7 +179,7 @@ import {
   Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import axios from 'axios'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const props = defineProps({
   style: {
@@ -302,9 +302,10 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
+      console.log(res)
       if (res.code === 200) {
         Notify({
           type: 'success',
@@ -328,13 +329,14 @@ const updateApi = (data = addFormData.value) => {
   }
   const id = data.id
   delete data.id
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       nameEn: pageModel.value.nameEn,
       data: data,
       params: { id }
     })
     .then((res) => {
+      console.log(res)
       if (res.code === 200) {
         Notify({
           type: 'success',
@@ -356,7 +358,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
@@ -365,6 +367,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
       params: data
     })
     .then((res) => {
+      console.log(res)
       if (res.code === 200) {
         tableData.value = res.data.list
         pagerState.total = res.data.total
@@ -383,9 +386,10 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
+      console.log(res)
       if (res.code === 200) {
         Notify({
           type: 'success',

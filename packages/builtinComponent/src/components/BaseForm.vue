@@ -62,7 +62,7 @@ import {
   Row as TinyRow,
   Col as TinyCol
 } from '@opentiny/vue'
-import axios from 'axios'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const props = defineProps({
   style: {
@@ -115,7 +115,7 @@ const insertApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: formModel.value.nameEn, params: data })
     .then((res) => {
       if (res.code === 200) {
@@ -136,7 +136,7 @@ const updateApi = (data = modelData.value) => {
   }
   const id = data.id
   delete data.id
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       nameEn: formModel.value.nameEn,
       data: data,
@@ -159,7 +159,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
@@ -183,7 +183,7 @@ const deleteApi = () => {
   if (!apiInfo) {
     return undefined
   }
-  return axios
+  return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { id: modelData.value?.id, nameEn: formModel.value.nameEn })
     .then((res) => {
       if (res.code === 200) {
