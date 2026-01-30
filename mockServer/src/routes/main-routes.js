@@ -247,4 +247,21 @@ router.get('/material-center/api/business-category/find', async (ctx) => {
   ctx.body = await mockService.templateService.searchGroup(group)
 })
 
+router.post('/material-center/api/model/create', async (ctx) => {
+  ctx.body = await mockService.modelService.create(ctx.request.body)
+})
+
+router.delete('/material-center/api/model/delete/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.modelService.delete(id)
+})
+
+router.get('/material-center/api/model/list', async (ctx) => {
+  ctx.body = await mockService.modelService.list(ctx.request.body)
+})
+
+router.put('/material-center/api/model/update/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.modelService.update(id, ctx.request.body)
+})
 export default router

@@ -18,6 +18,7 @@ import BlockGroupService from './blockGroup'
 import BlockCategoryService from './blockCategory'
 import Schema2CodeServcice from './schema2code'
 import TemplateService from './template'
+import ModelService from './model'
 
 export default class MockService {
   schema2codeService
@@ -29,6 +30,7 @@ export default class MockService {
   blockGroupService
   blockCategoryService
   TemplateService
+  ModelService
 
   constructor() {
     this.schema2codeService = new Schema2CodeServcice()
@@ -40,5 +42,6 @@ export default class MockService {
     this.blockGroupService = new BlockGroupService()
     this.blockCategoryService = new BlockCategoryService()
     this.templateService = new TemplateService()
+    this.modelService = new ModelService()
   }
 }
