@@ -310,7 +310,7 @@ const insertApi = (data = addFormData.value) => {
         message: '新增成功',
         position: 'top-right'
       })
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -336,7 +336,7 @@ const updateApi = (data = addFormData.value) => {
         message: '修改成功',
         position: 'top-right'
       })
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -357,10 +357,10 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
       params: data
     })
     .then((res) => {
-      tableData.value = res.data.list
-      pagerState.total = res.data.total
+      tableData.value = res.list
+      pagerState.total = res.total
       emit('update:tableData', tableData.value)
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -380,7 +380,7 @@ const deleteApi = (evidence) => {
         message: '已删除',
         position: 'top-right'
       })
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)

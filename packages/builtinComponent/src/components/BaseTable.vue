@@ -172,7 +172,7 @@ const insertApi = (data = {}) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
     .then((res) => {
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -193,7 +193,7 @@ const updateApi = (data) => {
       params: { id }
     })
     .then((res) => {
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -216,9 +216,9 @@ const queryApi = (
       params: data
     })
     .then((res) => {
-      tableData.value = res.data.list
-      pagerState.total = res.data.total
-      return res.data
+      tableData.value = res.list
+      pagerState.total = res.total
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -233,7 +233,7 @@ const deleteApi = (evidence) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
     .then((res) => {
-      return res.data
+      return res
     })
     .catch((err) => {
       throw new Error(err)
