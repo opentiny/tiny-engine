@@ -8,12 +8,21 @@ import { MCPHost } from '../../services/MCPHost'
 
 const mcpHost = new MCPHost()
 
+const defaultMcpIcon =
+  'https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/opentiny-tinyengine-logo-4f8a3801.svg'
+
+enum PluginAddState {
+  Added = 'added',
+  Idle = 'idle',
+  Loading = 'loading'
+}
+
 const ENGINE_MCP_SERVER: PluginInfo = {
   id: 'tiny-engine-mcp-server',
   name: 'Tiny Engine MCP 工具',
-  icon: 'https://res.hc-cdn.com/lowcode-portal/1.1.80.20250515160330/assets/opentiny-tinyengine-logo-4f8a3801.svg',
+  icon: defaultMcpIcon,
   description: '使用TinyEngine设计器能力，如操作画布、编辑页面等',
-  addState: 'added'
+  addState: PluginAddState.Added
 }
 
 const inUseMcpServers = ref<PluginInfo[]>([{ ...ENGINE_MCP_SERVER, enabled: true, expanded: true, tools: [] }])
@@ -94,13 +103,13 @@ const updateMcpServerToggle = async (server: PluginInfo, enabled: boolean) => {
 
 const updateMcpServerStatus = async (server: PluginInfo, added: boolean) => {
   // 市场添加状态修改
-  server.addState = added ? 'added' : 'idle'
+  server.addState = added ? PluginAddState.Added : PluginAddState.Idle
   if (added) {
     const newServer: PluginInfo = {
       ...server,
       id: server.id || `mcp-server-${Date.now()}`,
       enabled: true,
-      addState: 'added',
+      addState: PluginAddState.Added,
       expanded: false,
       tools: server.tools || []
     }
@@ -129,37 +138,34 @@ const updateMcpServerToolStatus = (currentServer: PluginInfo, toolId: string, en
 }
 
 const updateCustomMcpServers = async () => {
-  const customMcpServers = getRobotServiceOptions().mcpConfig?.mcpServers || {}
-  if (Object.keys(customMcpServers).length > 0) {
-    if (
-      Object.values(customMcpServers).some(
-        (server) => !['streamablehttp', 'sse'].includes(server.type?.toLowerCase()) || !server.url
-      )
-    ) {
-      return {
-        result: 'failed',
-        message: '解析JSON失败，缺少type或url字段'
-      }
+  const mcpServersConfig = getRobotServiceOptions().mcpConfig?.mcpServers || {}
+  if (!Object.keys(mcpServersConfig).length) return
+  const customMcpServers = Object.entries(mcpServersConfig).map(([id, config]) => ({ id, ...config }))
+  const logger = console
+
+  customMcpServers.forEach((server) => {
+    if (!['streamablehttp', 'sse'].includes(server.type?.toLowerCase()) || !server.url) {
+      logger.error(`解析mcpServer: ${server.id} 配置失败，type/url字段缺失或有误.`)
+      return
     }
-    for (const [serverName, server] of Object.entries(customMcpServers)) {
-      if (inUseMcpServers.value.find((s) => s.id === serverName)) {
-        continue
-      }
-      const newServer: PluginInfo = {
-        id: serverName,
-        name: serverName,
-        icon: server.icon,
-        description: server.description,
-        enabled: false,
-        addState: 'added',
-        expanded: false,
-        type: server.type,
-        url: server.url,
-        tools: []
-      }
-      inUseMcpServers.value.push(newServer)
+
+    if (inUseMcpServers.value.find((s) => s.id === server.id)) {
+      return
     }
-  }
+    const newServer: PluginInfo = {
+      id: server.id,
+      name: server.name || server.id,
+      icon: server.icon || defaultMcpIcon,
+      description: server.description || '',
+      enabled: false,
+      addState: PluginAddState.Added,
+      expanded: false,
+      type: server.type,
+      url: server.url,
+      tools: []
+    }
+    inUseMcpServers.value.push(newServer)
+  })
 }
 
 const connectMcpServer = (server: PluginInfo) => {
