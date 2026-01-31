@@ -62,7 +62,7 @@
         <template v-for="item in templateList" :key="item.id">
           <div class="item" @click="handleClickTemplate(item)">
             <div class="template-img">
-              <img :src="item.image_url || state.defaultImg" />
+              <img :src="item.image_url || defaultTemplateImg" />
             </div>
             <div class="item-content">
               <div class="template-name">
@@ -115,6 +115,7 @@ import { SearchEmpty } from '@opentiny/tiny-engine-common'
 import TemplateDetail from './TemplateDetail.vue'
 import { fetchBusinessCategoryByGroup, fetchTemplateList } from './js/http'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import defaultTemplateImg from '../assets/template-default.png'
 
 export default {
   components: {
@@ -144,8 +145,7 @@ export default {
       total: 0,
       currentPage: 1,
       pageSize: 10,
-      pageSizes: [10, 20, 30, 40],
-      defaultImg: 'https://tinyengine-assets.obs.myhuaweicloud.com/files/images/img-251230.png'
+      pageSizes: [10, 20, 30, 40]
     })
 
     const getTagsList = async () => {
@@ -173,7 +173,7 @@ export default {
         industryId: state.industry,
         framework: state.framework
       }
-      fetchTemplateList(Object.fromEntries(Object.entries(params).filter(([, value]) => !!value)))
+      fetchTemplateList(Object.fromEntries(Object.entries(params).filter(([, value]) => Boolean(value))))
         .then((res) => {
           templateList.value = res.apps || []
           state.total = res.total
@@ -223,6 +223,7 @@ export default {
     })
 
     return {
+      defaultTemplateImg,
       templateList,
       state,
       tagList,
