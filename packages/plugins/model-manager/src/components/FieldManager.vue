@@ -1,6 +1,6 @@
 <template>
   <div class="section">
-    <tiny-button size="mini" @click="$emit('add-field')"> <svg-icon name="add"></svg-icon> 添加字段 </tiny-button>
+    <tiny-button class="add-field-btn" size="mini" @click="$emit('add-field')"> <svg-icon name="add"></svg-icon> 添加字段 </tiny-button>
     <div class="field-table">
       <tiny-grid
         :data="model.parameters"

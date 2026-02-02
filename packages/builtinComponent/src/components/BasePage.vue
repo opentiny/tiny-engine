@@ -305,6 +305,7 @@ const insertApi = (data = addFormData.value) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
+      console.log(res)
       Notify({
         type: 'success',
         message: '新增成功',
@@ -331,6 +332,7 @@ const updateApi = (data = addFormData.value) => {
       params: { id }
     })
     .then((res) => {
+      console.log(res)
       Notify({
         type: 'success',
         message: '修改成功',
@@ -357,6 +359,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
       params: data
     })
     .then((res) => {
+      console.log(res)
       tableData.value = res.list
       pagerState.total = res.total
       emit('update:tableData', tableData.value)
@@ -375,6 +378,7 @@ const deleteApi = (evidence) => {
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
+      console.log(res)
       Notify({
         type: 'success',
         message: '已删除',
