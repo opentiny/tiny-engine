@@ -68,15 +68,15 @@
   </div>
 </template>
 
-<script>
-import { ref, computed, onMounted } from 'vue'
+<script lang="ts">
+import { ref, computed, onMounted, type Component } from 'vue'
 import { iconArrowLeft } from '@opentiny/vue-icon'
 import { getMetaApi, META_SERVICE, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 
 export default {
   components: {
-    TinyPopover: Popover,
+    TinyPopover: Popover as Component,
     TinyIconArrowLeft: iconArrowLeft()
   },
   props: {
@@ -111,13 +111,15 @@ export default {
           })
         : []
     })
-    const tenantValue = computed(() =>
-      enableLogin
-        ? getBaseInfo().tenantId
-          ? tenantList.value.find((item) => item.id === getBaseInfo().tenantId) || { id: '', label: '请选择组织' }
-          : tenantList.value[0]
-        : { ...getBaseInfo(), label: 'Public' }
-    )
+    const tenantValue = computed(() => {
+      if (!enableLogin) {
+        return { ...getBaseInfo(), label: 'Public' }
+      }
+
+      return getBaseInfo().tenantId
+        ? tenantList.value.find((item) => item.id === getBaseInfo().tenantId) || { id: '', label: '请选择组织' }
+        : tenantList.value[0]
+    })
 
     const changeTenant = (id) => {
       const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`

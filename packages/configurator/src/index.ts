@@ -33,6 +33,7 @@ import TabBarConfigurator from './tab-bar-configurator/TabBarConfigurator.vue'
 import BindVariableConfigurator from './bind-variable-configurator/BindVariableConfigurator.vue'
 import ModelConfigurator from './model-configurator/ModelConfigurator.vue'
 import ModelApiConfigurator from './model-api-configurator/ModelApiConfigurator.vue'
+import NestedPropertyConfigurator from './nested-property-configurator/NestedPropertyConfigurator.vue'
 import OperatorGroupConfigurator from './operator-group-configurator/OperatorGroupConfigurator.vue'
 import BasicTagConfigurator from './basic-tag-configurator/BasicTagConfigurator.vue'
 import ClassConfigurator from './class-configurator/ClassConfigurator.vue'
@@ -77,6 +78,7 @@ export {
   BindVariableConfigurator,
   ModelConfigurator,
   ModelApiConfigurator,
+  NestedPropertyConfigurator,
   OperatorGroupConfigurator,
   BasicTagConfigurator,
   ClassConfigurator,

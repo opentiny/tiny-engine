@@ -17,7 +17,7 @@
         :show-market-tab="false"
         @plugin-expand="handlePluginExpand"
         @plugin-add="updateMcpServerStatus"
-        @plugin-toggle="handlePluginToggle"
+        @plugin-toggle="updateMcpServerToggle"
         @tool-toggle="updateMcpServerToolStatus"
       />
     </div>
@@ -51,13 +51,9 @@ const {
   inUseMcpServers: installedPlugins,
   refreshMcpServerTools,
   updateMcpServerToolStatus,
-  updateMcpServerStatus
+  updateMcpServerStatus,
+  updateMcpServerToggle
 } = useMcpServer()
-
-// 插件状态切换
-const handlePluginToggle = (plugin: PluginInfo, enabled: boolean) => {
-  plugin.enabled = enabled
-}
 
 // 插件展开状态变化
 const handlePluginExpand = (plugin: PluginInfo, expanded: boolean) => {
