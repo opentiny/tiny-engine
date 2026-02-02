@@ -49,7 +49,7 @@ export default {
   setup(props, { emit }) {
     const insertApi = () => {
       return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data', {
+        .post('/platform-center/api/model-data/insertApi', {
           nameEn: 'staff',
           params: {
             id: 122,
@@ -73,7 +73,7 @@ export default {
 
     const updateApi = () => {
       return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data', {
+        .post('/platform-center/api/model-data/updateApi', {
           nameEn: 'staff',
           data: {
             name: 'jeff',
@@ -97,7 +97,7 @@ export default {
 
     const queryApi = () => {
       return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data', {
+        .post('/platform-center/api/model-data/queryApi', {
           currentPage: 1,
           pageSize: 10,
           nameEn: 'staff',
@@ -118,7 +118,7 @@ export default {
 
     const deleteApi = () => {
       return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data', { id: 122, nameEn: 'staff' })
+        .post('/platform-center/api/model-data/deleteApi', { id: 122, nameEn: 'staff' })
         .then((res) => {
           console.log(res)
           Notify({
