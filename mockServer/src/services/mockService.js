@@ -11,27 +11,37 @@
  */
 import PageService from './pages'
 import AppService from './app'
+import AppsService from './apps'
 import BlockService from './block'
 import SourceService from './source'
 import BlockGroupService from './blockGroup'
 import BlockCategoryService from './blockCategory'
 import Schema2CodeServcice from './schema2code'
+import TemplateService from './template'
+import ModelService from './model'
+
 export default class MockService {
   schema2codeService
   pageService
   appService
+  AppsService
   blockService
   sourceService
   blockGroupService
   blockCategoryService
+  TemplateService
+  ModelService
 
   constructor() {
     this.schema2codeService = new Schema2CodeServcice()
     this.pageService = new PageService()
     this.appService = new AppService()
+    this.appsService = new AppsService()
     this.blockService = new BlockService()
     this.sourceService = new SourceService()
     this.blockGroupService = new BlockGroupService()
     this.blockCategoryService = new BlockCategoryService()
+    this.templateService = new TemplateService()
+    this.modelService = new ModelService()
   }
 }

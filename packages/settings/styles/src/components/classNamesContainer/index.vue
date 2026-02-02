@@ -450,9 +450,9 @@ watchEffect(() => {
 const save = ({ content }) => {
   const { styleObject } = parser(content)
   const cssObject = {}
-  for (const styleKey in styleObject) {
+  Object.keys(styleObject).forEach((styleKey) => {
     cssObject[styleKey] = styleObject[styleKey].rules
-  }
+  })
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()
