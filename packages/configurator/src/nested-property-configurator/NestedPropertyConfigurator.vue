@@ -1,9 +1,5 @@
 <template>
   <div class="object-group-container">
-    <button @click="insertApi">新增</button>
-    <button @click="updateApi">修改</button>
-    <button @click="queryApi">查询</button>
-    <button @click="deleteApi">删除</button>
     <div class="overall-conf-wrap">
       <component
         :is="CodeConfigurator"
@@ -31,8 +27,7 @@
 <script>
 import { ref, computed } from 'vue'
 import { ConfigItem } from '@opentiny/tiny-engine-common'
-
-import { getConfigurator, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'NestedPropertyConfigurator',
@@ -47,90 +42,6 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const insertApi = () => {
-      return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data/insertApi', {
-          nameEn: 'staff',
-          params: {
-            id: 122,
-            name: 'leon',
-            status: '1'
-          }
-        })
-        .then((res) => {
-          console.log(res)
-          Notify({
-            type: 'success',
-            message: '新增成功',
-            position: 'top-right'
-          })
-          return res
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-
-    const updateApi = () => {
-      return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data/updateApi', {
-          nameEn: 'staff',
-          data: {
-            name: 'jeff',
-            status: '1'
-          },
-          params: { id: 122 }
-        })
-        .then((res) => {
-          console.log(res)
-          Notify({
-            type: 'success',
-            message: '修改成功',
-            position: 'top-right'
-          })
-          return res
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-
-    const queryApi = () => {
-      return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data/queryApi', {
-          currentPage: 1,
-          pageSize: 10,
-          nameEn: 'staff',
-          nameCn: '员工',
-          params: {
-            name: null
-          }
-        })
-        .then((res) => {
-          console.log(res)
-          return res
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
-
-    const deleteApi = () => {
-      return getMetaApi(META_SERVICE.Http)
-        .post('/platform-center/api/model-data/deleteApi', { id: 122, nameEn: 'staff' })
-        .then((res) => {
-          console.log(res)
-          Notify({
-            type: 'success',
-            message: '已删除',
-            position: 'top-right'
-          })
-          return res
-        })
-        .catch((err) => {
-          throw new Error(err)
-        })
-    }
     const CodeConfigurator = getConfigurator('CodeConfigurator')
     const bindValue = ref(props.meta.widget.props?.modelValue)
     const properties = computed(() => {
@@ -159,11 +70,7 @@ export default {
       bindValue,
       properties,
       onOptionsUpdate,
-      itemChange,
-      insertApi,
-      queryApi,
-      deleteApi,
-      updateApi
+      itemChange
     }
   }
 }

@@ -151,13 +151,18 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
+  // 处理查询参数
+  const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
       nameEn: formModel.value.nameEn,
       nameCn: formModel.value.nameCn,
-      params: data || modelData.value
+      params: {
+        ...params,
+        ...(data || modelData.value)
+      }
     })
     .then((res) => {
       return res

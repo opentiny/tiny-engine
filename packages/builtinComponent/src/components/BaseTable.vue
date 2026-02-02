@@ -207,13 +207,18 @@ const queryApi = (
   if (!apiInfo) {
     return undefined
   }
+  // 处理查询参数
+  const params = Object.fromEntries(tableModel.value.parameters.map((item) => [item.prop, null]))
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
       nameEn: tableModel.value.nameEn,
       nameCn: tableModel.value.nameCn,
-      params: data
+      params: {
+        ...params,
+        ...data
+      }
     })
     .then((res) => {
       tableData.value = res.list
