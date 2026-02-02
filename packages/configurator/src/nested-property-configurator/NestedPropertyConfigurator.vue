@@ -102,7 +102,9 @@ export default {
           pageSize: 10,
           nameEn: 'staff',
           nameCn: '员工',
-          params: {}
+          params: {
+            name: null
+          }
         })
         .then((res) => {
           console.log(res)
