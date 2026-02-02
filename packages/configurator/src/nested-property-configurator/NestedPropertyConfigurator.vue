@@ -106,9 +106,6 @@ export default {
         })
         .then((res) => {
           console.log(res)
-          tableData.value = res.list
-          pagerState.total = res.total
-          emit('update:tableData', tableData.value)
           return res
         })
         .catch((err) => {
