@@ -41,10 +41,9 @@
           "articles": [
             { "title": "区块管理", "name": "block-management.md" },
             { "title": "使用JS面板和事件绑定", "name": "js-panel-and-event-binding.md" },
-            { "title": "使用工具类方法 utils", "name": "using-utils-methods.md" },
             {
-              "title": "模型驱动",
-              "name": "model-driven.md"
+              "title": "使用工具类方法 utils",
+              "name": "using-utils-methods.md"
             },
             { "title": "高级面板设置", "name": "advanced-panel-settings.md" },
             { "title": "如何使用插槽", "name": "how-to-use-slots.md" },
