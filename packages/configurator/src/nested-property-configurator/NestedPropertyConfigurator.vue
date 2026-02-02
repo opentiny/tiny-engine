@@ -1,5 +1,9 @@
 <template>
   <div class="object-group-container">
+    <button @click="insertApi">新增</button>
+    <button @click="updateApi">修改</button>
+    <button @click="queryApi">查询</button>
+    <button @click="deleteApi">删除</button>
     <div class="overall-conf-wrap">
       <component
         :is="CodeConfigurator"
@@ -42,6 +46,91 @@ export default {
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const insertApi = () => {
+      return getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/model-data', {
+          nameEn: 'staff',
+          params: {
+            id: 122,
+            name: 'leon',
+            status: '1'
+          }
+        })
+        .then((res) => {
+          console.log(res)
+          Notify({
+            type: 'success',
+            message: '新增成功',
+            position: 'top-right'
+          })
+          return res
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+
+    const updateApi = () => {
+      return getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/model-data', {
+          nameEn: 'staff',
+          data: {
+            name: 'jeff',
+            status: '1'
+          },
+          params: { id: 122 }
+        })
+        .then((res) => {
+          console.log(res)
+          Notify({
+            type: 'success',
+            message: '修改成功',
+            position: 'top-right'
+          })
+          return res
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+
+    const queryApi = () => {
+      return getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/model-data', {
+          currentPage: 1,
+          pageSize: 10,
+          nameEn: 'staff',
+          nameCn: '员工',
+          params: {}
+        })
+        .then((res) => {
+          console.log(res)
+          tableData.value = res.list
+          pagerState.total = res.total
+          emit('update:tableData', tableData.value)
+          return res
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
+
+    const deleteApi = () => {
+      return getMetaApi(META_SERVICE.Http)
+        .post('/platform-center/api/model-data', { id: 122, nameEn: 'staff' })
+        .then((res) => {
+          console.log(res)
+          Notify({
+            type: 'success',
+            message: '已删除',
+            position: 'top-right'
+          })
+          return res
+        })
+        .catch((err) => {
+          throw new Error(err)
+        })
+    }
     const CodeConfigurator = getConfigurator('CodeConfigurator')
     const bindValue = ref(props.meta.widget.props?.modelValue)
     const properties = computed(() => {
@@ -70,7 +159,11 @@ export default {
       bindValue,
       properties,
       onOptionsUpdate,
-      itemChange
+      itemChange,
+      insertApi,
+      queryApi,
+      deleteApi,
+      updateApi
     }
   }
 }
