@@ -31,7 +31,8 @@
 <script>
 import { ref, computed } from 'vue'
 import { ConfigItem } from '@opentiny/tiny-engine-common'
-import { getConfigurator } from '@opentiny/tiny-engine-meta-register'
+
+import { getConfigurator, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   name: 'NestedPropertyConfigurator',
