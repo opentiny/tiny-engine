@@ -51,6 +51,7 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-toolbar-save': path.resolve(basePath, 'packages/toolbars/save/index.ts'),
     '@opentiny/tiny-engine-toolbar-setting': path.resolve(basePath, 'packages/toolbars/setting/index.ts'),
     '@opentiny/tiny-engine-toolbar-collaboration': path.resolve(basePath, 'packages/toolbars/collaboration/index.ts'),
+    '@opentiny/tiny-engine-toolbar-user': path.resolve(basePath, 'packages/toolbars/user/index.ts'),
     '@opentiny/tiny-engine-theme-base': path.resolve(basePath, 'packages/theme/base/src/index.ts'),
     '@opentiny/tiny-engine-svgs': path.resolve(basePath, 'packages/svgs/index.ts'),
     '@opentiny/tiny-engine-canvas/render': path.resolve(basePath, 'packages/canvas/render/index.ts'),
@@ -61,7 +62,15 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-meta-register': path.resolve(basePath, 'packages/register/src/index.ts'),
     '@opentiny/tiny-engine-layout': path.resolve(basePath, 'packages/layout/index.ts'),
     '@opentiny/tiny-engine-configurator': path.resolve(basePath, 'packages/configurator/src/index.ts'),
-    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts')
+    '@opentiny/tiny-engine-block-compiler': path.resolve(basePath, 'packages/block-compiler/src/index.ts'),
+    '@opentiny/tiny-engine-workspace-application-center': path.resolve(
+      basePath,
+      'packages/workspace/application-center/index.ts'
+    ),
+    '@opentiny/tiny-engine-workspace-template-center': path.resolve(
+      basePath,
+      'packages/workspace/template-center/index.ts'
+    )
   }
 }
 

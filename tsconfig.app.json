@@ -1,18 +1,16 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "extends": ["@vue/tsconfig/tsconfig.dom.json", "./tsconfig.base.json"],
   "compilerOptions": {
-    "composite": true,
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "noEmit": true,
     "noFallthroughCasesInSwitch": true,
-
     "allowJs": true,
     "baseUrl": "./",
-    "jsx": "react-jsx",
+    "jsx": "preserve",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "paths": {
       "@/*": ["packages/*"],
       "@opentiny/tiny-engine": ["packages/design-core/index.js"],
@@ -52,7 +50,10 @@
       "@opentiny/tiny-engine-toolbar-save": ["packages/toolbars/save/index"],
       "@opentiny/tiny-engine-toolbar-theme-switch": ["packages/toolbars/themeSwitch/index"],
       "@opentiny/tiny-engine-toolbar-view-setting": ["packages/toolbars/view-setting/index"],
-      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"]
+      "@opentiny/tiny-engine-toolbar-user": ["packages/toolbars/user/index"],
+      "@opentiny/tiny-engine-utils": ["packages/utils/src/index"],
+      "@opentiny/tiny-engine-workspace-template-center": ["packages/workspace/template-center/index"],
+      "@opentiny/tiny-engine-workspace-application-center": ["packages/workspace/application-center/index"],
     }
   },
   "include": ["packages/**/*"],

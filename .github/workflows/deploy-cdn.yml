@@ -1,0 +1,168 @@
+name: Deploy to CDN
+
+on:
+  workflow_dispatch:
+    inputs:
+      is_latest_release:
+        description: '当前分支是否是最新release版本'
+        required: true
+        default: true
+        type: boolean
+
+env:
+  HUAWEI_CLOUD_AK: ${{ secrets.HUAWEI_CLOUD_AK }}
+  HUAWEI_CLOUD_SK: ${{ secrets.HUAWEI_CLOUD_SK }}
+  HUAWEI_CLOUD_ENDPOINT: ${{ secrets.HUAWEI_CLOUD_ENDPOINT }}
+  HUAWEI_CLOUD_BUCKET: ${{ secrets.HUAWEI_CLOUD_BUCKET }}
+
+jobs:
+  check-secrets:
+    runs-on: ubuntu-latest
+    outputs:
+      secrets-ready: ${{ steps.check.outputs.secrets-ready }}
+    steps:
+      - name: Check required secrets
+        id: check
+        run: |
+          if [[ -z "${{ secrets.HUAWEI_CLOUD_AK }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_SK }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_ENDPOINT }}" ]] || \
+             [[ -z "${{ secrets.HUAWEI_CLOUD_BUCKET }}" ]]; then
+            echo "secrets-ready=false" >> $GITHUB_OUTPUT
+            echo "::error::Required Huawei Cloud secrets are not configured."
+            echo "::error::Please set: HUAWEI_CLOUD_AK, HUAWEI_CLOUD_SK, HUAWEI_CLOUD_ENDPOINT, HUAWEI_CLOUD_BUCKET"
+            exit 1
+          fi
+          echo "secrets-ready=true" >> $GITHUB_OUTPUT
+          echo "✅ All required secrets are configured"
+
+  build:
+    runs-on: ubuntu-latest
+    needs: check-secrets
+    outputs:
+      version-timestamp: ${{ steps.prepare-version.outputs.version_timestamp }}
+      cdn-base: ${{ steps.prepare-version.outputs.cdn_base }}
+      cdn-base-latest: ${{ steps.prepare-version.outputs.cdn_base_latest }}
+      obs-path: ${{ steps.prepare-version.outputs.obs_path }}
+      obs-path-latest: ${{ steps.prepare-version.outputs.obs_path_latest }}
+    concurrency:
+      group: deploy-cdn
+      cancel-in-progress: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: add environment variable
+        run: |
+          VITE_ORIGIN_URL="https://agent.opentiny.design/"
+          cat <<EOF >> designer-demo/env/.env.alpha
+          # ---- appended by CI (deploy-cdn) ----
+          VITE_ORIGIN=$VITE_ORIGIN_URL
+          EOF
+          echo "VITE_ORIGIN_URL=$VITE_ORIGIN_URL"
+
+      - id: prepare-version
+        name: Prepare version-timestamp
+        run: |
+          # Extract version from package.json
+          VERSION=$(node -p "require('./designer-demo/package.json').version")
+
+          # Generate timestamp in YYYYMMDD-HHMMSS format
+          TIMESTAMP=$(TZ="Asia/Shanghai" date +%Y%m%d-%H%M%S)
+
+          # Combine for version-timestamp
+          VERSION_TIMESTAMP="${VERSION}-${TIMESTAMP}"
+
+          # Set CDN base path
+          CDN_BASE="https://res-static.opentiny.design/tiny-engine-designer/${VERSION_TIMESTAMP}/"
+          CDN_BASE_LATEST="https://res-static.opentiny.design/tiny-engine-designer/latest/"
+          OBS_PATH="tiny-engine-designer/${VERSION_TIMESTAMP}/"
+          OBS_PATH_LATEST="tiny-engine-designer/latest"
+
+          # Export as environment variables for subsequent steps
+          echo "VERSION_TIMESTAMP=$VERSION_TIMESTAMP" >> $GITHUB_ENV
+          echo "CDN_BASE=$CDN_BASE" >> $GITHUB_ENV
+          echo "OBS_PATH=$OBS_PATH" >> $GITHUB_ENV
+
+          # Set outputs for job-level export
+          echo "version_timestamp=$VERSION_TIMESTAMP" >> $GITHUB_OUTPUT
+          echo "cdn_base=$CDN_BASE" >> $GITHUB_OUTPUT
+          echo "cdn_base_latest=$CDN_BASE_LATEST" >> $GITHUB_OUTPUT
+          echo "obs_path=$OBS_PATH" >> $GITHUB_OUTPUT
+          echo "obs_path_latest=$OBS_PATH_LATEST" >> $GITHUB_OUTPUT
+
+          echo "Version-Timestamp: $VERSION_TIMESTAMP"
+          echo "CDN Base: $CDN_BASE"
+          echo "OBS Path: $OBS_PATH"
+
+      - name: Run Build
+        run: |
+          set -eo pipefail
+          pnpm run build:plugin 2>&1 | tee /tmp/build-plugin.log
+          # Run build:alpha equivalent with --base parameter
+          pnpm run build:alpha --base=${{ env.CDN_BASE }} 2>&1 | tee /tmp/build-alpha.log
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: designer-demo-dist
+          path: ./designer-demo/dist/
+          retention-days: 1
+
+  deploy-cdn:
+    runs-on: ubuntu-latest
+    needs: [check-secrets, build]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: designer-demo-dist
+          path: ./designer-demo/dist/
+
+      - name: Install obsutil
+        run: |
+          curl -o obsutil.tar.gz https://obs-community.obs.cn-north-1.myhuaweicloud.com/obsutil/current/obsutil_linux_amd64.tar.gz
+          tar -xzf obsutil.tar.gz
+          chmod +x obsutil_linux_amd64_*/obsutil
+          sudo mv obsutil_linux_amd64_*/obsutil /usr/local/bin/obsutil
+
+      - name: Configure and Upload to OBS
+        run: |
+          obsutil config -i=${{ env.HUAWEI_CLOUD_AK }} \
+                         -k=${{ env.HUAWEI_CLOUD_SK }} \
+                         -e=${{ env.HUAWEI_CLOUD_ENDPOINT }}
+          # Upload to versioned path
+          obsutil cp ./designer-demo/dist \
+                    obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }} \
+                    -r -f -flat
+
+          # If is_latest_release is true, also upload to latest path
+          if [ "${{ github.event.inputs.is_latest_release }}" = "true" ]; then
+            # use cdn-base-latest replace cdn-base in all ./designer-demo/dist files
+            find ./designer-demo/dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.mjs" -o -name "*.css" \) \
+              -exec sed -i "s|${{ needs.build.outputs.cdn-base }}|${{ needs.build.outputs.cdn-base-latest }}|g" {} +
+            obsutil cp ./designer-demo/dist \
+                      obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path-latest }} \
+                      -r -f -flat
+          fi
+
+          echo "Uploaded to: obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }}"
+          echo "CDN URL: https://res-static.opentiny.design/${{ needs.build.outputs.obs-path }}"

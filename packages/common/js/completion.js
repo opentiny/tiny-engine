@@ -10,14 +10,7 @@
  *
  */
 import { ref } from 'vue'
-import {
-  useCanvas,
-  useResource,
-  useRobot,
-  getMergeMeta,
-  getMetaApi,
-  META_SERVICE
-} from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useResource, getMergeMeta, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import completion from './completion-files/context.md?raw'
 
 const keyWords = [
@@ -195,7 +188,7 @@ const generateBaseReference = () => {
 }
 
 const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
-  const { completeModel, apiKey, baseUrl } = useRobot().robotSettingState?.selectedModel || {}
+  const { completeModel, apiKey, baseUrl } = getMetaApi(META_SERVICE.Robot).getSelectedQuickModelInfo() || {}
   if (!completeModel || !apiKey || !baseUrl) {
     return
   }
@@ -218,7 +211,7 @@ const fetchAiInlineCompletion = (codeBeforeCursor, codeAfterCursor) => {
     {
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`
+        Authorization: `Bearer ${apiKey || ''}`
       }
     }
   )

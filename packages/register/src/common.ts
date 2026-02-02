@@ -85,7 +85,7 @@ const registryApiAndOptionsMap = (id: string, value: any) => {
   }
 }
 
-const genDefaultHashMap = (registry: any) => {
+const genDefaultHashMap = (registry: Record<string, any>) => {
   Object.entries(registry).forEach(([key, value]) => {
     if (typeof value === 'object' && value && !isRef(value)) {
       const { id } = value

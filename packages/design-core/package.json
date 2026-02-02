@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -87,8 +87,11 @@
     "@opentiny/tiny-engine-toolbar-setting": "workspace:*",
     "@opentiny/tiny-engine-toolbar-theme-switch": "workspace:*",
     "@opentiny/tiny-engine-toolbar-view-setting": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-user": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
+    "@opentiny/tiny-engine-workspace-template-center": "workspace:*",
+    "@opentiny/tiny-engine-workspace-application-center": "workspace:*",
     "@vue/repl": "4.6.1",
     "@vueuse/core": "^9.6.0",
     "element-resize-detector": "^1.2.4",
@@ -121,7 +124,8 @@
     "@opentiny/vue-renderless": "^3.20.0",
     "@opentiny/vue-runtime": "^3.20.0",
     "@opentiny/vue-theme": "^3.20.0",
-    "vue": "^3.4.23"
+    "vue": "^3.4.23",
+    "vue-router": "4.6.3"
   },
   "browserslist": [
     "> 1%",

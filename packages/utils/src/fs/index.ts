@@ -20,11 +20,10 @@ export const isSupportFileSystemAccess =
 
 /**
  * 获取用户选择并授权的文件夹根路径
- * @param {*} options
- *  mode: 授权模式 e.g. 'readwrite'
+ * @param {*} options - showDirectoryPicker 的选项
  * @returns dirHandle 目录句柄
  */
-export const getUserBaseDirHandle = async (options = {}) => {
+export const getUserBaseDirHandle = async (options: DirectoryPickerOptions = {}) => {
   if (!isSupportFileSystemAccess) {
     return createZip()
   }
@@ -76,15 +75,16 @@ export async function getFileHandle(baseDirHandle: any, filePath: string, { crea
 
 /**
  * 获取用户选择并授权的文件路径
- * @param {*} options
- *  mode: 授权模式 e.g. 'readwrite'
+ * @param {*} options - showOpenFilePicker 的选项
  * @returns fileHandle 文件句柄
  */
-export const getUserFileHandle = async (options = {}) => {
+export const getUserFileHandle = async (options: OpenFilePickerOptions & { multiple?: false } = {}) => {
   if (!isSupportFileSystemAccess) {
     throw new Error('不支持的浏览器或处于iframe中')
   }
-  const [fileHandle] = await window.showOpenFilePicker({ mode: 'readwrite', ...options })
+  const [fileHandle] = await window.showOpenFilePicker(options)
+  // 请求读写权限
+  await fileHandle.requestPermission({ mode: 'readwrite' })
   return fileHandle
 }
 

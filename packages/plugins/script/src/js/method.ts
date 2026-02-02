@@ -193,7 +193,7 @@ const setEditorSelection = () => {
   )
 }
 
-export const highlightMethod = (name) => {
+export const highlightMethod = async (name) => {
   if (!name) {
     return
   }
@@ -216,6 +216,9 @@ export const highlightMethod = (name) => {
   }
 
   if (state.editorSelection) {
+    // 兼容初始化进来时，state.script 为空，需要等待一个 tick 之后再设置选中
+    // 否则直接设置选中，此时 state.script 为空，设置无效
+    await nextTick()
     setEditorSelection()
   }
 }

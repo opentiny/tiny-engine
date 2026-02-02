@@ -30,4 +30,6 @@ export const initPreview = ({ registry, lifeCycles = {} }) => {
   initSvgs(app)
 
   app.mount('#app')
+
+  return app
 }

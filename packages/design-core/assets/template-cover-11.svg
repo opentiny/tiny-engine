@@ -1,0 +1,15 @@
+<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24.000000" height="24.000000" fill="none" customFrame="#000000">
+	<defs>
+		<linearGradient id="paint_linear_3" x1="0" x2="23.9999981" y1="0" y2="23.9999981" gradientUnits="userSpaceOnUse">
+			<stop stop-color="rgb(3,215,208)" offset="0.00499924878" stop-opacity="1" />
+			<stop stop-color="rgb(0,184,171)" offset="0.501534343" stop-opacity="1" />
+			<stop stop-color="rgb(0,204,197)" offset="1" stop-opacity="1" />
+		</linearGradient>
+	</defs>
+	<g id="组合 3031">
+		<g id="组合 3026">
+			<rect id="矩形 1" width="24.000004" height="24.000004" x="0.000000" y="0.000000" rx="4.848974" fill="url(#paint_linear_3)" />
+		</g>
+		<path id="减去顶层" d="M19 7.2C19 5.98497 18.015 5 16.8 5L8.2 5C6.98497 5 6 5.98497 6 7.2L6 16.8C6 18.015 6.98497 19 8.2 19L16.8 19C18.015 19 19 18.015 19 16.8L19 7.2ZM16 9C16 8.72386 15.7761 8.5 15.5 8.5L9.5 8.5C9.22386 8.5 9 8.72386 9 9C9 9.27614 9.22386 9.5 9.5 9.5L15.5 9.5C15.7761 9.5 16 9.27614 16 9ZM15.5 11.5C15.7761 11.5 16 11.7239 16 12C16 12.2761 15.7761 12.5 15.5 12.5L9.5 12.5C9.22386 12.5 9 12.2761 9 12C9 11.7239 9.22386 11.5 9.5 11.5L15.5 11.5ZM16 15C16 14.7239 15.7761 14.5 15.5 14.5L9.5 14.5C9.22386 14.5 9 14.7239 9 15C9 15.2761 9.22386 15.5 9.5 15.5L15.5 15.5C15.7761 15.5 16 15.2761 16 15Z" fill="rgb(255,255,255)" fill-rule="evenodd" />
+	</g>
+</svg>

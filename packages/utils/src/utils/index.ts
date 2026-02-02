@@ -341,8 +341,8 @@ export const objectToArray = (obj, { keyTo = 'id', orderKey = '_order' }) => {
 
   const arr = Object.entries(obj)
     // 过滤掉非对象的值，防止后面展开对象失败
-    .filter(([, value]) => typeof value === 'object' && obj !== null)
-    .map(([key, value]) => ({ ...value, [keyTo]: key }))
+    .filter(([, value]) => typeof value === 'object' && value !== null && !Array.isArray(value))
+    .map(([key, value]) => ({ ...(value as Record<string, any>), [keyTo]: key }))
     .map(({ [orderKey]: order, ...rest }) => ({ ...rest, [orderKey]: order ?? Number.MAX_SAFE_INTEGER }))
     .sort((a, b) => a[orderKey] - b[orderKey])
 
@@ -451,4 +451,30 @@ export const obj2StyleString = (obj: any) => {
       .map(([key, value]) => `${convertCamelToKebab(key)}: ${value}`)
       .join('; ')
   )
+}
+
+/**
+ * JSON转样式字符串
+ * @param {*} object
+ * @returns
+ */
+
+export const objectCssToString = (css) => {
+  if (typeof css === 'string') {
+    return css
+  }
+  let cssString = ''
+
+  for (const selector in css) {
+    const properties = css[selector]
+    let ruleString = `${selector} {\r\n`
+
+    for (const property in properties) {
+      ruleString += ` ${property}: ${properties[property]};\r\n`
+    }
+
+    ruleString += '}\n'
+    cssString += ruleString
+  }
+  return cssString
 }

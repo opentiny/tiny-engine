@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "types": ["@types/wicg-file-system-access"]
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.vue"]
+}

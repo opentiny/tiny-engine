@@ -4,27 +4,35 @@
     :visible="visible"
     :close-on-click-modal="false"
     :append-to-body="true"
-    width="800"
+    width="1000"
     title="请选择生成到本地的文件"
     @close="$emit('cancel')"
-    @open="openDialog"
+    @open="initdialogBox"
   >
     <div class="dialog-grid">
-      <tiny-grid
-        :data="tableData"
-        ref="gridRef"
-        size="mini"
-        :max-height="500"
-        :tree-config="{ children: 'children' }"
-        :expand-config="{ expandAll: true }"
-        :auto-resize="true"
-      >
-        <tiny-grid-column width="40" tree-node></tiny-grid-column>
-        <tiny-grid-column type="selection" width="60"></tiny-grid-column>
-        <tiny-grid-column field="fileType" title="文件类型" width="100"></tiny-grid-column>
-        <tiny-grid-column field="filePath" title="文件路径" width="250"></tiny-grid-column>
-        <tiny-grid-column field="fileContent" title="文件内容" show-overflow="ellipsis"></tiny-grid-column>
-      </tiny-grid>
+      <div class="tree-wrap">
+        <tiny-tree
+          ref="fileTreeRef"
+          :data="fileTree"
+          node-key="id"
+          :default-checked-keys="fileTreeAllCheckedKeys"
+          :expand-icon="expandIcon"
+          :shrink-icon="shrinkIcon"
+          show-checkbox
+          default-expand-all
+          highlight-current
+          :current-node-key="currentNodeKey"
+          @node-click="nodeClick"
+        ></tiny-tree>
+      </div>
+      <div class="editor-wrap">
+        <monaco-editor
+          v-if="options.language"
+          class="code-edit-content"
+          :value="fileContent"
+          :options="options"
+        ></monaco-editor>
+      </div>
     </div>
     <template #footer>
       <tiny-button type="primary" @click="confirm">确定</tiny-button>
@@ -35,60 +43,77 @@
 
 <script lang="ts">
 /* metaService: engine.toolbars.generate-code.FileSelector */
-import { DialogBox, Button, Grid, GridColumn } from '@opentiny/vue'
+import { DialogBox, Button, Tree } from '@opentiny/vue'
+import { iconPutAway, iconExpand } from '@opentiny/vue-icon'
 import { reactive, computed, ref, nextTick } from 'vue'
-import { useNotify } from '@opentiny/tiny-engine-meta-register'
+import { useNotify, useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { VueMonaco } from '@opentiny/tiny-engine-common'
 
 export default {
   components: {
+    MonacoEditor: VueMonaco,
     TinyDialogBox: DialogBox,
     TinyButton: Button,
-    TinyGrid: Grid,
-    TinyGridColumn: GridColumn
+    TinyTree: Tree
   },
   props: {
     visible: { type: Boolean, default: false },
     data: {
       type: Array,
       default: () => []
+    },
+    treeData: {
+      type: Object,
+      default: () => ({ treeArray: [], checkedTreeData: [] })
     }
   },
   emits: ['cancel', 'confirm'],
   setup(props, { emit }) {
-    const getTableTreeData = (data: any[]) => {
-      const res: any[] = []
-      data.forEach((item) => {
-        const folder = item.filePath.split('/').slice(0, -1)
+    const shrinkIcon = iconExpand()
+    const expandIcon = iconPutAway()
+    const currentNodeKey = ref()
 
-        if (!folder.length) {
-          res.push(item)
-          return
+    const fileTree = computed(() => {
+      return [
+        {
+          id: 'all',
+          label: '所有文件',
+          children: props.treeData.treeArray
         }
+      ]
+    })
 
-        const parentFolder = folder.reduce((parent: any[], curPath: any) => {
-          let curItem = parent.find((parItem) => parItem.path === curPath)
+    const fileTreeAllCheckedKeys = computed(() => {
+      return ['all'].concat(props.treeData.checkedTreeData)
+    })
 
-          if (!curItem) {
-            curItem = { path: curPath, filePath: curPath, children: [] }
-            parent.push(curItem)
-          }
+    const fileTreeRef = ref<any>(null)
 
-          return curItem.children
-        }, res)
+    const options = reactive({
+      language: 'javascript',
+      readOnly: true,
+      minimap: {
+        enabled: false
+      },
+      theme: 'customTheme'
+    })
 
-        parentFolder.push(item)
-      })
+    const fileContent = ref('')
 
-      return res
+    const nodeClick = (node: any) => {
+      if (node?.originData) {
+        nextTick(() => {
+          fileContent.value = node.originData.fileContent
+          fileTreeRef.value.setCurrentKey(node.id)
+        })
+      }
     }
 
-    const tableData = computed(() => getTableTreeData(props.data))
-    const gridRef = ref<any>(null)
-
-    const state = reactive({})
-
     const confirm = () => {
-      const selectedData = gridRef.value.getSelectRecords().filter((item: { children: any }) => !item.children)
+      const selectedData = fileTreeRef.value
+        .getCheckedNodes()
+        .map((node: any) => node.originData)
+        .filter((node: any) => node !== undefined)
       if (!selectedData?.length) {
         useNotify({
           type: 'error',
@@ -101,19 +126,30 @@ export default {
       emit('confirm', selectedData)
     }
 
-    const openDialog = () => {
-      nextTick(() => {
-        gridRef.value.setAllTreeExpansion(true)
-        gridRef.value.setAllSelection(true)
-      })
+    const initdialogBox = () => {
+      // 初始化显示的文件
+      const currentPage = useCanvas().getCurrentPage()
+      if (currentPage) {
+        const initCurrentNode: any = props.data.find((item: any) => item.fileName === `${currentPage.name}.vue`)
+        nextTick(() => {
+          fileContent.value = initCurrentNode.fileContent
+          fileTreeRef.value.setCurrentKey(initCurrentNode.fileName)
+        })
+      }
     }
 
     return {
-      state,
-      tableData,
-      gridRef,
+      shrinkIcon,
+      expandIcon,
+      currentNodeKey,
+      fileTree,
+      fileTreeAllCheckedKeys,
+      options,
+      fileContent,
+      fileTreeRef,
+      nodeClick,
       confirm,
-      openDialog
+      initdialogBox
     }
   }
 }
@@ -121,6 +157,9 @@ export default {
 
 <style lang="less" scoped>
 .dialog-box {
+  :deep(.tiny-dialog-box__body) {
+    height: 480px;
+  }
   :deep(.tiny-dialog-box__content) {
     background-color: var(--te-toolbars-generate-code-bg-color);
 
@@ -149,67 +188,49 @@ export default {
   }
 
   .dialog-grid {
-    :deep(.tiny-grid-cell) {
-      position: relative;
-    }
-
-    :deep(.tiny-grid-tree-wrapper) {
-      position: relative;
-      top: 2px;
-    }
-
-    :deep(.tiny-grid) {
-      .tiny-grid__header-wrapper {
-        .tiny-grid-header__column {
-          color: var(--te-toolbars-generate-code-text-color);
-          height: 30px;
-
-          .tiny-grid-resizable.is__line:before {
-            background-color: var(--te-toolbars-generate-code-bg-color);
-          }
-        }
-
-        .tiny-grid-checkbox__icon,
-        .icon-checked-sur {
-          svg {
-            color: var(--te-toolbars-generate-code-border-color-checked) !important;
-          }
+    display: flex;
+    .tree-wrap {
+      overflow: scroll;
+      .tiny-tree {
+        width: 300px;
+        height: 480px;
+        overflow-x: scroll;
+      }
+      :deep(.tiny-tree-node__content) {
+        .tiny-tree-node__content-left {
+          background-color: transparent;
         }
       }
-
-      .tiny-grid__body-wrapper {
-        &::-webkit-scrollbar {
-          height: 10px;
-        }
-
-        &::-webkit-scrollbar-track-piece {
-          background: unset;
-        }
-
-        .tiny-grid-body__column {
-          height: 32px;
-        }
-
-        .tiny-grid-body__row {
-          background-color: var(--te-toolbars-generate-code-bg-color);
-        }
-
-        .tiny-grid-body__row {
-          &.row__selected {
-            .tiny-grid-checkbox__icon {
-              svg {
-                color: var(--te-toolbars-generate-code-border-color-checked);
-                fill: currentColor;
-                width: 100%;
-                height: 100%;
-              }
+    }
+    .editor-wrap {
+      width: 100%;
+      max-width: 744px;
+      .code-edit-content {
+        width: 100%;
+        height: 480px;
+        :deep(.monaco-editor) {
+          .margin-view-overlays,
+          .sticky-line-number,
+          .view-lines,
+          .sticky-line-content {
+            background-color: var(--te-common-bg-container-weaken);
+          }
+          .scrollbar.vertical,
+          .decorationsOverviewRuler {
+            width: 8px !important;
+            .slider {
+              border-radius: 4px;
+              width: 8px !important;
+            }
+          }
+          .scrollbar.horizontal {
+            height: 8px !important;
+            .slider {
+              border-radius: 4px;
+              height: 8px !important;
             }
           }
         }
-      }
-
-      .tiny-grid__empty-text {
-        color: var(--te-toolbars-generate-code-text-color);
       }
     }
   }

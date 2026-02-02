@@ -4,6 +4,7 @@
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "dev": "pnpm run setup && concurrently 'pnpm:serve:backend' 'pnpm:serve:frontend'",
+    "dev:withAuth": "pnpm run setup && pnpm --filter designer-demo dev:withAuth",
     "serve:frontend": "pnpm --filter designer-demo dev",
     "serve:backend": "pnpm --filter @opentiny/tiny-engine-mock dev",
     "build:plugin": "pnpm --filter @opentiny/tiny-engine-* --filter @opentiny/tiny-engine build",

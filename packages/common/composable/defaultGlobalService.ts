@@ -1,14 +1,15 @@
-import { useMessage, useModal, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
-import { watch } from 'vue'
+import { useMessage, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { reactive, watch } from 'vue'
 
 const getBaseInfo = () => {
   const paramsMap = new URLSearchParams(location.search)
-  const id = paramsMap.get('id')
+  const id = paramsMap.get('id') // appId
   const blockId = paramsMap.get('blockid')
   const pageId = paramsMap.get('pageid')
   const previewId = paramsMap.get('previewid')
   const type = paramsMap.get('type')
   const version = paramsMap.get('version')
+  const tenantId = paramsMap.get('tenant')
 
   return {
     type: type || 'app',
@@ -16,7 +17,8 @@ const getBaseInfo = () => {
     pageId,
     previewId,
     blockId,
-    version
+    version,
+    tenantId
   }
 }
 
@@ -42,13 +44,57 @@ const initialState = {
   appList: [] as any[]
 }
 
-const getUserInfo = () => {
+const userState = reactive({
+  userInfo: {
+    username: '',
+    token: null,
+    expireTime: null,
+    tenantId: '',
+    tenant: []
+  },
+  needToLogin: false
+})
+
+const getLoginStatus = () => userState.needToLogin
+
+const setNeedToLogin = (value: boolean) => {
+  userState.needToLogin = value
+  if (!value) {
+    const defaultTenantId = userState.userInfo.tenant?.[0]?.id
+    if (defaultTenantId) {
+      const currentUrl = new URL(window.location.href)
+      const currentTenant = getBaseInfo().tenantId
+
+      const filterList = userState.userInfo.tenant.filter((item) => item.id === currentTenant) || []
+      // 只有当tenant值不存在时才更新
+      if (!filterList?.length) {
+        currentUrl.searchParams.set('tenant', String(defaultTenantId))
+        window.history.replaceState(window.history.state, '', currentUrl.href)
+      }
+    }
+    window.location.reload()
+  }
+}
+
+const getUserInfo = () => userState.userInfo
+
+const setUserInfo = (data: any) => {
+  userState.userInfo = { ...userState.userInfo, ...data }
+}
+
+const fetchUserInfo = () => {
   // 获取登录用户信息
-  return getMetaApi(META_SERVICE.Http)
-    .get('/platform-center/api/user/me')
-    .catch((error: { message: any }) => {
-      useModal().message({ message: error.message, status: 'error' })
-    })
+  return getMetaApi(META_SERVICE.Http).get('/platform-center/api/user/me', {
+    transformRequest: (data: any, headers: any) => {
+      delete headers['x-lowcode-org']
+      return data
+    }
+  })
+}
+
+const setTenantInfo = (id: any) => {
+  // 设置组织
+  return getMetaApi(META_SERVICE.Http).get(`/platform-center/api/user/tenant?tenantId=${id}`)
 }
 
 // 获取当前应用的信息
@@ -205,14 +251,21 @@ export default defineService({
       }
     })
 
-    getUserInfo().then((data: any) => {
+    fetchUserInfo().then((data: any) => {
       if (data) {
         state.userInfo = data
+        userState.userInfo = data
       }
       publish({ topic: 'global_service_init_finish' })
     })
   },
   apis: () => ({
+    getLoginStatus,
+    setNeedToLogin,
+    getUserInfo,
+    setUserInfo,
+    fetchUserInfo,
+    setTenantInfo,
     getBaseInfo,
     postLocationHistoryChanged,
     updateParams,

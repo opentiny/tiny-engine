@@ -1,7 +1,7 @@
 import { reactive } from 'vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
-import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, getMergeMeta, META_SERVICE, useEnv } from '@opentiny/tiny-engine-meta-register'
 import {
   fetchMetaData,
   fetchAppSchema,
@@ -254,7 +254,9 @@ const addScriptAndStyle = (scripts: Map<string, string>, styles: Set<string>, pk
 const getMaterialDeps = async () => {
   const bundleUrls = getMergeMeta('engine.config')?.material || []
   const materials = await Promise.allSettled(
-    bundleUrls.map((url: any) => (typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url) : url))
+    bundleUrls.map((url: any) =>
+      typeof url === 'string' ? getMetaApi(META_SERVICE.Http).get(url, { baseURL: useEnv().BASE_URL || '' }) : url
+    )
   )
 
   const scripts = new Map<string, string>()

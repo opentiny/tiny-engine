@@ -17,7 +17,7 @@ import {
   Fullscreen,
   Lang,
   ViewSetting,
-  Logo,
+  // Logo,
   Lock,
   Media,
   Redoundo,
@@ -51,8 +51,14 @@ import {
   GlobalService,
   ThemeSwitchService,
   HttpService,
-  McpService
+  McpService,
+  User,
+  ApplicationCenter,
+  TemplateCenter
 } from './re-export'
+
+const isDevelopEnv = import.meta.env.MODE?.includes('dev')
+const useAuth = import.meta.env.VITE_AUTH === 'true'
 
 window.__TINY_ENGINE_REMOVED_REGISTRY = {}
 
@@ -131,12 +137,13 @@ export default {
         oppositeTheme: 'light'
       }
     ],
-    enableTailwindCSS: true
+    enableTailwindCSS: true,
+    enableLogin: useAuth || !isDevelopEnv
   },
   layout: __TINY_ENGINE_REMOVED_REGISTRY['engine.layout'] === false ? null : Layout,
   toolbars: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.themeSwitch'] === false ? null : ThemeSwitch,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
+    //__TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.logo'] === false ? null : Logo,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.breadcrumb'] === false ? null : Breadcrumb,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lock'] === false ? null : Lock,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.media'] === false ? null : Media,
@@ -149,7 +156,8 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.save'] === false ? null : Save,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.fullscreen'] === false ? null : Fullscreen,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.lang'] === false ? null : Lang,
-    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.viewSetting'] === false ? null : ViewSetting,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.toolbars.user'] === false ? null : User
   ],
   plugins: [
     __TINY_ENGINE_REMOVED_REGISTRY['engine.plugins.materials'] === false ? null : Materials,
@@ -171,6 +179,10 @@ export default {
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.props'] === false ? null : Props,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.styles'] === false ? null : Styles,
     __TINY_ENGINE_REMOVED_REGISTRY['engine.setting.event'] === false ? null : Events
+  ],
+  workspace: [
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.application-center'] === false ? null : ApplicationCenter,
+    __TINY_ENGINE_REMOVED_REGISTRY['engine.workspace.template-center'] === false ? null : TemplateCenter
   ],
   canvas: Canvas
 }
