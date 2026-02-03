@@ -19,15 +19,6 @@
       </div>
       <div class="model-set-wrap">
         <div class="model-wrap">
-          <div class="model-groups">
-            <model-select
-              :model-page-size="5"
-              @model-select="getModel"
-              :meta="meta"
-              :isShow="isShow"
-              :isModelApi="true"
-            ></model-select>
-          </div>
           <div class="model-parameters">
             <tiny-grid
               :data="selectedModel?.method || []"
@@ -80,7 +71,7 @@
   <tiny-button @click="openPopover">{{ modelValue?.name || buttonText }}</tiny-button>
 </template>
 <script setup>
-import { ref, reactive, defineProps, defineEmits } from 'vue'
+import { ref, reactive, defineProps, defineEmits, watch } from 'vue'
 import {
   Button as TinyButton,
   Popover as TinyPopover,
@@ -95,7 +86,8 @@ import {
   Notify
 } from '@opentiny/vue'
 import { iconClose, iconDel } from '@opentiny/vue-icon'
-import ModelSelect from '../model-common/ModelSelect.vue'
+import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { getModelDetail } from '../model-common/http'
 import ParamsBindGrid from './ParamsBindGrid.vue'
 
 const props = defineProps({
@@ -166,15 +158,22 @@ const selectedFunction = ref()
 
 const openPopover = () => {
   isShow.value = true
+  getModel()
 }
 
 const closePopover = () => {
   isShow.value = false
 }
 
-const getModel = (data) => {
-  selectedModel.value = data
-  methodBasicData.method = 'post'
+const getModel = () => {
+  const modelId = useCanvas().getCurrentSchema().props?.serviceModel?.id
+  if (modelId) {
+    getModelDetail(modelId).then(res => {
+      console.log(res)
+    })
+    selectedModel.value = useCanvas().getCurrentSchema().props.serviceModel
+    methodBasicData.method = 'post'
+  }
 }
 
 const setModelFunction = async () => {
@@ -209,6 +208,26 @@ const selectModelFunction = (data) => {
   selectedFunction.value = data.row
   methodBasicData.url = `${selectedModel.value.baseUrl}/${selectedFunction.value.nameEn}`
 }
+
+watch(
+  () => useCanvas().getCurrentSchema().props.serviceModel,
+  (model) => {
+    console.log(model)
+    if (model) {
+      getModel()
+      // modelValue.value = model.method.map((api) => {
+      //   return {
+      //     url: `${model.baseUrl}/${api.nameEn}`,
+      //     method: 'post',
+      //     name: api.name,
+      //     nameEn: api.nameEn
+      //   }
+      // })
+      // 添加增删改查方法
+      // emit('update:modelValue', modelValue.value)
+    }
+  }
+)
 </script>
 
 <style lang="less" scoped>
@@ -240,30 +259,8 @@ const selectModelFunction = (data) => {
       max-height: 355px;
       border: 1px solid #e6e6e6;
       border-radius: 4px;
-      .model-groups {
-        width: 410px;
-        padding: 12px;
-        border-right: 1px solid #e6e6e6;
-        :deep(.tiny-tree) {
-          .tiny-tree-node__content .tiny-tree-node__content-left {
-            padding: 0;
-            .tiny-tree-node__label {
-              color: #191919;
-            }
-          }
-          .tiny-tree-node__children .tiny-tree-node__content {
-            padding: 0;
-            .tiny-tree-node__content-left .tiny-tree-node__label {
-              color: #595959;
-            }
-          }
-        }
-        .search {
-          margin-bottom: 12px;
-        }
-      }
       .model-parameters {
-        width: 412px;
+        width: 100%;
         padding: 12px;
         overflow-y: scroll;
         &::-webkit-scrollbar {

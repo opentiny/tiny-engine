@@ -171,9 +171,6 @@ const insertApi = (data = {}) => {
   }
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
-    .then((res) => {
-      return res
-    })
     .catch((err) => {
       throw new Error(err)
     })
@@ -191,9 +188,6 @@ const updateApi = (data) => {
       nameEn: tableModel.value.nameEn,
       data: data,
       params: { id }
-    })
-    .then((res) => {
-      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -237,9 +231,6 @@ const deleteApi = (evidence) => {
   }
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
-    .then((res) => {
-      return res
-    })
     .catch((err) => {
       throw new Error(err)
     })
