@@ -97,10 +97,13 @@ export default class AppsService {
     }
     this.db.insert(newApp)
 
+    let resultStr = JSON.stringify(defaultAppSchema.data)
+    resultStr = resultStr.replace(/"lowcode./g, '"lowcode_')
+    const modifiedResult = JSON.parse(resultStr)
     const newAppSchema = {
-      ...defaultAppSchema.data,
+      ...modifiedResult,
       meta: {
-        ...defaultAppSchema.data.meta,
+        ...modifiedResult.meta,
         name: params.name,
         description: params.description,
         appId: String(newApp.id),
@@ -132,7 +135,6 @@ export default class AppsService {
     this.appList = result.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
 
     if (createdBy) {
-      console.log('createdB', createdBy)
       this.appList = this.appList.filter((item) => item.createdBy === '86')
     }
 
