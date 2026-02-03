@@ -146,7 +146,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
     return undefined
   }
   // 处理查询参数
-  const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
+  const params = Object.fromEntries(formModel.value.parameters.map((item) => [item.prop, null]))
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
