@@ -156,6 +156,14 @@ const methodBasicData = reactive({
 const selectedModel = ref()
 const selectedFunction = ref()
 
+const getModel = async () => {
+  const modelId = useCanvas().getCurrentSchema().props?.serviceModel?.id
+  if (modelId) {
+    selectedModel.value = await getModelDetail(modelId)
+    methodBasicData.method = 'post'
+  }
+}
+
 const openPopover = () => {
   isShow.value = true
   getModel()
@@ -163,17 +171,6 @@ const openPopover = () => {
 
 const closePopover = () => {
   isShow.value = false
-}
-
-const getModel = () => {
-  const modelId = useCanvas().getCurrentSchema().props?.serviceModel?.id
-  if (modelId) {
-    getModelDetail(modelId).then(res => {
-      console.log(res)
-    })
-    selectedModel.value = useCanvas().getCurrentSchema().props.serviceModel
-    methodBasicData.method = 'post'
-  }
 }
 
 const setModelFunction = async () => {
@@ -211,20 +208,18 @@ const selectModelFunction = (data) => {
 
 watch(
   () => useCanvas().getCurrentSchema().props.serviceModel,
-  (model) => {
-    console.log(model)
+  async (model) => {
     if (model) {
-      getModel()
-      // modelValue.value = model.method.map((api) => {
-      //   return {
-      //     url: `${model.baseUrl}/${api.nameEn}`,
-      //     method: 'post',
-      //     name: api.name,
-      //     nameEn: api.nameEn
-      //   }
-      // })
-      // 添加增删改查方法
-      // emit('update:modelValue', modelValue.value)
+      await getModel()
+      modelValue.value = selectedModel.value.method.map((api) => {
+        return {
+          url: `${model.baseUrl}/${api.nameEn}`,
+          method: 'post',
+          name: api.name,
+          nameEn: api.nameEn
+        }
+      })
+      emit('update:modelValue', modelValue.value)
     }
   }
 )
