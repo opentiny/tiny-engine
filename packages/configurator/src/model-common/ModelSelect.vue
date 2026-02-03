@@ -54,10 +54,6 @@ export default {
     isShow: {
       type: Boolean,
       default: false
-    },
-    isModelApi: {
-      type: Boolean,
-      default: false
     }
   },
   emits: ['modelSelect'],
@@ -93,21 +89,8 @@ export default {
     }
 
     const selectModel = async (data) => {
-      // 处理parameters
-      if (props.isModelApi) {
-        emit('modelSelect', {
-          id: data.row.id,
-          name: data.row.nameCn,
-          nameEn: data.row.nameEn,
-          description: data.row.description,
-          version: data.row.version,
-          baseUrl: data.row.modelUrl ?? '',
-          method: data.row.method
-        })
-      } else {
-        currentSelectedModel.value = await handleSelectedModelParameters(data.row)
-        emit('modelSelect', currentSelectedModel.value)
-      }
+      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
+      emit('modelSelect', currentSelectedModel.value)
     }
 
     watch(

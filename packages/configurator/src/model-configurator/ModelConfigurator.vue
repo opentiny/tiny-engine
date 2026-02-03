@@ -363,6 +363,7 @@ watch(
   (value) => {
     if (value) {
       modelDetail.value = value
+      originModelData.value = value
     }
   }
 )

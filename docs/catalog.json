@@ -25,7 +25,14 @@
             { "title": "行内样式绑定状态变量", "name": "inline-style-variable-binding.md" },
             { "title": "查看大纲树", "name": "outline-tree.md" },
             { "title": "国际化", "name": "internationalization.md" },
-            { "title": "页面和区块预览", "name": "page-and-block-preview.md" }
+            {
+              "title": "资源管理",
+              "name": "resources-management.md"
+            },
+            {
+              "title": "页面、应用和区块预览",
+              "name": "page-app-and-block-preview.md"
+            }
           ]
         },
         {
@@ -34,7 +41,10 @@
           "articles": [
             { "title": "区块管理", "name": "block-management.md" },
             { "title": "使用JS面板和事件绑定", "name": "js-panel-and-event-binding.md" },
-            { "title": "使用工具类方法 utils", "name": "using-utils-methods.md" },
+            {
+              "title": "使用工具类方法 utils",
+              "name": "using-utils-methods.md"
+            },
             { "title": "高级面板设置", "name": "advanced-panel-settings.md" },
             { "title": "如何使用插槽", "name": "how-to-use-slots.md" },
             { "title": "循环渲染", "name": "loop-rendering.md" },
@@ -93,7 +103,10 @@
           "title": "解决方案",
           "name": "solutions",
           "articles": [
-            {"title": "前端及Java服务端docker部署", "name": "front-backend-docker-deployment.md"},
+            {
+              "title": "前端及Java服务端docker部署",
+              "name": "front-backend-docker-deployment.md"
+            },
             { "title": "Java服务端部署", "name": "server-deployment-solution-java.md" },
             { "title": "Node.js服务端部署", "name": "server-deployment-solution.md" },
             { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },

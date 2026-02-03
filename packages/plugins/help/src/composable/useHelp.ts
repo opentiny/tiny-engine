@@ -11,18 +11,18 @@
  */
 
 /* metaService: engine.service.help.useHelp */
-const getBaseUrl = () => 'https://opentiny.design/tiny-engine#/help-center/course/engine/'
+const getBaseUrl = () => 'https://docs.opentiny.design/tiny-engine/guide/'
 
 const helpState = {
   docsUrl: {
-    block: 3,
-    bridge: 13,
-    data: 7,
-    datasource: 11,
-    i18n: 12,
-    page: 2,
-    script: 8,
-    stylePanel: 6
+    block: 'block-management',
+    bridge: 'using-utils-methods',
+    data: 'state-management-and-variable-binding',
+    datasource: 'data-source-and-collection-usage',
+    i18n: 'internationalization',
+    page: 'page-management',
+    script: 'js-panel-and-event-binding',
+    stylePanel: 'style-settings'
   }
 }
 

@@ -45,7 +45,7 @@ import ModelBasicForm from './ModelBasicForm.vue'
 import FieldManager from './FieldManager.vue'
 import { createModel, updateModel } from '../composable/useModelManager'
 
-const isShow = ref(false)
+const isShow = ref(false) 
 
 export const openModelSettingPanel = () => {
   isShow.value = true
@@ -207,7 +207,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-:deep(.plugin-setting) {
-  width: fit-content !important;
+.modelmanager-plugin-setting {
+  width: fit-content;
 }
 </style>

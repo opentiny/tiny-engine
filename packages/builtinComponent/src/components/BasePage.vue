@@ -179,7 +179,7 @@ import {
   Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import axios from 'axios'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
 const props = defineProps({
   style: {
@@ -302,18 +302,15 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  return getMetaApi(META_SERVICE.Http)
+    .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
-      if (res.status === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '新增成功',
+        position: 'top-right'
+      })
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -325,18 +322,21 @@ const updateApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, data)
+  const id = data.id
+  delete data.id
+  return getMetaApi(META_SERVICE.Http)
+    .post(apiInfo.url, {
+      nameEn: pageModel.value.nameEn,
+      data: data,
+      params: { id }
+    })
     .then((res) => {
-      if (res.status === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '修改成功',
+        position: 'top-right'
+      })
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -348,17 +348,24 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](`${apiInfo.url}?currentPage=${currentPage || 1}&pageSize=${pageSize || 10}`, {
-    params: data || formData.value
-  })
-    .then((res) => {
-      if (res.status === 200) {
-        tableData.value = res.data.data
-        pagerState.total = res.data.total
-        emit('update:tableData', tableData.value)
-        return res.data
+  // 处理查询参数
+  const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
+  return getMetaApi(META_SERVICE.Http)
+    .post(apiInfo.url, {
+      currentPage: currentPage || 1,
+      pageSize: pageSize || 10,
+      nameEn: pageModel.value.nameEn,
+      nameCn: pageModel.value.nameCn,
+      params: {
+        ...params,
+        ...data
       }
-      throw new Error('request fail')
+    })
+    .then((res) => {
+      tableData.value = res.list
+      pagerState.total = res.total
+      emit('update:tableData', tableData.value)
+      return res
     })
     .catch((err) => {
       throw new Error(err)
@@ -370,18 +377,15 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return axios[apiInfo.method](apiInfo.url, { params: evidence })
+  return getMetaApi(META_SERVICE.Http)
+    .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
-      if (res.status === 200) {
-        Notify({
-          type: 'success',
-          message: res.data.message,
-          position: 'top-right'
-        })
-        return res.data
-      } else {
-        throw new Error('request fail')
-      }
+      Notify({
+        type: 'success',
+        message: '已删除',
+        position: 'top-right'
+      })
+      return res
     })
     .catch((err) => {
       throw new Error(err)

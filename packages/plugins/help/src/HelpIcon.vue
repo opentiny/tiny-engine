@@ -75,20 +75,20 @@ export default {
     const tinyGuideRef = ref()
     const helpTitle = '帮助与指引'
     const questionTitle = '常见问题'
-    const courseUrl = 'https://opentiny.design/tiny-engine#/help-center/course/engine'
+    const courseUrl = 'https://docs.opentiny.design/tiny-engine/guide/introduction'
     const imgUrl = 'https://tinyengine-assets.obs.myhuaweicloud.com/files/designer/drag-drop-action-guide.svg'
     const questionList = [
       {
         label: '如何引入第三方组件库',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/dev/third-party-library-in-designer'
+        url: 'https://docs.opentiny.design/tiny-engine/dev/third-party-library-in-designer'
       },
       {
         label: '如何使用AI功能创建页面',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/integrating-chatgpt-for-simple-pages'
+        url: 'https://docs.opentiny.design/tiny-engine/guide/new-ai-plugin-usage'
       },
       {
         label: '答疑视频回放',
-        url: 'https://opentiny.design/tiny-engine#/help-center/course/engine/issue-1-2023.10.27'
+        url: 'https://docs.opentiny.design/tiny-engine/guide/issue-1-2023.10.27'
       }
     ]
 
