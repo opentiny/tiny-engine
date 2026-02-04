@@ -7765,7 +7765,7 @@
                             "property": "splitColor",
                             "label": {
                               "text": {
-                                "zh_CN": "分割区间及颜色"
+                                "zh_CN": "分割区间"
                               }
                             },
                             "required": true,
