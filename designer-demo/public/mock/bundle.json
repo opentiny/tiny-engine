@@ -7965,17 +7965,245 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "series",
+                            "label": {
+                              "text": {
+                                "zh_CN": "系列"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": [
+                              {
+                                "type": "graph",
+                                "layout": "none",
+                                "symbolSize": 48,
+                                "color": "#42A5F5",
+                                "roam": true,
+                                "label": {
+                                  "normal": {
+                                    "show": true
+                                  }
+                                },
+                                "edgeSymbol": [
+                                  "circle",
+                                  "arrow"
+                                ],
+                                "edgeSymbolSize": [
+                                  3,
+                                  10
+                                ],
+                                "edgeLabel": {
+                                  "normal": {
+                                    "textStyle": {
+                                      "fontSize": 18
+                                    }
+                                  }
+                                },
+                                "data": [
+                                  {
+                                    "name": "节点 1",
+                                    "x": 300,
+                                    "y": 300
+                                  },
+                                  {
+                                    "name": "节点 2",
+                                    "x": 800,
+                                    "y": 300
+                                  },
+                                  {
+                                    "name": "节点 3",
+                                    "x": 550,
+                                    "y": 100
+                                  },
+                                  {
+                                    "name": "节点 4",
+                                    "x": 550,
+                                    "y": 500
+                                  }
+                                ],
+                                "links": [
+                                  {
+                                    "source": 0,
+                                    "target": 1,
+                                    "symbolSize": [
+                                      5,
+                                      20
+                                    ],
+                                    "label": {
+                                      "normal": {
+                                        "show": true
+                                      }
+                                    },
+                                    "lineStyle": {
+                                      "normal": {
+                                        "width": 5,
+                                        "curveness": 0.2
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 1",
+                                    "label": {
+                                      "normal": {
+                                        "show": true
+                                      }
+                                    },
+                                    "lineStyle": {
+                                      "normal": {
+                                        "curveness": 0.2
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "source": "节点 1",
+                                    "target": "节点 3"
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 3"
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 4"
+                                  },
+                                  {
+                                    "source": "节点 1",
+                                    "target": "节点 4"
+                                  }
+                                ],
+                                "lineStyle": {
+                                  "normal": {
+                                    "opacity": 0.9,
+                                    "width": 2,
+                                    "curveness": 0
+                                  }
+                                }
+                              }
+                            ],
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationEasing",
+                            "label": {
+                              "text": {
+                                "zh_CN": "初始缓动效果"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cubicOut",
+                            "cols": 12,
+                            "type": "string",
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "初始动画的缓动效果"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationEasingUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "更新缓动效果"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cubicInOut",
+                            "cols": 12,
+                            "type": "string",
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "更新动画的缓动效果"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationDurationUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "动画时长"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 300,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "数据更新动画的时长"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationDelayUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "动画延迟"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 100,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "数据更新动画的延迟"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "拓扑图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
