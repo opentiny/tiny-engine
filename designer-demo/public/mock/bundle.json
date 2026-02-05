@@ -3939,6 +3939,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -3961,6 +3970,23 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "Month": "Jan",
+                                "Domestic": 33,
+                                "Abroad": 37
+                              },
+                              {
+                                "Month": "Feb",
+                                "Domestic": 27,
+                                "Abroad": 39
+                              },
+                              {
+                                "Month": "Mar",
+                                "Domestic": 31,
+                                "Abroad": 20
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4002,7 +4028,10 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
-                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "defaultValue": {
+                              "barWidth": 8,
+                              "barGap": "60%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4113,6 +4142,30 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "data": "Month",
+                              "name": "Utils",
+                              "line": {
+                                "show": true,
+                                "lineStyle": {
+                                  "color": "red",
+                                  "type": "dashed",
+                                  "width": 2
+                                }
+                              },
+                              "interval": 2,
+                              "fullGrid": true,
+                              "labelRotate": 45,
+                              "ellipsis": {
+                                "overflow": "truncate",
+                                "labelWidth": 20
+                              },
+                              "nameLocation": "end",
+                              "nameTextStyle": {
+                                "fontSize": 12,
+                                "color": "#4e4e4e"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4135,6 +4188,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "max": 60,
+                              "min": 0,
+                              "interval": 5,
+                              "position": "right",
+                              "name": "Percent(%)",
+                              "unit": "%",
+                              "minInterval": 12,
+                              "maxInterval": 8
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4254,6 +4317,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4276,6 +4348,23 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "Month": "Jan",
+                                "Domestic": 33,
+                                "Abroad": 37
+                              },
+                              {
+                                "Month": "Feb",
+                                "Domestic": 27,
+                                "Abroad": 39
+                              },
+                              {
+                                "Month": "Mar",
+                                "Domestic": 31,
+                                "Abroad": 20
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4298,6 +4387,11 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "display": [
+                                "Domestic"
+                              ]
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4317,6 +4411,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "start": 0,
+                              "end": 100,
+                              "show": false,
+                              "position": {
+                                "left": 36,
+                                "bottom": 20
+                              },
+                              "height": 24
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4336,6 +4440,7 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": "vertical",
                             "cols": 12,
                             "widget": {
                               "component": "SelectConfigurator",
@@ -4368,7 +4473,10 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
-                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "defaultValue": {
+                              "barWidth": 8,
+                              "barGap": "60%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4388,6 +4496,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "show": false,
+                                "position": "inside",
+                                "offset": [
+                                  0,
+                                  0
+                                ]
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4410,6 +4528,31 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "show": false,
+                              "position": {
+                                "left": "center",
+                                "bottom": 15
+                              },
+                              "itemGap": 28,
+                              "orient": "horizontal",
+                              "reverseEvent": false,
+                              "selectedMode": true,
+                              "icon": "circle",
+                              "itemHeight": 14,
+                              "itemWeight": 14,
+                              "textStyle": {
+                                "fontSize": 12,
+                                "padding": [
+                                  4,
+                                  0,
+                                  0,
+                                  0
+                                ],
+                                "color": "#4e4e4e",
+                                "overflow": "none"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4452,6 +4595,11 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "top": 38,
+                              "bottom": 20,
+                              "color": "red"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4562,6 +4710,7 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": "bar",
                             "cols": 12,
                             "widget": {
                               "component": "SelectConfigurator",
@@ -4594,6 +4743,30 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "data": "Month",
+                              "name": "Utils",
+                              "line": {
+                                "show": true,
+                                "lineStyle": {
+                                  "color": "red",
+                                  "type": "dashed",
+                                  "width": 2
+                                }
+                              },
+                              "interval": 2,
+                              "fullGrid": true,
+                              "labelRotate": 45,
+                              "ellipsis": {
+                                "overflow": "truncate",
+                                "labelWidth": 20
+                              },
+                              "nameLocation": "end",
+                              "nameTextStyle": {
+                                "fontSize": 12,
+                                "color": "#4e4e4e"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4616,6 +4789,47 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "max": 60,
+                                "min": 0,
+                                "interval": 10,
+                                "position": "left",
+                                "dataName": [
+                                  "Domestic"
+                                ],
+                                "name": "value",
+                                "unit": "元",
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    0,
+                                    0,
+                                    -45
+                                  ]
+                                }
+                              },
+                              {
+                                "max": 90,
+                                "min": 0,
+                                "interval": 15,
+                                "position": "right",
+                                "dataName": [
+                                  "Abroad"
+                                ],
+                                "name": "kal",
+                                "unit": "$",
+                                "offset": 45,
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    -45,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4764,6 +4978,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4786,6 +5009,23 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "Month": "Jan",
+                                "Domestic": 33,
+                                "Abroad": 37
+                              },
+                              {
+                                "Month": "Feb",
+                                "Domestic": 27,
+                                "Abroad": 39
+                              },
+                              {
+                                "Month": "Mar",
+                                "Domestic": 31,
+                                "Abroad": 20
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4808,6 +5048,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "start": 0,
+                              "end": 100,
+                              "show": false,
+                              "position": {
+                                "left": 36,
+                                "bottom": 20
+                              },
+                              "height": 24
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4827,7 +5077,10 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
-                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "defaultValue": {
+                              "barWidth": 8,
+                              "barGap": "60%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4938,6 +5191,30 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "data": "Month",
+                              "name": "Utils",
+                              "line": {
+                                "show": true,
+                                "lineStyle": {
+                                  "color": "red",
+                                  "type": "dashed",
+                                  "width": 2
+                                }
+                              },
+                              "interval": 2,
+                              "fullGrid": true,
+                              "labelRotate": 45,
+                              "ellipsis": {
+                                "overflow": "truncate",
+                                "labelWidth": 20
+                              },
+                              "nameLocation": "end",
+                              "nameTextStyle": {
+                                "fontSize": 12,
+                                "color": "#4e4e4e"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -4960,6 +5237,47 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "max": 60,
+                                "min": 0,
+                                "interval": 10,
+                                "position": "left",
+                                "dataName": [
+                                  "Domestic"
+                                ],
+                                "name": "value",
+                                "unit": "元",
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    0,
+                                    0,
+                                    -45
+                                  ]
+                                }
+                              },
+                              {
+                                "max": 90,
+                                "min": 0,
+                                "interval": 15,
+                                "position": "right",
+                                "dataName": [
+                                  "Abroad"
+                                ],
+                                "name": "kal",
+                                "unit": "$",
+                                "offset": 45,
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    -45,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5108,6 +5426,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5130,6 +5457,20 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "value": 100,
+                                "name": "VPC"
+                              },
+                              {
+                                "value": 90,
+                                "name": "IM"
+                              },
+                              {
+                                "value": 49,
+                                "name": "EIP"
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5152,6 +5493,25 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "text": " ",
+                              "subtext": " ",
+                              "top": "center",
+                              "left": "center",
+                              "itemGap": 8,
+                              "textStyle": {
+                                "color": "#191919",
+                                "fontSize": 28,
+                                "lineHeight": 28,
+                                "fontWeight": "normal"
+                              },
+                              "subtextStyle": {
+                                "color": "#bbbbbb",
+                                "fontSize": 16,
+                                "lineHeight": 24,
+                                "fontWeight": "normal"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5171,6 +5531,11 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "borderColor": "#ffffff",
+                              "borderWidth": 3,
+                              "borderRadius": 0
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5190,6 +5555,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "center": [
+                                "50%",
+                                "45%"
+                              ],
+                              "radius": [
+                                "44%",
+                                "50%"
+                              ]
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5380,6 +5755,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5402,6 +5786,20 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "value": 100,
+                                "name": "VPC"
+                              },
+                              {
+                                "value": 90,
+                                "name": "IM"
+                              },
+                              {
+                                "value": 49,
+                                "name": "EIP"
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5418,12 +5816,22 @@
                             "property": "position",
                             "label": {
                               "text": {
-                                "zh_CN": "图标位置及大小"
+                                "zh_CN": "图表位置及大小"
                               }
                             },
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "center": [
+                                "50%",
+                                "45%"
+                              ],
+                              "radius": [
+                                "44%",
+                                "50%"
+                              ]
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5437,12 +5845,17 @@
                             "property": "itemStyle",
                             "label": {
                               "text": {
-                                "zh_CN": "描边位置"
+                                "zh_CN": "描边配置"
                               }
                             },
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "borderColor": "#ffffff",
+                              "borderWidth": 3,
+                              "borderRadius": 0
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5462,6 +5875,25 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "text": " ",
+                              "subtext": " ",
+                              "top": "center",
+                              "left": "center",
+                              "itemGap": 8,
+                              "textStyle": {
+                                "color": "#191919",
+                                "fontSize": 28,
+                                "lineHeight": 28,
+                                "fontWeight": "normal"
+                              },
+                              "subtextStyle": {
+                                "color": "#bbbbbb",
+                                "fontSize": 16,
+                                "lineHeight": 24,
+                                "fontWeight": "normal"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5553,7 +5985,7 @@
                       }
                     },
                     "description": {
-                      "zh_CN": "折线图配置"
+                      "zh_CN": "环形图配置"
                     },
                     "labelPosition": "top"
                   }
@@ -5691,6 +6123,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5713,6 +6154,22 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "Domestic": {
+                                "Equipment": 43,
+                                "VM": 90,
+                                "CSP": 80,
+                                "RD": 53,
+                                "Markets": 78
+                              },
+                              "Abroad": {
+                                "Equipment": 75,
+                                "VM": 55,
+                                "CSP": 93,
+                                "RD": 90,
+                                "Markets": 86
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5754,6 +6211,10 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "triggerEvent": true,
+                              "color": "#191919"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -5773,7 +6234,13 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
-                            "defaultValue": "{\n\r center: ['50%', '50%'], \n\r radius: '50%' \n\r}",
+                            "defaultValue": {
+                              "center": [
+                                "50%",
+                                "50%"
+                              ],
+                              "radius": "50%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6003,6 +6470,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6025,6 +6501,28 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "value": 60,
+                                "name": "Visit"
+                              },
+                              {
+                                "value": 40,
+                                "name": "Inquiry"
+                              },
+                              {
+                                "value": 20,
+                                "name": "Order"
+                              },
+                              {
+                                "value": 80,
+                                "name": "Click"
+                              },
+                              {
+                                "value": 100,
+                                "name": "Show"
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6047,6 +6545,14 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "left": "center",
+                              "right": "80",
+                              "top": 60,
+                              "bottom": 60,
+                              "funnelAlign": "center",
+                              "orient": "horizontal"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6066,6 +6572,14 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "width": "80%",
+                              "height": "80%",
+                              "min": 0,
+                              "max": 100,
+                              "minSize": "0%",
+                              "maxSize": "100%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6256,6 +6770,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6278,6 +6801,77 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "1990": [
+                                [
+                                  28604,
+                                  77,
+                                  17096869,
+                                  "Australia",
+                                  1990
+                                ],
+                                [
+                                  31163,
+                                  77.4,
+                                  27662440,
+                                  "Canada",
+                                  1990
+                                ],
+                                [
+                                  60001,
+                                  68,
+                                  1154605773,
+                                  "China",
+                                  1990
+                                ]
+                              ],
+                              "2000": [
+                                [
+                                  19349,
+                                  69.6,
+                                  147568552,
+                                  "Russia",
+                                  2000
+                                ],
+                                [
+                                  10670,
+                                  67.3,
+                                  53994605,
+                                  "Turkey",
+                                  2000
+                                ],
+                                [
+                                  26424,
+                                  75.7,
+                                  57110117,
+                                  "United Kingdom",
+                                  2000
+                                ]
+                              ],
+                              "2015": [
+                                [
+                                  44056,
+                                  81.8,
+                                  23968973,
+                                  "Australia",
+                                  2015
+                                ],
+                                [
+                                  43294,
+                                  81.7,
+                                  35939927,
+                                  "Canada",
+                                  2015
+                                ],
+                                [
+                                  13334,
+                                  76.9,
+                                  1376048943,
+                                  "China",
+                                  2015
+                                ]
+                              ]
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6571,6 +7165,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6593,6 +7196,41 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "Month": "Jan",
+                                "Domestic": [
+                                  5,
+                                  20
+                                ],
+                                "Abroad": [
+                                  5,
+                                  23
+                                ]
+                              },
+                              {
+                                "Month": "Feb",
+                                "Domestic": [
+                                  10,
+                                  30
+                                ],
+                                "Abroad": [
+                                  8,
+                                  25
+                                ]
+                              },
+                              {
+                                "Month": "Mar",
+                                "Domestic": [
+                                  8,
+                                  25
+                                ],
+                                "Abroad": [
+                                  2,
+                                  20
+                                ]
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6615,6 +7253,16 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "start": 0,
+                              "end": 100,
+                              "show": false,
+                              "position": {
+                                "left": 36,
+                                "bottom": 20
+                              },
+                              "height": 24
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6634,7 +7282,10 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
-                            "defaultValue": "{ \r\n\"barWidth\": 8, \r\n\"barGap\": \"60%\"\n}",
+                            "defaultValue": {
+                              "barWidth": 8,
+                              "barGap": "60%"
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6745,6 +7396,30 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "data": "Month",
+                              "name": "Utils",
+                              "line": {
+                                "show": true,
+                                "lineStyle": {
+                                  "color": "red",
+                                  "type": "dashed",
+                                  "width": 2
+                                }
+                              },
+                              "interval": 2,
+                              "fullGrid": true,
+                              "labelRotate": 45,
+                              "ellipsis": {
+                                "overflow": "truncate",
+                                "labelWidth": 20
+                              },
+                              "nameLocation": "end",
+                              "nameTextStyle": {
+                                "fontSize": 12,
+                                "color": "#4e4e4e"
+                              }
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6767,6 +7442,47 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "max": 60,
+                                "min": 0,
+                                "interval": 10,
+                                "position": "left",
+                                "dataName": [
+                                  "Domestic"
+                                ],
+                                "name": "value",
+                                "unit": "元",
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    0,
+                                    0,
+                                    -45
+                                  ]
+                                }
+                              },
+                              {
+                                "max": 90,
+                                "min": 0,
+                                "interval": 15,
+                                "position": "right",
+                                "dataName": [
+                                  "Abroad"
+                                ],
+                                "name": "kal",
+                                "unit": "$",
+                                "offset": 45,
+                                "nameTextStyle": {
+                                  "padding": [
+                                    0,
+                                    -45,
+                                    0,
+                                    0
+                                  ]
+                                }
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -6870,16 +7586,306 @@
                     "readOnly": false,
                     "disabled": false,
                     "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "color",
+                            "label": {
+                              "text": {
+                                "zh_CN": "颜色"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "颜色, 类型Array"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "data",
+                            "label": {
+                              "text": {
+                                "zh_CN": "数据"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": [
+                              {
+                                "value": 90,
+                                "name": "Utilization rate"
+                              }
+                            ],
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "startAngle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "起始角度"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 225,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "仪表盘起始角度。圆心正右手侧为 0 度，正上方为 90 度，正左手侧为 180 度"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "endAngle",
+                            "label": {
+                              "text": {
+                                "zh_CN": "结束角度"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": -45,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "仪表盘结束角度。圆心正右手侧为 0 度，正上方为 90 度，正左手侧为 180 度"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "min",
+                            "label": {
+                              "text": {
+                                "zh_CN": "最小刻度"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 0,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "仪表盘的最小值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "max",
+                            "label": {
+                              "text": {
+                                "zh_CN": "最大刻度"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 100,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "仪表盘的最大值"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "pointer",
+                            "label": {
+                              "text": {
+                                "zh_CN": "刻度指针"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": false,
+                            "cols": 12,
+                            "type": "boolean",
+                            "widget": {
+                              "component": "SwitchConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "刻度指针是否显示"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "splitColor",
+                            "label": {
+                              "text": {
+                                "zh_CN": "分割区间"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": [
+                              [
+                                0.25,
+                                "#0d9458"
+                              ],
+                              [
+                                0.5,
+                                "#eeba18"
+                              ],
+                              [
+                                0.75,
+                                "#ec6f1a"
+                              ],
+                              [
+                                1,
+                                "#f43146"
+                              ]
+                            ],
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "仪表盘的分割颜色，splitColor[i][0] 的值代表整根轴线的百分比，应在 0 到 1 之间, splitColor[i][1] 是对应的颜色"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "theme",
+                            "label": {
+                              "text": {
+                                "zh_CN": "主题"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cloud-light",
+                            "cols": 12,
+                            "widget": {
+                              "component": "SelectConfigurator",
+                              "props": {
+                                "options": [
+                                  {
+                                    "label": "light",
+                                    "value": "light"
+                                  },
+                                  {
+                                    "label": "dark",
+                                    "value": "dark"
+                                  },
+                                  {
+                                    "label": "hdesign-light",
+                                    "value": "hdesign-light"
+                                  },
+                                  {
+                                    "label": "hdesign-dark",
+                                    "value": "hdesign-dark"
+                                  },
+                                  {
+                                    "label": "cloud-light",
+                                    "value": "cloud-light"
+                                  },
+                                  {
+                                    "label": "bpit-light",
+                                    "value": "bpit-light"
+                                  },
+                                  {
+                                    "label": "bpit-dark",
+                                    "value": "bpit-dark"
+                                  }
+                                ]
+                              }
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "tooltip",
+                            "label": {
+                              "text": {
+                                "zh_CN": "悬浮框内容"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "悬浮提示框内容配置"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "仪表盘配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -6959,17 +7965,245 @@
                     "required": true,
                     "readOnly": false,
                     "disabled": false,
-                    "cols": 12,
+                    "properties": [
+                      {
+                        "label": {
+                          "zh_CN": "默认分组"
+                        },
+                        "content": [
+                          {
+                            "property": "series",
+                            "label": {
+                              "text": {
+                                "zh_CN": "系列"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": [
+                              {
+                                "type": "graph",
+                                "layout": "none",
+                                "symbolSize": 48,
+                                "color": "#42A5F5",
+                                "roam": true,
+                                "label": {
+                                  "normal": {
+                                    "show": true
+                                  }
+                                },
+                                "edgeSymbol": [
+                                  "circle",
+                                  "arrow"
+                                ],
+                                "edgeSymbolSize": [
+                                  3,
+                                  10
+                                ],
+                                "edgeLabel": {
+                                  "normal": {
+                                    "textStyle": {
+                                      "fontSize": 18
+                                    }
+                                  }
+                                },
+                                "data": [
+                                  {
+                                    "name": "节点 1",
+                                    "x": 300,
+                                    "y": 300
+                                  },
+                                  {
+                                    "name": "节点 2",
+                                    "x": 800,
+                                    "y": 300
+                                  },
+                                  {
+                                    "name": "节点 3",
+                                    "x": 550,
+                                    "y": 100
+                                  },
+                                  {
+                                    "name": "节点 4",
+                                    "x": 550,
+                                    "y": 500
+                                  }
+                                ],
+                                "links": [
+                                  {
+                                    "source": 0,
+                                    "target": 1,
+                                    "symbolSize": [
+                                      5,
+                                      20
+                                    ],
+                                    "label": {
+                                      "normal": {
+                                        "show": true
+                                      }
+                                    },
+                                    "lineStyle": {
+                                      "normal": {
+                                        "width": 5,
+                                        "curveness": 0.2
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 1",
+                                    "label": {
+                                      "normal": {
+                                        "show": true
+                                      }
+                                    },
+                                    "lineStyle": {
+                                      "normal": {
+                                        "curveness": 0.2
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "source": "节点 1",
+                                    "target": "节点 3"
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 3"
+                                  },
+                                  {
+                                    "source": "节点 2",
+                                    "target": "节点 4"
+                                  },
+                                  {
+                                    "source": "节点 1",
+                                    "target": "节点 4"
+                                  }
+                                ],
+                                "lineStyle": {
+                                  "normal": {
+                                    "opacity": 0.9,
+                                    "width": 2,
+                                    "curveness": 0
+                                  }
+                                }
+                              }
+                            ],
+                            "cols": 12,
+                            "widget": {
+                              "component": "CodeConfigurator",
+                              "props": {
+                                "language": "json"
+                              }
+                            },
+                            "description": {
+                              "zh_CN": "图表数据"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationEasing",
+                            "label": {
+                              "text": {
+                                "zh_CN": "初始缓动效果"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cubicOut",
+                            "cols": 12,
+                            "type": "string",
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "初始动画的缓动效果"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationEasingUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "更新缓动效果"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": "cubicInOut",
+                            "cols": 12,
+                            "type": "string",
+                            "widget": {
+                              "component": "InputConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "更新动画的缓动效果"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationDurationUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "动画时长"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 300,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "数据更新动画的时长"
+                            },
+                            "labelPosition": "left"
+                          },
+                          {
+                            "property": "animationDelayUpdate",
+                            "label": {
+                              "text": {
+                                "zh_CN": "动画延迟"
+                              }
+                            },
+                            "required": true,
+                            "readOnly": false,
+                            "disabled": false,
+                            "defaultValue": 100,
+                            "cols": 12,
+                            "type": "number",
+                            "widget": {
+                              "component": "NumberConfigurator",
+                              "props": {}
+                            },
+                            "description": {
+                              "zh_CN": "数据更新动画的延迟"
+                            },
+                            "labelPosition": "left"
+                          }
+                        ]
+                      }
+                    ],
                     "widget": {
-                      "component": "CodeConfigurator",
+                      "component": "NestedPropertyConfigurator",
                       "props": {
+                        "type": "object",
                         "language": "json"
                       }
                     },
                     "description": {
                       "zh_CN": "拓扑图配置"
                     },
-                    "labelPosition": "left"
+                    "labelPosition": "top"
                   }
                 ]
               }
@@ -7066,6 +8300,15 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              "#6D8FF0",
+                              "#00A874",
+                              "#BD72F0",
+                              "#54BCCE",
+                              "#FDC000",
+                              "#9185F0",
+                              "#00A2B5"
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -7088,6 +8331,20 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": [
+                              {
+                                "name": "UniEPMgr",
+                                "value": 80
+                              },
+                              {
+                                "name": "SMLoglic",
+                                "value": 65
+                              },
+                              {
+                                "name": "SSO",
+                                "value": 45
+                              }
+                            ],
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
@@ -7129,6 +8386,12 @@
                             "required": true,
                             "readOnly": false,
                             "disabled": false,
+                            "defaultValue": {
+                              "error": 75,
+                              "warning": 60,
+                              "subwarning": 50,
+                              "success": 20
+                            },
                             "cols": 12,
                             "widget": {
                               "component": "CodeConfigurator",
