@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="placeholder-layer" v-if="!TableModel || !TableModel?.id">请选择表格模型</div>
+    <div class="placeholder-layer" v-if="!tableModel || !tableModel?.id">请选择表格模型</div>
     <template v-else>
       <tiny-grid ref="gridRef" :data="tableData" v-bind="gridState">
         <tiny-grid-column v-if="gridState.selectedEnabled" type="selection" width="60"></tiny-grid-column>
@@ -102,7 +102,7 @@ const attrs = useAttrs()
 
 const gridRef = ref()
 
-const TableModel = computed(() => props.serviceModel)
+const tableModel = computed(() => props.serviceModel)
 
 const tableData = ref(props.modelValue)
 
@@ -194,9 +194,7 @@ const updateApi = (data) => {
     })
 }
 
-const queryApi = (
-  { currentPage, pageSize, data } = { currentPage: pagerState.currentPage, pageSize: pagerState.pageSize }
-) => {
+const queryApi = (data) => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
     return undefined
@@ -205,8 +203,8 @@ const queryApi = (
   const params = Object.fromEntries(tableModel.value.parameters.map((item) => [item.prop, null]))
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
-      currentPage: currentPage || 1,
-      pageSize: pageSize || 10,
+      currentPage: pagerState.currentPage || 1,
+      pageSize: pagerState.pageSize || 10,
       nameEn: tableModel.value.nameEn,
       nameCn: tableModel.value.nameCn,
       params: {

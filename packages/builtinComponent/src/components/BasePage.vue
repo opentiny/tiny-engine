@@ -343,7 +343,7 @@ const updateApi = (data = addFormData.value) => {
     })
 }
 
-const queryApi = ({ currentPage, pageSize, data } = {}) => {
+const queryApi = (data = formData.value) => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
     return undefined
@@ -352,8 +352,8 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
   return getMetaApi(META_SERVICE.Http)
     .post(apiInfo.url, {
-      currentPage: currentPage || 1,
-      pageSize: pageSize || 10,
+      currentPage: pagerState.currentPage || 1,
+      pageSize: pagerState.pageSize || 10,
       nameEn: pageModel.value.nameEn,
       nameCn: pageModel.value.nameCn,
       params: {
