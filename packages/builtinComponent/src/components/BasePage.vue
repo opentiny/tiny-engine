@@ -179,7 +179,7 @@ import {
   Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
@@ -302,7 +302,7 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
       Notify({
@@ -324,7 +324,7 @@ const updateApi = (data = addFormData.value) => {
   }
   const id = data.id
   delete data.id
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       nameEn: pageModel.value.nameEn,
       data: data,
@@ -350,7 +350,7 @@ const queryApi = (data = formData.value) => {
   }
   // 处理查询参数
   const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       currentPage: pagerState.currentPage || 1,
       pageSize: pagerState.pageSize || 10,
@@ -362,8 +362,8 @@ const queryApi = (data = formData.value) => {
       }
     })
     .then((res) => {
-      tableData.value = res.list
-      pagerState.total = res.total
+      tableData.value = res.data.data.list
+      pagerState.total = res.data.data.total
       emit('update:tableData', tableData.value)
       return res
     })
@@ -377,7 +377,7 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
       Notify({

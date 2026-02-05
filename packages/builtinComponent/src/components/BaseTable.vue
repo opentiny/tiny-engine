@@ -63,7 +63,7 @@ import {
   Popover as TinyPopover
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
@@ -169,11 +169,9 @@ const insertApi = (data = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
-    .catch((err) => {
-      throw new Error(err)
-    })
+  return axios.post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data }).catch((err) => {
+    throw new Error(err)
+  })
 }
 
 const updateApi = (data) => {
@@ -183,7 +181,7 @@ const updateApi = (data) => {
   }
   const id = data.id
   delete data.id
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       nameEn: tableModel.value.nameEn,
       data: data,
@@ -201,7 +199,7 @@ const queryApi = (data) => {
   }
   // 处理查询参数
   const params = Object.fromEntries(tableModel.value.parameters.map((item) => [item.prop, null]))
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       currentPage: pagerState.currentPage || 1,
       pageSize: pagerState.pageSize || 10,
@@ -213,8 +211,8 @@ const queryApi = (data) => {
       }
     })
     .then((res) => {
-      tableData.value = res.list
-      pagerState.total = res.total
+      tableData.value = res.data.data.list
+      pagerState.total = res.data.data.total
       return res
     })
     .catch((err) => {
@@ -227,11 +225,9 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
-    .catch((err) => {
-      throw new Error(err)
-    })
+  return axios.post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn }).catch((err) => {
+    throw new Error(err)
+  })
 }
 
 const exposedData = {
