@@ -18,20 +18,6 @@
         </div>
       </div>
       <div class="model-set-wrap">
-        <div class="model-wrap">
-          <div class="model-parameters">
-            <tiny-grid
-              :data="selectedModel?.method || []"
-              min-height="116"
-              max-height="330"
-              @radio-change="selectModelFunction"
-            >
-              <tiny-grid-column type="radio" width="40"></tiny-grid-column>
-              <tiny-grid-column field="name" title="方法名称" show-overflow></tiny-grid-column>
-              <tiny-grid-column field="nameEn" title="英文名" show-overflow></tiny-grid-column>
-            </tiny-grid>
-          </div>
-        </div>
         <div class="model-param-wrap" v-if="selectedFunction">
           <tiny-form
             ref="ruleFormRef"
@@ -44,7 +30,11 @@
               <tiny-input v-model="methodBasicData.url"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="请求方式" prop="method">
-              <tiny-select v-model="methodBasicData.method" :options="methodBasicData.options"></tiny-select>
+              <tiny-select
+                v-model="methodBasicData.method"
+                :disabled="methodDisabled"
+                :options="methodBasicData.options"
+              ></tiny-select>
             </tiny-form-item>
           </tiny-form>
           <tiny-collapse v-model="activeNames">
@@ -63,29 +53,26 @@
     </div>
   </tiny-popover>
   <div class="model-api-wrap" v-if="modelValue.length">
-    <div class="model-api-item" v-for="item in modelValue" :key="item.name">
-      <span>{{ item.name }}</span>
-      <tiny-icon-del @click="removeApi(item)"></tiny-icon-del>
+    <div class="model-api-item" v-for="(item, index) in apiList" :key="item.nameEn">
+      <tiny-checkbox v-model="item.checked" @change="setModelApis">{{ item.name }}</tiny-checkbox>
+      <tiny-icon-edit @click="openPopover(item, index)"></tiny-icon-edit>
     </div>
   </div>
-  <tiny-button @click="openPopover">{{ modelValue?.name || buttonText }}</tiny-button>
 </template>
 <script setup>
-import { ref, reactive, defineProps, defineEmits, watch } from 'vue'
+import { ref, reactive, computed, defineProps, defineEmits, watch } from 'vue'
 import {
   Button as TinyButton,
   Popover as TinyPopover,
   Collapse as TinyCollapse,
   CollapseItem as TinyCollapseItem,
-  Grid as TinyGrid,
-  GridColumn as TinyGridColumn,
   Form as TinyForm,
   FormItem as TinyFormItem,
   Input as TinyInput,
   Select as TinySelect,
-  Notify
+  Checkbox as TinyCheckbox
 } from '@opentiny/vue'
-import { iconClose, iconDel } from '@opentiny/vue-icon'
+import { iconClose, iconEdit } from '@opentiny/vue-icon'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { getModelDetail } from '../model-common/http'
 import ParamsBindGrid from './ParamsBindGrid.vue'
@@ -121,14 +108,12 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:modelValue'])
 const TinyIconClose = iconClose()
-const TinyIconDel = iconDel()
+const TinyIconEdit = iconEdit()
 const isShow = ref(false)
 const modelValue = ref(props.meta.widget.props.modelValue || [])
 const activeNames = ref(['request', 'response'])
 const ruleFormRef = ref(null)
 const methodBasicData = reactive({
-  url: '',
-  method: 'post',
   options: [
     {
       label: 'GET',
@@ -153,57 +138,66 @@ const methodBasicData = reactive({
   }
 })
 
+const apiList = ref([])
+const selectedApi = ref([])
 const selectedModel = ref()
 const selectedFunction = ref()
+const selectedFunctionIndex = ref(null)
+
+const methodDisabled = computed(
+  () => selectedFunction.value.url !== `${selectedModel.value.modelUrl}/${selectedFunction.value.nameEn}`
+)
 
 const getModel = async () => {
   const modelId = useCanvas().getCurrentSchema().props?.serviceModel?.id
   if (modelId) {
     selectedModel.value = await getModelDetail(modelId)
-    methodBasicData.method = 'post'
+    apiList.value = selectedModel.value.method.map((item) => {
+      return {
+        ...item,
+        checked: true,
+        url: `${selectedModel.value.modelUrl}/${item.nameEn}`,
+        method: 'post'
+      }
+    })
+    selectedApi.value = selectedModel.value.method.map((api) => api.name)
   }
 }
 
-const openPopover = () => {
+const openPopover = (editItem, editIndex) => {
+  selectedFunction.value = { ...editItem }
+  selectedFunctionIndex.value = editIndex
   isShow.value = true
-  getModel()
 }
 
 const closePopover = () => {
+  selectedFunction.value = null
+  selectedFunctionIndex.value = null
   isShow.value = false
+}
+
+const setModelApis = () => {
+  modelValue.value = apiList.value
+    .map((item) => {
+      return item.checked
+        ? {
+            url: item.url,
+            method: item.method,
+            name: item.name,
+            nameEn: item.nameEn
+          }
+        : null
+    })
+    .filter(api !== null)
+  emit('update:modelValue', modelValue.value)
 }
 
 const setModelFunction = async () => {
   ruleFormRef.value.validate().then(() => {
-    if (modelValue.value.find((item) => item.name === selectedFunction.value.name)) {
-      Notify({
-        type: 'error',
-        message: '当前模型方法已选择',
-        position: 'top-right'
-      })
-    } else {
-      modelValue.value.push({
-        modelName: selectedModel.value.nameCn,
-        url: methodBasicData.url,
-        method: methodBasicData.method,
-        name: selectedFunction.value.name,
-        nameEn: selectedFunction.value.nameEn
-      })
-      emit('update:modelValue', modelValue.value)
-
-      closePopover()
-    }
+    apiList.value[selectedFunctionIndex.value] = selectedFunction.value
+    setModelApis()
+    closePopover()
   })
-}
-
-const removeApi = (apiItem) => {
-  modelValue.value = modelValue.value.filter((item) => item.name !== apiItem.name)
-  emit('update:modelValue', modelValue.value)
-}
-
-const selectModelFunction = (data) => {
-  selectedFunction.value = data.row
-  methodBasicData.url = `${selectedModel.value.baseUrl}/${selectedFunction.value.nameEn}`
 }
 
 watch(
@@ -211,10 +205,10 @@ watch(
   async (model) => {
     if (model) {
       await getModel()
-      modelValue.value = selectedModel.value.method.map((api) => {
+      modelValue.value = apiList.value.map((api) => {
         return {
-          url: `${model.baseUrl}/${api.nameEn}`,
-          method: 'post',
+          url: api.url,
+          method: api.method,
           name: api.name,
           nameEn: api.nameEn
         }
@@ -302,13 +296,17 @@ watch(
   .model-api-item {
     display: flex;
     justify-content: space-between;
-    height: 24px;
+    height: 28px;
+    line-height: 28px;
     align-items: center;
-    padding: 2px;
+    padding: 0 8px;
     border-bottom: 1px solid var(--te-component-common-border-color-divider);
 
     svg {
       cursor: pointer;
+      font-size: 16px;
+      opacity: 0.4;
+      color: var(--te-component-common-text-color-primary);
     }
   }
 }
