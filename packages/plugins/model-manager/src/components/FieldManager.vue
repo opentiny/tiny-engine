@@ -1,6 +1,8 @@
 <template>
   <div class="section">
-    <tiny-button class="add-field-btn" size="mini" @click="$emit('add-field')"> <svg-icon name="add"></svg-icon> 添加字段 </tiny-button>
+    <tiny-button class="add-field-btn" size="mini" @click="$emit('add-field')">
+      <svg-icon name="add"></svg-icon> 添加字段
+    </tiny-button>
     <div class="field-table">
       <tiny-grid
         :data="model.parameters"
@@ -10,7 +12,6 @@
         ref="fieldGrid"
         style="height: 100%"
       >
-        <tiny-grid-column type="index" width="60" title="序号"></tiny-grid-column>
         <tiny-grid-column type="expand" width="20">
           <template #default="{ row }">
             <div v-if="row.type === 'Enum'" class="expand-content">
@@ -63,7 +64,7 @@
             </div>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column field="prop" title="字段名称" width="120">
+        <tiny-grid-column field="prop" title="字段名称" width="100">
           <template #default="{ row }">
             <div v-if="row.isEditing" class="editing-cell">
               <tiny-input v-model="row.prop" placeholder="请输入字段名称" size="small" />
@@ -71,7 +72,7 @@
             <div v-else class="readonly-cell">{{ row.prop || '点击编辑' }}</div>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column field="type" title="类型" width="110">
+        <tiny-grid-column field="type" title="类型" width="80">
           <template #default="{ row }">
             <div v-if="row.isEditing" class="editing-cell">
               <tiny-select v-model="row.type" size="small" @change="handleTypeChange(row)">
@@ -86,7 +87,7 @@
             <div v-else class="readonly-cell">{{ getFieldTypeLabel(row.type) }}</div>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column field="defaultValue" title="默认值" width="120">
+        <tiny-grid-column field="defaultValue" title="默认值" width="100">
           <template #default="{ row }">
             <div v-if="row.isEditing" class="editing-cell">
               <tiny-input v-model="row.defaultValue" placeholder="请输入默认值" size="small" />
@@ -102,7 +103,7 @@
             <div v-else class="readonly-cell"><tiny-checkbox v-model="row.required" disabled /></div>
           </template>
         </tiny-grid-column>
-        <tiny-grid-column field="description" title="描述" width="120">
+        <tiny-grid-column field="description" title="描述" width="100">
           <template #default="{ row }">
             <div v-if="row.isEditing" class="editing-cell">
               <tiny-input v-model="row.description" placeholder="请输入字段描述" size="small" />

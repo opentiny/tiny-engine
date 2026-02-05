@@ -11,8 +11,10 @@
         <div class="model-title">
           <span>绑定模型数据</span>
           <div class="right">
-            <tiny-button type="primary" plain @click="setModel"> 确认 </tiny-button>
-            <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
+            <button-group>
+              <tiny-button type="primary" @click="setModel"> 确认 </tiny-button>
+              <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
+            </button-group>
           </div>
         </div>
         <div class="model-wrap">
@@ -21,7 +23,7 @@
           </div>
           <div class="model-parameters">
             <tiny-grid :data="selectedModel?.parameters || []" min-height="296" max-height="560">
-              <tiny-grid-column field="prop" title="字段名" width="180"> </tiny-grid-column>
+              <tiny-grid-column field="prop" title="字段名" show-overflow> </tiny-grid-column>
               <tiny-grid-column field="label" title="标签名" show-overflow></tiny-grid-column>
               <tiny-grid-column field="originType" title="类型" show-overflow></tiny-grid-column>
             </tiny-grid>
@@ -179,6 +181,7 @@ import {
 import { iconUpWard, iconDownWard, iconClose, iconEdit } from '@opentiny/vue-icon'
 import { defineEmits, defineProps, ref, reactive, nextTick, computed, watch, onMounted } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
+import { ButtonGroup } from '@opentiny/tiny-engine-common'
 import MetaListItem from './MetaListItem.vue'
 import ModelSelect from '../model-common/ModelSelect.vue'
 import MetaChildItem from '../operator-group-configurator/MetaChildItem.vue'
@@ -502,12 +505,12 @@ onMounted(() => {
   border: 1px solid #e6e6e6;
   border-radius: 4px;
   .model-groups {
-    width: 380px;
+    width: 280px;
     padding: 12px;
     border-right: 1px solid #e6e6e6;
   }
   .model-parameters {
-    width: 380px;
+    width: 280px;
     padding: 12px;
   }
 }

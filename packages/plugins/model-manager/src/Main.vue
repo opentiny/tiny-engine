@@ -7,7 +7,6 @@
       @close="pluginPanelClosed"
     >
       <template #header>
-        <svg-button class="add-icon" name="add" placement="bottom" tips="新建模型" @click="handleAddModel"></svg-button>
         <svg-button
           class="flow-download-icon"
           name="flow-download"
@@ -17,6 +16,7 @@
         ></svg-button>
       </template>
       <template #content>
+        <tiny-button class="add-model" @click="handleAddModel"> <svg-icon name="add"></svg-icon>新建模型 </tiny-button>
         <div class="model-manager-search" clearable placeholder="搜索">
           <tiny-search v-model="localKeyword">
             <template #prefix>
@@ -30,16 +30,26 @@
               v-for="model in filteredModels"
               :key="model.id"
               :class="['model-item', { active: selectedModel?.id === model.id }]"
-              @click="selectModel(model)"
             >
-              <div class="model-info">
-                <div class="model-name">{{ model.nameCn }}</div>
-                <div class="model-english-name">{{ model.nameEn }}</div>
-                <div class="model-desc">{{ model.description || '暂无描述' }}</div>
+              <div class="item-label">
+                <div class="item-name">
+                  <svg-icon name="plugin-icon-data" class="plugin-icon-data"> </svg-icon>
+                  {{ model.nameCn }}
+                </div>
+                <div class="item-handler">
+                  <svg-button
+                    class="set-page"
+                    :hoverBgColor="false"
+                    tips="设置模型"
+                    name="setting"
+                    @mousedown.stop.prevent="selectModel(model)"
+                  >
+                  </svg-button>
+                </div>
               </div>
-              <div class="model-actions">
+              <!-- <div class="model-actions">
                 <svg-icon name="delete" @click.stop="handleDeleteModel(model)"></svg-icon>
-              </div>
+              </div> -->
             </div>
           </template>
           <search-empty :isShow="!models.length" />
@@ -49,6 +59,7 @@
     <model-setting
       :model="selectedModel"
       :models="models"
+      @deleteCallback="handleDeleteModel"
       @editCallback="editCallback"
       @exportModel="exportModel"
     ></model-setting>
@@ -57,7 +68,7 @@
 
 <script setup>
 import { ref, reactive, provide, computed, onMounted } from 'vue'
-import { TinySearch, Modal } from '@opentiny/vue'
+import { TinySearch, Modal, TinyButton } from '@opentiny/vue'
 import { IconSearch } from '@opentiny/vue-icon'
 import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
@@ -193,7 +204,10 @@ onMounted(async () => {
 .plugin-modelmanager {
   height: 100%;
   width: 280px;
-
+  .add-model {
+    margin: 0 12px 12px 12px;
+    width: calc(100% - 24px);
+  }
   .model-manager-search {
     padding: 0 12px 12px 12px;
   }
@@ -206,43 +220,42 @@ onMounted(async () => {
     font-size: var(--te-base-font-size-base);
 
     .model-item {
-      padding: 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
+      box-shadow: var(--te-datasource-tabs-border-color) 0, -1px;
+      height: 24px;
+      line-height: 24px;
       align-items: center;
-
-      &:hover {
-        background-color: var(--te-model-manage-draggable-row-bg-color-hover);
-        color: var(--te-model-manage-draggable-text-color);
-      }
-
+      display: grid;
+      padding: 0 12px;
+      position: relative;
+      color: var(--te-datasource-list-main-text-color);
+      cursor: pointer;
+      &:hover,
       &.active {
-        background-color: var(--te-model-manage-draggable-row-bg-color-hover);
-        color: var(--te-model-manage-draggable-text-color);
+        background: var(--te-datasource-list-text-color-hover);
+        .item-handler {
+          display: inline-block;
+        }
       }
-
-      svg {
-        cursor: pointer;
+      .item-label {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: var(--te-datasource-list-item-text-color);
+        .item-name {
+          display: flex;
+          align-items: center;
+        }
+        .plugin-icon-data {
+          color: var(--te-datasource-list-item-icon-color);
+          margin-right: 8px;
+        }
       }
-
-      .model-info {
-        .model-name {
-          font-weight: 600;
-          margin-bottom: 2px;
-          font-size: 14px;
-        }
-        .model-english-name {
-          font-size: 11px;
-          margin-bottom: 4px;
-          font-family: monospace;
-        }
-        .model-desc {
-          font-size: 12px;
-          color: var(--te-model-manage-tip-text-color);
-          display: -webkit-box;
-          overflow: hidden;
-        }
+      .item-handler {
+        height: 24px;
+        line-height: 24px;
+        display: none;
       }
     }
   }

@@ -10,6 +10,7 @@
       <button-group>
         <tiny-button @click="$emit('exportModel', selectedModel?.id)">导出SQL</tiny-button>
         <tiny-button type="primary" @click="saveModel">保存</tiny-button>
+        <svg-button name="delete" v-if="selectedModel?.id" @click="$emit('deleteCallback', selectedModel)"></svg-button>
         <svg-button name="close" @click="closeModelSettingPanel"></svg-button>
       </button-group>
     </template>
@@ -45,7 +46,7 @@ import ModelBasicForm from './ModelBasicForm.vue'
 import FieldManager from './FieldManager.vue'
 import { createModel, updateModel } from '../composable/useModelManager'
 
-const isShow = ref(false) 
+const isShow = ref(false)
 
 export const openModelSettingPanel = () => {
   isShow.value = true
@@ -76,7 +77,7 @@ export default {
       default: () => []
     }
   },
-  emits: ['editCallback', 'exportModel'],
+  emits: ['editCallback', 'exportModel', 'deleteCallback'],
   setup(props, { emit }) {
     const { PLUGIN_NAME } = useLayout()
     const activeName = ref(['general', 'fields'])

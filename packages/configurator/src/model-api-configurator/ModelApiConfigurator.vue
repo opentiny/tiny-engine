@@ -6,32 +6,33 @@
     :visible-arrow="false"
     :popper-class="['option-popper', 'fixed-left']"
     :offset="isSecond ? 652 : 0"
-    width="860"
+    width="640"
   >
     <div class="model-function-wrap">
       <div class="model-title">
         <span>选择模型方法</span>
         <div class="right">
-          <tiny-button @click="closePopover">取消</tiny-button>
-          <tiny-button type="primary" @click="setModelFunction" :disabled="!selectedFunction">确定</tiny-button>
-          <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
+          <button-group>
+            <tiny-button type="primary" @click="setModelFunction" :disabled="!selectedFunction">确定</tiny-button>
+            <tiny-icon-close class="tiny-svg-size" @click="closePopover"></tiny-icon-close>
+          </button-group>
         </div>
       </div>
       <div class="model-set-wrap">
         <div class="model-param-wrap" v-if="selectedFunction">
           <tiny-form
             ref="ruleFormRef"
-            :model="methodBasicData"
+            :model="selectedFunction"
             :rules="methodBasicData.rules"
             label-width="100px"
             label-position="left"
           >
             <tiny-form-item label="请求URL" prop="url">
-              <tiny-input v-model="methodBasicData.url"></tiny-input>
+              <tiny-input v-model="selectedFunction.url"></tiny-input>
             </tiny-form-item>
             <tiny-form-item label="请求方式" prop="method">
               <tiny-select
-                v-model="methodBasicData.method"
+                v-model="selectedFunction.method"
                 :disabled="methodDisabled"
                 :options="methodBasicData.options"
               ></tiny-select>
@@ -74,6 +75,7 @@ import {
 } from '@opentiny/vue'
 import { iconClose, iconEdit } from '@opentiny/vue-icon'
 import { useCanvas } from '@opentiny/tiny-engine-meta-register'
+import { ButtonGroup } from '@opentiny/tiny-engine-common'
 import { getModelDetail } from '../model-common/http'
 import ParamsBindGrid from './ParamsBindGrid.vue'
 
@@ -188,7 +190,7 @@ const setModelApis = () => {
           }
         : null
     })
-    .filter(api !== null)
+    .filter((api) => api !== null)
   emit('update:modelValue', modelValue.value)
 }
 

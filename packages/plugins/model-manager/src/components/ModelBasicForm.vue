@@ -1,6 +1,15 @@
 <template>
   <div class="section">
-    <tiny-form ref="ruleFormRef" :model="localValue" :rules="rules">
+    <tiny-form
+      ref="ruleFormRef"
+      :model="localValue"
+      :rules="rules"
+      label-width="120px"
+      validate-type="text"
+      :inline-message="true"
+      :label-align="true"
+      label-position="top"
+    >
       <div class="form-item">
         <tiny-form-item label="中文名称" prop="nameCn">
           <tiny-input v-model="localValue.nameCn" placeholder="请输入模型中文名称" />
