@@ -33,7 +33,7 @@
             >
               <div class="item-label">
                 <div class="item-name">
-                  <svg-icon name="plugin-icon-data" class="plugin-icon-data"> </svg-icon>
+                  <svg-icon name="plugin-icon-modelmanager" class="plugin-icon-modelmanager"> </svg-icon>
                   {{ model.nameCn }}
                 </div>
                 <div class="item-handler">
@@ -47,9 +47,6 @@
                   </svg-button>
                 </div>
               </div>
-              <!-- <div class="model-actions">
-                <svg-icon name="delete" @click.stop="handleDeleteModel(model)"></svg-icon>
-              </div> -->
             </div>
           </template>
           <search-empty :isShow="!models.length" />
@@ -220,18 +217,18 @@ onMounted(async () => {
     font-size: var(--te-base-font-size-base);
 
     .model-item {
-      box-shadow: var(--te-datasource-tabs-border-color) 0, -1px;
+      box-shadow: var(--te-model-manage-input-border-color) 0, -1px;
       height: 24px;
       line-height: 24px;
       align-items: center;
       display: grid;
       padding: 0 12px;
       position: relative;
-      color: var(--te-datasource-list-main-text-color);
+      color: var(--te-model-manage-text-color);
       cursor: pointer;
       &:hover,
       &.active {
-        background: var(--te-datasource-list-text-color-hover);
+        background: var(--te-model-manage-tree-node-bg-color-hover);
         .item-handler {
           display: inline-block;
         }
@@ -242,13 +239,13 @@ onMounted(async () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        color: var(--te-datasource-list-item-text-color);
+        color: var(--te-model-manage-draggable-text-color);
         .item-name {
           display: flex;
           align-items: center;
         }
-        .plugin-icon-data {
-          color: var(--te-datasource-list-item-icon-color);
+        .plugin-icon-modelmanager {
+          color: var(--te-model-manage-draggable-icon-color);
           margin-right: 8px;
         }
       }

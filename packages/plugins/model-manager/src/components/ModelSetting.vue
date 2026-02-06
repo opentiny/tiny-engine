@@ -210,5 +210,18 @@ export default {
 <style lang="less" scoped>
 .modelmanager-plugin-setting {
   width: fit-content;
+
+  :deep(.tiny-collapse .tiny-collapse-item) {
+    .tiny-collapse-item__header {
+      padding: 0;
+    }
+
+    .tiny-collapse-item__wrap .tiny-collapse-item__content {
+      padding: 0;
+      .section {
+        padding: 0;
+      }
+    }
+  }
 }
 </style>

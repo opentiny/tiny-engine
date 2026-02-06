@@ -1,9 +1,9 @@
 <template>
   <tiny-grid :data="data" :tree-config="{ children: 'children', indent: 6 }">
     <tiny-grid-column field="prop" title="字段" width="100" tree-node></tiny-grid-column>
-    <tiny-grid-column field="type" title="类型" width="60"></tiny-grid-column>
+    <tiny-grid-column field="type" title="类型" width="40"></tiny-grid-column>
     <tiny-grid-column field="description" show-overflow title="描述" width="80"></tiny-grid-column>
-    <tiny-grid-column field="required" title="是否必填" width="66">
+    <tiny-grid-column field="required" title="是否必填" width="60">
       <template #default="data">
         <span>{{ data.row?.required ? '是' : '否' }}</span>
       </template>

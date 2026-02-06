@@ -32,7 +32,7 @@
   </div>
 </template>
 <script>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, computed, watch } from 'vue'
 import { Search, Grid, GridColumn, Pager } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { getModelList } from '../model-common/http'
@@ -50,6 +50,9 @@ export default {
     modelPageSize: {
       type: Number,
       default: 10
+    },
+    data: {
+      type: Object
     },
     isShow: {
       type: Boolean,
@@ -72,10 +75,23 @@ export default {
     // 搜索
     const searchWords = ref('')
 
+    const selectedModel = computed(() => props.data)
+
+    const selectModel = async (data) => {
+      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
+      emit('modelSelect', currentSelectedModel.value)
+    }
+
     const getModels = () => {
-      getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then((res) => {
+      if (selectedModel.value) {
+        searchWords.value = selectedModel.value.name
+      }
+      getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then(async (res) => {
         modelList.value = res.records
         pagerState.total = res.total
+        const radioRow = res.records.find((item) => item.id === selectedModel.value.id)
+        modelListRef.value.setRadioRow(radioRow)
+        await selectModel({ row: radioRow })
       })
     }
 
@@ -86,11 +102,6 @@ export default {
     const pageChange = (curPage) => {
       pagerState.currentPage = curPage
       getModels()
-    }
-
-    const selectModel = async (data) => {
-      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
-      emit('modelSelect', currentSelectedModel.value)
     }
 
     watch(

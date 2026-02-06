@@ -19,7 +19,7 @@
         </div>
         <div class="model-wrap">
           <div class="model-groups">
-            <model-select @model-select="getModel" :isShow="isShow"></model-select>
+            <model-select @model-select="getModel" :data="modelDetail" :isShow="isShow"></model-select>
           </div>
           <div class="model-parameters">
             <tiny-grid :data="selectedModel?.parameters || []" min-height="296" max-height="560">
@@ -31,11 +31,15 @@
         </div>
         <template #reference>
           <tiny-button @click="openPopover">
-            <span v-if="modelDetail?.name">
-              {{ modelDetail?.name }}
-            </span>
-            <span v-else>选择模型</span>
+            <span>绑定模型数据</span>
           </tiny-button>
+          <div v-if="modelDetail?.name" class="bind-model-info">
+            <span class="bind-info-title"
+              >已绑定:
+              <span class="bind-info-name">{{ modelDetail?.name }} | {{ modelDetail?.nameEn }}</span>
+            </span>
+            <svg-icon name="delete"></svg-icon>
+          </div>
         </template>
       </tiny-popover>
     </div>
@@ -397,6 +401,21 @@ onMounted(() => {
   }
   .model-name-warp {
     border: 1px solid var(--ti-lowcode-component-input-border-color);
+
+    .bind-model-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      line-height: 28px;
+
+      .bind-info-title {
+        color: var(--te-common-text-secondary);
+        .bind-info-name {
+          font-weight: 600;
+        }
+      }
+    }
   }
   .meta-model-title {
     color: #808080;

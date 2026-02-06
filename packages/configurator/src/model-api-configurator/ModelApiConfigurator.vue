@@ -6,7 +6,7 @@
     :visible-arrow="false"
     :popper-class="['option-popper', 'fixed-left']"
     :offset="isSecond ? 652 : 0"
-    width="640"
+    width="600"
   >
     <div class="model-function-wrap">
       <div class="model-title">
@@ -54,7 +54,7 @@
     </div>
   </tiny-popover>
   <div class="model-api-wrap" v-if="modelValue.length">
-    <div class="model-api-item" v-for="(item, index) in apiList" :key="item.nameEn">
+    <div class="model-api-item" v-for="(item, index) in modelValue" :key="item.nameEn">
       <tiny-checkbox v-model="item.checked" @change="setModelApis">{{ item.name }}</tiny-checkbox>
       <tiny-icon-edit @click="openPopover(item, index)"></tiny-icon-edit>
     </div>
