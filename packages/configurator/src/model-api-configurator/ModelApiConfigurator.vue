@@ -61,7 +61,7 @@
   </div>
 </template>
 <script setup>
-import { ref, reactive, computed, defineProps, defineEmits, watch } from 'vue'
+import { ref, reactive, computed, defineProps, defineEmits, watch, onMounted } from 'vue'
 import {
   Button as TinyButton,
   Popover as TinyPopover,
@@ -219,6 +219,10 @@ watch(
     }
   }
 )
+
+onMounted(() => {
+  getModel()
+})
 </script>
 
 <style lang="less" scoped>

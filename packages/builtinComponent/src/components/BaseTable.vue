@@ -60,7 +60,8 @@ import {
   DatePicker as TinyDatePicker,
   Numeric as TinyNumeric,
   Pager as TinyPager,
-  Popover as TinyPopover
+  Popover as TinyPopover,
+  Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
 import axios from 'axios'
@@ -174,25 +175,7 @@ const insertApi = (data = {}) => {
   })
 }
 
-const updateApi = (data) => {
-  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
-  if (!apiInfo) {
-    return undefined
-  }
-  const id = data.id
-  delete data.id
-  return axios
-    .post(apiInfo.url, {
-      nameEn: tableModel.value.nameEn,
-      data: data,
-      params: { id }
-    })
-    .catch((err) => {
-      throw new Error(err)
-    })
-}
-
-const queryApi = (data) => {
+const queryApi = (data = {}) => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
     return undefined
@@ -220,14 +203,56 @@ const queryApi = (data) => {
     })
 }
 
+const updateApi = (data) => {
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
+  if (!apiInfo) {
+    return undefined
+  }
+  const requestData = {}
+  tableModel.value.parameters.forEach((item) => {
+    if (data[item.prop]) {
+      requestData[item.prop] = data[item.prop]
+    }
+  })
+  return axios
+    .post(apiInfo.url, {
+      nameEn: tableModel.value.nameEn,
+      data: requestData,
+      params: { id: data.id }
+    })
+    .then((res) => {
+      Notify({
+        type: 'success',
+        message: '修改成功',
+        position: 'top-right'
+      })
+      queryApi()
+      return res
+    })
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
+
 const deleteApi = (evidence) => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'deleteApi')
   if (!apiInfo) {
     return undefined
   }
-  return axios.post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn }).catch((err) => {
-    throw new Error(err)
-  })
+  return axios
+    .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
+    .then((res) => {
+      Notify({
+        type: 'success',
+        message: '已删除',
+        position: 'top-right'
+      })
+      queryApi()
+      return res
+    })
+    .catch((err) => {
+      throw new Error(err)
+    })
 }
 
 const exposedData = {

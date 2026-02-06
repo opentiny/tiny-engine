@@ -39,7 +39,7 @@
 </template>
 <script>
 import { ref, watch, nextTick } from 'vue'
-import { Button, Collapse, CollapseItem } from '@opentiny/vue'
+import { Button, Collapse, CollapseItem, Notify } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import ModelBasicForm from './ModelBasicForm.vue'

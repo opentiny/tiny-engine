@@ -322,12 +322,16 @@ const updateApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  const id = data.id
-  delete data.id
+  const requestData = {}
+  pageModel.value.parameters.forEach((item) => {
+    if (data[item.prop]) {
+      requestData[item.prop] = data[item.prop]
+    }
+  })
   return axios
     .post(apiInfo.url, {
       nameEn: pageModel.value.nameEn,
-      data: data,
+      data: requestData,
       params: { id }
     })
     .then((res) => {
@@ -385,6 +389,7 @@ const deleteApi = (evidence) => {
         message: '已删除',
         position: 'top-right'
       })
+      queryApi()
       return res
     })
     .catch((err) => {
