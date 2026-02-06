@@ -154,6 +154,7 @@ const getModel = async () => {
   const modelId = useCanvas().getCurrentSchema().props?.serviceModel?.id
   if (modelId) {
     selectedModel.value = await getModelDetail(modelId)
+    console.log('selectedModel', selectedModel.value)
     apiList.value = selectedModel.value.method.map((item) => {
       return {
         ...item,
@@ -162,6 +163,7 @@ const getModel = async () => {
         method: 'post'
       }
     })
+    console.log('apilist', apiList.value)
     selectedApi.value = selectedModel.value.method.map((api) => api.name)
   }
 }
@@ -215,6 +217,7 @@ watch(
           nameEn: api.nameEn
         }
       })
+      console.log('modelValue', modelValue.value)
       emit('update:modelValue', modelValue.value)
     }
   }
