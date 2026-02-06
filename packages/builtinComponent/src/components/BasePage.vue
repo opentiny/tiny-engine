@@ -332,7 +332,7 @@ const updateApi = (data = addFormData.value) => {
     .post(apiInfo.url, {
       nameEn: pageModel.value.nameEn,
       data: requestData,
-      params: { id }
+      params: { id: data.id }
     })
     .then((res) => {
       Notify({
