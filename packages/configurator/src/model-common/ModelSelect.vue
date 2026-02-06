@@ -89,9 +89,11 @@ export default {
       getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then(async (res) => {
         modelList.value = res.records
         pagerState.total = res.total
-        const radioRow = res.records.find((item) => item.id === selectedModel.value.id)
-        modelListRef.value.setRadioRow(radioRow)
-        await selectModel({ row: radioRow })
+        if (selectedModel.value) {
+          const radioRow = res.records.find((item) => item.id === selectedModel.value.id)
+          modelListRef.value.setRadioRow(radioRow)
+          await selectModel({ row: radioRow })
+        }
       })
     }
 
