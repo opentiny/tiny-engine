@@ -108,6 +108,12 @@ const whiteList = [
 const notAuthList = ['app-center/api/chat/completions', 'app-center/api/ai/chat', 'app-center/api/ai/search']
 const LoginErrorCode = ['CM004', 'CM005', 'CM006', 'CM007', 'CM336', 'CM339']
 
+// 新增：重置认证状态的函数
+const resetAuthState = () => {
+  isUnauthorized = false
+  abortControllers.clear()
+}
+
 // 创建 AbortController 并关联到请求
 const createAbortController = (config) => {
   const controller = new AbortController()
@@ -191,6 +197,10 @@ const requestHandler = (config) => {
       return new Promise(() => {})
     }
   } else {
+    // 有 token 时重置认证状态
+    if (isUnauthorized) {
+      resetAuthState()
+    }
     if (!notAuthList.some((url) => config.url.includes(url))) {
       config.headers.Authorization = `Bearer ${token}`
     }
