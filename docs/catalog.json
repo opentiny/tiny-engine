@@ -64,7 +64,8 @@
               ]
             },
             { "title": "主题切换功能", "name": "theme-switch.md" },
-            { "title": "画布快捷操作", "name": "canvas-shortcuts.md" }
+            { "title": "画布快捷操作", "name": "canvas-shortcuts.md" },
+            { "title": "登录功能", "name": "auth-plugin.md" }
           ]
         },
         {
