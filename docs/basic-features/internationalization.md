@@ -9,7 +9,7 @@
 
 ## 添加国际化词条
 
-1. 在左侧插件栏中，单击![国际化插件图标](./imgs/icon-i18n.png)<!-- {.image-inline} -->，展开国际化资源页面。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-i18n.png" alt="国际化插件图标"  class="image-inline">，展开国际化资源页面。
 2. 单击“新增词条”。
 3. 编辑key，中文和英文内容
 
@@ -25,8 +25,8 @@
 
 ## 编辑国际化词条
 
-1. 在左侧插件栏中，单击![国际化插件图标](./imgs/icon-i18n.png)<!-- {.image-inline} -->，展开国际化资源页面。
-2. 选择待操作的词条，单击“操作”列的![编辑图标](./imgs/icon-edit.png)<!-- {.image-inline} -->。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-i18n.png" alt="国际化插件图标" class="image-inline">，展开国际化资源页面。
+2. 选择待操作的词条，单击“操作”列的<img src="./imgs/icon-edit.png" alt="编辑图标" class="image-inline">。
 
    **图 2**  编辑词条  
    ![编辑词条](./imgs/editWord.png "editWord")
@@ -36,8 +36,8 @@
 
 ## 单个删除国际化词条
 
-1. 在左侧插件栏中，单击![国际化插件图标](./imgs/icon-i18n.png)<!-- {.image-inline} -->，展开国际化资源页面。
-2. 选择待操作的词条，单击“操作”列的![删除图标](./imgs/icon-del.png)<!-- {.image-inline} -->。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-i18n.png" alt="国际化插件图标" class="image-inline">，展开国际化资源页面。
+2. 选择待操作的词条，单击“操作”列的<img src="./imgs/icon-del.png" alt="删除图标" class="image-inline">。
 3. 在弹框中单击“确定”，完成国际化词条删除。
 
    **图 3**  删除词条
@@ -45,7 +45,7 @@
 
 ## 批量删除国际化词条
 
-1. 在左侧插件栏中，单击![国际化插件图标](./imgs/icon-i18n.png)<!-- {.image-inline} -->，展开国际化资源页面。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-i18n.png" alt="国际化插件图标" class="image-inline">，展开国际化资源页面。
 2. 勾选待操作的词条，单击“批量删除”。
 
    **图 4**  批量删除词条  
@@ -55,8 +55,8 @@
 
 ## 复制词条键值
 
-1. 在左侧插件栏中，单击![国际化插件图标](./imgs/icon-i18n.png)<!-- {.image-inline} -->，展开国际化资源页面。
-2. 选择待操作的词条，单击“操作”列的![复制图标](./imgs/icon-copy.png)<!-- {.image-inline} -->。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-i18n.png" alt="国际化插件图标" class="image-inline">，展开国际化资源页面。
+2. 选择待操作的词条，单击“操作”列的<img src="./imgs/icon-copy.png" alt="复制图标" class="image-inline">。
 
    页面显示“复制成功”，完成词条键值复制。
 
@@ -65,10 +65,10 @@
 
 ## 使用国际化词条
 
-1. 在左侧插件栏中，单击![物料插件图标](./imgs/icon-add.png)<!-- {.image-inline} -->，展开物料资产包。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-add.png" alt="物料插件图标" class="image-inline">，展开物料资产包。
 2. 在物料资产包中选择组件，例如button组件，并拖拽至中心画布中。
 3. 选中组件，在组件属性设置面板选择“属性”。
-4. 选中文案参数旁的![变量绑定图标](./imgs/icon-code.png)<!-- {.image-inline} -->，进行变量绑定。
+4. 选中文案参数旁的<img src="./imgs/icon-code.png" alt="变量绑定图标" class="image-inline">，进行变量绑定。
 5. 输入变量t\('lowcode.67564435'\)，其中lowcode.67564435为词条的key值，可参考[复制词条键值](#复制词条键值)获取。
 
    **图 6**  绑定变量 
