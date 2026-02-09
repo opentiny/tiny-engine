@@ -19,9 +19,15 @@
         </div>
         <div class="model-wrap">
           <div class="model-groups">
-            <model-select @model-select="getModel" :data="modelDetail" :isShow="isShow"></model-select>
+            <model-select @model-select="getModel" :isShow="isShow"></model-select>
           </div>
           <div class="model-parameters">
+            <div v-if="selectedModel?.name" class="bind-model-info">
+              <span class="bind-info-title"
+                >当前选中的模型:
+                <span class="bind-info-name">{{ selectedModel?.name }} | {{ selectedModel?.nameEn }}</span>
+              </span>
+            </div>
             <tiny-grid :data="selectedModel?.parameters || []" min-height="296" max-height="560">
               <tiny-grid-column field="prop" title="字段名" show-overflow> </tiny-grid-column>
               <tiny-grid-column field="label" title="标签名" show-overflow></tiny-grid-column>
@@ -38,7 +44,7 @@
               >已绑定:
               <span class="bind-info-name">{{ modelDetail?.name }} | {{ modelDetail?.nameEn }}</span>
             </span>
-            <svg-icon name="delete"></svg-icon>
+            <svg-icon name="delete" @click="unbindModel"></svg-icon>
           </div>
         </template>
       </tiny-popover>
@@ -186,6 +192,7 @@ import { iconUpWard, iconDownWard, iconClose, iconEdit } from '@opentiny/vue-ico
 import { defineEmits, defineProps, ref, reactive, nextTick, computed, watch, onMounted } from 'vue'
 import { VueDraggableNext } from 'vue-draggable-next'
 import { ButtonGroup } from '@opentiny/tiny-engine-common'
+import { useCanvas, useModal } from '@opentiny/tiny-engine-meta-register'
 import MetaListItem from './MetaListItem.vue'
 import ModelSelect from '../model-common/ModelSelect.vue'
 import MetaChildItem from '../operator-group-configurator/MetaChildItem.vue'
@@ -222,7 +229,7 @@ const isShow = ref(false)
 const searchUnused = ref('')
 const searchValue = ref('')
 
-const selectedModel = ref()
+const selectedModel = ref(null)
 const originModelData = ref()
 
 const getModel = (data) => {
@@ -283,10 +290,12 @@ const state = reactive({
 })
 
 const openPopover = () => {
+  selectedModel.value = modelDetail.value
   isShow.value = true
 }
 
 const closePopover = () => {
+  selectedModel.value = null
   isShow.value = false
 }
 
@@ -302,6 +311,26 @@ const setModel = async () => {
     position: 'top-right'
   })
   closePopover()
+}
+
+// 解除模型绑定
+const unbindModel = () => {
+  useModal().confirm({
+    title: '提示',
+    message: '移除绑定将清除所有绑定的模型信息，是否继续？',
+    exec: () => {
+      const currentSchema = useCanvas().getCurrentSchema()
+      const { clearSelect } = useCanvas().canvasApi.value
+      delete currentSchema.props.serviceModel
+      delete currentSchema.props.modelApis
+      useCanvas().operateNode({
+        type: 'updateAttributes',
+        id: currentSchema.id,
+        value: { props: currentSchema.props }
+      })
+      clearSelect()
+    }
+  })
 }
 
 const editItem = (data) => {
@@ -401,21 +430,6 @@ onMounted(() => {
   }
   .model-name-warp {
     border: 1px solid var(--ti-lowcode-component-input-border-color);
-
-    .bind-model-info {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      line-height: 28px;
-
-      .bind-info-title {
-        color: var(--te-common-text-secondary);
-        .bind-info-name {
-          font-weight: 600;
-        }
-      }
-    }
   }
   .meta-model-title {
     color: #808080;
@@ -496,6 +510,21 @@ onMounted(() => {
     }
   }
 }
+
+.bind-model-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  line-height: 28px;
+
+  .bind-info-title {
+    color: var(--te-common-text-secondary);
+    .bind-info-name {
+      font-weight: 600;
+    }
+  }
+}
 .model-title {
   display: flex;
   justify-content: space-between;
@@ -531,6 +560,10 @@ onMounted(() => {
   .model-parameters {
     width: 280px;
     padding: 12px;
+
+    .tiny-grid {
+      margin-top: 8px;
+    }
   }
 }
 </style>

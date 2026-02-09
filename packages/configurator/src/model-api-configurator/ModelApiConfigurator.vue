@@ -59,6 +59,7 @@
       <tiny-icon-edit @click="openPopover(item, index)"></tiny-icon-edit>
     </div>
   </div>
+  <div v-else class="model-api-empty">当前还未选择模型</div>
 </template>
 <script setup>
 import { ref, reactive, computed, defineProps, defineEmits, watch, onMounted } from 'vue'
@@ -83,10 +84,6 @@ const props = defineProps({
   meta: {
     type: Object,
     default: () => ({})
-  },
-  buttonText: {
-    type: String,
-    default: '选择模型方法'
   },
   // 协议类型
   renderType: {
@@ -315,5 +312,9 @@ onMounted(() => {
       color: var(--te-component-common-text-color-primary);
     }
   }
+}
+
+.model-api-empty {
+  color: var(--te-common-text-secondary);
 }
 </style>
