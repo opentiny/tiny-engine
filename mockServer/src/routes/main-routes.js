@@ -225,8 +225,8 @@ router.post('block-history/create', async (ctx) => {
 })
 
 router.get('/app-center/api/apps/page', async (ctx) => {
-  const { appId } = ctx.params
-  ctx.body = await mockService.appsService.list(appId)
+  const { name, orderBy, createdBy } = ctx.query
+  ctx.body = await mockService.appsService.list(name, orderBy, createdBy)
 })
 
 router.post('/app-center/api/apps/create', async (ctx) => {
@@ -236,6 +236,18 @@ router.post('/app-center/api/apps/create', async (ctx) => {
 router.get('/app-center/api/apps/delete/:id', async (ctx) => {
   const { id } = ctx.params
   ctx.body = await mockService.appsService.delete(id)
+})
+
+// 获取app详情
+router.get('/app-center/api/apps/detail/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.appsService.find(id)
+})
+
+// 获取appSchema
+router.get('/app-center/v1/api/apps/schema/:id', async (ctx) => {
+  const { id } = ctx.params
+  ctx.body = await mockService.appsService.findSchema(id)
 })
 
 router.get('/app-center/api/app-template/list', async (ctx) => {

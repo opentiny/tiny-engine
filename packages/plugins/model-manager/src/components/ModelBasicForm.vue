@@ -39,7 +39,7 @@ const props = defineProps({
 })
 
 // 创建本地副本，直接编辑本地数据
-const localValue = ref(props.model)
+const localValue = ref({ modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api/model-data`, ...props.model })
 
 const ruleFormRef = ref()
 
@@ -53,10 +53,7 @@ const rules = ref({
     { min: 1, max: 32, message: '长度在1-32之间', trigger: 'blur' }
   ],
   version: [{ required: true, message: '必填', trigger: 'blur' }],
-  modelUrl: [
-    { required: true, message: '必填', trigger: 'blur' },
-    { min: 1, max: 200, message: '长度在1-200之间', trigger: 'blur' }
-  ]
+  modelUrl: [{ min: 1, max: 200, message: '长度在1-200之间', trigger: 'blur' }]
 })
 
 // 监听 props 变化，同步到本地（当选择不同模型时）
