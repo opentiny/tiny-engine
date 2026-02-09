@@ -13,7 +13,7 @@
             <svg-icon class="user-icon" name="default-user"></svg-icon>{{ userInfo.username }}
           </div>
           <div class="user-tenant">
-            <div class="tenant-label">创建组织</div>
+            <div class="tenant-label">创建组织22</div>
             <div class="tenant-item">
               <tiny-input v-model="state.newTenant" placeholder="输入组织名"> </tiny-input>
               <svg-icon class="plus-circle" name="plus-circle" @click="createTenant"></svg-icon>
