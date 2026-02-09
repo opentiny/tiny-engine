@@ -55,7 +55,7 @@
           </tiny-col>
         </tiny-row>
       </tiny-form>
-      <div>
+      <div class="operator-group">
         <tiny-button type="primary" :size="pageState?.size" @click="addRow"> 新增 </tiny-button>
         <tiny-button :size="pageState?.size" @click="search"> 搜索 </tiny-button>
         <tiny-button :size="pageState?.size" @click="resetSearchForm"> 重置 </tiny-button>
@@ -305,6 +305,14 @@ const insertApi = (data = addFormData.value) => {
   return axios
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '新增成功',
@@ -335,6 +343,14 @@ const updateApi = (data = addFormData.value) => {
       params: { id: data.id }
     })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '修改成功',
@@ -366,6 +382,14 @@ const queryApi = (data = formData.value) => {
       }
     })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       tableData.value = res.data.data.list
       pagerState.total = res.data.data.total
       emit('update:tableData', tableData.value)
@@ -384,6 +408,14 @@ const deleteApi = (evidence) => {
   return axios
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '已删除',
@@ -445,6 +477,7 @@ const initEditFormData = () => {
 
 const resetSearchForm = () => {
   initSearchFormData()
+  queryApi()
 }
 
 const addRow = () => {
@@ -538,5 +571,9 @@ defineExpose({
   width: 100%;
   text-align: center;
   line-height: 40px;
+}
+
+.operator-group {
+  margin-bottom: 10px;
 }
 </style>

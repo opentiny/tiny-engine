@@ -194,6 +194,14 @@ const queryApi = (data = {}) => {
       }
     })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       tableData.value = res.data.data.list
       pagerState.total = res.data.data.total
       return res
@@ -221,6 +229,14 @@ const updateApi = (data) => {
       params: { id: data.id }
     })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '修改成功',
@@ -242,6 +258,14 @@ const deleteApi = (evidence) => {
   return axios
     .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '已删除',
