@@ -26,7 +26,7 @@ interface CanvasStatus {
 }
 
 export const getCanvasStatus = (data: Occupier | undefined): CanvasStatus => {
-  const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
+  const userInfo = getMetaApi(META_SERVICE.GlobalService).getUserInfo()
   const isDemo = useResource().appSchemaState.isDemo
   let state = ''
 
@@ -35,7 +35,7 @@ export const getCanvasStatus = (data: Occupier | undefined): CanvasStatus => {
   } else if (!data) {
     state = PAGE_STATUS.Release
   } else {
-    state = globalState.userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
+    state = userInfo.id === data.id ? PAGE_STATUS.Occupy : PAGE_STATUS.Lock
   }
 
   return {

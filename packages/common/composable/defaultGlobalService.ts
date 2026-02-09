@@ -1,4 +1,11 @@
-import { useMessage, defineService, getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import {
+  useCanvas,
+  useResource,
+  useMessage,
+  defineService,
+  getMetaApi,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
 import { reactive, watch } from 'vue'
 
 const getBaseInfo = () => {
@@ -55,24 +62,25 @@ const userState = reactive({
   needToLogin: false
 })
 
+const { subscribe, publish } = useMessage()
+
 const getLoginStatus = () => userState.needToLogin
 
 const setNeedToLogin = (value: boolean) => {
   userState.needToLogin = value
-  if (!value) {
-    const defaultTenantId = userState.userInfo.tenant?.[0]?.id
-    if (defaultTenantId) {
-      const currentUrl = new URL(window.location.href)
-      const currentTenant = getBaseInfo().tenantId
 
-      const filterList = userState.userInfo.tenant.filter((item) => item.id === currentTenant) || []
-      // 只有当tenant值不存在时才更新
-      if (!filterList?.length) {
-        currentUrl.searchParams.set('tenant', String(defaultTenantId))
-        window.history.replaceState(window.history.state, '', currentUrl.href)
+  if (!value) {
+    watch(
+      useCanvas().isCanvasApiReady,
+      (ready) => {
+        if (ready) {
+          useResource().fetchResource()
+        }
+      },
+      {
+        immediate: true
       }
-    }
-    window.location.reload()
+    )
   }
 }
 
@@ -103,8 +111,6 @@ const fetchAppInfo = (appId: string) => getMetaApi(META_SERVICE.Http).get(`/app-
 // 获取应用列表
 const fetchAppList = (platformId: string) =>
   getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/list/${platformId}`)
-
-const { subscribe, publish } = useMessage()
 
 const postLocationHistoryChanged = (data: any) => publish({ topic: 'locationHistoryChanged', data })
 

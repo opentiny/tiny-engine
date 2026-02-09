@@ -119,7 +119,7 @@ const initBlock = async (blockId: string) => {
 const initPageOrBlock = async () => {
   const { pageId, blockId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
   const pagePluginApi = getMetaApi(META_APP.AppManage)
-  const globalState = getMetaApi(META_SERVICE.GlobalService).getState()
+  const userInfo = getMetaApi(META_SERVICE.GlobalService).getUserInfo()
 
   if (pageId) {
     const data = await pagePluginApi.getPageById(pageId)
@@ -137,7 +137,7 @@ const initPageOrBlock = async () => {
   const getPageInfo = () => {
     // 页面是否被他人锁定 (被锁定 且 非当前用户锁定)
     const isPageOccupierdByOthers = (page) => {
-      return page.meta?.occupier && page.meta.occupier.id !== globalState.userInfo.id
+      return page.meta?.occupier && page.meta.occupier.id !== userInfo.id
     }
     // 首页
     const homePage = appSchemaState.pageTree.find((page) => page?.meta?.isHome)
