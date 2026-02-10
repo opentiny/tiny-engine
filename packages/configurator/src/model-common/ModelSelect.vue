@@ -18,7 +18,6 @@
       <tiny-grid-column type="radio" width="30"></tiny-grid-column>
       <tiny-grid-column field="nameCn" title="模型名称" show-overflow></tiny-grid-column>
       <tiny-grid-column field="description" title="模型描述" show-overflow></tiny-grid-column>
-      <tiny-grid-column field="version" title="版本" show-overflow></tiny-grid-column>
     </tiny-grid>
     <tiny-pager
       :current-page="pagerState.currentPage"
