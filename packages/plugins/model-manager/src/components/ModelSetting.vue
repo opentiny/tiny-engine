@@ -8,9 +8,9 @@
   >
     <template #header>
       <button-group>
-        <tiny-button @click="$emit('exportModel', selectedModel?.id)">导出SQL</tiny-button>
+        <tiny-button v-if="showExport" @click="$emit('exportModel', selectedModel?.id)">导出SQL</tiny-button>
         <tiny-button type="primary" @click="saveModel">保存</tiny-button>
-        <svg-button name="delete" v-if="selectedModel?.id" @click="$emit('deleteCallback', selectedModel)"></svg-button>
+        <svg-button name="delete" v-if="selectedModel?.id" @click="deleteModel"></svg-button>
         <svg-button name="close" @click="closeModelSettingPanel"></svg-button>
       </button-group>
     </template>
@@ -75,6 +75,10 @@ export default {
     models: {
       type: Array,
       default: () => []
+    },
+    showExport: {
+      type: Boolean,
+      default: false
     }
   },
   emits: ['editCallback', 'exportModel', 'deleteCallback'],
@@ -183,6 +187,11 @@ export default {
         }
       })
     }
+
+    const deleteModel = () => {
+      $emit('deleteCallback', selectedModel)
+      closeModelSettingPanel()
+    }
     // 监听 props 变化，同步到本地（当选择不同模型时）
     watch(
       () => props.model,
@@ -202,7 +211,8 @@ export default {
       handleAddField,
       insertEnumValueAfter,
       removeEnumValue,
-      saveModel
+      saveModel,
+      deleteModel
     }
   }
 }

@@ -8,6 +8,7 @@
     >
       <template #header>
         <svg-button
+          v-if="showExportSql"
           class="flow-download-icon"
           name="flow-download"
           placement="bottom"
@@ -56,6 +57,7 @@
     <model-setting
       :model="selectedModel"
       :models="models"
+      :showExport="showExportSql"
       @deleteCallback="handleDeleteModel"
       @editCallback="editCallback"
       @exportModel="exportModel"
@@ -89,7 +91,7 @@ const selectedModel = ref(null) // 当前选中的模型
 // 模型数据列表，包含模型及其字段
 const models = ref([])
 const localKeyword = ref('')
-
+const showExportSql = ref(false)
 const panelState = reactive({
   emitEvent: emit
 })
@@ -133,8 +135,7 @@ const handleAddModel = () => {
     id: null,
     nameCn: '',
     nameEn: '',
-    version: '',
-    modelUrl: '',
+    modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api/model-data`,
     description: '',
     parameters: []
   }
