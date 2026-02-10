@@ -136,7 +136,7 @@ const handleAddModel = () => {
     id: null,
     nameCn: '',
     nameEn: '',
-    modelUrl: `${VITE_ORIGIN}/platform-center/api/model-data`,
+    modelUrl: `${VITE_ORIGIN}platform-center/api/model-data`,
     description: '',
     parameters: []
   }
