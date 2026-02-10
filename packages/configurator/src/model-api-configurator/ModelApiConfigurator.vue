@@ -144,7 +144,7 @@ const selectedFunction = ref()
 const selectedFunctionIndex = ref(null)
 
 const methodDisabled = computed(
-  () => selectedFunction.value.url !== `${selectedModel.value.modelUrl}/${selectedFunction.value.nameEn}`
+  () => selectedFunction.value.url === `${selectedModel.value.modelUrl}/${selectedFunction.value.nameEn}`
 )
 
 const getModel = async () => {
