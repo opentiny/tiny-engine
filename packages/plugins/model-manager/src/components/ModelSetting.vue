@@ -219,7 +219,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .modelmanager-plugin-setting {
-  width: fit-content;
+  width: 578px;
 
   :deep(.tiny-collapse .tiny-collapse-item) {
     .tiny-collapse-item__header {
