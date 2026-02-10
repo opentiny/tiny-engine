@@ -70,7 +70,7 @@ import { ref, reactive, provide, computed, onMounted } from 'vue'
 import { TinySearch, Modal, TinyButton } from '@opentiny/vue'
 import { IconSearch } from '@opentiny/vue-icon'
 import { PluginPanel, SvgButton, SearchEmpty } from '@opentiny/tiny-engine-common'
-import { useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, useEnv } from '@opentiny/tiny-engine-meta-register'
 import ModelSetting, { openModelSettingPanel, closeModelSettingPanel } from './components/ModelSetting.vue'
 import { getModelList, deleteModel, getModelSql, getModelSqlById } from './composable/useModelManager'
 
@@ -86,6 +86,7 @@ defineProps({
 const emit = defineEmits(['close'])
 
 const { PLUGIN_NAME } = useLayout()
+const { VITE_ORIGIN } = useEnv()
 const TinyIconSearch = IconSearch()
 const selectedModel = ref(null) // 当前选中的模型
 // 模型数据列表，包含模型及其字段
@@ -135,7 +136,7 @@ const handleAddModel = () => {
     id: null,
     nameCn: '',
     nameEn: '',
-    modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api/model-data`,
+    modelUrl: `${VITE_ORIGIN}/platform-center/api/model-data`,
     description: '',
     parameters: []
   }
