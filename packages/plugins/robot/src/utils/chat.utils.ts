@@ -11,7 +11,8 @@ export const formatMessages = (messages: LLMMessage[]) => {
       role: message.role,
       content: message.content,
       ...(message.tool_calls ? { tool_calls: message.tool_calls } : {}),
-      ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {})
+      ...(message.tool_call_id ? { tool_call_id: message.tool_call_id } : {}),
+      ...(message.reasoning_content ? { reasoning_content: message.reasoning_content } : {})
     }))
 }
 

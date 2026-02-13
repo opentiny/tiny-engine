@@ -29,6 +29,7 @@ const handleDeltaReasoning = (choice: ChatCompletionStreamResponseChoice, lastMe
       })
     }
     lastMessage.renderContent.at(-1)!.content += choice.delta.reasoning_content
+    lastMessage.reasoning_content = (lastMessage.reasoning_content || '') + choice.delta.reasoning_content
   }
 }
 

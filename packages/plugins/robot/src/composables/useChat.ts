@@ -168,7 +168,13 @@ const handleToolCall = createToolCallHandler({
     onError: handleRequestError,
     onDone: handleFinishRequest
   },
-  getMessageState: () => messageManager.messageState
+  getMessageState: () => messageManager.messageState,
+  statusManager: {
+    isProcessing: () => chatStatus === CHAT_STATUS.PROCESSING,
+    setProcessing: () => {
+      chatStatus = CHAT_STATUS.PROCESSING
+    }
+  }
 })
 
 // 包装 conversation 方法，添加业务特定逻辑

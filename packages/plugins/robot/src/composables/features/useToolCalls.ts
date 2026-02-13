@@ -74,6 +74,10 @@ export interface ToolCallHandlerConfig {
     onDone: (finishReason: string, messages: any[], contextMessages: any[], messageState: any) => Promise<void>
   }
   getMessageState: () => any
+  statusManager?: {
+    isProcessing: () => boolean
+    setProcessing: () => void
+  }
 }
 
 /**
@@ -81,7 +85,7 @@ export interface ToolCallHandlerConfig {
  * 使用工厂函数模式，将所有依赖通过配置注入
  */
 export function createToolCallHandler(config: ToolCallHandlerConfig) {
-  const { client, getAbortController, formatMessages, hooks, streamHandlers, getMessageState } = config
+  const { client, getAbortController, formatMessages, hooks, streamHandlers, getMessageState, statusManager } = config
 
   return async (tool_calls: ResponseToolCall[], messages: any[], contextMessages: RobotMessage[]) => {
     const hasToolCall = tool_calls?.length > 0
@@ -117,6 +121,8 @@ export function createToolCallHandler(config: ToolCallHandlerConfig) {
     }
 
     delete currentMessage.tool_calls
+
+    statusManager?.setProcessing()
 
     // 使用工具调用结果继续对话
     await client.chatStream(
