@@ -113,7 +113,7 @@ const handleFinishRequest = async (
   } else if (finishReason === 'stop' && !lastMessage.tool_calls) {
     messageState.status = STATUS.FINISHED
     chatStatus.value = CHAT_STATUS.FINISHED
-    await await onMessageProcessed(finishReason, lastMessage.content ?? '', messages.value, {})
+    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages.value, {})
   }
 }
 
