@@ -49,7 +49,7 @@
         </tiny-tooltip>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleRegister"> 注册</tiny-button>
+        <tiny-button :disabled="!isReady" type="primary" @click="handleRegister"> 注册</tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="register-bottom">
@@ -197,10 +197,6 @@ export default {
     cursor: pointer;
     color: #1476ff;
   }
-}
-
-.successBg {
-  background: #191919 !important;
 }
 
 :deep(.tiny-form-item__content) {

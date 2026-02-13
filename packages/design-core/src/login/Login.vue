@@ -14,7 +14,7 @@
         ></tiny-input>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleLogin"> 登录 </tiny-button>
+        <tiny-button :disabled="!isReady" type="primary" @click="handleLogin"> 登录 </tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="login-bottom">
@@ -116,9 +116,6 @@ export default {
   position: relative;
   padding-left: 40%;
   margin-bottom: 24px;
-}
-.successBg {
-  background: #191919 !important;
 }
 
 .login-other::before,

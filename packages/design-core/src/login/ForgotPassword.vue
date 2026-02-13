@@ -52,7 +52,7 @@
         </tiny-tooltip>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleForgot"> 提交</tiny-button>
+        <tiny-button :disabled="!isReady" type="primary" @click="handleForgot"> 提交</tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="forgot-bottom">
@@ -198,10 +198,6 @@ export default {
     cursor: pointer;
     color: #1476ff;
   }
-}
-
-.successBg {
-  background: #191919 !important;
 }
 
 :deep(.tiny-form-item__content) {
