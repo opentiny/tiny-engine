@@ -11,6 +11,7 @@ export interface ConversationAdapterOptions {
   statusManager: {
     isProcessing: () => boolean
     setProcessing: () => void
+    resetProcessing: () => void
   }
 }
 
@@ -43,7 +44,8 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
       const contextMessages = toRaw(messages.value.slice(0, -1))
       await onFinishRequest(finishReason ?? 'unknown', messages.value, contextMessages, messageState)
       const lastMessage = messages.value.at(-1)
-      if (lastMessage) {
+      if (lastMessage && finishReason === 'stop' && !lastMessage.tool_calls && statusManager.isProcessing()) {
+        statusManager.resetProcessing()
         await onMessageProcessed(finishReason ?? 'unknown', lastMessage.content ?? '', messages.value, {})
       }
     }

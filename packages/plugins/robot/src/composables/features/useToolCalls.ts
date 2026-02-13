@@ -77,6 +77,7 @@ export interface ToolCallHandlerConfig {
   statusManager?: {
     isProcessing: () => boolean
     setProcessing: () => void
+    resetProcessing: () => void
   }
 }
 

@@ -110,6 +110,10 @@ const handleFinishRequest = async (
 
   if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
     messageState.status = STATUS.ABORTED
+  } else if (finishReason === 'stop' && !lastMessage.tool_calls) {
+    messageState.status = STATUS.FINISHED
+    chatStatus.value = CHAT_STATUS.FINISHED
+    await await onMessageProcessed(finishReason, lastMessage.content ?? '', messages.value, {})
   }
 }
 
@@ -146,6 +150,9 @@ const {
     isProcessing: () => chatStatus.value === CHAT_STATUS.PROCESSING,
     setProcessing: () => {
       chatStatus.value = CHAT_STATUS.PROCESSING
+    },
+    resetProcessing: () => {
+      chatStatus.value = CHAT_STATUS.FINISHED
     }
   }
 })
@@ -173,6 +180,9 @@ const handleToolCall = createToolCallHandler({
     isProcessing: () => chatStatus.value === CHAT_STATUS.PROCESSING,
     setProcessing: () => {
       chatStatus.value = CHAT_STATUS.PROCESSING
+    },
+    resetProcessing: () => {
+      chatStatus.value = CHAT_STATUS.FINISHED
     }
   }
 })
