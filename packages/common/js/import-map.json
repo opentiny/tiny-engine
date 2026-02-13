@@ -9,7 +9,7 @@
     "@vueuse/shared": "${VITE_CDN_DOMAIN}/@vueuse/shared${versionDelimiter}9.6.0${fileDelimiter}/index.mjs",
     "axios": "${VITE_CDN_DOMAIN}/axios${versionDelimiter}1.0.0${fileDelimiter}/dist/esm/axios.js",
     "@opentiny/tiny-engine-i18n-host": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-i18n-host${versionDelimiter}^2${fileDelimiter}/dist/lowcode-design-i18n-host.es.js",
-    "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component${versionDelimiter}^2.10.0-rc.0${fileDelimiter}/dist/index.mjs",
+    "@opentiny/tiny-engine-builtin-component": "${VITE_CDN_DOMAIN}/@opentiny/tiny-engine-builtin-component${versionDelimiter}^2.10.0${fileDelimiter}/dist/index.mjs",
     "vue-demi": "${VITE_CDN_DOMAIN}/vue-demi${versionDelimiter}0.13.11${fileDelimiter}/lib/index.mjs",
     "pinia": "${VITE_CDN_DOMAIN}/pinia${versionDelimiter}2.0.22${fileDelimiter}/dist/pinia.esm-browser.js",
     "@opentiny/vue": "${VITE_CDN_DOMAIN}/@opentiny/vue-runtime${versionDelimiter}~3.20${fileDelimiter}/dist3/tiny-vue-pc.mjs",
