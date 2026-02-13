@@ -18,7 +18,6 @@
       <tiny-grid-column type="radio" width="30"></tiny-grid-column>
       <tiny-grid-column field="nameCn" title="模型名称" show-overflow></tiny-grid-column>
       <tiny-grid-column field="description" title="模型描述" show-overflow></tiny-grid-column>
-      <tiny-grid-column field="version" title="版本" show-overflow></tiny-grid-column>
     </tiny-grid>
     <tiny-pager
       :current-page="pagerState.currentPage"
@@ -72,8 +71,13 @@ export default {
     // 搜索
     const searchWords = ref('')
 
+    const selectModel = async (data) => {
+      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
+      emit('modelSelect', currentSelectedModel.value)
+    }
+
     const getModels = () => {
-      getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then((res) => {
+      getModelList(pagerState.currentPage, { nameCn: searchWords.value }).then(async (res) => {
         modelList.value = res.records
         pagerState.total = res.total
       })
@@ -86,11 +90,6 @@ export default {
     const pageChange = (curPage) => {
       pagerState.currentPage = curPage
       getModels()
-    }
-
-    const selectModel = async (data) => {
-      currentSelectedModel.value = await handleSelectedModelParameters(data.row)
-      emit('modelSelect', currentSelectedModel.value)
     }
 
     watch(

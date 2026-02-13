@@ -157,7 +157,7 @@ export default {
   color: #191919;
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
 }
 
 .pw-tips {
@@ -178,11 +178,10 @@ export default {
 }
 
 .register-bottom {
-  margin-top: 16px;
   display: flex;
   justify-content: center;
   color: #808080;
-  margin-bottom: 32px;
+  font-size: 14px;
   .to-login {
     cursor: pointer;
     color: #1476ff;

@@ -60,10 +60,11 @@ import {
   DatePicker as TinyDatePicker,
   Numeric as TinyNumeric,
   Pager as TinyPager,
-  Popover as TinyPopover
+  Popover as TinyPopover,
+  Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
@@ -169,39 +170,19 @@ const insertApi = (data = {}) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data })
-    .catch((err) => {
-      throw new Error(err)
-    })
+  return axios.post(apiInfo.url, { nameEn: tableModel.value.nameEn, params: data }).catch((err) => {
+    throw new Error(err)
+  })
 }
 
-const updateApi = (data) => {
-  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
-  if (!apiInfo) {
-    return undefined
-  }
-  const id = data.id
-  delete data.id
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, {
-      nameEn: tableModel.value.nameEn,
-      data: data,
-      params: { id }
-    })
-    .catch((err) => {
-      throw new Error(err)
-    })
-}
-
-const queryApi = (data) => {
+const queryApi = (data = {}) => {
   const apiInfo = props.modelApis.find((api) => api.nameEn === 'queryApi')
   if (!apiInfo) {
     return undefined
   }
   // 处理查询参数
   const params = Object.fromEntries(tableModel.value.parameters.map((item) => [item.prop, null]))
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       currentPage: pagerState.currentPage || 1,
       pageSize: pagerState.pageSize || 10,
@@ -213,8 +194,55 @@ const queryApi = (data) => {
       }
     })
     .then((res) => {
-      tableData.value = res.list
-      pagerState.total = res.total
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
+      tableData.value = res.data.data.list
+      pagerState.total = res.data.data.total
+      return res
+    })
+    .catch((err) => {
+      throw new Error(err)
+    })
+}
+
+const updateApi = (data) => {
+  const apiInfo = props.modelApis.find((api) => api.nameEn === 'updateApi')
+  if (!apiInfo) {
+    return undefined
+  }
+  const requestData = {}
+  tableModel.value.parameters.forEach((item) => {
+    if (data[item.prop]) {
+      requestData[item.prop] = data[item.prop]
+    }
+  })
+  return axios
+    .post(apiInfo.url, {
+      nameEn: tableModel.value.nameEn,
+      data: requestData,
+      params: { id: data.id }
+    })
+    .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
+      Notify({
+        type: 'success',
+        message: '修改成功',
+        position: 'top-right'
+      })
+      queryApi()
       return res
     })
     .catch((err) => {
@@ -227,8 +255,25 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, { ...evidence, nameEn: tableModel.value.nameEn })
+    .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
+      Notify({
+        type: 'success',
+        message: '已删除',
+        position: 'top-right'
+      })
+      queryApi()
+      return res
+    })
     .catch((err) => {
       throw new Error(err)
     })

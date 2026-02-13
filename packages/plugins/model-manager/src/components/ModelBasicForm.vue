@@ -1,6 +1,15 @@
 <template>
   <div class="section">
-    <tiny-form ref="ruleFormRef" :model="localValue" :rules="rules">
+    <tiny-form
+      ref="ruleFormRef"
+      :model="localValue"
+      :rules="rules"
+      label-width="120px"
+      validate-type="text"
+      :inline-message="true"
+      :label-align="true"
+      label-position="top"
+    >
       <div class="form-item">
         <tiny-form-item label="中文名称" prop="nameCn">
           <tiny-input v-model="localValue.nameCn" placeholder="请输入模型中文名称" />
@@ -9,11 +18,6 @@
       <div class="form-item">
         <tiny-form-item label="英文名称" prop="nameEn">
           <tiny-input v-model="localValue.nameEn" placeholder="请输入模型英文名称" />
-        </tiny-form-item>
-      </div>
-      <div class="form-item">
-        <tiny-form-item label="版本号" prop="version">
-          <tiny-input v-model="localValue.version" placeholder="1.0.0" />
         </tiny-form-item>
       </div>
       <div class="form-item">
@@ -39,7 +43,7 @@ const props = defineProps({
 })
 
 // 创建本地副本，直接编辑本地数据
-const localValue = ref({ modelUrl: `${import.meta.env.VITE_ORIGIN}/platform-center/api/model-data`, ...props.model })
+const localValue = ref(props.model)
 
 const ruleFormRef = ref()
 
@@ -52,7 +56,6 @@ const rules = ref({
     { required: true, message: '必填', trigger: 'blur' },
     { min: 1, max: 32, message: '长度在1-32之间', trigger: 'blur' }
   ],
-  version: [{ required: true, message: '必填', trigger: 'blur' }],
   modelUrl: [{ min: 1, max: 200, message: '长度在1-200之间', trigger: 'blur' }]
 })
 

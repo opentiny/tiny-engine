@@ -55,7 +55,7 @@
           </tiny-col>
         </tiny-row>
       </tiny-form>
-      <div>
+      <div class="operator-group">
         <tiny-button type="primary" :size="pageState?.size" @click="addRow"> 新增 </tiny-button>
         <tiny-button :size="pageState?.size" @click="search"> 搜索 </tiny-button>
         <tiny-button :size="pageState?.size" @click="resetSearchForm"> 重置 </tiny-button>
@@ -179,7 +179,7 @@ import {
   Notify
 } from '@opentiny/vue'
 import * as tinyVueIcon from '@opentiny/vue-icon'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
@@ -302,9 +302,17 @@ const insertApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, { nameEn: pageModel.value.nameEn, params: data })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '新增成功',
@@ -322,15 +330,27 @@ const updateApi = (data = addFormData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  const id = data.id
-  delete data.id
-  return getMetaApi(META_SERVICE.Http)
+  const requestData = {}
+  pageModel.value.parameters.forEach((item) => {
+    if (data[item.prop]) {
+      requestData[item.prop] = data[item.prop]
+    }
+  })
+  return axios
     .post(apiInfo.url, {
       nameEn: pageModel.value.nameEn,
-      data: data,
-      params: { id }
+      data: requestData,
+      params: { id: data.id }
     })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '修改成功',
@@ -350,7 +370,7 @@ const queryApi = (data = formData.value) => {
   }
   // 处理查询参数
   const params = Object.fromEntries(pageModel.value.parameters.map((item) => [item.prop, null]))
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       currentPage: pagerState.currentPage || 1,
       pageSize: pagerState.pageSize || 10,
@@ -362,8 +382,16 @@ const queryApi = (data = formData.value) => {
       }
     })
     .then((res) => {
-      tableData.value = res.list
-      pagerState.total = res.total
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
+      tableData.value = res.data.data.list
+      pagerState.total = res.data.data.total
       emit('update:tableData', tableData.value)
       return res
     })
@@ -377,14 +405,23 @@ const deleteApi = (evidence) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, { ...evidence, nameEn: pageModel.value.nameEn })
     .then((res) => {
+      if (res.data.error) {
+        Notify({
+          type: 'error',
+          message: res.data.error.message,
+          position: 'top-right'
+        })
+        return
+      }
       Notify({
         type: 'success',
         message: '已删除',
         position: 'top-right'
       })
+      queryApi()
       return res
     })
     .catch((err) => {
@@ -440,6 +477,7 @@ const initEditFormData = () => {
 
 const resetSearchForm = () => {
   initSearchFormData()
+  queryApi()
 }
 
 const addRow = () => {
@@ -533,5 +571,9 @@ defineExpose({
   width: 100%;
   text-align: center;
   line-height: 40px;
+}
+
+.operator-group {
+  margin-bottom: 10px;
 }
 </style>

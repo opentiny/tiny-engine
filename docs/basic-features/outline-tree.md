@@ -1,6 +1,6 @@
 # 查看大纲树
 
-在左侧插件栏中，单击![大纲树插件图标](./imgs/icon-tree.png)<!-- {.image-inline} -->，展开并查看页面大纲树。
+在左侧插件栏中，单击<img src="./imgs/icon-tree.png" alt="大纲树插件图标" class="image-inline">，展开并查看页面大纲树。
 
 ##  大纲树UI展示
    ![outline-tree-1](./imgs/outline-tree-1.png)

@@ -8,7 +8,7 @@
 
 ## 从物料面板中添加组件
 
-1. 在左侧插件栏中，单击![物料插件图标](./imgs/icon-add.png)<!-- {.image-inline} -->，展开物料资产包。
+1. 在左侧插件栏中，单击<img src="./imgs/icon-add.png" alt="物料插件图标" class="image-inline">，展开物料资产包。
 2. 在物料资产包中选择组件，并拖拽至中心画布中。
 
 ![拖入组件](./imgs/dragComponent.gif)

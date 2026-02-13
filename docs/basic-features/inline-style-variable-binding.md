@@ -12,7 +12,7 @@
    ![addVar](./imgs/addVar.png)
 
 2. 画布中选中组件，在组件属性设置面板选择“样式”。
-3. 单击行内样式的编辑框后的![变量绑定图标](./imgs/icon-code.png)<!-- {.image-inline} -->。
+3. 单击行内样式的编辑框后的<img src="./imgs/icon-code.png" alt="变量绑定图标" class="image-inline">。
 4. 在弹框中进行变量绑定。
 
    **图 2**  绑定变量

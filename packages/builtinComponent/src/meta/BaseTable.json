@@ -1785,7 +1785,8 @@
         "rowOperations": {
           "type": "object",
           "value": []
-        }
+        },
+        "rowOperationEnabled": true
       }
     }
   }

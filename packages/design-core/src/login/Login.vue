@@ -93,15 +93,14 @@ export default {
   color: #191919;
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
 }
 
 .login-bottom {
-  margin-top: 16px;
   display: flex;
   justify-content: space-between;
   color: #1476ff;
-  margin-bottom: 32px;
+  font-size: 14px;
   div {
     cursor: pointer;
   }
@@ -139,12 +138,5 @@ export default {
     height: 26px;
     cursor: pointer;
   }
-}
-:deep(.tiny-form-item__content) {
-  margin-left: 0 !important;
-}
-:deep(.tiny-button.tiny-button.tiny-button.tiny-button) {
-  width: 100%;
-  background: #595959;
 }
 </style>

@@ -8,8 +8,9 @@
   >
     <template #header>
       <button-group>
-        <tiny-button @click="$emit('exportModel', selectedModel?.id)">导出SQL</tiny-button>
+        <tiny-button v-if="showExport" @click="$emit('exportModel', selectedModel?.id)">导出SQL</tiny-button>
         <tiny-button type="primary" @click="saveModel">保存</tiny-button>
+        <svg-button name="delete" v-if="selectedModel?.id" @click="deleteModel"></svg-button>
         <svg-button name="close" @click="closeModelSettingPanel"></svg-button>
       </button-group>
     </template>
@@ -38,14 +39,14 @@
 </template>
 <script>
 import { ref, watch, nextTick } from 'vue'
-import { Button, Collapse, CollapseItem } from '@opentiny/vue'
+import { Button, Collapse, CollapseItem, Notify } from '@opentiny/vue'
 import { PluginSetting, ButtonGroup, SvgButton } from '@opentiny/tiny-engine-common'
 import { useLayout } from '@opentiny/tiny-engine-meta-register'
 import ModelBasicForm from './ModelBasicForm.vue'
 import FieldManager from './FieldManager.vue'
 import { createModel, updateModel } from '../composable/useModelManager'
 
-const isShow = ref(false) 
+const isShow = ref(false)
 
 export const openModelSettingPanel = () => {
   isShow.value = true
@@ -74,9 +75,13 @@ export default {
     models: {
       type: Array,
       default: () => []
+    },
+    showExport: {
+      type: Boolean,
+      default: false
     }
   },
-  emits: ['editCallback', 'exportModel'],
+  emits: ['editCallback', 'exportModel', 'deleteCallback'],
   setup(props, { emit }) {
     const { PLUGIN_NAME } = useLayout()
     const activeName = ref(['general', 'fields'])
@@ -182,6 +187,11 @@ export default {
         }
       })
     }
+
+    const deleteModel = () => {
+      $emit('deleteCallback', selectedModel)
+      closeModelSettingPanel()
+    }
     // 监听 props 变化，同步到本地（当选择不同模型时）
     watch(
       () => props.model,
@@ -201,13 +211,27 @@ export default {
       handleAddField,
       insertEnumValueAfter,
       removeEnumValue,
-      saveModel
+      saveModel,
+      deleteModel
     }
   }
 }
 </script>
 <style lang="less" scoped>
 .modelmanager-plugin-setting {
-  width: fit-content;
+  width: 578px;
+
+  :deep(.tiny-collapse .tiny-collapse-item) {
+    .tiny-collapse-item__header {
+      padding: 0;
+    }
+
+    .tiny-collapse-item__wrap .tiny-collapse-item__content {
+      padding: 0;
+      .section {
+        padding: 0;
+      }
+    }
+  }
 }
 </style>

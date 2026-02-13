@@ -62,7 +62,7 @@ import {
   Row as TinyRow,
   Col as TinyCol
 } from '@opentiny/vue'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import axios from 'axios'
 
 const props = defineProps({
   style: {
@@ -115,11 +115,9 @@ const insertApi = (data = modelData.value) => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, { nameEn: formModel.value.nameEn, params: data })
-    .catch((err) => {
-      throw new Error(err)
-    })
+  return axios.post(apiInfo.url, { nameEn: formModel.value.nameEn, params: data }).catch((err) => {
+    throw new Error(err)
+  })
 }
 
 const updateApi = (data = modelData.value) => {
@@ -129,7 +127,7 @@ const updateApi = (data = modelData.value) => {
   }
   const id = data.id
   delete data.id
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       nameEn: formModel.value.nameEn,
       data: data,
@@ -147,7 +145,7 @@ const queryApi = ({ currentPage, pageSize, data } = {}) => {
   }
   // 处理查询参数
   const params = Object.fromEntries(formModel.value.parameters.map((item) => [item.prop, null]))
-  return getMetaApi(META_SERVICE.Http)
+  return axios
     .post(apiInfo.url, {
       currentPage: currentPage || 1,
       pageSize: pageSize || 10,
@@ -168,11 +166,9 @@ const deleteApi = () => {
   if (!apiInfo) {
     return undefined
   }
-  return getMetaApi(META_SERVICE.Http)
-    .post(apiInfo.url, { id: modelData.value?.id, nameEn: formModel.value.nameEn })
-    .catch((err) => {
-      throw new Error(err)
-    })
+  return axios.post(apiInfo.url, { id: modelData.value?.id, nameEn: formModel.value.nameEn }).catch((err) => {
+    throw new Error(err)
+  })
 }
 
 const initFormData = () => {
