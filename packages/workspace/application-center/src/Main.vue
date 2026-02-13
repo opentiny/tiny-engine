@@ -95,6 +95,7 @@ import { reactive, ref, onMounted } from 'vue'
 import { Button, Select, Pager, Grid, GridColumn, Divider, Search, Modal, Notify } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import AppDialog from './AppDialog.vue'
 import { fetchApplicationList, createApplication, updateApplication, deleteApplication } from './js/http'
 
@@ -113,6 +114,7 @@ export default {
   },
 
   setup() {
+    const { getUserInfo } = getMetaApi(META_SERVICE.GlobalService)
     const appList = ref([])
 
     const appFilterOptions = [
@@ -165,11 +167,12 @@ export default {
     })
 
     const getApplicationList = () => {
+      const info = getUserInfo()
       const params = {
         currentPage: state.currentPage,
         pageSize: state.pageSize,
         name: state.appSearchKey,
-        createdBy: state.appFilter === 'all' ? '' : '1'
+        createdBy: state.appFilter === 'all' ? '' : info.id
       }
       if (state.orderBy === 'last_updated_time') {
         params.orderBy = state.orderBy
