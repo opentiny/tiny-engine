@@ -189,7 +189,7 @@ export default {
     }
 
     const deleteModel = () => {
-      $emit('deleteCallback', selectedModel)
+      emit('deleteCallback', selectedModel.value)
       closeModelSettingPanel()
     }
     // 监听 props 变化，同步到本地（当选择不同模型时）
