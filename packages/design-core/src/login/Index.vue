@@ -100,10 +100,16 @@ export default {
     background: #595959;
     height: 32px;
     margin-top: 20px;
+    font-size: 14px;
   }
   :deep(.tiny-input.tiny-input .tiny-input__inner.tiny-input__inner) {
     height: 32px;
+    font-size: 14px;
   }
+  :deep(.tiny-input.tiny-input .tiny-input__inner.tiny-input__inner)::placeholder {
+    font-size: 14px;
+  }
+
   :deep(.tiny-form.tiny-form.tiny-form .tiny-form-item) {
     margin-bottom: 20px;
   }
