@@ -19,6 +19,7 @@
 import { reactive, computed } from 'vue'
 import { TinyCheckbox, TinyButton } from '@opentiny/vue'
 import useLogin from './js/useLogin'
+import { useModal } from '@opentiny/tiny-engine-meta-register'
 
 export default {
   components: {
@@ -37,14 +38,13 @@ export default {
       emit('changeStatus', useLogin().LOGIN)
     }
 
-    const copy = () => {
-      const textarea = document.createElement('textarea')
-
-      textarea.value = `${publicKey.value}`
-      document.body.appendChild(textarea)
-      textarea.select()
-      document.execCommand('copy')
-      document.body.removeChild(textarea)
+    const copy = async () => {
+      try {
+        await navigator.clipboard.writeText(publicKey.value)
+        useModal().message({ message: '复制成功', status: 'success' })
+      } catch (err) {
+        useModal().message({ message: '复制失败', status: 'error' })
+      }
     }
 
     return {
@@ -93,15 +93,5 @@ export default {
   .success-text {
     margin-bottom: 20px;
   }
-}
-
-:deep(.tiny-button.tiny-button.tiny-button.tiny-button) {
-  margin-top: 20px;
-  background: #fff;
-  color: #191919;
-  border: 1px solid #c9c9c9;
-}
-:deep(.tiny-button.tiny-button.tiny-button.tiny-button.tiny-button--primary:not(.is-disabled)):hover {
-  background: #fff;
 }
 </style>

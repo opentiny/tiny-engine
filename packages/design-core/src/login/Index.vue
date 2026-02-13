@@ -61,12 +61,11 @@ export default {
   height: 100vh;
   background: linear-gradient(to top left, #e7f0ff, #fff);
   display: flex;
-  padding: 10%;
+  padding: 10% 10% 0 10%;
   .login-left {
     flex: 2;
     .login-img {
       max-height: 500px;
-      min-height: 298px;
       width: 100%;
       height: 100%;
       background-image: url(../../assets/login-bg.svg);
@@ -83,15 +82,30 @@ export default {
       box-sizing: border-box;
       max-width: 440px;
       min-width: 340px;
-      max-height: 500px;
-      min-height: 298px;
       width: 100%;
-      height: 100%;
       background: #fff;
       border-radius: 12px;
       box-shadow: 0 8px 40px 0 #dce6f6;
-      padding: 48px 60px;
+      padding: 52px 60px 80px 60px;
+      max-height: 100%;
+      overflow-y: auto;
     }
+  }
+
+  :deep(.tiny-form-item__content) {
+    margin-left: 0 !important;
+  }
+  :deep(.tiny-button.tiny-button.tiny-button.tiny-button) {
+    width: 100%;
+    background: #595959;
+    height: 32px;
+    margin-top: 20px;
+  }
+  :deep(.tiny-input.tiny-input .tiny-input__inner.tiny-input__inner) {
+    height: 32px;
+  }
+  :deep(.tiny-form.tiny-form.tiny-form .tiny-form-item) {
+    margin-bottom: 20px;
   }
 }
 </style>

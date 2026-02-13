@@ -55,6 +55,9 @@
         <tiny-button type="primary" @click="handleForgot"> 提交</tiny-button>
       </tiny-form-item>
     </tiny-form>
+    <div class="forgot-bottom">
+      <div class="to-login" @click="toLogin">去登录</div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +134,10 @@ export default {
       }
     }
 
+    const toLogin = () => {
+      emit('changeStatus', useLogin().LOGIN)
+    }
+
     watch(
       () => state.forgotData.password,
       () => {
@@ -139,7 +146,8 @@ export default {
     )
     return {
       state,
-      handleForgot
+      handleForgot,
+      toLogin
     }
   }
 }
@@ -150,7 +158,7 @@ export default {
   color: #191919;
   font-size: 24px;
   font-weight: 600;
-  margin-bottom: 28px;
+  margin-bottom: 36px;
 }
 
 .pw-tips {
@@ -167,6 +175,16 @@ export default {
     .pw-content-item {
       line-height: 22px;
     }
+  }
+}
+
+.forgot-bottom {
+  display: flex;
+  justify-content: center;
+  font-size: 14px;
+  .to-login {
+    cursor: pointer;
+    color: #1476ff;
   }
 }
 
