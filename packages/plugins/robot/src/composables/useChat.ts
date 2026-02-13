@@ -1,4 +1,4 @@
-import { nextTick } from 'vue'
+import { nextTick, ref } from 'vue'
 import { GeneratingStatus, STATUS, type ChatMessage, type MessageState } from '@opentiny/tiny-robot-kit'
 import { formatMessages, removeLoading } from '../utils'
 import { getClientConfig as getConfig, updateClientConfig as updateConfig, client } from '../services/aiClient'
@@ -39,7 +39,7 @@ enum CHAT_STATUS {
   FINISHED = 'finished' // 本轮对话结束
 }
 
-let chatStatus: CHAT_STATUS = CHAT_STATUS.PROCESSING
+const chatStatus = ref<CHAT_STATUS>(CHAT_STATUS.FINISHED)
 
 const abortControllerMap: Record<string, AbortController> = {}
 
@@ -52,9 +52,9 @@ const handleStreamData = createStreamDataHandler({
     onStreamTools
   },
   statusManager: {
-    isStreaming: () => chatStatus === CHAT_STATUS.STREAMING,
+    isStreaming: () => chatStatus.value === CHAT_STATUS.STREAMING,
     setStreaming: () => {
-      chatStatus = CHAT_STATUS.STREAMING
+      chatStatus.value = CHAT_STATUS.STREAMING
     }
   }
 })
@@ -114,7 +114,7 @@ const handleFinishRequest = async (
 }
 
 const handleRequestError = async (error: Error, messages: ChatMessage[], messageState: MessageState) => {
-  chatStatus = CHAT_STATUS.FINISHED
+  chatStatus.value = CHAT_STATUS.FINISHED
   delete abortControllerMap.main
   await onRequestEnd('error', messages.at(-1).content, messages, { error }) // 本次请求结束
   messageState.status = STATUS.ERROR
@@ -140,12 +140,12 @@ const {
     if (GeneratingStatus.includes(messageManager.messageState.status)) {
       messageManager.messageState.status = STATUS.FINISHED
     }
-    chatStatus = CHAT_STATUS.FINISHED
+    chatStatus.value = CHAT_STATUS.FINISHED
   },
   statusManager: {
-    isProcessing: () => chatStatus === CHAT_STATUS.PROCESSING,
+    isProcessing: () => chatStatus.value === CHAT_STATUS.PROCESSING,
     setProcessing: () => {
-      chatStatus = CHAT_STATUS.PROCESSING
+      chatStatus.value = CHAT_STATUS.PROCESSING
     }
   }
 })
@@ -170,9 +170,9 @@ const handleToolCall = createToolCallHandler({
   },
   getMessageState: () => messageManager.messageState,
   statusManager: {
-    isProcessing: () => chatStatus === CHAT_STATUS.PROCESSING,
+    isProcessing: () => chatStatus.value === CHAT_STATUS.PROCESSING,
     setProcessing: () => {
-      chatStatus = CHAT_STATUS.PROCESSING
+      chatStatus.value = CHAT_STATUS.PROCESSING
     }
   }
 })
@@ -241,6 +241,7 @@ const abortRequest = () => {
   for (const key of Object.keys(abortControllerMap)) {
     delete abortControllerMap[key]
   }
+  chatStatus.value = CHAT_STATUS.FINISHED
 
   onRequestEnd('aborted', messageManager.messages.value.at(-1)?.content as string, messageManager.messages.value)
 }
@@ -260,6 +261,7 @@ const changeChatMode = (chatMode: string) => {
 
 export default function () {
   return {
+    chatStatus,
     initChatClient,
     updateConfig,
     ...messageManager,
