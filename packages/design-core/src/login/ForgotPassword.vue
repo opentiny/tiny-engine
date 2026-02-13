@@ -52,7 +52,7 @@
         </tiny-tooltip>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button type="primary" @click="handleForgot"> 提交</tiny-button>
+        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleForgot"> 提交</tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="forgot-bottom">
@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinyTooltip } from '@opentiny/vue'
 import useLogin from './js/useLogin'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
@@ -88,6 +88,17 @@ export default {
       pwManualShow: false,
       confirmManualShow: false,
       rules: [...useLogin().passwordRules]
+    })
+
+    const isReady = computed(() => {
+      return (
+        state.forgotData.username &&
+        state.forgotData.password &&
+        state.forgotData.key &&
+        state.forgotData.confirmPassword &&
+        !state.pwManualShow &&
+        state.forgotData.confirmPassword === state.forgotData.password
+      )
     })
 
     const handleConfirmPwChange = () => {
@@ -146,6 +157,7 @@ export default {
     )
     return {
       state,
+      isReady,
       handleForgot,
       toLogin
     }
@@ -186,6 +198,10 @@ export default {
     cursor: pointer;
     color: #1476ff;
   }
+}
+
+.successBg {
+  background: #191919 !important;
 }
 
 :deep(.tiny-form-item__content) {

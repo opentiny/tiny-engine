@@ -14,7 +14,7 @@
         ></tiny-input>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button type="primary" @click="handleLogin"> 登录 </tiny-button>
+        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleLogin"> 登录 </tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="login-bottom">
@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton } from '@opentiny/vue'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 import useLogin from './js/useLogin'
@@ -49,6 +49,10 @@ export default {
         username: '',
         password: ''
       }
+    })
+
+    const isReady = computed(() => {
+      return state.loginData.username && state.loginData.password
     })
 
     const handleLogin = () => {
@@ -78,8 +82,10 @@ export default {
     const toForgot = () => {
       emit('changeStatus', useLogin().FORGOT)
     }
+
     return {
       state,
+      isReady,
       handleLogin,
       toRegister,
       toForgot
@@ -110,6 +116,9 @@ export default {
   position: relative;
   padding-left: 40%;
   margin-bottom: 24px;
+}
+.successBg {
+  background: #191919 !important;
 }
 
 .login-other::before,

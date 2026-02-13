@@ -76,7 +76,8 @@ export default {
   }
 
   .login-right {
-    flex: 1;
+    flex: 1.2;
+    margin-top: 50px;
     margin-left: 80px;
     .login-form {
       box-sizing: border-box;
@@ -101,6 +102,9 @@ export default {
     height: 32px;
     margin-top: 20px;
     font-size: 14px;
+  }
+  :deep(.tiny-button.tiny-button.tiny-button.tiny-button.tiny-button--primary) {
+    border: none;
   }
   :deep(.tiny-input.tiny-input .tiny-input__inner.tiny-input__inner) {
     height: 32px;

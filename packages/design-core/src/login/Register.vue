@@ -49,7 +49,7 @@
         </tiny-tooltip>
       </tiny-form-item>
       <tiny-form-item>
-        <tiny-button type="primary" @click="handleRegister"> 注册</tiny-button>
+        <tiny-button :class="{ successBg: isReady }" type="primary" @click="handleRegister"> 注册</tiny-button>
       </tiny-form-item>
     </tiny-form>
     <div class="register-bottom">
@@ -60,7 +60,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import { TinyForm, TinyFormItem, TinyInput, TinyButton, TinyTooltip } from '@opentiny/vue'
 import useLogin from './js/useLogin'
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
@@ -84,6 +84,16 @@ export default {
       pwManualShow: false,
       confirmManualShow: false,
       rules: [...useLogin().passwordRules]
+    })
+
+    const isReady = computed(() => {
+      return (
+        state.registerData.username &&
+        state.registerData.password &&
+        state.registerData.confirmPassword &&
+        !state.pwManualShow &&
+        state.registerData.confirmPassword === state.registerData.password
+      )
     })
 
     const handleConfirmPwChange = () => {
@@ -144,6 +154,7 @@ export default {
 
     return {
       state,
+      isReady,
       handleRegister,
       handlePwChange,
       toLogin
@@ -186,6 +197,10 @@ export default {
     cursor: pointer;
     color: #1476ff;
   }
+}
+
+.successBg {
+  background: #191919 !important;
 }
 
 :deep(.tiny-form-item__content) {
