@@ -154,7 +154,7 @@ export default {
               nameEn: latestModelData.nameEn,
               version: latestModelData.version,
               id: latestModelData.id,
-              parameters: JSON.parse(JSON.stringify(latestModelData.parameters.filter((item) => !!item.prop)))
+              parameters: JSON.parse(JSON.stringify(latestModelData.parameters.filter((item) => Boolean(item.prop))))
             }
 
             let isModelRefRelative = true
