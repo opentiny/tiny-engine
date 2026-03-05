@@ -10,8 +10,8 @@
  *
  */
 
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import { getResponseData } from '../tool/Common'
 
 const parsePageContent = (item) => {
   if (item && item.page_content && typeof item.page_content === 'string') {
@@ -26,14 +26,8 @@ const parsePageContent = (item) => {
 
 export default class PageService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('pages.db'),
-      autoload: true
-    })
-
-    this.db.ensureIndex({
-      fieldName: 'route',
-      unique: true
+    this.store = createStore('pages', {
+      indexes: [{ fieldName: 'route', unique: true }]
     })
 
     this.userInfo = {
@@ -84,9 +78,9 @@ export default class PageService {
       pageData.page_content = JSON.stringify(pageData.page_content)
     }
 
-    const result = await this.db.insertAsync(pageData)
+    const result = await this.store.insert(pageData)
     const { _id } = result
-    await this.db.updateAsync({ _id }, { $set: { id: _id } })
+    await this.store.update({ _id }, { $set: { id: _id } })
     result.id = result._id
     return getResponseData(parsePageContent(result))
   }
@@ -97,13 +91,13 @@ export default class PageService {
       updateData.page_content = JSON.stringify(updateData.page_content)
     }
 
-    await this.db.updateAsync({ _id: id }, { $set: updateData })
-    const result = await this.db.findOneAsync({ _id: id })
+    await this.store.update({ _id: id }, { $set: updateData })
+    const result = await this.store.findOne({ _id: id })
     return getResponseData(parsePageContent(result))
   }
 
   async list(appId) {
-    const result = await this.db.findAsync({ app: appId.toString() })
+    const result = await this.store.find({ app: appId.toString() })
     if (Array.isArray(result)) {
       result.forEach(parsePageContent)
     }
@@ -111,13 +105,13 @@ export default class PageService {
   }
 
   async detail(pageId) {
-    const result = await this.db.findOneAsync({ _id: pageId })
+    const result = await this.store.findOne({ _id: pageId })
     return getResponseData(parsePageContent(result))
   }
 
   async delete(pageId) {
-    const result = await this.db.findOneAsync({ _id: pageId })
-    await this.db.removeAsync({ _id: pageId })
+    const result = await this.store.findOne({ _id: pageId })
+    await this.store.remove({ _id: pageId })
     return getResponseData(parsePageContent(result))
   }
 }

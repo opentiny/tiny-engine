@@ -10,7 +10,11 @@
  *
  */
 
+const path = require('path')
+
 module.exports = {
   port: process.env.MOCK_PORT || 9090,
-  env: process.env.NODE_ENV || 'development' // Current mode
+  env: process.env.NODE_ENV || 'development', // Current mode
+  dbMode: process.env.MOCK_DB_MODE || 'db', // 'db' or 'file'
+  fileDbPath: process.env.MOCK_FILE_DB_PATH || path.resolve(__dirname, '../../data')
 }
