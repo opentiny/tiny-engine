@@ -13,6 +13,17 @@
 import DateStore from '@seald-io/nedb'
 import { getDatabasePath, getResponseData } from '../tool/Common'
 
+const parsePageContent = (item) => {
+  if (item && item.page_content && typeof item.page_content === 'string') {
+    try {
+      item.page_content = JSON.parse(item.page_content)
+    } catch (e) {
+      // ignore
+    }
+  }
+  return item
+}
+
 export default class PageService {
   constructor() {
     this.db = new DateStore({
@@ -68,32 +79,45 @@ export default class PageService {
   async create(params) {
     const model = params.isPage ? this.pageModel : this.folderModel
     const pageData = { ...model, ...params }
+
+    if (pageData.page_content && typeof pageData.page_content === 'object') {
+      pageData.page_content = JSON.stringify(pageData.page_content)
+    }
+
     const result = await this.db.insertAsync(pageData)
     const { _id } = result
     await this.db.updateAsync({ _id }, { $set: { id: _id } })
     result.id = result._id
-    return getResponseData(result)
+    return getResponseData(parsePageContent(result))
   }
 
   async update(id, params) {
-    await this.db.updateAsync({ _id: id }, { $set: params })
+    const updateData = { ...params }
+    if (updateData.page_content && typeof updateData.page_content === 'object') {
+      updateData.page_content = JSON.stringify(updateData.page_content)
+    }
+
+    await this.db.updateAsync({ _id: id }, { $set: updateData })
     const result = await this.db.findOneAsync({ _id: id })
-    return getResponseData(result)
+    return getResponseData(parsePageContent(result))
   }
 
   async list(appId) {
     const result = await this.db.findAsync({ app: appId.toString() })
+    if (Array.isArray(result)) {
+      result.forEach(parsePageContent)
+    }
     return getResponseData(result)
   }
 
   async detail(pageId) {
     const result = await this.db.findOneAsync({ _id: pageId })
-    return getResponseData(result)
+    return getResponseData(parsePageContent(result))
   }
 
   async delete(pageId) {
     const result = await this.db.findOneAsync({ _id: pageId })
     await this.db.removeAsync({ _id: pageId })
-    return getResponseData(result)
+    return getResponseData(parsePageContent(result))
   }
 }
