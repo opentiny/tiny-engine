@@ -10,14 +10,14 @@
  *
  */
 
-import DateStore from '@seald-io/nedb'
-import StoreAdapter from './StoreAdapter'
+const DateStore = require('@seald-io/nedb')
+const StoreAdapter = require('./StoreAdapter')
 
 /**
  * NeDB storage adapter implementation
  * Wraps @seald-io/nedb to provide standard storage interface
  */
-export default class NedbStore extends StoreAdapter {
+class NedbStore extends StoreAdapter {
   constructor(options) {
     super()
     this.db = new DateStore({
@@ -25,13 +25,10 @@ export default class NedbStore extends StoreAdapter {
       autoload: true
     })
 
-    // Setup unique indexes if specified
-    if (options.uniqueFields && Array.isArray(options.uniqueFields)) {
-      options.uniqueFields.forEach((fieldName) => {
-        this.db.ensureIndex({
-          fieldName,
-          unique: true
-        })
+    // Process indexes array (matches NeDB format)
+    if (options.indexes && Array.isArray(options.indexes)) {
+      options.indexes.forEach((indexConfig) => {
+        this.db.ensureIndex(indexConfig)
       })
     }
   }
@@ -41,8 +38,9 @@ export default class NedbStore extends StoreAdapter {
     return result
   }
 
-  async update(query, data) {
-    await this.db.updateAsync(query, { $set: data })
+  async update(query, update) {
+    // Pass update operators directly, don't wrap in $set
+    await this.db.updateAsync(query, update)
     const result = await this.db.findOneAsync(query)
     return result
   }
@@ -63,3 +61,5 @@ export default class NedbStore extends StoreAdapter {
     return result
   }
 }
+
+module.exports = NedbStore

@@ -14,7 +14,7 @@
  * Base class for storage adapters
  * Defines the standard interface that all storage implementations must follow
  */
-export default class StoreAdapter {
+class StoreAdapter {
   /**
    * Insert a single record
    * @param {Object} data - The data to insert
@@ -69,3 +69,5 @@ export default class StoreAdapter {
     // Optional: some stores may not need this
   }
 }
+
+module.exports = StoreAdapter

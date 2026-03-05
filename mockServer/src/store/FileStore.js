@@ -24,7 +24,15 @@ class FileStore extends StoreAdapter {
     this.collectionName = collectionName
     this.dataPath = dataPath
     this.collectionPath = path.join(dataPath, collectionName)
-    this.uniqueFields = options.uniqueFields || []
+
+    // Extract unique fields from indexes array
+    this.uniqueFields = []
+    if (options.indexes && Array.isArray(options.indexes)) {
+      this.uniqueFields = options.indexes
+        .filter(idx => idx.unique === true)
+        .map(idx => idx.fieldName)
+    }
+
     this.lockMap = new Map() // Simple in-memory lock for file operations
 
     // Ensure collection directory exists
