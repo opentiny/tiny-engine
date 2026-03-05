@@ -15,6 +15,14 @@ const collectionNamingFields = {
   blockCategories: ['name']
 }
 
+function isNedbMetadataRecord (doc) {
+  if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
+    return false
+  }
+
+  return Object.keys(doc).some((key) => key.startsWith('$$'))
+}
+
 function sanitizeFileName (name) {
   if (!name) {
     return ''
@@ -73,7 +81,7 @@ function resolveFileBaseName (doc, collectionName, usedNames) {
 
 function parseDbFile (dbPath) {
   const content = fs.readFileSync(dbPath, 'utf8')
-  return content
+  const docs = content
     .split('\n')
     .map((line) => line.trim())
     .filter(Boolean)
@@ -84,6 +92,13 @@ function parseDbFile (dbPath) {
         throw new Error(`Failed to parse ${path.basename(dbPath)} line ${index + 1}: ${error.message}`)
       }
     })
+
+  const filteredDocs = docs.filter((doc) => !isNedbMetadataRecord(doc))
+
+  return {
+    docs: filteredDocs,
+    filtered: docs.length - filteredDocs.length
+  }
 }
 
 function ensureDirectory (dirPath) {
@@ -107,7 +122,7 @@ function exportCollection (dbFile) {
   const collectionName = path.basename(dbFile, '.db')
   const dbPath = path.join(sourceDir, dbFile)
   const collectionPath = path.join(outputDir, collectionName)
-  const docs = parseDbFile(dbPath)
+  const { docs, filtered } = parseDbFile(dbPath)
 
   ensureDirectory(collectionPath)
   if (forceOverwrite) {
@@ -135,7 +150,13 @@ function exportCollection (dbFile) {
     written += 1
   }
 
-  return { collectionName, total: docs.length, written, skipped }
+  return {
+    collectionName,
+    total: docs.length + filtered,
+    filtered,
+    written,
+    skipped
+  }
 }
 
 function run () {
@@ -157,7 +178,7 @@ function run () {
   console.log(`Export complete. Output: ${outputDir}`)
   summary.forEach((item) => {
     console.log(
-      `- ${item.collectionName}: total=${item.total}, written=${item.written}, skipped=${item.skipped}`
+      `- ${item.collectionName}: total=${item.total}, filtered=${item.filtered}, written=${item.written}, skipped=${item.skipped}`
     )
   })
 }
