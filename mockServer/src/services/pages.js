@@ -11,6 +11,7 @@
  */
 
 import createStore from '../store/StoreFactory'
+import config from '../config/config'
 import { getResponseData } from '../tool/Common'
 
 const parsePageContent = (item) => {
@@ -24,10 +25,34 @@ const parsePageContent = (item) => {
   return item
 }
 
+const formatPageContentForStorage = (pageContent) => {
+  if (pageContent === undefined) {
+    return pageContent
+  }
+
+  if (config.dbMode === 'file') {
+    if (typeof pageContent === 'string') {
+      try {
+        return JSON.parse(pageContent)
+      } catch (e) {
+        return pageContent
+      }
+    }
+    return pageContent
+  }
+
+  if (pageContent && typeof pageContent === 'object') {
+    return JSON.stringify(pageContent)
+  }
+
+  return pageContent
+}
+
 export default class PageService {
   constructor() {
     this.store = createStore('pages', {
-      indexes: [{ fieldName: 'route', unique: true }]
+      indexes: [{ fieldName: 'route', unique: true }],
+      namingFields: ['name']
     })
 
     this.userInfo = {
@@ -74,9 +99,7 @@ export default class PageService {
     const model = params.isPage ? this.pageModel : this.folderModel
     const pageData = { ...model, ...params }
 
-    if (pageData.page_content && typeof pageData.page_content === 'object') {
-      pageData.page_content = JSON.stringify(pageData.page_content)
-    }
+    pageData.page_content = formatPageContentForStorage(pageData.page_content)
 
     const result = await this.store.insert(pageData)
     const { _id } = result
@@ -87,8 +110,9 @@ export default class PageService {
 
   async update(id, params) {
     const updateData = { ...params }
-    if (updateData.page_content && typeof updateData.page_content === 'object') {
-      updateData.page_content = JSON.stringify(updateData.page_content)
+
+    if (Object.prototype.hasOwnProperty.call(updateData, 'page_content')) {
+      updateData.page_content = formatPageContentForStorage(updateData.page_content)
     }
 
     await this.store.update({ _id: id }, { $set: updateData })

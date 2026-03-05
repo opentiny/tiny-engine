@@ -24,16 +24,13 @@ class FileStore extends StoreAdapter {
     this.collectionName = collectionName
     this.dataPath = dataPath
     this.collectionPath = path.join(dataPath, collectionName)
+    this.namingFields = Array.isArray(options.namingFields) ? options.namingFields : []
 
     // Extract unique fields from indexes array
     this.uniqueFields = []
     if (options.indexes && Array.isArray(options.indexes)) {
-      this.uniqueFields = options.indexes
-        .filter(idx => idx.unique === true)
-        .map(idx => idx.fieldName)
+      this.uniqueFields = options.indexes.filter((idx) => idx.unique === true).map((idx) => idx.fieldName)
     }
-
-    this.lockMap = new Map() // Simple in-memory lock for file operations
 
     // Ensure collection directory exists
     this.ensureDirectory()
@@ -55,11 +52,67 @@ class FileStore extends StoreAdapter {
     return crypto.randomBytes(8).toString('hex')
   }
 
-  /**
-   * Get file path for a document by ID
-   */
-  getFilePath(id) {
-    return path.join(this.collectionPath, `${id}.json`)
+  sanitizeFileName(name) {
+    if (!name) {
+      return ''
+    }
+
+    const normalized = String(name)
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^\.+/, '')
+      .replace(/\.+$/, '')
+      .slice(0, 120)
+
+    if (!normalized || normalized === '.' || normalized === '..') {
+      return ''
+    }
+
+    return normalized
+  }
+
+  buildFileBaseName(doc, allEntries = [], excludeId = null, reservedNames = null) {
+    let baseName = ''
+
+    for (const field of this.namingFields) {
+      const value = this.sanitizeFileName(doc[field])
+      if (value) {
+        baseName = value
+        break
+      }
+    }
+
+    if (!baseName) {
+      baseName = this.sanitizeFileName(doc.id) || this.sanitizeFileName(doc._id) || 'record'
+    }
+
+    const usedNames = new Set(
+      allEntries
+        .filter((entry) => entry.doc && entry.doc._id !== excludeId)
+        .map((entry) => path.parse(entry.fileName).name.toLowerCase())
+    )
+    if (reservedNames) {
+      for (const name of reservedNames) {
+        usedNames.add(name)
+      }
+    }
+
+    if (!usedNames.has(baseName.toLowerCase())) {
+      return baseName
+    }
+
+    const suffix = String(doc._id || doc.id || 'item').slice(0, 6)
+    let candidate = `${baseName}-${suffix}`
+    let seq = 2
+
+    while (usedNames.has(candidate.toLowerCase())) {
+      candidate = `${baseName}-${suffix}-${seq}`
+      seq += 1
+    }
+
+    return candidate
   }
 
   /**
@@ -79,44 +132,45 @@ class FileStore extends StoreAdapter {
     }
   }
 
-  /**
-   * Read a single document from file
-   */
-  readDocument(id) {
-    const filePath = this.getFilePath(id)
-    if (!fs.existsSync(filePath)) {
-      return null
-    }
+  readDocumentFromFilePath(filePath) {
     try {
       const content = fs.readFileSync(filePath, 'utf8')
-      return JSON.parse(content)
+      const doc = JSON.parse(content)
+      return doc
     } catch (error) {
-      console.error(`Error reading document ${id}:`, error)
+      console.error(`Error reading document ${filePath}:`, error)
       return null
     }
   }
 
-  /**
-   * Read all documents in the collection
-   */
-  readAllDocuments() {
+  readAllEntries() {
     if (!fs.existsSync(this.collectionPath)) {
       return []
     }
-    const files = fs.readdirSync(this.collectionPath)
-    const documents = []
 
-    for (const file of files) {
-      if (file.endsWith('.json') && !file.includes('.tmp.')) {
-        const id = file.replace('.json', '')
-        const doc = this.readDocument(id)
-     if (doc) {
-        documents.push(doc)
+    const files = fs.readdirSync(this.collectionPath)
+    const entries = []
+
+    for (const fileName of files) {
+      if (!fileName.endsWith('.json') || fileName.includes('.tmp.')) {
+        continue
+      }
+
+      const filePath = path.join(this.collectionPath, fileName)
+      const doc = this.readDocumentFromFilePath(filePath)
+      if (doc) {
+        if (!doc._id && doc.id !== undefined) {
+          doc._id = String(doc.id)
         }
+        entries.push({ doc, filePath, fileName })
       }
     }
 
-    return documents
+    return entries
+  }
+
+  readAllDocuments() {
+    return this.readAllEntries().map((entry) => entry.doc)
   }
 
   /**
@@ -129,46 +183,44 @@ class FileStore extends StoreAdapter {
 
     for (const [key, value] of Object.entries(query)) {
       if (typeof value === 'object' && value !== null) {
-     // Handle special operators
+        // Handle special operators
         if (value.$regex) {
           const regex = value.$regex
           if (!regex.test(doc[key])) {
             return false
           }
         } else if (value.$ne !== undefined) {
-        if (doc[key] === value.$ne) {
-          return false
+          if (doc[key] === value.$ne) {
+            return false
           }
         } else if (value.$in !== undefined) {
           if (!value.$in.includes(doc[key])) {
-          return false
+            return false
           }
         } else if (value.$nin !== undefined) {
-        if (value.$nin.includes(doc[key])) {
-         return false
+          if (value.$nin.includes(doc[key])) {
+            return false
           }
         } else if (value.$gt !== undefined) {
           if (!(doc[key] > value.$gt)) {
-        return false
+            return false
           }
         } else if (value.$gte !== undefined) {
-       if (!(doc[key] >= value.$gte)) {
-       return false
-        }
+          if (!(doc[key] >= value.$gte)) {
+            return false
+          }
         } else if (value.$lt !== undefined) {
           if (!(doc[key] < value.$lt)) {
-      return false
+            return false
           }
-      } else if (value.$lte !== undefined) {
+        } else if (value.$lte !== undefined) {
           if (!(doc[key] <= value.$lte)) {
-          return false
+            return false
           }
         }
-      } else {
+      } else if (doc[key] !== value) {
         // Simple equality check
-        if (doc[key] !== value) {
-          return false
-        }
+        return false
       }
     }
 
@@ -182,7 +234,7 @@ class FileStore extends StoreAdapter {
     const newDoc = { ...doc }
 
     if (update.$set) {
-  Object.assign(newDoc, update.$set)
+      Object.assign(newDoc, update.$set)
     }
 
     if (update.$unset) {
@@ -217,11 +269,9 @@ class FileStore extends StoreAdapter {
 
     for (const field of this.uniqueFields) {
       if (data[field] !== undefined) {
-        const existing = allDocs.find(
-          doc => doc[field] === data[field] && doc._id !== excludeId
-        )
+        const existing = allDocs.find((doc) => doc[field] === data[field] && doc._id !== excludeId)
         if (existing) {
-     throw new Error(`Unique constraint violated for field: ${field}`)
+          throw new Error(`Unique constraint violated for field: ${field}`)
         }
       }
     }
@@ -240,10 +290,14 @@ class FileStore extends StoreAdapter {
     // Check unique constraints
     await this.checkUniqueConstraints(doc)
 
-    const filePath = this.getFilePath(id)
-    if (fs.existsSync(filePath)) {
+    const allEntries = this.readAllEntries()
+    const existing = allEntries.find((entry) => entry.doc && entry.doc._id === id)
+    if (existing) {
       throw new Error(`Document with id ${id} already exists`)
     }
+
+    const fileBaseName = this.buildFileBaseName(doc, allEntries)
+    const filePath = path.join(this.collectionPath, `${fileBaseName}.json`)
 
     this.writeAtomic(filePath, doc)
     return doc
@@ -253,27 +307,34 @@ class FileStore extends StoreAdapter {
    * Update documents matching the query
    */
   async update(query, update, options = {}) {
-    const allDocs = this.readAllDocuments()
-    const matchingDocs = allDocs.filter(doc => this.matchesQuery(doc, query))
+    const allEntries = this.readAllEntries()
+    const matchingEntries = allEntries.filter((entry) => this.matchesQuery(entry.doc, query))
 
-    if (matchingDocs.length === 0) {
+    if (matchingEntries.length === 0) {
       return 0
     }
 
     const multi = options.multi !== false
-    const docsToUpdate = multi ? matchingDocs : [matchingDocs[0]]
+    const entriesToUpdate = multi ? matchingEntries : [matchingEntries[0]]
+    const reservedNames = new Set()
 
-    for (const doc of docsToUpdate) {
-   const updatedDoc = this.applyUpdate(doc, update)
+    for (const entry of entriesToUpdate) {
+      const updatedDoc = this.applyUpdate(entry.doc, update)
 
       // Check unique constraints for updated document
-      await this.checkUniqueConstraints(updatedDoc, doc._id)
+      await this.checkUniqueConstraints(updatedDoc, entry.doc._id)
 
-      const filePath = this.getFilePath(doc._id)
-      this.writeAtomic(filePath, updatedDoc)
+      const fileBaseName = this.buildFileBaseName(updatedDoc, allEntries, entry.doc._id, reservedNames)
+      const targetPath = path.join(this.collectionPath, `${fileBaseName}.json`)
+      reservedNames.add(fileBaseName.toLowerCase())
+
+      this.writeAtomic(targetPath, updatedDoc)
+      if (targetPath !== entry.filePath && fs.existsSync(entry.filePath)) {
+        fs.unlinkSync(entry.filePath)
+      }
     }
 
-    return docsToUpdate.length
+    return entriesToUpdate.length
   }
 
   /**
@@ -281,7 +342,7 @@ class FileStore extends StoreAdapter {
    */
   async find(query) {
     const allDocs = this.readAllDocuments()
-    return allDocs.filter(doc => this.matchesQuery(doc, query))
+    return allDocs.filter((doc) => this.matchesQuery(doc, query))
   }
 
   /**
@@ -289,31 +350,30 @@ class FileStore extends StoreAdapter {
    */
   async findOne(query) {
     const allDocs = this.readAllDocuments()
-    return allDocs.find(doc => this.matchesQuery(doc, query)) || null
+    return allDocs.find((doc) => this.matchesQuery(doc, query)) || null
   }
 
   /**
    * Remove documents matching the query
    */
   async remove(query, options = {}) {
-    const allDocs = this.readAllDocuments()
-    const matchingDocs = allDocs.filter(doc => this.matchesQuery(doc, query))
+    const allEntries = this.readAllEntries()
+    const matchingEntries = allEntries.filter((entry) => this.matchesQuery(entry.doc, query))
 
-    if (matchingDocs.length === 0) {
+    if (matchingEntries.length === 0) {
       return 0
     }
 
     const multi = options.multi !== false
-    const docsToRemove = multi ? matchingDocs : [matchingDocs[0]]
+    const entriesToRemove = multi ? matchingEntries : [matchingEntries[0]]
 
-    for (const doc of docsToRemove) {
-      const filePath = this.getFilePath(doc._id)
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath)
+    for (const entry of entriesToRemove) {
+      if (fs.existsSync(entry.filePath)) {
+        fs.unlinkSync(entry.filePath)
       }
     }
 
-    return docsToRemove.length
+    return entriesToRemove.length
   }
 }
 

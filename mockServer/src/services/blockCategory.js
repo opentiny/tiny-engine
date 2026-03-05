@@ -16,7 +16,8 @@ import appinfo from '../assets/json/appinfo.json'
 export default class BlockCategoryService {
   constructor() {
     this.store = createStore('blockCategories', {
-      indexes: [{ fieldName: 'name', unique: true }]
+      indexes: [{ fieldName: 'name', unique: true }],
+      namingFields: ['name']
     })
 
     this.blockCategoriesModel = {

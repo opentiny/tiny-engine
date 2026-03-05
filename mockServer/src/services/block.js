@@ -15,7 +15,8 @@ import { getResponseData } from '../tool/Common'
 export default class BlockService {
   constructor() {
     this.store = createStore('blocks', {
-      indexes: [{ fieldName: 'label', unique: true }]
+      indexes: [{ fieldName: 'label', unique: true }],
+      namingFields: ['label', 'name']
     })
 
     this.userInfo = {

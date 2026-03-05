@@ -64,11 +64,13 @@ const defaultApp = {
 export default class AppsService {
   constructor() {
     this.store = createStore('apps', {
-      indexes: [{ fieldName: '_id', unique: true }]
+      indexes: [{ fieldName: '_id', unique: true }],
+      namingFields: ['name']
     })
 
     this.schemaStore = createStore('appsSchema', {
-      indexes: [{ fieldName: '_id', unique: true }]
+      indexes: [{ fieldName: '_id', unique: true }],
+      namingFields: ['id']
     })
 
     this.appList = []

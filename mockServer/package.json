@@ -24,6 +24,8 @@
   "scripts": {
     "start": "gulp nodemon",
     "dev": "gulp",
+    "dev:file": "MOCK_DB_MODE=file gulp",
+    "export-db-to-file": "node scripts/export-db-to-file.js",
     "build:js": "babel src --out-dir dist",
     "build:static": "ncp src/assets dist/assets && ncp src/mock dist/mock && ncp src/database dist/database",
     "build": "npm run build:js && npm run build:static",
