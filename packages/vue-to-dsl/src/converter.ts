@@ -62,17 +62,6 @@ export class VueToDslConverter {
       let scriptSchema: any = {}
       let styleSchema: any = {}
 
-      if (sfcResult.template) {
-        try {
-          templateSchema = this.options.customParsers?.template
-            ? this.options.customParsers.template.parse(sfcResult.template)
-            : parseTemplate(sfcResult.template, this.options as any)
-        } catch (error: any) {
-          errors.push(`Template parsing error: ${error.message}`)
-          if (this.options.strictMode) throw error
-        }
-      }
-
       const scriptContent = sfcResult.scriptSetup || sfcResult.script
       if (scriptContent) {
         try {
@@ -95,6 +84,20 @@ export class VueToDslConverter {
           }
         } catch (error: any) {
           errors.push(`Script parsing error: ${error.message}`)
+          if (this.options.strictMode) throw error
+        }
+      }
+
+      if (sfcResult.template) {
+        try {
+          templateSchema = this.options.customParsers?.template
+            ? this.options.customParsers.template.parse(sfcResult.template)
+            : parseTemplate(sfcResult.template, {
+                ...this.options,
+                imports: scriptSchema.imports || []
+              } as any)
+        } catch (error: any) {
+          errors.push(`Template parsing error: ${error.message}`)
           if (this.options.strictMode) throw error
         }
       }
@@ -183,7 +186,69 @@ export class VueToDslConverter {
 
     // 1) Collect page schemas from all .vue files under src/views/**
     const vueFiles = await this.walk(viewsDir, (p) => p.endsWith('.vue'))
-    const pageResults = await this.convertMultipleFiles(vueFiles)
+
+    // First pass: collect all files and detect naming conflicts
+    const fileMap = new Map<string, string[]>()
+    for (const filePath of vueFiles) {
+      const relativePath = path.relative(viewsDir, filePath)
+      const baseName = path.basename(relativePath, '.vue')
+      if (!fileMap.has(baseName)) {
+        fileMap.set(baseName, [])
+      }
+      fileMap.get(baseName)!.push(relativePath)
+    }
+
+    // Determine which files need special naming (camelCase with directory prefix)
+    const needsSpecialNaming = new Set<string>()
+    for (const paths of fileMap.values()) {
+      if (paths.length > 1) {
+        // Multiple files with same basename, all need special naming
+        paths.forEach((p) => needsSpecialNaming.add(p))
+      }
+    }
+
+    // Helper function to convert path to camelCase
+    const pathToCamelCase = (relativePath: string, baseName: string): string => {
+      const parts = relativePath.replace(/\.vue$/i, '').split(/[\\/]/)
+      if (parts.length === 1) {
+        return baseName
+      }
+      // Join directory parts with the filename in camelCase
+      const dirParts = parts.slice(0, -1)
+      const camelCaseDir = dirParts
+        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+        .join('')
+      return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
+    }
+
+    // Convert files with appropriate naming
+    const pageResults: ConvertResult[] = []
+    for (const filePath of vueFiles) {
+      try {
+        const vueCode = await fs.readFile(filePath, 'utf-8')
+        const relativePath = path.relative(viewsDir, filePath)
+        const baseName = path.basename(relativePath, '.vue')
+
+        // Use camelCase naming if there are conflicts, otherwise use basename
+        let fileName: string
+        if (needsSpecialNaming.has(relativePath)) {
+          fileName = pathToCamelCase(relativePath, baseName)
+        } else {
+          fileName = baseName
+        }
+
+        const result = await this.convertFromString(vueCode, fileName)
+        pageResults.push(result)
+      } catch (error: any) {
+        pageResults.push({
+          schema: null,
+          dependencies: [],
+          errors: [`Failed to convert ${filePath}: ${error.message}`],
+          warnings: []
+        })
+      }
+    }
+
     const pageSchemas = pageResults.map((r) => r.schema).filter(Boolean)
 
     // 2) Load i18n
@@ -332,15 +397,38 @@ export class VueToDslConverter {
       for (const ps of pageSchemas) {
         const fileName = ps?.fileName
         if (!fileName) continue
-        const info = byFile[fileName]
-        if (!info) continue
+        let info = byFile[fileName]
+        // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
+        if (!info) {
+          for (const [base, routeInfo] of Object.entries(byFile)) {
+            if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
+              info = routeInfo
+              break
+            }
+          }
+        }
         ps.meta = ps.meta || {}
-        ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-        ps.meta.isPage = true
-        ps.meta.isHome = !!info.isHome
+        if (info) {
+          // Remove leading slash from router path
+          const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
+          ps.meta.router = routerPath
+          ps.meta.isPage = true
+          ps.meta.isHome = !!info.isHome
+        } else {
+          // Generate default router path from fileName if no match found
+          ps.meta.router = fileName.toLowerCase()
+          ps.meta.isPage = true
+        }
       }
-    } catch {
-      // ignore router enrichment failures
+    } catch (error) {
+      // If router enrichment fails, set default router for all pages
+      for (const ps of pageSchemas) {
+        ps.meta = ps.meta || {}
+        if (!ps.meta.router) {
+          ps.meta.router = (ps.fileName || 'page').toLowerCase()
+          ps.meta.isPage = true
+        }
+      }
     }
 
     // 7) Assemble app schema
@@ -389,12 +477,66 @@ export class VueToDslConverter {
       // 1) Pages: src/views/**/*.vue
       const viewPrefix = joinRoot('src/views/')
       const vueFiles = allFiles.filter((p) => p.startsWith(viewPrefix) && p.endsWith('.vue'))
+
+      // First pass: collect all files and detect naming conflicts
+      const fileMap = new Map<string, string[]>()
+      for (const vf of vueFiles) {
+        const relativePath = vf.substring(viewPrefix.length)
+        const baseName =
+          relativePath
+            .split('/')
+            .pop()
+            ?.replace(/\.vue$/i, '') || ''
+        if (!fileMap.has(baseName)) {
+          fileMap.set(baseName, [])
+        }
+        fileMap.get(baseName)!.push(relativePath)
+      }
+
+      // Determine which files need special naming (camelCase with directory prefix)
+      const needsSpecialNaming = new Set<string>()
+      for (const paths of fileMap.values()) {
+        if (paths.length > 1) {
+          // Multiple files with same basename, all need special naming
+          paths.forEach((p) => needsSpecialNaming.add(p))
+        }
+      }
+
+      // Helper function to convert path to camelCase
+      const pathToCamelCase = (relativePath: string, baseName: string): string => {
+        const parts = relativePath.replace(/\.vue$/i, '').split('/')
+        if (parts.length === 1) {
+          return baseName
+        }
+        // Join directory parts with the filename in camelCase
+        const dirParts = parts.slice(0, -1)
+        const camelCaseDir = dirParts
+          .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+          .join('')
+        return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
+      }
+
+      // Convert files with appropriate naming
       const pageSchemas: any[] = []
       for (const vf of vueFiles) {
         const code = await readText(vf)
         if (!code) continue
-        const base = vf.split('/').pop() || 'Page.vue'
-        const fileName = base.replace(/\.vue$/i, '')
+
+        const relativePath = vf.substring(viewPrefix.length)
+        const baseName =
+          relativePath
+            .split('/')
+            .pop()
+            ?.replace(/\.vue$/i, '') || 'Page'
+
+        // Use camelCase naming if there are conflicts, otherwise use basename
+        let fileName: string
+        if (needsSpecialNaming.has(relativePath)) {
+          fileName = pathToCamelCase(relativePath, baseName)
+        } else {
+          fileName = baseName
+        }
+
         const res = await this.convertFromString(code, fileName)
         if (res.schema) pageSchemas.push(res.schema)
       }
@@ -525,16 +667,54 @@ export class VueToDslConverter {
           for (const ps of pageSchemas) {
             const fileName = ps?.fileName
             if (!fileName) continue
-            const info = byFile[fileName]
-            if (!info) continue
+            let info = byFile[fileName]
+            // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
+            if (!info) {
+              for (const [base, routeInfo] of Object.entries(byFile)) {
+                // Try exact match (case-insensitive)
+                if (fileName.toLowerCase() === base.toLowerCase()) {
+                  info = routeInfo
+                  break
+                }
+                // Try matching if fileName ends with base name (for camelCase names)
+                if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
+                  info = routeInfo
+                  break
+                }
+              }
+            }
             ps.meta = ps.meta || {}
-            ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-            ps.meta.isPage = true
-            ps.meta.isHome = !!info.isHome
+            if (info) {
+              // Remove leading slash from router path
+              const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
+              ps.meta.router = routerPath
+              ps.meta.isPage = true
+              ps.meta.isHome = !!info.isHome
+            } else {
+              // Generate default router path from fileName if no match found
+              ps.meta.router = fileName.toLowerCase()
+              ps.meta.isPage = true
+            }
+          }
+        } else {
+          // If router file not found, set default router for all pages
+          for (const ps of pageSchemas) {
+            ps.meta = ps.meta || {}
+            if (!ps.meta.router) {
+              ps.meta.router = (ps.fileName || 'page').toLowerCase()
+              ps.meta.isPage = true
+            }
           }
         }
-      } catch {
-        // ignore
+      } catch (error) {
+        // If router enrichment fails, set default router for all pages
+        for (const ps of pageSchemas) {
+          ps.meta = ps.meta || {}
+          if (!ps.meta.router) {
+            ps.meta.router = (ps.fileName || 'page').toLowerCase()
+            ps.meta.isPage = true
+          }
+        }
       }
 
       // 7) Assemble app schema
@@ -659,12 +839,69 @@ export class VueToDslConverter {
     const vueFiles = relevantFiles.filter(
       (file) => file.webkitRelativePath.includes('src/views/') && file.name.endsWith('.vue')
     )
+
+    // First pass: collect all files and detect naming conflicts
+    const fileMap = new Map<string, string[]>()
+    for (const vf of vueFiles) {
+      const webkitPath = vf.webkitRelativePath
+      const viewsIndex = webkitPath.indexOf('src/views/')
+      const relativePath = viewsIndex >= 0 ? webkitPath.substring(viewsIndex + 'src/views/'.length) : vf.name
+      const baseName =
+        relativePath
+          .split('/')
+          .pop()
+          ?.replace(/\.vue$/i, '') || ''
+      if (!fileMap.has(baseName)) {
+        fileMap.set(baseName, [])
+      }
+      fileMap.get(baseName)!.push(relativePath)
+    }
+
+    // Determine which files need special naming (camelCase with directory prefix)
+    const needsSpecialNaming = new Set<string>()
+    for (const paths of fileMap.values()) {
+      if (paths.length > 1) {
+        // Multiple files with same basename, all need special naming
+        paths.forEach((p) => needsSpecialNaming.add(p))
+      }
+    }
+
+    // Helper function to convert path to camelCase
+    const pathToCamelCase = (relativePath: string, baseName: string): string => {
+      const parts = relativePath.replace(/\.vue$/i, '').split('/')
+      if (parts.length === 1) {
+        return baseName
+      }
+      // Join directory parts with the filename in camelCase
+      const dirParts = parts.slice(0, -1)
+      const camelCaseDir = dirParts
+        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
+        .join('')
+      return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
+    }
+
     const pageSchemas: any[] = []
     for (const vf of vueFiles) {
       const code = await readText(vf)
       if (!code) continue
-      const base = vf.name || 'Page.vue'
-      const fileName = base.replace(/\.vue$/i, '')
+
+      const webkitPath = vf.webkitRelativePath
+      const viewsIndex = webkitPath.indexOf('src/views/')
+      const relativePath = viewsIndex >= 0 ? webkitPath.substring(viewsIndex + 'src/views/'.length) : vf.name
+      const baseName =
+        relativePath
+          .split('/')
+          .pop()
+          ?.replace(/\.vue$/i, '') || 'Page'
+
+      // Use camelCase naming if there are conflicts, otherwise use basename
+      let fileName: string
+      if (needsSpecialNaming.has(relativePath)) {
+        fileName = pathToCamelCase(relativePath, baseName)
+      } else {
+        fileName = baseName
+      }
+
       const res = await this.convertFromString(code, fileName)
       if (res.schema) pageSchemas.push(res.schema)
     }
@@ -800,16 +1037,54 @@ export class VueToDslConverter {
         for (const ps of pageSchemas) {
           const fileName = ps?.fileName
           if (!fileName) continue
-          const info = byFile[fileName]
-          if (!info) continue
+          let info = byFile[fileName]
+          // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
+          if (!info) {
+            for (const [base, routeInfo] of Object.entries(byFile)) {
+              // Try exact match (case-insensitive)
+              if (fileName.toLowerCase() === base.toLowerCase()) {
+                info = routeInfo
+                break
+              }
+              // Try matching if fileName ends with base name (for camelCase names)
+              if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
+                info = routeInfo
+                break
+              }
+            }
+          }
           ps.meta = ps.meta || {}
-          ps.meta.router = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-          ps.meta.isPage = true
-          ps.meta.isHome = !!info.isHome
+          if (info) {
+            // Remove leading slash from router path
+            const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
+            ps.meta.router = routerPath
+            ps.meta.isPage = true
+            ps.meta.isHome = !!info.isHome
+          } else {
+            // Generate default router path from fileName if no match found
+            ps.meta.router = fileName.toLowerCase()
+            ps.meta.isPage = true
+          }
+        }
+      } else {
+        // If router file not found, set default router for all pages
+        for (const ps of pageSchemas) {
+          ps.meta = ps.meta || {}
+          if (!ps.meta.router) {
+            ps.meta.router = (ps.fileName || 'page').toLowerCase()
+            ps.meta.isPage = true
+          }
         }
       }
-    } catch {
-      // ignore
+    } catch (error) {
+      // If router enrichment fails, set default router for all pages
+      for (const ps of pageSchemas) {
+        ps.meta = ps.meta || {}
+        if (!ps.meta.router) {
+          ps.meta.router = (ps.fileName || 'page').toLowerCase()
+          ps.meta.isPage = true
+        }
+      }
     }
 
     // 7) Assemble app schema

@@ -1,5 +1,7 @@
 import { defaultComponentsMap } from '../constants'
 function convertToPlainValue(expr: any) {
+  // If it's already an object or array, return as-is (for nested reactive objects)
+  if (typeof expr === 'object' && expr !== null) return expr
   if (typeof expr !== 'string') return expr
   const trimmed = expr.trim()
   if (/^['"].*['"]$/.test(trimmed)) return trimmed.slice(1, -1)
@@ -11,6 +13,8 @@ function convertToPlainValue(expr: any) {
 }
 
 function extractRefPrimitive(expr: any) {
+  // If it's already an object or array, return as-is
+  if (typeof expr === 'object' && expr !== null) return expr
   if (typeof expr !== 'string') return expr
   const m = expr.match(/^ref\((.*)\)$/)
   if (!m) return expr
@@ -131,11 +135,15 @@ function sanitizeSchemaStrings(obj: any): any {
 }
 
 export async function generateSchema(templateSchema: any[], scriptSchema: any, styleSchema: any, options: any = {}) {
+  const fileName = options.fileName || 'UnnamedPage'
+  // Capitalize first letter for display name
+  const displayName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
+
   const schema: any = {
     componentName: 'Page',
-    fileName: options.fileName || 'UnnamedPage',
+    fileName: fileName,
     meta: {
-      name: options.fileName || 'UnnamedPage'
+      name: displayName
     }
   }
   if (scriptSchema) {
@@ -158,6 +166,18 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
 }
 
 export function generateAppSchema(pageSchemas: any[], options: any = {}) {
+  // Ensure all pages have a router path without leading slash
+  if (pageSchemas && Array.isArray(pageSchemas)) {
+    for (const ps of pageSchemas) {
+      if (ps && ps.meta && ps.meta.router && typeof ps.meta.router === 'string') {
+        // Remove leading slash from router path
+        if (ps.meta.router.startsWith('/')) {
+          ps.meta.router = ps.meta.router.slice(1)
+        }
+      }
+    }
+  }
+
   return {
     meta: {
       name: options.name || 'Generated App',

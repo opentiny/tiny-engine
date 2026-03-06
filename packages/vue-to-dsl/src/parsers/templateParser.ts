@@ -1,14 +1,30 @@
 import { parse } from '@vue/compiler-dom'
 import { parse as babelParse } from '@babel/parser'
 
-function ensureThisPrefix(exp: string) {
+function ensureThisPrefix(exp: string, loopVariable?: string) {
   const v = String(exp || '').trim()
   if (!v) return v
   if (v.startsWith('this.')) return v
+
+  // If we're inside a loop and the expression starts with the loop variable, don't prefix
+  if (loopVariable) {
+    // Check if expression starts with the loop variable name
+    const loopVarPattern = new RegExp(`^${loopVariable}(?:\\.|\\[|$)`)
+    if (loopVarPattern.test(v)) {
+      return v
+    }
+  }
+
   // Only prefix when expression starts with an identifier (not literals/objects/arrays/parens/etc.)
   // and avoid prefixing keywords like function/async/new
   if (/^[A-Za-z_$]/.test(v) && !/^(function|async|new)\b/.test(v)) {
-    return `this.${v}`
+    // Check if it already starts with 'state.'
+    if (v.startsWith('state.')) {
+      return `this.${v}`
+    }
+    // For other identifiers, add 'this.state.' prefix
+    // This handles both 'state' variable references and other reactive variables
+    return `this.state.${v}`
   }
   return v
 }
@@ -64,6 +80,79 @@ function getComponentName(tag: string, options: any) {
   if (htmlTags.includes(lower)) return lower
   // Default: convert arbitrary custom elements to PascalCase by hyphen/underscore splitting
   return toPascalCase(tag)
+}
+
+function isComponentImported(tag: string, options: any) {
+  // Check if this tag corresponds to an imported component
+  if (!options.imports || !Array.isArray(options.imports)) return false
+
+  const lower = tag.toLowerCase()
+
+  // HTML tags are not imported components
+  const htmlTags = [
+    'div',
+    'span',
+    'p',
+    'h1',
+    'h2',
+    'h3',
+    'h4',
+    'h5',
+    'h6',
+    'ul',
+    'ol',
+    'li',
+    'a',
+    'img',
+    'button',
+    'input',
+    'form',
+    'table',
+    'tr',
+    'td',
+    'th',
+    'thead',
+    'tbody',
+    'section',
+    'article',
+    'header',
+    'footer',
+    'nav',
+    'aside',
+    'main',
+    'slot'
+  ]
+  if (htmlTags.includes(lower)) return false
+
+  // tiny-* components are built-in, not imported
+  if (lower.startsWith('tiny-')) return false
+
+  // Check if the tag matches any imported component
+  // The tag could be in kebab-case or PascalCase
+  const pascalTag = toPascalCase(tag)
+
+  for (const imp of options.imports) {
+    // imp is an object with { source, specifiers }
+    // specifiers is an array of { local, imported }
+    if (!imp.specifiers || !Array.isArray(imp.specifiers)) continue
+
+    for (const spec of imp.specifiers) {
+      // Check if the imported name matches the tag
+      if (spec.local === pascalTag || spec.local === tag) {
+        return true
+      }
+      // Also check if the imported name in kebab-case matches
+      const kebabImported = spec.local
+        .replace(/([A-Z])/g, '-$1')
+        .toLowerCase()
+        .replace(/^-/, '')
+      if (kebabImported === lower) {
+        return true
+      }
+    }
+  }
+
+  return false
 }
 
 function parseNodeProps(props: any[], _options: any) {
@@ -145,6 +234,29 @@ function parseLiteralExpression(exp: string): { ok: true; value: any } | { ok: f
 
 function parseDirectives(node: any, schema: any, _options: any) {
   if (!node.props) return
+
+  // First pass: extract loopArgs if this node has v-for
+  let loopVariable: string | undefined
+  for (const prop of node.props) {
+    if (prop.type === 7 && prop.name === 'for' && prop.exp) {
+      const exp = prop.exp.content || ''
+      // Extract loop variable names from `v-for="(item, index) in/of list"`
+      const loopArgsMatch = exp.match(/^\(([A-Za-z_$][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_$][A-Za-z0-9_$]*)\)/)
+      if (loopArgsMatch) {
+        loopVariable = loopArgsMatch[1]
+        schema.loopArgs = [loopArgsMatch[1], loopArgsMatch[2]]
+      } else {
+        const itemMatch = exp.match(/^\(?([A-Za-z_$][A-Za-z0-9_$]*)\)?/)
+        if (itemMatch) {
+          loopVariable = itemMatch[1]
+          schema.loopArgs = [itemMatch[1]]
+        }
+      }
+      break
+    }
+  }
+
+  // Second pass: process all directives with knowledge of loop variable
   node.props.forEach((prop: any) => {
     if (prop.type !== 7) return
     const directiveName = prop.name
@@ -169,7 +281,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
       case 'model':
         schema.props['modelValue'] = {
           type: 'JSExpression',
-          value: ensureThisPrefix(String(prop.exp.content)),
+          value: ensureThisPrefix(String(prop.exp.content), loopVariable),
           model: true
         }
         break
@@ -177,7 +289,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
         const rawEvent = prop.arg ? prop.arg.content : 'click'
         const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
-        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val) }
+        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, loopVariable) }
         break
       }
       case 'bind': {
@@ -189,7 +301,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
           if (parsed.ok) {
             schema.props[`${attrName}`] = parsed.value
           } else {
-            schema.props[`${attrName}`] = { type: 'JSExpression', value: ensureThisPrefix(raw) }
+            schema.props[`${attrName}`] = { type: 'JSExpression', value: ensureThisPrefix(raw, loopVariable) }
           }
         } else {
           schema.props[`${attrName}`] = ''
@@ -212,13 +324,13 @@ function parseTextNode(node: any, _options: any) {
   return { componentName: 'Text', props: { text: node.content.trim() } }
 }
 
-function parseInterpolationNode(node: any, _options: any) {
+function parseInterpolationNode(node: any, _options: any, loopVariable?: string) {
   return {
     componentName: 'Text',
     props: {
       text: {
         type: 'JSExpression',
-        value: ensureThisPrefix(node.content ? node.content.content : '')
+        value: ensureThisPrefix(node.content ? node.content.content : '', loopVariable)
       }
     }
   }
@@ -245,20 +357,32 @@ function normalizeTinyIcon(schema: any, node: any) {
   schema.props.name = iconName
 }
 
-function parseTemplateNode(node: any, options: any) {
+function parseTemplateNode(node: any, options: any, parentLoopVariable?: string) {
   if (node.type !== 1) return null
-  const schema: any = { componentName: getComponentName(node.tag, options), props: {}, children: [] }
+  const componentName = getComponentName(node.tag, options)
+  const schema: any = { componentName, props: {}, children: [] }
+
+  // Check if this is an imported component (sub-component)
+  // If the component name is PascalCase and not an HTML tag, it's likely a component
+  const isImportedComponent = isComponentImported(node.tag, options)
+  if (isImportedComponent) {
+    schema.componentType = 'Block'
+  }
+
   if (node.props && node.props.length > 0) schema.props = parseNodeProps(node.props, options)
   parseDirectives(node, schema, options)
   // Apply icon normalization
   normalizeTinyIcon(schema, node)
 
+  // Get the loop variable from this node (if it has v-for)
+  const currentLoopVariable = schema.loopArgs ? schema.loopArgs[0] : parentLoopVariable
+
   if (node.children && node.children.length > 0) {
     schema.children = node.children
       .map((child: any) => {
-        if (child.type === 1) return parseTemplateNode(child, options)
+        if (child.type === 1) return parseTemplateNode(child, options, currentLoopVariable)
         if (child.type === 2) return parseTextNode(child, options)
-        if (child.type === 5) return parseInterpolationNode(child, options)
+        if (child.type === 5) return parseInterpolationNode(child, options, currentLoopVariable)
         return null
       })
       .filter(Boolean)
@@ -271,6 +395,6 @@ export function parseTemplate(template: string, options: any = {}) {
   if (!ast || !ast.children) return []
   return ast.children
     .filter((node: any) => node.type === 1)
-    .map((node: any) => parseTemplateNode(node, options))
+    .map((node: any) => parseTemplateNode(node, options, undefined))
     .filter(Boolean)
 }

@@ -171,42 +171,79 @@ function addMethodFromFunctionLike(name: string, init: any, result: any, source:
   return false
 }
 
+function extractObjectValue(node: any): any {
+  if (t.isObjectExpression(node)) {
+    const obj: Record<string, any> = {}
+    node.properties.forEach((prop: any) => {
+      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
+        obj[prop.key.name] = extractObjectValue(prop.value)
+      }
+    })
+    return obj
+  }
+  return getNodeValue(node)
+}
+
 function assignStateIfNamedState(name: string, init: any, result: any): boolean {
   if (name !== 'state') return false
-  const initCode = getNodeValue(init)
+
   if (isVueReactiveCall(init, 'reactive')) {
     const firstArg = init.arguments && init.arguments[0]
     if (t.isObjectExpression(firstArg)) {
-      firstArg.properties.forEach((prop: any) => {
-        if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-          const propName = prop.key.name
-          const propValue = prop.value ? getNodeValue(prop.value) : undefined
-          result.state[propName] = { type: 'reactive', value: propValue }
-        }
+      const stateValue = extractObjectValue(firstArg)
+      Object.entries(stateValue).forEach(([key, value]) => {
+        result.state[key] = { type: 'reactive', value }
       })
     } else {
+      const initCode = getNodeValue(init)
       result.state[name] = { type: 'reactive', value: initCode }
     }
     return true
   }
+
   if (isVueReactiveCall(init, 'ref')) {
-    result.state[name] = { type: 'ref', value: initCode }
+    const firstArg = init.arguments && init.arguments[0]
+    const value = firstArg ? getNodeValue(firstArg) : undefined
+    result.state[name] = { type: 'ref', value }
     return true
   }
+
   // normal non-reactive assignment to state
+  const initCode = getNodeValue(init)
   result.state[name] = { type: 'normal', value: initCode }
   return true
 }
 
 function assignComputedIfComputed(name: string, init: any, result: any, source: string): boolean {
   if (!isVueReactiveCall(init, 'computed')) return false
+
   const firstArg = (init.arguments && init.arguments[0]) as any
   let compCode = firstArg ? getSource(firstArg, source) : getNodeValue(init)
+
   if (firstArg) {
-    if (t.isArrowFunctionExpression(firstArg)) compCode = arrowToFunctionString(name, firstArg, source)
-    else if (t.isFunctionExpression(firstArg))
+    if (t.isArrowFunctionExpression(firstArg)) {
+      compCode = arrowToFunctionString(name, firstArg, source)
+    } else if (t.isFunctionExpression(firstArg)) {
       compCode = functionExpressionToNamedFunctionString(name, firstArg, source)
+    } else if (t.isObjectExpression(firstArg)) {
+      // Handle computed({ get: () => {}, set: (val) => {} })
+      const getterProp = firstArg.properties.find(
+        (prop: any) => t.isObjectProperty(prop) && t.isIdentifier(prop.key) && prop.key.name === 'get'
+      ) as any
+      if (
+        getterProp &&
+        getterProp.value &&
+        (t.isArrowFunctionExpression(getterProp.value) || t.isFunctionExpression(getterProp.value))
+      ) {
+        compCode = t.isArrowFunctionExpression(getterProp.value)
+          ? arrowToFunctionString(name, getterProp.value, source)
+          : functionExpressionToNamedFunctionString(name, getterProp.value, source)
+      } else {
+        compCode = getSource(firstArg, source)
+      }
+    }
   }
+
   result.computed[name] = { type: 'computed', value: compCode }
   return true
 }
@@ -214,11 +251,48 @@ function assignComputedIfComputed(name: string, init: any, result: any, source: 
 function handleVariableDeclarator(name: string, init: any, result: any, source: string) {
   // 1) function-like assignments become methods
   if (addMethodFromFunctionLike(name, init, result, source)) return
-  // 2) state-only extraction
+
+  // 2) Check for reactive/ref calls regardless of variable name
+  if (isVueReactiveCall(init, 'reactive')) {
+    const firstArg = init.arguments && init.arguments[0]
+    if (t.isObjectExpression(firstArg)) {
+      const stateValue = extractObjectValue(firstArg)
+      // For 'state' named variable, expand properties into result.state
+      // For other variables, store as a single state item with the variable name as key
+      if (name === 'state') {
+        Object.entries(stateValue).forEach(([key, value]) => {
+          result.state[key] = { type: 'reactive', value }
+        })
+      } else {
+        // Store the entire object under the variable name
+        result.state[name] = { type: 'reactive', value: stateValue }
+      }
+    } else {
+      const initCode = getNodeValue(init)
+      result.state[name] = { type: 'reactive', value: initCode }
+    }
+    return
+  }
+
+  if (isVueReactiveCall(init, 'ref')) {
+    const firstArg = init.arguments && init.arguments[0]
+    const value = firstArg ? getNodeValue(firstArg) : undefined
+    result.state[name] = { type: 'ref', value }
+    return
+  }
+
+  // 3) state-only extraction (for backward compatibility with 'state' variable)
   if (assignStateIfNamedState(name, init, result)) return
-  // 3) computed regardless of name
+
+  // 4) computed regardless of name
   if (assignComputedIfComputed(name, init, result, source)) return
-  // 4) otherwise ignored for state (per requirement), no-op
+
+  // 5) handle non-reactive data (plain variables with initial values)
+  if (init) {
+    const value = getNodeValue(init)
+    result.state[name] = { type: 'normal', value }
+    return
+  }
 }
 
 function parseSetupFunctionBody(body: any, result: any, source: string) {
