@@ -1242,6 +1242,27 @@
           "version": "3.22.0"
         },
         {
+          "componentName": "TinyHuichartsGraph",
+          "package": "@opentiny/vue-huicharts",
+          "exportName": "TinyHuichartsGraph",
+          "destructuring": true,
+          "version": "3.22.0"
+        },
+        {
+          "componentName": "TinyHuichartsProcess",
+          "package": "@opentiny/vue-huicharts",
+          "exportName": "TinyHuichartsProcess",
+          "destructuring": true,
+          "version": "3.22.0"
+        },
+        {
+          "componentName": "TinyHuichartsGauge",
+          "package": "@opentiny/vue-huicharts",
+          "exportName": "TinyHuichartsGauge",
+          "destructuring": true,
+          "version": "3.22.0"
+        },
+        {
           "componentName": "PortalHome",
           "main": "common/components/home",
           "destructuring": false,
