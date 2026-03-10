@@ -42,6 +42,7 @@ const handleAtRules = (node: any) => {
 
   return {
     type,
+    hasBlock: node.nodes !== undefined,
     style: {
       type,
       value: rawString
@@ -141,6 +142,47 @@ export const parser = (css: string) => {
     selectors,
     styleObject
   }
+}
+
+/**
+ * 根据编辑器 css 内容生成对象，保留源码顺序并支持 at-rule
+ * @param {string} content
+ * @returns {Record<string, any>}
+ */
+export const buildCssObjectFromContent = (content: string) => {
+  const { parseList, styleObject } = parser(content)
+  const cssObject = {}
+
+  // 保证存入 cssObject 的键值顺序与编辑器中的源码字符顺序一致
+  parseList.forEach((item) => {
+    // parser 中的 handleRules 没有给普通 rule 赋 type 属性，只具备 selectors 和 style
+    if (!item.type && item.selectors) {
+      if (styleObject[item.selectors]) {
+        cssObject[item.selectors] = styleObject[item.selectors].rules
+      }
+    } else if (item.type === 'atrule') {
+      const rawValue = item.style?.value || ''
+      let key = ''
+      let value = ''
+
+      if (item.hasBlock) {
+        const braceIdx = rawValue.indexOf('{')
+        key = braceIdx !== -1 ? rawValue.slice(0, braceIdx).trim() : rawValue.trim()
+        value = braceIdx !== -1 ? rawValue.slice(braceIdx).trim() : ''
+      } else {
+        key = rawValue.trim()
+        value = ''
+      }
+
+      if (cssObject[key] !== undefined) {
+        cssObject[key] = Array.isArray(cssObject[key]) ? [...cssObject[key], value] : [cssObject[key], value]
+      } else {
+        cssObject[key] = value
+      }
+    }
+  })
+
+  return cssObject
 }
 
 /**
