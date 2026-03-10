@@ -70,7 +70,8 @@ const getDevAlias = (useSourceAlias) => {
     '@opentiny/tiny-engine-workspace-template-center': path.resolve(
       basePath,
       'packages/workspace/template-center/index.ts'
-    )
+    ),
+    '@opentiny/tiny-engine-vue-to-dsl': path.resolve(basePath, 'packages/vue-to-dsl/src/index.ts')
   }
 }
 

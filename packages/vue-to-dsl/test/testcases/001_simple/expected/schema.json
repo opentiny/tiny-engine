@@ -1,0 +1,60 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component"
+  },
+  "state": {
+    "switchStatus": true
+  },
+  "methods": {
+    "onClickNew": {
+      "type": "JSFunction",
+      "value": "function onClickNew(event) {\n  this.state.switchStatus = !this.state.switchStatus\n}"
+    }
+  },
+  "computed": {},
+  "lifeCycles": {
+    "setup": {
+      "type": "JSFunction",
+      "value": "function setup({ props, state, watch, onMounted }) {\n  console.log('setup')\n  state.switchStatus = false\n}"
+    }
+  },
+  "css": ".page-base-style {\n  padding: 24px;\n  background: #ffffff;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "TinySwitch",
+          "props": {
+            "className": "component-base-style",
+            "modelValue": {
+              "type": "JSExpression",
+              "value": "this.state.switchStatus",
+              "model": true
+            }
+          },
+          "children": [],
+          "id": "fv6wuu63"
+        },
+        {
+          "componentName": "TinyButton",
+          "props": {
+            "text": "按钮文案",
+            "className": "component-base-style",
+            "onClick": {
+              "type": "JSExpression",
+              "value": "this.onClickNew"
+            }
+          },
+          "children": [],
+          "id": "88gmxjxz"
+        }
+      ],
+      "id": "ngzpirht"
+    }
+  ],
+  "id": "g6s705pv"
+}
