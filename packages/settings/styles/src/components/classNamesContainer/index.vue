@@ -448,11 +448,30 @@ watchEffect(() => {
 })
 
 const save = ({ content }) => {
-  const { styleObject } = parser(content)
+  const { parseList, styleObject } = parser(content)
   const cssObject = {}
-  Object.keys(styleObject).forEach((styleKey) => {
-    cssObject[styleKey] = styleObject[styleKey].rules
+
+  // 保证存入 cssObject 的键值顺序与编辑器中的源码字符顺序一致
+  parseList.forEach((item) => {
+    // parser 中的 handleRules 没有给普通 rule 赋 type 属性，只具备 selectors 和 style
+    if (!item.type && item.selectors) {
+      if (styleObject[item.selectors]) {
+        cssObject[item.selectors] = styleObject[item.selectors].rules
+      }
+    } else if (item.type === 'atrule') {
+      const rawValue = item.style?.value || ''
+      const braceIdx = rawValue.indexOf('{')
+      const key = braceIdx !== -1 ? rawValue.slice(0, braceIdx).trim() : rawValue.trim()
+      const value = braceIdx !== -1 ? rawValue.slice(braceIdx).trim() : ''
+
+      if (cssObject[key] !== undefined) {
+        cssObject[key] = Array.isArray(cssObject[key]) ? [...cssObject[key], value] : [cssObject[key], value]
+      } else {
+        cssObject[key] = value
+      }
+    }
   })
+
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()
