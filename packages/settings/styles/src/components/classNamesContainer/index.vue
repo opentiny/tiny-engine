@@ -109,7 +109,7 @@ import { useProperties, useCanvas, useHistory, useHelp } from '@opentiny/tiny-en
 import { LinkButton } from '@opentiny/tiny-engine-common'
 import { CodeConfigurator } from '@opentiny/tiny-engine-configurator'
 import useStyle, { updateGlobalStyleStr } from '../../js/useStyle'
-import { stringify, getSelectorArr, parser } from '../../js/parser'
+import { stringify, getSelectorArr, buildCssObjectFromContent } from '../../js/parser'
 
 const { getSchema, propsUpdateKey, setProp } = useProperties()
 
@@ -448,11 +448,8 @@ watchEffect(() => {
 })
 
 const save = ({ content }) => {
-  const { styleObject } = parser(content)
-  const cssObject = {}
-  Object.keys(styleObject).forEach((styleKey) => {
-    cssObject[styleKey] = styleObject[styleKey].rules
-  })
+  const cssObject = buildCssObjectFromContent(content)
+
   const { addHistory } = useHistory()
   const { updateRect } = useCanvas().canvasApi.value
   const { updateSchema } = useCanvas()

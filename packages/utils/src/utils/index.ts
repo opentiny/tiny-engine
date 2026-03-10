@@ -464,9 +464,27 @@ export const objectCssToString = (css) => {
     return css
   }
   let cssString = ''
+  let topString = ''
 
   for (const selector in css) {
     const properties = css[selector]
+
+    if (typeof properties === 'string' || (Array.isArray(properties) && typeof properties[0] === 'string')) {
+      const isTopRule =
+        selector.startsWith('@charset') || selector.startsWith('@import') || selector.startsWith('@namespace')
+      const propsArray = Array.isArray(properties) ? properties : [properties]
+
+      propsArray.forEach((prop) => {
+        const line = prop ? `${selector} ${prop}\n` : `${selector}\n`
+        if (isTopRule) {
+          topString += line
+        } else {
+          cssString += line
+        }
+      })
+      continue
+    }
+
     let ruleString = `${selector} {\r\n`
 
     for (const property in properties) {
@@ -476,5 +494,5 @@ export const objectCssToString = (css) => {
     ruleString += '}\n'
     cssString += ruleString
   }
-  return cssString
+  return topString + cssString
 }
