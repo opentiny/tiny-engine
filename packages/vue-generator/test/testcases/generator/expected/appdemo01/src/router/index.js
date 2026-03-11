@@ -29,12 +29,6 @@ const routes = [
         }
       },
       {
-        name: 'lifecycle-page',
-        path: 'lifecycle',
-        component: () => import('@/views/LifeCyclePage.vue'),
-        children: []
-      },
-      {
         name: '1737797330916',
         path: 'testCanvasRowCol',
         component: () => import('@/views/testCanvasRowCol.vue'),

@@ -1,5 +1,5 @@
 {
-  "name": "@opentiny/tiny-engine-toolbar-generate-code",
+  "name": "@opentiny/tiny-engine-toolbar-upload",
   "version": "2.10.0",
   "publishConfig": {
     "access": "public"
@@ -16,7 +16,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/opentiny/tiny-engine",
-    "directory": "packages/toolbars/generate-code"
+    "directory": "packages/toolbars/upload"
   },
   "bugs": {
     "url": "https://github.com/opentiny/tiny-engine/issues"
@@ -27,7 +27,8 @@
   "dependencies": {
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
-    "@opentiny/tiny-engine-utils": "workspace:*"
+    "@opentiny/tiny-engine-utils": "workspace:*",
+    "@opentiny/tiny-engine-vue-to-dsl": "workspace:*"
   },
   "devDependencies": {
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",

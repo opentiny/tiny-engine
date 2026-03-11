@@ -55,7 +55,7 @@
         >
         <tiny-form-item label="可用区" style="border-radius: 0px">
           <tiny-button-group
-            v-model="state.selectValues.availableZone"
+            modelValue="1"
             :data="[
               { text: '可用区1', value: '1' },
               { text: '可用区2', value: '2' },
@@ -89,7 +89,7 @@
       >
         <tiny-form-item label="CPU架构">
           <tiny-button-group
-            v-model="state.formData.cpu"
+            modelValue="1"
             :data="[
               { text: 'x86计算', value: '1' },
               { text: '鲲鹏计算', value: '2' }
@@ -101,8 +101,8 @@
             <div style="display: flex; align-items: center; margin-right: 10px">
               <span style="width: 80px">vCPUs</span>
               <tiny-select
+                modelValue=""
                 placeholder="请选择"
-                v-model="state.selectValues.cpuArch"
                 :options="[
                   { value: '1', label: '黄金糕' },
                   { value: '2', label: '双皮奶' }
@@ -112,8 +112,8 @@
             <div style="display: flex; align-items: center; margin-right: 10px">
               <span style="width: 80px; border-radius: 0px">内存</span>
               <tiny-select
+                modelValue=""
                 placeholder="请选择"
-                v-model="state.selectValues.memorySize"
                 :options="[
                   { value: '1', label: '黄金糕' },
                   { value: '2', label: '双皮奶' }
@@ -121,8 +121,8 @@
               ></tiny-select>
             </div>
             <div style="display: flex; align-items: center">
-              <span style="width: 120px">规格名称</span>
-              <tiny-search placeholder="输入关键词" v-model="state.inputValues.diskLabel"></tiny-search>
+              <span style="width: 80px">规格名称</span>
+              <tiny-search modelValue="" placeholder="输入关键词"></tiny-search>
             </div>
           </div>
           <div style="border-radius: 0px">
@@ -212,18 +212,18 @@
           ></tiny-button-group>
           <div style="display: flex; margin-top: 12px; border-radius: 0px">
             <tiny-select
+              modelValue=""
               placeholder="请选择"
               style="width: 170px; margin-right: 10px"
-              v-model="state.selectValues.storageOption"
               :options="[
                 { value: '1', label: '黄金糕' },
                 { value: '2', label: '双皮奶' }
               ]"
             ></tiny-select>
             <tiny-select
+              modelValue=""
               placeholder="请选择"
               style="width: 340px"
-              v-model="state.selectValues.networkOption"
               :options="[
                 { value: '1', label: '黄金糕' },
                 { value: '2', label: '双皮奶' }
@@ -262,19 +262,15 @@
         <tiny-form-item label="系统盘" style="border-radius: 0px">
           <div style="display: flex">
             <tiny-select
+              modelValue=""
               placeholder="请选择"
               style="width: 200px; margin-right: 10px"
-              v-model="state.formData.storageType"
               :options="[
                 { value: '1', label: '黄金糕' },
                 { value: '2', label: '双皮奶' }
               ]"
             ></tiny-select>
-            <tiny-input
-              placeholder="请输入"
-              style="width: 120px; margin-right: 10px"
-              v-model="state.inputValues.systemDisk"
-            ></tiny-input>
+            <tiny-input placeholder="请输入" modelValue="" style="width: 120px; margin-right: 10px"></tiny-input>
             <span style="color: #575d6c; font-size: 12px">GiB IOPS上限240，IOPS突发上限5,000</span>
           </div></tiny-form-item
         ></tiny-form
@@ -294,21 +290,17 @@
               fill="currentColor"
             ></tiny-icon-panel-mini>
             <tiny-select
+              modelValue=""
               placeholder="请选择"
               style="width: 200px; margin-right: 10px"
-              v-model="state.formData.diskType"
               :options="[
                 { value: '1', label: '黄金糕' },
                 { value: '2', label: '双皮奶' }
               ]"
             ></tiny-select>
-            <tiny-input
-              placeholder="请输入"
-              style="width: 120px; margin-right: 10px"
-              v-model="state.inputValues.dataDiskSize"
-            ></tiny-input>
+            <tiny-input placeholder="请输入" modelValue="" style="width: 120px; margin-right: 10px"></tiny-input>
             <span style="color: #575d6c; font-size: 12px; margin-right: 10px">GiB IOPS上限600，IOPS突发上限5,000</span>
-            <tiny-input placeholder="请输入" style="width: 120px" v-model="state.inputValues.diskLabel"></tiny-input>
+            <tiny-input placeholder="请输入" modelValue="" style="width: 120px"></tiny-input>
           </div>
           <div style="display: flex; margin-top: 12px; border-radius: 0px">
             <tiny-icon-plus style="width: 16px; height: 16px; margin-right: 10px" fill="currentColor"></tiny-icon-plus>
@@ -348,11 +340,7 @@
           <tiny-row style="border-radius: 0px">
             <tiny-col span="5" style="display: flex">
               <span style="margin-right: 10px">购买量</span>
-              <tiny-input
-                placeholder="请输入"
-                style="width: 120px; margin-right: 10px"
-                v-model="state.formData.instanceCount"
-              ></tiny-input>
+              <tiny-input placeholder="请输入" modelValue="" style="width: 120px; margin-right: 10px"></tiny-input>
               <span>台</span></tiny-col
             >
             <tiny-col span="7">
@@ -396,8 +384,7 @@ import {
   Form as TinyForm,
   Grid as TinyGrid,
   Select as TinySelect,
-  ButtonGroup as TinyButtonGroup,
-  Button as TinyButton
+  ButtonGroup as TinyButtonGroup
 } from '@opentiny/vue'
 import { IconPanelMini, IconPlus } from '@opentiny/vue-icon'
 import * as vue from 'vue'
@@ -413,24 +400,7 @@ const { t, lowcodeWrap, stores } = vue.inject(I18nInjectionKey).lowcode()
 const wrap = lowcodeWrap(props, { emit })
 wrap({ stores })
 
-const state = vue.reactive({
-  dataDisk: [1, 2, 3],
-  formData: {
-    zone: '1',
-    cpu: '1',
-    memory: '1',
-    storageType: '1',
-    storageSize: '40',
-    diskType: '1',
-    diskSize: '100',
-    networkType: '1',
-    bandwidth: '1',
-    instanceType: '1',
-    instanceCount: '1'
-  },
-  inputValues: { diskLabel: '', systemDisk: '', dataDiskSize: '', networkConfig: '' },
-  selectValues: { availableZone: '1', cpuArch: '1', memorySize: '1', storageOption: '1', networkOption: '1' }
-})
+const state = vue.reactive({ dataDisk: [1, 2, 3] })
 wrap({ state })
 </script>
 <style scoped>

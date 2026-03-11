@@ -122,7 +122,7 @@ export default defineComponent({
 .overwrite-dialog {
   .tip {
     font-size: 12px;
-    color: var(--te-configurator-common-text-color);
+    color: var(--te-toolbars-upload-text-color-primary);
     margin-bottom: 8px;
   }
   .actions {
@@ -133,13 +133,13 @@ export default defineComponent({
   }
   .switch-label {
     font-size: 12px;
-    color: var(--te-configurator-common-text-color);
+    color: var(--te-toolbars-upload-text-color-primary);
   }
   .list {
     max-height: 320px;
     overflow: auto;
     padding: 6px 4px;
-    border: 1px solid var(--te-configurator-common-border-color);
+    border: 1px solid var(--te-toolbars-upload-bg-color);
     border-radius: 4px;
   }
   .row {
