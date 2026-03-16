@@ -151,7 +151,7 @@ export default {
       try {
         const componentsTree = pages.map((ps: any) => ({
           name: ps?.meta?.name || ps?.fileName || 'Page',
-          meta: { ...(ps?.meta || {}), isPage: true },
+          meta: { ...(ps?.meta || {}), isPage: true, message: 'Page auto save', isBody: false, isHome: false },
           page_content: ps
         }))
         if (!componentsTree.some((p: any) => p?.meta?.isHome) && componentsTree[0]) {
@@ -325,7 +325,10 @@ export default {
           page_content: {
             ...result.schema,
             fileName
-          }
+          },
+          message: 'Page auto save',
+          isBody: false,
+          isHome: false
         }
         await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
         const { pageSettingState } = usePage()
