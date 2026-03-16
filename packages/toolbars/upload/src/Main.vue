@@ -186,7 +186,10 @@ export default {
           page_content: {
             ...ps,
             fileName: ps?.fileName || rawName
-          }
+          },
+          message: 'Page auto save',
+          isBody: false,
+          isHome: false
         }
       }
 
