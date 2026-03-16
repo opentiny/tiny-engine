@@ -303,7 +303,10 @@ export default {
             page_content: {
               ...result.schema,
               fileName
-            }
+            },
+            message: 'Page auto save',
+            isBody: false,
+            isHome: false
           }
           await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
           const { pageSettingState } = usePage()
@@ -392,7 +395,10 @@ export default {
             route: ps?.meta?.router || existing?.route || safeRoute,
             isPage: true,
             app: appId,
-            page_content: { ...ps, fileName: ps?.fileName || rawName }
+            page_content: { ...ps, fileName: ps?.fileName || rawName },
+            message: 'Page auto save',
+            isBody: false,
+            isHome: false
           }
           requests.push(getMetaApi(META_SERVICE.Http).post(`/app-center/api/pages/update/${existing.id}`, updateParams))
         }
@@ -407,7 +413,10 @@ export default {
               parentId: '0',
               isPage: true,
               app: appId,
-              page_content: { ...ps, fileName: ps?.fileName || ps?.meta?.name || 'Page' }
+              page_content: { ...ps, fileName: ps?.fileName || ps?.meta?.name || 'Page' },
+              message: 'Page auto save',
+              isBody: false,
+              isHome: false
             })
           )
         }
