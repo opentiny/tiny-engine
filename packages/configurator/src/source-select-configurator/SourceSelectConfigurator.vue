@@ -204,12 +204,11 @@ export default {
 .source-container {
   width: 100%;
   line-height: 28px;
-  background-color: var(--ti-lowcode-input-bg);
   .source-img-wrap {
     position: relative;
     width: 150px;
     height: 96px;
-    background-color: var(--te-common-bg-container);
+    background-color: var(--te-configurator-container-bg-color);
     img {
       width: 100%;
       height: 100%;
@@ -232,7 +231,7 @@ export default {
         width: 70px;
         height: 22px;
         line-height: 22px;
-        border: 1px solid var(--te-common-bg-popover);
+        border: 1px solid var(--te-configurator-common-border-color);
         border-radius: 4px;
         text-align: center;
         color: var(--te-common-text-inverse);

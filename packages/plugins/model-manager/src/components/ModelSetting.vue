@@ -262,19 +262,38 @@ export default {
 </script>
 <style lang="less" scoped>
 .modelmanager-plugin-setting {
-  width: 578px;
-
   :deep(.tiny-collapse .tiny-collapse-item) {
     .tiny-collapse-item__header {
-      padding: 0;
+      &,
+      &.is-active {
+        &::before {
+          border: none;
+        }
+      }
+
+      .svg-icon {
+        margin-right: 6px;
+      }
     }
 
     .tiny-collapse-item__wrap .tiny-collapse-item__content {
-      padding: 0;
+      padding: 0 12px 12px;
       .section {
         padding: 0;
       }
     }
+  }
+
+  :deep(.plugin-setting-header) {
+    border: 0;
+  }
+
+  :deep(.plugin-setting-content) {
+    padding: 0 0 16px 0;
+  }
+
+  :deep(.tiny-collapse) {
+    border-bottom: 0;
   }
 }
 </style>

@@ -4,7 +4,7 @@
     trigger="manual"
     v-model="isShow"
     :visible-arrow="false"
-    :popper-class="['option-popper', 'fixed-left']"
+    :popper-class="['option-popper', 'fixed-left', 'model-function-popper']"
     :offset="isSecond ? 652 : 0"
     width="600"
   >
@@ -230,7 +230,7 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 8px 0 20px 0;
+    margin: 8px 16px 20px 16px;
     .right {
       svg {
         margin-left: 10px;
@@ -286,7 +286,10 @@ onMounted(() => {
 
     .model-param-wrap {
       .tiny-form {
-        padding: 12px;
+        padding: 12px 28px;
+      }
+      .tiny-collapse.tiny-collapse .tiny-collapse-item {
+        padding: 0 12px;
       }
     }
   }
@@ -316,5 +319,12 @@ onMounted(() => {
 
 .model-api-empty {
   color: var(--te-common-text-secondary);
+}
+</style>
+<style lang="less">
+.model-function-popper.model-function-popper.model-function-popper.model-function-popper {
+  border-radius: 0;
+  box-shadow: -6px 0px 3px 0px var(--te-configurator-common-panel-shadow-color);
+  padding: 0;
 }
 </style>

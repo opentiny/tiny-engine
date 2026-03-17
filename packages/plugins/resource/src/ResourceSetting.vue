@@ -1,5 +1,11 @@
 <template>
-  <plugin-setting v-if="isShow" :fixed-name="PLUGIN_NAME.Resource" :align="align" :title="state.title">
+  <plugin-setting
+    v-if="isShow"
+    :fixed-name="PLUGIN_NAME.Resource"
+    :align="align"
+    :title="state.title"
+    class="resource-plugin-setting"
+  >
     <template #header>
       <button-group>
         <tiny-button type="primary" @click="saveResourceSetting">保存</tiny-button>
@@ -148,13 +154,19 @@ export default {
 </script>
 <style lang="less" scoped>
 .resource-plugin-setting {
+  :deep(.plugin-setting-header) {
+    border: 0;
+  }
+
   :deep(.plugin-setting-content) {
     padding: 0 0 16px 0;
   }
+
   :deep(.tiny-collapse) {
     border-bottom: 0;
   }
 }
+
 .resource-setting-collapse {
   :deep(.tiny-collapse-item__header) {
     &,
