@@ -4,7 +4,7 @@ export default {
   title: 'generate-code',
   options: {
     icon: {
-      default: 'flow-download'
+      default: 'generate-code'
     },
     renderType: 'button'
   }

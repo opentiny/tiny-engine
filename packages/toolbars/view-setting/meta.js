@@ -4,7 +4,7 @@ export default {
   title: 'viewSetting',
   options: {
     icon: {
-      default: 'routerview'
+      default: 'nest-attempt'
     },
     renderType: 'icon',
     collapsed: true

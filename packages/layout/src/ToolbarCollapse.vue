@@ -2,7 +2,7 @@
   <tiny-popover :visible-arrow="false" width="248" trigger="click" :open-delay="OPEN_DELAY.Default">
     <template #reference>
       <span class="toolbar-ellipsis">
-        <svg-icon name="ellipsis"></svg-icon>
+        <svg-icon name="more"></svg-icon>
       </span>
     </template>
     <div class="collapse-content">
