@@ -48,7 +48,7 @@
 <script lang="ts">
 /* metaService: engine.layout.Main */
 import { ref, computed } from 'vue'
-import { useLayout, getMergeMeta, getMergeMetaByType } from '@opentiny/tiny-engine-meta-register'
+import { useLayout, getMergeMeta, getMergeMetaByType, useEnv } from '@opentiny/tiny-engine-meta-register'
 import { constants } from '@opentiny/tiny-engine-utils'
 import DesignToolbars from './DesignToolbars.vue'
 import DesignPlugins from './DesignPlugins.vue'
@@ -81,6 +81,17 @@ export default {
     const workspaceRegistry = getMergeMetaByType('workspace')
     // @legacy 旧版本兼容，后续废弃 type: 'setting' 的 plugin，全部改为 type: 'plugins'
     const settingRegistry = getMergeMetaByType('setting')
+    // 归一化 URL：移除用户手动输入的随机 pathname，防止后续 URL 构建时残留
+    const { BASE_URL } = useEnv()
+    const basePath = new URL(BASE_URL, window.location.origin).pathname
+    const currentPath = window.location.pathname.replace(/\/$/, '')
+    const expectedPath = basePath.replace(/\/$/, '')
+    if (currentPath !== expectedPath) {
+      const normalizedUrl = new URL(window.location.href)
+      normalizedUrl.pathname = basePath
+      window.history.replaceState({}, '', normalizedUrl.toString())
+    }
+
     // 启用isShowWorkspace = true后，且当url中不包含id=xxx即应用id时自动打开workspace页
     const queryParams = new URLSearchParams(location.search)
     const isShowDefaultWorkspace = computed(() => {

@@ -95,7 +95,7 @@ import { reactive, ref, onMounted } from 'vue'
 import { Button, Select, Pager, Grid, GridColumn, Divider, Search, Modal, Notify } from '@opentiny/vue'
 import { iconSearch } from '@opentiny/vue-icon'
 import { SearchEmpty } from '@opentiny/tiny-engine-common'
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, useEnv } from '@opentiny/tiny-engine-meta-register'
 import AppDialog from './AppDialog.vue'
 import { fetchApplicationList, createApplication, updateApplication, deleteApplication } from './js/http'
 
@@ -210,8 +210,11 @@ export default {
     }
 
     const openApplication = (template) => {
-      const href = window.location.href.split('?')[0] || './'
-      const newUrl = `${href}?type=app&id=${template.id}&tenant=${template.tenantId || queryParams.get('tenant')}`
+      const { BASE_URL } = useEnv()
+      const basePath = new URL(BASE_URL, window.location.origin).pathname
+      const newUrl = `${window.location.origin}${basePath}?type=app&id=${template.id}&tenant=${
+        template.tenantId || queryParams.get('tenant')
+      }`
       if (window.self !== window.top) {
         window.parent.postMessage(
           {

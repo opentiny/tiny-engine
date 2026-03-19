@@ -72,7 +72,7 @@
 <script lang="ts">
 import { ref, computed, onMounted, type Component } from 'vue'
 import { iconArrowLeft } from '@opentiny/vue-icon'
-import { getMetaApi, META_SERVICE, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, META_SERVICE, getMergeMeta, useEnv } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 
 export default {
@@ -122,9 +122,15 @@ export default {
         : tenantList.value[0]
     })
 
+    const { BASE_URL } = useEnv()
+    const basePath = new URL(BASE_URL, window.location.origin).pathname
+
     const changeTenant = (id) => {
-      const baseUrl = `${window.location.origin}${window.location.pathname}?type=app&`
-      window.location.href = `${baseUrl}tenant=${id}`
+      const url = new URL(window.location.origin)
+      url.pathname = basePath
+      url.searchParams.set('type', 'app')
+      url.searchParams.set('tenant', id)
+      window.location.href = url.toString()
     }
 
     const logOut = () => {
@@ -139,9 +145,13 @@ export default {
       if (enableLogin) {
         const tenantId = getBaseInfo().tenantId || tenantList.value[0].id
         const url = new URL(window.location.href)
+        url.pathname = basePath
         if (!url.searchParams.has('tenant')) {
           url.searchParams.append('tenant', tenantId)
-          window.history.replaceState({}, '', url.toString())
+        }
+        const newHref = url.toString()
+        if (window.location.href !== newHref) {
+          window.history.replaceState({}, '', newHref)
         }
       }
     })
