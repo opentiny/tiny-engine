@@ -359,6 +359,36 @@ function parsePropsSimple(node: any) {
   if (t.isArrayExpression(node)) {
     return node.elements.map((e: any) => (t.isStringLiteral(e) ? { name: e.value, type: 'any' } : null)).filter(Boolean)
   }
+  // 处理对象形式的 props: { title: { type: String, default: '标题一' }, count: Number }
+  if (t.isObjectExpression(node)) {
+    return node.properties
+      .map((prop: any) => {
+        if (!t.isObjectProperty(prop) || !t.isIdentifier(prop.key)) return null
+        const name = prop.key.name
+        // 简写形式: title: String
+        if (t.isIdentifier(prop.value)) {
+          return { name, type: prop.value.name?.toLowerCase() || 'any' }
+        }
+        // 对象形式: title: { type: String, default: '标题一' }
+        if (t.isObjectExpression(prop.value)) {
+          const propDef: any = { name, type: 'any' }
+          prop.value.properties.forEach((p: any) => {
+            if (!t.isObjectProperty(p) || !t.isIdentifier(p.key)) return
+            const key = p.key.name
+            if (key === 'type') {
+              if (t.isIdentifier(p.value)) propDef.type = p.value.name.toLowerCase()
+            } else if (key === 'default') {
+              propDef.default = getNodeValue(p.value)
+            } else if (key === 'required') {
+              propDef.required = getNodeValue(p.value)
+            }
+          })
+          return propDef
+        }
+        return { name, type: 'any' }
+      })
+      .filter(Boolean)
+  }
   return []
 }
 
@@ -491,9 +521,31 @@ function parseSetupScript(ast: any, result: any, source: string) {
       path.node.declarations.forEach((declaration: any) => {
         if (t.isIdentifier(declaration.id) && declaration.init) {
           const name = declaration.id.name
+          // 处理 const props = defineProps({...}) 或 const props = defineProps([...])
+          if (
+            t.isCallExpression(declaration.init) &&
+            t.isIdentifier(declaration.init.callee) &&
+            declaration.init.callee.name === 'defineProps'
+          ) {
+            const arg = declaration.init.arguments[0]
+            if (arg) {
+              result.props = parsePropsSimple(arg)
+            }
+            return
+          }
           handleVariableDeclarator(name, declaration.init, result, source)
         }
       })
+    },
+    // 处理无赋值的 defineProps({...}) 调用
+    ExpressionStatement(path: any) {
+      const expr = path.node.expression
+      if (t.isCallExpression(expr) && t.isIdentifier(expr.callee) && expr.callee.name === 'defineProps') {
+        const arg = expr.arguments[0]
+        if (arg) {
+          result.props = parsePropsSimple(arg)
+        }
+      }
     },
     FunctionDeclaration(path: any) {
       const name = path.node.id.name

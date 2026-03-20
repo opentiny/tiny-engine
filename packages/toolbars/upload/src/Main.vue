@@ -45,10 +45,11 @@ import {
   usePage,
   useTranslate,
   getMetaApi,
-  META_SERVICE
+  META_SERVICE,
+  META_APP
 } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { fetchPageList } from './http'
+import { fetchPageList, fetchBlockGroups, createBlockGroup, createBlock } from './http'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
 import { TinyPopover } from '@opentiny/vue'
@@ -77,6 +78,8 @@ export default {
       pendingImportedPages: [] as any[],
       appId: '' as any
     })
+
+    const { publishBlock } = getMetaApi(META_APP.BlockManage)
 
     const poperVisible = ref(false)
     const clickPopover = () => {
@@ -246,17 +249,240 @@ export default {
         }
       }
 
+      // 3) 创建区块（批量）—— 将页面中引用的子组件创建为区块
+      const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
+      if (blocks.length) {
+        try {
+          // 查询或创建区块分组
+          let groupId: string | null = null
+          try {
+            const groupsRes: any = await fetchBlockGroups({ app: appId })
+            const groups = Array.isArray(groupsRes) ? groupsRes : groupsRes?.data || []
+
+            if (groups.length > 0) {
+              // 使用第一个分组
+              groupId = groups[0].id
+            } else {
+              // 创建默认分组 "我的分组"
+              const createGroupRes: any = await createBlockGroup({
+                name: '我的分组',
+                app: appId
+              })
+              groupId = createGroupRes?.id
+            }
+          } catch (e) {
+            // 继续创建区块，即使分组创建失败
+          }
+
+          // 创建区块
+          // 先从页面 schema 中收集父组件传给各区块的 props
+          const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+          const parentPropsMap: Record<string, Record<string, any>> = {}
+          const collectParentProps = (node: any) => {
+            if (!node || typeof node !== 'object') return
+            if (node.componentType === 'Block' && node.componentName && node.props) {
+              const name = node.componentName
+              if (!parentPropsMap[name]) parentPropsMap[name] = {}
+              Object.keys(node.props).forEach((key) => {
+                if (key !== 'className' && key !== 'style' && key !== 'class') {
+                  parentPropsMap[name][key] = node.props[key]
+                }
+              })
+            }
+            if (Array.isArray(node.children)) {
+              node.children.forEach(collectParentProps)
+            }
+          }
+          pages.forEach((ps: any) => {
+            if (ps?.children) ps.children.forEach(collectParentProps)
+          })
+
+          await Promise.allSettled(
+            blocks.map((bs: any) => {
+              const blockLabel = bs.fileName || bs.meta?.name || 'Block'
+
+              // 类型对应的默认编辑器组件
+              const META_COMPONENTS: Record<string, string> = {
+                array: 'CodeConfigurator',
+                string: 'InputConfigurator',
+                number: 'NumberConfigurator',
+                object: 'CodeConfigurator',
+                boolean: 'SwitchConfigurator',
+                function: 'CodeConfigurator'
+              }
+
+              // 推断值的类型
+              const inferType = (val: any): string => {
+                if (val === null || val === undefined) return 'string'
+                if (typeof val === 'object' && val.type === 'JSExpression') return 'string'
+                if (Array.isArray(val)) return 'array'
+                return typeof val
+              }
+
+              // 获取默认值（JSExpression 取其原始值，其他直接用）
+              const getDefaultValue = (val: any): any => {
+                if (val === null || val === undefined) return ''
+                if (typeof val === 'object' && val.type === 'JSExpression') return ''
+                return val
+              }
+
+              // 合并两个来源的 props：
+              // 1. 子组件自身声明的 props（bs.props）
+              // 2. 父组件传递的 props（parentPropsMap）
+              const declaredProps: Record<string, any> = {}
+              if (Array.isArray(bs.props)) {
+                bs.props.forEach((p: any) => {
+                  declaredProps[p.name] = p
+                })
+              }
+              const parentProps = parentPropsMap[blockLabel] || {}
+
+              // 以父组件传递的 props 为主，合并子组件声明的 props
+              const mergedPropNames = new Set([...Object.keys(declaredProps), ...Object.keys(parentProps)])
+
+              const blockProperties: any[] = []
+              mergedPropNames.forEach((propName) => {
+                const declared = declaredProps[propName]
+                const parentVal = parentProps[propName]
+
+                const propType = declared?.type || inferType(parentVal)
+                const defaultValue = declared?.default !== undefined ? declared.default : getDefaultValue(parentVal)
+
+                blockProperties.push({
+                  property: propName,
+                  type: propType,
+                  defaultValue: defaultValue,
+                  label: {
+                    text: {
+                      zh_CN: propName
+                    }
+                  },
+                  cols: 12,
+                  rules: [],
+                  accessor: {},
+                  hidden: false,
+                  required: declared?.required || false,
+                  readOnly: false,
+                  disabled: false,
+                  widget: {
+                    component: META_COMPONENTS[propType] || 'InputConfigurator',
+                    props: {}
+                  },
+                  properties: [
+                    {
+                      label: {
+                        zh_CN: '默认分组'
+                      },
+                      content: []
+                    }
+                  ]
+                })
+              })
+
+              // 将子节点中引用 state 变量的地方转换为 this.props.xxx
+              const propNames = new Set(blockProperties.map((p: any) => p.property))
+              const rewriteChildrenProps = (node: any) => {
+                if (!node || typeof node !== 'object') return
+                if (node.props && typeof node.props === 'object') {
+                  Object.keys(node.props).forEach((key) => {
+                    const val = node.props[key]
+                    // 将 state 引用转为 props 引用
+                    if (typeof val === 'object' && val?.type === 'JSExpression' && typeof val.value === 'string') {
+                      propNames.forEach((pn) => {
+                        if (val.value.includes(`this.state.${pn}`)) {
+                          val.value = val.value.replace(new RegExp(`this\\.state\\.${pn}`, 'g'), `this.props.${pn}`)
+                        }
+                      })
+                    }
+                  })
+                }
+                if (Array.isArray(node.children)) {
+                  node.children.forEach(rewriteChildrenProps)
+                }
+              }
+              const children = JSON.parse(JSON.stringify(bs.children || []))
+              children.forEach(rewriteChildrenProps)
+
+              const blockParams: any = {
+                label: blockLabel,
+                name_cn: blockLabel,
+                public: 1,
+                framework: 'Vue',
+                created_app: appId,
+                content: {
+                  componentName: 'Block',
+                  fileName: blockLabel,
+                  css: bs.css || '',
+                  props: {},
+                  children: children,
+                  schema: {
+                    properties: [
+                      {
+                        label: {
+                          zh_CN: '基础信息'
+                        },
+                        description: {
+                          zh_CN: '基础信息'
+                        },
+                        collapse: {
+                          number: 6,
+                          text: {
+                            zh_CN: '显示更多'
+                          }
+                        },
+                        content: blockProperties
+                      }
+                    ],
+                    events: {},
+                    slots: {}
+                  },
+                  state: {},
+                  methods: bs.methods || {},
+                  dataSource: bs.dataSource || {},
+                  dependencies: bs.dependencies || { scripts: [], styles: [] },
+                  id: 'body'
+                }
+              }
+
+              // 添加分组ID（如果成功获取或创建）
+              if (groupId) {
+                blockParams.groups = [groupId]
+              } else {
+                // 备选方案：使用空分类数组
+                blockParams.categories = []
+              }
+
+              return createBlock(blockParams).then((data: any) => {
+                if (data?.id) {
+                  const params = {
+                    block: data,
+                    is_compile: true,
+                    deploy_info: '导入项目自动发布',
+                    version: '1.0.1',
+                    needToSave: true
+                  }
+                  publishBlock(params)
+                }
+              })
+            })
+          )
+        } catch (e) {
+          // 区块创建失败不阻塞页面导入流程
+        }
+      }
+
       // 若弹出覆盖选择对话框，则先不立即渲染，等用户选择后再渲染
       if (!state.showOverwriteDialog) {
         const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+        const blockMsg = blocks.length ? `，已创建 ${blocks.length} 个区块` : ''
         if (!chosen) {
-          useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
+          useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）${blockMsg}` })
         } else {
           await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
           useNotify({
             type: 'success',
             title: '导入成功',
-            message: `已创建页面并加载：${chosen?.meta?.name || '页面'}`
+            message: `已创建页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
           })
         }
       }

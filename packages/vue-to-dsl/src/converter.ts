@@ -431,15 +431,76 @@ export class VueToDslConverter {
       }
     }
 
-    // 7) Assemble app schema
+    // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
+    const blockSchemas: any[] = []
+    try {
+      const componentsDir = path.join(srcDir, 'components')
+      const componentVueFiles = await this.walk(componentsDir, (p) => p.endsWith('.vue'))
+      for (const filePath of componentVueFiles) {
+        try {
+          const vueCode = await fs.readFile(filePath, 'utf-8')
+          const baseName = path.basename(filePath, '.vue')
+          const savedOptions = { ...this.options }
+          this.options = { ...this.options, isBlock: true } as any
+          const result = await this.convertFromString(vueCode, baseName)
+          this.options = savedOptions
+          if (result.schema) {
+            result.schema.componentName = 'Block'
+            blockSchemas.push(result.schema)
+          }
+        } catch {
+          // skip individual component conversion errors
+        }
+      }
+    } catch {
+      // ignore if src/components doesn't exist
+    }
+
+    // Also scan page schemas for componentType=Block nodes and ensure they have block schemas
+    this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+
+    // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
       i18n,
       utils,
       dataSource,
-      globalState
+      globalState,
+      blockSchemas
     })
 
     return appSchema
+  }
+
+  // Recursively collect componentType=Block references from page schemas
+  // to ensure all referenced blocks have corresponding block schemas
+  private collectBlockRefsFromSchemas(pageSchemas: any[], blockSchemas: any[]): void {
+    const existingBlockNames = new Set(blockSchemas.map((b) => b.fileName))
+
+    const collectBlockNames = (node: any): void => {
+      if (!node || typeof node !== 'object') return
+      if (node.componentType === 'Block' && node.componentName && !existingBlockNames.has(node.componentName)) {
+        // Create a placeholder block schema for referenced but not found components
+        existingBlockNames.add(node.componentName)
+        blockSchemas.push({
+          componentName: 'Block',
+          fileName: node.componentName,
+          meta: { name: node.componentName },
+          children: node.children || [],
+          props: node.props || {},
+          state: {},
+          methods: {}
+        })
+      }
+      if (Array.isArray(node.children)) {
+        node.children.forEach(collectBlockNames)
+      }
+    }
+
+    for (const ps of pageSchemas) {
+      if (ps?.children) {
+        ps.children.forEach(collectBlockNames)
+      }
+    }
   }
 
   setOptions(options: VueToSchemaOptions) {
@@ -717,12 +778,38 @@ export class VueToDslConverter {
         }
       }
 
-      // 7) Assemble app schema
+      // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
+      const blockSchemas: any[] = []
+      const componentsPrefix = joinRoot('src/components/')
+      const componentVueFiles = allFiles.filter((p) => p.startsWith(componentsPrefix) && p.endsWith('.vue'))
+      for (const cf of componentVueFiles) {
+        try {
+          const code = await readText(cf)
+          if (!code) continue
+          const baseName = (cf.split('/').pop() || '').replace(/\.vue$/i, '') || 'Block'
+          const savedOptions = { ...this.options }
+          this.options = { ...this.options, isBlock: true } as any
+          const res = await this.convertFromString(code, baseName)
+          this.options = savedOptions
+          if (res.schema) {
+            res.schema.componentName = 'Block'
+            blockSchemas.push(res.schema)
+          }
+        } catch {
+          // skip individual component conversion errors
+        }
+      }
+
+      // Also scan page schemas for componentType=Block nodes
+      this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+
+      // 8) Assemble app schema
       const appSchema = generateAppSchema(pageSchemas, {
         i18n,
         utils,
         dataSource,
-        globalState
+        globalState,
+        blockSchemas
       })
 
       return appSchema
@@ -1087,12 +1174,39 @@ export class VueToDslConverter {
       }
     }
 
-    // 7) Assemble app schema
+    // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
+    const blockSchemas: any[] = []
+    const componentVueFiles = relevantFiles.filter(
+      (file) => file.webkitRelativePath.includes('src/components/') && file.name.endsWith('.vue')
+    )
+    for (const cf of componentVueFiles) {
+      try {
+        const code = await readText(cf)
+        if (!code) continue
+        const baseName = cf.name.replace(/\.vue$/i, '') || 'Block'
+        const savedOptions = { ...this.options }
+        this.options = { ...this.options, isBlock: true } as any
+        const res = await this.convertFromString(code, baseName)
+        this.options = savedOptions
+        if (res.schema) {
+          res.schema.componentName = 'Block'
+          blockSchemas.push(res.schema)
+        }
+      } catch {
+        // skip individual component conversion errors
+      }
+    }
+
+    // Also scan page schemas for componentType=Block nodes
+    this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+
+    // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
       i18n,
       utils,
       dataSource,
-      globalState
+      globalState,
+      blockSchemas
     })
 
     return appSchema

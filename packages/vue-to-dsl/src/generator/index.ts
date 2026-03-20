@@ -140,7 +140,7 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   const displayName = fileName.charAt(0).toUpperCase() + fileName.slice(1)
 
   const schema: any = {
-    componentName: 'Page',
+    componentName: options.isBlock ? 'Block' : 'Page',
     fileName: fileName,
     meta: {
       name: displayName
@@ -188,6 +188,7 @@ export function generateAppSchema(pageSchemas: any[], options: any = {}) {
     dataSource: options.dataSource || { list: [] },
     globalState: options.globalState || [],
     pageSchema: pageSchemas || [],
+    blockSchemas: options.blockSchemas || [],
     componentsMap: options.componentsMap || defaultComponentsMap
   }
 }
