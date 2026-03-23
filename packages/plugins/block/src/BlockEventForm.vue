@@ -41,7 +41,11 @@
 /* metaService: engine.plugins.blockmanage.BlockEventForm */
 import { computed, reactive, watch } from 'vue'
 import { Input as TinyInput, Form as TinyForm, FormItem as TinyFormItem, TinyPopover } from '@opentiny/vue'
-import { REGEXP_EVENT_NAME, verifyEventName } from '@opentiny/tiny-engine-common/js/verification'
+import {
+  REGEXP_EVENT_NAME,
+  REGEXP_UPDATE_EVENT_NAME,
+  verifyEventName
+} from '@opentiny/tiny-engine-common/js/verification'
 import {
   getEditBlockPropertyList,
   getEditBlockEvents,
@@ -106,16 +110,15 @@ export default {
     const rules = {
       eventName: [
         {
-          pattern: REGEXP_EVENT_NAME,
-          validator: (rule: any /* IFormInnerRule */, value: string, callback: (e?: Error) => void) => {
+          validator: (_rule: any /* IFormInnerRule */, value: string, callback: (e?: Error) => void) => {
             if (isUpdateEvent.value) {
-              const matched = /^onUpdate:[a-zA-Z_$][\w$]*$/.test(value)
+              const matched = REGEXP_UPDATE_EVENT_NAME.test(value)
               const propertyMatched = propertys.value.some((item) => item.property === value.replace('onUpdate:', ''))
               return matched && propertyMatched
                 ? callback()
                 : callback(new Error(`${value} 需要有对应的 ${value.replace('onUpdate:', '')} 在属性中定义`))
             }
-            if (!rule.pattern.test(value)) {
+            if (!REGEXP_EVENT_NAME.test(value)) {
               callback(new Error(eventNameTip))
             } else {
               callback()
@@ -134,7 +137,12 @@ export default {
     )
 
     const changeEventName = () => {
-      if (formData.eventName !== getEditEventName() && verifyEventName(formData.eventName)) {
+      const isEventNameValid = isUpdateEvent.value
+        ? REGEXP_UPDATE_EVENT_NAME.test(formData.eventName) &&
+          propertys.value.some((item: any) => item.property === formData.eventName.replace('onUpdate:', ''))
+        : verifyEventName(formData.eventName)
+
+      if (formData.eventName !== getEditEventName() && isEventNameValid) {
         renameBlockEventName(formData.eventName, getEditEventName())
       }
     }

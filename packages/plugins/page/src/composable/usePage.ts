@@ -22,6 +22,7 @@ import {
   useModal,
   useNotify,
   getMetaApi,
+  getMergeMeta,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import http from '../http'
@@ -115,6 +116,27 @@ export interface MaterialsOptions {
 }
 
 const generateCssString = (pageOptions: PageOptions, materialsOptions: MaterialsOptions) => {
+  const enableStructuredCss = getMergeMeta('engine.config')?.enableStructuredCss
+
+  if (!enableStructuredCss) {
+    if (!pageOptions?.pageBaseStyle?.className || !pageOptions?.pageBaseStyle?.style) {
+      return ''
+    }
+
+    const formatCssRule = (className: string, style: string) => `.${className} {\n  ${style.trim()}\n}\n`
+    const baseStyle = `.${pageOptions.pageBaseStyle.className}{\r\n ${pageOptions.pageBaseStyle.style}\r\n}\r\n`
+
+    if (!materialsOptions.useBaseStyle) {
+      return baseStyle
+    }
+
+    return [
+      formatCssRule(pageOptions.pageBaseStyle.className, pageOptions.pageBaseStyle.style),
+      formatCssRule(materialsOptions.blockBaseStyle.className, materialsOptions.blockBaseStyle.style),
+      formatCssRule(materialsOptions.componentBaseStyle.className, materialsOptions.componentBaseStyle.style)
+    ].join('\n')
+  }
+
   let cssObject: Record<string, any> = {}
   const parseStyle = (styleString: string) => {
     const styleObj: Record<string, string> = {}

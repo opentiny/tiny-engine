@@ -92,7 +92,7 @@ defineExpose({
   border-bottom: 1px solid #f0f0f0;
 }
 .form-item {
-  margin-bottom: 20px;
+  margin-bottom: 12px;
 }
 .form-item label {
   display: block;

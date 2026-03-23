@@ -10,8 +10,8 @@
  *
  */
 
-import useHttp from '../http'
-import dataSources from './dataSource.json'
+import useHttp from '@/http/index.js'
+import dataSources from '@/lowcodeConfig/dataSource.json'
 
 const dataSourceMap = {}
 
@@ -27,7 +27,7 @@ const createFn = (fnContent) => {
 
 const globalDataHandle = dataSources.dataHandler
   ? createFn(dataSources.dataHandler.value)
-  : Promise.resolve({ data: res })
+  : (res) => Promise.resolve({ data: res })
 
 const load = (http, options, dataSource, shouldFetch) => (params, customUrl) => {
   // 如果没有配置远程请求，则直接返回静态数据，返回前可能会有全局数据处理
@@ -84,7 +84,7 @@ dataSources.list.forEach((config) => {
   http.interceptors.request.use(willFetch, errorHandler)
   http.interceptors.response.use(dataHandler, errorHandler)
 
-  if (import.meta.env.VITE_APP_MOCK === 'mock') {
+  if (import.meta.env?.VITE_APP_MOCK === 'mock') {
     http.mock([
       {
         url: config.options?.uri,

@@ -1,6 +1,6 @@
 <template>
   <plugin-panel
-    title="资源管理"
+    title="工具管理"
     class="plugin-bridge"
     :fixed-name="PLUGIN_NAME.Bridge"
     :fixedPanels="fixedPanels"
@@ -48,7 +48,7 @@ export default {
     const utilsRef: Ref<BridgeManageInstance | null> = ref(null)
     const tips = computed(() => RESOURCE_TIP[activedName.value])
     const docsContent =
-      '资源管理插件提供「工具类方法」功能，支持自定义函数和npm包引用，实现代码复用。轻松添加公共函数或第三方库，应用内全局调用，提升开发效率。'
+      '工具管理插件提供「工具类方法」功能，支持自定义函数和npm包引用，实现代码复用。轻松添加公共函数或第三方库，应用内全局调用，提升开发效率。'
 
     const { PLUGIN_NAME } = useLayout()
 

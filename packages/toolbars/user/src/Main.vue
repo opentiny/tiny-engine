@@ -1,6 +1,6 @@
 <template>
   <div>
-    <tiny-popover :visible-arrow="false" width="200" trigger="click">
+    <tiny-popover :visible-arrow="false" width="260" trigger="click">
       <template #reference>
         <div>
           <svg-icon class="user-icon" name="default-user"></svg-icon>
@@ -10,7 +10,8 @@
       <div class="user-style">
         <div class="user-setting">
           <div class="user-name">
-            <svg-icon class="user-icon" name="default-user"></svg-icon>{{ userInfo.username }}
+            <svg-icon class="user-icon" name="default-user"></svg-icon>
+            <div class="name">{{ userInfo.username }}</div>
           </div>
           <div class="user-tenant">
             <div class="tenant-label">创建组织</div>
@@ -142,11 +143,21 @@ export default {
   border-bottom: 1px solid var(--te-toolbars-user-border-bottom-color);
   font-size: 12px;
   .user-name {
+    display: flex;
+    align-items: center;
     height: 40px;
-    line-height: 40px;
     font-weight: 700;
     .user-icon {
       margin-right: 6px;
+    }
+    .name {
+      display: -webkit-box;
+      -webkit-line-clamp: 2; /* 限制为2行 */
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      word-break: break-word;
+      width: calc(100% - 30px);
     }
   }
   .user-tenant {
@@ -156,7 +167,7 @@ export default {
     margin-top: 6px;
     height: 40px;
     .tenant-item {
-      width: 108px;
+      width: 168px;
       display: flex;
       justify-content: center;
       align-items: center;

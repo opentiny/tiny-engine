@@ -35,14 +35,15 @@
             <div class="empty" v-else>暂无相关数据</div>
           </div>
         </tiny-popover>
-        <tiny-popover :visible-arrow="false" width="150" trigger="click">
+        <tiny-popover :visible-arrow="false" width="260" trigger="click">
           <template #reference>
             <div>
               <svg-icon class="user-icon" name="default-user"></svg-icon>
             </div>
           </template>
           <div class="user-name">
-            <svg-icon class="user-icon" name="default-user"></svg-icon>{{ userInfo.username }}
+            <svg-icon class="user-icon" name="default-user"></svg-icon>
+            <div class="name">{{ userInfo.username }}</div>
           </div>
           <div class="divider"></div>
           <div class="user-out" @click="logOut">
@@ -243,9 +244,20 @@ export default {
 }
 .user-name {
   color: var(--te-layout-common-text-color-weaken);
+  display: flex;
+  align-items: center;
   .user-icon {
     margin-right: 6px;
     font-size: 20px;
+  }
+  .name {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 限制为2行 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
+    width: calc(100% - 26px);
   }
 }
 .divider {

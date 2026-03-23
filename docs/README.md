@@ -95,7 +95,6 @@
     - [应用工具类管理](./api/backend-api/app-utility-management.md)
     - [区块管理](./api/backend-api/block-management-api.md)
     - [数据源管理](./api/backend-api/data-source-management.md)
-    - [DSL代码生成](./api/backend-api/dsl-code-generation.md)
     - [物料中心](./api/backend-api/material-center.md)
     - [页面管理](./api/backend-api/page-management-api.md)
     - [APP服务](./api/backend-api/app-services.md)

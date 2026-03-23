@@ -14,17 +14,6 @@ import createStore from '../store/StoreFactory'
 import config from '../config/config'
 import { getResponseData } from '../tool/Common'
 
-const parsePageContent = (item) => {
-  if (item && item.page_content && typeof item.page_content === 'string') {
-    try {
-      item.page_content = JSON.parse(item.page_content)
-    } catch (e) {
-      // ignore
-    }
-  }
-  return item
-}
-
 const formatPageContentForStorage = (pageContent) => {
   if (pageContent === undefined) {
     return pageContent
@@ -46,6 +35,17 @@ const formatPageContentForStorage = (pageContent) => {
   }
 
   return pageContent
+}
+
+const parsePageContent = (item) => {
+  if (item && item.page_content && typeof item.page_content === 'string') {
+    try {
+      item.page_content = JSON.parse(item.page_content)
+    } catch (e) {
+      // ignore
+    }
+  }
+  return item
 }
 
 export default class PageService {

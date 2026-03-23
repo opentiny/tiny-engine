@@ -11,6 +11,7 @@
  */
 
 export const REGEXP_EVENT_NAME = /^[a-z]+([A-Z][a-z]*)*$/
+export const REGEXP_UPDATE_EVENT_NAME = /^onUpdate:[a-zA-Z_$][\w$]*$/
 
 export const verifyEventName = (name: string) => REGEXP_EVENT_NAME.test(name)
 

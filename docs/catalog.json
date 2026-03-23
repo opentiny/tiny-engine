@@ -8,23 +8,56 @@
           "title": "新手指引",
           "name": "getting-started",
           "articles": [
-            { "title": "简介", "name": "introduction.md" },
-            { "title": "快速上手", "name": "quick-start.md" }
+            {
+              "title": "简介",
+              "name": "introduction.md"
+            },
+            {
+              "title": "快速上手",
+              "name": "quick-start.md"
+            }
           ]
         },
         {
           "title": "基础功能",
           "name": "basic-features",
           "articles": [
-            { "title": "设计器界面模块简介", "name": "designer-ui-modules.md" },
-            { "title": "设计前端应用流程", "name": "frontend-application-flow.md" },
-            { "title": "页面管理", "name": "page-management.md" },
-            { "title": "使用组件", "name": "using-components.md" },
-            { "title": "样式设置", "name": "style-settings.md" },
-            { "title": "使用状态管理和变量绑定", "name": "state-management-and-variable-binding.md" },
-            { "title": "行内样式绑定状态变量", "name": "inline-style-variable-binding.md" },
-            { "title": "查看大纲树", "name": "outline-tree.md" },
-            { "title": "国际化", "name": "internationalization.md" },
+            {
+              "title": "设计器界面模块简介",
+              "name": "designer-ui-modules.md"
+            },
+            {
+              "title": "设计前端应用流程",
+              "name": "frontend-application-flow.md"
+            },
+            {
+              "title": "页面管理",
+              "name": "page-management.md"
+            },
+            {
+              "title": "使用组件",
+              "name": "using-components.md"
+            },
+            {
+              "title": "样式设置",
+              "name": "style-settings.md"
+            },
+            {
+              "title": "使用状态管理和变量绑定",
+              "name": "state-management-and-variable-binding.md"
+            },
+            {
+              "title": "行内样式绑定状态变量",
+              "name": "inline-style-variable-binding.md"
+            },
+            {
+              "title": "查看大纲树",
+              "name": "outline-tree.md"
+            },
+            {
+              "title": "国际化",
+              "name": "internationalization.md"
+            },
             {
               "title": "资源管理",
               "name": "resources-management.md"
@@ -39,40 +72,94 @@
           "title": "进阶功能",
           "name": "advanced-features",
           "articles": [
-            { "title": "区块管理", "name": "block-management.md" },
-            { "title": "使用JS面板和事件绑定", "name": "js-panel-and-event-binding.md" },
+            {
+              "title": "区块管理",
+              "name": "block-management.md"
+            },
+            {
+              "title": "使用JS面板和事件绑定",
+              "name": "js-panel-and-event-binding.md"
+            },
             {
               "title": "使用工具类方法 utils",
               "name": "using-utils-methods.md"
             },
-            { "title": "高级面板设置", "name": "advanced-panel-settings.md" },
-            { "title": "如何使用插槽", "name": "how-to-use-slots.md" },
-            { "title": "循环渲染", "name": "loop-rendering.md" },
-            { "title": "条件渲染", "name": "conditional-rendering.md" },
-            { "title": "新版AI插件使用", "name": "new-ai-plugin-usage.md" },
-            { "title": "数据源和Collection—远程字段", "name": "data-source-and-collection-remote-fields.md" },
-            { "title": "数据源和Collection—mock数据", "name": "data-source-and-collection-mock-data.md" },
-            { "title": "数据源和Collection—使用数据源", "name": "data-source-and-collection-usage.md" },
+            {
+              "title": "高级面板设置",
+              "name": "advanced-panel-settings.md"
+            },
+            {
+              "title": "如何使用插槽",
+              "name": "how-to-use-slots.md"
+            },
+            {
+              "title": "循环渲染",
+              "name": "loop-rendering.md"
+            },
+            {
+              "title": "条件渲染",
+              "name": "conditional-rendering.md"
+            },
+            {
+              "title": "新版AI插件使用",
+              "name": "new-ai-plugin-usage.md"
+            },
+            {
+              "title": "数据源和Collection—远程字段",
+              "name": "data-source-and-collection-remote-fields.md"
+            },
+            {
+              "title": "数据源和Collection—mock数据",
+              "name": "data-source-and-collection-mock-data.md"
+            },
+            {
+              "title": "数据源和Collection—使用数据源",
+              "name": "data-source-and-collection-usage.md"
+            },
             {
               "title": "路由能力",
               "name": "route-capabilities",
               "articles": [
-                { "title": "页面支持嵌套路由", "name": "page-support-nested-route.md" },
-                { "title": "路由bar一键清除预览页面路径", "name": "route-bar-clear-preview-page.md" },
-                { "title": "路由bar高亮显示预览页面路径", "name": "route-bar-current-page-highlight.md" },
-                { "title": "RouterView组件支持预览子界面", "name": "route-view-support-preview-subpage.md" }
+                {
+                  "title": "页面支持嵌套路由",
+                  "name": "page-support-nested-route.md"
+                },
+                {
+                  "title": "路由bar一键清除预览页面路径",
+                  "name": "route-bar-clear-preview-page.md"
+                },
+                {
+                  "title": "路由bar高亮显示预览页面路径",
+                  "name": "route-bar-current-page-highlight.md"
+                },
+                {
+                  "title": "RouterView组件支持预览子界面",
+                  "name": "route-view-support-preview-subpage.md"
+                }
               ]
             },
-            { "title": "主题切换功能", "name": "theme-switch.md" },
-            { "title": "画布快捷操作", "name": "canvas-shortcuts.md" }
+            {
+              "title": "主题切换功能",
+              "name": "theme-switch.md"
+            },
+            {
+              "title": "画布快捷操作",
+              "name": "canvas-shortcuts.md"
+            }
           ]
         },
         {
           "title": "教程",
           "name": "tutorials",
           "articles": [
-            { "title": "从零搭建一个页面", "name": "build-a-page-from-scratch.md" },
-            { "title": "第一期2023.10.27", "name": "issue-1-2023.10.27.md" }
+            {
+              "title": "从零搭建一个页面",
+              "name": "build-a-page-from-scratch.md"
+            },
+            {
+              "title": "第一期2023.10.27",
+              "name": "issue-1-2023.10.27.md"
+            }
           ]
         }
       ]
@@ -85,18 +172,32 @@
           "title": "开始",
           "name": "development-getting-started",
           "articles": [
-            { "title": "简介", "name": "dev-intro.md" },
-            { "title": "快速上手", "name": "dev-quick-start.md" },
-            { "title": "前后端启动联调(Java服务端)", "name": "debugging-of-java-backend.md" }
+            {
+              "title": "简介",
+              "name": "dev-intro.md"
+            },
+            {
+              "title": "快速上手",
+              "name": "dev-quick-start.md"
+            },
+            {
+              "title": "前后端启动联调(Java服务端)",
+              "name": "debugging-of-java-backend.md"
+            }
           ]
         },
-
         {
           "title": "更新日志",
           "name": "changelog",
           "articles": [
-            { "title": "更新日志", "name": "changelog.md" },
-            { "title": "v2.7升级指南", "name": "v2.7-upgrade-guide.md" }
+            {
+              "title": "更新日志",
+              "name": "changelog.md"
+            },
+            {
+              "title": "v2.7升级指南",
+              "name": "v2.7-upgrade-guide.md"
+            }
           ]
         },
         {
@@ -107,84 +208,212 @@
               "title": "前端及Java服务端docker部署",
               "name": "front-backend-docker-deployment.md"
             },
-            { "title": "Java服务端部署", "name": "server-deployment-solution-java.md" },
-            { "title": "Node.js服务端部署", "name": "server-deployment-solution.md" },
-            { "title": "区块发布方案(Node.js服务端)", "name": "block-release-solution.md" },
-            { "title": "区块局域网发布方案(Node.js服务端)", "name": "block-lan-release-solution.md" },
-            { "title": "设计器中引入第三方组件库", "name": "third-party-library-in-designer.md" },
-            { "title": "物料同步方案", "name": "material-sync-solution.md" },
-            { "title": "本地化CDN方案", "name": "import-map-local.md" },
-            { "title": "全新区块构建方案", "name": "block-construction-solution.md" },
-            { "title": "全新画布通信方案", "name": "canvas-communication-solution.md" }
+            {
+              "title": "Java服务端部署",
+              "name": "server-deployment-solution-java.md"
+            },
+            {
+              "title": "Node.js服务端部署",
+              "name": "server-deployment-solution.md"
+            },
+            {
+              "title": "区块发布方案(Node.js服务端)",
+              "name": "block-release-solution.md"
+            },
+            {
+              "title": "区块局域网发布方案(Node.js服务端)",
+              "name": "block-lan-release-solution.md"
+            },
+            {
+              "title": "设计器中引入第三方组件库",
+              "name": "third-party-library-in-designer.md"
+            },
+            {
+              "title": "物料同步方案",
+              "name": "material-sync-solution.md"
+            },
+            {
+              "title": "本地化CDN方案",
+              "name": "import-map-local.md"
+            },
+            {
+              "title": "全新区块构建方案",
+              "name": "block-construction-solution.md"
+            },
+            {
+              "title": "全新画布通信方案",
+              "name": "canvas-communication-solution.md"
+            }
           ]
         },
         {
           "title": "扩展能力介绍",
           "name": "extension-capabilities-overview",
           "articles": [
-            { "title": "新架构介绍", "name": "new-architecture.md" },
-            { "title": "注册表", "name": "registry.md" },
-            { "title": "注册表（新版）", "name": "new-registry.md" },
-            { "title": "注册表高级特性", "name": "new-registry-advanced.md" },
-            { "title": "元服务和元应用", "name": "meta-services-and-meta-apps.md" }
+            {
+              "title": "新架构介绍",
+              "name": "new-architecture.md"
+            },
+            {
+              "title": "注册表",
+              "name": "registry.md"
+            },
+            {
+              "title": "注册表（新版）",
+              "name": "new-registry.md"
+            },
+            {
+              "title": "注册表高级特性",
+              "name": "new-registry-advanced.md"
+            },
+            {
+              "title": "元服务和元应用",
+              "name": "meta-services-and-meta-apps.md"
+            }
           ]
         },
         {
           "title": "扩展能力使用教程",
           "name": "extension-capabilities-tutorial",
           "articles": [
-            { "title": "如何开发插件", "name": "how-to-develop-plugins.md" },
+            {
+              "title": "如何开发插件",
+              "name": "how-to-develop-plugins.md"
+            },
             {
               "title": "出码功能",
               "name": "code-output-function",
               "articles": [
-                { "title": "出码功能简介与使用", "name": "code-output-overview-and-usage.md" },
-                { "title": "如何自定义出码", "name": "how-to-customize-code-output.md" },
-                { "title": "如何自定义出码插件", "name": "how-to-customize-code-output-plugins.md" },
-                { "title": "自定义页面出码插件", "name": "custom-page-code-output-plugin.md" },
-                { "title": "官方出码能力API", "name": "official-code-output-api.md" }
+                {
+                  "title": "出码功能简介与使用",
+                  "name": "code-output-overview-and-usage.md"
+                },
+                {
+                  "title": "如何自定义出码",
+                  "name": "how-to-customize-code-output.md"
+                },
+                {
+                  "title": "如何自定义出码插件",
+                  "name": "how-to-customize-code-output-plugins.md"
+                },
+                {
+                  "title": "自定义页面出码插件",
+                  "name": "custom-page-code-output-plugin.md"
+                },
+                {
+                  "title": "官方出码能力API",
+                  "name": "official-code-output-api.md"
+                }
               ]
             },
-            { "title": "定制插件UI", "name": "customize-plugin-ui.md" },
-            { "title": "定制元服务逻辑", "name": "customize-meta-service-logic.md" },
-            { "title": "开发设置器组件", "name": "develop-configurator-components.md" },
-            { "title": "AI插件使用前配置", "name": "ai-plugin-configuration.md" },
-            { "title": "如何自定义主题", "name": "how-to-custom-theme.md" }
+            {
+              "title": "定制插件UI",
+              "name": "customize-plugin-ui.md"
+            },
+            {
+              "title": "定制元服务逻辑",
+              "name": "customize-meta-service-logic.md"
+            },
+            {
+              "title": "开发设置器组件",
+              "name": "develop-configurator-components.md"
+            },
+            {
+              "title": "AI插件使用前配置",
+              "name": "ai-plugin-configuration.md"
+            },
+            {
+              "title": "如何自定义主题",
+              "name": "how-to-custom-theme.md"
+            }
           ]
         },
         {
           "title": "API",
           "name": "api",
           "articles": [
-            { "title": "API总览", "name": "api-overview.md" },
+            {
+              "title": "API总览",
+              "name": "api-overview.md"
+            },
             {
               "title": "前端API",
               "name": "frontend-api",
               "articles": [
-                { "title": "主包API", "name": "main-package-api.md" },
-                { "title": "画布API", "name": "canvas-api.md" },
-                { "title": "全局布局API", "name": "global-layout-api.md" },
-                { "title": "物料API", "name": "material-api.md" },
-                { "title": "设置面板API", "name": "settings-panel-api.md" },
-                { "title": "预览API", "name": "preview-api.md" },
-                { "title": "元服务API", "name": "globalService-api.md" },
-                { "title": "注册表API", "name": "registry-api.md" }
+                {
+                  "title": "主包API",
+                  "name": "main-package-api.md"
+                },
+                {
+                  "title": "画布API",
+                  "name": "canvas-api.md"
+                },
+                {
+                  "title": "全局布局API",
+                  "name": "global-layout-api.md"
+                },
+                {
+                  "title": "物料API",
+                  "name": "material-api.md"
+                },
+                {
+                  "title": "设置面板API",
+                  "name": "settings-panel-api.md"
+                },
+                {
+                  "title": "预览API",
+                  "name": "preview-api.md"
+                },
+                {
+                  "title": "元服务API",
+                  "name": "globalService-api.md"
+                },
+                {
+                  "title": "注册表API",
+                  "name": "registry-api.md"
+                }
               ]
             },
             {
               "title": "后端API",
               "name": "backend-api",
               "articles": [
-                { "title": "AI功能接口", "name": "ai-function-api.md" },
-                { "title": "应用管理", "name": "app-management.md" },
-                { "title": "区块分类", "name": "block-categories.md" },
-                { "title": "应用工具类管理", "name": "app-utility-management.md" },
-                { "title": "区块管理", "name": "block-management-api.md" },
-                { "title": "数据源管理", "name": "data-source-management.md" },
-                { "title": "DSL代码生成", "name": "dsl-code-generation.md" },
-                { "title": "物料中心", "name": "material-center.md" },
-                { "title": "页面管理", "name": "page-management-api.md" },
-                { "title": "APP服务", "name": "app-services.md" }
+                {
+                  "title": "AI功能接口",
+                  "name": "ai-function-api.md"
+                },
+                {
+                  "title": "应用管理",
+                  "name": "app-management.md"
+                },
+                {
+                  "title": "区块分类",
+                  "name": "block-categories.md"
+                },
+                {
+                  "title": "应用工具类管理",
+                  "name": "app-utility-management.md"
+                },
+                {
+                  "title": "区块管理",
+                  "name": "block-management-api.md"
+                },
+                {
+                  "title": "数据源管理",
+                  "name": "data-source-management.md"
+                },
+                {
+                  "title": "物料中心",
+                  "name": "material-center.md"
+                },
+                {
+                  "title": "页面管理",
+                  "name": "page-management-api.md"
+                },
+                {
+                  "title": "APP服务",
+                  "name": "app-services.md"
+                }
               ]
             }
           ]
@@ -193,9 +422,18 @@
           "title": "实战案例",
           "name": "practical-cases",
           "articles": [
-            { "title": "PDM元数据审批电子流", "name": "pdm-metadata-approval-workflow.md" },
-            { "title": "图元编排设计器", "name": "graphical-element-arrangement-designer.md" },
-            { "title": "SMB轻量应用服务", "name": "smb-lightweight-application-service.md" }
+            {
+              "title": "PDM元数据审批电子流",
+              "name": "pdm-metadata-approval-workflow.md"
+            },
+            {
+              "title": "图元编排设计器",
+              "name": "graphical-element-arrangement-designer.md"
+            },
+            {
+              "title": "SMB轻量应用服务",
+              "name": "smb-lightweight-application-service.md"
+            }
           ]
         }
       ]
@@ -208,10 +446,22 @@
           "title": "生态中心",
           "name": "ecosystem-center",
           "articles": [
-            { "title": "介绍", "name": "ecosystem-intro.md" },
-            { "title": "如何导入组件库", "name": "how-to-import-library.md" },
-            { "title": "如何发布区块", "name": "how-to-publish-block.md" },
-            { "title": "发布其他生态", "name": "publish-other-ecosystems.md" }
+            {
+              "title": "介绍",
+              "name": "ecosystem-intro.md"
+            },
+            {
+              "title": "如何导入组件库",
+              "name": "how-to-import-library.md"
+            },
+            {
+              "title": "如何发布区块",
+              "name": "how-to-publish-block.md"
+            },
+            {
+              "title": "发布其他生态",
+              "name": "publish-other-ecosystems.md"
+            }
           ]
         },
         {
@@ -222,30 +472,54 @@
               "title": "创建应用（创建空白应用、从模板创建应用）",
               "name": "create-application-blank-or-template.md"
             },
-            { "title": "开发应用", "name": "develop-application.md" }
+            {
+              "title": "开发应用",
+              "name": "develop-application.md"
+            }
           ]
         },
         {
           "title": "关于物料",
           "name": "about-materials",
           "articles": [
-            { "title": "介绍", "name": "materials-intro.md" },
-            { "title": "创建物料资产包", "name": "create-material-asset-package.md" },
-            { "title": "添加组件库和区块", "name": "add-library-and-blocks.md" },
-            { "title": "构建物料资产包", "name": "build-material-asset-package.md" }
+            {
+              "title": "介绍",
+              "name": "materials-intro.md"
+            },
+            {
+              "title": "创建物料资产包",
+              "name": "create-material-asset-package.md"
+            },
+            {
+              "title": "添加组件库和区块",
+              "name": "add-library-and-blocks.md"
+            },
+            {
+              "title": "构建物料资产包",
+              "name": "build-material-asset-package.md"
+            }
           ]
         },
         {
           "title": "关于设计器",
           "name": "about-designer",
           "articles": [
-            { "title": "介绍", "name": "designer-intro.md" },
-            { "title": "创建设计器", "name": "create-designer.md" },
+            {
+              "title": "介绍",
+              "name": "designer-intro.md"
+            },
+            {
+              "title": "创建设计器",
+              "name": "create-designer.md"
+            },
             {
               "title": "定制物料资产包、主题、DSL、工具栏和插件栏",
               "name": "customize-material-package-themes-dsl-toolbar-plugins.md"
             },
-            { "title": "定制设计器", "name": "customize-designer.md" }
+            {
+              "title": "定制设计器",
+              "name": "customize-designer.md"
+            }
           ]
         }
       ]

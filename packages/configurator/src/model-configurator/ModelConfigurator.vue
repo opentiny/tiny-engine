@@ -6,7 +6,7 @@
         trigger="manual"
         v-model="isShow"
         :visible-arrow="false"
-        :popper-class="['option-popper', 'fixed-left']"
+        :popper-class="['option-popper', 'fixed-left', 'model-popper']"
       >
         <div class="model-title">
           <span>绑定模型数据</span>
@@ -424,19 +424,15 @@ onMounted(() => {
 .model-container {
   width: 100%;
   line-height: 28px;
-  background-color: var(--ti-lowcode-input-bg);
   &:hover {
     cursor: pointer;
   }
-  .model-name-warp {
-    border: 1px solid var(--ti-lowcode-component-input-border-color);
-  }
   .meta-model-title {
-    color: #808080;
+    color: var(--te-configurator-common-text-color-weaken);
   }
   .meta-array-wrap {
     font-size: 12px;
-    border: 1px solid #dbdbdb;
+    border: 1px solid var(--te-configurator-common-border-color);
     border-radius: 4px;
     display: block;
     :deep(.tiny-search) {
@@ -444,7 +440,7 @@ onMounted(() => {
       .tiny-search__line {
         border: none;
         border-radius: 0;
-        border-bottom: 1px solid var(--ti-search-input-border-color);
+        border-bottom: 1px solid var(--te-configurator-common-border-color);
       }
     }
     .meta-array-header {
@@ -565,5 +561,11 @@ onMounted(() => {
       margin-top: 8px;
     }
   }
+}
+</style>
+<style lang="less">
+.model-popper.model-popper.model-popper.model-popper {
+  border-radius: 0;
+  box-shadow: -6px 0px 3px 0px var(--te-configurator-common-panel-shadow-color);
 }
 </style>

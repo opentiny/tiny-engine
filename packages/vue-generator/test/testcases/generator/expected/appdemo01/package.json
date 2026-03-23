@@ -10,7 +10,7 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "dependencies": {
-    "@opentiny/tiny-engine-i18n-host": "^1.0.0",
+    "@opentiny/tiny-engine-i18n-host": "^2.8.0",
     "@opentiny/vue": "0.1.16",
     "@opentiny/vue-icon": "0.1.16",
     "axios": "latest",
