@@ -1,28 +1,12 @@
-import { expect, test, beforeEach, afterEach, vi } from 'vitest'
+import { expect, test } from 'vitest'
 import { genSFCWithDefaultPlugin } from '@/generator/vue/sfc'
 import pageSchema from './page.schema.json'
+import scopeSchema from './scope.schema.json'
+import multilineSchema from './multiline.schema.json'
+import jsxQuoteSchema from './jsxQuote.schema.json'
+import jsxQuoteComponentsMap from './jsxQuote.components-map.json'
+import primitiveQuoteSchema from './primitiveQuote.schema.json'
 import { formatCode } from '@/utils/formatCode'
-
-let count = 0
-const mockValue = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-
-beforeEach(() => {
-  // 伪随机数，保证每次快照都一致
-  vi.spyOn(global.Math, 'random').mockImplementation(() => {
-    const res = mockValue[count]
-
-    count++
-    if (count > 10) {
-      count = 0
-    }
-
-    return res
-  })
-})
-
-afterEach(() => {
-  vi.spyOn(global.Math, 'random').mockRestore()
-})
 
 test('should generate template quote correctly', async () => {
   const res = genSFCWithDefaultPlugin(pageSchema, [])
@@ -30,4 +14,36 @@ test('should generate template quote correctly', async () => {
   const formattedCode = formatCode(res, 'vue')
 
   await expect(formattedCode).toMatchFileSnapshot('./expected/templateQuote.vue')
+})
+
+test('should preserve expression scope and string content with quotes', async () => {
+  const res = genSFCWithDefaultPlugin(scopeSchema, [])
+
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./expected/quoteScope.vue')
+})
+
+test('should escape newlines in v-bind string literals for multiline strings with double quotes', async () => {
+  const res = genSFCWithDefaultPlugin(multilineSchema, [])
+
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./expected/multiline.vue')
+})
+
+test('should not use v-bind string literal syntax in JSX slot mode', async () => {
+  const res = genSFCWithDefaultPlugin(jsxQuoteSchema, jsxQuoteComponentsMap)
+
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./expected/jsxQuote.vue')
+})
+
+test('should encode double quotes as &quot; in primitive string attributes', async () => {
+  const res = genSFCWithDefaultPlugin(primitiveQuoteSchema, [])
+
+  const formattedCode = formatCode(res, 'vue')
+
+  await expect(formattedCode).toMatchFileSnapshot('./expected/primitiveQuote.vue')
 })

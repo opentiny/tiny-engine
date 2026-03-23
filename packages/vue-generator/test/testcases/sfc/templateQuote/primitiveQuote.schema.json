@@ -1,0 +1,24 @@
+{
+  "state": {},
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyButton",
+      "props": {
+        "noQuotes": "plain text value",
+        "onlyDouble": "{\"name\": \"test\", \"id\": \"main\"}",
+        "onlySingle": "it's a 'test' value",
+        "bothQuotes": "She said \"hello\" and it's fine",
+        "htmlAttr": "class=\"primary\" id=\"btn-1\"",
+        "emptyStr": ""
+      },
+      "id": "primitive-quote-001",
+      "children": []
+    }
+  ],
+  "fileName": "testPrimitiveQuote"
+}

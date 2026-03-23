@@ -70,7 +70,7 @@ export const checkHasSpecialType = (obj) => {
   return false
 }
 
-const handleJSExpressionBinding = (key, value, isJSX, globalHooks) => {
+const handleJSExpressionBinding = (key, value, isJSX) => {
   const expressValue = value.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
 
   if (isJSX) {
@@ -85,19 +85,10 @@ const handleJSExpressionBinding = (key, value, isJSX, globalHooks) => {
   }
 
   // expression 使用 v-bind 绑定
-  if (expressValue.includes('"') && expressValue.includes("'")) {
-    let stateKey = `${key}_${randomString()}`
-    let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${expressValue}`)
-
-    while (!addSuccess) {
-      stateKey = `${key}_${randomString()}`
-      addSuccess = globalHooks.addState(stateKey, `${stateKey}:${expressValue}`)
-    }
-
-    return `:${key}="state.${stateKey}"`
-  } else {
-    return `:${key}="${expressValue.replaceAll(/"/g, "'")}"`
-  }
+  // 如果包含双引号，通过 &quot; 编码避免与属性分隔符冲突
+  // 比如绑定的值为：[{ "name": "test" }]
+  // 则转换为: :key="[{ &quot;name&quot;: &quot;test&quot; }]"
+  return `:${key}="${expressValue.replaceAll(/"/g, '&quot;')}"`
 }
 
 const handleBindI18n = (key, value, isJSX) => {
@@ -194,19 +185,7 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
   const iterVar = [...loopArgs]
 
   if (!isJSX) {
-    if (source.includes('"') && source.includes("'")) {
-      let stateKey = `loop_${randomString()}`
-      let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${source}`)
-
-      while (!addSuccess) {
-        stateKey = `loop_${randomString()}`
-        addSuccess = globalHooks.addState(stateKey, `${stateKey}:${source}`)
-      }
-
-      attributes.push(`v-for="(${iterVar.join(',')}) in state.${stateKey}"`)
-    } else {
-      attributes.push(`v-for="(${iterVar.join(',')}) in ${source.replaceAll(/"/g, "'")}"`)
-    }
+    attributes.push(`v-for="(${iterVar.join(',')}) in ${source.replaceAll(/"/g, '&quot;')}"`)
 
     return
   }
@@ -376,7 +355,7 @@ export const handleExpressionAttrHook = (schemaData, globalHooks, config) => {
   Object.entries(props).forEach(([key, value]) => {
     if (value?.type === JS_EXPRESSION && !isOn(key)) {
       specialTypeHandler[JS_RESOURCE](value, globalHooks, config)
-      attributes.push(handleJSExpressionBinding(key, value, isJSX, globalHooks))
+      attributes.push(handleJSExpressionBinding(key, value, isJSX))
 
       delete props[key]
     }
@@ -408,7 +387,7 @@ export const handleJSFunctionAttrHook = (schemaData, globalHooks, config) => {
         functionName = value.value
       }
 
-      attributes.push(handleJSExpressionBinding(key, { value: functionName }, isJSX, globalHooks))
+      attributes.push(handleJSExpressionBinding(key, { value: functionName }, isJSX))
 
       delete props[key]
     }
@@ -475,15 +454,15 @@ const genStateAccessor = (value, globalHooks) => {
   }
 }
 
-const transformObjValue = (renderKey, value, globalHooks, config, transformObjType, shouldConvertQuote = false) => {
+const transformObjValue = (renderKey, value, globalHooks, config, transformObjType) => {
   const result = { shouldBindToState: false, res: null }
 
   if (typeof value === 'string') {
-    if (shouldConvertQuote) {
-      result.res = `${renderKey}'${value.replaceAll(/"/g, "'").replaceAll(/'/g, "\\'")}'`
-    } else {
-      result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
-    }
+    result.res = `${renderKey}"${value
+      .replaceAll(/\\/g, '\\\\')
+      .replaceAll(/\n/g, '\\n')
+      .replaceAll(/\r/g, '\\r')
+      .replaceAll(/"/g, '\\"')}"`
 
     return result
   }
@@ -496,11 +475,7 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
 
   if (specialTypeHandler[value?.type]) {
     const specialVal = specialTypeHandler[value.type](value, globalHooks, config)?.value || ''
-    if (shouldConvertQuote) {
-      result.res = `${renderKey}${specialVal.replaceAll(/"/g, "'")}`
-    } else {
-      result.res = `${renderKey}${specialVal}`
-    }
+    result.res = `${renderKey}${specialVal}`
 
     if (specialTypes.includes(value.type)) {
       result.shouldBindToState = true
@@ -535,7 +510,7 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
 }
 
 const normalKeyRegexp = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/
-export const transformObjType = (obj, globalHooks, config, shouldConvertQuote = false) => {
+export const transformObjType = (obj, globalHooks, config) => {
   if (!obj || typeof obj !== 'object') {
     return {
       res: obj
@@ -559,8 +534,7 @@ export const transformObjType = (obj, globalHooks, config, shouldConvertQuote = 
       value,
       globalHooks,
       config,
-      transformObjType,
-      shouldConvertQuote
+      transformObjType
     )
 
     if (tmpShouldBindToState) {
@@ -574,7 +548,7 @@ export const transformObjType = (obj, globalHooks, config, shouldConvertQuote = 
 
     // 复杂的 object 类型，需要递归处理
     const { res: tempRes, shouldBindToState: tempShouldBindToState } =
-      transformObjType(value, globalHooks, config, shouldConvertQuote) || {}
+      transformObjType(value, globalHooks, config) || {}
 
     resStr.push(`${renderKey}${tempRes}`)
 
@@ -603,20 +577,21 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
       return
     }
 
-    const { res, shouldBindToState } = transformObjType(value, globalHooks, config, true)
+    const { res, shouldBindToState } = transformObjType(value, globalHooks, config)
 
     if (shouldBindToState && !isJSX) {
       let stateKey = key
       let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${res}`)
+      let retryCount = 0
 
-      while (!addSuccess) {
+      while (!addSuccess && retryCount++ < 100) {
         stateKey = `${key}${randomString()}`
         addSuccess = globalHooks.addState(stateKey, `${stateKey}:${res}`)
       }
 
       attributes.push(`:${key}="state.${stateKey}"`)
     } else {
-      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res}"`)
+      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res.replaceAll(/"/g, '&quot;')}"`)
     }
 
     delete props[key]
@@ -633,7 +608,7 @@ export const handlePrimitiveAttributeHook = (schemaData, globalHooks, config) =>
     const valueType = typeof value
 
     if (valueType === 'string') {
-      attributes.push(`${key}="${value.replaceAll(/"/g, "'")}"`)
+      attributes.push(`${key}="${value.replaceAll(/"/g, '&quot;')}"`)
 
       delete props[key]
     }
