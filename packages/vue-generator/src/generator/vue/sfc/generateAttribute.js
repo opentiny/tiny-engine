@@ -589,7 +589,12 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
         addSuccess = globalHooks.addState(stateKey, `${stateKey}:${res}`)
       }
 
-      attributes.push(`:${key}="state.${stateKey}"`)
+      if (addSuccess) {
+        attributes.push(`:${key}="state.${stateKey}"`)
+      } else {
+        // state 注册失败，回退到内联绑定
+        attributes.push(`:${key}="${res.replaceAll(/"/g, '&quot;')}"`)
+      }
     } else {
       attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res.replaceAll(/"/g, '&quot;')}"`)
     }
