@@ -11,7 +11,7 @@ export default defineConfig({
   },
   plugins: [vue(), vueJsx()],
   define: {
-    'process.env': { ...process.env }
+    'process.env': {}
   },
   build: {
     minify: true,

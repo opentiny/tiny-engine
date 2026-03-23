@@ -16,7 +16,9 @@ import { createZip, writeZip } from './fszip'
 
 // 支持file system api的条件：存在这个方法 && 不处于iframe中
 export const isSupportFileSystemAccess =
-  Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') && window.self === window.top
+  typeof window !== 'undefined' &&
+  Object.prototype.hasOwnProperty.call(window, 'showDirectoryPicker') &&
+  window.self === window.top
 
 /**
  * 获取用户选择并授权的文件夹根路径
