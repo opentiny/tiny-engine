@@ -45,8 +45,7 @@ import {
   usePage,
   useTranslate,
   getMetaApi,
-  META_SERVICE,
-  META_APP
+  META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import {
@@ -54,6 +53,9 @@ import {
   fetchBlockGroups,
   createBlockGroup,
   createBlock,
+  fetchBlockByLabel,
+  updateBlock,
+  deployBlock,
   fetchUtilsResourceList,
   createUtilsResource,
   updateUtilsResource
@@ -87,8 +89,6 @@ export default {
       pendingAppSchema: null as any,
       appId: '' as any
     })
-
-    const { publishBlock } = getMetaApi(META_APP.BlockManage)
 
     const poperVisible = ref(false)
     const clickPopover = () => {
@@ -178,6 +178,23 @@ export default {
       }
     }
 
+    const getNextBlockVersion = (block: any) => {
+      const backupList = Array.isArray(block?.histories) ? block.histories : []
+
+      let latestVersion = block?.current_version || '1.0.0'
+      let latestTime = 0
+
+      backupList.forEach((item: { created_at?: string | number | Date; version?: string }) => {
+        const itemTime = item?.created_at ? new Date(item.created_at).getTime() : 0
+        if (itemTime > latestTime && item?.version) {
+          latestTime = itemTime
+          latestVersion = item.version
+        }
+      })
+
+      return String(latestVersion || '1.0.0').replace(/\d+$/, (match) => String(Number(match) + 1))
+    }
+
     // 触发隐藏文件上传
     const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
       closePopover()
@@ -241,7 +258,7 @@ export default {
     const createAndPublishBlocks = async (appSchema: any, appId: string) => {
       const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
       if (!blocks.length) {
-        return 0
+        return { total: 0, created: 0, updated: 0 }
       }
 
       if (blocks.length) {
@@ -290,8 +307,11 @@ export default {
             if (ps?.children) ps.children.forEach(collectParentProps)
           })
 
+          let createdCount = 0
+          let updatedCount = 0
+
           await Promise.allSettled(
-            blocks.map((bs: any) => {
+            blocks.map(async (bs: any) => {
               const blockLabel = bs.fileName || bs.meta?.name || 'Block'
 
               // 类型对应的默认编辑器组件
@@ -445,26 +465,80 @@ export default {
                 blockParams.categories = []
               }
 
-              return createBlock(blockParams).then((data: any) => {
-                if (data?.id) {
-                  const params = {
-                    block: data,
-                    is_compile: true,
-                    deploy_info: '导入项目自动发布',
-                    version: '1.0.1',
-                    needToSave: true
-                  }
-                  publishBlock(params)
+              const existingRes: any = await fetchBlockByLabel(blockLabel).catch(() => [])
+              const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+              const existing =
+                existingList.find?.(
+                  (item: any) =>
+                    String(item?.label) === String(blockLabel) &&
+                    String(item?.created_app || item?.app || '') === String(appId)
+                ) ||
+                existingList.find?.((item: any) => String(item?.label) === String(blockLabel)) ||
+                existingList?.[0]
+
+              let blockData: any = null
+
+              if (existing?.id) {
+                const existingGroups = Array.isArray(existing.groups)
+                  ? existing.groups.map((item: any) => item?.id || item).filter(Boolean)
+                  : []
+                const existingCategories = Array.isArray(existing.categories)
+                  ? existing.categories.map((item: any) => item?.id || item).filter(Boolean)
+                  : []
+                const updateParams = {
+                  name_cn: blockParams.name_cn,
+                  label: blockParams.label,
+                  content: blockParams.content,
+                  screenshot: existing.screenshot,
+                  public: existing.public ?? blockParams.public,
+                  public_scope_tenants: existing.public_scope_tenants || [],
+                  tags: existing.tags || [],
+                  description: existing.description || '',
+                  ...(groupId
+                    ? { groups: [groupId] }
+                    : existingGroups.length
+                    ? { groups: existingGroups }
+                    : { categories: existingCategories.length ? existingCategories : blockParams.categories || [] })
                 }
-              })
+
+                blockData = await updateBlock(existing.id, updateParams, appId)
+                if (blockData?.id) {
+                  updatedCount += 1
+                }
+              } else {
+                blockData = await createBlock(blockParams)
+                if (blockData?.id) {
+                  createdCount += 1
+                }
+              }
+
+              if (blockData?.id) {
+                const publishVersion = existing?.id
+                  ? getNextBlockVersion(existing)
+                  : blockData?.current_version || '1.0.1'
+                const params = {
+                  block: blockData,
+                  is_compile: true,
+                  deploy_info: '导入项目自动发布',
+                  version: publishVersion,
+                  needToSave: true
+                }
+                await deployBlock(params)
+              }
             })
           )
+
+          return {
+            total: blocks.length,
+            created: createdCount,
+            updated: updatedCount
+          }
         } catch (e) {
           // 区块创建失败不阻塞页面导入流程
         }
       }
 
-      return blocks.length
+      return { total: blocks.length, created: 0, updated: 0 }
     }
 
     const processAppSchema = async (appSchema: any) => {
@@ -544,10 +618,12 @@ export default {
       }
 
       await applyImportedAppSchema(appSchema, appId, type)
-      const blockCount = await createAndPublishBlocks(appSchema, appId)
+      const blockResult = await createAndPublishBlocks(appSchema, appId)
 
       const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
-      const blockMsg = blockCount ? `，已创建 ${blockCount} 个区块` : ''
+      const blockMsg = blockResult?.total
+        ? `，已处理 ${blockResult.total} 个区块${blockResult.updated ? `（更新 ${blockResult.updated}）` : ''}`
+        : ''
       if (!chosen) {
         useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）${blockMsg}` })
       } else {
@@ -732,24 +808,27 @@ export default {
           if (pendingAppSchema) {
             await applyImportedAppSchema(pendingAppSchema, appId, type)
           }
-          const blockCount = pendingAppSchema ? await createAndPublishBlocks(pendingAppSchema, appId) : 0
+          const blockResult = pendingAppSchema
+            ? await createAndPublishBlocks(pendingAppSchema, appId)
+            : { total: 0, created: 0, updated: 0 }
           // 用户选择后进行渲染
           const pages = state.pendingImportedPages
           const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+          const blockMsg = blockResult?.total
+            ? `，已处理 ${blockResult.total} 个区块${blockResult.updated ? `（更新 ${blockResult.updated}）` : ''}`
+            : ''
           if (chosen) {
             await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
             useNotify({
               type: 'success',
               title: '导入成功',
-              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}${
-                blockCount ? `，已创建 ${blockCount} 个区块` : ''
-              }`
+              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
             })
           } else {
             useNotify({
               type: 'success',
               title: '导入成功',
-              message: `已更新全局配置（未检测到页面）${blockCount ? `，已创建 ${blockCount} 个区块` : ''}`
+              message: `已更新全局配置（未检测到页面）${blockMsg}`
             })
           }
         } else {

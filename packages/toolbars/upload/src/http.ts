@@ -29,6 +29,20 @@ export const createBlockGroup = (params: any) =>
 export const createBlock = (params: any) =>
   getMetaApi(META_SERVICE.Http).post('/material-center/api/block/create', params)
 
+// 根据标签查询区块
+export const fetchBlockByLabel = (label: string) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/block?label=${label}`)
+
+// 更新区块
+export const updateBlock = (blockId: string, params: any, appId: string) =>
+  getMetaApi(META_SERVICE.Http).post(`/material-center/api/block/update/${blockId}`, params, {
+    params: { appId }
+  })
+
+// 发布区块
+export const deployBlock = (params: any) =>
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/block/deploy', params)
+
 // 获取工具类列表
 export const fetchUtilsResourceList = (appId: string) =>
   getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/extension/list?app=${appId}&category=utils`)
