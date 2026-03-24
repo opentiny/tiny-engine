@@ -4,10 +4,15 @@ import { parseScript } from './parsers/scriptParser'
 import { parseStyle } from './parsers/styleParser'
 import { generateSchema, generateAppSchema } from './generator/index'
 import { defaultComponentMap } from './constants'
+import { parse as babelParse } from '@babel/parser'
+import traverseModule from '@babel/traverse'
+import * as t from '@babel/types'
 import fs from 'fs/promises'
 import path from 'path'
 import os from 'os'
 import JSZip from 'jszip'
+
+const traverse: any = (traverseModule as any)?.default ?? (traverseModule as any)
 
 export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
@@ -31,6 +36,13 @@ export interface ConvertResult {
   dependencies: string[]
   errors: string[]
   warnings: string[]
+  scriptSchema?: any
+}
+
+type LocalModuleContext = {
+  allFiles: string[]
+  fileSet: Set<string>
+  readText: (filePath: string) => Promise<string | null>
 }
 
 export class VueToDslConverter {
@@ -94,7 +106,11 @@ export class VueToDslConverter {
             ? this.options.customParsers.template.parse(sfcResult.template)
             : parseTemplate(sfcResult.template, {
                 ...this.options,
-                imports: scriptSchema.imports || []
+                imports: scriptSchema.imports || [],
+                props: scriptSchema.props || [],
+                state: scriptSchema.state || {},
+                methods: scriptSchema.methods || {},
+                computed: scriptSchema.computed || {}
               } as any)
         } catch (error: any) {
           errors.push(`Template parsing error: ${error.message}`)
@@ -124,7 +140,8 @@ export class VueToDslConverter {
         schema,
         dependencies: [...new Set(dependencies)],
         errors,
-        warnings
+        warnings,
+        scriptSchema
       }
     } catch (error: any) {
       errors.push(`Conversion error: ${error.message}`)
@@ -179,10 +196,712 @@ export class VueToDslConverter {
     return acc
   }
 
+  private parseImportEntries(code: string) {
+    const imports: Array<{ local: string; imported: string; source: string; destructuring: boolean }> = []
+    const importRegex = /import\s+(?:\*\s+as\s+([\w$]+)|{\s*([^}]+)\s*}|([\w$]+))\s+from\s+['"]([^'"]+)['"]/g
+    let match: RegExpExecArray | null
+
+    while ((match = importRegex.exec(code))) {
+      const namespaceLocal = match[1]
+      const named = match[2]
+      const defaultLocal = match[3]
+      const source = match[4]
+
+      if (namespaceLocal) {
+        imports.push({ local: namespaceLocal, imported: '*', source, destructuring: false })
+        continue
+      }
+
+      if (named) {
+        named
+          .split(',')
+          .map((item) => item.trim())
+          .filter(Boolean)
+          .forEach((item) => {
+            const aliasMatch = item.match(/^([\w$]+)\s+as\s+([\w$]+)$/)
+            const imported = aliasMatch ? aliasMatch[1] : item
+            const local = aliasMatch ? aliasMatch[2] : item
+            imports.push({ local, imported, source, destructuring: true })
+          })
+        continue
+      }
+
+      if (defaultLocal) {
+        imports.push({ local: defaultLocal, imported: 'default', source, destructuring: false })
+      }
+    }
+
+    return imports
+  }
+
+  private parseExportedNames(code: string) {
+    const exported = new Map<string, string>()
+    const exportListRegex = /export\s*{([^}]+)}/g
+    let match: RegExpExecArray | null
+
+    while ((match = exportListRegex.exec(code))) {
+      match[1]
+        .split(',')
+        .map((item) => item.trim())
+        .filter(Boolean)
+        .forEach((item) => {
+          const aliasMatch = item.match(/^([\w$]+)\s+as\s+([\w$]+)$/)
+          if (aliasMatch) exported.set(aliasMatch[2], aliasMatch[1])
+          else exported.set(item, item)
+        })
+    }
+
+    const directExportRegex = /export\s+(?:async\s+function|function|const|let|var|class)\s+([\w$]+)/g
+    while ((match = directExportRegex.exec(code))) {
+      exported.set(match[1], match[1])
+    }
+
+    return exported
+  }
+
+  private parseUtilsModule(code: string) {
+    const utils: any[] = []
+    const imports = this.parseImportEntries(code)
+    const exported = this.parseExportedNames(code)
+
+    for (const [exportedName, localName] of exported.entries()) {
+      const found = imports.find((imp) => imp.local === localName)
+      if (found) {
+        utils.push({
+          name: exportedName,
+          type: 'npm',
+          content: {
+            type: 'JSFunction',
+            value: '',
+            package: found.source,
+            destructuring: found.destructuring,
+            exportName: found.imported === 'default' || found.imported === '*' ? found.local : found.imported
+          }
+        })
+      } else {
+        utils.push({ name: exportedName, type: 'function', content: { type: 'JSFunction', value: '' } })
+      }
+    }
+
+    return utils
+  }
+
+  private getScriptCodeStrings(scriptSchema: any = {}) {
+    const codeStrings: string[] = []
+
+    ;['methods', 'computed', 'lifeCycles'].forEach((section) => {
+      const entries = scriptSchema?.[section] || {}
+      Object.values(entries).forEach((entry: any) => {
+        if (typeof entry === 'string') codeStrings.push(entry)
+        else if (entry?.value && typeof entry.value === 'string') codeStrings.push(entry.value)
+      })
+    })
+
+    return codeStrings
+  }
+
+  private isImportUsed(localName: string, codeStrings: string[]) {
+    if (!localName) return false
+    const escaped = localName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const pattern = new RegExp(`\\b${escaped}\\b`)
+    return codeStrings.some((code) => pattern.test(code))
+  }
+
+  private isFrameworkImport(source: string) {
+    return ['vue', 'vue-i18n'].includes(source)
+  }
+
+  private isLocalUtilitySource(source: string) {
+    return /(^|[\\/])utils(?:[/\\]index)?(?:\.[a-z]+)?$/i.test(source) || source === '@/utils'
+  }
+
+  private getNodeSource(node: any, source: string) {
+    if (!node) return ''
+    const start = node?.start
+    const end = node?.end
+    if (typeof start !== 'number' || typeof end !== 'number') return ''
+    return source.slice(start, end)
+  }
+
+  private sanitizeModuleCodeFromNode(node: any, source: string) {
+    const raw = this.getNodeSource(node, source)
+    const baseStart = node?.start
+    const baseEnd = node?.end
+    if (!raw || typeof baseStart !== 'number' || typeof baseEnd !== 'number') return raw
+
+    let wrappedNode: any
+    if (t.isStatement(node)) {
+      wrappedNode = node
+    } else if (t.isExpression(node)) {
+      wrappedNode = t.expressionStatement(node)
+    } else {
+      wrappedNode = t.functionDeclaration(t.identifier('__temp__'), [node as any], t.blockStatement([]))
+    }
+
+    const fileAst = t.file(t.program([wrappedNode]))
+    const replacements: Array<{ start: number; end: number; text: string }> = []
+    const seenRanges = new Set<string>()
+
+    const pushReplacement = (start: number, end: number, text = '') => {
+      if (start >= end) return
+      const relativeStart = start - baseStart
+      const relativeEnd = end - baseStart
+      if (relativeStart < 0 || relativeEnd > raw.length) return
+      const key = `${relativeStart}:${relativeEnd}:${text}`
+      if (seenRanges.has(key)) return
+      seenRanges.add(key)
+      replacements.push({ start: relativeStart, end: relativeEnd, text })
+    }
+
+    traverse(fileAst as any, {
+      TSTypeAnnotation(path: any) {
+        pushReplacement(path.node.start, path.node.end)
+      },
+      TSTypeParameterInstantiation(path: any) {
+        pushReplacement(path.node.start, path.node.end)
+      },
+      TSTypeParameterDeclaration(path: any) {
+        pushReplacement(path.node.start, path.node.end)
+      },
+      TSAsExpression(path: any) {
+        pushReplacement(path.node.expression.end, path.node.end)
+      },
+      TSTypeAssertion(path: any) {
+        pushReplacement(path.node.start, path.node.expression.start)
+      },
+      TSNonNullExpression(path: any) {
+        pushReplacement(path.node.expression.end, path.node.end)
+      },
+      TSInstantiationExpression(path: any) {
+        pushReplacement(path.node.expression.end, path.node.end)
+      },
+      Identifier(path: any) {
+        if (!path.node.optional) return
+        const typeAnnotationStart = path.node.typeAnnotation?.start
+        const optionalStart = path.node.start + String(path.node.name || '').length
+        if (typeof typeAnnotationStart === 'number') {
+          pushReplacement(optionalStart, typeAnnotationStart)
+        } else {
+          pushReplacement(optionalStart, optionalStart + 1)
+        }
+      },
+      CallExpression(path: any) {
+        const typeParameters = path.node.typeParameters || path.node.typeArguments
+        if (typeParameters) pushReplacement(typeParameters.start, typeParameters.end)
+      },
+      NewExpression(path: any) {
+        const typeParameters = path.node.typeParameters || path.node.typeArguments
+        if (typeParameters) pushReplacement(typeParameters.start, typeParameters.end)
+      }
+    })
+
+    return replacements
+      .sort((a, b) => b.start - a.start || b.end - a.end)
+      .reduce((output, item) => `${output.slice(0, item.start)}${item.text}${output.slice(item.end)}`, raw)
+  }
+
+  private normalizeVirtualPath(filePath = '') {
+    return String(filePath || '')
+      .replace(/\\/g, '/')
+      .replace(/^\.\//, '')
+      .replace(/\/+/g, '/')
+      .replace(/\/$/, '')
+  }
+
+  private getVirtualDirname(filePath = '') {
+    const normalized = this.normalizeVirtualPath(filePath)
+    const index = normalized.lastIndexOf('/')
+    return index === -1 ? '' : normalized.slice(0, index)
+  }
+
+  private resolveVirtualRelativePath(baseDir: string, relativePath: string) {
+    const normalizedBase = this.normalizeVirtualPath(baseDir)
+    const normalizedRelative = this.normalizeVirtualPath(relativePath)
+    const baseParts = normalizedBase ? normalizedBase.split('/') : []
+    const nextParts = normalizedRelative.split('/')
+    const output = normalizedRelative.startsWith('/') ? [] : [...baseParts]
+
+    nextParts.forEach((part) => {
+      if (!part || part === '.') return
+      if (part === '..') {
+        output.pop()
+        return
+      }
+      output.push(part)
+    })
+
+    return output.join('/')
+  }
+
+  private resolveLocalModulePath(source: string, importerFile: string, context: LocalModuleContext) {
+    if (!source || (!source.startsWith('.') && !source.startsWith('@/'))) return null
+
+    const basePath = source.startsWith('@/')
+      ? this.normalizeVirtualPath(`src/${source.slice(2)}`)
+      : this.resolveVirtualRelativePath(this.getVirtualDirname(importerFile), source)
+
+    const candidates = [basePath]
+    const extensions = ['.js', '.ts', '.jsx', '.tsx', '.mjs', '.cjs']
+
+    extensions.forEach((ext) => {
+      candidates.push(`${basePath}${ext}`)
+    })
+
+    extensions.forEach((ext) => {
+      candidates.push(`${basePath}/index${ext}`)
+    })
+
+    const found = candidates.find((candidate) => context.fileSet.has(this.normalizeVirtualPath(candidate)))
+    return found ? this.normalizeVirtualPath(found) : null
+  }
+
+  private createEmptyFunctionUtilEntry(name: string) {
+    return {
+      name,
+      type: 'function',
+      content: {
+        type: 'JSFunction',
+        value: ''
+      }
+    }
+  }
+
+  private cloneUtilEntry(item: any, name = item?.name) {
+    return {
+      ...item,
+      name,
+      content: item?.content ? { ...item.content } : item?.content
+    }
+  }
+
+  private createNpmUtilEntry(
+    name: string,
+    source: string,
+    imported: string,
+    options: { destructuring?: boolean; exportName?: string } = {}
+  ) {
+    return {
+      name,
+      type: 'npm',
+      content: {
+        type: 'JSFunction',
+        value: '',
+        package: source,
+        destructuring: options.destructuring ?? (imported !== 'default' && imported !== '*'),
+        exportName: options.exportName || (imported === 'default' || imported === '*' ? name : imported || name)
+      }
+    }
+  }
+
+  private createDeclaredUtilEntry(name: string, node: any, sourceCode: string) {
+    if (
+      t.isFunctionDeclaration(node) ||
+      t.isFunctionExpression(node) ||
+      t.isArrowFunctionExpression(node) ||
+      t.isClassDeclaration(node) ||
+      t.isClassExpression(node)
+    ) {
+      return {
+        name,
+        type: 'function',
+        content: {
+          type: 'JSFunction',
+          value: this.sanitizeModuleCodeFromNode(node, sourceCode)
+        }
+      }
+    }
+
+    return this.createEmptyFunctionUtilEntry(name)
+  }
+
+  private async collectModuleUtilExports(
+    modulePath: string,
+    context: LocalModuleContext,
+    cache = new Map<string, Map<string, any>>()
+  ) {
+    const normalizedPath = this.normalizeVirtualPath(modulePath)
+
+    if (cache.has(normalizedPath)) {
+      return cache.get(normalizedPath)!
+    }
+
+    const exportsMap = new Map<string, any>()
+    cache.set(normalizedPath, exportsMap)
+
+    const code = await context.readText(normalizedPath)
+    if (!code) return exportsMap
+
+    let ast: any
+    try {
+      ast = babelParse(code, { sourceType: 'module', plugins: ['typescript', 'jsx'] })
+    } catch {
+      this.parseUtilsModule(code).forEach((item) => exportsMap.set(item.name, item))
+      return exportsMap
+    }
+
+    const importsByLocal = new Map<string, any>()
+    const declaredUtils = new Map<string, any>()
+
+    const resolveImportedUtil = async (importInfo: any, exportedName: string) => {
+      if (!importInfo?.source) return null
+
+      if (this.isFrameworkImport(importInfo.source) || /\.vue$/i.test(importInfo.source)) {
+        return null
+      }
+
+      if (importInfo.source.startsWith('.') || importInfo.source.startsWith('@/')) {
+        const targetPath = this.resolveLocalModulePath(importInfo.source, normalizedPath, context)
+        if (!targetPath) return null
+        const targetExports = await this.collectModuleUtilExports(targetPath, context, cache)
+        const target =
+          targetExports.get(exportedName) || (exportedName === 'default' ? targetExports.get('default') : null)
+        return target ? this.cloneUtilEntry(target) : null
+      }
+
+      return this.createNpmUtilEntry(exportedName, importInfo.source, importInfo.imported || exportedName, {
+        destructuring: importInfo.kind === 'named',
+        exportName:
+          importInfo.kind === 'named'
+            ? importInfo.imported || exportedName
+            : importInfo.kind === 'namespace'
+            ? importInfo.local
+            : importInfo.local
+      })
+    }
+
+    const collectDeclaredVariables = (declaration: any, targetMap: Map<string, any>, shouldExport = false) => {
+      declaration.declarations.forEach((item: any) => {
+        if (!t.isIdentifier(item.id)) return
+        const utilEntry = this.createDeclaredUtilEntry(item.id.name, item.init, code)
+        targetMap.set(item.id.name, utilEntry)
+        if (shouldExport) exportsMap.set(item.id.name, this.cloneUtilEntry(utilEntry))
+      })
+    }
+
+    for (const statement of ast.program.body) {
+      if (t.isImportDeclaration(statement)) {
+        statement.specifiers.forEach((spec: any) => {
+          if (t.isImportSpecifier(spec)) {
+            importsByLocal.set(spec.local.name, {
+              source: statement.source.value,
+              local: spec.local.name,
+              imported: t.isIdentifier(spec.imported) ? spec.imported.name : spec.imported.value,
+              kind: 'named'
+            })
+            return
+          }
+
+          if (t.isImportNamespaceSpecifier(spec)) {
+            importsByLocal.set(spec.local.name, {
+              source: statement.source.value,
+              local: spec.local.name,
+              imported: '*',
+              kind: 'namespace'
+            })
+            return
+          }
+
+          importsByLocal.set(spec.local.name, {
+            source: statement.source.value,
+            local: spec.local.name,
+            imported: 'default',
+            kind: 'default'
+          })
+        })
+        continue
+      }
+
+      if (t.isFunctionDeclaration(statement) && statement.id) {
+        declaredUtils.set(statement.id.name, this.createDeclaredUtilEntry(statement.id.name, statement, code))
+        continue
+      }
+
+      if (t.isClassDeclaration(statement) && statement.id) {
+        declaredUtils.set(statement.id.name, this.createDeclaredUtilEntry(statement.id.name, statement, code))
+        continue
+      }
+
+      if (t.isVariableDeclaration(statement)) {
+        collectDeclaredVariables(statement, declaredUtils)
+        continue
+      }
+
+      if (t.isExportNamedDeclaration(statement)) {
+        if (statement.declaration) {
+          if (t.isFunctionDeclaration(statement.declaration) && statement.declaration.id) {
+            const utilEntry = this.createDeclaredUtilEntry(statement.declaration.id.name, statement.declaration, code)
+            declaredUtils.set(statement.declaration.id.name, utilEntry)
+            exportsMap.set(statement.declaration.id.name, this.cloneUtilEntry(utilEntry))
+            continue
+          }
+
+          if (t.isClassDeclaration(statement.declaration) && statement.declaration.id) {
+            const utilEntry = this.createDeclaredUtilEntry(statement.declaration.id.name, statement.declaration, code)
+            declaredUtils.set(statement.declaration.id.name, utilEntry)
+            exportsMap.set(statement.declaration.id.name, this.cloneUtilEntry(utilEntry))
+            continue
+          }
+
+          if (t.isVariableDeclaration(statement.declaration)) {
+            collectDeclaredVariables(statement.declaration, declaredUtils, true)
+            continue
+          }
+        }
+
+        if (statement.source) {
+          for (const specifier of statement.specifiers) {
+            if (!t.isExportSpecifier(specifier)) continue
+            const importedName = t.isIdentifier(specifier.local) ? specifier.local.name : specifier.local.value
+            const exportedName = t.isIdentifier(specifier.exported) ? specifier.exported.name : specifier.exported.value
+            const importInfo = {
+              source: statement.source.value,
+              imported: importedName,
+              local: importedName,
+              kind: importedName === 'default' ? 'default' : 'named'
+            }
+            const utilEntry = await resolveImportedUtil(importInfo, importedName)
+            if (utilEntry) exportsMap.set(exportedName, this.cloneUtilEntry(utilEntry, exportedName))
+          }
+          continue
+        }
+
+        for (const specifier of statement.specifiers) {
+          if (!t.isExportSpecifier(specifier)) continue
+          const localName = t.isIdentifier(specifier.local) ? specifier.local.name : specifier.local.value
+          const exportedName = t.isIdentifier(specifier.exported) ? specifier.exported.name : specifier.exported.value
+
+          if (declaredUtils.has(localName)) {
+            exportsMap.set(exportedName, this.cloneUtilEntry(declaredUtils.get(localName), exportedName))
+            continue
+          }
+
+          if (importsByLocal.has(localName)) {
+            const utilEntry = await resolveImportedUtil(
+              importsByLocal.get(localName),
+              importsByLocal.get(localName).imported
+            )
+            if (utilEntry) {
+              exportsMap.set(exportedName, this.cloneUtilEntry(utilEntry, exportedName))
+            } else {
+              exportsMap.set(exportedName, this.createEmptyFunctionUtilEntry(exportedName))
+            }
+          }
+        }
+
+        continue
+      }
+
+      if (t.isExportAllDeclaration(statement)) {
+        if (!statement.source) continue
+        const importInfo = { source: statement.source.value, imported: '*', local: '*', kind: 'namespace' }
+        const targetPath = this.resolveLocalModulePath(importInfo.source, normalizedPath, context)
+        if (!targetPath) continue
+        const targetExports = await this.collectModuleUtilExports(targetPath, context, cache)
+        targetExports.forEach((item, exportName) => {
+          if (exportName === 'default') return
+          exportsMap.set(exportName, this.cloneUtilEntry(item, exportName))
+        })
+        continue
+      }
+
+      if (t.isExportDefaultDeclaration(statement)) {
+        const declaration = statement.declaration
+
+        if (
+          t.isFunctionDeclaration(declaration) ||
+          t.isFunctionExpression(declaration) ||
+          t.isArrowFunctionExpression(declaration) ||
+          t.isClassDeclaration(declaration) ||
+          t.isClassExpression(declaration)
+        ) {
+          exportsMap.set('default', this.createDeclaredUtilEntry('default', declaration, code))
+          continue
+        }
+
+        if (t.isIdentifier(declaration)) {
+          if (declaredUtils.has(declaration.name)) {
+            exportsMap.set('default', this.cloneUtilEntry(declaredUtils.get(declaration.name), 'default'))
+            continue
+          }
+
+          if (importsByLocal.has(declaration.name)) {
+            const utilEntry = await resolveImportedUtil(
+              importsByLocal.get(declaration.name),
+              importsByLocal.get(declaration.name).imported
+            )
+            if (utilEntry) exportsMap.set('default', this.cloneUtilEntry(utilEntry, 'default'))
+          }
+        }
+      }
+    }
+
+    return exportsMap
+  }
+
+  private async collectRootUtils(context: LocalModuleContext) {
+    const entryCandidates = [
+      'src/utils.js',
+      'src/utils.ts',
+      'src/utils.jsx',
+      'src/utils.tsx',
+      'src/utils.mjs',
+      'src/utils.cjs',
+      'src/utils/index.js',
+      'src/utils/index.ts',
+      'src/utils/index.jsx',
+      'src/utils/index.tsx',
+      'src/utils/index.mjs',
+      'src/utils/index.cjs'
+    ]
+
+    const cache = new Map<string, Map<string, any>>()
+    const utils: any[] = []
+
+    for (const candidate of entryCandidates) {
+      if (!context.fileSet.has(candidate)) continue
+      const exportsMap = await this.collectModuleUtilExports(candidate, context, cache)
+      exportsMap.forEach((item, exportName) => {
+        if (exportName === 'default') return
+        utils.push(this.cloneUtilEntry(item, exportName))
+      })
+    }
+
+    return this.mergeUtils([], utils)
+  }
+
+  private async createImportedUtilEntry(
+    spec: {
+      local: string
+      imported: string
+      source: string
+      destructuring: boolean
+      kind?: string
+      importerFile?: string
+    },
+    knownUtilsByName: Map<string, any>,
+    context?: LocalModuleContext,
+    cache?: Map<string, Map<string, any>>
+  ) {
+    if (this.isFrameworkImport(spec.source)) return null
+    if (/\.vue$/i.test(spec.source)) return null
+
+    if (context && spec.importerFile && (spec.source.startsWith('.') || spec.source.startsWith('@/'))) {
+      const targetPath = this.resolveLocalModulePath(spec.source, spec.importerFile, context)
+      if (targetPath) {
+        const targetExports = await this.collectModuleUtilExports(targetPath, context, cache)
+        const target =
+          targetExports.get(spec.imported) || (spec.imported === 'default' ? targetExports.get('default') : null)
+        if (target) {
+          return this.cloneUtilEntry(target, spec.local)
+        }
+      }
+    }
+
+    if (this.isLocalUtilitySource(spec.source)) {
+      const known = knownUtilsByName.get(spec.imported) || knownUtilsByName.get(spec.local)
+      if (known) {
+        return {
+          ...known,
+          name: spec.local,
+          content: {
+            ...(known.content || {}),
+            exportName:
+              known.type === 'npm'
+                ? spec.imported === 'default' || spec.imported === '*'
+                  ? known.content?.exportName || spec.local
+                  : spec.imported
+                : known.content?.exportName
+          }
+        }
+      }
+    }
+
+    if (spec.source.startsWith('.') || spec.source.startsWith('@/')) {
+      return this.createEmptyFunctionUtilEntry(spec.local)
+    }
+
+    return this.createNpmUtilEntry(spec.local, spec.source, spec.imported, { destructuring: spec.destructuring })
+  }
+
+  private mergeUtils(existing: any[], incoming: any[]) {
+    const merged = [...existing]
+    const knownNames = new Set(existing.map((item) => item?.name).filter(Boolean))
+
+    incoming.forEach((item) => {
+      if (!item?.name || knownNames.has(item.name)) return
+      knownNames.add(item.name)
+      merged.push(item)
+    })
+
+    return merged
+  }
+
+  private async enrichUtilsFromScriptResults(results: ConvertResult[], baseUtils: any[], context?: LocalModuleContext) {
+    const knownUtilsByName = new Map(baseUtils.map((item) => [item.name, item]))
+    const discovered: any[] = []
+    const cache = new Map<string, Map<string, any>>()
+
+    for (const result of results as any[]) {
+      const scriptSchema = result?.scriptSchema
+      if (!scriptSchema?.imports?.length) continue
+
+      const usedImports =
+        Array.isArray(scriptSchema?.usedUtilsImports) && scriptSchema.usedUtilsImports.length
+          ? scriptSchema.usedUtilsImports
+          : scriptSchema.imports.flatMap((imp: any) => {
+              const codeStrings = this.getScriptCodeStrings(scriptSchema)
+              return (imp.specifiers || [])
+                .filter((spec: any) => spec?.local && this.isImportUsed(spec.local, codeStrings))
+                .map((spec: any) => ({
+                  local: spec.local,
+                  imported: spec.imported || 'default',
+                  source: imp.source,
+                  kind: spec.kind || (spec.imported === 'default' ? 'default' : 'named')
+                }))
+            })
+
+      for (const usedImport of usedImports) {
+        const utilEntry = await this.createImportedUtilEntry(
+          {
+            local: usedImport.local,
+            imported: usedImport.imported || 'default',
+            source: usedImport.source,
+            destructuring:
+              usedImport.kind === 'named' || (usedImport.imported !== 'default' && usedImport.imported !== '*'),
+            kind: usedImport.kind,
+            importerFile: scriptSchema.__filePath
+          },
+          knownUtilsByName,
+          context,
+          cache
+        )
+        if (utilEntry) {
+          discovered.push(utilEntry)
+          knownUtilsByName.set(utilEntry.name, utilEntry)
+        }
+      }
+    }
+
+    return this.mergeUtils(baseUtils, discovered)
+  }
   // Convert a full app directory (e.g., test/full/input/appdemo01) into an aggregated schema.json
   async convertAppDirectory(appDir: string): Promise<any> {
     const srcDir = path.join(appDir, 'src')
     const viewsDir = path.join(srcDir, 'views')
+    const appFiles = (await this.walk(appDir, (_p) => true)).map((filePath) =>
+      this.normalizeVirtualPath(path.relative(appDir, filePath))
+    )
+    const moduleContext: LocalModuleContext = {
+      allFiles: appFiles,
+      fileSet: new Set(appFiles),
+      readText: async (filePath: string) => {
+        try {
+          return await fs.readFile(path.join(appDir, ...this.normalizeVirtualPath(filePath).split('/')), 'utf-8')
+        } catch {
+          return null
+        }
+      }
+    }
 
     // 1) Collect page schemas from all .vue files under src/views/**
     const vueFiles = await this.walk(viewsDir, (p) => p.endsWith('.vue'))
@@ -238,6 +957,9 @@ export class VueToDslConverter {
         }
 
         const result = await this.convertFromString(vueCode, fileName)
+        if (result.scriptSchema) {
+          result.scriptSchema.__filePath = this.normalizeVirtualPath(path.relative(appDir, filePath))
+        }
         pageResults.push(result)
       } catch (error: any) {
         pageResults.push({
@@ -265,60 +987,8 @@ export class VueToDslConverter {
       // keep defaults
     }
 
-    // 3) Load utils from src/utils.js (very lightweight parser)
-    const utils: any[] = []
-    try {
-      const utilsPath = path.join(srcDir, 'utils.js')
-      const code = await fs.readFile(utilsPath, 'utf-8')
-      const importRegex = /import\s+(?:{\s*([\w,\s]+)\s*}|([\w$]+))\s+from\s+['"]([^'"]+)['"]/g
-      const imports: Array<{ local: string; source: string; destructuring: boolean }> = []
-      let m: RegExpExecArray | null
-      while ((m = importRegex.exec(code))) {
-        const named = m[1]
-        const def = m[2]
-        const source = m[3]
-        if (named) {
-          named
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
-            .forEach((n) => imports.push({ local: n, source, destructuring: true }))
-        } else if (def) {
-          imports.push({ local: def, source, destructuring: false })
-        }
-      }
-      // exported names
-      const exportRegex = /export\s*{([^}]+)}/
-      const expMatch = code.match(exportRegex)
-      const exported = expMatch
-        ? expMatch[1]
-            .split(',')
-            .map((s) => s.trim())
-            .filter(Boolean)
-        : []
-      // Build utils array for exported imports; fallback for exported local functions/vars
-      for (const name of exported) {
-        const found = imports.find((imp) => imp.local === name)
-        if (found) {
-          utils.push({
-            name,
-            type: 'npm',
-            content: {
-              type: 'JSFunction',
-              value: '',
-              package: found.source,
-              destructuring: found.destructuring,
-              exportName: name
-            }
-          })
-        } else {
-          // treat as function utility placeholder
-          utils.push({ name, type: 'function', content: { type: 'JSFunction', value: '' } })
-        }
-      }
-    } catch {
-      // ignore
-    }
+    // 3) Load utils from src/utils or src/utils/index
+    let utils: any[] = await this.collectRootUtils(moduleContext)
 
     // 4) Load dataSource from lowcodeConfig/dataSource.json
     const dataSource: any = { list: [] }
@@ -444,10 +1114,14 @@ export class VueToDslConverter {
           this.options = { ...this.options, isBlock: true } as any
           const result = await this.convertFromString(vueCode, baseName)
           this.options = savedOptions
+          if (result.scriptSchema) {
+            result.scriptSchema.__filePath = this.normalizeVirtualPath(path.relative(appDir, filePath))
+          }
           if (result.schema) {
             result.schema.componentName = 'Block'
             blockSchemas.push(result.schema)
           }
+          pageResults.push(result)
         } catch {
           // skip individual component conversion errors
         }
@@ -458,6 +1132,7 @@ export class VueToDslConverter {
 
     // Also scan page schemas for componentType=Block nodes and ensure they have block schemas
     this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+    utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
@@ -534,6 +1209,16 @@ export class VueToDslConverter {
         const file = zip.file(rel)
         return file ? await file.async('string') : null
       }
+      const appFiles = allFiles.map((filePath) =>
+        this.normalizeVirtualPath(
+          rootPrefix && filePath.startsWith(rootPrefix) ? filePath.slice(rootPrefix.length) : filePath
+        )
+      )
+      const moduleContext: LocalModuleContext = {
+        allFiles: appFiles,
+        fileSet: new Set(appFiles),
+        readText: async (filePath: string) => readText(joinRoot(filePath))
+      }
 
       // 1) Pages: src/views/**/*.vue
       const viewPrefix = joinRoot('src/views/')
@@ -578,6 +1263,7 @@ export class VueToDslConverter {
       }
 
       // Convert files with appropriate naming
+      const pageResults: ConvertResult[] = []
       const pageSchemas: any[] = []
       for (const vf of vueFiles) {
         const code = await readText(vf)
@@ -599,6 +1285,12 @@ export class VueToDslConverter {
         }
 
         const res = await this.convertFromString(code, fileName)
+        if (res.scriptSchema) {
+          res.scriptSchema.__filePath = this.normalizeVirtualPath(
+            rootPrefix && vf.startsWith(rootPrefix) ? vf.slice(rootPrefix.length) : vf
+          )
+        }
+        pageResults.push(res)
         if (res.schema) pageSchemas.push(res.schema)
       }
 
@@ -612,58 +1304,8 @@ export class VueToDslConverter {
         // keep defaults
       }
 
-      // 3) utils from src/utils.js
-      const utils: any[] = []
-      try {
-        const code = await readText(joinRoot('src/utils.js'))
-        if (code) {
-          const importRegex = /import\s+(?:{\s*([\w,\s]+)\s*}|([\w$]+))\s+from\s+['"]([^'"]+)['"]/g
-          const imports: Array<{ local: string; source: string; destructuring: boolean }> = []
-          let m: RegExpExecArray | null
-          while ((m = importRegex.exec(code))) {
-            const named = m[1]
-            const def = m[2]
-            const source = m[3]
-            if (named) {
-              named
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-                .forEach((n) => imports.push({ local: n, source, destructuring: true }))
-            } else if (def) {
-              imports.push({ local: def, source, destructuring: false })
-            }
-          }
-          const exportRegex = /export\s*{([^}]+)}/
-          const expMatch = code.match(exportRegex)
-          const exported = expMatch
-            ? expMatch[1]
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-            : []
-          for (const name of exported) {
-            const found = imports.find((imp) => imp.local === name)
-            if (found) {
-              utils.push({
-                name,
-                type: 'npm',
-                content: {
-                  type: 'JSFunction',
-                  value: '',
-                  package: found.source,
-                  destructuring: found.destructuring,
-                  exportName: name
-                }
-              })
-            } else {
-              utils.push({ name, type: 'function', content: { type: 'JSFunction', value: '' } })
-            }
-          }
-        }
-      } catch {
-        // ignore
-      }
+      // 3) utils from src/utils or src/utils/index
+      let utils: any[] = await this.collectRootUtils(moduleContext)
 
       // 4) dataSource
       const dataSource: any = { list: [] }
@@ -791,10 +1433,16 @@ export class VueToDslConverter {
           this.options = { ...this.options, isBlock: true } as any
           const res = await this.convertFromString(code, baseName)
           this.options = savedOptions
+          if (res.scriptSchema) {
+            res.scriptSchema.__filePath = this.normalizeVirtualPath(
+              rootPrefix && cf.startsWith(rootPrefix) ? cf.slice(rootPrefix.length) : cf
+            )
+          }
           if (res.schema) {
             res.schema.componentName = 'Block'
             blockSchemas.push(res.schema)
           }
+          pageResults.push(res)
         } catch {
           // skip individual component conversion errors
         }
@@ -802,6 +1450,7 @@ export class VueToDslConverter {
 
       // Also scan page schemas for componentType=Block nodes
       this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+      utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
 
       // 8) Assemble app schema
       const appSchema = generateAppSchema(pageSchemas, {
@@ -922,6 +1571,18 @@ export class VueToDslConverter {
       relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
     }
 
+    const getAppRelativePath = (file: File) =>
+      this.normalizeVirtualPath(file.webkitRelativePath.split('/').slice(1).join('/'))
+    const filesByPath = new Map<string, File>(relevantFiles.map((file) => [getAppRelativePath(file), file]))
+    const moduleContext: LocalModuleContext = {
+      allFiles: Array.from(filesByPath.keys()),
+      fileSet: new Set(filesByPath.keys()),
+      readText: async (filePath: string) => {
+        const file = filesByPath.get(this.normalizeVirtualPath(filePath))
+        return file ? await readText(file) : null
+      }
+    }
+
     // 1) Pages: src/views/**/*.vue
     const vueFiles = relevantFiles.filter(
       (file) => file.webkitRelativePath.includes('src/views/') && file.name.endsWith('.vue')
@@ -967,6 +1628,7 @@ export class VueToDslConverter {
       return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
     }
 
+    const pageResults: ConvertResult[] = []
     const pageSchemas: any[] = []
     for (const vf of vueFiles) {
       const code = await readText(vf)
@@ -990,6 +1652,10 @@ export class VueToDslConverter {
       }
 
       const res = await this.convertFromString(code, fileName)
+      if (res.scriptSchema) {
+        res.scriptSchema.__filePath = getAppRelativePath(vf)
+      }
+      pageResults.push(res)
       if (res.schema) pageSchemas.push(res.schema)
     }
 
@@ -1005,59 +1671,8 @@ export class VueToDslConverter {
       // keep defaults
     }
 
-    // 3) utils from src/utils.js
-    const utils: any[] = []
-    try {
-      const utilsFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/utils.js'))
-      if (utilsFile) {
-        const code = await readText(utilsFile)
-        const importRegex = /import\s+(?:{\s*([\w,\s]+)\s*}|([\w$]+))\s+from\s+['"]([^'"]+)['"]/g
-        const imports: Array<{ local: string; source: string; destructuring: boolean }> = []
-        let m: RegExpExecArray | null
-        while ((m = importRegex.exec(code))) {
-          const named = m[1]
-          const def = m[2]
-          const source = m[3]
-          if (named) {
-            named
-              .split(',')
-              .map((s) => s.trim())
-              .filter(Boolean)
-              .forEach((n) => imports.push({ local: n, source, destructuring: true }))
-          } else if (def) {
-            imports.push({ local: def, source, destructuring: false })
-          }
-        }
-        const exportRegex = /export\s*{([^}]+)}/
-        const expMatch = code.match(exportRegex)
-        const exported = expMatch
-          ? expMatch[1]
-              .split(',')
-              .map((s) => s.trim())
-              .filter(Boolean)
-          : []
-        for (const name of exported) {
-          const found = imports.find((imp) => imp.local === name)
-          if (found) {
-            utils.push({
-              name,
-              type: 'npm',
-              content: {
-                type: 'JSFunction',
-                value: '',
-                package: found.source,
-                destructuring: found.destructuring,
-                exportName: name
-              }
-            })
-          } else {
-            utils.push({ name, type: 'function', content: { type: 'JSFunction', value: '' } })
-          }
-        }
-      }
-    } catch {
-      // ignore
-    }
+    // 3) utils from src/utils or src/utils/index
+    let utils: any[] = await this.collectRootUtils(moduleContext)
 
     // 4) dataSource
     const dataSource: any = { list: [] }
@@ -1188,10 +1803,14 @@ export class VueToDslConverter {
         this.options = { ...this.options, isBlock: true } as any
         const res = await this.convertFromString(code, baseName)
         this.options = savedOptions
+        if (res.scriptSchema) {
+          res.scriptSchema.__filePath = getAppRelativePath(cf)
+        }
         if (res.schema) {
           res.schema.componentName = 'Block'
           blockSchemas.push(res.schema)
         }
+        pageResults.push(res)
       } catch {
         // skip individual component conversion errors
       }
@@ -1199,6 +1818,7 @@ export class VueToDslConverter {
 
     // Also scan page schemas for componentType=Block nodes
     this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
+    utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {

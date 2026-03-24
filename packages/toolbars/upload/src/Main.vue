@@ -49,7 +49,15 @@ import {
   META_APP
 } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
-import { fetchPageList, fetchBlockGroups, createBlockGroup, createBlock } from './http'
+import {
+  fetchPageList,
+  fetchBlockGroups,
+  createBlockGroup,
+  createBlock,
+  fetchUtilsResourceList,
+  createUtilsResource,
+  updateUtilsResource
+} from './http'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
 import { TinyPopover } from '@opentiny/vue'
@@ -112,6 +120,63 @@ export default {
         // ignore
       }
     }
+
+    const mergeUtilsByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item?.name) return
+        merged.set(String(item.name), item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const syncImportedUtils = async (appId: string, importedUtils: any[] = []) => {
+      const normalizedUtils = Array.isArray(importedUtils)
+        ? importedUtils.filter((item) => item?.name && item?.type)
+        : []
+      const useUtilsApi: any = getMetaApi(META_SERVICE.UseUtils)
+      const mergedLocalUtils = mergeUtilsByName(useUtilsApi?.getUtils?.() || [], normalizedUtils)
+
+      useUtilsApi?.setUtils?.(mergedLocalUtils)
+
+      if (!normalizedUtils.length) {
+        return
+      }
+
+      try {
+        const existingRes: any = await fetchUtilsResourceList(appId)
+        const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+        const existingMap = new Map<string, any>()
+
+        existingList?.forEach?.((item: any) => {
+          if (!item?.name) return
+          existingMap.set(String(item.name), item)
+        })
+
+        await Promise.allSettled(
+          normalizedUtils.map((item: any) => {
+            const existing = existingMap.get(String(item.name))
+            const payload = {
+              ...(existing || {}),
+              app: appId,
+              category: 'utils',
+              name: item.name,
+              type: item.type,
+              content: item.content || {}
+            }
+
+            return existing?.id ? updateUtilsResource(payload) : createUtilsResource(payload)
+          })
+        )
+
+        await useUtilsApi?.refreshUtils?.()
+      } catch (e) {
+        useUtilsApi?.setUtils?.(mergedLocalUtils)
+      }
+    }
+
     // 触发隐藏文件上传
     const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
       closePopover()
@@ -127,6 +192,8 @@ export default {
     const processAppSchema = async (appSchema: any) => {
       // 将 appSchema 应用到全局
       const { appSchemaState } = useResource()
+      const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
+      const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       // 1) 全局元数据（i18n/utils/dataSource/globalState/componentsMap）
       const i18n = appSchema?.i18n || {}
       const locales = Object.keys(i18n).length
@@ -139,14 +206,15 @@ export default {
         locales,
         messages: i18n
       }
-      appSchemaState.utils = appSchema?.utils || []
+      appSchemaState.utils = importedUtils
       appSchemaState.dataSource = appSchema?.dataSource?.list || []
       appSchemaState.globalState = appSchema?.globalState || []
       appSchemaState.componentsMap = appSchema?.componentsMap || appSchemaState.componentsMap
 
+      await syncImportedUtils(appId, importedUtils)
+
       // 同步刷新 i18n 到画布/设计器
-      const { id, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-      await useTranslate().initI18n({ host: id, hostType: type, init: true })
+      await useTranslate().initI18n({ host: appId, hostType: type, init: true })
 
       // 2) 创建静态页面（批量）并刷新页面树
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
@@ -173,7 +241,6 @@ export default {
       } catch (e) {
         // ignore persistence errors
       }
-      const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
       // 保存 appId 供覆盖选择确认/取消时使用
       state.appId = appId
       const buildCreateParams = (ps: any) => {

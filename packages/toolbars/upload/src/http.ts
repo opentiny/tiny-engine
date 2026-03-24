@@ -28,3 +28,15 @@ export const createBlockGroup = (params: any) =>
 // 创建区块
 export const createBlock = (params: any) =>
   getMetaApi(META_SERVICE.Http).post('/material-center/api/block/create', params)
+
+// 获取工具类列表
+export const fetchUtilsResourceList = (appId: string) =>
+  getMetaApi(META_SERVICE.Http).get(`/app-center/api/apps/extension/list?app=${appId}&category=utils`)
+
+// 创建工具类
+export const createUtilsResource = (params: any) =>
+  getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/extension/create', params)
+
+// 更新工具类
+export const updateUtilsResource = (params: any) =>
+  getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/extension/update', params)

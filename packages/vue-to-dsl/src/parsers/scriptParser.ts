@@ -4,6 +4,53 @@ import * as t from '@babel/types'
 
 const traverse: any = (traverseModule as any)?.default ?? (traverseModule as any)
 
+const JS_GLOBALS = new Set([
+  'Math',
+  'Number',
+  'String',
+  'Boolean',
+  'Array',
+  'Object',
+  'Date',
+  'JSON',
+  'console',
+  'Intl',
+  'RegExp',
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  'Promise',
+  'Symbol',
+  'BigInt',
+  'parseInt',
+  'parseFloat',
+  'isNaN',
+  'isFinite',
+  'encodeURI',
+  'decodeURI',
+  'encodeURIComponent',
+  'decodeURIComponent',
+  'undefined',
+  'NaN',
+  'Infinity',
+  'window',
+  'document',
+  'localStorage',
+  'sessionStorage',
+  'navigator',
+  'location',
+  'history',
+  'fetch',
+  'URL',
+  'URLSearchParams',
+  'setTimeout',
+  'clearTimeout',
+  'setInterval',
+  'clearInterval',
+  'alert'
+])
+
 const LIFECYCLE_HOOKS = [
   'onMounted',
   'onUpdated',
@@ -96,14 +143,381 @@ function getSource(node: any, source: string): string {
   return ''
 }
 
+function applyReplacements(code: string, replacements: Array<{ start: number; end: number; text: string }>) {
+  return replacements
+    .sort((a, b) => b.start - a.start || b.end - a.end)
+    .reduce((output, item) => `${output.slice(0, item.start)}${item.text}${output.slice(item.end)}`, code)
+}
+
+function isFrameworkImportSource(source: string) {
+  return ['vue', 'vue-i18n'].includes(source)
+}
+
+function sanitizeCodeFromNode(node: any, source: string): string {
+  const raw = getSource(node, source)
+  const baseStart = node?.start
+  const baseEnd = node?.end
+  if (!raw || typeof baseStart !== 'number' || typeof baseEnd !== 'number') return raw
+
+  let wrappedNode: any
+  if (t.isStatement(node)) {
+    wrappedNode = node
+  } else if (t.isExpression(node)) {
+    wrappedNode = t.expressionStatement(node)
+  } else {
+    wrappedNode = t.functionDeclaration(t.identifier('__temp__'), [node as any], t.blockStatement([]))
+  }
+  const fileAst = t.file(t.program([wrappedNode]))
+  const replacements: Array<{ start: number; end: number; text: string }> = []
+  const seenRanges = new Set<string>()
+
+  const pushReplacement = (start: number, end: number, text = '') => {
+    if (start >= end) return
+    const relativeStart = start - baseStart
+    const relativeEnd = end - baseStart
+    if (relativeStart < 0 || relativeEnd > raw.length) return
+    const key = `${relativeStart}:${relativeEnd}:${text}`
+    if (seenRanges.has(key)) return
+    seenRanges.add(key)
+    replacements.push({ start: relativeStart, end: relativeEnd, text })
+  }
+
+  traverse(fileAst as any, {
+    TSTypeAnnotation(path: any) {
+      pushReplacement(path.node.start, path.node.end)
+    },
+    TSTypeParameterInstantiation(path: any) {
+      pushReplacement(path.node.start, path.node.end)
+    },
+    TSTypeParameterDeclaration(path: any) {
+      pushReplacement(path.node.start, path.node.end)
+    },
+    TSAsExpression(path: any) {
+      pushReplacement(path.node.expression.end, path.node.end)
+    },
+    TSTypeAssertion(path: any) {
+      pushReplacement(path.node.start, path.node.expression.start)
+    },
+    TSNonNullExpression(path: any) {
+      pushReplacement(path.node.expression.end, path.node.end)
+    },
+    TSInstantiationExpression(path: any) {
+      pushReplacement(path.node.expression.end, path.node.end)
+    },
+    Identifier(path: any) {
+      if (!path.node.optional) return
+      const typeAnnotationStart = path.node.typeAnnotation?.start
+      const optionalStart = path.node.start + String(path.node.name || '').length
+      if (typeof typeAnnotationStart === 'number') {
+        pushReplacement(optionalStart, typeAnnotationStart)
+      } else {
+        pushReplacement(optionalStart, optionalStart + 1)
+      }
+    },
+    CallExpression(path: any) {
+      const typeParameters = path.node.typeParameters || path.node.typeArguments
+      if (typeParameters) pushReplacement(typeParameters.start, typeParameters.end)
+    },
+    NewExpression(path: any) {
+      const typeParameters = path.node.typeParameters || path.node.typeArguments
+      if (typeParameters) pushReplacement(typeParameters.start, typeParameters.end)
+    }
+  })
+
+  return applyReplacements(raw, replacements)
+}
+
+function createScriptRewriteContext(result: any) {
+  const stateEntries = result?.state || {}
+  const propNames = new Set((result?.props || []).map((prop: any) => prop?.name).filter(Boolean))
+  const stateNames = new Set(Object.keys(stateEntries))
+  const refStateNames = new Set(
+    Object.entries(stateEntries)
+      .filter(([, value]: [string, any]) => value?.type === 'ref')
+      .map(([name]) => name)
+  )
+  const methodNames = new Set(Object.keys(result?.methods || {}))
+  const computedNames = new Set(Object.keys(result?.computed || {}))
+
+  return {
+    propNames,
+    stateNames,
+    refStateNames,
+    methodNames,
+    computedNames
+  }
+}
+
+function resolveScriptIdentifierReplacement(name: string, context: any) {
+  if (!name || name === 'this' || JS_GLOBALS.has(name)) return null
+
+  if (name === 'state') return 'this.state'
+  if (name === 'props') return 'this.props'
+  if (name === 'emit') return 'this.emit'
+  if (name === 'stores') return 'this.stores'
+  if (name === 'bridge') return 'this.bridge'
+  if (name === 'dataSourceMap') return 'this.dataSourceMap'
+
+  if (context.propNames.has(name)) return `this.props.${name}`
+  if (context.stateNames.has(name)) return `this.state.${name}`
+  if (context.methodNames.has(name) || context.computedNames.has(name)) return `this.${name}`
+
+  return null
+}
+
+function rewriteScriptContextInCode(code: string, result: any) {
+  if (!code) return code
+
+  const context = createScriptRewriteContext(result)
+  if (
+    context.propNames.size === 0 &&
+    context.stateNames.size === 0 &&
+    context.methodNames.size === 0 &&
+    context.computedNames.size === 0
+  ) {
+    return code
+  }
+
+  try {
+    const ast = parse(code, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
+    const replacements: Array<{ start: number; end: number; text: string }> = []
+    const seenRanges = new Set<string>()
+
+    const pushReplacement = (start: number, end: number, text: string) => {
+      if (typeof start !== 'number' || typeof end !== 'number' || start >= end) return
+      const key = `${start}:${end}:${text}`
+      if (seenRanges.has(key)) return
+      seenRanges.add(key)
+      replacements.push({ start, end, text })
+    }
+
+    traverse(ast as any, {
+      MemberExpression(path: any) {
+        if (path.node.computed) return
+
+        const objectNode = path.node.object
+        const propertyNode = path.node.property
+        if (!t.isIdentifier(objectNode) || !t.isIdentifier(propertyNode)) return
+
+        const refLikeName = objectNode.name
+        const isRefLikeState = context.refStateNames.has(refLikeName)
+        const isComputedRef = context.computedNames.has(refLikeName)
+        if (!isRefLikeState && !isComputedRef) return
+        if (propertyNode.name !== 'value') return
+
+        const binding = path.scope.getBinding(refLikeName)
+        if (binding && binding.kind !== 'module') return
+
+        const replacement = isComputedRef ? `this.${refLikeName}` : `this.state.${refLikeName}`
+        pushReplacement(path.node.start, path.node.end, replacement)
+      },
+      Identifier(path: any) {
+        if (!path.isReferencedIdentifier()) return
+
+        const { node, parent } = path
+        const name = node.name
+        const binding = path.scope.getBinding(name)
+        if (binding && binding.kind !== 'module') return
+
+        if (
+          path.parentPath.isMemberExpression({ property: node }) &&
+          parent &&
+          parent.property === node &&
+          !parent.computed
+        ) {
+          return
+        }
+
+        if (path.parentPath.isObjectProperty({ key: node }) && parent && parent.key === node && !parent.computed) {
+          return
+        }
+
+        if (
+          path.parentPath.isMemberExpression() &&
+          path.parent.object === path.node &&
+          !path.parent.computed &&
+          t.isIdentifier(path.parent.property) &&
+          path.parent.property.name === 'value' &&
+          (context.refStateNames.has(name) || context.computedNames.has(name))
+        ) {
+          return
+        }
+
+        const replacement = resolveScriptIdentifierReplacement(name, context)
+        if (!replacement || replacement === name) return
+
+        if (path.parentPath.isObjectProperty() && parent?.shorthand && parent.value === node) {
+          pushReplacement(path.parent.start, path.parent.end, `${name}: ${replacement}`)
+          return
+        }
+
+        pushReplacement(path.node.start, path.node.end, replacement)
+      }
+    })
+
+    return applyReplacements(code, replacements)
+  } catch {
+    return code
+  }
+}
+
+function rewriteScriptContextInEntries(entries: Record<string, any>, result: any) {
+  Object.keys(entries || {}).forEach((key) => {
+    const entry = entries[key]
+    if (!entry) return
+    if (typeof entry === 'string') {
+      entries[key] = rewriteScriptContextInCode(entry, result)
+      return
+    }
+    if (typeof entry.value === 'string') {
+      entry.value = rewriteScriptContextInCode(entry.value, result)
+    }
+  })
+  return entries
+}
+
+function rewriteScriptContextInResult(result: any) {
+  result.methods = rewriteScriptContextInEntries(result.methods || {}, result)
+  result.computed = rewriteScriptContextInEntries(result.computed || {}, result)
+  result.lifeCycles = rewriteScriptContextInEntries(result.lifeCycles || {}, result)
+}
+
+function addUsedUtilImport(collector: any[], item: any) {
+  if (!Array.isArray(collector) || !item?.source || !item?.local) return
+  const exists = collector.some(
+    (entry) => entry?.source === item.source && entry?.imported === item.imported && entry?.local === item.local
+  )
+  if (!exists) collector.push(item)
+}
+
+function getImportedUtilsMap(imports: any[] = []) {
+  const importedUtils = new Map<string, any>()
+
+  imports.forEach((imp: any) => {
+    if (!imp?.source || isFrameworkImportSource(imp.source) || /\.vue$/i.test(imp.source)) return
+    ;(imp.specifiers || []).forEach((spec: any) => {
+      if (!spec?.local) return
+      importedUtils.set(spec.local, { ...spec, source: imp.source })
+    })
+  })
+
+  return importedUtils
+}
+
+function rewriteImportedUtilsInCode(code: string, imports: any[] = [], usedImports: any[] = []) {
+  const importedUtils = getImportedUtilsMap(imports)
+
+  if (!code || importedUtils.size === 0) return code
+
+  try {
+    const ast = parse(code, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
+    const replacements: Array<{ start: number; end: number; text: string }> = []
+    const seenRanges = new Set<string>()
+
+    const pushReplacement = (start: number, end: number, text: string) => {
+      if (typeof start !== 'number' || typeof end !== 'number' || start >= end) return
+      const key = `${start}:${end}:${text}`
+      if (seenRanges.has(key)) return
+      seenRanges.add(key)
+      replacements.push({ start, end, text })
+    }
+
+    traverse(ast as any, {
+      MemberExpression(path: any) {
+        if (path.node.computed) return
+        const objectNode = path.node.object
+        const propertyNode = path.node.property
+        if (!t.isIdentifier(objectNode) || !t.isIdentifier(propertyNode)) return
+
+        const spec = importedUtils.get(objectNode.name)
+        if (!spec || spec.kind !== 'namespace') return
+
+        const binding = path.scope.getBinding(objectNode.name)
+        if (binding && binding.kind !== 'module') return
+
+        addUsedUtilImport(usedImports, {
+          source: spec.source,
+          imported: propertyNode.name,
+          local: propertyNode.name,
+          kind: 'named'
+        })
+        pushReplacement(path.node.start, path.node.end, `this.utils.${propertyNode.name}`)
+      },
+      Identifier(path: any) {
+        const name = path.node?.name
+        const spec = importedUtils.get(name)
+        if (!name || !spec || !path.isReferencedIdentifier()) return
+
+        const binding = path.scope.getBinding(name)
+        if (binding && binding.kind !== 'module') return
+
+        if (
+          spec.kind === 'namespace' &&
+          path.parentPath?.isMemberExpression() &&
+          path.parent.object === path.node &&
+          !path.parent.computed
+        ) {
+          return
+        }
+
+        addUsedUtilImport(usedImports, {
+          source: spec.source,
+          imported: spec.imported || 'default',
+          local: spec.local,
+          kind: spec.kind || 'named'
+        })
+
+        if (
+          path.parentPath?.isObjectProperty() &&
+          path.parent.shorthand &&
+          path.parent.value === path.node &&
+          path.parent.key === path.node
+        ) {
+          pushReplacement(path.parent.start, path.parent.end, `${name}: this.utils.${name}`)
+          return
+        }
+
+        pushReplacement(path.node.start, path.node.end, `this.utils.${name}`)
+      }
+    })
+
+    return applyReplacements(code, replacements)
+  } catch {
+    return code
+  }
+}
+
+function rewriteImportedUtilsInEntries(entries: Record<string, any>, imports: any[] = [], usedImports: any[] = []) {
+  Object.keys(entries || {}).forEach((key) => {
+    const entry = entries[key]
+    if (!entry) return
+    if (typeof entry === 'string') {
+      entries[key] = rewriteImportedUtilsInCode(entry, imports, usedImports)
+      return
+    }
+    if (typeof entry.value === 'string') {
+      entry.value = rewriteImportedUtilsInCode(entry.value, imports, usedImports)
+    }
+  })
+  return entries
+}
+
+function rewriteImportedUtilsInResult(result: any) {
+  const imports = result?.imports || []
+  result.usedUtilsImports = []
+  result.methods = rewriteImportedUtilsInEntries(result.methods || {}, imports, result.usedUtilsImports)
+  result.computed = rewriteImportedUtilsInEntries(result.computed || {}, imports, result.usedUtilsImports)
+  result.lifeCycles = rewriteImportedUtilsInEntries(result.lifeCycles || {}, imports, result.usedUtilsImports)
+}
+
 function arrowToFunctionString(name: string, node: t.ArrowFunctionExpression, source: string) {
   const asyncStr = node.async ? 'async ' : ''
-  const params = node.params.map((p) => getSource(p, source)).join(', ')
+  const params = node.params.map((p) => sanitizeCodeFromNode(p, source)).join(', ')
   if (t.isBlockStatement(node.body)) {
-    const body = getSource(node.body, source)
+    const body = sanitizeCodeFromNode(node.body, source)
     return `${asyncStr}function ${name}(${params}) ${body}`
   }
-  const expr = getSource(node.body, source)
+  const expr = sanitizeCodeFromNode(node.body, source)
   return `${asyncStr}function ${name}(${params}) { return ${expr}; }`
 }
 
@@ -113,8 +527,8 @@ function functionExpressionToNamedFunctionString(
   source: string
 ) {
   const asyncStr = (node as any).async ? 'async ' : ''
-  const params = (node as any).params.map((p: any) => getSource(p, source)).join(', ')
-  const body = getSource((node as any).body, source)
+  const params = (node as any).params.map((p: any) => sanitizeCodeFromNode(p, source)).join(', ')
+  const body = sanitizeCodeFromNode((node as any).body, source)
   return `${asyncStr}function ${name}(${params}) ${body}`
 }
 
@@ -144,7 +558,7 @@ function addMethodFromFunctionLike(name: string, init: any, result: any, source:
     return true
   }
   if (t.isFunctionExpression(init)) {
-    const code = getSource(init, source)
+    const code = functionExpressionToNamedFunctionString(name, init, source)
     routeFunctionLikeByName(result, name, code)
     return true
   }
@@ -218,7 +632,7 @@ function assignComputedIfComputed(name: string, init: any, result: any, source: 
   if (!isVueReactiveCall(init, 'computed')) return false
 
   const firstArg = (init.arguments && init.arguments[0]) as any
-  let compCode = firstArg ? getSource(firstArg, source) : getNodeValue(init)
+  let compCode = firstArg ? sanitizeCodeFromNode(firstArg, source) : getNodeValue(init)
 
   if (firstArg) {
     if (t.isArrowFunctionExpression(firstArg)) {
@@ -239,7 +653,7 @@ function assignComputedIfComputed(name: string, init: any, result: any, source: 
           ? arrowToFunctionString(name, getterProp.value, source)
           : functionExpressionToNamedFunctionString(name, getterProp.value, source)
       } else {
-        compCode = getSource(firstArg, source)
+        compCode = sanitizeCodeFromNode(firstArg, source)
       }
     }
   }
@@ -314,7 +728,7 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
       })
     } else if (t.isFunctionDeclaration(statement)) {
       const name = statement.id!.name
-      const fnCode = getSource(statement, source)
+      const fnCode = sanitizeCodeFromNode(statement, source)
       functionBodies[name] = fnCode
       routeFunctionLikeByName(result, name, fnCode)
     } else if (t.isExpressionStatement(statement) && t.isCallExpression(statement.expression)) {
@@ -398,12 +812,12 @@ function parseMethodsSimple(node: any, source: string) {
   node.properties.forEach((prop: any) => {
     if (t.isObjectMethod(prop) && t.isIdentifier(prop.key)) {
       const name = prop.key.name
-      const code = getSource(prop, source)
+      const code = functionExpressionToNamedFunctionString(name, prop as any, source)
       methods[name] = { type: 'function', value: code || `function ${name}(){}` }
     } else if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
       const name = prop.key.name
       if (t.isFunctionExpression(prop.value)) {
-        const code = getSource(prop.value, source)
+        const code = functionExpressionToNamedFunctionString(name, prop.value, source)
         methods[name] = { type: 'function', value: code || `function ${name}(){}` }
       } else if (t.isArrowFunctionExpression(prop.value)) {
         const code = arrowToFunctionString(name, prop.value, source)
@@ -427,7 +841,7 @@ function parseComputedSimple(node: any, source: string) {
     } else if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
       const name = prop.key.name
       if (t.isFunctionExpression(prop.value)) {
-        const code = getSource(prop.value, source)
+        const code = functionExpressionToNamedFunctionString(name, prop.value, source)
         computed[name] = { type: 'computed', value: code || 'function() {}' }
       } else if (t.isArrowFunctionExpression(prop.value)) {
         const code = arrowToFunctionString(name, prop.value, source)
@@ -506,10 +920,29 @@ function parseImports(ast: any, result: any) {
     ImportDeclaration(path: any) {
       result.imports.push({
         source: path.node.source.value,
-        specifiers: path.node.specifiers.map((spec: any) => ({
-          local: spec.local.name,
-          imported: (spec as any).imported ? (spec as any).imported.name : 'default'
-        }))
+        specifiers: path.node.specifiers.map((spec: any) => {
+          if (t.isImportSpecifier(spec)) {
+            return {
+              local: spec.local.name,
+              imported: t.isIdentifier(spec.imported) ? spec.imported.name : spec.imported.value,
+              kind: 'named'
+            }
+          }
+
+          if (t.isImportNamespaceSpecifier(spec)) {
+            return {
+              local: spec.local.name,
+              imported: '*',
+              kind: 'namespace'
+            }
+          }
+
+          return {
+            local: spec.local.name,
+            imported: 'default',
+            kind: 'default'
+          }
+        })
       })
     }
   })
@@ -549,7 +982,7 @@ function parseSetupScript(ast: any, result: any, source: string) {
     },
     FunctionDeclaration(path: any) {
       const name = path.node.id.name
-      const code = getSource(path.node, source)
+      const code = sanitizeCodeFromNode(path.node, source)
       routeFunctionLikeByName(result, name, code)
     },
     CallExpression(path: any) {
@@ -588,6 +1021,7 @@ export function parseScript(script: string, options: any = {}) {
     const ast = parse(script, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
     const result = {
       imports: [] as any[],
+      usedUtilsImports: [] as any[],
       props: [] as any[],
       emits: [] as any[],
       state: {} as any,
@@ -598,10 +1032,13 @@ export function parseScript(script: string, options: any = {}) {
     parseImports(ast, result)
     if (options.isSetup) parseSetupScript(ast, result, script)
     else parseOptionsAPI(ast, result, script)
+    rewriteScriptContextInResult(result)
+    rewriteImportedUtilsInResult(result)
     return result
   } catch (error: any) {
     return {
       imports: [],
+      usedUtilsImports: [],
       props: [],
       emits: [],
       state: {},

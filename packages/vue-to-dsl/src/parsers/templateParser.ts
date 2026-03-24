@@ -1,32 +1,135 @@
 import { parse } from '@vue/compiler-dom'
 import { parse as babelParse } from '@babel/parser'
+import traverseModule from '@babel/traverse'
 
-function ensureThisPrefix(exp: string, loopVariable?: string) {
+const traverse: any = (traverseModule as any)?.default ?? (traverseModule as any)
+
+const JS_GLOBALS = new Set([
+  'Math',
+  'Number',
+  'String',
+  'Boolean',
+  'Array',
+  'Object',
+  'Date',
+  'JSON',
+  'console',
+  'Intl',
+  'RegExp',
+  'Map',
+  'Set',
+  'WeakMap',
+  'WeakSet',
+  'Promise',
+  'Symbol',
+  'BigInt',
+  'parseInt',
+  'parseFloat',
+  'isNaN',
+  'isFinite',
+  'encodeURI',
+  'decodeURI',
+  'encodeURIComponent',
+  'decodeURIComponent',
+  'undefined',
+  'NaN',
+  'Infinity'
+])
+
+function getTemplateContext(options: any = {}, loopVariables: string[] = []) {
+  const propNames = new Set((options.props || []).map((prop: any) => prop?.name).filter(Boolean))
+  const stateNames = new Set(Object.keys(options.state || {}))
+  const methodNames = new Set(Object.keys(options.methods || {}))
+  const computedNames = new Set(Object.keys(options.computed || {}))
+  const localNames = new Set((loopVariables || []).filter(Boolean))
+
+  return { propNames, stateNames, methodNames, computedNames, localNames }
+}
+
+function resolveIdentifierReplacement(name: string, context: any) {
+  if (!name || name === 'this') return null
+  if (JS_GLOBALS.has(name)) return null
+  if (context.localNames.has(name)) return null
+
+  if (name === 'state') return 'this.state'
+  if (name === 'props') return 'this.props'
+  if (context.propNames.has(name)) return `this.props.${name}`
+  if (context.stateNames.has(name)) return `this.state.${name}`
+  if (context.methodNames.has(name) || context.computedNames.has(name)) return `this.${name}`
+
+  return `this.state.${name}`
+}
+
+function ensureThisPrefix(exp: string, options: any = {}, loopVariables: string[] = []) {
   const v = String(exp || '').trim()
   if (!v) return v
   if (v.startsWith('this.')) return v
 
-  // If we're inside a loop and the expression starts with the loop variable, don't prefix
-  if (loopVariable) {
-    // Check if expression starts with the loop variable name
-    const loopVarPattern = new RegExp(`^${loopVariable}(?:\\.|\\[|$)`)
-    if (loopVarPattern.test(v)) {
-      return v
-    }
-  }
+  const context = getTemplateContext(options, loopVariables)
 
-  // Only prefix when expression starts with an identifier (not literals/objects/arrays/parens/etc.)
-  // and avoid prefixing keywords like function/async/new
-  if (/^[A-Za-z_$]/.test(v) && !/^(function|async|new)\b/.test(v)) {
-    // Check if it already starts with 'state.'
-    if (v.startsWith('state.')) {
-      return `this.${v}`
+  try {
+    const ast: any = babelParse(`(${v})`, { sourceType: 'module', plugins: ['typescript', 'jsx'] })
+    const replacements: Array<{ start: number; end: number; text: string }> = []
+    const replacedRanges = new Set<string>()
+
+    traverse(ast, {
+      Identifier(path: any) {
+        if (!path.isReferencedIdentifier()) return
+
+        const { node, parent } = path
+        const name = node.name
+
+        if (
+          path.parentPath.isMemberExpression({ property: node }) &&
+          parent &&
+          parent.property === node &&
+          !parent.computed
+        ) {
+          return
+        }
+
+        if (path.parentPath.isObjectProperty({ key: node }) && parent && parent.key === node && !parent.computed) {
+          return
+        }
+
+        if (path.scope.hasBinding(name)) return
+
+        const replacement = resolveIdentifierReplacement(name, context)
+        if (!replacement || replacement === name) return
+
+        if (path.parentPath.isObjectProperty() && parent?.shorthand && parent.value === node) {
+          const start = parent.start - 1
+          const end = parent.end - 1
+          const rangeKey = `${start}:${end}`
+          if (replacedRanges.has(rangeKey)) return
+          replacedRanges.add(rangeKey)
+          replacements.push({ start, end, text: `${name}: ${replacement}` })
+          return
+        }
+
+        const start = node.start - 1
+        const end = node.end - 1
+        const rangeKey = `${start}:${end}`
+        if (replacedRanges.has(rangeKey)) return
+        replacedRanges.add(rangeKey)
+        replacements.push({ start, end, text: replacement })
+      }
+    })
+
+    if (replacements.length === 0) return v
+
+    return replacements
+      .sort((a, b) => b.start - a.start)
+      .reduce((code, item) => `${code.slice(0, item.start)}${item.text}${code.slice(item.end)}`, v)
+  } catch (_error) {
+    const loopVarPattern = loopVariables.length > 0 ? new RegExp(`^(?:${loopVariables.join('|')})(?:\\.|\\[|$)`) : null
+    if (loopVarPattern && loopVarPattern.test(v)) return v
+    if (/^[A-Za-z_$]/.test(v) && !/^(function|async|new)\b/.test(v)) {
+      if (v.startsWith('state.')) return `this.${v}`
+      return `this.state.${v}`
     }
-    // For other identifiers, add 'this.state.' prefix
-    // This handles both 'state' variable references and other reactive variables
-    return `this.state.${v}`
+    return v
   }
-  return v
 }
 
 function toPascalCase(input: string) {
@@ -236,19 +339,19 @@ function parseDirectives(node: any, schema: any, _options: any) {
   if (!node.props) return
 
   // First pass: extract loopArgs if this node has v-for
-  let loopVariable: string | undefined
+  let currentLoopVariables: string[] = []
   for (const prop of node.props) {
     if (prop.type === 7 && prop.name === 'for' && prop.exp) {
       const exp = prop.exp.content || ''
       // Extract loop variable names from `v-for="(item, index) in/of list"`
       const loopArgsMatch = exp.match(/^\(([A-Za-z_$][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_$][A-Za-z0-9_$]*)\)/)
       if (loopArgsMatch) {
-        loopVariable = loopArgsMatch[1]
+        currentLoopVariables = [loopArgsMatch[1], loopArgsMatch[2]]
         schema.loopArgs = [loopArgsMatch[1], loopArgsMatch[2]]
       } else {
         const itemMatch = exp.match(/^\(?([A-Za-z_$][A-Za-z0-9_$]*)\)?/)
         if (itemMatch) {
-          loopVariable = itemMatch[1]
+          currentLoopVariables = [itemMatch[1]]
           schema.loopArgs = [itemMatch[1]]
         }
       }
@@ -272,7 +375,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
           const match =
             exp.match(/^[^]*?(?:\)|\S)\s+(?:in|of)\s+([^]+)$/) || exp.match(/^(?:[^]+?)\s+(?:in|of)\s+([^]+)$/)
           const src = (match ? match[1] : exp).trim()
-          schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src) }
+          schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src, _options) }
         }
         break
       case 'show':
@@ -281,7 +384,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
       case 'model':
         schema.props['modelValue'] = {
           type: 'JSExpression',
-          value: ensureThisPrefix(String(prop.exp.content), loopVariable),
+          value: ensureThisPrefix(String(prop.exp.content), _options, currentLoopVariables),
           model: true
         }
         break
@@ -289,7 +392,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
         const rawEvent = prop.arg ? prop.arg.content : 'click'
         const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
-        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, loopVariable) }
+        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, _options, currentLoopVariables) }
         break
       }
       case 'bind': {
@@ -301,7 +404,10 @@ function parseDirectives(node: any, schema: any, _options: any) {
           if (parsed.ok) {
             schema.props[`${attrName}`] = parsed.value
           } else {
-            schema.props[`${attrName}`] = { type: 'JSExpression', value: ensureThisPrefix(raw, loopVariable) }
+            schema.props[`${attrName}`] = {
+              type: 'JSExpression',
+              value: ensureThisPrefix(raw, _options, currentLoopVariables)
+            }
           }
         } else {
           schema.props[`${attrName}`] = ''
@@ -324,13 +430,13 @@ function parseTextNode(node: any, _options: any) {
   return { componentName: 'Text', props: { text: node.content.trim() } }
 }
 
-function parseInterpolationNode(node: any, _options: any, loopVariable?: string) {
+function parseInterpolationNode(node: any, _options: any, loopVariables: string[] = []) {
   return {
     componentName: 'Text',
     props: {
       text: {
         type: 'JSExpression',
-        value: ensureThisPrefix(node.content ? node.content.content : '', loopVariable)
+        value: ensureThisPrefix(node.content ? node.content.content : '', _options, loopVariables)
       }
     }
   }
@@ -357,7 +463,7 @@ function normalizeTinyIcon(schema: any, node: any) {
   schema.props.name = iconName
 }
 
-function parseTemplateNode(node: any, options: any, parentLoopVariable?: string) {
+function parseTemplateNode(node: any, options: any, parentLoopVariables: string[] = []) {
   if (node.type !== 1) return null
   const componentName = getComponentName(node.tag, options)
   const schema: any = { componentName, props: {}, children: [] }
@@ -374,15 +480,16 @@ function parseTemplateNode(node: any, options: any, parentLoopVariable?: string)
   // Apply icon normalization
   normalizeTinyIcon(schema, node)
 
-  // Get the loop variable from this node (if it has v-for)
-  const currentLoopVariable = schema.loopArgs ? schema.loopArgs[0] : parentLoopVariable
+  const currentLoopVariables = Array.from(
+    new Set([...(parentLoopVariables || []), ...((schema.loopArgs as string[]) || [])])
+  )
 
   if (node.children && node.children.length > 0) {
     schema.children = node.children
       .map((child: any) => {
-        if (child.type === 1) return parseTemplateNode(child, options, currentLoopVariable)
+        if (child.type === 1) return parseTemplateNode(child, options, currentLoopVariables)
         if (child.type === 2) return parseTextNode(child, options)
-        if (child.type === 5) return parseInterpolationNode(child, options, currentLoopVariable)
+        if (child.type === 5) return parseInterpolationNode(child, options, currentLoopVariables)
         return null
       })
       .filter(Boolean)
@@ -395,6 +502,6 @@ export function parseTemplate(template: string, options: any = {}) {
   if (!ast || !ast.children) return []
   return ast.children
     .filter((node: any) => node.type === 1)
-    .map((node: any) => parseTemplateNode(node, options, undefined))
+    .map((node: any) => parseTemplateNode(node, options, []))
     .filter(Boolean)
 }
