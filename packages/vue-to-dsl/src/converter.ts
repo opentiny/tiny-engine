@@ -408,6 +408,61 @@ export class VueToDslConverter {
       .replace(/\/$/, '')
   }
 
+  private buildConflictResolvedFileName(
+    relativePath: string,
+    baseName: string,
+    duplicatePaths: string[] = [],
+    allPaths: string[] = []
+  ) {
+    const normalizeParts = (filePath: string) =>
+      this.normalizeVirtualPath(filePath)
+        .replace(/\.vue$/i, '')
+        .split('/')
+        .filter(Boolean)
+
+    const toCamelCase = (parts: string[]) =>
+      parts.map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1))).join('')
+
+    const currentParts = normalizeParts(relativePath)
+    const dirParts = currentParts.slice(0, -1)
+    if (dirParts.length === 0) {
+      return baseName
+    }
+
+    const normalizedAllPaths = allPaths.map((filePath) => this.normalizeVirtualPath(filePath))
+    const normalizedDuplicates = duplicatePaths.map((filePath) => this.normalizeVirtualPath(filePath))
+    const currentPath = this.normalizeVirtualPath(relativePath)
+    const currentDir = dirParts.join('/')
+    const isSinglePageFileInParent =
+      normalizedAllPaths.filter((filePath) => {
+        const parts = normalizeParts(filePath)
+        return parts.slice(0, -1).join('/') === currentDir
+      }).length === 1
+    const buildName = (suffixParts: string[]) => {
+      const prefix = toCamelCase(suffixParts)
+      if (isSinglePageFileInParent) {
+        return prefix
+      }
+      return `${prefix}${baseName.charAt(0).toUpperCase()}${baseName.slice(1)}`
+    }
+
+    for (let depth = 1; depth <= dirParts.length; depth++) {
+      const currentSuffixParts = dirParts.slice(-depth)
+      const currentSuffix = currentSuffixParts.join('/')
+      const hasConflict = normalizedDuplicates.some((filePath) => {
+        if (filePath === currentPath) return false
+        const candidateDirParts = normalizeParts(filePath).slice(0, -1)
+        return candidateDirParts.slice(-depth).join('/') === currentSuffix
+      })
+
+      if (!hasConflict) {
+        return buildName(currentSuffixParts)
+      }
+    }
+
+    return buildName(dirParts)
+  }
+
   private getVirtualDirname(filePath = '') {
     const normalized = this.normalizeVirtualPath(filePath)
     const index = normalized.lastIndexOf('/')
@@ -512,6 +567,12 @@ export class VueToDslConverter {
     }
 
     return this.createEmptyFunctionUtilEntry(name)
+  }
+
+  private getModuleExportName(node: any, fallback = '') {
+    if (t.isIdentifier(node)) return node.name
+    if (t.isStringLiteral(node)) return node.value
+    return fallback
   }
 
   private async collectModuleUtilExports(
@@ -651,8 +712,8 @@ export class VueToDslConverter {
         if (statement.source) {
           for (const specifier of statement.specifiers) {
             if (!t.isExportSpecifier(specifier)) continue
-            const importedName = t.isIdentifier(specifier.local) ? specifier.local.name : specifier.local.value
-            const exportedName = t.isIdentifier(specifier.exported) ? specifier.exported.name : specifier.exported.value
+            const importedName = this.getModuleExportName(specifier.local)
+            const exportedName = this.getModuleExportName(specifier.exported, importedName)
             const importInfo = {
               source: statement.source.value,
               imported: importedName,
@@ -667,8 +728,8 @@ export class VueToDslConverter {
 
         for (const specifier of statement.specifiers) {
           if (!t.isExportSpecifier(specifier)) continue
-          const localName = t.isIdentifier(specifier.local) ? specifier.local.name : specifier.local.value
-          const exportedName = t.isIdentifier(specifier.exported) ? specifier.exported.name : specifier.exported.value
+          const localName = this.getModuleExportName(specifier.local)
+          const exportedName = this.getModuleExportName(specifier.exported, localName)
 
           if (declaredUtils.has(localName)) {
             exportsMap.set(exportedName, this.cloneUtilEntry(declaredUtils.get(localName), exportedName))
@@ -926,20 +987,6 @@ export class VueToDslConverter {
       }
     }
 
-    // Helper function to convert path to camelCase
-    const pathToCamelCase = (relativePath: string, baseName: string): string => {
-      const parts = relativePath.replace(/\.vue$/i, '').split(/[\\/]/)
-      if (parts.length === 1) {
-        return baseName
-      }
-      // Join directory parts with the filename in camelCase
-      const dirParts = parts.slice(0, -1)
-      const camelCaseDir = dirParts
-        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
-        .join('')
-      return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
-    }
-
     // Convert files with appropriate naming
     const pageResults: ConvertResult[] = []
     for (const filePath of vueFiles) {
@@ -951,7 +998,12 @@ export class VueToDslConverter {
         // Use camelCase naming if there are conflicts, otherwise use basename
         let fileName: string
         if (needsSpecialNaming.has(relativePath)) {
-          fileName = pathToCamelCase(relativePath, baseName)
+          fileName = this.buildConflictResolvedFileName(
+            relativePath,
+            baseName,
+            fileMap.get(baseName) || [],
+            Array.from(vueFiles, (file) => path.relative(viewsDir, file))
+          )
         } else {
           fileName = baseName
         }
@@ -1248,20 +1300,6 @@ export class VueToDslConverter {
         }
       }
 
-      // Helper function to convert path to camelCase
-      const pathToCamelCase = (relativePath: string, baseName: string): string => {
-        const parts = relativePath.replace(/\.vue$/i, '').split('/')
-        if (parts.length === 1) {
-          return baseName
-        }
-        // Join directory parts with the filename in camelCase
-        const dirParts = parts.slice(0, -1)
-        const camelCaseDir = dirParts
-          .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
-          .join('')
-        return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
-      }
-
       // Convert files with appropriate naming
       const pageResults: ConvertResult[] = []
       const pageSchemas: any[] = []
@@ -1279,7 +1317,12 @@ export class VueToDslConverter {
         // Use camelCase naming if there are conflicts, otherwise use basename
         let fileName: string
         if (needsSpecialNaming.has(relativePath)) {
-          fileName = pathToCamelCase(relativePath, baseName)
+          fileName = this.buildConflictResolvedFileName(
+            relativePath,
+            baseName,
+            fileMap.get(baseName) || [],
+            vueFiles.map((file) => file.substring(viewPrefix.length))
+          )
         } else {
           fileName = baseName
         }
@@ -1614,20 +1657,6 @@ export class VueToDslConverter {
       }
     }
 
-    // Helper function to convert path to camelCase
-    const pathToCamelCase = (relativePath: string, baseName: string): string => {
-      const parts = relativePath.replace(/\.vue$/i, '').split('/')
-      if (parts.length === 1) {
-        return baseName
-      }
-      // Join directory parts with the filename in camelCase
-      const dirParts = parts.slice(0, -1)
-      const camelCaseDir = dirParts
-        .map((part, index) => (index === 0 ? part : part.charAt(0).toUpperCase() + part.slice(1)))
-        .join('')
-      return camelCaseDir + baseName.charAt(0).toUpperCase() + baseName.slice(1)
-    }
-
     const pageResults: ConvertResult[] = []
     const pageSchemas: any[] = []
     for (const vf of vueFiles) {
@@ -1646,7 +1675,16 @@ export class VueToDslConverter {
       // Use camelCase naming if there are conflicts, otherwise use basename
       let fileName: string
       if (needsSpecialNaming.has(relativePath)) {
-        fileName = pathToCamelCase(relativePath, baseName)
+        fileName = this.buildConflictResolvedFileName(
+          relativePath,
+          baseName,
+          fileMap.get(baseName) || [],
+          vueFiles.map((file) => {
+            const webkitPath = file.webkitRelativePath
+            const fileViewsIndex = webkitPath.indexOf('src/views/')
+            return fileViewsIndex >= 0 ? webkitPath.substring(fileViewsIndex + 'src/views/'.length) : file.name
+          })
+        )
       } else {
         fileName = baseName
       }

@@ -84,6 +84,7 @@ export default {
       duplicatePages: [] as Array<{ name: string; ps: any; existing: any }>,
       toCreatePages: [] as any[],
       pendingImportedPages: [] as any[],
+      pendingAppSchema: null as any,
       appId: '' as any
     })
 
@@ -189,12 +190,9 @@ export default {
       }
     }
 
-    const processAppSchema = async (appSchema: any) => {
-      // 将 appSchema 应用到全局
+    const applyImportedAppSchema = async (appSchema: any, appId: string, hostType: string) => {
       const { appSchemaState } = useResource()
       const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
-      const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
-      // 1) 全局元数据（i18n/utils/dataSource/globalState/componentsMap）
       const i18n = appSchema?.i18n || {}
       const locales = Object.keys(i18n).length
         ? Object.keys(i18n).map((key) => ({ lang: key, label: key }))
@@ -212,13 +210,8 @@ export default {
       appSchemaState.componentsMap = appSchema?.componentsMap || appSchemaState.componentsMap
 
       await syncImportedUtils(appId, importedUtils)
-
-      // 同步刷新 i18n 到画布/设计器
-      await useTranslate().initI18n({ host: appId, hostType: type, init: true })
-
-      // 2) 创建静态页面（批量）并刷新页面树
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
-      // 将应用级 schema 归一化并持久化，便于 Http 拦截器统一返回
+
       try {
         const componentsTree = pages.map((ps: any) => ({
           name: ps?.meta?.name || ps?.fileName || 'Page',
@@ -241,83 +234,16 @@ export default {
       } catch (e) {
         // ignore persistence errors
       }
-      // 保存 appId 供覆盖选择确认/取消时使用
-      state.appId = appId
-      const buildCreateParams = (ps: any) => {
-        const rawName = (ps?.meta?.name || ps?.fileName || 'Page') as string
-        const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
-        return {
-          name: rawName,
-          route: ps?.meta?.router || safeRoute,
-          group: 'staticPages',
-          parentId: '0',
-          isPage: true,
-          app: appId,
-          page_content: {
-            ...ps,
-            fileName: ps?.fileName || rawName
-          },
-          message: 'Page auto save',
-          isBody: false,
-          isHome: false
-        }
-      }
 
-      if (pages.length) {
-        // 检查是否存在与现有页面重名（按 meta.name/fileName 比较）
-        try {
-          const existingList: any[] = await fetchPageList(appId)
-          const mapByName = new Map<string, any>()
-          existingList?.forEach?.((p: any) => {
-            if (p?.name) mapByName.set(String(p.name), p)
-          })
+      await useTranslate().initI18n({ host: appId, hostType: hostType, init: true })
+    }
 
-          const getRawName = (ps: any) => (ps?.meta?.name || ps?.fileName || 'Page') as string
-          const pagesToUpdate: Array<{ ps: any; existing: any; name: string }> = []
-          const pagesToCreate: any[] = []
-          const duplicateNames: string[] = []
-
-          for (const ps of pages) {
-            const rawName = getRawName(ps)
-            const existing = mapByName.get(rawName)
-            if (existing) {
-              pagesToUpdate.push({ ps, existing, name: rawName })
-              duplicateNames.push(rawName)
-            } else {
-              pagesToCreate.push(ps)
-            }
-          }
-
-          if (duplicateNames.length) {
-            // 打开覆盖选择对话框并缓存数据，等待用户选择
-            state.duplicatePages = pagesToUpdate
-            state.toCreatePages = pagesToCreate
-            state.pendingImportedPages = pages
-            state.showOverwriteDialog = true
-          } else {
-            // 无重名，直接创建
-            await Promise.allSettled(
-              pagesToCreate.map((ps: any) =>
-                getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
-              )
-            )
-            const { pageSettingState } = usePage()
-            await pageSettingState.updateTreeData?.()
-          }
-        } catch (e) {
-          // 若校验失败，则回退为原始创建逻辑
-          await Promise.allSettled(
-            pages.map((ps: any) =>
-              getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
-            )
-          )
-          const { pageSettingState } = usePage()
-          await pageSettingState.updateTreeData?.()
-        }
-      }
-
-      // 3) 创建区块（批量）—— 将页面中引用的子组件创建为区块
+    const createAndPublishBlocks = async (appSchema: any, appId: string) => {
       const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
+      if (!blocks.length) {
+        return 0
+      }
+
       if (blocks.length) {
         try {
           // 查询或创建区块分组
@@ -538,20 +464,99 @@ export default {
         }
       }
 
-      // 若弹出覆盖选择对话框，则先不立即渲染，等用户选择后再渲染
-      if (!state.showOverwriteDialog) {
-        const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
-        const blockMsg = blocks.length ? `，已创建 ${blocks.length} 个区块` : ''
-        if (!chosen) {
-          useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）${blockMsg}` })
-        } else {
-          await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
-          useNotify({
-            type: 'success',
-            title: '导入成功',
-            message: `已创建页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
-          })
+      return blocks.length
+    }
+
+    const processAppSchema = async (appSchema: any) => {
+      const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+
+      state.appId = appId
+      const buildCreateParams = (ps: any) => {
+        const rawName = (ps?.meta?.name || ps?.fileName || 'Page') as string
+        const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+        return {
+          name: rawName,
+          route: ps?.meta?.router || safeRoute,
+          group: 'staticPages',
+          parentId: '0',
+          isPage: true,
+          app: appId,
+          page_content: {
+            ...ps,
+            fileName: ps?.fileName || rawName
+          },
+          message: 'Page auto save',
+          isBody: false,
+          isHome: false
         }
+      }
+
+      if (pages.length) {
+        try {
+          const existingList: any[] = await fetchPageList(appId)
+          const mapByName = new Map<string, any>()
+          existingList?.forEach?.((p: any) => {
+            if (p?.name) mapByName.set(String(p.name), p)
+          })
+
+          const getRawName = (ps: any) => (ps?.meta?.name || ps?.fileName || 'Page') as string
+          const pagesToUpdate: Array<{ ps: any; existing: any; name: string }> = []
+          const pagesToCreate: any[] = []
+          const duplicateNames: string[] = []
+
+          for (const ps of pages) {
+            const rawName = getRawName(ps)
+            const existing = mapByName.get(rawName)
+            if (existing) {
+              pagesToUpdate.push({ ps, existing, name: rawName })
+              duplicateNames.push(rawName)
+            } else {
+              pagesToCreate.push(ps)
+            }
+          }
+
+          if (duplicateNames.length) {
+            state.duplicatePages = pagesToUpdate
+            state.toCreatePages = pagesToCreate
+            state.pendingImportedPages = pages
+            state.pendingAppSchema = appSchema
+            state.showOverwriteDialog = true
+            return
+          }
+
+          await Promise.allSettled(
+            pagesToCreate.map((ps: any) =>
+              getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+            )
+          )
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+        } catch (e) {
+          await Promise.allSettled(
+            pages.map((ps: any) =>
+              getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+            )
+          )
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+        }
+      }
+
+      await applyImportedAppSchema(appSchema, appId, type)
+      const blockCount = await createAndPublishBlocks(appSchema, appId)
+
+      const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+      const blockMsg = blockCount ? `，已创建 ${blockCount} 个区块` : ''
+      if (!chosen) {
+        useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）${blockMsg}` })
+      } else {
+        await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
+        useNotify({
+          type: 'success',
+          title: '导入成功',
+          message: `已创建页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
+        })
       }
     }
 
@@ -677,6 +682,8 @@ export default {
       const { pageSettingState } = usePage()
       try {
         const appId = state.appId
+        const { type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+        const pendingAppSchema = state.pendingAppSchema
         const requests: Promise<any>[] = []
         // 更新选中的重名项
         for (const item of state.duplicatePages) {
@@ -722,6 +729,10 @@ export default {
         const hasOps = requests.length > 0
         if (hasOps) {
           await pageSettingState.updateTreeData?.()
+          if (pendingAppSchema) {
+            await applyImportedAppSchema(pendingAppSchema, appId, type)
+          }
+          const blockCount = pendingAppSchema ? await createAndPublishBlocks(pendingAppSchema, appId) : 0
           // 用户选择后进行渲染
           const pages = state.pendingImportedPages
           const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
@@ -730,10 +741,16 @@ export default {
             useNotify({
               type: 'success',
               title: '导入成功',
-              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}`
+              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}${
+                blockCount ? `，已创建 ${blockCount} 个区块` : ''
+              }`
             })
           } else {
-            useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）` })
+            useNotify({
+              type: 'success',
+              title: '导入成功',
+              message: `已更新全局配置（未检测到页面）${blockCount ? `，已创建 ${blockCount} 个区块` : ''}`
+            })
           }
         } else {
           // 无任何选择且无不重名项：直接跳过
@@ -744,6 +761,7 @@ export default {
         state.duplicatePages = []
         state.toCreatePages = []
         state.pendingImportedPages = []
+        state.pendingAppSchema = null
       }
     }
 
@@ -753,6 +771,7 @@ export default {
       state.duplicatePages = []
       state.toCreatePages = []
       state.pendingImportedPages = []
+      state.pendingAppSchema = null
       useNotify({ type: 'info', title: '已取消导入', message: '未创建或覆盖任何页面' })
     }
 
