@@ -135,12 +135,55 @@ function getNodeValue(node: any): any {
   return 'undefined'
 }
 
+function getObjectKeyName(node: any): string | null {
+  if (t.isIdentifier(node)) return node.name
+  if (t.isStringLiteral(node)) return node.value
+  if (t.isNumericLiteral(node)) return String(node.value)
+  return null
+}
+
+function getJSXAttributeName(node: any): string {
+  if (t.isJSXIdentifier(node)) return node.name
+  if (t.isJSXNamespacedName(node)) {
+    const namespace = t.isJSXIdentifier(node.namespace) ? node.namespace.name : ''
+    const name = t.isJSXIdentifier(node.name) ? node.name.name : ''
+    return `${namespace}:${name}`
+  }
+  if (t.isJSXMemberExpression(node)) {
+    const objectName = getJSXAttributeName(node.object)
+    const propertyName = getJSXAttributeName(node.property)
+    return [objectName, propertyName].filter(Boolean).join('.')
+  }
+  return ''
+}
+
+function getJSXTagName(node: any): string {
+  if (t.isJSXIdentifier(node)) return node.name
+  if (t.isJSXMemberExpression(node)) {
+    const objectName = getJSXTagName(node.object)
+    const propertyName = getJSXTagName(node.property)
+    return [objectName, propertyName].filter(Boolean).join('.')
+  }
+  if (t.isJSXNamespacedName(node)) {
+    return `${getJSXAttributeName(node.namespace)}:${getJSXAttributeName(node.name)}`
+  }
+  return 'div'
+}
+
 function getSource(node: any, source: string): string {
   if (!node) return ''
   const start = (node as any).start
   const end = (node as any).end
   if (typeof start === 'number' && typeof end === 'number') return source.slice(start, end)
   return ''
+}
+
+function unwrapExpression(node: any): any {
+  if (t.isTSAsExpression(node)) return unwrapExpression(node.expression)
+  if (t.isTSTypeAssertion(node)) return unwrapExpression(node.expression)
+  if (t.isTSNonNullExpression(node)) return unwrapExpression(node.expression)
+  if ((t as any).isParenthesizedExpression?.(node)) return unwrapExpression((node as any).expression)
+  return node
 }
 
 function applyReplacements(code: string, replacements: Array<{ start: number; end: number; text: string }>) {
@@ -227,7 +270,512 @@ function sanitizeCodeFromNode(node: any, source: string): string {
   return applyReplacements(raw, replacements)
 }
 
-function createScriptRewriteContext(result: any) {
+function getSlotParamNames(params: any[] = []) {
+  const firstParam = params[0]
+  if (t.isObjectPattern(firstParam)) {
+    return firstParam.properties
+      .map((item: any) => {
+        if (t.isObjectProperty(item) && t.isIdentifier(item.value)) return item.value.name
+        if (t.isRestElement(item) && t.isIdentifier(item.argument)) return item.argument.name
+        return null
+      })
+      .filter(Boolean)
+  }
+
+  if (t.isIdentifier(firstParam)) {
+    return [firstParam.name]
+  }
+
+  return []
+}
+
+function getReturnedJSXNode(node: any) {
+  if (t.isArrowFunctionExpression(node)) {
+    if (t.isBlockStatement(node.body)) {
+      const returnStatement = node.body.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+      if (t.isReturnStatement(returnStatement) && returnStatement.argument) {
+        return unwrapExpression(returnStatement.argument)
+      }
+      return null
+    }
+
+    return unwrapExpression(node.body)
+  }
+
+  if (t.isFunctionExpression(node)) {
+    const returnStatement = node.body.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+    if (t.isReturnStatement(returnStatement) && returnStatement.argument) {
+      return unwrapExpression(returnStatement.argument)
+    }
+    return null
+  }
+
+  return null
+}
+
+function isJSXSlotFunction(node: any) {
+  if (!t.isArrowFunctionExpression(node) && !t.isFunctionExpression(node)) return false
+  const returnedNode = getReturnedJSXNode(node)
+  return t.isJSXElement(returnedNode) || t.isJSXFragment(returnedNode)
+}
+
+function getEventHandlerExpression(node: any, source: string) {
+  const firstParam =
+    node?.params?.[0] && t.isIdentifier(node.params[0])
+      ? node.params[0].name
+      : node?.params?.[0] && t.isRestElement(node.params[0]) && t.isIdentifier(node.params[0].argument)
+      ? node.params[0].argument.name
+      : null
+
+  const resolveBodyExpression = (target: any) => {
+    const unwrapped = unwrapExpression(target)
+    if (t.isCallExpression(unwrapped)) return unwrapped
+    if (t.isBlockStatement(unwrapped)) {
+      const expressionStatement = unwrapped.body.find((item: any) => t.isExpressionStatement(item))
+      if (
+        t.isExpressionStatement(expressionStatement) &&
+        t.isCallExpression(unwrapExpression(expressionStatement.expression))
+      ) {
+        return unwrapExpression(expressionStatement.expression)
+      }
+      const returnStatement = unwrapped.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+      if (
+        t.isReturnStatement(returnStatement) &&
+        returnStatement.argument &&
+        t.isCallExpression(unwrapExpression(returnStatement.argument))
+      ) {
+        return unwrapExpression(returnStatement.argument)
+      }
+    }
+    return null
+  }
+
+  const callExpression = resolveBodyExpression(node.body)
+  if (!callExpression) return null
+
+  const value = getSource(callExpression.callee, source)
+  const params = callExpression.arguments
+    .filter((arg: any, index: number) => {
+      if (index !== 0 || !firstParam) return true
+      return !(t.isIdentifier(arg) && arg.name === firstParam)
+    })
+    .map((arg: any) => getSource(arg, source))
+    .filter(Boolean)
+
+  if (!value) return null
+
+  return {
+    type: 'JSExpression',
+    value,
+    ...(params.length ? { params } : {})
+  }
+}
+
+function getModelUpdateTarget(node: any, source: string) {
+  const firstParam =
+    node?.params?.[0] && t.isIdentifier(node.params[0])
+      ? node.params[0].name
+      : node?.params?.[0] && t.isRestElement(node.params[0]) && t.isIdentifier(node.params[0].argument)
+      ? node.params[0].argument.name
+      : null
+
+  if (!firstParam) return null
+
+  const resolveAssignment = (target: any): any => {
+    const unwrapped = unwrapExpression(target)
+    if (t.isAssignmentExpression(unwrapped)) return unwrapped
+    if (t.isBlockStatement(unwrapped)) {
+      const expressionStatement = unwrapped.body.find((item: any) => t.isExpressionStatement(item))
+      if (
+        t.isExpressionStatement(expressionStatement) &&
+        t.isAssignmentExpression(unwrapExpression(expressionStatement.expression))
+      ) {
+        return unwrapExpression(expressionStatement.expression)
+      }
+    }
+    return null
+  }
+
+  const assignmentExpression = resolveAssignment(node.body)
+  if (!assignmentExpression) return null
+  if (!t.isIdentifier(assignmentExpression.right) || assignmentExpression.right.name !== firstParam) return null
+
+  return getSource(assignmentExpression.left, source)
+}
+
+function parseJSXExpressionValue(node: any, source: string) {
+  const target = unwrapExpression(node)
+  if (t.isStringLiteral(target)) return target.value
+  if (t.isNumericLiteral(target)) return target.value
+  if (t.isBooleanLiteral(target)) return target.value
+  if (t.isNullLiteral(target)) return null
+
+  return {
+    type: 'JSExpression',
+    value: getSource(target, source)
+  }
+}
+
+function parseJSXAttributes(attributes: any[], source: string) {
+  const props: Record<string, any> = {}
+  const pendingModelTargets: Record<string, string> = {}
+
+  attributes.forEach((attr: any) => {
+    if (!t.isJSXAttribute(attr)) return
+    let attrName = getJSXAttributeName(attr.name)
+    if (!attrName) return
+    if (attrName === 'class') attrName = 'className'
+
+    if (attr.value === null) {
+      props[attrName] = true
+      return
+    }
+
+    if (t.isStringLiteral(attr.value)) {
+      props[attrName] = attr.value.value
+      return
+    }
+
+    if (!t.isJSXExpressionContainer(attr.value) || t.isJSXEmptyExpression(attr.value.expression)) {
+      props[attrName] = ''
+      return
+    }
+
+    const expression = unwrapExpression(attr.value.expression)
+
+    if ((attrName === 'onUpdate:modelValue' || attrName === 'onUpdate') && t.isArrowFunctionExpression(expression)) {
+      const modelTarget = getModelUpdateTarget(expression, source)
+      if (modelTarget) {
+        pendingModelTargets.modelValue = modelTarget
+        return
+      }
+    }
+
+    if (attrName.startsWith('on') && (t.isArrowFunctionExpression(expression) || t.isFunctionExpression(expression))) {
+      const handler = getEventHandlerExpression(expression, source)
+      if (handler) {
+        props[attrName] = handler
+        return
+      }
+
+      props[attrName] = {
+        type: 'JSFunction',
+        value: sanitizeCodeFromNode(expression, source)
+      }
+      return
+    }
+
+    props[attrName] = parseJSXExpressionValue(expression, source)
+  })
+
+  if (pendingModelTargets.modelValue && props.modelValue?.type === 'JSExpression') {
+    props.modelValue = {
+      ...props.modelValue,
+      model: true
+    }
+  }
+
+  return props
+}
+
+const jsxSchemaParser = {
+  parseChild(node: any, source: string): any {
+    if (t.isJSXText(node)) {
+      const text = node.value.replace(/\s+/g, ' ').trim()
+      return text || null
+    }
+
+    if (t.isJSXExpressionContainer(node)) {
+      if (t.isJSXEmptyExpression(node.expression)) return null
+      const expression = unwrapExpression(node.expression)
+      if (t.isJSXElement(expression) || t.isJSXFragment(expression)) {
+        return this.parseReturn(expression, source)
+      }
+      return {
+        type: 'JSExpression',
+        value: getSource(expression, source)
+      }
+    }
+
+    if (t.isJSXElement(node) || t.isJSXFragment(node)) {
+      return this.parseReturn(node, source)
+    }
+
+    return null
+  },
+
+  normalizeChildren(children: any[], source: string) {
+    const normalizedChildren = children
+      .flatMap((child: any) => {
+        const parsed = this.parseChild(child, source)
+        if (Array.isArray(parsed)) return parsed
+        return parsed === null || parsed === undefined ? [] : [parsed]
+      })
+      .filter((item) => item !== null && item !== undefined && item !== '')
+
+    if (!normalizedChildren.length) return []
+    if (normalizedChildren.length === 1) {
+      const [firstChild] = normalizedChildren
+      if (typeof firstChild === 'string' || firstChild?.type === 'JSExpression') {
+        return firstChild
+      }
+    }
+
+    return normalizedChildren
+  },
+
+  parseElement(node: any, source: string): any {
+    const schema: any = {
+      componentName: getJSXTagName(node.openingElement.name),
+      props: parseJSXAttributes(node.openingElement.attributes || [], source)
+    }
+
+    const normalizedChildren = this.normalizeChildren(node.children || [], source)
+    if (Array.isArray(normalizedChildren)) {
+      if (normalizedChildren.length) schema.children = normalizedChildren
+    } else if (normalizedChildren !== undefined) {
+      schema.children = normalizedChildren
+    }
+
+    return schema
+  },
+
+  parseReturn(node: any, source: string): any[] {
+    const target = unwrapExpression(node)
+    if (t.isJSXFragment(target)) {
+      const normalizedChildren = this.normalizeChildren(target.children || [], source)
+      if (Array.isArray(normalizedChildren)) {
+        return normalizedChildren.flatMap((item: any) => (Array.isArray(item) ? item : [item]))
+      }
+      return normalizedChildren === null || normalizedChildren === undefined ? [] : [normalizedChildren]
+    }
+    if (t.isJSXElement(target)) {
+      return [this.parseElement(target, source)]
+    }
+    return []
+  }
+}
+
+function parseJSXReturnToSchema(node: any, source: string): any[] {
+  return jsxSchemaParser.parseReturn(node, source)
+}
+
+function getReturnedRenderNode(node: any) {
+  if (t.isArrowFunctionExpression(node)) {
+    if (t.isBlockStatement(node.body)) {
+      const returnStatement = node.body.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+      if (t.isReturnStatement(returnStatement) && returnStatement.argument) {
+        return unwrapExpression(returnStatement.argument)
+      }
+      return null
+    }
+
+    return unwrapExpression(node.body)
+  }
+
+  if (t.isFunctionExpression(node)) {
+    const returnStatement = node.body.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+    if (t.isReturnStatement(returnStatement) && returnStatement.argument) {
+      return unwrapExpression(returnStatement.argument)
+    }
+    return null
+  }
+
+  return null
+}
+
+function isHCallExpression(node: any) {
+  const target = unwrapExpression(node)
+  return t.isCallExpression(target) && t.isIdentifier(target.callee) && target.callee.name === 'h'
+}
+
+function parseHExpressionValue(node: any, source: string): any {
+  const target = unwrapExpression(node)
+  if (t.isStringLiteral(target)) return target.value
+  if (t.isNumericLiteral(target)) return target.value
+  if (t.isBooleanLiteral(target)) return target.value
+  if (t.isNullLiteral(target)) return null
+
+  return {
+    type: 'JSExpression',
+    value: getSource(target, source)
+  }
+}
+
+function parseHPropsObject(node: any, source: string) {
+  if (!t.isObjectExpression(node)) return {}
+
+  const props: Record<string, any> = {}
+  const pendingModelTargets: Record<string, string> = {}
+
+  node.properties.forEach((property: any) => {
+    if (!t.isObjectProperty(property)) return
+    const keyName = getObjectKeyName(property.key)
+    if (!keyName) return
+    const attrName = keyName === 'class' ? 'className' : keyName
+    const valueNode = unwrapExpression(property.value)
+
+    if ((attrName === 'onUpdate:modelValue' || attrName === 'onUpdate') && t.isArrowFunctionExpression(valueNode)) {
+      const modelTarget = getModelUpdateTarget(valueNode, source)
+      if (modelTarget) {
+        pendingModelTargets.modelValue = modelTarget
+        return
+      }
+    }
+
+    if (attrName.startsWith('on') && (t.isArrowFunctionExpression(valueNode) || t.isFunctionExpression(valueNode))) {
+      const handler = getEventHandlerExpression(valueNode, source)
+      if (handler) {
+        props[attrName] = handler
+        return
+      }
+
+      props[attrName] = {
+        type: 'JSFunction',
+        value: sanitizeCodeFromNode(valueNode, source)
+      }
+      return
+    }
+
+    props[attrName] = parseHExpressionValue(valueNode, source)
+  })
+
+  if (pendingModelTargets.modelValue && props.modelValue?.type === 'JSExpression') {
+    props.modelValue = {
+      ...props.modelValue,
+      model: true
+    }
+  }
+
+  return props
+}
+
+const hSchemaParser = {
+  parseChildren(node: any, source: string): any {
+    const target = unwrapExpression(node)
+
+    if (t.isStringLiteral(target)) return target.value
+    if (t.isTemplateLiteral(target) && target.expressions.length === 0) {
+      return target.quasis.map((item: any) => item.value.cooked).join('')
+    }
+    if (t.isNumericLiteral(target) || t.isBooleanLiteral(target) || t.isNullLiteral(target)) {
+      return parseHExpressionValue(target, source)
+    }
+    if (isHCallExpression(target)) {
+      const parsed = this.parseCall(target, source)
+      return parsed ? [parsed] : []
+    }
+    if (t.isArrayExpression(target)) {
+      return target.elements
+        .flatMap((item: any) => {
+          if (!item) return []
+          const parsed = this.parseChildren(item, source)
+          return Array.isArray(parsed) ? parsed : parsed === null || parsed === undefined ? [] : [parsed]
+        })
+        .filter(Boolean)
+    }
+    if (t.isArrowFunctionExpression(target) || t.isFunctionExpression(target)) {
+      const returnedNode = getReturnedRenderNode(target)
+      if (!returnedNode) return null
+      return this.parseChildren(returnedNode, source)
+    }
+
+    return {
+      type: 'JSExpression',
+      value: getSource(target, source)
+    }
+  },
+
+  parseCall(node: any, source: string): any {
+    const target = unwrapExpression(node)
+    if (!t.isCallExpression(target) || !t.isIdentifier(target.callee) || target.callee.name !== 'h') return null
+
+    const [componentArg, secondArg, thirdArg] = target.arguments
+    if (!componentArg) return null
+
+    let propsArg: any = null
+    let childrenArg: any = null
+
+    if (
+      secondArg &&
+      (t.isObjectExpression(unwrapExpression(secondArg)) ||
+        t.isNullLiteral(unwrapExpression(secondArg)) ||
+        t.isIdentifier(unwrapExpression(secondArg)))
+    ) {
+      propsArg = secondArg
+      childrenArg = thirdArg
+    } else {
+      childrenArg = secondArg
+    }
+
+    const componentNode = unwrapExpression(componentArg)
+    let componentName = 'div'
+    if (t.isStringLiteral(componentNode)) {
+      componentName = componentNode.value
+    } else if (t.isIdentifier(componentNode)) {
+      componentName = componentNode.name
+    } else if (t.isMemberExpression(componentNode)) {
+      componentName = getSource(componentNode, source)
+    }
+
+    const schema: any = {
+      componentName,
+      props:
+        propsArg && !t.isNullLiteral(unwrapExpression(propsArg))
+          ? parseHPropsObject(unwrapExpression(propsArg), source)
+          : {}
+    }
+
+    if (childrenArg) {
+      const parsedChildren = this.parseChildren(childrenArg, source)
+      if (Array.isArray(parsedChildren)) {
+        if (parsedChildren.length) schema.children = parsedChildren
+      } else if (parsedChildren !== null && parsedChildren !== undefined && parsedChildren !== '') {
+        schema.children = parsedChildren
+      }
+    }
+
+    return schema
+  }
+}
+
+function parseHCallToSchema(node: any, source: string): any {
+  return hSchemaParser.parseCall(node, source)
+}
+
+function parseHSlotValue(node: any, source: string) {
+  if (!t.isArrowFunctionExpression(node) && !t.isFunctionExpression(node)) return null
+
+  const returnedNode = getReturnedRenderNode(node)
+  if (!returnedNode) return null
+
+  const parsedNode = parseHCallToSchema(returnedNode, source)
+  if (!parsedNode) return null
+
+  return {
+    type: 'JSSlot',
+    params: getSlotParamNames(node.params || []),
+    value: [parsedNode]
+  }
+}
+
+function parseJSSlotValue(node: any, result: any, source: string) {
+  if (isJSXSlotFunction(node)) {
+    const returnedNode = getReturnedJSXNode(node)
+    const slotValue = parseJSXReturnToSchema(returnedNode, source)
+    if (!slotValue.length) return null
+
+    return {
+      type: 'JSSlot',
+      params: getSlotParamNames(node.params || []),
+      value: slotValue
+    }
+  }
+
+  return parseHSlotValue(node, source)
+}
+
+function createScriptRewriteContext(result: any, localNames: string[] = []) {
   const stateEntries = result?.state || {}
   const propNames = new Set((result?.props || []).map((prop: any) => prop?.name).filter(Boolean))
   const stateNames = new Set(Object.keys(stateEntries))
@@ -244,12 +792,14 @@ function createScriptRewriteContext(result: any) {
     stateNames,
     refStateNames,
     methodNames,
-    computedNames
+    computedNames,
+    localNames: new Set(localNames.filter(Boolean))
   }
 }
 
 function resolveScriptIdentifierReplacement(name: string, context: any) {
   if (!name || name === 'this' || JS_GLOBALS.has(name)) return null
+  if (context.localNames.has(name)) return null
 
   if (name === 'state') return 'this.state'
   if (name === 'props') return 'this.props'
@@ -265,10 +815,10 @@ function resolveScriptIdentifierReplacement(name: string, context: any) {
   return null
 }
 
-function rewriteScriptContextInCode(code: string, result: any) {
+function rewriteScriptContextInCode(code: string, result: any, localNames: string[] = []) {
   if (!code) return code
 
-  const context = createScriptRewriteContext(result)
+  const context = createScriptRewriteContext(result, localNames)
   if (
     context.propNames.size === 0 &&
     context.stateNames.size === 0 &&
@@ -376,10 +926,49 @@ function rewriteScriptContextInEntries(entries: Record<string, any>, result: any
   return entries
 }
 
+function rewriteNestedStateValue(value: any, result: any, localNames: string[] = []): any {
+  if (Array.isArray(value)) {
+    return value.map((item) => rewriteNestedStateValue(item, result, localNames))
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value
+  }
+
+  if (value.type === 'JSExpression' && typeof value.value === 'string') {
+    return {
+      ...value,
+      value: rewriteScriptContextInCode(value.value, result, localNames)
+    }
+  }
+
+  if (value.type === 'JSFunction' && typeof value.value === 'string') {
+    return {
+      ...value,
+      value: rewriteScriptContextInCode(value.value, result, localNames)
+    }
+  }
+
+  if (value.type === 'JSSlot') {
+    const slotParams = Array.isArray(value.params) ? value.params : []
+    return {
+      ...value,
+      value: rewriteNestedStateValue(value.value || [], result, [...localNames, ...slotParams])
+    }
+  }
+
+  const output: Record<string, any> = Array.isArray(value) ? [] : {}
+  Object.keys(value).forEach((key) => {
+    output[key] = rewriteNestedStateValue(value[key], result, localNames)
+  })
+  return output
+}
+
 function rewriteScriptContextInResult(result: any) {
   result.methods = rewriteScriptContextInEntries(result.methods || {}, result)
   result.computed = rewriteScriptContextInEntries(result.computed || {}, result)
   result.lifeCycles = rewriteScriptContextInEntries(result.lifeCycles || {}, result)
+  result.state = rewriteNestedStateValue(result.state || {}, result)
 }
 
 function addUsedUtilImport(collector: any[], item: any) {
@@ -585,26 +1174,45 @@ function addMethodFromFunctionLike(name: string, init: any, result: any, source:
   return false
 }
 
-function extractObjectValue(node: any): any {
+function extractObjectValue(node: any, source: string, result: any): any {
+  if (t.isIdentifier(node)) {
+    const knownState = result?.state?.[node.name]
+    if (knownState && typeof knownState === 'object' && 'value' in knownState) {
+      return knownState.value
+    }
+    return getNodeValue(node)
+  }
   if (t.isObjectExpression(node)) {
     const obj: Record<string, any> = {}
     node.properties.forEach((prop: any) => {
-      if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
-        obj[prop.key.name] = extractObjectValue(prop.value)
+      if (t.isObjectProperty(prop)) {
+        const keyName = getObjectKeyName(prop.key)
+        if (!keyName) return
+
+        const slotValue = parseJSSlotValue(prop.value, result, source)
+        if (slotValue) {
+          obj[keyName] = slotValue
+          return
+        }
+
+        obj[keyName] = extractObjectValue(prop.value, source, result)
       }
     })
     return obj
   }
+  if (t.isArrayExpression(node)) {
+    return node.elements.map((item: any) => (item ? extractObjectValue(item, source, result) : null))
+  }
   return getNodeValue(node)
 }
 
-function assignStateIfNamedState(name: string, init: any, result: any): boolean {
+function assignStateIfNamedState(name: string, init: any, result: any, source: string): boolean {
   if (name !== 'state') return false
 
   if (isVueReactiveCall(init, 'reactive')) {
     const firstArg = init.arguments && init.arguments[0]
     if (t.isObjectExpression(firstArg)) {
-      const stateValue = extractObjectValue(firstArg)
+      const stateValue = extractObjectValue(firstArg, source, result)
       Object.entries(stateValue).forEach(([key, value]) => {
         result.state[key] = { type: 'reactive', value }
       })
@@ -670,7 +1278,7 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
   if (isVueReactiveCall(init, 'reactive')) {
     const firstArg = init.arguments && init.arguments[0]
     if (t.isObjectExpression(firstArg)) {
-      const stateValue = extractObjectValue(firstArg)
+      const stateValue = extractObjectValue(firstArg, source, result)
       // For 'state' named variable, expand properties into result.state
       // For other variables, store as a single state item with the variable name as key
       if (name === 'state') {
@@ -696,14 +1304,17 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
   }
 
   // 3) state-only extraction (for backward compatibility with 'state' variable)
-  if (assignStateIfNamedState(name, init, result)) return
+  if (assignStateIfNamedState(name, init, result, source)) return
 
   // 4) computed regardless of name
   if (assignComputedIfComputed(name, init, result, source)) return
 
   // 5) handle non-reactive data (plain variables with initial values)
   if (init) {
-    const value = getNodeValue(init)
+    const value =
+      t.isObjectExpression(init) || t.isArrayExpression(init) || isJSXSlotFunction(init)
+        ? extractObjectValue(init, source, result)
+        : getNodeValue(init)
     result.state[name] = { type: 'normal', value }
     return
   }
