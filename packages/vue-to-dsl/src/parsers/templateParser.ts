@@ -416,6 +416,53 @@ function parseLiteralExpression(exp: string): { ok: true; value: any } | { ok: f
   }
 }
 
+function stringifyClassValue(value: any) {
+  if (value && typeof value === 'object' && value.type === 'JSExpression' && typeof value.value === 'string') {
+    return value.value
+  }
+
+  if (value === undefined) {
+    return 'undefined'
+  }
+
+  if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) {
+    return JSON.stringify(value)
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stringifyClassValue(item)).join(', ')}]`
+  }
+
+  if (typeof value === 'object') {
+    const props = Object.entries(value).map(([key, itemValue]) => {
+      const renderKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : JSON.stringify(key)
+
+      return `${renderKey}: ${stringifyClassValue(itemValue)}`
+    })
+
+    return `{ ${props.join(', ')} }`
+  }
+
+  return JSON.stringify(value)
+}
+
+function mergeClassBinding(existingValue: any, nextValue: any) {
+  if (existingValue === undefined) return nextValue
+  if (nextValue === undefined) return existingValue
+
+  if (typeof existingValue === 'string' && !existingValue.trim()) return nextValue
+  if (typeof nextValue === 'string' && !nextValue.trim()) return existingValue
+
+  if (typeof existingValue === 'string' && typeof nextValue === 'string') {
+    return `${existingValue} ${nextValue}`.trim()
+  }
+
+  return {
+    type: 'JSExpression',
+    value: `[${stringifyClassValue(existingValue)}, ${stringifyClassValue(nextValue)}]`
+  }
+}
+
 function createConditionExpression(value: string) {
   return {
     type: 'JSExpression',
@@ -555,12 +602,16 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
           const raw = String(prop.exp.content)
           const parsed = parseLiteralExpression(raw)
           if (parsed.ok) {
-            schema.props[`${attrName}`] = parsed.value
+            const nextValue = parsed.value
+            schema.props[`${attrName}`] =
+              attrName === 'className' ? mergeClassBinding(schema.props[`${attrName}`], nextValue) : nextValue
           } else {
-            schema.props[`${attrName}`] = {
+            const nextValue = {
               type: 'JSExpression',
               value: ensureThisPrefix(raw, _options, activeLoopVariables)
             }
+            schema.props[`${attrName}`] =
+              attrName === 'className' ? mergeClassBinding(schema.props[`${attrName}`], nextValue) : nextValue
           }
         } else {
           schema.props[`${attrName}`] = ''
