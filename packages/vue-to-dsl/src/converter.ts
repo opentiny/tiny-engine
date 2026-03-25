@@ -830,6 +830,135 @@ export class VueToDslConverter {
     return this.mergeUtils([], utils)
   }
 
+  private resolveLocalVueFilePath(source: string, importerFile: string, context: LocalModuleContext) {
+    if (!source || (!source.startsWith('.') && !source.startsWith('@/'))) return null
+
+    const basePath = source.startsWith('@/')
+      ? this.normalizeVirtualPath(`src/${source.slice(2)}`)
+      : this.resolveVirtualRelativePath(this.getVirtualDirname(importerFile), source)
+
+    const candidates = [basePath]
+
+    if (!/\.vue$/i.test(basePath)) {
+      candidates.push(`${basePath}.vue`)
+      candidates.push(`${basePath}/index.vue`)
+    }
+
+    const found = candidates.find((candidate) => context.fileSet.has(this.normalizeVirtualPath(candidate)))
+    return found ? this.normalizeVirtualPath(found) : null
+  }
+
+  private collectBlockComponentNames(schema: any) {
+    const names = new Set<string>()
+
+    const visit = (node: any) => {
+      if (!node || typeof node !== 'object') return
+      if (node.componentType === 'Block' && node.componentName) {
+        names.add(String(node.componentName))
+      }
+      if (Array.isArray(node.children)) {
+        node.children.forEach(visit)
+      }
+    }
+
+    if (Array.isArray(schema?.children)) {
+      schema.children.forEach(visit)
+    }
+
+    return names
+  }
+
+  private getReferencedLocalVueImports(result: ConvertResult, context: LocalModuleContext) {
+    const refs: Array<{ filePath: string; componentName: string }> = []
+    const schema = result?.schema
+    const scriptSchema: any = result?.scriptSchema
+
+    if (!schema || !scriptSchema?.imports?.length || !scriptSchema?.__filePath) {
+      return refs
+    }
+
+    const usedBlockNames = this.collectBlockComponentNames(schema)
+
+    scriptSchema.imports.forEach((imp: any) => {
+      ;(imp.specifiers || []).forEach((spec: any) => {
+        if (!spec?.local || !usedBlockNames.has(String(spec.local))) return
+
+        const targetPath = this.resolveLocalVueFilePath(imp.source, scriptSchema.__filePath, context)
+        if (!targetPath) return
+
+        refs.push({
+          filePath: targetPath,
+          componentName: String(spec.local)
+        })
+      })
+    })
+
+    return refs
+  }
+
+  private async collectImportedVueBlocks(
+    results: ConvertResult[],
+    context: LocalModuleContext,
+    baseBlockSchemas: any[] = []
+  ) {
+    const blockSchemas = [...baseBlockSchemas]
+    const blockResults: ConvertResult[] = []
+    const blockedViewPaths = new Set<string>()
+    const existingBlockNames = new Set(
+      blockSchemas.map((item) => String(item?.fileName || item?.meta?.name || '')).filter(Boolean)
+    )
+    const processedPaths = new Set<string>()
+    const queue = results.flatMap((result) => this.getReferencedLocalVueImports(result, context))
+
+    while (queue.length) {
+      const current = queue.shift()
+      if (!current) continue
+
+      const filePath = this.normalizeVirtualPath(current.filePath)
+      if (processedPaths.has(filePath)) continue
+      processedPaths.add(filePath)
+
+      const code = await context.readText(filePath)
+      if (!code) continue
+
+      const savedOptions = { ...this.options }
+      try {
+        this.options = { ...this.options, isBlock: true } as any
+        const result = await this.convertFromString(code, current.componentName)
+        if (result.scriptSchema) {
+          result.scriptSchema.__filePath = filePath
+        }
+        if (result.schema) {
+          result.schema.componentName = 'Block'
+          result.schema.fileName = current.componentName
+          result.schema.meta = { ...(result.schema.meta || {}), name: current.componentName }
+          ;(result.schema as any).__sourceFilePath = filePath
+
+          if (!existingBlockNames.has(current.componentName)) {
+            existingBlockNames.add(current.componentName)
+            blockSchemas.push(result.schema)
+          }
+        }
+
+        blockResults.push(result)
+
+        if (filePath.startsWith('src/views/')) {
+          blockedViewPaths.add(filePath)
+        }
+
+        queue.push(...this.getReferencedLocalVueImports(result, context))
+      } finally {
+        this.options = savedOptions
+      }
+    }
+
+    return {
+      blockSchemas,
+      blockResults,
+      blockedViewPaths
+    }
+  }
+
   private async createImportedUtilEntry(
     spec: {
       local: string
@@ -1023,7 +1152,7 @@ export class VueToDslConverter {
       }
     }
 
-    const pageSchemas = pageResults.map((r) => r.schema).filter(Boolean)
+    const allResults: ConvertResult[] = [...pageResults]
 
     // 2) Load i18n
     let i18n: any = { en_US: {}, zh_CN: {} }
@@ -1089,7 +1218,20 @@ export class VueToDslConverter {
       // ignore
     }
 
-    // 6) Read router info to enrich page meta (router path, isPage, isHome)
+    // 6) Collect imported local Vue sub-components and convert them to block schemas
+    let blockSchemas: any[] = []
+    const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
+    blockSchemas = importedVueBlockData.blockSchemas
+    allResults.push(...importedVueBlockData.blockResults)
+    const pageSchemas = pageResults
+      .filter(
+        (result: any) =>
+          result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
+      )
+      .map((result) => result.schema)
+      .filter(Boolean)
+
+    // 7) Read router info to enrich page meta (router path, isPage, isHome)
     try {
       const routerPath = path.join(srcDir, 'router', 'index.js')
       const rcode = await fs.readFile(routerPath, 'utf-8')
@@ -1153,38 +1295,7 @@ export class VueToDslConverter {
       }
     }
 
-    // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
-    const blockSchemas: any[] = []
-    try {
-      const componentsDir = path.join(srcDir, 'components')
-      const componentVueFiles = await this.walk(componentsDir, (p) => p.endsWith('.vue'))
-      for (const filePath of componentVueFiles) {
-        try {
-          const vueCode = await fs.readFile(filePath, 'utf-8')
-          const baseName = path.basename(filePath, '.vue')
-          const savedOptions = { ...this.options }
-          this.options = { ...this.options, isBlock: true } as any
-          const result = await this.convertFromString(vueCode, baseName)
-          this.options = savedOptions
-          if (result.scriptSchema) {
-            result.scriptSchema.__filePath = this.normalizeVirtualPath(path.relative(appDir, filePath))
-          }
-          if (result.schema) {
-            result.schema.componentName = 'Block'
-            blockSchemas.push(result.schema)
-          }
-          pageResults.push(result)
-        } catch {
-          // skip individual component conversion errors
-        }
-      }
-    } catch {
-      // ignore if src/components doesn't exist
-    }
-
-    // Also scan page schemas for componentType=Block nodes and ensure they have block schemas
-    this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
-    utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
+    utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
@@ -1196,38 +1307,6 @@ export class VueToDslConverter {
     })
 
     return appSchema
-  }
-
-  // Recursively collect componentType=Block references from page schemas
-  // to ensure all referenced blocks have corresponding block schemas
-  private collectBlockRefsFromSchemas(pageSchemas: any[], blockSchemas: any[]): void {
-    const existingBlockNames = new Set(blockSchemas.map((b) => b.fileName))
-
-    const collectBlockNames = (node: any): void => {
-      if (!node || typeof node !== 'object') return
-      if (node.componentType === 'Block' && node.componentName && !existingBlockNames.has(node.componentName)) {
-        // Create a placeholder block schema for referenced but not found components
-        existingBlockNames.add(node.componentName)
-        blockSchemas.push({
-          componentName: 'Block',
-          fileName: node.componentName,
-          meta: { name: node.componentName },
-          children: node.children || [],
-          props: node.props || {},
-          state: {},
-          methods: {}
-        })
-      }
-      if (Array.isArray(node.children)) {
-        node.children.forEach(collectBlockNames)
-      }
-    }
-
-    for (const ps of pageSchemas) {
-      if (ps?.children) {
-        ps.children.forEach(collectBlockNames)
-      }
-    }
   }
 
   setOptions(options: VueToSchemaOptions) {
@@ -1302,7 +1381,7 @@ export class VueToDslConverter {
 
       // Convert files with appropriate naming
       const pageResults: ConvertResult[] = []
-      const pageSchemas: any[] = []
+      const allResults: ConvertResult[] = []
       for (const vf of vueFiles) {
         const code = await readText(vf)
         if (!code) continue
@@ -1334,7 +1413,7 @@ export class VueToDslConverter {
           )
         }
         pageResults.push(res)
-        if (res.schema) pageSchemas.push(res.schema)
+        allResults.push(res)
       }
 
       // 2) i18n
@@ -1392,7 +1471,20 @@ export class VueToDslConverter {
         }
       }
 
-      // 6) router enrichment
+      // 6) Collect imported local Vue sub-components and convert them to block schemas
+      let blockSchemas: any[] = []
+      const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
+      blockSchemas = importedVueBlockData.blockSchemas
+      allResults.push(...importedVueBlockData.blockResults)
+      const pageSchemas = pageResults
+        .filter(
+          (result: any) =>
+            result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
+        )
+        .map((result) => result.schema)
+        .filter(Boolean)
+
+      // 7) router enrichment
       try {
         const rcode = await readText(joinRoot('src/router/index.js'))
         if (rcode) {
@@ -1463,37 +1555,7 @@ export class VueToDslConverter {
         }
       }
 
-      // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
-      const blockSchemas: any[] = []
-      const componentsPrefix = joinRoot('src/components/')
-      const componentVueFiles = allFiles.filter((p) => p.startsWith(componentsPrefix) && p.endsWith('.vue'))
-      for (const cf of componentVueFiles) {
-        try {
-          const code = await readText(cf)
-          if (!code) continue
-          const baseName = (cf.split('/').pop() || '').replace(/\.vue$/i, '') || 'Block'
-          const savedOptions = { ...this.options }
-          this.options = { ...this.options, isBlock: true } as any
-          const res = await this.convertFromString(code, baseName)
-          this.options = savedOptions
-          if (res.scriptSchema) {
-            res.scriptSchema.__filePath = this.normalizeVirtualPath(
-              rootPrefix && cf.startsWith(rootPrefix) ? cf.slice(rootPrefix.length) : cf
-            )
-          }
-          if (res.schema) {
-            res.schema.componentName = 'Block'
-            blockSchemas.push(res.schema)
-          }
-          pageResults.push(res)
-        } catch {
-          // skip individual component conversion errors
-        }
-      }
-
-      // Also scan page schemas for componentType=Block nodes
-      this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
-      utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
+      utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
 
       // 8) Assemble app schema
       const appSchema = generateAppSchema(pageSchemas, {
@@ -1658,7 +1720,7 @@ export class VueToDslConverter {
     }
 
     const pageResults: ConvertResult[] = []
-    const pageSchemas: any[] = []
+    const allResults: ConvertResult[] = []
     for (const vf of vueFiles) {
       const code = await readText(vf)
       if (!code) continue
@@ -1694,7 +1756,7 @@ export class VueToDslConverter {
         res.scriptSchema.__filePath = getAppRelativePath(vf)
       }
       pageResults.push(res)
-      if (res.schema) pageSchemas.push(res.schema)
+      allResults.push(res)
     }
 
     // 2) i18n
@@ -1756,7 +1818,20 @@ export class VueToDslConverter {
       }
     }
 
-    // 6) router enrichment
+    // 6) Collect imported local Vue sub-components and convert them to block schemas
+    let blockSchemas: any[] = []
+    const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
+    blockSchemas = importedVueBlockData.blockSchemas
+    allResults.push(...importedVueBlockData.blockResults)
+    const pageSchemas = pageResults
+      .filter(
+        (result: any) =>
+          result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
+      )
+      .map((result) => result.schema)
+      .filter(Boolean)
+
+    // 7) router enrichment
     try {
       const routerFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/router/index.js'))
       if (routerFile) {
@@ -1827,36 +1902,7 @@ export class VueToDslConverter {
       }
     }
 
-    // 7) Collect sub-components from src/components/**/*.vue and convert to block schemas
-    const blockSchemas: any[] = []
-    const componentVueFiles = relevantFiles.filter(
-      (file) => file.webkitRelativePath.includes('src/components/') && file.name.endsWith('.vue')
-    )
-    for (const cf of componentVueFiles) {
-      try {
-        const code = await readText(cf)
-        if (!code) continue
-        const baseName = cf.name.replace(/\.vue$/i, '') || 'Block'
-        const savedOptions = { ...this.options }
-        this.options = { ...this.options, isBlock: true } as any
-        const res = await this.convertFromString(code, baseName)
-        this.options = savedOptions
-        if (res.scriptSchema) {
-          res.scriptSchema.__filePath = getAppRelativePath(cf)
-        }
-        if (res.schema) {
-          res.schema.componentName = 'Block'
-          blockSchemas.push(res.schema)
-        }
-        pageResults.push(res)
-      } catch {
-        // skip individual component conversion errors
-      }
-    }
-
-    // Also scan page schemas for componentType=Block nodes
-    this.collectBlockRefsFromSchemas(pageSchemas, blockSchemas)
-    utils = await this.enrichUtilsFromScriptResults(pageResults, utils, moduleContext)
+    utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
