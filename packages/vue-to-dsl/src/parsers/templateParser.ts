@@ -132,6 +132,86 @@ function ensureThisPrefix(exp: string, options: any = {}, loopVariables: string[
   }
 }
 
+function splitVForExpression(exp: string): { left: string; right: string } | null {
+  const source = String(exp || '').trim()
+  if (!source) return null
+
+  let quote: string | null = null
+  let depth = 0
+
+  for (let index = 0; index < source.length; index++) {
+    const char = source[index]
+
+    if (quote) {
+      if (char === '\\') {
+        index += 1
+        continue
+      }
+      if (char === quote) {
+        quote = null
+      }
+      continue
+    }
+
+    if (char === "'" || char === '"' || char === '`') {
+      quote = char
+      continue
+    }
+
+    if (char === '(' || char === '[' || char === '{') {
+      depth += 1
+      continue
+    }
+
+    if (char === ')' || char === ']' || char === '}') {
+      depth = Math.max(0, depth - 1)
+      continue
+    }
+
+    if (depth !== 0) continue
+
+    if (source.startsWith(' in ', index)) {
+      return {
+        left: source.slice(0, index).trim(),
+        right: source.slice(index + 4).trim()
+      }
+    }
+
+    if (source.startsWith(' of ', index)) {
+      return {
+        left: source.slice(0, index).trim(),
+        right: source.slice(index + 4).trim()
+      }
+    }
+  }
+
+  return null
+}
+
+function extractLoopArgs(left: string): string[] {
+  const target = String(left || '').trim()
+  if (!target || target === '()') return []
+
+  try {
+    const functionSource = target.startsWith('(') ? `${target} => {}` : `(${target}) => {}`
+    const ast: any = babelParse(functionSource, { sourceType: 'module', plugins: ['typescript', 'jsx'] })
+    const expression = ast.program?.body?.[0]?.expression
+    const params = expression?.params || []
+
+    return params
+      .map((param: any) => {
+        if (param?.type === 'Identifier') return param.name
+        if (param?.type === 'AssignmentPattern' && param.left?.type === 'Identifier') return param.left.name
+        if (param?.type === 'RestElement' && param.argument?.type === 'Identifier') return param.argument.name
+        return null
+      })
+      .filter(Boolean)
+  } catch (_error) {
+    const simpleMatch = target.match(/^\(?\s*([A-Za-z_$][A-Za-z0-9_$]*)/)
+    return simpleMatch ? [simpleMatch[1]] : []
+  }
+}
+
 function toPascalCase(input: string) {
   return input
     .split(/[-_\s]+/)
@@ -335,29 +415,87 @@ function parseLiteralExpression(exp: string): { ok: true; value: any } | { ok: f
   }
 }
 
-function parseDirectives(node: any, schema: any, _options: any) {
+function createConditionExpression(value: string) {
+  return {
+    type: 'JSExpression',
+    value
+  }
+}
+
+function negateCondition(value: string) {
+  return `!(${value})`
+}
+
+function combineConditions(expressions: string[] = []) {
+  if (!expressions.length) return ''
+  if (expressions.length === 1) return expressions[0]
+  return expressions.map((item) => `(${item})`).join(' && ')
+}
+
+function applyConditionalBranches(nodes: any[]) {
+  const branchConditions: string[] = []
+
+  const clearBranchMeta = (node: any) => {
+    if (!node || typeof node !== 'object') return node
+    delete node.__branchType
+    delete node.__branchExpression
+    return node
+  }
+
+  return nodes.map((node: any) => {
+    if (!node || typeof node !== 'object') return node
+
+    const branchType = node.__branchType
+    const branchExpression = node.__branchExpression
+
+    if (branchType === 'if' && branchExpression) {
+      branchConditions.length = 0
+      branchConditions.push(branchExpression)
+      node.condition = createConditionExpression(branchExpression)
+      return clearBranchMeta(node)
+    }
+
+    if (branchType === 'else-if' && branchExpression && branchConditions.length) {
+      const previousConditions = branchConditions.map(negateCondition)
+      const currentCondition = combineConditions([...previousConditions, branchExpression])
+      branchConditions.push(branchExpression)
+      node.condition = createConditionExpression(currentCondition)
+      return clearBranchMeta(node)
+    }
+
+    if (branchType === 'else' && branchConditions.length) {
+      const previousConditions = branchConditions.map(negateCondition)
+      node.condition = createConditionExpression(combineConditions(previousConditions))
+      branchConditions.length = 0
+      return clearBranchMeta(node)
+    }
+
+    branchConditions.length = 0
+    return clearBranchMeta(node)
+  })
+}
+
+function parseDirectives(node: any, schema: any, _options: any, parentLoopVariables: string[] = []) {
   if (!node.props) return
 
   // First pass: extract loopArgs if this node has v-for
   let currentLoopVariables: string[] = []
+  let loopSource = ''
   for (const prop of node.props) {
     if (prop.type === 7 && prop.name === 'for' && prop.exp) {
       const exp = prop.exp.content || ''
-      // Extract loop variable names from `v-for="(item, index) in/of list"`
-      const loopArgsMatch = exp.match(/^\(([A-Za-z_$][A-Za-z0-9_$]*)\s*,\s*([A-Za-z_$][A-Za-z0-9_$]*)\)/)
-      if (loopArgsMatch) {
-        currentLoopVariables = [loopArgsMatch[1], loopArgsMatch[2]]
-        schema.loopArgs = [loopArgsMatch[1], loopArgsMatch[2]]
-      } else {
-        const itemMatch = exp.match(/^\(?([A-Za-z_$][A-Za-z0-9_$]*)\)?/)
-        if (itemMatch) {
-          currentLoopVariables = [itemMatch[1]]
-          schema.loopArgs = [itemMatch[1]]
-        }
+      const parsedFor = splitVForExpression(exp)
+      const parsedLoopArgs = extractLoopArgs(parsedFor?.left || '')
+      currentLoopVariables = parsedLoopArgs
+      loopSource = parsedFor?.right || exp
+
+      if (parsedLoopArgs.length) {
+        schema.loopArgs = parsedLoopArgs
       }
       break
     }
   }
+  const activeLoopVariables = Array.from(new Set([...(parentLoopVariables || []), ...currentLoopVariables]))
 
   // Second pass: process all directives with knowledge of loop variable
   node.props.forEach((prop: any) => {
@@ -365,26 +503,40 @@ function parseDirectives(node: any, schema: any, _options: any) {
     const directiveName = prop.name
     switch (directiveName) {
       case 'if':
-        schema.condition = prop.exp ? prop.exp.content : 'true'
+        schema.__branchType = 'if'
+        schema.__branchExpression = ensureThisPrefix(
+          prop.exp ? prop.exp.content : 'true',
+          _options,
+          activeLoopVariables
+        )
+        break
+      case 'else-if':
+        schema.__branchType = 'else-if'
+        schema.__branchExpression = ensureThisPrefix(
+          prop.exp ? prop.exp.content : 'true',
+          _options,
+          activeLoopVariables
+        )
+        break
+      case 'else':
+        schema.__branchType = 'else'
         break
       case 'for':
         if (prop.exp) {
-          const exp = prop.exp.content || ''
-          // Extract the iterable expression in `v-for="(item, i) in/of list"`
-          // Prefer the part after the last occurrence of ` in ` or ` of `.
-          const match =
-            exp.match(/^[^]*?(?:\)|\S)\s+(?:in|of)\s+([^]+)$/) || exp.match(/^(?:[^]+?)\s+(?:in|of)\s+([^]+)$/)
-          const src = (match ? match[1] : exp).trim()
+          const src = String(loopSource || prop.exp.content || '').trim()
           schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src, _options) }
         }
         break
       case 'show':
-        schema.props['v-show'] = prop.exp ? prop.exp.content : 'true'
+        schema.props['v-show'] = {
+          type: 'JSExpression',
+          value: ensureThisPrefix(prop.exp ? prop.exp.content : 'true', _options, activeLoopVariables)
+        }
         break
       case 'model':
         schema.props['modelValue'] = {
           type: 'JSExpression',
-          value: ensureThisPrefix(String(prop.exp.content), _options, currentLoopVariables),
+          value: ensureThisPrefix(String(prop.exp.content), _options, activeLoopVariables),
           model: true
         }
         break
@@ -392,7 +544,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
         const rawEvent = prop.arg ? prop.arg.content : 'click'
         const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
-        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, _options, currentLoopVariables) }
+        schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, _options, activeLoopVariables) }
         break
       }
       case 'bind': {
@@ -406,7 +558,7 @@ function parseDirectives(node: any, schema: any, _options: any) {
           } else {
             schema.props[`${attrName}`] = {
               type: 'JSExpression',
-              value: ensureThisPrefix(raw, _options, currentLoopVariables)
+              value: ensureThisPrefix(raw, _options, activeLoopVariables)
             }
           }
         } else {
@@ -423,23 +575,6 @@ function parseDirectives(node: any, schema: any, _options: any) {
         schema.props[`v-${directiveName}`] = prop.exp ? prop.exp.content : 'true'
     }
   })
-}
-
-function parseTextNode(node: any, _options: any) {
-  if (!node.content || !node.content.trim()) return null
-  return { componentName: 'Text', props: { text: node.content.trim() } }
-}
-
-function parseInterpolationNode(node: any, _options: any, loopVariables: string[] = []) {
-  return {
-    componentName: 'Text',
-    props: {
-      text: {
-        type: 'JSExpression',
-        value: ensureThisPrefix(node.content ? node.content.content : '', _options, loopVariables)
-      }
-    }
-  }
 }
 
 // Normalize tiny-icon-* to generic Icon component with name prop
@@ -463,45 +598,67 @@ function normalizeTinyIcon(schema: any, node: any) {
   schema.props.name = iconName
 }
 
-function parseTemplateNode(node: any, options: any, parentLoopVariables: string[] = []) {
-  if (node.type !== 1) return null
-  const componentName = getComponentName(node.tag, options)
-  const schema: any = { componentName, props: {}, children: [] }
+const templateAstParser = {
+  parseTextNode(node: any, _options: any) {
+    if (!node.content || !node.content.trim()) return null
+    return { componentName: 'Text', props: { text: node.content.trim() } }
+  },
 
-  // Check if this is an imported component (sub-component)
-  // If the component name is PascalCase and not an HTML tag, it's likely a component
-  const isImportedComponent = isComponentImported(node.tag, options)
-  if (isImportedComponent) {
-    schema.componentType = 'Block'
-  }
+  parseInterpolationNode(node: any, _options: any, loopVariables: string[] = []) {
+    return {
+      componentName: 'Text',
+      props: {
+        text: {
+          type: 'JSExpression',
+          value: ensureThisPrefix(node.content ? node.content.content : '', _options, loopVariables)
+        }
+      }
+    }
+  },
 
-  if (node.props && node.props.length > 0) schema.props = parseNodeProps(node.props, options)
-  parseDirectives(node, schema, options)
-  // Apply icon normalization
-  normalizeTinyIcon(schema, node)
+  parseTemplateNode(node: any, options: any, parentLoopVariables: string[] = []) {
+    if (node.type !== 1) return null
+    const componentName = getComponentName(node.tag, options)
+    const schema: any = { componentName, props: {}, children: [] }
 
-  const currentLoopVariables = Array.from(
-    new Set([...(parentLoopVariables || []), ...((schema.loopArgs as string[]) || [])])
-  )
+    // Check if this is an imported component (sub-component)
+    // If the component name is PascalCase and not an HTML tag, it's likely a component
+    const isImportedComponent = isComponentImported(node.tag, options)
+    if (isImportedComponent) {
+      schema.componentType = 'Block'
+    }
 
-  if (node.children && node.children.length > 0) {
-    schema.children = node.children
+    if (node.props && node.props.length > 0) schema.props = parseNodeProps(node.props, options)
+    parseDirectives(node, schema, options, parentLoopVariables)
+    // Apply icon normalization
+    normalizeTinyIcon(schema, node)
+
+    const currentLoopVariables = Array.from(
+      new Set([...(parentLoopVariables || []), ...((schema.loopArgs as string[]) || [])])
+    )
+
+    if (node.children && node.children.length > 0) {
+      schema.children = templateAstParser.parseTemplateChildren(node.children, options, currentLoopVariables)
+    }
+    return schema
+  },
+
+  parseTemplateChildren(children: any[], options: any, parentLoopVariables: string[] = []) {
+    const parsedChildren = children
       .map((child: any) => {
-        if (child.type === 1) return parseTemplateNode(child, options, currentLoopVariables)
-        if (child.type === 2) return parseTextNode(child, options)
-        if (child.type === 5) return parseInterpolationNode(child, options, currentLoopVariables)
+        if (child.type === 1) return templateAstParser.parseTemplateNode(child, options, parentLoopVariables)
+        if (child.type === 2) return templateAstParser.parseTextNode(child, options)
+        if (child.type === 5) return templateAstParser.parseInterpolationNode(child, options, parentLoopVariables)
         return null
       })
       .filter(Boolean)
+
+    return applyConditionalBranches(parsedChildren)
   }
-  return schema
 }
 
 export function parseTemplate(template: string, options: any = {}) {
   const ast = parse(template)
   if (!ast || !ast.children) return []
-  return ast.children
-    .filter((node: any) => node.type === 1)
-    .map((node: any) => parseTemplateNode(node, options, []))
-    .filter(Boolean)
+  return templateAstParser.parseTemplateChildren(ast.children, options, []).filter((node: any) => node?.componentName)
 }
