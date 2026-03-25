@@ -810,7 +810,8 @@ function resolveScriptIdentifierReplacement(name: string, context: any) {
 
   if (context.propNames.has(name)) return `this.props.${name}`
   if (context.stateNames.has(name)) return `this.state.${name}`
-  if (context.methodNames.has(name) || context.computedNames.has(name)) return `this.${name}`
+  if (context.methodNames.has(name)) return `this.${name}`
+  if (context.computedNames.has(name)) return `this.state.${name}`
 
   return null
 }
@@ -858,7 +859,7 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
         const binding = path.scope.getBinding(refLikeName)
         if (binding && binding.kind !== 'module') return
 
-        const replacement = isComputedRef ? `this.${refLikeName}` : `this.state.${refLikeName}`
+        const replacement = `this.state.${refLikeName}`
         pushReplacement(path.node.start, path.node.end, replacement)
       },
       Identifier(path: any) {

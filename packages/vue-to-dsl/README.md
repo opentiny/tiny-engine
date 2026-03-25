@@ -82,7 +82,8 @@ interface VueToSchemaOptions {
   componentMap?: Record<string, string>
   preserveComments?: boolean
   strictMode?: boolean
-  // 控制是否输出 computed 字段（默认 false）
+  // 控制是否额外输出 computed 字段（默认 false）
+  // 无论该开关是否开启，computed 都会同步转换为兼容当前设计器运行时的 state accessor
   computed_flag?: boolean
   customParsers?: {
     template?: { parse: (code: string) => any }
@@ -141,6 +142,22 @@ type ConvertResult = {
 - 全局状态：`src/stores/*.js`（简易 Pinia `defineStore` 解析，只提取 state 返回对象）
 - 路由：`src/router/index.js`（提取 name/path 与 import 的页面文件，设置 `meta.router/isPage/isHome`）
 
+页面与区块生成规则：
+
+- 单文件导入：默认按页面处理，生成 `Page` schema
+- 整包导入时，`src/views/**/*.vue` 默认作为页面候选，进入 `pageSchema`
+- 页面里 import 并在模板中实际使用到的本地 `.vue` 子组件，会沿 import 链递归转换为区块，进入 `blockSchemas`
+- 如果某个被页面作为子组件使用的 `.vue` 文件本身位于 `src/views/` 下，则优先按区块处理，并从最终 `pageSchema` 中排除
+- `src/components/**/*.vue` 不再无条件全部生成区块；只有被页面或其子组件沿 import 链实际引用到时，才会进入 `blockSchemas`
+- 本地 `.vue` 区块的收集优先基于 import 链路解析真实文件，不再为“模板里引用但无法解析到真实文件”的场景自动补空占位区块
+
+与导入工具栏（`packages/toolbars/upload`）联动时的行为：
+
+- 项目目录导入与 zip 导入都会先调用本包聚合出 `appSchema`
+- `pageSchema` 会被导入为页面；若存在重名页面，导入工具栏会先弹出覆盖确认，再决定是否创建/覆盖页面
+- `blockSchemas` 会被导入为区块；同名区块会走更新并发布，非同名区块会走创建并发布
+- 导入工具栏只会处理本包输出的 `pageSchema` / `blockSchemas` / `utils` / `dataSource` / `globalState` / `i18n` 等聚合结果，本包本身不负责页面落库、区块发布或覆盖交互
+
 ## 模板/脚本/样式支持
 
 模板（`parseTemplate`）
@@ -148,6 +165,7 @@ type ConvertResult = {
 - HTML 标签与自定义组件；通过 `componentMap` 做名称映射
 - 指令：`v-if`/`v-for`/`v-show`/`v-model`/`v-on`/`v-bind`/`v-slot` 等核心指令
 - v-for：尝试抽取迭代表达式，写入 `loop: { type: 'JSExpression', value: 'this.xxx' }`
+- v-if / v-else-if / v-else：会转换为互斥的 `condition: { type: 'JSExpression', value }` 分支链条件
 - 事件与绑定：能解析简单字面量，复杂表达式以 `JSExpression` 形式保留
 - 文本与插值：转为 `Text` 组件；插值为 `JSExpression`
 - 特殊：`tiny-icon-*` 归一为通用 `Icon` 组件并写入 `name` 属性
@@ -161,6 +179,10 @@ type ConvertResult = {
 - Options API：
   - `props`（数组语法）/`methods`/`computed`/生命周期基础支持
 - import 收集：用于返回 `dependencies`
+- computed 兼容：
+  - 模板/脚本中对 computed 的引用会按 `this.state.xxx` 形式改写
+  - 生成 schema 时会额外把 computed 映射为 state accessor，兼容当前设计器导入运行时
+  - 当 `computed_flag=true` 时，仍会保留 `schema.computed` 字段，便于调试或后续处理
 
 样式（`parseStyle` + 辅助）
 
@@ -171,8 +193,20 @@ type ConvertResult = {
 
 - 根节点 `componentName: 'Page'`，自动补齐 `id`（8 位字母数字）
 - `state`/`methods`/`computed`/`lifecycle` 值以 `{ type: 'JSFunction', value: string }` 表达（state 中基础类型按需折叠）
+- `computed` 会同步展开为 `state` 中的 accessor getter，以便导入后的页面在当前运行时下正常显示
 - `children` 为模板树；属性中无法安全字面量化的表达式以 `JSExpression` 表达
 - 所有字符串做轻度“去换行/多空格”规整
+
+## 已知限制
+
+- `v-for` 目前优先支持常见写法，如 `item in list`、`(item, index) in list`、`(item, index) of list`；更复杂的解构参数、对象枚举、三参数以上的场景支持有限
+- `v-if / v-else-if / v-else` 会按同级相邻节点组成互斥分支链；如果模板经过复杂包装、注释穿插或非常规结构改写，分支链识别结果可能与原始意图不完全一致
+- `v-show` 会转换为 `JSExpression`，但其显示/隐藏语义仍依赖运行时组件对对应属性的支持
+- 本地 `.vue` 子组件转区块依赖 import 链路和模板实际使用情况；动态注册组件、运行时字符串组件名、非常规组件解析方式无法完整覆盖
+- `src/router/index.js`、`src/stores/*.js`、`src/utils(.js|.ts|index)`、`src/lowcodeConfig/dataSource.json` 等应用级信息仍然主要基于约定路径和轻量解析，复杂工程结构或自定义目录布局可能需要额外适配
+- `script setup` 与 Options API 的常见场景已覆盖，但宏展开、复杂 TS 类型推导、装饰器、非常规编译期语法等场景支持有限
+- 变量中的 JSX / `h()` 渲染函数已支持常见 slot 场景，但非常复杂的 render 函数组合、深层闭包、运行时生成 vnode 的逻辑仍可能需要额外适配
+- `computed` 已做导入兼容，会额外映射为 `state accessor`；如果原始 computed 强依赖运行时环境、副作用或复杂闭包，导入后仍建议重点校验
 
 ## 测试用例说明
 

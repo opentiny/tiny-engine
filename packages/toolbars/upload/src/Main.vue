@@ -719,7 +719,7 @@ export default {
 
       try {
         // 转换器实例
-        const converter = new VueToDslConverter()
+        const converter = new VueToDslConverter({ computed_flag: true })
 
         // 检查是目录上传还是文件上传
         const isDirectory = files[0].webkitRelativePath !== ''

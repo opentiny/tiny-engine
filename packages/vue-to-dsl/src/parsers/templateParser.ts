@@ -55,7 +55,8 @@ function resolveIdentifierReplacement(name: string, context: any) {
   if (name === 'props') return 'this.props'
   if (context.propNames.has(name)) return `this.props.${name}`
   if (context.stateNames.has(name)) return `this.state.${name}`
-  if (context.methodNames.has(name) || context.computedNames.has(name)) return `this.${name}`
+  if (context.methodNames.has(name)) return `this.${name}`
+  if (context.computedNames.has(name)) return `this.state.${name}`
 
   return `this.state.${name}`
 }

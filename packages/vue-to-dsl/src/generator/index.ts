@@ -74,6 +74,32 @@ function transformComputed(computed: Record<string, any>) {
   return result
 }
 
+function transformComputedToState(computed: Record<string, any>) {
+  const result: Record<string, any> = {}
+
+  Object.keys(computed || {}).forEach((key) => {
+    const computedItem = computed[key]
+    const computedValue =
+      typeof computedItem === 'object' && computedItem.value
+        ? computedItem.value
+        : typeof computedItem === 'string'
+        ? computedItem
+        : 'function() { return undefined }'
+
+    result[key] = {
+      defaultValue: undefined,
+      accessor: {
+        getter: {
+          type: 'JSFunction',
+          value: `function getter() { this.state.${key} = (${computedValue}).call(this) }`
+        }
+      }
+    }
+  })
+
+  return result
+}
+
 function transformLifeCycles(lifecycle: Record<string, any>) {
   const result: Record<string, any> = {}
   Object.keys(lifecycle).forEach((key) => {
@@ -148,6 +174,12 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
   }
   if (scriptSchema) {
     if (scriptSchema.state) schema.state = transformState(scriptSchema.state)
+    if (scriptSchema.computed) {
+      schema.state = {
+        ...(schema.state || {}),
+        ...transformComputedToState(scriptSchema.computed)
+      }
+    }
     if (scriptSchema.methods) schema.methods = transformMethods(scriptSchema.methods)
     // only output computed when computed_flag is explicitly enabled
     if (options.computed_flag === true && scriptSchema.computed) {
