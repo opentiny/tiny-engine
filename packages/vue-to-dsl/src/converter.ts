@@ -3,7 +3,7 @@ import { parseTemplate } from './parsers/templateParser'
 import { parseScript } from './parsers/scriptParser'
 import { parseStyle } from './parsers/styleParser'
 import { generateSchema, generateAppSchema } from './generator/index'
-import { defaultComponentMap } from './constants'
+import { defaultComponentMap, defaultComponentsMap } from './constants'
 import { parse as babelParse } from '@babel/parser'
 import traverseModule from '@babel/traverse'
 import * as t from '@babel/types'
@@ -13,6 +13,55 @@ import os from 'os'
 import JSZip from 'jszip'
 
 const traverse: any = (traverseModule as any)?.default ?? (traverseModule as any)
+
+const HTML_TAGS = new Set([
+  'div',
+  'span',
+  'p',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'ul',
+  'ol',
+  'li',
+  'a',
+  'img',
+  'button',
+  'input',
+  'form',
+  'table',
+  'tr',
+  'td',
+  'th',
+  'thead',
+  'tbody',
+  'section',
+  'article',
+  'header',
+  'footer',
+  'nav',
+  'aside',
+  'main',
+  'template',
+  'slot'
+])
+
+const BUILTIN_SCHEMA_COMPONENTS = new Set([
+  'Page',
+  'Block',
+  'Text',
+  'Icon',
+  'Template',
+  'Collection',
+  'Slot',
+  'slot',
+  'RouterView',
+  'RouterLink',
+  'CanvasPlaceholder'
+])
 
 export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
@@ -37,6 +86,7 @@ export interface ConvertResult {
   errors: string[]
   warnings: string[]
   scriptSchema?: any
+  componentsMap?: any[]
 }
 
 type LocalModuleContext = {
@@ -57,6 +107,206 @@ export class VueToDslConverter {
       customParsers: {},
       ...options
     }
+  }
+
+  private isLocalModuleSource(source = '') {
+    return source.startsWith('.') || source.startsWith('@/') || source.startsWith('/')
+  }
+
+  private isSchemaBuiltinComponent(componentName = '') {
+    if (!componentName) return true
+    if (BUILTIN_SCHEMA_COMPONENTS.has(componentName)) return true
+
+    const lower = componentName.toLowerCase()
+    if (HTML_TAGS.has(lower)) return true
+    if (lower.includes('-') && !lower.startsWith('tiny-')) return true
+
+    return false
+  }
+
+  private getComponentPackageVersion(source = '') {
+    if (source === '@opentiny/vue' || source === '@opentiny/vue-icon') {
+      return '^3.10.0'
+    }
+    return ''
+  }
+
+  private createPackageComponentMapEntry(
+    componentName: string,
+    source: string,
+    exportName: string,
+    destructuring = true
+  ) {
+    if (!componentName || !source || this.isLocalModuleSource(source)) return null
+
+    const entry: any = {
+      componentName,
+      package: source,
+      exportName: exportName || componentName,
+      destructuring
+    }
+
+    const version = this.getComponentPackageVersion(source)
+    if (version) {
+      entry.version = version
+    }
+
+    return entry
+  }
+
+  private collectTemplateComponentNames(nodes: any[] = [], target = new Set<string>()) {
+    const visited = new Set<any>()
+
+    const walkAny = (value: any) => {
+      if (!value || typeof value !== 'object') return
+      if (visited.has(value)) return
+      visited.add(value)
+
+      if (Array.isArray(value)) {
+        value.forEach((item) => walkAny(item))
+        return
+      }
+
+      if (typeof value.componentName === 'string' && value.componentName) {
+        target.add(value.componentName)
+      }
+
+      Object.values(value).forEach((item) => {
+        if (item && typeof item === 'object') {
+          walkAny(item)
+        }
+      })
+    }
+
+    nodes.forEach((node: any) => walkAny(node))
+    return target
+  }
+
+  private buildComponentsMapFromTemplateAndScript(templateSchema: any[] = [], scriptSchema: any = {}) {
+    const componentNames = [...this.collectTemplateComponentNames(templateSchema)]
+    const defaultMapByName = new Map<string, any>()
+    defaultComponentsMap.forEach((item: any) => {
+      const componentName = String(item?.componentName || '')
+      if (!componentName) return
+      defaultMapByName.set(componentName, { ...item })
+    })
+
+    const importLookup = new Map<string, { source: string; imported: string; kind: string }>()
+    ;(scriptSchema?.imports || []).forEach((imp: any) => {
+      const source = String(imp?.source || '')
+      ;(imp?.specifiers || []).forEach((spec: any) => {
+        const local = String(spec?.local || '')
+        if (!local) return
+
+        importLookup.set(local, {
+          source,
+          imported: String(spec?.imported || local),
+          kind: String(spec?.kind || 'named')
+        })
+      })
+    })
+
+    const iconFactoryLookup = new Map<string, string>()
+    Object.entries(scriptSchema?.state || {}).forEach(([name, stateItem]: [string, any]) => {
+      if (!/^TinyIcon[A-Z0-9]/.test(name)) return
+      const rawValue = typeof stateItem?.value === 'string' ? stateItem.value.trim() : ''
+      const match = rawValue.match(/^([A-Za-z_$][A-Za-z0-9_$]*)\(\)$/)
+      if (match?.[1]) {
+        iconFactoryLookup.set(name, match[1])
+      }
+    })
+
+    const merged = new Map<string, any>()
+    const addEntry = (entry: any) => {
+      const name = String(entry?.componentName || '')
+      if (!name || merged.has(name)) return
+      merged.set(name, entry)
+    }
+
+    componentNames.forEach((componentName) => {
+      if (this.isSchemaBuiltinComponent(componentName)) return
+
+      const defaultEntry = defaultMapByName.get(componentName)
+      if (defaultEntry) {
+        addEntry(defaultEntry)
+        return
+      }
+
+      const directImport = importLookup.get(componentName)
+      if (
+        directImport &&
+        !this.isFrameworkImport(directImport.source) &&
+        !this.isLocalModuleSource(directImport.source)
+      ) {
+        const exportName =
+          directImport.imported === 'default' || directImport.imported === '*' ? componentName : directImport.imported
+        const destructuring = directImport.kind === 'named'
+        const entry = this.createPackageComponentMapEntry(componentName, directImport.source, exportName, destructuring)
+        if (entry) {
+          addEntry(entry)
+          return
+        }
+      }
+
+      if (/^TinyIcon[A-Z0-9]/.test(componentName)) {
+        const inferredFactory = iconFactoryLookup.get(componentName) || `icon${componentName.slice('TinyIcon'.length)}`
+        const iconImport = importLookup.get(inferredFactory)
+
+        if (iconImport && iconImport.source === '@opentiny/vue-icon') {
+          const exportName = iconImport.imported === 'default' ? inferredFactory : iconImport.imported
+          const entry = this.createPackageComponentMapEntry(componentName, iconImport.source, exportName, true)
+          if (entry) {
+            addEntry(entry)
+            return
+          }
+        }
+
+        const iconEntry = this.createPackageComponentMapEntry(
+          componentName,
+          '@opentiny/vue-icon',
+          inferredFactory,
+          true
+        )
+        if (iconEntry) {
+          addEntry(iconEntry)
+          return
+        }
+      }
+
+      if (/^Tiny[A-Z0-9]/.test(componentName)) {
+        const tinyEntry = this.createPackageComponentMapEntry(
+          componentName,
+          '@opentiny/vue',
+          componentName.replace(/^Tiny/, ''),
+          true
+        )
+        if (tinyEntry) {
+          addEntry(tinyEntry)
+        }
+      }
+    })
+
+    return [...merged.values()]
+  }
+
+  private mergeComponentsMaps(componentMaps: any[][] = []) {
+    const merged = new Map<string, any>()
+
+    componentMaps.flat().forEach((item: any) => {
+      const componentName = String(item?.componentName || '')
+      if (!componentName || merged.has(componentName)) return
+      merged.set(componentName, { ...item })
+    })
+
+    return [...merged.values()]
+  }
+
+  private collectComponentsMapFromResults(results: ConvertResult[] = []) {
+    const resultMaps = results
+      .map((result: any) => (Array.isArray(result?.componentsMap) ? result.componentsMap : []))
+      .filter((items) => items.length > 0)
+
+    return this.mergeComponentsMaps([defaultComponentsMap as any[], ...resultMaps])
   }
 
   async convertFromString(vueCode: string, fileName?: string): Promise<ConvertResult> {
@@ -135,13 +385,15 @@ export class VueToDslConverter {
       }
 
       const schema = await generateSchema(templateSchema, scriptSchema, styleSchema, this.options as any)
+      const componentsMap = this.buildComponentsMapFromTemplateAndScript(templateSchema, scriptSchema)
 
       return {
         schema,
         dependencies: [...new Set(dependencies)],
         errors,
         warnings,
-        scriptSchema
+        scriptSchema,
+        componentsMap
       }
     } catch (error: any) {
       errors.push(`Conversion error: ${error.message}`)
@@ -1296,6 +1548,7 @@ export class VueToDslConverter {
     }
 
     utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
+    const componentsMap = this.collectComponentsMapFromResults(allResults)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
@@ -1303,7 +1556,8 @@ export class VueToDslConverter {
       utils,
       dataSource,
       globalState,
-      blockSchemas
+      blockSchemas,
+      componentsMap
     })
 
     return appSchema
@@ -1556,6 +1810,7 @@ export class VueToDslConverter {
       }
 
       utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
+      const componentsMap = this.collectComponentsMapFromResults(allResults)
 
       // 8) Assemble app schema
       const appSchema = generateAppSchema(pageSchemas, {
@@ -1563,7 +1818,8 @@ export class VueToDslConverter {
         utils,
         dataSource,
         globalState,
-        blockSchemas
+        blockSchemas,
+        componentsMap
       })
 
       return appSchema
@@ -1903,6 +2159,7 @@ export class VueToDslConverter {
     }
 
     utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
+    const componentsMap = this.collectComponentsMapFromResults(allResults)
 
     // 8) Assemble app schema
     const appSchema = generateAppSchema(pageSchemas, {
@@ -1910,7 +2167,8 @@ export class VueToDslConverter {
       utils,
       dataSource,
       globalState,
-      blockSchemas
+      blockSchemas,
+      componentsMap
     })
 
     return appSchema

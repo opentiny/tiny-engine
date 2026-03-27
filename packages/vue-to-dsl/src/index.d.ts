@@ -87,6 +87,8 @@ declare module '@opentiny/tiny-engine-vue-to-dsl' {
     dependencies: string[]
     errors: string[]
     warnings: string[]
+    scriptSchema?: ScriptSchema
+    componentsMap?: Array<Record<string, any>>
   }
 
   export class VueToDslConverter {

@@ -43,6 +43,7 @@ import {
   useNotify,
   useResource,
   usePage,
+  useMaterial,
   useTranslate,
   getMetaApi,
   META_SERVICE
@@ -86,6 +87,7 @@ export default {
       duplicatePages: [] as Array<{ name: string; ps: any; existing: any }>,
       toCreatePages: [] as any[],
       pendingImportedPages: [] as any[],
+      pendingImportedComponentsMap: [] as any[],
       pendingAppSchema: null as any,
       appId: '' as any
     })
@@ -131,6 +133,161 @@ export default {
       })
 
       return Array.from(merged.values())
+    }
+
+    const mergeComponentsMapByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item?.componentName) return
+        const key = String(item.componentName)
+        const existing = merged.get(key)
+        merged.set(key, existing ? { ...existing, ...item, componentName: key } : item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const toPascalCase = (input = '') =>
+      String(input)
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+        .join('')
+
+    const normalizeIconComponentName = (componentName = '') => {
+      const raw = String(componentName || '')
+      if (/^TinyIcon[A-Z0-9]/.test(raw)) {
+        return raw.replace(/^Tiny/, '')
+      }
+
+      const lower = raw.toLowerCase()
+      if (lower.startsWith('tiny-icon-')) {
+        return `Icon${toPascalCase(lower.replace(/^tiny-icon-/, ''))}`
+      }
+
+      return ''
+    }
+
+    const normalizeImportedSchemaIcons = (schema: any) => {
+      if (!schema || typeof schema !== 'object') return schema
+
+      const visited = new WeakSet<object>()
+      const shouldHandleAsSchemaNode = (value: any) => {
+        if (!value || typeof value !== 'object') return false
+        if (typeof value.componentName !== 'string') return false
+        return (
+          Object.prototype.hasOwnProperty.call(value, 'props') ||
+          Object.prototype.hasOwnProperty.call(value, 'children') ||
+          Object.prototype.hasOwnProperty.call(value, 'id') ||
+          Object.prototype.hasOwnProperty.call(value, 'componentType')
+        )
+      }
+
+      const walk = (value: any) => {
+        if (!value || typeof value !== 'object') return
+        if (visited.has(value)) return
+        visited.add(value)
+
+        if (Array.isArray(value)) {
+          value.forEach(walk)
+          return
+        }
+
+        if (shouldHandleAsSchemaNode(value)) {
+          const iconName = normalizeIconComponentName(value.componentName)
+          if (iconName) {
+            const nextProps = {
+              ...(value.props || {}),
+              name: iconName
+            }
+            value.componentName = 'Icon'
+            value.props = nextProps
+          }
+        }
+
+        Object.values(value).forEach((item) => {
+          if (item && typeof item === 'object') {
+            walk(item)
+          }
+        })
+      }
+
+      walk(schema)
+      return schema
+    }
+
+    const normalizeImportedAppSchemaIcons = (appSchema: any) => {
+      const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+      const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
+
+      pages.forEach((pageSchema: any) => normalizeImportedSchemaIcons(pageSchema))
+      blocks.forEach((blockSchema: any) => normalizeImportedSchemaIcons(blockSchema))
+
+      return appSchema
+    }
+
+    const syncComponentsDepsByMap = (componentsMap: any[] = []) => {
+      if (!Array.isArray(componentsMap) || !componentsMap.length) return
+
+      const { appSchemaState } = useResource()
+      const scriptsDeps = appSchemaState.materialsDeps?.scripts || []
+
+      componentsMap.forEach((item: any) => {
+        if (!item?.componentName || !item?.package) return
+        const pkg = String(item.package)
+        if (!pkg) return
+
+        const exportName = item.exportName || item.componentName
+        const destructuring = item.destructuring !== false
+        const existing = scriptsDeps.find((dep: any) => String(dep?.package || '') === pkg)
+
+        if (existing) {
+          existing.components = {
+            ...(existing.components || {}),
+            [item.componentName]: { exportName, destructuring }
+          }
+
+          if (!existing.script && item.script) {
+            existing.script = item.script
+          }
+
+          return
+        }
+
+        scriptsDeps.push({
+          package: pkg,
+          script: item.script,
+          components: {
+            [item.componentName]: { exportName, destructuring }
+          }
+        })
+      })
+
+      useMaterial().updateCanvasDeps?.()
+    }
+
+    const syncImportedComponentsMap = (importedComponentsMap: any[] = []) => {
+      const normalized = Array.isArray(importedComponentsMap)
+        ? importedComponentsMap.filter((item) => item?.componentName)
+        : []
+      if (!normalized.length) return
+
+      const { appSchemaState } = useResource()
+      const mergedComponentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], normalized)
+      appSchemaState.componentsMap = mergedComponentsMap
+      syncComponentsDepsByMap(mergedComponentsMap)
+
+      try {
+        const cachedAppSchema = localStorage.getItem('TE_LOCAL_APPSCHEMA')
+        if (cachedAppSchema) {
+          const parsed = JSON.parse(cachedAppSchema)
+          parsed.componentsMap = mergeComponentsMapByName(parsed?.componentsMap || [], normalized)
+          localStorage.setItem('TE_LOCAL_APPSCHEMA', JSON.stringify(parsed))
+        }
+      } catch (e) {
+        // ignore persistence errors
+      }
     }
 
     const syncImportedUtils = async (appId: string, importedUtils: any[] = []) => {
@@ -210,6 +367,7 @@ export default {
     const applyImportedAppSchema = async (appSchema: any, appId: string, hostType: string) => {
       const { appSchemaState } = useResource()
       const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
+      const importedComponentsMap = Array.isArray(appSchema?.componentsMap) ? appSchema.componentsMap : []
       const i18n = appSchema?.i18n || {}
       const locales = Object.keys(i18n).length
         ? Object.keys(i18n).map((key) => ({ lang: key, label: key }))
@@ -224,7 +382,8 @@ export default {
       appSchemaState.utils = importedUtils
       appSchemaState.dataSource = appSchema?.dataSource?.list || []
       appSchemaState.globalState = appSchema?.globalState || []
-      appSchemaState.componentsMap = appSchema?.componentsMap || appSchemaState.componentsMap
+      appSchemaState.componentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], importedComponentsMap)
+      syncComponentsDepsByMap(appSchemaState.componentsMap || [])
 
       await syncImportedUtils(appId, importedUtils)
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
@@ -242,6 +401,7 @@ export default {
           ...appSchema,
           componentsTree,
           pageSchema: pages,
+          componentsMap: appSchemaState.componentsMap,
           meta: {
             ...(appSchema.meta || {}),
             globalState: (appSchema.meta && appSchema.meta.globalState) || appSchema.globalState || []
@@ -542,6 +702,8 @@ export default {
     }
 
     const processAppSchema = async (appSchema: any) => {
+      normalizeImportedAppSchemaIcons(appSchema)
+
       const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
 
@@ -594,6 +756,7 @@ export default {
             state.duplicatePages = pagesToUpdate
             state.toCreatePages = pagesToCreate
             state.pendingImportedPages = pages
+            state.pendingImportedComponentsMap = []
             state.pendingAppSchema = appSchema
             state.showOverwriteDialog = true
             return
@@ -639,6 +802,7 @@ export default {
     const processSingleFile = async (file: File, converter: VueToDslConverter) => {
       const text = await file.text()
       const result = await converter.convertFromString(text, file.name)
+      normalizeImportedSchemaIcons(result?.schema)
 
       // 解析单文件页面信息
       const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
@@ -664,6 +828,8 @@ export default {
           state.duplicatePages = [{ ps, existing, name: rawName }]
           state.toCreatePages = []
           state.pendingImportedPages = [ps]
+          state.pendingImportedComponentsMap = result?.componentsMap || []
+          state.pendingAppSchema = null
           state.showOverwriteDialog = true
         } else {
           // 不重名：直接创建
@@ -685,6 +851,7 @@ export default {
           await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
           const { pageSettingState } = usePage()
           await pageSettingState.updateTreeData?.()
+          syncImportedComponentsMap(result?.componentsMap || [])
           useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
         }
       } catch (e: any) {
@@ -707,6 +874,7 @@ export default {
         await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
         const { pageSettingState } = usePage()
         await pageSettingState.updateTreeData?.()
+        syncImportedComponentsMap(result?.componentsMap || [])
         useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
       }
     }
@@ -807,6 +975,8 @@ export default {
           await pageSettingState.updateTreeData?.()
           if (pendingAppSchema) {
             await applyImportedAppSchema(pendingAppSchema, appId, type)
+          } else if (state.pendingImportedComponentsMap?.length) {
+            syncImportedComponentsMap(state.pendingImportedComponentsMap)
           }
           const blockResult = pendingAppSchema
             ? await createAndPublishBlocks(pendingAppSchema, appId)
@@ -840,6 +1010,7 @@ export default {
         state.duplicatePages = []
         state.toCreatePages = []
         state.pendingImportedPages = []
+        state.pendingImportedComponentsMap = []
         state.pendingAppSchema = null
       }
     }
@@ -850,6 +1021,7 @@ export default {
       state.duplicatePages = []
       state.toCreatePages = []
       state.pendingImportedPages = []
+      state.pendingImportedComponentsMap = []
       state.pendingAppSchema = null
       useNotify({ type: 'info', title: '已取消导入', message: '未创建或覆盖任何页面' })
     }

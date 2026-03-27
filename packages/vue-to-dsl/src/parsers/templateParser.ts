@@ -189,6 +189,43 @@ function splitVForExpression(exp: string): { left: string; right: string } | nul
   return null
 }
 
+function collectPatternIdentifiers(param: any, names: Set<string>) {
+  if (!param) return
+
+  if (param.type === 'Identifier' && param.name) {
+    names.add(param.name)
+    return
+  }
+
+  if (param.type === 'AssignmentPattern') {
+    collectPatternIdentifiers(param.left, names)
+    return
+  }
+
+  if (param.type === 'RestElement') {
+    collectPatternIdentifiers(param.argument, names)
+    return
+  }
+
+  if (param.type === 'ObjectPattern' && Array.isArray(param.properties)) {
+    param.properties.forEach((item: any) => {
+      if (item?.type === 'ObjectProperty') {
+        collectPatternIdentifiers(item.value, names)
+        return
+      }
+
+      if (item?.type === 'RestElement') {
+        collectPatternIdentifiers(item.argument, names)
+      }
+    })
+    return
+  }
+
+  if (param.type === 'ArrayPattern' && Array.isArray(param.elements)) {
+    param.elements.forEach((item: any) => collectPatternIdentifiers(item, names))
+  }
+}
+
 function extractLoopArgs(left: string): string[] {
   const target = String(left || '').trim()
   if (!target || target === '()') return []
@@ -199,14 +236,9 @@ function extractLoopArgs(left: string): string[] {
     const expression = ast.program?.body?.[0]?.expression
     const params = expression?.params || []
 
-    return params
-      .map((param: any) => {
-        if (param?.type === 'Identifier') return param.name
-        if (param?.type === 'AssignmentPattern' && param.left?.type === 'Identifier') return param.left.name
-        if (param?.type === 'RestElement' && param.argument?.type === 'Identifier') return param.argument.name
-        return null
-      })
-      .filter(Boolean)
+    const names = new Set<string>()
+    params.forEach((param: any) => collectPatternIdentifiers(param, names))
+    return [...names]
   } catch (_error) {
     const simpleMatch = target.match(/^\(?\s*([A-Za-z_$][A-Za-z0-9_$]*)/)
     return simpleMatch ? [simpleMatch[1]] : []
@@ -416,6 +448,10 @@ function parseLiteralExpression(exp: string): { ok: true; value: any } | { ok: f
   }
 }
 
+function stringifySingleQuotedString(value: string) {
+  return `'${String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\r/g, '\\r').replace(/\n/g, '\\n')}'`
+}
+
 function stringifyClassValue(value: any) {
   if (value && typeof value === 'object' && value.type === 'JSExpression' && typeof value.value === 'string') {
     return value.value
@@ -425,7 +461,11 @@ function stringifyClassValue(value: any) {
     return 'undefined'
   }
 
-  if (value === null || ['string', 'number', 'boolean'].includes(typeof value)) {
+  if (typeof value === 'string') {
+    return stringifySingleQuotedString(value)
+  }
+
+  if (value === null || ['number', 'boolean'].includes(typeof value)) {
     return JSON.stringify(value)
   }
 
@@ -435,7 +475,7 @@ function stringifyClassValue(value: any) {
 
   if (typeof value === 'object') {
     const props = Object.entries(value).map(([key, itemValue]) => {
-      const renderKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : JSON.stringify(key)
+      const renderKey = /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(key) ? key : stringifySingleQuotedString(key)
 
       return `${renderKey}: ${stringifyClassValue(itemValue)}`
     })
@@ -582,10 +622,13 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
         }
         break
       case 'model':
-        schema.props['modelValue'] = {
-          type: 'JSExpression',
-          value: ensureThisPrefix(String(prop.exp.content), _options, activeLoopVariables),
-          model: true
+        {
+          const modelProp = prop.arg ? String(prop.arg.content || '').trim() || 'modelValue' : 'modelValue'
+          schema.props[modelProp] = {
+            type: 'JSExpression',
+            value: ensureThisPrefix(String(prop.exp.content), _options, activeLoopVariables),
+            model: modelProp === 'modelValue' ? true : { prop: modelProp }
+          }
         }
         break
       case 'on': {
@@ -620,7 +663,12 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
       }
       case 'slot': {
         const slotName = prop.arg ? prop.arg.content : 'default'
-        schema.slot = slotName
+        const slotArgs = prop.exp && prop.exp.content ? extractLoopArgs(String(prop.exp.content)) : []
+        schema.props = schema.props || {}
+        schema.props.slot = {
+          name: slotName,
+          ...(slotArgs.length ? { params: slotArgs } : {})
+        }
         break
       }
       default:
@@ -629,25 +677,62 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
   })
 }
 
-// Normalize tiny-icon-* to generic Icon component with name prop
-// e.g. <tiny-icon-panel-mini /> -> { componentName: 'Icon', props: { name: 'IconPanelMini', style: '...' } }
+function normalizeTinyGridColumns(schema: any) {
+  if (schema?.componentName !== 'TinyGrid') return
+  if (!Array.isArray(schema.children) || !schema.children.length) return
+
+  const tinyGridColumns = schema.children.filter((item: any) => item?.componentName === 'TinyGridColumn')
+  if (!tinyGridColumns.length) return
+
+  const normalizeSlotParams = (slotItem: any) => {
+    const propParams = slotItem?.props?.slot?.params
+    if (Array.isArray(propParams)) return propParams
+    if (typeof propParams === 'string' && propParams) return [propParams]
+
+    return []
+  }
+
+  const normalizedColumns = tinyGridColumns.map((columnItem: any) => {
+    const normalizedColumn: Record<string, any> = { ...(columnItem?.props || {}) }
+    const slotMap: Record<string, any> = {}
+    const columnChildren = Array.isArray(columnItem?.children) ? columnItem.children : []
+
+    columnChildren.forEach((child: any) => {
+      if (child?.componentName === 'Template') {
+        const slotName = child?.props?.slot?.name || child?.props?.slot || 'default'
+        slotMap[slotName] = {
+          type: 'JSSlot',
+          params: normalizeSlotParams(child),
+          value: Array.isArray(child?.children) ? child.children : []
+        }
+        return
+      }
+
+      slotMap.default = slotMap.default || { type: 'JSSlot', params: [], value: [] }
+      slotMap.default.value.push(child)
+    })
+
+    if (Object.keys(slotMap).length) {
+      normalizedColumn.slots = slotMap
+    }
+
+    return normalizedColumn
+  })
+
+  schema.props = schema.props || {}
+
+  if (Array.isArray(schema.props.columns)) {
+    schema.props.columns = [...schema.props.columns, ...normalizedColumns]
+  } else if (schema.props.columns === undefined) {
+    schema.props.columns = normalizedColumns
+  }
+
+  schema.children = schema.children.filter((item: any) => item?.componentName !== 'TinyGridColumn')
+}
+
 function normalizeTinyIcon(schema: any, node: any) {
-  const lowerTag = typeof node.tag === 'string' ? node.tag.toLowerCase() : ''
-  if (!lowerTag.startsWith('tiny-icon-')) return
-  const toPascal = (s: string) =>
-    s
-      .split(/[-_\s]+/)
-      .filter(Boolean)
-      .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
-      .join('')
-  const rawName = lowerTag.replace(/^tiny-icon-/, '')
-  const iconName = `Icon${toPascal(rawName)}`
-  const styleVal = schema.props && typeof schema.props.style === 'string' ? schema.props.style : undefined
-  // Rebuild props: keep style if present; set name; drop other raw attributes like fill
-  schema.componentName = 'Icon'
-  schema.props = {}
-  if (styleVal) schema.props.style = styleVal
-  schema.props.name = iconName
+  void schema
+  void node
 }
 
 const templateAstParser = {
@@ -686,12 +771,17 @@ const templateAstParser = {
     normalizeTinyIcon(schema, node)
 
     const currentLoopVariables = Array.from(
-      new Set([...(parentLoopVariables || []), ...((schema.loopArgs as string[]) || [])])
+      new Set([
+        ...(parentLoopVariables || []),
+        ...((schema.loopArgs as string[]) || []),
+        ...((schema.props?.slot?.params as string[]) || [])
+      ])
     )
 
     if (node.children && node.children.length > 0) {
       schema.children = templateAstParser.parseTemplateChildren(node.children, options, currentLoopVariables)
     }
+    normalizeTinyGridColumns(schema)
     return schema
   },
 
