@@ -22,8 +22,12 @@
           @item-click="handlePromptItemClick"
         ></tr-prompts>
       </div>
-      <tr-bubble-provider v-else :content-renderers="contentRenderers">
-        <tr-bubble-list :items="messages" :roles="roles" auto-scroll class="robot-bubble-list"> </tr-bubble-list>
+      <tr-bubble-provider v-else :content-renderer-matches="contentRendererMatches">
+        <tr-bubble-list :messages="messages" :role-configs="roleConfigs" auto-scroll class="robot-bubble-list">
+          <template #content-footer="{ messages }">
+            <div v-if="messages[0]?.aborted" class="aborted">已中止</div>
+          </template>
+        </tr-bubble-list>
       </tr-bubble-provider>
     </div>
 
@@ -39,9 +43,6 @@
           :showWordLimit="false"
           @submit="handleSendMessage"
           @cancel="handleAbortRequest"
-          :allowFiles="selectedAttachments.length < 1 && props.allowFiles"
-          uploadTooltip="支持上传1张图片"
-          @files-selected="handleSingleFilesSelected"
         >
           <template #header v-if="selectedAttachments.length > 0">
             <div>
@@ -55,8 +56,22 @@
               </tr-attachments>
             </div>
           </template>
-          <template #footer-left>
+          <template #footer>
             <slot name="footer-left"></slot>
+          </template>
+          <template #footer-right>
+            <VoiceButton
+              :speech-config="{ lang: 'zh-CN', continuous: false }"
+              @speech-start="handleSpeechStart"
+              @speech-end="handleSpeechEnd"
+              @speech-error="handleSpeechError"
+            />
+            <UploadButton
+              v-if="selectedAttachments.length < 1 && props.allowFiles"
+              accept="image/*"
+              :multiple="false"
+              @select="handleSingleFilesSelected"
+            />
           </template>
         </tr-sender>
       </div>
@@ -74,11 +89,16 @@ import {
   TrSender,
   TrWelcome,
   TrAttachments,
+  UploadButton,
+  VoiceButton,
+  BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
-  type RawFileAttachment
+  type RawFileAttachment,
+  type BubbleContentRendererMatch
 } from '@opentiny/tiny-robot'
-import { type ChatMessage, GeneratingStatus } from '@opentiny/tiny-robot-kit'
+import { type ChatMessage } from '@opentiny/tiny-robot-kit'
+import { GeneratingStatus } from '../../constants/status'
 import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
@@ -122,6 +142,24 @@ watch(
     }
   }
 )
+
+const contentRendererMatches: BubbleContentRendererMatch[] = [
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any) => !Boolean(message.loading) && message.content,
+    renderer: MarkdownRenderer
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any) => message?.content?.[0]?.type === 'img' || message?.content?.[0]?.type === 'image',
+    renderer: ImgRenderer
+  },
+  {
+    priority: BubbleRendererMatchPriority.LOADING,
+    find: (message) => Boolean(message.loading),
+    renderer: LoadingRenderer
+  }
+]
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -172,37 +210,42 @@ const handleSingleFileRetry = (file: RawFileAttachment) => {
   handleSingleFilesSelected([file.rawFile], true)
 }
 
+// 语音输入处理
+const handleSpeechStart = () => {}
+
+const handleSpeechEnd = (transcript: string) => {
+  if (transcript) {
+    inputMessage.value = transcript
+  }
+}
+
+const handleSpeechError = () => {
+  useNotify({
+    type: 'error',
+    message: '语音识别失败，请重试'
+  })
+}
+
 const getSvgIcon = (name: string, style?: CSSProperties) => {
   return h(resolveComponent('svg-icon'), { name, style: { fontSize: '32px', ...style } })
 }
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
 
-const contentRenderers = computed(() => ({
-  markdown: MarkdownRenderer,
-  loading: LoadingRenderer,
-  img: ImgRenderer,
-  ...props.bubbleRenderers
-}))
-
-const roles: Record<string, BubbleRoleConfig> = {
+const roleConfigs: Record<string, BubbleRoleConfig> = {
   assistant: {
     placement: 'start',
     avatar: aiAvatar,
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+    contentResolver: (message: any) => message.renderContent || message.content
   },
   user: {
     placement: 'end',
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+    contentResolver: (message: any) => message.renderContent || message.content
   },
   system: {
     hidden: true
   }
 }
-
-const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 // 发送消息
 const handleSendMessage = async (content: string) => {
@@ -362,13 +405,13 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       }
     }
     :deep([data-role='user']) {
-      --tr-bubble-content-bg: var(--tr-color-primary-light);
+      --tr-bubble-box-bg: var(--tr-color-primary-light);
     }
   }
 
   &.fullscreen {
     :deep([data-role='assistant']) {
-      --tr-bubble-content-bg: transparent;
+      --tr-bubble-box-bg: transparent;
       .tr-bubble__content {
         padding: 8px 0 0;
       }
@@ -470,5 +513,11 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
 .robot-bubble-list {
   height: 100%;
+}
+
+.aborted {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.7;
 }
 </style>

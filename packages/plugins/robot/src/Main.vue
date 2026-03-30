@@ -18,7 +18,7 @@
           v-model:fullscreen="fullscreen"
           v-model:show="robotVisible"
           v-model:input="inputMessage"
-          :status="chatStatus"
+          :status="mappedStatus"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
@@ -147,7 +147,7 @@ const showTeleport = ref(false)
 const showSetting = ref(false)
 
 const {
-  chatStatus,
+  mappedStatus,
   inputMessage,
   messages,
   changeChatMode,

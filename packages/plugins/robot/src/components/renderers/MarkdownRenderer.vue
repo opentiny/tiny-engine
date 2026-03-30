@@ -28,9 +28,9 @@ hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('shell', shell)
 
 const props = defineProps({
-  content: {
-    type: String,
-    required: true
+  message: {
+    type: Object as () => Options,
+    default: () => ({})
   },
   theme: {
     type: String as () => 'light' | 'dark',
@@ -66,7 +66,7 @@ const markdownIt = new MarkdownIt({
 })
 
 const renderContent = computed(() => {
-  return DOMPurify.sanitize(markdownIt.render(props.content))
+  return DOMPurify.sanitize(markdownIt.render(props.message.content))
 })
 </script>
 
