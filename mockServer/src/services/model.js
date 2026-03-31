@@ -14,7 +14,6 @@ import DateStore from '@seald-io/nedb'
 import { getDatabasePath, getResponseData } from '../tool/Common'
 
 const defaultModel = {
-  id: 5,
   createdBy: '1',
   lastUpdatedBy: '1',
   tenantId: null,
@@ -310,9 +309,7 @@ const defaultModel = {
       ]
     }
   ],
-  description: '111',
-  created_at: '2026-01-27 10:41:10',
-  updated_at: '2026-01-27 10:41:10'
+  description: '111'
 }
 
 export default class ModelService {
@@ -334,6 +331,8 @@ export default class ModelService {
     const newModel = {
       ...defaultModel,
       id: mockId++,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       ...params
     }
 

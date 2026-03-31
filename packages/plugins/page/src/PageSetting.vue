@@ -501,7 +501,7 @@ export default {
 
 .input-output {
   :deep(.tiny-collapse-item__content) {
-    height: 80px;
+    margin-bottom: 4px;
   }
 }
 </style>

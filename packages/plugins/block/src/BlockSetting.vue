@@ -61,8 +61,8 @@
             </block-event>
           </div>
         </tiny-collapse-item>
-        <tiny-collapse-item title="生命周期设置" name="lifeCycle">
-          <div class="life-cycles-container">
+        <tiny-collapse-item class="life-cycles-container" title="生命周期设置" name="lifeCycle">
+          <div>
             <life-cycles :isPage="false" :bindLifeCycles="state.bindLifeCycles" @bind="bindLifeCycles"></life-cycles>
           </div>
         </tiny-collapse-item>
@@ -378,6 +378,11 @@ export default {
   }
   :deep(.tiny-collapse-item__content) {
     padding: 0 12px 12px;
+  }
+}
+.life-cycles-container {
+  :deep(.tiny-collapse-item__content) {
+    margin-bottom: 4px;
   }
 }
 </style>
