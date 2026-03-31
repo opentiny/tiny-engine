@@ -6,6 +6,375 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "动作菜单"
+          },
+          "component": "TinyActionMenu",
+          "icon": "dropdown",
+          "description": "动作菜单",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyActionMenu",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "动作菜单",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "object",
+                    "label": {
+                      "text": {
+                        "zh_CN": "绑定值"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "options",
+                    "readOnly": false,
+                    "required": true,
+                    "description": {
+                      "zh_CN": "菜单项列表的数据"
+                    },
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大显示数量"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 2
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "maxShowNum",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "最多显示菜单按钮的个数，其他菜单在下拉弹框显示",
+                    "defaultValue": 2,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮模式"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "default",
+                            "value": "default"
+                          },
+                          {
+                            "label": "card",
+                            "value": "card"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "mode",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单按钮模式",
+                    "defaultValue": "default",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "下拉按钮文本"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "moreText",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉按钮文本",
+                    "defaultValue": "更多",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "二级下拉面板的显示位置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "bottom-start",
+                            "value": "bottom-start"
+                          },
+                          {
+                            "label": "bottom-end",
+                            "value": "bottom-end"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "placement",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "二级下拉面板的显示位置",
+                    "defaultValue": "bottom-end",
+                    "labelPosition": "top"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "show-icon"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "showIcon",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "是否显示下拉触发源图标",
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "text-field"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "textField",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单按钮文本的键值",
+                    "defaultValue": "label",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮间距"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "spacing",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单按钮之间的间距",
+                    "defaultValue": "5px",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              }
+            ],
+            "events": {
+              "onItemClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "菜单项点击"
+                },
+                "description": {
+                  "zh_CN": "监听点击菜单项事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "data",
+                      "type": "IItemClickParam",
+                      "description": {
+                        "zh_CN": "点击的菜单项参数数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onButtonClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "左侧按钮点击"
+                },
+                "description": {
+                  "zh_CN": "监听左侧按钮点击事件，仅 split-button 为 true 时生效"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onVisibleChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "显隐状态变化"
+                },
+                "description": {
+                  "zh_CN": "监听下拉框的显示或隐藏状态"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "status",
+                      "type": "boolean",
+                      "description": {
+                        "zh_CN": "下拉框的显示或隐藏状态"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "自定义触发源文本区域。 注意： 必须是一个元素或者或者组件"
+                }
+              },
+              "dropdown": {
+                "label": {
+                  "zh_CN": "下拉列表"
+                },
+                "description": {
+                  "zh_CN": "自定义下拉列表区域，通常使用 tiny-dropdown-menu 组件"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "下拉菜单"
           },
           "component": "TinyDropdown",
@@ -26930,6 +27299,46 @@
                     ],
                     "textField": "name"
                   }
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "动作菜单"
+              },
+              "icon": "dropdown",
+              "screenshot": "",
+              "snippetName": "TinyActionMenu",
+              "schema": {
+                "componentName": "TinyActionMenu",
+                "props": {
+                  "options": [
+                    {
+                      "label": "远程登录"
+                    },
+                    {
+                      "label": "开机"
+                    },
+                    {
+                      "label": "关机"
+                    },
+                    {
+                      "label": "重启",
+                      "divided": true
+                    },
+                    {
+                      "label": "网络设置",
+                      "children": [
+                        {
+                          "label": "更改安全组"
+                        },
+                        {
+                          "label": "切换 VPC",
+                          "divided": true
+                        }
+                      ]
+                    }
+                  ]
                 }
               }
             }

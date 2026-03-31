@@ -1855,6 +1855,13 @@
         "version": "0.1.16"
       },
       {
+        "componentName": "TinyActionMenu",
+        "package": "@opentiny/vue",
+        "exportName": "ActionMenu",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
         "componentName": "TinyDialogBox",
         "package": "@opentiny/vue",
         "exportName": "DialogBox",
