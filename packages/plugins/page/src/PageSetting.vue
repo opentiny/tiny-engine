@@ -498,4 +498,10 @@ export default {
     padding: 0 12px 12px;
   }
 }
+
+.input-output {
+  :deep(.tiny-collapse-item__content) {
+    height: 80px;
+  }
+}
 </style>
