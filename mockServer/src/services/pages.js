@@ -32,8 +32,11 @@ export default class PageService {
     })
 
     this.db.ensureIndex({
-      fieldName: 'route',
-      unique: true
+      fieldName: 'app'
+    })
+
+    this.db.ensureIndex({
+      fieldName: 'route'
     })
 
     this.userInfo = {
@@ -80,6 +83,23 @@ export default class PageService {
     const model = params.isPage ? this.pageModel : this.folderModel
     const pageData = { ...model, ...params }
 
+    if (!pageData.route) {
+      pageData.route = pageData.name || 'Untitled'
+    }
+
+    const existing = await this.db.findOneAsync({
+      app: pageData.app.toString(),
+      route: pageData.route
+    })
+
+    if (existing) {
+      return getResponseData(null, {
+        code: 'ROUTE_CONFLICT',
+        message: `Route "${pageData.route}" already exists in app "${pageData.app}"`,
+        status: 409
+      })
+    }
+
     if (pageData.page_content && typeof pageData.page_content === 'object') {
       pageData.page_content = JSON.stringify(pageData.page_content)
     }
@@ -112,11 +132,13 @@ export default class PageService {
 
   async detail(pageId) {
     const result = await this.db.findOneAsync({ _id: pageId })
+
     return getResponseData(parsePageContent(result))
   }
 
   async delete(pageId) {
     const result = await this.db.findOneAsync({ _id: pageId })
+
     await this.db.removeAsync({ _id: pageId })
     return getResponseData(parsePageContent(result))
   }
