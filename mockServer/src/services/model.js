@@ -309,7 +309,7 @@ const defaultModel = {
       ]
     }
   ],
-  description: '111'
+  description: ''
 }
 
 export default class ModelService {
