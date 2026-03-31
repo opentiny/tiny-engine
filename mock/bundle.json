@@ -6,6 +6,676 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "下拉菜单"
+          },
+          "component": "TinyDropdown",
+          "icon": "dropdown",
+          "description": "下拉菜单",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyDropdown",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "下拉菜单",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "尺寸"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "medium",
+                            "value": "medium"
+                          },
+                          {
+                            "label": "small",
+                            "value": "small"
+                          },
+                          {
+                            "label": "mini",
+                            "value": "mini"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "size",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单尺寸。注意：只在 split-button为 true 的情况下生效",
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "分割按钮"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "split-button",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉触发元素呈现为按钮",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "ibuttontype",
+                    "label": {
+                      "text": {
+                        "zh_CN": "按钮类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "按钮类型。注意：只在 split-button 为 true 的情况下有效",
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "触发方式"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "hover",
+                            "value": "hover"
+                          },
+                          {
+                            "label": "click",
+                            "value": "click"
+                          },
+                          {
+                            "label": "contextmenu",
+                            "value": "contextmenu"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "trigger",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "触发下拉的方式",
+                    "defaultValue": "hover",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "iplacementtype",
+                    "label": {
+                      "text": {
+                        "zh_CN": "弹出位置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "placement",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单弹出位置",
+                    "defaultValue": "bottom-end",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显隐状态"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "visible",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "手动控制下拉弹框显隐，优先级高于trigger",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件核心功能相关的配置，包括 name、size、type 等核心属性"
+                }
+              },
+              {
+                "name": "1",
+                "label": {
+                  "zh_CN": "样式属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "标题"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "title",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "自定义触发源的文本",
+                    "defaultValue": "下拉菜单",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示图标"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "SwitchConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-icon",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "是否显示下拉触发源图标",
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "component",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入图标名称"
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "suffix-icon",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉触发源图标",
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "继承宽度"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "inherit-width",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉弹框的最小宽度是否继承触发源的宽度，默认不继承",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示箭头"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "visible-arrow",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉弹框是否显示箭头，默认不显示",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "弹框类名"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "popper-class",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "下拉弹框的类名，用于自定义样式",
+                    "defaultValue": null,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件外观、颜色、尺寸相关的配置，包括 width、height、backgroundColor、color 等与视觉呈现相关的属性"
+                }
+              },
+              {
+                "name": "2",
+                "label": {
+                  "zh_CN": "行为属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "disabled",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "是否禁用",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "点击收起"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "hide-on-click",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "点击菜单项后是否收起菜单。默认点击后收起",
+                    "defaultValue": true,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "收起延时"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "hide-timeout",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "延时多久收起下拉菜单，单位毫秒。注意：仅在 trigger 为 hover 时有效",
+                    "defaultValue": 150,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "展开延时"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "show-timeout",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "延时多久展开下拉菜单，单位毫秒。注意：仅在 trigger 为 hover 时有效",
+                    "defaultValue": 250,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "number",
+                    "label": {
+                      "text": {
+                        "zh_CN": "Tab索引"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "step": 1
+                      },
+                      "component": "NumberConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "tabindex",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "初始化触发元素的原生属性 tabindex",
+                    "defaultValue": 0,
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件交互、事件、状态相关的配置，包括 disabled、loading、onClick 等与用户操作和状态相关的属性"
+                }
+              },
+              {
+                "name": "3",
+                "label": {
+                  "zh_CN": "高级属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "懒加载"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "lazy-show-popper",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "是否懒加载下拉菜单及内部的项，以优化性能，默认初始全加载菜单及内部项。",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "imenuoption",
+                    "label": {
+                      "text": {
+                        "zh_CN": "菜单配置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "menu-options",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "配置式且只使用 tiny-dropdown 组件时使用",
+                    "defaultValue": "{ options:[], textField:\"label\", popperClass:\"\", placement:\"bottom-end\" }",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "iitemdata[]",
+                    "label": {
+                      "text": {
+                        "zh_CN": "菜单项配置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "height": 150,
+                        "language": "json"
+                      },
+                      "component": "CodeConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "options",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "通过配置式设置菜单项的属性",
+                    "defaultValue": "[]",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文本字段"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "text-field",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "菜单项文本的字段,结合 options 属性使用",
+                    "defaultValue": "label",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": "组件可选的专业配置项，包括复杂对象配置、高级功能选项等不常用的特殊配置"
+                }
+              }
+            ],
+            "events": {
+              "onItemClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "菜单项点击"
+                },
+                "description": {
+                  "zh_CN": "监听点击菜单项事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "data",
+                      "type": "IItemClickParam",
+                      "description": {
+                        "zh_CN": "点击的菜单项参数数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onButtonClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "左侧按钮点击"
+                },
+                "description": {
+                  "zh_CN": "监听左侧按钮点击事件，仅 split-button 为 true 时生效"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onVisibleChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "显隐状态变化"
+                },
+                "description": {
+                  "zh_CN": "监听下拉框的显示或隐藏状态"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "status",
+                      "type": "boolean",
+                      "description": {
+                        "zh_CN": "下拉框的显示或隐藏状态"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": "事件返回值的描述文字"
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": "自定义触发源文本区域。 注意： 必须是一个元素或者或者组件"
+                }
+              },
+              "dropdown": {
+                "label": {
+                  "zh_CN": "下拉列表"
+                },
+                "description": {
+                  "zh_CN": "自定义下拉列表区域，通常使用 tiny-dropdown-menu 组件"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "评分"
           },
           "component": "TinyRate",
@@ -26230,6 +26900,36 @@
                   ],
                   "placeholder": "输入关键字搜索",
                   "node-key": "id"
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "下拉菜单"
+              },
+              "icon": "dropdown",
+              "screenshot": "",
+              "snippetName": "TinyDropdown",
+              "schema": {
+                "componentName": "TinyDropdown",
+                "props": {
+                  "menu-options": {
+                    "options": [
+                      {
+                        "name": "老友粉",
+                        "disabled": true
+                      },
+                      {
+                        "name": "狮子头",
+                        "divided": true
+                      },
+                      {
+                        "name": "黄金糕",
+                        "divided": true
+                      }
+                    ],
+                    "textField": "name"
+                  }
                 }
               }
             }
