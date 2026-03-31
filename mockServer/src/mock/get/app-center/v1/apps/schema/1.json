@@ -2149,6 +2149,13 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyDropdown",
+        "package": "@opentiny/vue",
+        "exportName": "TinyDropdown",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsFunnel",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsFunnel",

@@ -32,11 +32,8 @@ export default class PageService {
     })
 
     this.db.ensureIndex({
-      fieldName: 'app'
-    })
-
-    this.db.ensureIndex({
-      fieldName: 'route'
+      fieldName: '_id',
+      unique: true
     })
 
     this.userInfo = {
