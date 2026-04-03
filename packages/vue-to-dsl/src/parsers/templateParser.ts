@@ -53,6 +53,10 @@ function resolveIdentifierReplacement(name: string, context: any) {
 
   if (name === 'state') return 'this.state'
   if (name === 'props') return 'this.props'
+  if (name === 'emit') return 'this.emit'
+  if (name === 'stores') return 'this.stores'
+  if (name === 'bridge') return 'this.bridge'
+  if (name === 'dataSourceMap') return 'this.dataSourceMap'
   if (context.propNames.has(name)) return `this.props.${name}`
   if (context.stateNames.has(name)) return `this.state.${name}`
   if (context.methodNames.has(name)) return `this.${name}`
@@ -612,7 +616,7 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
       case 'for':
         if (prop.exp) {
           const src = String(loopSource || prop.exp.content || '').trim()
-          schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src, _options) }
+          schema.loop = { type: 'JSExpression', value: ensureThisPrefix(src, _options, activeLoopVariables) }
         }
         break
       case 'show':

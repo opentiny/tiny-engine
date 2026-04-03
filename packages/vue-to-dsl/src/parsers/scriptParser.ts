@@ -92,49 +92,6 @@ function isLifecycleHook(name: string) {
   return LIFECYCLE_HOOKS.includes(name)
 }
 
-function getNodeValue(node: any): any {
-  if (t.isStringLiteral(node)) return node.value
-  if (t.isNumericLiteral(node)) return node.value
-  if (t.isBooleanLiteral(node)) return node.value
-  if (t.isNullLiteral(node)) return null
-  if (t.isUnaryExpression(node) && node.operator === '-' && t.isNumericLiteral(node.argument)) {
-    return -node.argument.value
-  }
-  if (t.isCallExpression(node)) {
-    let calleeStr = ''
-    if (t.isIdentifier(node.callee)) {
-      calleeStr = node.callee.name
-    } else if (t.isMemberExpression(node.callee)) {
-      const obj = node.callee.object as any
-      const prop = node.callee.property as any
-      const objStr = t.isIdentifier(obj) ? obj.name : ''
-      const propStr = t.isIdentifier(prop) ? prop.name : ''
-      if (objStr && propStr) calleeStr = `${objStr}.${propStr}`
-    }
-    const args = node.arguments.map((arg: any) => getNodeValue(arg))
-    if (calleeStr)
-      return `${calleeStr}(${args.map((a: any) => (typeof a === 'string' ? `'${a}'` : String(a))).join(', ')})`
-    return 'undefined'
-  }
-  if (t.isObjectExpression(node)) {
-    const obj: Record<string, any> = {}
-    node.properties.forEach((prop: any) => {
-      if (t.isObjectProperty(prop)) {
-        let keyName: string | null = null
-        if (t.isIdentifier(prop.key)) keyName = prop.key.name
-        else if (t.isStringLiteral(prop.key)) keyName = prop.key.value
-        else if (t.isNumericLiteral(prop.key)) keyName = String(prop.key.value)
-        if (keyName) obj[keyName] = getNodeValue(prop.value as any)
-      }
-    })
-    return obj
-  }
-  if (t.isArrayExpression(node)) {
-    return node.elements.map((el: any) => (el ? getNodeValue(el) : null))
-  }
-  return 'undefined'
-}
-
 function getObjectKeyName(node: any): string | null {
   if (t.isIdentifier(node)) return node.name
   if (t.isStringLiteral(node)) return node.value
@@ -268,6 +225,54 @@ function sanitizeCodeFromNode(node: any, source: string): string {
   })
 
   return applyReplacements(raw, replacements)
+}
+
+function createExpressionValue(node: any, source?: string) {
+  const value = source ? sanitizeCodeFromNode(node, source) : ''
+
+  if (!value) return 'undefined'
+
+  return {
+    type: 'JSExpression',
+    value
+  }
+}
+
+function getNodeValue(node: any, source = ''): any {
+  if (t.isStringLiteral(node)) return node.value
+  if (t.isNumericLiteral(node)) return node.value
+  if (t.isBooleanLiteral(node)) return node.value
+  if (t.isNullLiteral(node)) return null
+  if (t.isUnaryExpression(node) && node.operator === '-' && t.isNumericLiteral(node.argument)) {
+    return -node.argument.value
+  }
+  if (t.isTemplateLiteral(node)) {
+    if ((node.expressions?.length ?? 0) === 0) {
+      return node.quasis.map((item: any) => item.value.cooked).join('')
+    }
+
+    return createExpressionValue(node, source)
+  }
+  if (t.isCallExpression(node)) {
+    return createExpressionValue(node, source)
+  }
+  if (t.isObjectExpression(node)) {
+    const obj: Record<string, any> = {}
+    node.properties.forEach((prop: any) => {
+      if (t.isObjectProperty(prop)) {
+        let keyName: string | null = null
+        if (t.isIdentifier(prop.key)) keyName = prop.key.name
+        else if (t.isStringLiteral(prop.key)) keyName = prop.key.value
+        else if (t.isNumericLiteral(prop.key)) keyName = String(prop.key.value)
+        if (keyName) obj[keyName] = getNodeValue(prop.value as any, source)
+      }
+    })
+    return obj
+  }
+  if (t.isArrayExpression(node)) {
+    return node.elements.map((el: any) => (el ? getNodeValue(el, source) : null))
+  }
+  return 'undefined'
 }
 
 function getSlotParamNames(params: any[] = []) {
@@ -927,9 +932,127 @@ function rewriteScriptContextInEntries(entries: Record<string, any>, result: any
   return entries
 }
 
-function rewriteNestedStateValue(value: any, result: any, localNames: string[] = []): any {
+function resolveStateRuntimeValue(value: any): any {
   if (Array.isArray(value)) {
-    return value.map((item) => rewriteNestedStateValue(item, result, localNames))
+    return value.map((item) => resolveStateRuntimeValue(item))
+  }
+
+  if (!value || typeof value !== 'object') {
+    return value
+  }
+
+  if (value.type === 'JSExpression' || value.type === 'JSFunction' || value.type === 'JSSlot') {
+    return undefined
+  }
+
+  if (Object.prototype.hasOwnProperty.call(value, 'type') && Object.prototype.hasOwnProperty.call(value, 'value')) {
+    return resolveStateRuntimeValue(value.value)
+  }
+
+  return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, resolveStateRuntimeValue(item)]))
+}
+
+function createStateEvaluationContext(result: any) {
+  const context: Record<string, any> = {}
+
+  Object.entries(result?.state || {}).forEach(([key, entry]: [string, any]) => {
+    const resolvedValue = resolveStateRuntimeValue(entry)
+
+    if (entry?.type === 'ref') {
+      context[key] = { value: resolvedValue }
+      return
+    }
+
+    context[key] = resolvedValue
+  })
+
+  return context
+}
+
+function hasStateInitializerDependency(node: any, source: string, result: any) {
+  const code = sanitizeCodeFromNode(node, source)
+  const stateNames = new Set(Object.keys(result?.state || {}))
+
+  if (!code || stateNames.size === 0) return false
+
+  try {
+    const ast = parse(`(${code})`, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
+    let hasDependency = false
+
+    traverse(ast as any, {
+      Identifier(path: any) {
+        if (hasDependency || !path.isReferencedIdentifier()) return
+
+        const { node, parent } = path
+        const name = node?.name
+        if (!name || !stateNames.has(name)) return
+
+        const binding = path.scope.getBinding(name)
+        if (binding && binding.kind !== 'module') return
+
+        if (
+          path.parentPath?.isMemberExpression({ property: node }) &&
+          parent &&
+          parent.property === node &&
+          !parent.computed
+        ) {
+          return
+        }
+
+        if (path.parentPath?.isObjectProperty({ key: node }) && parent && parent.key === node && !parent.computed) {
+          return
+        }
+
+        hasDependency = true
+        path.stop()
+      }
+    })
+
+    return hasDependency
+  } catch {
+    return false
+  }
+}
+
+function tryEvaluateStateExpression(node: any, source: string, result: any) {
+  const code = sanitizeCodeFromNode(node, source)
+  if (!code) return { ok: false }
+  if (!hasStateInitializerDependency(node, source, result)) return { ok: false }
+
+  const context = createStateEvaluationContext(result)
+  const argNames = Object.keys(context)
+  const argValues = Object.values(context)
+
+  try {
+    const evaluator = new Function(...argNames, `"use strict"; return (${code});`)
+    return {
+      ok: true,
+      value: evaluator(...argValues)
+    }
+  } catch {
+    return { ok: false }
+  }
+}
+
+function getStateInitializerFallbackValue(node: any, source: string) {
+  const fallbackValue = getNodeValue(node, source)
+
+  if (fallbackValue !== 'undefined') return fallbackValue
+  if (!t.isExpression(node) || t.isIdentifier(node)) return fallbackValue
+
+  return createExpressionValue(node, source)
+}
+
+function getStateInitializerValue(node: any, source: string, result: any): any {
+  const evaluated = tryEvaluateStateExpression(node, source, result)
+  if (evaluated.ok) return evaluated.value
+
+  return getStateInitializerFallbackValue(node, source)
+}
+
+function rewriteNestedStateValue(value: any, result: any, localNames: string[] = [], rewriteExpressions = true): any {
+  if (Array.isArray(value)) {
+    return value.map((item) => rewriteNestedStateValue(item, result, localNames, rewriteExpressions))
   }
 
   if (!value || typeof value !== 'object') {
@@ -937,6 +1060,7 @@ function rewriteNestedStateValue(value: any, result: any, localNames: string[] =
   }
 
   if (value.type === 'JSExpression' && typeof value.value === 'string') {
+    if (!rewriteExpressions) return value
     return {
       ...value,
       value: rewriteScriptContextInCode(value.value, result, localNames)
@@ -944,6 +1068,7 @@ function rewriteNestedStateValue(value: any, result: any, localNames: string[] =
   }
 
   if (value.type === 'JSFunction' && typeof value.value === 'string') {
+    if (!rewriteExpressions) return value
     return {
       ...value,
       value: rewriteScriptContextInCode(value.value, result, localNames)
@@ -954,22 +1079,22 @@ function rewriteNestedStateValue(value: any, result: any, localNames: string[] =
     const slotParams = Array.isArray(value.params) ? value.params : []
     return {
       ...value,
-      value: rewriteNestedStateValue(value.value || [], result, [...localNames, ...slotParams])
+      value: rewriteNestedStateValue(value.value || [], result, [...localNames, ...slotParams], true)
     }
   }
 
   const output: Record<string, any> = Array.isArray(value) ? [] : {}
   Object.keys(value).forEach((key) => {
-    output[key] = rewriteNestedStateValue(value[key], result, localNames)
+    output[key] = rewriteNestedStateValue(value[key], result, localNames, rewriteExpressions)
   })
   return output
 }
 
 function rewriteScriptContextInResult(result: any) {
+  result.state = rewriteNestedStateValue(result.state || {}, result, [], false)
   result.methods = rewriteScriptContextInEntries(result.methods || {}, result)
   result.computed = rewriteScriptContextInEntries(result.computed || {}, result)
   result.lifeCycles = rewriteScriptContextInEntries(result.lifeCycles || {}, result)
-  result.state = rewriteNestedStateValue(result.state || {}, result)
 }
 
 function addUsedUtilImport(collector: any[], item: any) {
@@ -1181,7 +1306,7 @@ function extractObjectValue(node: any, source: string, result: any): any {
     if (knownState && typeof knownState === 'object' && 'value' in knownState) {
       return knownState.value
     }
-    return getNodeValue(node)
+    return getNodeValue(node, source)
   }
   if (t.isObjectExpression(node)) {
     const obj: Record<string, any> = {}
@@ -1204,7 +1329,7 @@ function extractObjectValue(node: any, source: string, result: any): any {
   if (t.isArrayExpression(node)) {
     return node.elements.map((item: any) => (item ? extractObjectValue(item, source, result) : null))
   }
-  return getNodeValue(node)
+  return getStateInitializerValue(node, source, result)
 }
 
 function assignStateIfNamedState(name: string, init: any, result: any, source: string): boolean {
@@ -1218,7 +1343,7 @@ function assignStateIfNamedState(name: string, init: any, result: any, source: s
         result.state[key] = { type: 'reactive', value }
       })
     } else {
-      const initCode = getNodeValue(init)
+      const initCode = getNodeValue(init, source)
       result.state[name] = { type: 'reactive', value: initCode }
     }
     return true
@@ -1226,13 +1351,13 @@ function assignStateIfNamedState(name: string, init: any, result: any, source: s
 
   if (isVueReactiveCall(init, 'ref')) {
     const firstArg = init.arguments && init.arguments[0]
-    const value = firstArg ? getNodeValue(firstArg) : undefined
+    const value = firstArg ? getStateInitializerValue(firstArg, source, result) : undefined
     result.state[name] = { type: 'ref', value }
     return true
   }
 
   // normal non-reactive assignment to state
-  const initCode = getNodeValue(init)
+  const initCode = getStateInitializerValue(init, source, result)
   result.state[name] = { type: 'normal', value: initCode }
   return true
 }
@@ -1241,7 +1366,7 @@ function assignComputedIfComputed(name: string, init: any, result: any, source: 
   if (!isVueReactiveCall(init, 'computed')) return false
 
   const firstArg = (init.arguments && init.arguments[0]) as any
-  let compCode = firstArg ? sanitizeCodeFromNode(firstArg, source) : getNodeValue(init)
+  let compCode = firstArg ? sanitizeCodeFromNode(firstArg, source) : getNodeValue(init, source)
 
   if (firstArg) {
     if (t.isArrowFunctionExpression(firstArg)) {
@@ -1291,7 +1416,7 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
         result.state[name] = { type: 'reactive', value: stateValue }
       }
     } else {
-      const initCode = getNodeValue(init)
+      const initCode = getNodeValue(init, source)
       result.state[name] = { type: 'reactive', value: initCode }
     }
     return
@@ -1299,7 +1424,7 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
 
   if (isVueReactiveCall(init, 'ref')) {
     const firstArg = init.arguments && init.arguments[0]
-    const value = firstArg ? getNodeValue(firstArg) : undefined
+    const value = firstArg ? getStateInitializerValue(firstArg, source, result) : undefined
     result.state[name] = { type: 'ref', value }
     return
   }
@@ -1315,7 +1440,7 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
     const value =
       t.isObjectExpression(init) || t.isArrayExpression(init) || isJSXSlotFunction(init)
         ? extractObjectValue(init, source, result)
-        : getNodeValue(init)
+        : getStateInitializerValue(init, source, result)
     result.state[name] = { type: 'normal', value }
     return
   }
@@ -1381,7 +1506,89 @@ function parseSetupMethod(method: any, result: any, source: string) {
   parseSetupFunctionBody(method.body, result, source)
 }
 
-function parsePropsSimple(node: any) {
+function getTSTypeName(node: any): string {
+  if (!node) return 'any'
+  if (t.isTSStringKeyword(node)) return 'string'
+  if (t.isTSNumberKeyword(node)) return 'number'
+  if (t.isTSBooleanKeyword(node)) return 'boolean'
+  if (t.isTSAnyKeyword(node)) return 'any'
+  if (t.isTSUnknownKeyword(node)) return 'unknown'
+  if (t.isTSArrayType(node)) return 'array'
+  if (t.isTSTypeLiteral(node)) return 'object'
+  if (t.isTSUnionType(node)) return node.types.map((item: any) => getTSTypeName(item)).join(' | ')
+  if (t.isTSTupleType(node)) return 'array'
+  if (t.isTSLiteralType(node)) {
+    const literal = node.literal
+    if (t.isStringLiteral(literal)) return 'string'
+    if (t.isNumericLiteral(literal)) return 'number'
+    if (t.isBooleanLiteral(literal)) return 'boolean'
+  }
+  if (t.isTSTypeReference(node)) {
+    if (t.isIdentifier(node.typeName)) return node.typeName.name
+    if (t.isTSQualifiedName(node.typeName)) return node.typeName.right.name
+  }
+  return 'any'
+}
+
+function resolveTSTypeNode(node: any, typeDecls: Map<string, any>) {
+  if (!node) return null
+  if (t.isTSTypeReference(node) && t.isIdentifier(node.typeName)) {
+    return typeDecls.get(node.typeName.name) || node
+  }
+  return node
+}
+
+function parsePropsFromTypeNode(node: any, typeDecls: Map<string, any> = new Map()) {
+  const resolvedNode = resolveTSTypeNode(node, typeDecls)
+  if (!resolvedNode || !t.isTSTypeLiteral(resolvedNode)) return []
+
+  return resolvedNode.members
+    .map((member: any) => {
+      if (!t.isTSPropertySignature(member) || !member.key) return null
+      const name = getObjectKeyName(member.key)
+      if (!name) return null
+
+      return {
+        name,
+        type: getTSTypeName(member.typeAnnotation?.typeAnnotation),
+        required: !member.optional
+      }
+    })
+    .filter(Boolean)
+}
+
+function parseEmitsFromTypeNode(node: any, typeDecls: Map<string, any> = new Map()) {
+  const resolvedNode = resolveTSTypeNode(node, typeDecls)
+  if (!resolvedNode) return []
+
+  if (t.isTSTypeLiteral(resolvedNode)) {
+    return resolvedNode.members
+      .map((member: any) => {
+        if (t.isTSPropertySignature(member) && member.key) {
+          return getObjectKeyName(member.key)
+        }
+
+        if (t.isTSCallSignatureDeclaration(member)) {
+          const firstParam = member.parameters?.[0]
+          if (
+            t.isIdentifier(firstParam) &&
+            firstParam.typeAnnotation &&
+            t.isTSLiteralType(firstParam.typeAnnotation.typeAnnotation) &&
+            t.isStringLiteral(firstParam.typeAnnotation.typeAnnotation.literal)
+          ) {
+            return firstParam.typeAnnotation.typeAnnotation.literal.value
+          }
+        }
+
+        return null
+      })
+      .filter(Boolean)
+  }
+
+  return []
+}
+
+function parsePropsSimple(node: any, source = '') {
   if (t.isArrayExpression(node)) {
     return node.elements.map((e: any) => (t.isStringLiteral(e) ? { name: e.value, type: 'any' } : null)).filter(Boolean)
   }
@@ -1404,9 +1611,9 @@ function parsePropsSimple(node: any) {
             if (key === 'type') {
               if (t.isIdentifier(p.value)) propDef.type = p.value.name.toLowerCase()
             } else if (key === 'default') {
-              propDef.default = getNodeValue(p.value)
+              propDef.default = getNodeValue(p.value, source)
             } else if (key === 'required') {
-              propDef.required = getNodeValue(p.value)
+              propDef.required = getNodeValue(p.value, source)
             }
           })
           return propDef
@@ -1472,7 +1679,7 @@ function parseOptionsObject(objectExpression: any, result: any, source: string) 
       const key = prop.key.name
       switch (key) {
         case 'props':
-          result.props = parsePropsSimple(prop.value)
+          result.props = parsePropsSimple(prop.value, source)
           break
         case 'data':
           result.state = { data: 'function() { return {} }' }
@@ -1561,44 +1768,94 @@ function parseImports(ast: any, result: any) {
 }
 
 function parseSetupScript(ast: any, result: any, source: string) {
-  traverse(ast as any, {
-    VariableDeclaration(path: any) {
-      path.node.declarations.forEach((declaration: any) => {
-        if (t.isIdentifier(declaration.id) && declaration.init) {
-          const name = declaration.id.name
-          // 处理 const props = defineProps({...}) 或 const props = defineProps([...])
-          if (
-            t.isCallExpression(declaration.init) &&
-            t.isIdentifier(declaration.init.callee) &&
-            declaration.init.callee.name === 'defineProps'
-          ) {
-            const arg = declaration.init.arguments[0]
-            if (arg) {
-              result.props = parsePropsSimple(arg)
-            }
-            return
+  const programBody = ast?.program?.body || []
+  const typeDecls = new Map<string, any>()
+
+  programBody.forEach((statement: any) => {
+    if (t.isTSTypeAliasDeclaration(statement)) {
+      typeDecls.set(statement.id.name, statement.typeAnnotation)
+      return
+    }
+
+    if (t.isTSInterfaceDeclaration(statement)) {
+      typeDecls.set(statement.id.name, t.tsTypeLiteral(statement.body.body))
+    }
+  })
+
+  programBody.forEach((statement: any) => {
+    if (t.isVariableDeclaration(statement)) {
+      statement.declarations.forEach((declaration: any) => {
+        if (!t.isIdentifier(declaration.id) || !declaration.init) return
+
+        const name = declaration.id.name
+        const typeParameters = declaration.init.typeParameters || declaration.init.typeArguments
+        // 处理 const props = defineProps({...}) 或 const props = defineProps([...])
+        if (
+          t.isCallExpression(declaration.init) &&
+          t.isIdentifier(declaration.init.callee) &&
+          declaration.init.callee.name === 'defineProps'
+        ) {
+          const arg = declaration.init.arguments[0]
+          if (arg) {
+            result.props = parsePropsSimple(arg, source)
+          } else if (typeParameters?.params?.[0]) {
+            result.props = parsePropsFromTypeNode(typeParameters.params[0], typeDecls)
           }
-          handleVariableDeclarator(name, declaration.init, result, source)
+          return
         }
+
+        if (
+          t.isCallExpression(declaration.init) &&
+          t.isIdentifier(declaration.init.callee) &&
+          declaration.init.callee.name === 'defineEmits'
+        ) {
+          const arg = declaration.init.arguments[0]
+          if (t.isArrayExpression(arg)) {
+            result.emits = arg.elements
+              .map((item: any) => (t.isStringLiteral(item) ? item.value : null))
+              .filter(Boolean)
+          } else if (typeParameters?.params?.[0]) {
+            result.emits = parseEmitsFromTypeNode(typeParameters.params[0], typeDecls)
+          }
+          return
+        }
+
+        handleVariableDeclarator(name, declaration.init, result, source)
       })
-    },
-    // 处理无赋值的 defineProps({...}) 调用
-    ExpressionStatement(path: any) {
-      const expr = path.node.expression
-      if (t.isCallExpression(expr) && t.isIdentifier(expr.callee) && expr.callee.name === 'defineProps') {
+      return
+    }
+
+    if (t.isExpressionStatement(statement) && t.isCallExpression(statement.expression)) {
+      const expr = statement.expression
+
+      // 处理无赋值的 defineProps({...}) 调用
+      if (t.isIdentifier(expr.callee) && expr.callee.name === 'defineProps') {
         const arg = expr.arguments[0]
         if (arg) {
-          result.props = parsePropsSimple(arg)
+          result.props = parsePropsSimple(arg, source)
+        } else {
+          const typeParameters = expr.typeParameters || expr.typeArguments
+          if (typeParameters?.params?.[0]) {
+            result.props = parsePropsFromTypeNode(typeParameters.params[0], typeDecls)
+          }
         }
+        return
       }
-    },
-    FunctionDeclaration(path: any) {
-      const name = path.node.id.name
-      const code = sanitizeCodeFromNode(path.node, source)
-      routeFunctionLikeByName(result, name, code)
-    },
-    CallExpression(path: any) {
-      const callee = path.node.callee
+
+      if (t.isIdentifier(expr.callee) && expr.callee.name === 'defineEmits') {
+        const arg = expr.arguments[0]
+        if (t.isArrayExpression(arg)) {
+          result.emits = arg.elements.map((item: any) => (t.isStringLiteral(item) ? item.value : null)).filter(Boolean)
+        } else {
+          const typeParameters = expr.typeParameters || expr.typeArguments
+          if (typeParameters?.params?.[0]) {
+            result.emits = parseEmitsFromTypeNode(typeParameters.params[0], typeDecls)
+          }
+        }
+        return
+      }
+
+      const callee = expr.callee
       let hookName: string | null = null
       if (t.isIdentifier(callee)) hookName = callee.name
       else if (t.isMemberExpression(callee) && t.isIdentifier(callee.property)) hookName = callee.property.name
@@ -1606,7 +1863,7 @@ function parseSetupScript(ast: any, result: any, source: string) {
       if (hookName && isLifecycleHook(hookName)) {
         // 避免 obj.setup() 这类成员调用被误判为生命周期
         if (hookName === 'setup' && !t.isIdentifier(callee)) return
-        const cb = path.node.arguments && (path.node.arguments[0] as any)
+        const cb = expr.arguments && (expr.arguments[0] as any)
         let cbCode = 'function() { /* lifecycle hook */ }'
         if (cb) {
           if (t.isArrowFunctionExpression(cb)) cbCode = arrowToFunctionString(hookName, cb, source)
@@ -1616,6 +1873,13 @@ function parseSetupScript(ast: any, result: any, source: string) {
         if (hookName === 'setup') setLifecycleEntry(result, hookName, cbCode, { noOverride: true })
         else setLifecycleEntry(result, hookName, cbCode)
       }
+      return
+    }
+
+    if (t.isFunctionDeclaration(statement) && statement.id) {
+      const name = statement.id.name
+      const code = sanitizeCodeFromNode(statement, source)
+      routeFunctionLikeByName(result, name, code)
     }
   })
 }

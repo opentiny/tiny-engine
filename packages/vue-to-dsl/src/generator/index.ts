@@ -1,4 +1,285 @@
+import { parse as babelParse } from '@babel/parser'
 import { defaultComponentsMap } from '../constants'
+
+function parseFunctionExpression(functionCode: string) {
+  if (!functionCode || typeof functionCode !== 'string') return null
+
+  try {
+    const wrappedCode = `(${functionCode})`
+    const ast: any = babelParse(wrappedCode, {
+      sourceType: 'module',
+      plugins: ['typescript', 'jsx']
+    })
+    const expression = ast?.program?.body?.[0]?.expression
+    if (!expression) return null
+
+    return {
+      wrappedCode,
+      expression
+    }
+  } catch (_error) {
+    return null
+  }
+}
+
+function getReturnedExpression(functionCode: string) {
+  const parsed = parseFunctionExpression(functionCode)
+  const expression = parsed?.expression
+
+  if (!expression) return null
+
+  if (expression.type === 'ArrowFunctionExpression') {
+    if (expression.body?.type === 'BlockStatement') {
+      const returnStatement = expression.body.body.find(
+        (item: any) => item?.type === 'ReturnStatement' && item.argument
+      )
+      return returnStatement?.argument || null
+    }
+    return expression.body || null
+  }
+
+  if (expression.body?.type === 'BlockStatement') {
+    const returnStatement = expression.body.body.find((item: any) => item?.type === 'ReturnStatement' && item.argument)
+    return returnStatement?.argument || null
+  }
+
+  return null
+}
+
+function getNodeSource(code: string, node: any) {
+  if (!code || !node || typeof node.start !== 'number' || typeof node.end !== 'number') {
+    return ''
+  }
+
+  return code.slice(node.start, node.end)
+}
+
+function applySourceReplacements(code: string, replacements: Array<{ start: number; end: number; text: string }>) {
+  return replacements
+    .sort((a, b) => b.start - a.start || b.end - a.end)
+    .reduce((output, item) => `${output.slice(0, item.start)}${item.text}${output.slice(item.end)}`, code)
+}
+
+function collectComputedReturnReplacements(
+  node: any,
+  key: string,
+  wrappedCode: string,
+  replacements: Array<{ start: number; end: number; text: string }>
+) {
+  if (!node) return
+
+  switch (node.type) {
+    case 'BlockStatement':
+      node.body?.forEach((statement: any) =>
+        collectComputedReturnReplacements(statement, key, wrappedCode, replacements)
+      )
+      return
+    case 'ReturnStatement': {
+      if (!node.argument) return
+      const returnedCode = getNodeSource(wrappedCode, node.argument).trim()
+      if (!returnedCode) return
+
+      replacements.push({
+        start: node.start,
+        end: node.end,
+        text: `this.state.${key} = ${returnedCode}; return`
+      })
+      return
+    }
+    case 'IfStatement':
+      collectComputedReturnReplacements(node.consequent, key, wrappedCode, replacements)
+      collectComputedReturnReplacements(node.alternate, key, wrappedCode, replacements)
+      return
+    case 'ForStatement':
+    case 'ForInStatement':
+    case 'ForOfStatement':
+    case 'WhileStatement':
+    case 'DoWhileStatement':
+    case 'LabeledStatement':
+    case 'WithStatement':
+      collectComputedReturnReplacements(node.body, key, wrappedCode, replacements)
+      return
+    case 'SwitchStatement':
+      node.cases?.forEach((caseNode: any) => {
+        caseNode.consequent?.forEach((statement: any) =>
+          collectComputedReturnReplacements(statement, key, wrappedCode, replacements)
+        )
+      })
+      return
+    case 'TryStatement':
+      collectComputedReturnReplacements(node.block, key, wrappedCode, replacements)
+      collectComputedReturnReplacements(node.handler?.body, key, wrappedCode, replacements)
+      collectComputedReturnReplacements(node.finalizer, key, wrappedCode, replacements)
+      return
+    default:
+      return
+  }
+}
+
+function buildComputedGetterStatements(key: string, wrappedCode: string, statements: any[]) {
+  const replacements: Array<{ start: number; end: number; text: string }> = []
+  statements.forEach((statement: any) => collectComputedReturnReplacements(statement, key, wrappedCode, replacements))
+
+  if (!replacements.length) {
+    return statements
+      .map((statement: any) => getNodeSource(wrappedCode, statement))
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  const bodyStart = statements[0]?.start
+  const bodyEnd = statements[statements.length - 1]?.end
+  const bodyCode = getNodeSource(wrappedCode, { start: bodyStart, end: bodyEnd })
+  const relativeReplacements = replacements
+    .filter((item) => typeof item.start === 'number' && typeof item.end === 'number')
+    .map((item) => ({
+      start: item.start - bodyStart,
+      end: item.end - bodyStart,
+      text: item.text
+    }))
+
+  const getterBody = applySourceReplacements(bodyCode, relativeReplacements)
+
+  return getterBody
+}
+
+function getStateReferenceName(node: any) {
+  if (!node || node.type !== 'MemberExpression' || node.computed) return ''
+
+  if (node.object?.type === 'Identifier' && node.object.name === 'state' && node.property?.type === 'Identifier') {
+    return node.property.name
+  }
+
+  if (
+    node.object?.type === 'MemberExpression' &&
+    !node.object.computed &&
+    node.object.object?.type === 'ThisExpression' &&
+    node.object.property?.type === 'Identifier' &&
+    node.object.property.name === 'state' &&
+    node.property?.type === 'Identifier'
+  ) {
+    return node.property.name
+  }
+
+  return ''
+}
+
+function inferDefaultValueFromExpression(node: any, knownDefaults: Map<string, any>): any {
+  if (!node) return undefined
+
+  switch (node.type) {
+    case 'ArrayExpression':
+      return []
+    case 'ObjectExpression':
+      return {}
+    case 'StringLiteral':
+      return node.value
+    case 'TemplateLiteral':
+      return node.expressions?.length ? '' : node.quasis?.map((item: any) => item.value?.cooked || '').join('')
+    case 'NumericLiteral':
+      return node.value
+    case 'BooleanLiteral':
+      return node.value
+    case 'NullLiteral':
+      return null
+    case 'UnaryExpression':
+      if (node.operator === '!' || node.operator === 'delete') return false
+      if (node.operator === '-' && node.argument?.type === 'NumericLiteral') return -node.argument.value
+      return inferDefaultValueFromExpression(node.argument, knownDefaults)
+    case 'MemberExpression': {
+      if (!node.computed && node.property?.type === 'Identifier' && node.property.name === 'length') {
+        return 0
+      }
+      const stateKey = getStateReferenceName(node)
+      if (stateKey && knownDefaults.has(stateKey)) {
+        return knownDefaults.get(stateKey)
+      }
+      return undefined
+    }
+    case 'CallExpression': {
+      if (
+        node.callee?.type === 'MemberExpression' &&
+        !node.callee.computed &&
+        node.callee.property?.type === 'Identifier'
+      ) {
+        const methodName = node.callee.property.name
+        if (['filter', 'map', 'slice', 'concat', 'flat', 'flatMap'].includes(methodName)) return []
+        if (['trim', 'toLowerCase', 'toUpperCase', 'substring', 'substr'].includes(methodName)) return ''
+        if (['includes', 'startsWith', 'endsWith', 'some', 'every'].includes(methodName)) return false
+      }
+      return undefined
+    }
+    case 'ConditionalExpression': {
+      const consequent = inferDefaultValueFromExpression(node.consequent, knownDefaults)
+      const alternate = inferDefaultValueFromExpression(node.alternate, knownDefaults)
+      if (Array.isArray(consequent) && Array.isArray(alternate)) return []
+      if (
+        consequent &&
+        alternate &&
+        typeof consequent === 'object' &&
+        typeof alternate === 'object' &&
+        !Array.isArray(consequent) &&
+        !Array.isArray(alternate)
+      ) {
+        return {}
+      }
+      if (typeof consequent === 'number' && typeof alternate === 'number') return 0
+      if (typeof consequent === 'string' && typeof alternate === 'string') return ''
+      if (typeof consequent === 'boolean' && typeof alternate === 'boolean') return false
+      return consequent !== undefined ? consequent : alternate
+    }
+    case 'LogicalExpression': {
+      const left = inferDefaultValueFromExpression(node.left, knownDefaults)
+      const right = inferDefaultValueFromExpression(node.right, knownDefaults)
+      if (node.operator === '||') return left !== undefined ? left : right
+      if (node.operator === '&&') return right !== undefined ? right : left
+      return undefined
+    }
+    case 'BinaryExpression':
+      return ['===', '!==', '==', '!=', '>', '>=', '<', '<='].includes(node.operator) ? false : 0
+    default:
+      return undefined
+  }
+}
+
+function inferComputedDefaultValue(functionCode: string, knownDefaults: Map<string, any>) {
+  const returnedExpression = getReturnedExpression(functionCode)
+  return inferDefaultValueFromExpression(returnedExpression, knownDefaults)
+}
+
+function buildComputedGetterValue(key: string, computedValue: string) {
+  const parsed = parseFunctionExpression(computedValue)
+  const expression = parsed?.expression
+  const wrappedCode = parsed?.wrappedCode || ''
+  const fallbackValue = `function getter() { this.state.${key} = (${computedValue}).call(this) }`
+
+  if (!expression) {
+    return fallbackValue
+  }
+
+  if (expression.type === 'ArrowFunctionExpression' && expression.body?.type !== 'BlockStatement') {
+    const returnedCode = getNodeSource(wrappedCode, expression.body).trim()
+
+    return returnedCode ? `function getter() { this.state.${key} = ${returnedCode} }` : fallbackValue
+  }
+
+  if (expression.body?.type !== 'BlockStatement') {
+    return fallbackValue
+  }
+
+  const statements = expression.body.body
+  if (!statements.length) {
+    return fallbackValue
+  }
+
+  const getterStatements = buildComputedGetterStatements(key, wrappedCode, statements)
+
+  if (!getterStatements || !String(getterStatements).trim()) {
+    return fallbackValue
+  }
+
+  return `function getter() { ${getterStatements} }`
+}
 function convertToPlainValue(expr: any) {
   // If it's already an object or array, return as-is (for nested reactive objects)
   if (typeof expr === 'object' && expr !== null) return expr
@@ -76,6 +357,7 @@ function transformComputed(computed: Record<string, any>) {
 
 function transformComputedToState(computed: Record<string, any>) {
   const result: Record<string, any> = {}
+  const inferredDefaults = new Map<string, any>()
 
   Object.keys(computed || {}).forEach((key) => {
     const computedItem = computed[key]
@@ -85,13 +367,16 @@ function transformComputedToState(computed: Record<string, any>) {
         : typeof computedItem === 'string'
         ? computedItem
         : 'function() { return undefined }'
+    const defaultValue = inferComputedDefaultValue(computedValue, inferredDefaults)
+
+    inferredDefaults.set(key, defaultValue)
 
     result[key] = {
-      defaultValue: undefined,
+      defaultValue,
       accessor: {
         getter: {
           type: 'JSFunction',
-          value: `function getter() { this.state.${key} = (${computedValue}).call(this) }`
+          value: buildComputedGetterValue(key, computedValue)
         }
       }
     }
@@ -187,6 +472,7 @@ export async function generateSchema(templateSchema: any[], scriptSchema: any, s
     }
     if (scriptSchema.lifeCycles) schema.lifeCycles = transformLifeCycles(scriptSchema.lifeCycles)
     if (scriptSchema.props && scriptSchema.props.length > 0) schema.props = transformProps(scriptSchema.props)
+    if (Array.isArray(scriptSchema.emits) && scriptSchema.emits.length > 0) schema.emits = [...scriptSchema.emits]
   }
   if (styleSchema && styleSchema.css) schema.css = styleSchema.css
   if (templateSchema && templateSchema.length > 0) schema.children = templateSchema

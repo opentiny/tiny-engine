@@ -61,6 +61,8 @@ import {
   createUtilsResource,
   updateUtilsResource
 } from './http'
+import { buildImportedBlockEvents, normalizeImportedBlockDefaultValue, splitImportedBlockBindings } from './blockImport'
+import { normalizeImportedAppSchema, normalizeImportedSchema } from './schemaImport'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
 import { TinyPopover } from '@opentiny/vue'
@@ -448,15 +450,23 @@ export default {
           // 先从页面 schema 中收集父组件传给各区块的 props
           const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
           const parentPropsMap: Record<string, Record<string, any>> = {}
+          const parentEventsMap: Record<string, Record<string, any>> = {}
           const collectParentProps = (node: any) => {
             if (!node || typeof node !== 'object') return
             if (node.componentType === 'Block' && node.componentName && node.props) {
               const name = node.componentName
               if (!parentPropsMap[name]) parentPropsMap[name] = {}
-              Object.keys(node.props).forEach((key) => {
+              if (!parentEventsMap[name]) parentEventsMap[name] = {}
+
+              const { props: blockProps, events: blockEvents } = splitImportedBlockBindings(node.props)
+
+              Object.keys(blockProps).forEach((key) => {
                 if (key !== 'className' && key !== 'style' && key !== 'class') {
-                  parentPropsMap[name][key] = node.props[key]
+                  parentPropsMap[name][key] = blockProps[key]
                 }
+              })
+              Object.keys(blockEvents).forEach((key) => {
+                parentEventsMap[name][key] = blockEvents[key]
               })
             }
             if (Array.isArray(node.children)) {
@@ -495,7 +505,6 @@ export default {
               // 获取默认值（JSExpression 取其原始值，其他直接用）
               const getDefaultValue = (val: any): any => {
                 if (val === null || val === undefined) return ''
-                if (typeof val === 'object' && val.type === 'JSExpression') return ''
                 return val
               }
 
@@ -509,6 +518,7 @@ export default {
                 })
               }
               const parentProps = parentPropsMap[blockLabel] || {}
+              const parentEvents = parentEventsMap[blockLabel] || {}
 
               // 以父组件传递的 props 为主，合并子组件声明的 props
               const mergedPropNames = new Set([...Object.keys(declaredProps), ...Object.keys(parentProps)])
@@ -519,7 +529,10 @@ export default {
                 const parentVal = parentProps[propName]
 
                 const propType = declared?.type || inferType(parentVal)
-                const defaultValue = declared?.default !== undefined ? declared.default : getDefaultValue(parentVal)
+                const defaultValue =
+                  declared?.default !== undefined
+                    ? normalizeImportedBlockDefaultValue(declared.default)
+                    : normalizeImportedBlockDefaultValue(getDefaultValue(parentVal))
 
                 blockProperties.push({
                   property: propName,
@@ -606,7 +619,7 @@ export default {
                         content: blockProperties
                       }
                     ],
-                    events: {},
+                    events: buildImportedBlockEvents(bs.emits || [], parentEvents),
                     slots: {}
                   },
                   state: {},
@@ -703,6 +716,7 @@ export default {
 
     const processAppSchema = async (appSchema: any) => {
       normalizeImportedAppSchemaIcons(appSchema)
+      normalizeImportedAppSchema(appSchema)
 
       const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
@@ -803,6 +817,7 @@ export default {
       const text = await file.text()
       const result = await converter.convertFromString(text, file.name)
       normalizeImportedSchemaIcons(result?.schema)
+      normalizeImportedSchema(result?.schema)
 
       // 解析单文件页面信息
       const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')

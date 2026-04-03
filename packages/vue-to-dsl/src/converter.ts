@@ -1326,72 +1326,65 @@ export class VueToDslConverter {
 
     return this.mergeUtils(baseUtils, discovered)
   }
-  // Convert a full app directory (e.g., test/full/input/appdemo01) into an aggregated schema.json
-  async convertAppDirectory(appDir: string): Promise<any> {
-    const srcDir = path.join(appDir, 'src')
-    const viewsDir = path.join(srcDir, 'views')
-    const appFiles = (await this.walk(appDir, (_p) => true)).map((filePath) =>
-      this.normalizeVirtualPath(path.relative(appDir, filePath))
-    )
-    const moduleContext: LocalModuleContext = {
-      allFiles: appFiles,
-      fileSet: new Set(appFiles),
-      readText: async (filePath: string) => {
-        try {
-          return await fs.readFile(path.join(appDir, ...this.normalizeVirtualPath(filePath).split('/')), 'utf-8')
-        } catch {
-          return null
-        }
-      }
-    }
 
-    // 1) Collect page schemas from all .vue files under src/views/**
-    const vueFiles = await this.walk(viewsDir, (p) => p.endsWith('.vue'))
+  private getViewVueFiles(context: LocalModuleContext) {
+    return context.allFiles
+      .map((filePath) => this.normalizeVirtualPath(filePath))
+      .filter((filePath) => filePath.startsWith('src/views/') && filePath.endsWith('.vue'))
+  }
 
-    // First pass: collect all files and detect naming conflicts
+  private async collectPageResultsFromModuleContext(context: LocalModuleContext) {
+    const vueFiles = this.getViewVueFiles(context)
+    const relativeViewPaths = vueFiles.map((filePath) => filePath.slice('src/views/'.length))
+
     const fileMap = new Map<string, string[]>()
-    for (const filePath of vueFiles) {
-      const relativePath = path.relative(viewsDir, filePath)
-      const baseName = path.basename(relativePath, '.vue')
+    relativeViewPaths.forEach((relativePath) => {
+      const baseName =
+        relativePath
+          .split('/')
+          .pop()
+          ?.replace(/\.vue$/i, '') || ''
       if (!fileMap.has(baseName)) {
         fileMap.set(baseName, [])
       }
       fileMap.get(baseName)!.push(relativePath)
-    }
+    })
 
-    // Determine which files need special naming (camelCase with directory prefix)
     const needsSpecialNaming = new Set<string>()
     for (const paths of fileMap.values()) {
       if (paths.length > 1) {
-        // Multiple files with same basename, all need special naming
-        paths.forEach((p) => needsSpecialNaming.add(p))
+        paths.forEach((item) => needsSpecialNaming.add(item))
       }
     }
 
-    // Convert files with appropriate naming
     const pageResults: ConvertResult[] = []
     for (const filePath of vueFiles) {
-      try {
-        const vueCode = await fs.readFile(filePath, 'utf-8')
-        const relativePath = path.relative(viewsDir, filePath)
-        const baseName = path.basename(relativePath, '.vue')
+      const relativePath = filePath.slice('src/views/'.length)
+      const baseName =
+        relativePath
+          .split('/')
+          .pop()
+          ?.replace(/\.vue$/i, '') || 'Page'
 
-        // Use camelCase naming if there are conflicts, otherwise use basename
-        let fileName: string
-        if (needsSpecialNaming.has(relativePath)) {
-          fileName = this.buildConflictResolvedFileName(
-            relativePath,
-            baseName,
-            fileMap.get(baseName) || [],
-            Array.from(vueFiles, (file) => path.relative(viewsDir, file))
-          )
-        } else {
-          fileName = baseName
+      try {
+        const vueCode = await context.readText(filePath)
+        if (!vueCode) {
+          pageResults.push({
+            schema: null,
+            dependencies: [],
+            errors: [`Failed to read ${filePath}`],
+            warnings: []
+          })
+          continue
         }
+
+        const fileName = needsSpecialNaming.has(relativePath)
+          ? this.buildConflictResolvedFileName(relativePath, baseName, fileMap.get(baseName) || [], relativeViewPaths)
+          : baseName
 
         const result = await this.convertFromString(vueCode, fileName)
         if (result.scriptSchema) {
-          result.scriptSchema.__filePath = this.normalizeVirtualPath(path.relative(appDir, filePath))
+          result.scriptSchema.__filePath = filePath
         }
         pageResults.push(result)
       } catch (error: any) {
@@ -1404,77 +1397,163 @@ export class VueToDslConverter {
       }
     }
 
-    const allResults: ConvertResult[] = [...pageResults]
+    return pageResults
+  }
 
-    // 2) Load i18n
-    let i18n: any = { en_US: {}, zh_CN: {} }
+  private async collectAppI18nFromModuleContext(context: LocalModuleContext) {
     try {
-      const enPath = path.join(srcDir, 'i18n', 'en_US.json')
-      const zhPath = path.join(srcDir, 'i18n', 'zh_CN.json')
       const [en, zh] = await Promise.all([
-        fs.readFile(enPath, 'utf-8').catch(() => '{}'),
-        fs.readFile(zhPath, 'utf-8').catch(() => '{}')
+        context.readText('src/i18n/en_US.json').then((content) => content || '{}'),
+        context.readText('src/i18n/zh_CN.json').then((content) => content || '{}')
       ])
-      i18n = { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
+
+      return { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
     } catch {
-      // keep defaults
+      return { en_US: {}, zh_CN: {} }
     }
+  }
 
-    // 3) Load utils from src/utils or src/utils/index
-    let utils: any[] = await this.collectRootUtils(moduleContext)
-
-    // 4) Load dataSource from lowcodeConfig/dataSource.json
+  private async collectDataSourceFromModuleContext(context: LocalModuleContext) {
     const dataSource: any = { list: [] }
+
     try {
-      const dsPath = path.join(srcDir, 'lowcodeConfig', 'dataSource.json')
-      const dsRaw = await fs.readFile(dsPath, 'utf-8')
-      const dsJson = JSON.parse(dsRaw)
-      // pass through; keep shape as-is
-      if (Array.isArray(dsJson.list)) dataSource.list = dsJson.list
+      const raw = await context.readText('src/lowcodeConfig/dataSource.json')
+      if (!raw) return dataSource
+
+      const json = JSON.parse(raw)
+      if (Array.isArray(json.list)) dataSource.list = json.list
     } catch {
       // ignore
     }
 
-    // 5) Load globalState from src/stores/*.js (very light support for pinia defineStore)
+    return dataSource
+  }
+
+  private async collectGlobalStateFromModuleContext(context: LocalModuleContext) {
     const globalState: any[] = []
-    try {
-      const storesDir = path.join(srcDir, 'stores')
-      const storeFiles = await this.walk(storesDir, (p) => p.endsWith('.js'))
-      for (const sf of storeFiles) {
-        const code = await fs.readFile(sf, 'utf-8')
-        // Skip files that don't define a Pinia store (e.g., re-export index.js)
-        if (!/defineStore\s*\(/.test(code)) continue
-        // naive extraction: id: 'xxx'
+    const storeFiles = context.allFiles
+      .map((filePath) => this.normalizeVirtualPath(filePath))
+      .filter((filePath) => filePath.startsWith('src/stores/') && filePath.endsWith('.js'))
+
+    for (const filePath of storeFiles) {
+      try {
+        const code = await context.readText(filePath)
+        if (!code || !/defineStore\s*\(/.test(code)) continue
+
         const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
         const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
-        const entry: any = { id: idMatch ? idMatch[1] : path.basename(sf, path.extname(sf)) }
+        const fallbackId =
+          filePath
+            .split('/')
+            .pop()
+            ?.replace(/\.[^.]+$/, '') || 'store'
+        const entry: any = { id: idMatch ? idMatch[1] : fallbackId }
+
         if (stateMatch) {
           try {
-            // very naive: turn JS object to JSON by removing trailing commas and function values
             const objText = stateMatch[1]
-            const stateObj = Function(`return (${objText})`)()
-            entry.state = stateObj
+            entry.state = Function(`return (${objText})`)()
           } catch {
             entry.state = {}
           }
         } else {
-          // No state found, skip this file to avoid empty entries
           continue
         }
-        // Only push when we have some keys in state (avoid empty {})
+
         if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
           globalState.push(entry)
         }
+      } catch {
+        // ignore
       }
-    } catch {
-      // ignore
     }
 
-    // 6) Collect imported local Vue sub-components and convert them to block schemas
+    return globalState
+  }
+
+  private async enrichPageSchemasWithRouterFromModuleContext(pageSchemas: any[], context: LocalModuleContext) {
+    try {
+      const rcode = await context.readText('src/router/index.js')
+      if (!rcode) {
+        throw new Error('router file not found')
+      }
+
+      const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
+      const homeName = homeMatch ? homeMatch[1] : ''
+      const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
+      const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
+      const routeRegex =
+        /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
+      let match: RegExpExecArray | null
+
+      while ((match = routeRegex.exec(rclean))) {
+        routeEntries.push({ routeName: match[1], routePath: match[2], importPath: match[3] })
+      }
+
+      const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
+      routeEntries.forEach((item) => {
+        const base =
+          item.importPath
+            .split('/')
+            .pop()
+            ?.replace(/\.vue$/i, '') || ''
+        if (!base) return
+        byFile[base] = { routeName: item.routeName, routePath: item.routePath, isHome: item.routeName === homeName }
+      })
+
+      for (const pageSchema of pageSchemas) {
+        const fileName = pageSchema?.fileName
+        if (!fileName) continue
+
+        let info = byFile[fileName]
+        if (!info) {
+          for (const [base, routeInfo] of Object.entries(byFile)) {
+            if (fileName.toLowerCase() === base.toLowerCase()) {
+              info = routeInfo
+              break
+            }
+            if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
+              info = routeInfo
+              break
+            }
+          }
+        }
+
+        pageSchema.meta = pageSchema.meta || {}
+        if (info) {
+          const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
+          pageSchema.meta.router = routerPath
+          pageSchema.meta.isPage = true
+          pageSchema.meta.isHome = !!info.isHome
+        } else {
+          pageSchema.meta.router = fileName.toLowerCase()
+          pageSchema.meta.isPage = true
+        }
+      }
+    } catch {
+      for (const pageSchema of pageSchemas) {
+        pageSchema.meta = pageSchema.meta || {}
+        if (!pageSchema.meta.router) {
+          pageSchema.meta.router = (pageSchema.fileName || 'page').toLowerCase()
+          pageSchema.meta.isPage = true
+        }
+      }
+    }
+  }
+
+  private async buildAppSchemaFromModuleContext(context: LocalModuleContext) {
+    const pageResults = await this.collectPageResultsFromModuleContext(context)
+    const allResults: ConvertResult[] = [...pageResults]
+    const i18n = await this.collectAppI18nFromModuleContext(context)
+    let utils: any[] = await this.collectRootUtils(context)
+    const dataSource = await this.collectDataSourceFromModuleContext(context)
+    const globalState = await this.collectGlobalStateFromModuleContext(context)
+
     let blockSchemas: any[] = []
-    const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
+    const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, context, blockSchemas)
     blockSchemas = importedVueBlockData.blockSchemas
     allResults.push(...importedVueBlockData.blockResults)
+
     const pageSchemas = pageResults
       .filter(
         (result: any) =>
@@ -1483,75 +1562,11 @@ export class VueToDslConverter {
       .map((result) => result.schema)
       .filter(Boolean)
 
-    // 7) Read router info to enrich page meta (router path, isPage, isHome)
-    try {
-      const routerPath = path.join(srcDir, 'router', 'index.js')
-      const rcode = await fs.readFile(routerPath, 'utf-8')
-      // find root redirect name (home)
-      // Simply capture the first redirect name (root level in this project)
-      const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
-      const homeName = homeMatch ? homeMatch[1] : ''
-
-      // To avoid incorrectly pairing the redirect name with the first route's path/component,
-      // remove the redirect object before extracting route entries.
-      const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
-
-      const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
-      const routeRegex =
-        /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
-      let m: RegExpExecArray | null
-      while ((m = routeRegex.exec(rclean))) {
-        routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
-      }
-      // Build map by fileName (basename of the import .vue)
-      const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
-      for (const e of routeEntries) {
-        const base = path.basename(e.importPath).replace(/\.vue$/i, '')
-        byFile[base] = { routeName: e.routeName, routePath: e.routePath, isHome: e.routeName === homeName }
-      }
-      // Enrich page schemas
-      for (const ps of pageSchemas) {
-        const fileName = ps?.fileName
-        if (!fileName) continue
-        let info = byFile[fileName]
-        // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
-        if (!info) {
-          for (const [base, routeInfo] of Object.entries(byFile)) {
-            if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
-              info = routeInfo
-              break
-            }
-          }
-        }
-        ps.meta = ps.meta || {}
-        if (info) {
-          // Remove leading slash from router path
-          const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-          ps.meta.router = routerPath
-          ps.meta.isPage = true
-          ps.meta.isHome = !!info.isHome
-        } else {
-          // Generate default router path from fileName if no match found
-          ps.meta.router = fileName.toLowerCase()
-          ps.meta.isPage = true
-        }
-      }
-    } catch (error) {
-      // If router enrichment fails, set default router for all pages
-      for (const ps of pageSchemas) {
-        ps.meta = ps.meta || {}
-        if (!ps.meta.router) {
-          ps.meta.router = (ps.fileName || 'page').toLowerCase()
-          ps.meta.isPage = true
-        }
-      }
-    }
-
-    utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
+    await this.enrichPageSchemasWithRouterFromModuleContext(pageSchemas, context)
+    utils = await this.enrichUtilsFromScriptResults(allResults, utils, context)
     const componentsMap = this.collectComponentsMapFromResults(allResults)
 
-    // 8) Assemble app schema
-    const appSchema = generateAppSchema(pageSchemas, {
+    return generateAppSchema(pageSchemas, {
       i18n,
       utils,
       dataSource,
@@ -1559,8 +1574,176 @@ export class VueToDslConverter {
       blockSchemas,
       componentsMap
     })
+  }
 
-    return appSchema
+  private async createModuleContextFromAppDirectory(appDir: string): Promise<LocalModuleContext> {
+    const appFiles = (await this.walk(appDir, (_p) => true)).map((filePath) =>
+      this.normalizeVirtualPath(path.relative(appDir, filePath))
+    )
+
+    return {
+      allFiles: appFiles,
+      fileSet: new Set(appFiles),
+      readText: async (filePath: string) => {
+        try {
+          return await fs.readFile(path.join(appDir, ...this.normalizeVirtualPath(filePath).split('/')), 'utf-8')
+        } catch {
+          return null
+        }
+      }
+    }
+  }
+
+  private createGitignoreFilter(gitignoreContent: string) {
+    const lines = gitignoreContent
+      .split('\n')
+      .map((line) => line.trim())
+      .filter((line) => line && !line.startsWith('#'))
+
+    const patterns = lines.map((line) => {
+      const isNegative = line.startsWith('!')
+      const pattern = isNegative ? line.slice(1) : line
+      const regexString = pattern
+        .replace(/([.+?^${}()|[\]\\])/g, '\\$1')
+        .replace(/\/\*\*$/, '/.*')
+        .replace(/\*\*/g, '.*')
+        .replace(/\*/g, '[^/]*')
+        .replace(/\?/g, '[^/]')
+
+      if (regexString.endsWith('/')) {
+        return { regex: new RegExp(`^${regexString}`), isNegative }
+      }
+
+      return { regex: new RegExp(`^${regexString}(/.*)?$`), isNegative }
+    })
+
+    return (targetPath: string) => {
+      let isIgnored = false
+      for (const { regex, isNegative } of patterns) {
+        if (regex.test(targetPath)) {
+          isIgnored = !isNegative
+        }
+      }
+      return !isIgnored
+    }
+  }
+
+  private async createModuleContextFromBrowserZip(
+    zipBuffer: ArrayBuffer | Uint8Array | Buffer
+  ): Promise<LocalModuleContext> {
+    const zip = await JSZip.loadAsync(zipBuffer as any)
+    const allFiles = Object.keys((zip as any).files || {})
+      .filter((filePath) => !(zip as any).files[filePath].dir)
+      .filter((filePath) => !filePath.startsWith('__MACOSX/'))
+
+    const topLevels = new Set(
+      allFiles
+        .map((filePath) => filePath.split('/')[0])
+        .filter((segment) => !!segment && segment !== '.' && segment !== '..')
+    )
+    const rootPrefix = topLevels.size === 1 ? `${[...topLevels][0]}/` : ''
+    const joinRoot = (subPath: string) =>
+      rootPrefix ? rootPrefix + subPath.replace(/^\/+/, '') : subPath.replace(/^\/+/, '')
+    const readText = async (relPath: string) => {
+      const file = zip.file(relPath)
+      return file ? await file.async('string') : null
+    }
+    const appFiles = allFiles.map((filePath) =>
+      this.normalizeVirtualPath(
+        rootPrefix && filePath.startsWith(rootPrefix) ? filePath.slice(rootPrefix.length) : filePath
+      )
+    )
+
+    return {
+      allFiles: appFiles,
+      fileSet: new Set(appFiles),
+      readText: async (filePath: string) => readText(joinRoot(filePath))
+    }
+  }
+
+  private async unzipZipBufferToAppDirectory(zipBuffer: ArrayBuffer | Uint8Array | Buffer): Promise<string> {
+    const tmpBase = await fs.mkdtemp(path.join(os.tmpdir(), 'vue-to-dsl-'))
+    const zip = await JSZip.loadAsync(zipBuffer as any)
+    const fileEntries: string[] = []
+    const writeTasks: Promise<any>[] = []
+
+    zip.forEach((relPath, file) => {
+      if (relPath.startsWith('__MACOSX/')) return
+      const outPath = path.join(tmpBase, relPath)
+      if (file.dir) {
+        writeTasks.push(fs.mkdir(outPath, { recursive: true }))
+        return
+      }
+
+      fileEntries.push(relPath)
+      writeTasks.push(
+        (async () => {
+          await fs.mkdir(path.dirname(outPath), { recursive: true })
+          const content = await file.async('nodebuffer')
+          await fs.writeFile(outPath, content)
+        })()
+      )
+    })
+
+    await Promise.all(writeTasks)
+
+    const topLevels = new Set(
+      fileEntries
+        .map((filePath) => filePath.split('/')[0])
+        .filter((segment) => !!segment && segment !== '.' && segment !== '..')
+    )
+
+    if (topLevels.size === 1) {
+      return path.join(tmpBase, [...topLevels][0])
+    }
+
+    return tmpBase
+  }
+
+  private async createModuleContextFromFileList(files: FileList): Promise<LocalModuleContext> {
+    const fileArray = Array.from(files)
+    const readText = async (file: File) =>
+      await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader()
+        reader.onload = () => resolve(reader.result as string)
+        reader.onerror = () => reject(reader.error)
+        reader.readAsText(file)
+      })
+
+    let relevantFiles = fileArray
+    const gitignoreFile = fileArray.find((file) => file.webkitRelativePath.endsWith('/.gitignore'))
+
+    if (gitignoreFile) {
+      const gitignoreContent = await readText(gitignoreFile)
+      const rootDir = gitignoreFile.webkitRelativePath.split('/')[0]
+      const filter = this.createGitignoreFilter(gitignoreContent)
+
+      relevantFiles = fileArray.filter((file) => {
+        const relativePath = file.webkitRelativePath.slice(rootDir.length + 1)
+        return relativePath && filter(relativePath)
+      })
+    } else {
+      relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
+    }
+
+    const getAppRelativePath = (file: File) =>
+      this.normalizeVirtualPath(file.webkitRelativePath.split('/').slice(1).join('/'))
+    const filesByPath = new Map<string, File>(relevantFiles.map((file) => [getAppRelativePath(file), file]))
+
+    return {
+      allFiles: Array.from(filesByPath.keys()),
+      fileSet: new Set(filesByPath.keys()),
+      readText: async (filePath: string) => {
+        const file = filesByPath.get(this.normalizeVirtualPath(filePath))
+        return file ? await readText(file) : null
+      }
+    }
+  }
+
+  // Convert a full app directory (e.g., test/full/input/appdemo01) into an aggregated schema.json
+  async convertAppDirectory(appDir: string): Promise<any> {
+    const moduleContext = await this.createModuleContextFromAppDirectory(appDir)
+    return await this.buildAppSchemaFromModuleContext(moduleContext)
   }
 
   setOptions(options: VueToSchemaOptions) {
@@ -1575,602 +1758,16 @@ export class VueToDslConverter {
   async convertAppFromZip(zipBuffer: ArrayBuffer | Uint8Array | Buffer): Promise<any> {
     // Browser-safe path: avoid fs/path/os, work fully in-memory
     if (typeof window !== 'undefined' && typeof (window as any).document !== 'undefined') {
-      const zip = await JSZip.loadAsync(zipBuffer as any)
-
-      // Collect file entries (posix paths in zip)
-      const allFiles = Object.keys((zip as any).files || {})
-        .filter((p) => !(zip as any).files[p].dir)
-        .filter((p) => !p.startsWith('__MACOSX/'))
-
-      // Determine root prefix (top-level folder)
-      const topLevels = new Set(
-        allFiles.map((p) => p.split('/')[0]).filter((seg) => !!seg && seg !== '.' && seg !== '..')
-      )
-      let rootPrefix = ''
-      if (topLevels.size === 1) rootPrefix = [...topLevels][0] + '/'
-
-      const joinRoot = (sub: string) => (rootPrefix ? rootPrefix + sub.replace(/^\/+/, '') : sub.replace(/^\/+/, ''))
-      const readText = async (rel: string) => {
-        const file = zip.file(rel)
-        return file ? await file.async('string') : null
-      }
-      const appFiles = allFiles.map((filePath) =>
-        this.normalizeVirtualPath(
-          rootPrefix && filePath.startsWith(rootPrefix) ? filePath.slice(rootPrefix.length) : filePath
-        )
-      )
-      const moduleContext: LocalModuleContext = {
-        allFiles: appFiles,
-        fileSet: new Set(appFiles),
-        readText: async (filePath: string) => readText(joinRoot(filePath))
-      }
-
-      // 1) Pages: src/views/**/*.vue
-      const viewPrefix = joinRoot('src/views/')
-      const vueFiles = allFiles.filter((p) => p.startsWith(viewPrefix) && p.endsWith('.vue'))
-
-      // First pass: collect all files and detect naming conflicts
-      const fileMap = new Map<string, string[]>()
-      for (const vf of vueFiles) {
-        const relativePath = vf.substring(viewPrefix.length)
-        const baseName =
-          relativePath
-            .split('/')
-            .pop()
-            ?.replace(/\.vue$/i, '') || ''
-        if (!fileMap.has(baseName)) {
-          fileMap.set(baseName, [])
-        }
-        fileMap.get(baseName)!.push(relativePath)
-      }
-
-      // Determine which files need special naming (camelCase with directory prefix)
-      const needsSpecialNaming = new Set<string>()
-      for (const paths of fileMap.values()) {
-        if (paths.length > 1) {
-          // Multiple files with same basename, all need special naming
-          paths.forEach((p) => needsSpecialNaming.add(p))
-        }
-      }
-
-      // Convert files with appropriate naming
-      const pageResults: ConvertResult[] = []
-      const allResults: ConvertResult[] = []
-      for (const vf of vueFiles) {
-        const code = await readText(vf)
-        if (!code) continue
-
-        const relativePath = vf.substring(viewPrefix.length)
-        const baseName =
-          relativePath
-            .split('/')
-            .pop()
-            ?.replace(/\.vue$/i, '') || 'Page'
-
-        // Use camelCase naming if there are conflicts, otherwise use basename
-        let fileName: string
-        if (needsSpecialNaming.has(relativePath)) {
-          fileName = this.buildConflictResolvedFileName(
-            relativePath,
-            baseName,
-            fileMap.get(baseName) || [],
-            vueFiles.map((file) => file.substring(viewPrefix.length))
-          )
-        } else {
-          fileName = baseName
-        }
-
-        const res = await this.convertFromString(code, fileName)
-        if (res.scriptSchema) {
-          res.scriptSchema.__filePath = this.normalizeVirtualPath(
-            rootPrefix && vf.startsWith(rootPrefix) ? vf.slice(rootPrefix.length) : vf
-          )
-        }
-        pageResults.push(res)
-        allResults.push(res)
-      }
-
-      // 2) i18n
-      let i18n: any = { en_US: {}, zh_CN: {} }
-      try {
-        const en = (await readText(joinRoot('src/i18n/en_US.json'))) || '{}'
-        const zh = (await readText(joinRoot('src/i18n/zh_CN.json'))) || '{}'
-        i18n = { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
-      } catch {
-        // keep defaults
-      }
-
-      // 3) utils from src/utils or src/utils/index
-      let utils: any[] = await this.collectRootUtils(moduleContext)
-
-      // 4) dataSource
-      const dataSource: any = { list: [] }
-      try {
-        const dsRaw = await readText(joinRoot('src/lowcodeConfig/dataSource.json'))
-        if (dsRaw) {
-          const dsJson = JSON.parse(dsRaw)
-          if (Array.isArray(dsJson.list)) dataSource.list = dsJson.list
-        }
-      } catch {
-        // ignore
-      }
-
-      // 5) globalState from src/stores/*.js
-      const storesPrefix = joinRoot('src/stores/')
-      const storeFiles = allFiles.filter((p) => p.startsWith(storesPrefix) && p.endsWith('.js'))
-      const globalState: any[] = []
-      for (const sf of storeFiles) {
-        try {
-          const code = await readText(sf)
-          if (!code || !/defineStore\s*\(/.test(code)) continue
-          const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
-          const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
-          const entry: any = { id: idMatch ? idMatch[1] : (sf.split('/').pop() || 'store').replace(/\.[^.]+$/, '') }
-          if (stateMatch) {
-            try {
-              const objText = stateMatch[1]
-              const stateObj = Function(`return (${objText})`)()
-              entry.state = stateObj
-            } catch {
-              entry.state = {}
-            }
-          } else {
-            continue
-          }
-          if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
-            globalState.push(entry)
-          }
-        } catch {
-          // ignore
-        }
-      }
-
-      // 6) Collect imported local Vue sub-components and convert them to block schemas
-      let blockSchemas: any[] = []
-      const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
-      blockSchemas = importedVueBlockData.blockSchemas
-      allResults.push(...importedVueBlockData.blockResults)
-      const pageSchemas = pageResults
-        .filter(
-          (result: any) =>
-            result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
-        )
-        .map((result) => result.schema)
-        .filter(Boolean)
-
-      // 7) router enrichment
-      try {
-        const rcode = await readText(joinRoot('src/router/index.js'))
-        if (rcode) {
-          const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
-          const homeName = homeMatch ? homeMatch[1] : ''
-          const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
-          const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
-          const routeRegex =
-            /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
-          let m: RegExpExecArray | null
-          while ((m = routeRegex.exec(rclean)))
-            routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
-          const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
-          for (const e of routeEntries) {
-            const base = (e.importPath.split('/').pop() || '').replace(/\.vue$/i, '')
-            byFile[base] = { routeName: e.routeName, routePath: e.routePath, isHome: e.routeName === homeName }
-          }
-          for (const ps of pageSchemas) {
-            const fileName = ps?.fileName
-            if (!fileName) continue
-            let info = byFile[fileName]
-            // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
-            if (!info) {
-              for (const [base, routeInfo] of Object.entries(byFile)) {
-                // Try exact match (case-insensitive)
-                if (fileName.toLowerCase() === base.toLowerCase()) {
-                  info = routeInfo
-                  break
-                }
-                // Try matching if fileName ends with base name (for camelCase names)
-                if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
-                  info = routeInfo
-                  break
-                }
-              }
-            }
-            ps.meta = ps.meta || {}
-            if (info) {
-              // Remove leading slash from router path
-              const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-              ps.meta.router = routerPath
-              ps.meta.isPage = true
-              ps.meta.isHome = !!info.isHome
-            } else {
-              // Generate default router path from fileName if no match found
-              ps.meta.router = fileName.toLowerCase()
-              ps.meta.isPage = true
-            }
-          }
-        } else {
-          // If router file not found, set default router for all pages
-          for (const ps of pageSchemas) {
-            ps.meta = ps.meta || {}
-            if (!ps.meta.router) {
-              ps.meta.router = (ps.fileName || 'page').toLowerCase()
-              ps.meta.isPage = true
-            }
-          }
-        }
-      } catch (error) {
-        // If router enrichment fails, set default router for all pages
-        for (const ps of pageSchemas) {
-          ps.meta = ps.meta || {}
-          if (!ps.meta.router) {
-            ps.meta.router = (ps.fileName || 'page').toLowerCase()
-            ps.meta.isPage = true
-          }
-        }
-      }
-
-      utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
-      const componentsMap = this.collectComponentsMapFromResults(allResults)
-
-      // 8) Assemble app schema
-      const appSchema = generateAppSchema(pageSchemas, {
-        i18n,
-        utils,
-        dataSource,
-        globalState,
-        blockSchemas,
-        componentsMap
-      })
-
-      return appSchema
+      const moduleContext = await this.createModuleContextFromBrowserZip(zipBuffer)
+      return await this.buildAppSchemaFromModuleContext(moduleContext)
     }
 
-    // Node.js path: unzip to temp and reuse directory-based converter
-    // 1) Unzip into a temp directory
-    const tmpBase = await fs.mkdtemp(path.join(os.tmpdir(), 'vue-to-dsl-'))
-    const zip = await JSZip.loadAsync(zipBuffer as any)
-
-    const fileEntries: string[] = []
-    const writeTasks: Promise<any>[] = []
-    zip.forEach((relPath, file) => {
-      // Skip macOS metadata
-      if (relPath.startsWith('__MACOSX/')) return
-      const outPath = path.join(tmpBase, relPath)
-      if (file.dir) {
-        writeTasks.push(fs.mkdir(outPath, { recursive: true }))
-      } else {
-        fileEntries.push(relPath)
-        writeTasks.push(
-          (async () => {
-            await fs.mkdir(path.dirname(outPath), { recursive: true })
-            const content = await file.async('nodebuffer')
-            await fs.writeFile(outPath, content)
-          })()
-        )
-      }
-    })
-    await Promise.all(writeTasks)
-
-    // 2) Determine the root app directory inside the zip
-    const topLevels = new Set(
-      fileEntries.map((p) => p.split('/')[0]).filter((seg) => !!seg && seg !== '.' && seg !== '..')
-    )
-
-    let appRoot = tmpBase
-    if (topLevels.size === 1) {
-      const only = [...topLevels][0]
-      appRoot = path.join(tmpBase, only)
-    }
-
-    // 3) Delegate to convertAppDirectory
-    const schema = await this.convertAppDirectory(appRoot)
-    return schema
+    const appRoot = await this.unzipZipBufferToAppDirectory(zipBuffer)
+    return await this.convertAppDirectory(appRoot)
   }
 
   async convertAppFromDirectory(files: FileList): Promise<any> {
-    const fileArray = Array.from(files)
-    let relevantFiles = []
-
-    const readText = async (file: File) => {
-      return new Promise<string>((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => resolve(reader.result as string)
-        reader.onerror = () => reject(reader.error)
-        reader.readAsText(file)
-      })
-    }
-
-    const createGitignoreFilter = (gitignoreContent: string) => {
-      const lines = gitignoreContent
-        .split('\n')
-        .map((l) => l.trim())
-        .filter((l) => l && !l.startsWith('#'))
-      const patterns = lines.map((line) => {
-        const isNegative = line.startsWith('!')
-        const pattern = isNegative ? line.slice(1) : line
-
-        // Convert gitignore pattern to regex
-        const regexString = pattern
-          .replace(/([.+?^${}()|[\]\\])/g, '\\$1') // Escape special chars
-          .replace(/\/\*\*$/, '/.*') // '/**' at the end
-          .replace(/\*\*/g, '.*') // '**'
-          .replace(/\*/g, '[^/]*') // '*'
-          .replace(/\?/g, '[^/]') // '?'
-
-        // Handle directory matching
-        if (regexString.endsWith('/')) {
-          return { regex: new RegExp(`^${regexString}`), isNegative }
-        }
-
-        return { regex: new RegExp(`^${regexString}(/.*)?$`), isNegative }
-      })
-
-      return (path: string) => {
-        let isIgnored = false
-        for (const { regex, isNegative } of patterns) {
-          if (regex.test(path)) {
-            isIgnored = !isNegative
-          }
-        }
-        return !isIgnored
-      }
-    }
-
-    const gitignoreFile = fileArray.find((file) => file.webkitRelativePath.endsWith('/.gitignore'))
-
-    if (gitignoreFile) {
-      const gitignoreContent = await readText(gitignoreFile)
-      const rootDir = gitignoreFile.webkitRelativePath.split('/')[0]
-      const filter = createGitignoreFilter(gitignoreContent)
-
-      relevantFiles = fileArray.filter((file) => {
-        const relativePath = file.webkitRelativePath.slice(rootDir.length + 1)
-        return relativePath && filter(relativePath)
-      })
-    } else {
-      // Filter out node_modules
-      relevantFiles = fileArray.filter((file) => !file.webkitRelativePath.includes('node_modules'))
-    }
-
-    const getAppRelativePath = (file: File) =>
-      this.normalizeVirtualPath(file.webkitRelativePath.split('/').slice(1).join('/'))
-    const filesByPath = new Map<string, File>(relevantFiles.map((file) => [getAppRelativePath(file), file]))
-    const moduleContext: LocalModuleContext = {
-      allFiles: Array.from(filesByPath.keys()),
-      fileSet: new Set(filesByPath.keys()),
-      readText: async (filePath: string) => {
-        const file = filesByPath.get(this.normalizeVirtualPath(filePath))
-        return file ? await readText(file) : null
-      }
-    }
-
-    // 1) Pages: src/views/**/*.vue
-    const vueFiles = relevantFiles.filter(
-      (file) => file.webkitRelativePath.includes('src/views/') && file.name.endsWith('.vue')
-    )
-
-    // First pass: collect all files and detect naming conflicts
-    const fileMap = new Map<string, string[]>()
-    for (const vf of vueFiles) {
-      const webkitPath = vf.webkitRelativePath
-      const viewsIndex = webkitPath.indexOf('src/views/')
-      const relativePath = viewsIndex >= 0 ? webkitPath.substring(viewsIndex + 'src/views/'.length) : vf.name
-      const baseName =
-        relativePath
-          .split('/')
-          .pop()
-          ?.replace(/\.vue$/i, '') || ''
-      if (!fileMap.has(baseName)) {
-        fileMap.set(baseName, [])
-      }
-      fileMap.get(baseName)!.push(relativePath)
-    }
-
-    // Determine which files need special naming (camelCase with directory prefix)
-    const needsSpecialNaming = new Set<string>()
-    for (const paths of fileMap.values()) {
-      if (paths.length > 1) {
-        // Multiple files with same basename, all need special naming
-        paths.forEach((p) => needsSpecialNaming.add(p))
-      }
-    }
-
-    const pageResults: ConvertResult[] = []
-    const allResults: ConvertResult[] = []
-    for (const vf of vueFiles) {
-      const code = await readText(vf)
-      if (!code) continue
-
-      const webkitPath = vf.webkitRelativePath
-      const viewsIndex = webkitPath.indexOf('src/views/')
-      const relativePath = viewsIndex >= 0 ? webkitPath.substring(viewsIndex + 'src/views/'.length) : vf.name
-      const baseName =
-        relativePath
-          .split('/')
-          .pop()
-          ?.replace(/\.vue$/i, '') || 'Page'
-
-      // Use camelCase naming if there are conflicts, otherwise use basename
-      let fileName: string
-      if (needsSpecialNaming.has(relativePath)) {
-        fileName = this.buildConflictResolvedFileName(
-          relativePath,
-          baseName,
-          fileMap.get(baseName) || [],
-          vueFiles.map((file) => {
-            const webkitPath = file.webkitRelativePath
-            const fileViewsIndex = webkitPath.indexOf('src/views/')
-            return fileViewsIndex >= 0 ? webkitPath.substring(fileViewsIndex + 'src/views/'.length) : file.name
-          })
-        )
-      } else {
-        fileName = baseName
-      }
-
-      const res = await this.convertFromString(code, fileName)
-      if (res.scriptSchema) {
-        res.scriptSchema.__filePath = getAppRelativePath(vf)
-      }
-      pageResults.push(res)
-      allResults.push(res)
-    }
-
-    // 2) i18n
-    let i18n: any = { en_US: {}, zh_CN: {} }
-    try {
-      const enFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/i18n/en_US.json'))
-      const zhFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/i18n/zh_CN.json'))
-      const en = enFile ? await readText(enFile) : '{}'
-      const zh = zhFile ? await readText(zhFile) : '{}'
-      i18n = { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
-    } catch {
-      // keep defaults
-    }
-
-    // 3) utils from src/utils or src/utils/index
-    let utils: any[] = await this.collectRootUtils(moduleContext)
-
-    // 4) dataSource
-    const dataSource: any = { list: [] }
-    try {
-      const dsFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/lowcodeConfig/dataSource.json'))
-      if (dsFile) {
-        const dsRaw = await readText(dsFile)
-        const dsJson = JSON.parse(dsRaw)
-        if (Array.isArray(dsJson.list)) dataSource.list = dsJson.list
-      }
-    } catch {
-      // ignore
-    }
-
-    // 5) globalState from src/stores/*.js
-    const storeFiles = relevantFiles.filter(
-      (f) => f.webkitRelativePath.includes('src/stores/') && f.name.endsWith('.js')
-    )
-    const globalState: any[] = []
-    for (const sf of storeFiles) {
-      try {
-        const code = await readText(sf)
-        if (!code || !/defineStore\s*\(/.test(code)) continue
-        const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
-        const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
-        const entry: any = { id: idMatch ? idMatch[1] : sf.name.replace(/\.[^.]+$/, '') }
-        if (stateMatch) {
-          try {
-            const objText = stateMatch[1]
-            const stateObj = Function(`return (${objText})`)()
-            entry.state = stateObj
-          } catch {
-            entry.state = {}
-          }
-        } else {
-          continue
-        }
-        if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
-          globalState.push(entry)
-        }
-      } catch {
-        // ignore
-      }
-    }
-
-    // 6) Collect imported local Vue sub-components and convert them to block schemas
-    let blockSchemas: any[] = []
-    const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, moduleContext, blockSchemas)
-    blockSchemas = importedVueBlockData.blockSchemas
-    allResults.push(...importedVueBlockData.blockResults)
-    const pageSchemas = pageResults
-      .filter(
-        (result: any) =>
-          result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
-      )
-      .map((result) => result.schema)
-      .filter(Boolean)
-
-    // 7) router enrichment
-    try {
-      const routerFile = relevantFiles.find((f) => f.webkitRelativePath.endsWith('src/router/index.js'))
-      if (routerFile) {
-        const rcode = await readText(routerFile)
-        const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
-        const homeName = homeMatch ? homeMatch[1] : ''
-        const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
-        const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
-        const routeRegex =
-          /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
-        let m: RegExpExecArray | null
-        while ((m = routeRegex.exec(rclean))) routeEntries.push({ routeName: m[1], routePath: m[2], importPath: m[3] })
-        const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
-        for (const e of routeEntries) {
-          const base = (e.importPath.split('/').pop() || '').replace(/\.vue$/i, '')
-          byFile[base] = { routeName: e.routeName, routePath: e.routePath, isHome: e.routeName === homeName }
-        }
-        for (const ps of pageSchemas) {
-          const fileName = ps?.fileName
-          if (!fileName) continue
-          let info = byFile[fileName]
-          // If not found, try to match by checking if fileName ends with the base name (for camelCase names)
-          if (!info) {
-            for (const [base, routeInfo] of Object.entries(byFile)) {
-              // Try exact match (case-insensitive)
-              if (fileName.toLowerCase() === base.toLowerCase()) {
-                info = routeInfo
-                break
-              }
-              // Try matching if fileName ends with base name (for camelCase names)
-              if (fileName.endsWith(base.charAt(0).toUpperCase() + base.slice(1))) {
-                info = routeInfo
-                break
-              }
-            }
-          }
-          ps.meta = ps.meta || {}
-          if (info) {
-            // Remove leading slash from router path
-            const routerPath = info.routePath.startsWith('/') ? info.routePath.slice(1) : info.routePath
-            ps.meta.router = routerPath
-            ps.meta.isPage = true
-            ps.meta.isHome = !!info.isHome
-          } else {
-            // Generate default router path from fileName if no match found
-            ps.meta.router = fileName.toLowerCase()
-            ps.meta.isPage = true
-          }
-        }
-      } else {
-        // If router file not found, set default router for all pages
-        for (const ps of pageSchemas) {
-          ps.meta = ps.meta || {}
-          if (!ps.meta.router) {
-            ps.meta.router = (ps.fileName || 'page').toLowerCase()
-            ps.meta.isPage = true
-          }
-        }
-      }
-    } catch (error) {
-      // If router enrichment fails, set default router for all pages
-      for (const ps of pageSchemas) {
-        ps.meta = ps.meta || {}
-        if (!ps.meta.router) {
-          ps.meta.router = (ps.fileName || 'page').toLowerCase()
-          ps.meta.isPage = true
-        }
-      }
-    }
-
-    utils = await this.enrichUtilsFromScriptResults(allResults, utils, moduleContext)
-    const componentsMap = this.collectComponentsMapFromResults(allResults)
-
-    // 8) Assemble app schema
-    const appSchema = generateAppSchema(pageSchemas, {
-      i18n,
-      utils,
-      dataSource,
-      globalState,
-      blockSchemas,
-      componentsMap
-    })
-
-    return appSchema
+    const moduleContext = await this.createModuleContextFromFileList(files)
+    return await this.buildAppSchemaFromModuleContext(moduleContext)
   }
 }
