@@ -1570,13 +1570,18 @@ function parseEmitsFromTypeNode(node: any, typeDecls: Map<string, any> = new Map
 
         if (t.isTSCallSignatureDeclaration(member)) {
           const firstParam = member.parameters?.[0]
+          const paramTypeAnnotation =
+            t.isIdentifier(firstParam) && t.isTSTypeAnnotation(firstParam.typeAnnotation)
+              ? firstParam.typeAnnotation.typeAnnotation
+              : null
+
           if (
             t.isIdentifier(firstParam) &&
-            firstParam.typeAnnotation &&
-            t.isTSLiteralType(firstParam.typeAnnotation.typeAnnotation) &&
-            t.isStringLiteral(firstParam.typeAnnotation.typeAnnotation.literal)
+            paramTypeAnnotation &&
+            t.isTSLiteralType(paramTypeAnnotation) &&
+            t.isStringLiteral(paramTypeAnnotation.literal)
           ) {
-            return firstParam.typeAnnotation.typeAnnotation.literal.value
+            return paramTypeAnnotation.literal.value
           }
         }
 
