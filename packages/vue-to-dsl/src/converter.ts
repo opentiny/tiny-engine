@@ -93,10 +93,20 @@ type LocalModuleContext = {
   allFiles: string[]
   fileSet: Set<string>
   readText: (filePath: string) => Promise<string | null>
+  readDataUrl: (filePath: string) => Promise<string | null>
+}
+
+type ImportedAssetEntry = {
+  placeholder: string
+  filePath: string
+  name: string
+  resourceData: string
 }
 
 export class VueToDslConverter {
   private options: VueToSchemaOptions
+
+  private static readonly NOOP_FUNCTION_VALUE = 'function noop() {}'
 
   constructor(options: VueToSchemaOptions = {}) {
     this.options = {
@@ -111,6 +121,245 @@ export class VueToDslConverter {
 
   private isLocalModuleSource(source = '') {
     return source.startsWith('.') || source.startsWith('@/') || source.startsWith('/')
+  }
+
+  private stripQueryAndHash(source = '') {
+    return String(source || '')
+      .split('#')[0]
+      .split('?')[0]
+  }
+
+  private getVirtualFileName(filePath = '') {
+    const normalized = this.normalizeVirtualPath(filePath)
+    const segments = normalized.split('/')
+    return segments[segments.length - 1] || normalized
+  }
+
+  private getVirtualFileBaseName(filePath = '') {
+    return this.getVirtualFileName(filePath).replace(/\.[^.]+$/, '')
+  }
+
+  private escapeRegExp(value = '') {
+    return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  }
+
+  private extractStringLiteralValue(code = '') {
+    const trimmed = String(code || '').trim()
+    const quote = trimmed[0]
+    if (!trimmed || ![`'`, '"', '`'].includes(quote) || trimmed[trimmed.length - 1] !== quote) {
+      return null
+    }
+
+    return trimmed.slice(1, -1)
+  }
+
+  private isImageAssetPath(filePath = '') {
+    return /\.(png|jpe?g|gif|svg|webp|bmp|ico|avif)$/i.test(this.stripQueryAndHash(filePath))
+  }
+
+  private isLocalImageSource(source = '') {
+    const normalized = String(source || '').trim()
+    if (!normalized || !this.isImageAssetPath(normalized)) return false
+
+    return (
+      normalized.startsWith('./') ||
+      normalized.startsWith('../') ||
+      normalized.startsWith('@/') ||
+      normalized.startsWith('/')
+    )
+  }
+
+  private getMimeTypeByAssetPath(filePath = '') {
+    const cleaned = this.stripQueryAndHash(filePath).toLowerCase()
+    if (cleaned.endsWith('.png')) return 'image/png'
+    if (cleaned.endsWith('.jpg') || cleaned.endsWith('.jpeg')) return 'image/jpeg'
+    if (cleaned.endsWith('.gif')) return 'image/gif'
+    if (cleaned.endsWith('.svg')) return 'image/svg+xml'
+    if (cleaned.endsWith('.webp')) return 'image/webp'
+    if (cleaned.endsWith('.bmp')) return 'image/bmp'
+    if (cleaned.endsWith('.ico')) return 'image/x-icon'
+    if (cleaned.endsWith('.avif')) return 'image/avif'
+
+    return 'application/octet-stream'
+  }
+
+  private resolveLocalAssetPath(source: string, importerFile: string, context: LocalModuleContext) {
+    if (!this.isLocalImageSource(source)) return null
+
+    const cleanedSource = this.stripQueryAndHash(source)
+    const normalizedSource = this.normalizeVirtualPath(cleanedSource)
+    let candidates: string[] = []
+
+    if (normalizedSource.startsWith('@/')) {
+      candidates = [this.normalizeVirtualPath(`src/${normalizedSource.slice(2)}`)]
+    } else if (normalizedSource.startsWith('/')) {
+      const relativePath = normalizedSource.replace(/^\/+/, '')
+      candidates = [relativePath, this.normalizeVirtualPath(`public/${relativePath}`)]
+    } else {
+      candidates = [this.resolveVirtualRelativePath(this.getVirtualDirname(importerFile), normalizedSource)]
+    }
+
+    const resolvedPath = candidates.find((item) => item && context.fileSet.has(item))
+    return resolvedPath || null
+  }
+
+  private createImportedAssetPlaceholder(index: number) {
+    return `__TE_IMPORTED_ASSET_${index}__`
+  }
+
+  private buildImportedAssetName(filePath = '') {
+    return this.getVirtualFileName(filePath)
+  }
+
+  private async getOrCreateImportedAssetEntry(
+    resolvedPath: string,
+    context: LocalModuleContext,
+    assetMap: Map<string, ImportedAssetEntry>
+  ) {
+    const normalizedPath = this.normalizeVirtualPath(resolvedPath)
+    const existing = assetMap.get(normalizedPath)
+    if (existing) return existing
+
+    const resourceData = await context.readDataUrl(normalizedPath)
+    if (!resourceData) return null
+
+    const assetEntry: ImportedAssetEntry = {
+      placeholder: this.createImportedAssetPlaceholder(assetMap.size + 1),
+      filePath: normalizedPath,
+      name: this.buildImportedAssetName(normalizedPath),
+      resourceData
+    }
+
+    assetMap.set(normalizedPath, assetEntry)
+    return assetEntry
+  }
+
+  private async replaceSchemaCssAssetUrls(
+    cssText: string,
+    importerFile: string,
+    context: LocalModuleContext,
+    assetMap: Map<string, ImportedAssetEntry>
+  ) {
+    const matches = Array.from(cssText.matchAll(/url\(\s*(['"]?)([^)'"]+)\1\s*\)/g))
+    if (!matches.length) return cssText
+
+    let output = cssText
+    for (const match of matches) {
+      const originalSource = String(match[2] || '').trim()
+      const resolvedPath = this.resolveLocalAssetPath(originalSource, importerFile, context)
+      if (!resolvedPath) continue
+
+      const assetEntry = await this.getOrCreateImportedAssetEntry(resolvedPath, context, assetMap)
+      if (!assetEntry) continue
+
+      output = output.split(originalSource).join(assetEntry.placeholder)
+    }
+
+    return output
+  }
+
+  private async rewriteSchemaAssetReferences(
+    target: any,
+    importerFile: string,
+    context: LocalModuleContext,
+    assetMap: Map<string, ImportedAssetEntry>,
+    localAssetImports = new Map<string, string>()
+  ) {
+    if (Array.isArray(target)) {
+      for (const item of target) {
+        await this.rewriteSchemaAssetReferences(item, importerFile, context, assetMap, localAssetImports)
+      }
+      return
+    }
+
+    if (!target || typeof target !== 'object') {
+      return
+    }
+
+    if (typeof target.css === 'string') {
+      target.css = await this.replaceSchemaCssAssetUrls(target.css, importerFile, context, assetMap)
+    }
+
+    for (const [key, value] of Object.entries(target)) {
+      if (typeof value === 'string') {
+        const resolvedPath = this.resolveLocalAssetPath(value, importerFile, context)
+        if (resolvedPath) {
+          const assetEntry = await this.getOrCreateImportedAssetEntry(resolvedPath, context, assetMap)
+          if (assetEntry) {
+            ;(target as any)[key] = assetEntry.placeholder
+          }
+        }
+        continue
+      }
+
+      if (
+        value &&
+        typeof value === 'object' &&
+        (value as any).type === 'JSExpression' &&
+        typeof (value as any).value === 'string'
+      ) {
+        const nextExpression = String((value as any).value)
+        const literalSource = this.extractStringLiteralValue(nextExpression)
+
+        if (literalSource) {
+          const resolvedPath = this.resolveLocalAssetPath(literalSource, importerFile, context)
+          if (resolvedPath) {
+            const assetEntry = await this.getOrCreateImportedAssetEntry(resolvedPath, context, assetMap)
+            if (assetEntry) {
+              ;(value as any).value = `'${assetEntry.placeholder}'`
+            }
+          }
+        }
+
+        for (const [localName, resolvedPath] of localAssetImports.entries()) {
+          const assetEntry = await this.getOrCreateImportedAssetEntry(resolvedPath, context, assetMap)
+          if (!assetEntry) continue
+
+          const assetLiteral = `'${assetEntry.placeholder}'`
+          const importRefPattern = new RegExp(`\\bthis\\.state\\.${this.escapeRegExp(localName)}\\b`, 'g')
+          ;(value as any).value = String((value as any).value).replace(importRefPattern, assetLiteral)
+        }
+      }
+
+      if (value && typeof value === 'object') {
+        await this.rewriteSchemaAssetReferences(value, importerFile, context, assetMap, localAssetImports)
+      }
+    }
+  }
+
+  private collectLocalImageImports(scriptSchema: any, context: LocalModuleContext) {
+    const importerFile = scriptSchema?.__filePath
+    const importMap = new Map<string, string>()
+
+    if (!importerFile || !Array.isArray(scriptSchema?.imports)) {
+      return importMap
+    }
+
+    scriptSchema.imports.forEach((item: any) => {
+      const resolvedPath = this.resolveLocalAssetPath(item?.source || '', importerFile, context)
+      if (!resolvedPath) return
+      ;(item.specifiers || []).forEach((spec: any) => {
+        if (!spec?.local) return
+        importMap.set(String(spec.local), resolvedPath)
+      })
+    })
+
+    return importMap
+  }
+
+  private async collectImportedAssetsFromResults(results: ConvertResult[], context: LocalModuleContext) {
+    const assetMap = new Map<string, ImportedAssetEntry>()
+
+    for (const result of results) {
+      const schema = result?.schema
+      const importerFile = result?.scriptSchema?.__filePath || schema?.__sourceFilePath
+      if (!schema || !importerFile) continue
+
+      const localAssetImports = this.collectLocalImageImports(result?.scriptSchema, context)
+      await this.rewriteSchemaAssetReferences(schema, importerFile, context, assetMap, localAssetImports)
+    }
+
+    return Array.from(assetMap.values())
   }
 
   private isSchemaBuiltinComponent(componentName = '') {
@@ -524,14 +773,18 @@ export class VueToDslConverter {
           type: 'npm',
           content: {
             type: 'JSFunction',
-            value: '',
+            value: VueToDslConverter.NOOP_FUNCTION_VALUE,
             package: found.source,
             destructuring: found.destructuring,
             exportName: found.imported === 'default' || found.imported === '*' ? found.local : found.imported
           }
         })
       } else {
-        utils.push({ name: exportedName, type: 'function', content: { type: 'JSFunction', value: '' } })
+        utils.push({
+          name: exportedName,
+          type: 'function',
+          content: { type: 'JSFunction', value: VueToDslConverter.NOOP_FUNCTION_VALUE }
+        })
       }
     }
 
@@ -768,7 +1021,7 @@ export class VueToDslConverter {
       type: 'function',
       content: {
         type: 'JSFunction',
-        value: ''
+        value: VueToDslConverter.NOOP_FUNCTION_VALUE
       }
     }
   }
@@ -792,7 +1045,7 @@ export class VueToDslConverter {
       type: 'npm',
       content: {
         type: 'JSFunction',
-        value: '',
+        value: VueToDslConverter.NOOP_FUNCTION_VALUE,
         package: source,
         destructuring: options.destructuring ?? (imported !== 'default' && imported !== '*'),
         exportName: options.exportName || (imported === 'default' || imported === '*' ? name : imported || name)
@@ -1553,6 +1806,7 @@ export class VueToDslConverter {
     const importedVueBlockData = await this.collectImportedVueBlocks(pageResults, context, blockSchemas)
     blockSchemas = importedVueBlockData.blockSchemas
     allResults.push(...importedVueBlockData.blockResults)
+    const assets = await this.collectImportedAssetsFromResults(allResults, context)
 
     const pageSchemas = pageResults
       .filter(
@@ -1569,6 +1823,7 @@ export class VueToDslConverter {
     return generateAppSchema(pageSchemas, {
       i18n,
       utils,
+      assets,
       dataSource,
       globalState,
       blockSchemas,
@@ -1587,6 +1842,17 @@ export class VueToDslConverter {
       readText: async (filePath: string) => {
         try {
           return await fs.readFile(path.join(appDir, ...this.normalizeVirtualPath(filePath).split('/')), 'utf-8')
+        } catch {
+          return null
+        }
+      },
+      readDataUrl: async (filePath: string) => {
+        try {
+          const normalizedPath = this.normalizeVirtualPath(filePath)
+          const fileBuffer = await fs.readFile(path.join(appDir, ...normalizedPath.split('/')))
+          const mimeType = this.getMimeTypeByAssetPath(normalizedPath)
+
+          return `data:${mimeType};base64,${fileBuffer.toString('base64')}`
         } catch {
           return null
         }
@@ -1657,7 +1923,16 @@ export class VueToDslConverter {
     return {
       allFiles: appFiles,
       fileSet: new Set(appFiles),
-      readText: async (filePath: string) => readText(joinRoot(filePath))
+      readText: async (filePath: string) => readText(joinRoot(filePath)),
+      readDataUrl: async (filePath: string) => {
+        const normalizedPath = this.normalizeVirtualPath(filePath)
+        const zipFile = zip.file(joinRoot(normalizedPath))
+        if (!zipFile) return null
+
+        const mimeType = this.getMimeTypeByAssetPath(normalizedPath)
+        const base64Content = await zipFile.async('base64')
+        return `data:${mimeType};base64,${base64Content}`
+      }
     }
   }
 
@@ -1736,6 +2011,17 @@ export class VueToDslConverter {
       readText: async (filePath: string) => {
         const file = filesByPath.get(this.normalizeVirtualPath(filePath))
         return file ? await readText(file) : null
+      },
+      readDataUrl: async (filePath: string) => {
+        const file = filesByPath.get(this.normalizeVirtualPath(filePath))
+        if (!file) return null
+
+        return await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader()
+          reader.onload = () => resolve(reader.result as string)
+          reader.onerror = () => reject(reader.error)
+          reader.readAsDataURL(file)
+        }).catch(() => null)
       }
     }
   }

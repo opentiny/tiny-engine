@@ -65,6 +65,23 @@ function resolveIdentifierReplacement(name: string, context: any) {
   return `this.state.${name}`
 }
 
+function shouldRewriteTemplateIdentifier(path: any) {
+  if (path.isReferencedIdentifier()) return true
+
+  const { parent } = path
+  if (!parent) return false
+
+  if (path.parentPath?.isAssignmentExpression() && parent.left === path.node) {
+    return true
+  }
+
+  if (path.parentPath?.isUpdateExpression() && parent.argument === path.node) {
+    return true
+  }
+
+  return false
+}
+
 function ensureThisPrefix(exp: string, options: any = {}, loopVariables: string[] = []) {
   const v = String(exp || '').trim()
   if (!v) return v
@@ -79,7 +96,7 @@ function ensureThisPrefix(exp: string, options: any = {}, loopVariables: string[
 
     traverse(ast, {
       Identifier(path: any) {
-        if (!path.isReferencedIdentifier()) return
+        if (!shouldRewriteTemplateIdentifier(path)) return
 
         const { node, parent } = path
         const name = node.name
@@ -257,6 +274,11 @@ function toPascalCase(input: string) {
     .join('')
 }
 
+function normalizeTemplatePropName(name: string) {
+  if (name === 'class') return 'className'
+  return name
+}
+
 function getComponentName(tag: string, options: any) {
   if (options.componentMap && options.componentMap[tag]) return options.componentMap[tag]
   const lower = tag.toLowerCase()
@@ -379,7 +401,7 @@ function parseNodeProps(props: any[], _options: any) {
   const result: Record<string, any> = {}
   props.forEach((prop: any) => {
     if (prop.type === 6) {
-      const name = prop.name === 'class' ? 'className' : prop.name
+      const name = normalizeTemplatePropName(prop.name)
       result[name] = prop.value ? prop.value.content : true
     }
   })
@@ -627,7 +649,8 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
         break
       case 'model':
         {
-          const modelProp = prop.arg ? String(prop.arg.content || '').trim() || 'modelValue' : 'modelValue'
+          const rawModelProp = prop.arg ? String(prop.arg.content || '').trim() || 'modelValue' : 'modelValue'
+          const modelProp = normalizeTemplatePropName(rawModelProp)
           schema.props[modelProp] = {
             type: 'JSExpression',
             value: ensureThisPrefix(String(prop.exp.content), _options, activeLoopVariables),
@@ -639,12 +662,15 @@ function parseDirectives(node: any, schema: any, _options: any, parentLoopVariab
         const rawEvent = prop.arg ? prop.arg.content : 'click'
         const eventName = `on${toPascalCase(rawEvent)}`
         const val = prop.exp ? String(prop.exp.content || '') : ''
+        if (!val.trim()) {
+          break
+        }
         schema.props[eventName] = { type: 'JSExpression', value: ensureThisPrefix(val, _options, activeLoopVariables) }
         break
       }
       case 'bind': {
-        let attrName = prop.arg ? prop.arg.content : 'value'
-        if (attrName === 'class') attrName = 'className'
+        const rawAttrName = prop.arg ? prop.arg.content : 'value'
+        const attrName = normalizeTemplatePropName(rawAttrName)
         if (prop.exp && prop.exp.content !== null) {
           const raw = String(prop.exp.content)
           const parsed = parseLiteralExpression(raw)

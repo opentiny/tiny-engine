@@ -12,7 +12,12 @@
 
 /* metaService: engine.toolbars.upload.http */
 
-import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { getMetaApi, getMergeMeta, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+
+const getResourceRequestMeta = () => ({
+  appId: getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id,
+  platformId: getMergeMeta('engine.config')?.platformId
+})
 
 // 获取页面列表
 export const fetchPageList = (appId: string) => getMetaApi(META_SERVICE.Http).get(`/app-center/api/pages/list/${appId}`)
@@ -54,3 +59,30 @@ export const createUtilsResource = (params: any) =>
 // 更新工具类
 export const updateUtilsResource = (params: any) =>
   getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/extension/update', params)
+
+// 资源管理 - 获取资源分组列表
+export const fetchResourceGroups = () =>
+  getMetaApi(META_SERVICE.Http).get(
+    `/material-center/api/resource-group/${getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id}`
+  )
+
+// 资源管理 - 创建资源分组
+export const createResourceGroup = (params: any) =>
+  getMetaApi(META_SERVICE.Http).post('/material-center/api/resource-group/create', {
+    ...params,
+    ...getResourceRequestMeta()
+  })
+
+// 资源管理 - 获取分组下资源列表
+export const fetchResourceListByGroupId = (resourceGroupId: number | string) =>
+  getMetaApi(META_SERVICE.Http).get(`/material-center/api/resource/find/${resourceGroupId}`)
+
+// 资源管理 - 批量创建资源
+export const batchCreateResource = (params: any[]) =>
+  getMetaApi(META_SERVICE.Http).post(
+    '/material-center/api/resource/create/batch',
+    params.map((item: any) => ({
+      ...item,
+      ...getResourceRequestMeta()
+    }))
+  )

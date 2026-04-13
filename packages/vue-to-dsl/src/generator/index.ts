@@ -164,14 +164,66 @@ function getStateReferenceName(node: any) {
   return ''
 }
 
+function convertLiteralAstToValue(node: any): any {
+  if (!node) return undefined
+
+  switch (node.type) {
+    case 'StringLiteral':
+    case 'NumericLiteral':
+    case 'BooleanLiteral':
+      return node.value
+    case 'NullLiteral':
+      return null
+    case 'TemplateLiteral':
+      return node.expressions?.length ? undefined : node.quasis?.map((item: any) => item.value?.cooked || '').join('')
+    case 'ArrayExpression': {
+      const items: any[] = []
+      for (const element of node.elements || []) {
+        if (!element) return undefined
+        const itemValue = convertLiteralAstToValue(element)
+        if (itemValue === undefined) return undefined
+        items.push(itemValue)
+      }
+      return items
+    }
+    case 'ObjectExpression': {
+      const result: Record<string, any> = {}
+      for (const property of node.properties || []) {
+        if (property?.type !== 'ObjectProperty' || property.computed) return undefined
+
+        const keyNode = property.key
+        const key =
+          keyNode?.type === 'Identifier'
+            ? keyNode.name
+            : keyNode?.type === 'StringLiteral'
+            ? keyNode.value
+            : keyNode?.type === 'NumericLiteral'
+            ? String(keyNode.value)
+            : ''
+
+        if (!key) return undefined
+
+        const propertyValue = convertLiteralAstToValue(property.value)
+        if (propertyValue === undefined) return undefined
+        result[key] = propertyValue
+      }
+      return result
+    }
+    default:
+      return undefined
+  }
+}
+
 function inferDefaultValueFromExpression(node: any, knownDefaults: Map<string, any>): any {
   if (!node) return undefined
 
   switch (node.type) {
     case 'ArrayExpression':
-      return []
-    case 'ObjectExpression':
-      return {}
+    case 'ObjectExpression': {
+      const literalValue = convertLiteralAstToValue(node)
+      if (literalValue !== undefined) return literalValue
+      return node.type === 'ArrayExpression' ? [] : {}
+    }
     case 'StringLiteral':
       return node.value
     case 'TemplateLiteral':
@@ -247,18 +299,28 @@ function inferComputedDefaultValue(functionCode: string, knownDefaults: Map<stri
   return inferDefaultValueFromExpression(returnedExpression, knownDefaults)
 }
 
+function stabilizeComputedGetterCode(code: string) {
+  if (!code) return code
+
+  return code.replace(
+    /\b(this\.state\.([A-Za-z_$][\w$]*))\.(reduce|filter|map|slice|concat|flat|flatMap|some|every|find|findIndex)\(/g,
+    '($1 || []).$3('
+  )
+}
+
 function buildComputedGetterValue(key: string, computedValue: string) {
   const parsed = parseFunctionExpression(computedValue)
   const expression = parsed?.expression
   const wrappedCode = parsed?.wrappedCode || ''
-  const fallbackValue = `function getter() { this.state.${key} = (${computedValue}).call(this) }`
+  const safeComputedValue = stabilizeComputedGetterCode(computedValue)
+  const fallbackValue = `function getter() { this.state.${key} = (${safeComputedValue}).call(this) }`
 
   if (!expression) {
     return fallbackValue
   }
 
   if (expression.type === 'ArrowFunctionExpression' && expression.body?.type !== 'BlockStatement') {
-    const returnedCode = getNodeSource(wrappedCode, expression.body).trim()
+    const returnedCode = stabilizeComputedGetterCode(getNodeSource(wrappedCode, expression.body).trim())
 
     return returnedCode ? `function getter() { this.state.${key} = ${returnedCode} }` : fallbackValue
   }
@@ -278,7 +340,7 @@ function buildComputedGetterValue(key: string, computedValue: string) {
     return fallbackValue
   }
 
-  return `function getter() { ${getterStatements} }`
+  return `function getter() { ${stabilizeComputedGetterCode(String(getterStatements))} }`
 }
 function convertToPlainValue(expr: any) {
   // If it's already an object or array, return as-is (for nested reactive objects)
@@ -503,6 +565,7 @@ export function generateAppSchema(pageSchemas: any[], options: any = {}) {
     },
     i18n: options.i18n || { en_US: {}, zh_CN: {} },
     utils: options.utils || [],
+    assets: options.assets || [],
     dataSource: options.dataSource || { list: [] },
     globalState: options.globalState || [],
     pageSchema: pageSchemas || [],

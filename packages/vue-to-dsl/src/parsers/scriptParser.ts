@@ -838,6 +838,11 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
     const ast = parse(code, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
     const replacements: Array<{ start: number; end: number; text: string }> = []
     const seenRanges = new Set<string>()
+    const isRewritableIdentifier = (path: any) => {
+      if (path.isReferencedIdentifier()) return true
+
+      return path.parentPath?.isAssignmentPattern?.() && path.parent?.right === path.node
+    }
 
     const pushReplacement = (start: number, end: number, text: string) => {
       if (typeof start !== 'number' || typeof end !== 'number' || start >= end) return
@@ -868,7 +873,7 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
         pushReplacement(path.node.start, path.node.end, replacement)
       },
       Identifier(path: any) {
-        if (!path.isReferencedIdentifier()) return
+        if (!isRewritableIdentifier(path)) return
 
         const { node, parent } = path
         const name = node.name
@@ -969,11 +974,51 @@ function createStateEvaluationContext(result: any) {
   return context
 }
 
+function createMethodEvaluationContext(result: any, stateContext: Record<string, any>) {
+  const methodEntries = Object.entries(result?.methods || {})
+  const context: Record<string, any> = {}
+  const pendingMethods = new Map<string, string>()
+
+  methodEntries.forEach(([key, entry]: [string, any]) => {
+    const code = typeof entry === 'string' ? entry : entry?.value
+    if (typeof code === 'string' && code.trim()) {
+      pendingMethods.set(key, code)
+    }
+  })
+
+  let changed = true
+  while (pendingMethods.size > 0 && changed) {
+    changed = false
+
+    for (const [key, code] of Array.from(pendingMethods.entries())) {
+      const runtimeContext = { ...stateContext, ...context }
+      const argNames = Object.keys(runtimeContext)
+      const argValues = Object.values(runtimeContext)
+
+      try {
+        const evaluator = new Function(...argNames, `"use strict"; return (${code});`)
+        const methodValue = evaluator(...argValues)
+
+        if (typeof methodValue === 'function') {
+          context[key] = methodValue
+          pendingMethods.delete(key)
+          changed = true
+        }
+      } catch {
+        // Skip methods whose dependencies are not ready yet; they can be retried in the next pass.
+      }
+    }
+  }
+
+  return context
+}
+
 function hasStateInitializerDependency(node: any, source: string, result: any) {
   const code = sanitizeCodeFromNode(node, source)
   const stateNames = new Set(Object.keys(result?.state || {}))
+  const methodNames = new Set(Object.keys(result?.methods || {}))
 
-  if (!code || stateNames.size === 0) return false
+  if (!code || (stateNames.size === 0 && methodNames.size === 0)) return false
 
   try {
     const ast = parse(`(${code})`, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
@@ -985,7 +1030,7 @@ function hasStateInitializerDependency(node: any, source: string, result: any) {
 
         const { node, parent } = path
         const name = node?.name
-        if (!name || !stateNames.has(name)) return
+        if (!name || (!stateNames.has(name) && !methodNames.has(name))) return
 
         const binding = path.scope.getBinding(name)
         if (binding && binding.kind !== 'module') return
@@ -1019,7 +1064,9 @@ function tryEvaluateStateExpression(node: any, source: string, result: any) {
   if (!code) return { ok: false }
   if (!hasStateInitializerDependency(node, source, result)) return { ok: false }
 
-  const context = createStateEvaluationContext(result)
+  const stateContext = createStateEvaluationContext(result)
+  const methodContext = createMethodEvaluationContext(result, stateContext)
+  const context = { ...stateContext, ...methodContext }
   const argNames = Object.keys(context)
   const argValues = Object.values(context)
 
@@ -1225,9 +1272,21 @@ function rewriteImportedUtilsInResult(result: any) {
   result.lifeCycles = rewriteImportedUtilsInEntries(result.lifeCycles || {}, imports, result.usedUtilsImports)
 }
 
+function functionParamToCode(node: any, source: string): string {
+  if (t.isAssignmentPattern(node)) {
+    return `${functionParamToCode(node.left, source)} = ${sanitizeCodeFromNode(node.right, source)}`
+  }
+
+  if (t.isRestElement(node)) {
+    return `...${functionParamToCode(node.argument, source)}`
+  }
+
+  return sanitizeCodeFromNode(node, source)
+}
+
 function arrowToFunctionString(name: string, node: t.ArrowFunctionExpression, source: string) {
   const asyncStr = node.async ? 'async ' : ''
-  const params = node.params.map((p) => sanitizeCodeFromNode(p, source)).join(', ')
+  const params = node.params.map((p) => functionParamToCode(p, source)).join(', ')
   if (t.isBlockStatement(node.body)) {
     const body = sanitizeCodeFromNode(node.body, source)
     return `${asyncStr}function ${name}(${params}) ${body}`
@@ -1242,8 +1301,15 @@ function functionExpressionToNamedFunctionString(
   source: string
 ) {
   const asyncStr = (node as any).async ? 'async ' : ''
-  const params = (node as any).params.map((p: any) => sanitizeCodeFromNode(p, source)).join(', ')
+  const params = (node as any).params.map((p: any) => functionParamToCode(p, source)).join(', ')
   const body = sanitizeCodeFromNode((node as any).body, source)
+  return `${asyncStr}function ${name}(${params}) ${body}`
+}
+
+function functionDeclarationToNamedFunctionString(name: string, node: t.FunctionDeclaration, source: string) {
+  const asyncStr = node.async ? 'async ' : ''
+  const params = node.params.map((p) => functionParamToCode(p, source)).join(', ')
+  const body = sanitizeCodeFromNode(node.body, source)
   return `${asyncStr}function ${name}(${params}) ${body}`
 }
 
@@ -1343,8 +1409,8 @@ function assignStateIfNamedState(name: string, init: any, result: any, source: s
         result.state[key] = { type: 'reactive', value }
       })
     } else {
-      const initCode = getNodeValue(init, source)
-      result.state[name] = { type: 'reactive', value: initCode }
+      const value = firstArg ? getStateInitializerValue(firstArg, source, result) : getNodeValue(init, source)
+      result.state[name] = { type: 'reactive', value }
     }
     return true
   }
@@ -1416,8 +1482,8 @@ function handleVariableDeclarator(name: string, init: any, result: any, source: 
         result.state[name] = { type: 'reactive', value: stateValue }
       }
     } else {
-      const initCode = getNodeValue(init, source)
-      result.state[name] = { type: 'reactive', value: initCode }
+      const stateValue = firstArg ? getStateInitializerValue(firstArg, source, result) : getNodeValue(init, source)
+      result.state[name] = { type: 'reactive', value: stateValue }
     }
     return
   }
@@ -1452,7 +1518,13 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
   const functionBodies: Record<string, string> = {}
 
   body.body.forEach((statement: any) => {
-    if (t.isFunctionDeclaration(statement) && statement.id) declaredFunctions.add(statement.id.name)
+    if (t.isFunctionDeclaration(statement) && statement.id) {
+      const name = statement.id.name
+      const fnCode = functionDeclarationToNamedFunctionString(name, statement, source)
+      declaredFunctions.add(name)
+      functionBodies[name] = fnCode
+      routeFunctionLikeByName(result, name, fnCode)
+    }
   })
 
   body.body.forEach((statement: any) => {
@@ -1463,11 +1535,6 @@ function parseSetupFunctionBody(body: any, result: any, source: string) {
           handleVariableDeclarator(name, declaration.init, result, source)
         }
       })
-    } else if (t.isFunctionDeclaration(statement)) {
-      const name = statement.id!.name
-      const fnCode = sanitizeCodeFromNode(statement, source)
-      functionBodies[name] = fnCode
-      routeFunctionLikeByName(result, name, fnCode)
     } else if (t.isExpressionStatement(statement) && t.isCallExpression(statement.expression)) {
       const call = statement.expression
       if (t.isIdentifier(call.callee) && isLifecycleHook(call.callee.name)) {
@@ -1630,6 +1697,78 @@ function parsePropsSimple(node: any, source = '') {
   return []
 }
 
+function applyWithDefaultsToProps(props: any[], defaultsNode: any, source = '') {
+  if (!Array.isArray(props) || !t.isObjectExpression(defaultsNode)) return props
+
+  const defaultsMap = new Map<string, any>()
+  defaultsNode.properties.forEach((prop: any) => {
+    if (!t.isObjectProperty(prop)) return
+    const keyName = getObjectKeyName(prop.key)
+    if (!keyName) return
+
+    defaultsMap.set(keyName, getNodeValue(prop.value, source))
+  })
+
+  if (!defaultsMap.size) return props
+
+  return props.map((prop: any) => {
+    if (!prop?.name || !defaultsMap.has(prop.name)) return prop
+
+    return {
+      ...prop,
+      default: defaultsMap.get(prop.name),
+      required: false
+    }
+  })
+}
+
+function extractDefinePropsCall(node: any) {
+  if (!t.isCallExpression(node)) return null
+
+  if (t.isIdentifier(node.callee) && node.callee.name === 'defineProps') {
+    return {
+      definePropsCall: node,
+      defaultsNode: null
+    }
+  }
+
+  if (t.isIdentifier(node.callee) && node.callee.name === 'withDefaults') {
+    const definePropsCall = node.arguments?.[0]
+    const defaultsNode = node.arguments?.[1]
+
+    if (
+      t.isCallExpression(definePropsCall) &&
+      t.isIdentifier(definePropsCall.callee) &&
+      definePropsCall.callee.name === 'defineProps'
+    ) {
+      return {
+        definePropsCall,
+        defaultsNode: defaultsNode || null
+      }
+    }
+  }
+
+  return null
+}
+
+function parseSetupDefineProps(node: any, source: string, typeDecls: Map<string, any> = new Map()) {
+  const extracted = extractDefinePropsCall(node)
+  if (!extracted) return null
+
+  const { definePropsCall, defaultsNode } = extracted
+  const typeParameters = definePropsCall.typeParameters || definePropsCall.typeArguments
+  let props = []
+
+  const arg = definePropsCall.arguments?.[0]
+  if (arg) {
+    props = parsePropsSimple(arg, source)
+  } else if (typeParameters?.params?.[0]) {
+    props = parsePropsFromTypeNode(typeParameters.params[0], typeDecls)
+  }
+
+  return applyWithDefaultsToProps(props, defaultsNode, source)
+}
+
 function parseMethodsSimple(node: any, source: string) {
   if (!t.isObjectExpression(node)) return {}
   const methods: Record<string, any> = {}
@@ -1678,6 +1817,38 @@ function parseComputedSimple(node: any, source: string) {
   return computed
 }
 
+function getReturnedObjectExpressionFromFunction(node: any) {
+  if (!node) return null
+
+  if (t.isArrowFunctionExpression(node) && !t.isBlockStatement(node.body)) {
+    const body = unwrapExpression(node.body)
+    return t.isObjectExpression(body) ? body : null
+  }
+
+  const body = (node as any).body
+  if (!t.isBlockStatement(body)) return null
+
+  const returnStatement = body.body.find((statement: any) => t.isReturnStatement(statement) && statement.argument)
+  if (!returnStatement?.argument) return null
+
+  const returned = unwrapExpression(returnStatement.argument)
+  return t.isObjectExpression(returned) ? returned : null
+}
+
+function parseOptionsData(node: any, result: any, source: string) {
+  const returnedObject = getReturnedObjectExpressionFromFunction(node)
+
+  if (returnedObject) {
+    const stateValue = extractObjectValue(returnedObject, source, result)
+    Object.entries(stateValue || {}).forEach(([key, value]) => {
+      result.state[key] = { type: 'reactive', value }
+    })
+    return
+  }
+
+  result.state = { data: 'function() { return {} }' }
+}
+
 function parseOptionsObject(objectExpression: any, result: any, source: string) {
   objectExpression.properties.forEach((prop: any) => {
     if (t.isObjectProperty(prop) && t.isIdentifier(prop.key)) {
@@ -1687,7 +1858,7 @@ function parseOptionsObject(objectExpression: any, result: any, source: string) 
           result.props = parsePropsSimple(prop.value, source)
           break
         case 'data':
-          result.state = { data: 'function() { return {} }' }
+          parseOptionsData(prop.value, result, source)
           break
         case 'methods':
           result.methods = parseMethodsSimple(prop.value, source)
@@ -1726,7 +1897,9 @@ function parseOptionsObject(objectExpression: any, result: any, source: string) 
       }
     } else if (t.isObjectMethod(prop) && t.isIdentifier(prop.key)) {
       const key = prop.key.name
-      if (key === 'setup') {
+      if (key === 'data') {
+        parseOptionsData(prop, result, source)
+      } else if (key === 'setup') {
         // 输出 setup 生命周期，并解析其函数体
         const code = functionExpressionToNamedFunctionString('setup', prop, source)
         setLifecycleEntry(result, 'setup', code)
@@ -1788,12 +1961,25 @@ function parseSetupScript(ast: any, result: any, source: string) {
   })
 
   programBody.forEach((statement: any) => {
+    if (!t.isFunctionDeclaration(statement) || !statement.id) return
+
+    const name = statement.id.name
+    const code = functionDeclarationToNamedFunctionString(name, statement, source)
+    routeFunctionLikeByName(result, name, code)
+  })
+
+  programBody.forEach((statement: any) => {
     if (t.isVariableDeclaration(statement)) {
       statement.declarations.forEach((declaration: any) => {
         if (!t.isIdentifier(declaration.id) || !declaration.init) return
 
         const name = declaration.id.name
         const typeParameters = declaration.init.typeParameters || declaration.init.typeArguments
+        const parsedProps = parseSetupDefineProps(declaration.init, source, typeDecls)
+        if (parsedProps) {
+          result.props = parsedProps
+          return
+        }
         // 处理 const props = defineProps({...}) 或 const props = defineProps([...])
         if (
           t.isCallExpression(declaration.init) &&
@@ -1832,6 +2018,11 @@ function parseSetupScript(ast: any, result: any, source: string) {
 
     if (t.isExpressionStatement(statement) && t.isCallExpression(statement.expression)) {
       const expr = statement.expression
+      const parsedProps = parseSetupDefineProps(expr, source, typeDecls)
+      if (parsedProps) {
+        result.props = parsedProps
+        return
+      }
 
       // 处理无赋值的 defineProps({...}) 调用
       if (t.isIdentifier(expr.callee) && expr.callee.name === 'defineProps') {
@@ -1879,12 +2070,6 @@ function parseSetupScript(ast: any, result: any, source: string) {
         else setLifecycleEntry(result, hookName, cbCode)
       }
       return
-    }
-
-    if (t.isFunctionDeclaration(statement) && statement.id) {
-      const name = statement.id.name
-      const code = sanitizeCodeFromNode(statement, source)
-      routeFunctionLikeByName(result, name, code)
     }
   })
 }

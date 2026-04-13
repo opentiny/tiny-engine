@@ -46,6 +46,7 @@ import {
   useMaterial,
   useTranslate,
   getMetaApi,
+  getMergeMeta,
   META_SERVICE
 } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
@@ -59,16 +60,37 @@ import {
   deployBlock,
   fetchUtilsResourceList,
   createUtilsResource,
-  updateUtilsResource
+  updateUtilsResource,
+  fetchResourceGroups,
+  createResourceGroup,
+  fetchResourceListByGroupId,
+  batchCreateResource
 } from './http'
-import { buildImportedBlockEvents, normalizeImportedBlockDefaultValue, splitImportedBlockBindings } from './blockImport'
-import { normalizeImportedAppSchema, normalizeImportedSchema } from './schemaImport'
+import {
+  buildImportedAssetCreatePayload,
+  buildImportedAssetResourceName,
+  findImportedAssetResource,
+  getImportedAssetResourceUrl,
+  getImportedAssets,
+  normalizeImportedAssetResourceList,
+  splitImportedAssetCreatePayloads,
+  replaceImportedAssetPlaceholders
+} from './assetImport'
+import {
+  buildImportedBlockEvents,
+  resolveImportedBlockDefaultValue,
+  resolveImportedBlockPropType,
+  splitImportedBlockBindings
+} from './blockImport'
+import { hydrateImportedAppSchemaState, normalizeImportedAppSchema, normalizeImportedSchema } from './schemaImport'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
 import { TinyPopover } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 
 const { OPEN_DELAY } = constants
+const IMPORTED_RESOURCE_GROUP_NAME = '项目导入资源'
+const IMPORTED_RESOURCE_GROUP_DESCRIPTION = '项目导入时自动上传的图片资源'
 
 // @ts-ignore
 export default {
@@ -494,20 +516,6 @@ export default {
                 function: 'CodeConfigurator'
               }
 
-              // 推断值的类型
-              const inferType = (val: any): string => {
-                if (val === null || val === undefined) return 'string'
-                if (typeof val === 'object' && val.type === 'JSExpression') return 'string'
-                if (Array.isArray(val)) return 'array'
-                return typeof val
-              }
-
-              // 获取默认值（JSExpression 取其原始值，其他直接用）
-              const getDefaultValue = (val: any): any => {
-                if (val === null || val === undefined) return ''
-                return val
-              }
-
               // 合并两个来源的 props：
               // 1. 子组件自身声明的 props（bs.props）
               // 2. 父组件传递的 props（parentPropsMap）
@@ -528,11 +536,8 @@ export default {
                 const declared = declaredProps[propName]
                 const parentVal = parentProps[propName]
 
-                const propType = declared?.type || inferType(parentVal)
-                const defaultValue =
-                  declared?.default !== undefined
-                    ? normalizeImportedBlockDefaultValue(declared.default)
-                    : normalizeImportedBlockDefaultValue(getDefaultValue(parentVal))
+                const propType = resolveImportedBlockPropType(declared?.type, parentVal)
+                const defaultValue = resolveImportedBlockDefaultValue(declared?.default, parentVal)
 
                 blockProperties.push({
                   property: propName,
@@ -587,6 +592,9 @@ export default {
                 }
               }
               const children = JSON.parse(JSON.stringify(bs.children || []))
+              const blockState = JSON.parse(JSON.stringify(bs.state || {}))
+              const blockMethods = JSON.parse(JSON.stringify(bs.methods || {}))
+              const blockLifeCycles = JSON.parse(JSON.stringify(bs.lifeCycles || {}))
               children.forEach(rewriteChildrenProps)
 
               const blockParams: any = {
@@ -622,8 +630,9 @@ export default {
                     events: buildImportedBlockEvents(bs.emits || [], parentEvents),
                     slots: {}
                   },
-                  state: {},
-                  methods: bs.methods || {},
+                  state: blockState,
+                  methods: blockMethods,
+                  lifeCycles: blockLifeCycles,
                   dataSource: bs.dataSource || {},
                   dependencies: bs.dependencies || { scripts: [], styles: [] },
                   id: 'body'
@@ -714,9 +723,136 @@ export default {
       return { total: blocks.length, created: 0, updated: 0 }
     }
 
+    const ensureImportedResourceGroup = async () => {
+      const groupResponse: any = await fetchResourceGroups()
+      const groupList = Array.isArray(groupResponse) ? groupResponse : groupResponse?.data || []
+      const existingGroup = groupList.find((item: any) => String(item?.name || '') === IMPORTED_RESOURCE_GROUP_NAME)
+
+      if (existingGroup?.id) {
+        return existingGroup
+      }
+
+      return await createResourceGroup({
+        name: IMPORTED_RESOURCE_GROUP_NAME,
+        description: IMPORTED_RESOURCE_GROUP_DESCRIPTION
+      })
+    }
+
+    const syncImportedAssets = async (appSchema: any) => {
+      const importedAssets = getImportedAssets(appSchema)
+      if (!importedAssets.length) {
+        delete appSchema?.assets
+        return { total: 0, uploaded: 0, reused: 0 }
+      }
+
+      const { id: appId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      const platformId = getMergeMeta('engine.config')?.platformId
+      const resourceGroup = await ensureImportedResourceGroup()
+      const resourceResponse: any = await fetchResourceListByGroupId(resourceGroup.id)
+      const existingResources = normalizeImportedAssetResourceList(resourceResponse)
+      const existingByName = new Map<string, any>()
+      const urlMap = new Map<string, string>()
+      const createPayloads: any[] = []
+
+      existingResources.forEach((item: any) => {
+        if (!item?.name) return
+        existingByName.set(String(item.name), item)
+      })
+
+      importedAssets.forEach((asset: any) => {
+        const resourceName = buildImportedAssetResourceName(asset)
+        const existing = existingByName.get(resourceName)
+        const existingResourceUrl = getImportedAssetResourceUrl(existing)
+
+        if (existingResourceUrl) {
+          urlMap.set(String(asset.placeholder), String(existingResourceUrl))
+          return
+        }
+
+        createPayloads.push({
+          placeholder: asset.placeholder,
+          ...buildImportedAssetCreatePayload(asset, resourceGroup.id, { appId, platformId })
+        })
+      })
+
+      if (createPayloads.length) {
+        const uploadPayloads = createPayloads.map((item: any) => ({
+          name: item.name,
+          description: item.description,
+          resourceGroupId: item.resourceGroupId,
+          resourceData: item.resourceData,
+          resourceUrl: item.resourceUrl,
+          category: item.category,
+          appId: item.appId,
+          platformId: item.platformId
+        }))
+        const uploadBatches = splitImportedAssetCreatePayloads(uploadPayloads)
+        const createdResources: any[] = []
+
+        for (const batch of uploadBatches) {
+          const createResponse: any = await batchCreateResource(batch)
+          createdResources.push(...normalizeImportedAssetResourceList(createResponse))
+        }
+
+        const createdByName = new Map<string, any>()
+        createdResources.forEach((item: any) => {
+          if (!item?.name) return
+          createdByName.set(String(item.name), item)
+        })
+
+        createPayloads.forEach((item: any) => {
+          const created = createdByName.get(String(item.name)) || findImportedAssetResource(createdResources, item)
+          const createdResourceUrl = getImportedAssetResourceUrl(created)
+          if (createdResourceUrl) {
+            urlMap.set(String(item.placeholder), String(createdResourceUrl))
+          }
+        })
+
+        for (let attempt = 0; attempt < 4; attempt += 1) {
+          const pendingPayloads = createPayloads.filter((item: any) => !urlMap.get(String(item.placeholder)))
+          if (!pendingPayloads.length) {
+            break
+          }
+
+          if (attempt > 0) {
+            await new Promise((resolve) => window.setTimeout(resolve, 400 * attempt))
+          }
+
+          const refreshedResponse: any = await fetchResourceListByGroupId(resourceGroup.id)
+          const refreshedResources = normalizeImportedAssetResourceList(refreshedResponse)
+
+          pendingPayloads.forEach((item: any) => {
+            const created = findImportedAssetResource(refreshedResources, item)
+            const createdResourceUrl = getImportedAssetResourceUrl(created)
+            if (createdResourceUrl) {
+              urlMap.set(String(item.placeholder), String(createdResourceUrl))
+            }
+          })
+        }
+      }
+
+      const unresolvedAsset = importedAssets.find((item: any) => !urlMap.get(String(item.placeholder)))
+      if (unresolvedAsset) {
+        throw new Error(
+          `图片资源上传失败：${unresolvedAsset.filePath || unresolvedAsset.name || unresolvedAsset.placeholder}`
+        )
+      }
+
+      replaceImportedAssetPlaceholders(appSchema, urlMap)
+      delete appSchema.assets
+      useResource().fetchResource?.()
+
+      return {
+        total: importedAssets.length,
+        uploaded: createPayloads.length,
+        reused: importedAssets.length - createPayloads.length
+      }
+    }
+
     const processAppSchema = async (appSchema: any) => {
       normalizeImportedAppSchemaIcons(appSchema)
       normalizeImportedAppSchema(appSchema)
+      await hydrateImportedAppSchemaState(appSchema)
 
       const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
@@ -776,6 +912,7 @@ export default {
             return
           }
 
+          await syncImportedAssets(appSchema)
           await Promise.allSettled(
             pagesToCreate.map((ps: any) =>
               getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
@@ -784,6 +921,7 @@ export default {
           const { pageSettingState } = usePage()
           await pageSettingState.updateTreeData?.()
         } catch (e) {
+          await syncImportedAssets(appSchema)
           await Promise.allSettled(
             pages.map((ps: any) =>
               getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
@@ -792,6 +930,10 @@ export default {
           const { pageSettingState } = usePage()
           await pageSettingState.updateTreeData?.()
         }
+      }
+
+      if (!pages.length) {
+        await syncImportedAssets(appSchema)
       }
 
       await applyImportedAppSchema(appSchema, appId, type)
@@ -818,6 +960,7 @@ export default {
       const result = await converter.convertFromString(text, file.name)
       normalizeImportedSchemaIcons(result?.schema)
       normalizeImportedSchema(result?.schema)
+      await hydrateImportedAppSchemaState({ pageSchema: [result?.schema], blockSchemas: [] })
 
       // 解析单文件页面信息
       const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
@@ -943,6 +1086,9 @@ export default {
         const appId = state.appId
         const { type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
         const pendingAppSchema = state.pendingAppSchema
+        if (pendingAppSchema) {
+          await syncImportedAssets(pendingAppSchema)
+        }
         const requests: Promise<any>[] = []
         // 更新选中的重名项
         for (const item of state.duplicatePages) {
