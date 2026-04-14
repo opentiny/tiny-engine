@@ -477,9 +477,24 @@ function stabilizeComputedGetterCode(code: string) {
   )
 }
 
+function normalizeImportedRuntimeHelpers(code: string) {
+  if (!code || typeof code !== 'string') return code
+
+  return code
+    .replace(/\bthis\.\$router\b/g, 'this.router')
+    .replace(/\bthis\.\$route\b/g, 'this.route')
+    .replace(/\bawait\s+(?:this\.)?(?:\$?nextTick)\s*\(\s*\)/g, 'await Promise.resolve()')
+    .replace(
+      /\b(?:this\.)?(?:\$?nextTick)\s*\(\s*([^()]+|\([^)]*\)\s*=>[\s\S]*?|function[\s\S]*?)\s*\)/g,
+      (_match, callback) => {
+        return `Promise.resolve().then(${String(callback).trim()})`
+      }
+    )
+}
+
 function buildComputedGetterValue(key: string, computedValue: string) {
   const shape = getFunctionShape(computedValue)
-  const safeComputedValue = stabilizeComputedGetterCode(computedValue)
+  const safeComputedValue = normalizeImportedRuntimeHelpers(stabilizeComputedGetterCode(computedValue))
   const fallbackValue = `function getter() { this.state.${key} = (${safeComputedValue}).call(this) }`
 
   if (!shape) {
@@ -487,7 +502,7 @@ function buildComputedGetterValue(key: string, computedValue: string) {
   }
 
   if (shape.type === 'expression') {
-    const body = stabilizeComputedGetterCode(shape.body)
+    const body = normalizeImportedRuntimeHelpers(stabilizeComputedGetterCode(shape.body))
     return body ? `function getter() { this.state.${key} = ${body} }` : fallbackValue
   }
 
@@ -500,8 +515,110 @@ function buildComputedGetterValue(key: string, computedValue: string) {
   const getterStatements = [beforeReturn, `this.state.${key} = ${returnInfo.expression}`].filter(Boolean)
 
   return getterStatements.length
-    ? `function getter() { ${stabilizeComputedGetterCode(getterStatements.join('\n'))} }`
+    ? `function getter() { ${normalizeImportedRuntimeHelpers(
+        stabilizeComputedGetterCode(getterStatements.join('\n'))
+      )} }`
     : fallbackValue
+}
+
+function normalizeImportedRuntimeCodeEntries(target: any) {
+  if (!target || typeof target !== 'object') return
+
+  Object.values(target).forEach((entry: any) => {
+    if (!entry || typeof entry !== 'object') return
+
+    if (typeof entry.value === 'string') {
+      entry.value = normalizeImportedRuntimeHelpers(entry.value)
+    }
+
+    if (entry.accessor?.getter?.value) {
+      entry.accessor.getter.value = normalizeImportedRuntimeHelpers(entry.accessor.getter.value)
+    }
+
+    if (entry.accessor?.setter?.value) {
+      entry.accessor.setter.value = normalizeImportedRuntimeHelpers(entry.accessor.setter.value)
+    }
+  })
+}
+
+function collectImportedTemplateRefNames(nodes: any, collector = new Set<string>()) {
+  if (!nodes) return collector
+
+  if (Array.isArray(nodes)) {
+    nodes.forEach((item) => collectImportedTemplateRefNames(item, collector))
+    return collector
+  }
+
+  if (typeof nodes !== 'object') return collector
+
+  const refName = nodes?.props?.ref
+  if (typeof refName === 'string' && refName.trim()) {
+    collector.add(refName.trim())
+  }
+
+  Object.values(nodes).forEach((item) => {
+    if (item && typeof item === 'object') {
+      collectImportedTemplateRefNames(item, collector)
+    }
+  })
+
+  return collector
+}
+
+function replaceImportedTemplateRefCode(code: string, refNames: Set<string>) {
+  if (!code || !refNames.size) return code
+
+  let nextCode = String(code)
+  refNames.forEach((refName) => {
+    const pattern = new RegExp(`\\bthis\\.state\\.${refName}\\b`, 'g')
+    nextCode = nextCode.replace(pattern, `this.$('${refName}')`)
+  })
+
+  return nextCode
+}
+
+function normalizeImportedTemplateRefs(schema: any) {
+  if (!schema || typeof schema !== 'object') return schema
+
+  const refNames = collectImportedTemplateRefNames(schema.children)
+  if (!refNames.size) return schema
+
+  const walk = (value: any) => {
+    if (!value || typeof value !== 'object') return
+
+    if (Array.isArray(value)) {
+      value.forEach(walk)
+      return
+    }
+
+    if ((value.type === 'JSExpression' || value.type === 'JSFunction') && typeof value.value === 'string') {
+      value.value = replaceImportedTemplateRefCode(value.value, refNames)
+      return
+    }
+
+    if (value.accessor?.getter?.value) {
+      value.accessor.getter.value = replaceImportedTemplateRefCode(value.accessor.getter.value, refNames)
+    }
+
+    if (value.accessor?.setter?.value) {
+      value.accessor.setter.value = replaceImportedTemplateRefCode(value.accessor.setter.value, refNames)
+    }
+
+    Object.values(value).forEach((item) => walk(item))
+  }
+
+  walk(schema.methods)
+  walk(schema.computed)
+  walk(schema.lifeCycles)
+  walk(schema.state)
+
+  refNames.forEach((refName) => {
+    if (schema.state && Object.prototype.hasOwnProperty.call(schema.state, refName)) {
+      delete schema.state[refName]
+    }
+  })
+
+  return schema
 }
 
 function normalizeSchemaComputedDefaults(schema: any) {
@@ -690,6 +807,11 @@ function normalizeImportedMultiRootSlots(schema: any) {
 
 export function normalizeImportedSchema(schema: any) {
   normalizeSchemaComputedDefaults(schema)
+  normalizeImportedRuntimeCodeEntries(schema?.methods)
+  normalizeImportedRuntimeCodeEntries(schema?.computed)
+  normalizeImportedRuntimeCodeEntries(schema?.lifeCycles)
+  normalizeImportedRuntimeCodeEntries(schema?.state)
+  normalizeImportedTemplateRefs(schema)
   normalizeImportedIconStates(schema)
   normalizeImportedMultiRootSlots(schema)
   return schema

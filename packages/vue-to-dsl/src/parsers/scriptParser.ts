@@ -780,6 +780,50 @@ function parseJSSlotValue(node: any, result: any, source: string) {
   return parseHSlotValue(node, source)
 }
 
+function ensureRuntimeAliasRegistry(result: any) {
+  if (!result.runtimeAliases || typeof result.runtimeAliases !== 'object') {
+    result.runtimeAliases = {
+      router: [],
+      route: [],
+      nextTick: []
+    }
+  }
+
+  return result.runtimeAliases
+}
+
+function addRuntimeAlias(result: any, target: 'router' | 'route' | 'nextTick', localName: string) {
+  if (!localName) return
+
+  const registry = ensureRuntimeAliasRegistry(result)
+  const current = Array.isArray(registry[target]) ? registry[target] : []
+
+  if (!current.includes(localName)) {
+    registry[target] = [...current, localName]
+  }
+}
+
+function getImportedLocalNames(result: any, source: string, imported: string) {
+  const names = new Set<string>()
+
+  ;(result?.imports || []).forEach((imp: any) => {
+    if (imp?.source !== source) return
+    ;(imp.specifiers || []).forEach((spec: any) => {
+      if (spec?.imported === imported && spec?.local) {
+        names.add(spec.local)
+      }
+    })
+  })
+
+  return names
+}
+
+function isImportedCallExpression(init: any, result: any, source: string, imported: string) {
+  if (!t.isCallExpression(init) || !t.isIdentifier(init.callee)) return false
+
+  return getImportedLocalNames(result, source, imported).has(init.callee.name)
+}
+
 function createScriptRewriteContext(result: any, localNames: string[] = []) {
   const stateEntries = result?.state || {}
   const propNames = new Set((result?.props || []).map((prop: any) => prop?.name).filter(Boolean))
@@ -791,6 +835,13 @@ function createScriptRewriteContext(result: any, localNames: string[] = []) {
   )
   const methodNames = new Set(Object.keys(result?.methods || {}))
   const computedNames = new Set(Object.keys(result?.computed || {}))
+  const runtimeAliases = result?.runtimeAliases || {}
+  const routerNames = new Set(runtimeAliases.router || [])
+  const routeNames = new Set(runtimeAliases.route || [])
+  const nextTickNames = new Set([
+    ...(runtimeAliases.nextTick || []),
+    ...getImportedLocalNames(result, 'vue', 'nextTick')
+  ])
 
   return {
     propNames,
@@ -798,6 +849,9 @@ function createScriptRewriteContext(result: any, localNames: string[] = []) {
     refStateNames,
     methodNames,
     computedNames,
+    routerNames,
+    routeNames,
+    nextTickNames,
     localNames: new Set(localNames.filter(Boolean))
   }
 }
@@ -812,6 +866,10 @@ function resolveScriptIdentifierReplacement(name: string, context: any) {
   if (name === 'stores') return 'this.stores'
   if (name === 'bridge') return 'this.bridge'
   if (name === 'dataSourceMap') return 'this.dataSourceMap'
+  if (name === '$router') return 'this.router'
+  if (name === '$route') return 'this.route'
+  if (context.routerNames.has(name)) return 'this.router'
+  if (context.routeNames.has(name)) return 'this.route'
 
   if (context.propNames.has(name)) return `this.props.${name}`
   if (context.stateNames.has(name)) return `this.state.${name}`
@@ -838,6 +896,18 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
     const ast = parse(code, { sourceType: 'module', plugins: ['typescript', 'jsx'] as any })
     const replacements: Array<{ start: number; end: number; text: string }> = []
     const seenRanges = new Set<string>()
+    const buildNextTickReplacement = (args: any[] = []) => {
+      const callback = args[0]
+
+      if (!callback) {
+        return 'Promise.resolve()'
+      }
+
+      const callbackCode = sanitizeCodeFromNode(callback, code)
+      const rewrittenCallback = rewriteScriptContextInCode(callbackCode, result, localNames)
+
+      return `Promise.resolve().then(${rewrittenCallback})`
+    }
     const isRewritableIdentifier = (path: any) => {
       if (path.isReferencedIdentifier()) return true
 
@@ -853,7 +923,51 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
     }
 
     traverse(ast as any, {
+      CallExpression(path: any) {
+        const callee = path.node.callee
+        const args = path.node.arguments || []
+
+        if (t.isIdentifier(callee) && context.nextTickNames.has(callee.name)) {
+          const binding = path.scope.getBinding(callee.name)
+          if (!binding || binding.kind === 'module') {
+            pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args, code, result, localNames))
+            path.skip()
+            return
+          }
+        }
+
+        if (
+          t.isMemberExpression(callee) &&
+          !callee.computed &&
+          t.isThisExpression(callee.object) &&
+          t.isIdentifier(callee.property) &&
+          callee.property.name === '$nextTick'
+        ) {
+          pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args, code, result, localNames))
+          path.skip()
+        }
+      },
       MemberExpression(path: any) {
+        if (
+          !path.node.computed &&
+          t.isThisExpression(path.node.object) &&
+          t.isIdentifier(path.node.property) &&
+          path.node.property.name === '$router'
+        ) {
+          pushReplacement(path.node.start, path.node.end, 'this.router')
+          return
+        }
+
+        if (
+          !path.node.computed &&
+          t.isThisExpression(path.node.object) &&
+          t.isIdentifier(path.node.property) &&
+          path.node.property.name === '$route'
+        ) {
+          pushReplacement(path.node.start, path.node.end, 'this.route')
+          return
+        }
+
         if (path.node.computed) return
 
         const objectNode = path.node.object
@@ -1465,6 +1579,17 @@ function assignComputedIfComputed(name: string, init: any, result: any, source: 
 function handleVariableDeclarator(name: string, init: any, result: any, source: string) {
   // 1) function-like assignments become methods
   if (addMethodFromFunctionLike(name, init, result, source)) return
+
+  // 1.5) runtime composables should map to lowcode runtime instead of normal state
+  if (isImportedCallExpression(init, result, 'vue-router', 'useRouter')) {
+    addRuntimeAlias(result, 'router', name)
+    return
+  }
+
+  if (isImportedCallExpression(init, result, 'vue-router', 'useRoute')) {
+    addRuntimeAlias(result, 'route', name)
+    return
+  }
 
   // 2) Check for reactive/ref calls regardless of variable name
   if (isVueReactiveCall(init, 'reactive')) {
@@ -2088,6 +2213,11 @@ export function parseScript(script: string, options: any = {}) {
     const result = {
       imports: [] as any[],
       usedUtilsImports: [] as any[],
+      runtimeAliases: {
+        router: [] as string[],
+        route: [] as string[],
+        nextTick: [] as string[]
+      },
       props: [] as any[],
       emits: [] as any[],
       state: {} as any,

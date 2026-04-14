@@ -41,9 +41,13 @@ function getTemplateContext(options: any = {}, loopVariables: string[] = []) {
   const stateNames = new Set(Object.keys(options.state || {}))
   const methodNames = new Set(Object.keys(options.methods || {}))
   const computedNames = new Set(Object.keys(options.computed || {}))
+  const runtimeAliases = options.runtimeAliases || {}
+  const routerNames = new Set(runtimeAliases.router || [])
+  const routeNames = new Set(runtimeAliases.route || [])
+  const nextTickNames = new Set(runtimeAliases.nextTick || [])
   const localNames = new Set((loopVariables || []).filter(Boolean))
 
-  return { propNames, stateNames, methodNames, computedNames, localNames }
+  return { propNames, stateNames, methodNames, computedNames, routerNames, routeNames, nextTickNames, localNames }
 }
 
 function resolveIdentifierReplacement(name: string, context: any) {
@@ -57,6 +61,10 @@ function resolveIdentifierReplacement(name: string, context: any) {
   if (name === 'stores') return 'this.stores'
   if (name === 'bridge') return 'this.bridge'
   if (name === 'dataSourceMap') return 'this.dataSourceMap'
+  if (name === '$router') return 'this.router'
+  if (name === '$route') return 'this.route'
+  if (context.routerNames.has(name)) return 'this.router'
+  if (context.routeNames.has(name)) return 'this.route'
   if (context.propNames.has(name)) return `this.props.${name}`
   if (context.stateNames.has(name)) return `this.state.${name}`
   if (context.methodNames.has(name)) return `this.${name}`

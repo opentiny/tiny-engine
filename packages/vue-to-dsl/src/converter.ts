@@ -63,6 +63,89 @@ const BUILTIN_SCHEMA_COMPONENTS = new Set([
   'CanvasPlaceholder'
 ])
 
+function collectTemplateRefNames(nodes: any, collector = new Set<string>()) {
+  if (!nodes) return collector
+
+  if (Array.isArray(nodes)) {
+    nodes.forEach((item) => collectTemplateRefNames(item, collector))
+    return collector
+  }
+
+  if (typeof nodes !== 'object') return collector
+
+  const refName = nodes?.props?.ref
+  if (typeof refName === 'string' && refName.trim()) {
+    collector.add(refName.trim())
+  }
+
+  Object.values(nodes).forEach((item) => {
+    if (item && typeof item === 'object') {
+      collectTemplateRefNames(item, collector)
+    }
+  })
+
+  return collector
+}
+
+function replaceTemplateRefCode(code: string, refNames: Set<string>) {
+  if (!code || !refNames.size) return code
+
+  let nextCode = String(code)
+  refNames.forEach((refName) => {
+    const pattern = new RegExp(`\\bthis\\.state\\.${refName}\\b`, 'g')
+    nextCode = nextCode.replace(pattern, `this.$('${refName}')`)
+  })
+
+  return nextCode
+}
+
+function normalizeSchemaTemplateRefs(schema: any, scriptSchema: any, templateSchema: any[]) {
+  const refNames = collectTemplateRefNames(templateSchema)
+  if (!refNames.size || !schema || typeof schema !== 'object') return schema
+
+  const walk = (value: any) => {
+    if (!value || typeof value !== 'object') return
+
+    if (Array.isArray(value)) {
+      value.forEach(walk)
+      return
+    }
+
+    if ((value.type === 'JSExpression' || value.type === 'JSFunction') && typeof value.value === 'string') {
+      value.value = replaceTemplateRefCode(value.value, refNames)
+      return
+    }
+
+    if (value.accessor?.getter?.value) {
+      value.accessor.getter.value = replaceTemplateRefCode(value.accessor.getter.value, refNames)
+    }
+
+    if (value.accessor?.setter?.value) {
+      value.accessor.setter.value = replaceTemplateRefCode(value.accessor.setter.value, refNames)
+    }
+
+    Object.values(value).forEach((item) => walk(item))
+  }
+
+  walk(schema.methods)
+  walk(schema.computed)
+  walk(schema.lifeCycles)
+  walk(schema.children)
+  walk(schema.state)
+
+  refNames.forEach((refName) => {
+    if (
+      scriptSchema?.state?.[refName]?.type === 'ref' &&
+      schema.state &&
+      Object.prototype.hasOwnProperty.call(schema.state, refName)
+    ) {
+      delete schema.state[refName]
+    }
+  })
+
+  return schema
+}
+
 export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
   preserveComments?: boolean
@@ -609,7 +692,8 @@ export class VueToDslConverter {
                 props: scriptSchema.props || [],
                 state: scriptSchema.state || {},
                 methods: scriptSchema.methods || {},
-                computed: scriptSchema.computed || {}
+                computed: scriptSchema.computed || {},
+                runtimeAliases: scriptSchema.runtimeAliases || {}
               } as any)
         } catch (error: any) {
           errors.push(`Template parsing error: ${error.message}`)
@@ -633,7 +717,11 @@ export class VueToDslConverter {
         this.options.fileName = fileName.replace(/\.vue$/i, '')
       }
 
-      const schema = await generateSchema(templateSchema, scriptSchema, styleSchema, this.options as any)
+      const schema = normalizeSchemaTemplateRefs(
+        await generateSchema(templateSchema, scriptSchema, styleSchema, this.options as any),
+        scriptSchema,
+        templateSchema
+      )
       const componentsMap = this.buildComponentsMapFromTemplateAndScript(templateSchema, scriptSchema)
 
       return {
