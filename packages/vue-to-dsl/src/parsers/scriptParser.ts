@@ -930,7 +930,7 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
         if (t.isIdentifier(callee) && context.nextTickNames.has(callee.name)) {
           const binding = path.scope.getBinding(callee.name)
           if (!binding || binding.kind === 'module') {
-            pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args, code, result, localNames))
+            pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args))
             path.skip()
             return
           }
@@ -943,7 +943,7 @@ function rewriteScriptContextInCode(code: string, result: any, localNames: strin
           t.isIdentifier(callee.property) &&
           callee.property.name === '$nextTick'
         ) {
-          pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args, code, result, localNames))
+          pushReplacement(path.node.start, path.node.end, buildNextTickReplacement(args))
           path.skip()
         }
       },
@@ -1398,7 +1398,7 @@ function functionParamToCode(node: any, source: string): string {
   return sanitizeCodeFromNode(node, source)
 }
 
-function arrowToFunctionString(name: string, node: t.ArrowFunctionExpression, source: string) {
+function arrowToFunctionString(name: string, node: any, source: string) {
   const asyncStr = node.async ? 'async ' : ''
   const params = node.params.map((p) => functionParamToCode(p, source)).join(', ')
   if (t.isBlockStatement(node.body)) {
@@ -1409,18 +1409,14 @@ function arrowToFunctionString(name: string, node: t.ArrowFunctionExpression, so
   return `${asyncStr}function ${name}(${params}) { return ${expr}; }`
 }
 
-function functionExpressionToNamedFunctionString(
-  name: string,
-  node: t.FunctionExpression | t.ObjectMethod,
-  source: string
-) {
+function functionExpressionToNamedFunctionString(name: string, node: any, source: string) {
   const asyncStr = (node as any).async ? 'async ' : ''
   const params = (node as any).params.map((p: any) => functionParamToCode(p, source)).join(', ')
   const body = sanitizeCodeFromNode((node as any).body, source)
   return `${asyncStr}function ${name}(${params}) ${body}`
 }
 
-function functionDeclarationToNamedFunctionString(name: string, node: t.FunctionDeclaration, source: string) {
+function functionDeclarationToNamedFunctionString(name: string, node: any, source: string) {
   const asyncStr = node.async ? 'async ' : ''
   const params = node.params.map((p) => functionParamToCode(p, source)).join(', ')
   const body = sanitizeCodeFromNode(node.body, source)
@@ -1953,10 +1949,17 @@ function getReturnedObjectExpressionFromFunction(node: any) {
   const body = (node as any).body
   if (!t.isBlockStatement(body)) return null
 
-  const returnStatement = body.body.find((statement: any) => t.isReturnStatement(statement) && statement.argument)
-  if (!returnStatement?.argument) return null
+  let returnArgument = null
+  for (const statement of body.body) {
+    if (t.isReturnStatement(statement) && statement.argument) {
+      returnArgument = statement.argument
+      break
+    }
+  }
 
-  const returned = unwrapExpression(returnStatement.argument)
+  if (!returnArgument) return null
+
+  const returned = unwrapExpression(returnArgument)
   return t.isObjectExpression(returned) ? returned : null
 }
 
