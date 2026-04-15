@@ -1,6 +1,5 @@
 import { FIM_CONFIG } from '../constants.js'
 import {
-  SYSTEM_BASE_PROMPT,
   createCodeInstruction,
   createLowcodeInstruction,
   BLOCK_COMMENT_INSTRUCTION,
@@ -69,32 +68,16 @@ export class FIMPromptBuilder {
    * @returns {string} 指令前缀
    */
   buildInstructionPrefix(language, isComment, lowcodeContext, cursorContext) {
-    let instruction = ''
-
-    // 1. 添加系统基础提示（转换为注释）
-    instruction += '// ===== AI COMPLETION INSTRUCTIONS =====\n'
-    instruction += this.convertToComments(SYSTEM_BASE_PROMPT)
-    instruction += '//\n'
-
-    // 2. 添加具体的补全指令
     let specificInstruction
     if (isComment) {
-      // 注释补全
       specificInstruction = cursorContext.inBlockComment ? BLOCK_COMMENT_INSTRUCTION : LINE_COMMENT_INSTRUCTION
     } else if (lowcodeContext) {
-      // 低代码补全
       specificInstruction = createLowcodeInstruction(language, lowcodeContext)
     } else {
-      // 普通代码补全
       specificInstruction = createCodeInstruction(language)
     }
 
-    instruction += this.convertToComments(specificInstruction)
-    instruction += '//\n'
-    instruction += '// ===== CODE CONTEXT STARTS BELOW =====\n'
-    instruction += '\n'
-
-    return instruction
+    return `${this.convertToComments(specificInstruction)}\n\n`
   }
 
   /**
@@ -171,9 +154,33 @@ export class FIMPromptBuilder {
 
     // 分析前缀最后几个字符
     const prefixTrimmed = prefix.trimEnd()
+    const isObjectLiteralStart = () => {
+      if (!/{\s*$/.test(prefixTrimmed)) {
+        return false
+      }
 
+      const beforeBrace = prefixTrimmed.slice(0, prefixTrimmed.lastIndexOf('{')).trimEnd()
+      return !beforeBrace || /[=(:,[]$/.test(beforeBrace) || /\breturn$/.test(beforeBrace)
+    }
+
+    const isObjectPropertyContinuation = () => {
+      if (!/,\s*$/.test(prefixTrimmed)) {
+        return false
+      }
+
+      const beforeComma = prefixTrimmed.slice(0, -1)
+      const openBraces = (beforeComma.match(/{/g) || []).length
+      const closeBraces = (beforeComma.match(/}/g) || []).length
+      return openBraces > closeBraces
+    }
+
+    // 检测是否在对象字面量中
+    if (isObjectLiteralStart() || isObjectPropertyContinuation()) {
+      context.inObject = true
+      context.type = 'object-property'
+    }
     // 检测是否在表达式中
-    if (/[=+\-*/%<>!&|,([]$/.test(prefixTrimmed)) {
+    else if (/[=+\-*/%<>!&|([]$/.test(prefixTrimmed) || /,\s*$/.test(prefixTrimmed)) {
       context.needsExpression = true
       context.type = 'expression'
     }
@@ -181,11 +188,6 @@ export class FIMPromptBuilder {
     else if (/[{;]\s*$/.test(prefixTrimmed) || prefixTrimmed.length === 0) {
       context.needsStatement = true
       context.type = 'statement'
-    }
-    // 检测是否在对象字面量中
-    else if (/{\s*$/.test(prefixTrimmed) || /,\s*$/.test(prefixTrimmed)) {
-      context.inObject = true
-      context.type = 'object-property'
     }
 
     // 检测作用域

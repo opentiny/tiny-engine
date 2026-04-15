@@ -14,6 +14,8 @@
  * 模型配置接口
  */
 
+export type CompletionProtocol = 'qwen' | 'deepseek'
+
 export interface Capability {
   extraBody: {
     enable: Record<string, unknown> | null
@@ -30,7 +32,7 @@ export interface ModelConfig {
     vision?: boolean
     reasoning?: boolean | Capability
     compact?: boolean
-    codeCompletion?: boolean
+    completionProtocol?: CompletionProtocol
     jsonOutput?: boolean | Capability
   }
 }
@@ -81,6 +83,7 @@ export type SelectedModelInfo = ModelConfig & {
   // 模型兼容字段
   model?: string
   completeModel?: string
+  completionProtocol?: CompletionProtocol | null
   // 服务兼容字段
   baseUrl?: string
   apiKey?: string

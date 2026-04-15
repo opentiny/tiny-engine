@@ -15,7 +15,13 @@ import { reactive, readonly } from 'vue'
 import { DEFAULT_LLM_MODELS } from '../../constants'
 import { getRobotServiceOptions } from '../../utils'
 import { ChatMode } from '../../types/mode.types'
-import type { ModelConfig, ModelService, RobotSettings, SelectedModelInfo } from '../../types/setting.types'
+import type {
+  CompletionProtocol,
+  ModelConfig,
+  ModelService,
+  RobotSettings,
+  SelectedModelInfo
+} from '../../types/setting.types'
 import apiService from '../../services/api'
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
@@ -42,6 +48,48 @@ const getAIModelOptions = () => {
     return DEFAULT_LLM_MODELS
   }
   return mergeAIModelOptions(DEFAULT_LLM_MODELS, customAIModels) // eslint-disable-line
+}
+
+const inferCompletionProtocol = ({
+  provider = '',
+  baseUrl = '',
+  modelName = '',
+  capabilities = {}
+}: {
+  provider?: string
+  baseUrl?: string
+  modelName?: string
+  capabilities?: ModelConfig['capabilities']
+}): CompletionProtocol | null => {
+  if (capabilities?.completionProtocol) {
+    return capabilities.completionProtocol
+  }
+
+  const normalizedProvider = provider.toLowerCase()
+  if (normalizedProvider === 'bailian') {
+    return 'qwen'
+  }
+  if (normalizedProvider === 'deepseek') {
+    return 'deepseek'
+  }
+
+  const normalizedBaseUrl = baseUrl.toLowerCase()
+  if (normalizedBaseUrl.includes('dashscope.aliyuncs.com')) {
+    return 'qwen'
+  }
+  if (normalizedBaseUrl.includes('deepseek.com')) {
+    return 'deepseek'
+  }
+
+  const normalizedModelName = modelName.toLowerCase()
+  if (normalizedModelName.includes('qwen')) {
+    return 'qwen'
+  }
+  if (normalizedModelName.includes('deepseek')) {
+    return 'deepseek'
+  }
+
+  return null
 }
 
 // 初始化内置服务
@@ -120,7 +168,9 @@ const migrateOldSettings = (oldSettings: any): RobotSettings | null => {
       customService.models.push({
         name: customizeModel.completeModel,
         label: customizeModel.completeModel,
-        capabilities: { compact: true }
+        capabilities: {
+          compact: true
+        }
       })
     }
     services.push(customService)
@@ -318,19 +368,9 @@ const getAllAvailableModels = () => {
   )
 }
 
-// 获取快速模型列表（包含 compact 或 codeCompletion 的模型）
+// 获取快速模型列表
 const getCompactModels = () => {
-  return getAllAvailableModels().filter((model) => model.capabilities?.compact || model.capabilities?.codeCompletion)
-}
-
-// 获取代码补全优化模型列表
-const getCodeCompletionModels = () => {
-  return getAllAvailableModels().filter((model) => model.capabilities?.codeCompletion)
-}
-
-// 获取非代码补全模型列表（用于默认助手模型）
-const getNonCodeCompletionModels = () => {
-  return getAllAvailableModels().filter((model) => !model.capabilities?.codeCompletion)
+  return getAllAvailableModels().filter((model) => model.capabilities?.compact)
 }
 
 const updateThinkingState = (value: boolean) => {
@@ -430,6 +470,13 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
     (m) => m.name === robotSettingState.quickModel.modelName
   )
   const { name = '', label = '', capabilities = {} } = currentModel || {}
+  const completionProtocol =
+    inferCompletionProtocol({
+      provider: currentService?.provider,
+      baseUrl: currentService?.baseUrl,
+      modelName: name,
+      capabilities
+    }) || null
 
   const { models, ...service } = currentService ?? ({} as Partial<ModelService>)
 
@@ -444,6 +491,7 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
     // 模型兼容字段
     model: robotSettingState.quickModel.modelName,
     completeModel: robotSettingState.quickModel.modelName || '',
+    completionProtocol,
     // 服务兼容字段
     baseUrl: currentService?.baseUrl || '',
     apiKey: currentService?.apiKey || ''
@@ -466,8 +514,6 @@ export default () => {
     getModelCapabilities,
     getAllAvailableModels,
     getCompactModels,
-    getCodeCompletionModels, // 代码补全模型列表
-    getNonCodeCompletionModels, // 非代码补全模型列表
     getSelectedModelInfo, // 对话模型信息
     getSelectedQuickModelInfo, // 快速模型信息
 

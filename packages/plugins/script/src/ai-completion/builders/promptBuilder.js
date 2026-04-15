@@ -1,10 +1,4 @@
 import { CODE_PATTERNS, CONTEXT_CONFIG } from '../constants.js'
-import {
-  createCodeInstruction,
-  createLowcodeInstruction,
-  BLOCK_COMMENT_INSTRUCTION,
-  LINE_COMMENT_INSTRUCTION
-} from '../prompts/templates.js'
 import { buildLowcodeContext, validateLowcodeContext } from './lowcodeContextBuilder.js'
 
 /**
@@ -126,34 +120,9 @@ function buildMetaInfo(filename, language, codeContext, technologies) {
 }
 
 /**
- * 构建基础上下文
- * @param {string} language - 语言类型
- * @param {string} filename - 文件名
- * @returns {string} 上下文字符串
- */
-function buildContext(language, filename) {
-  let context = `You are an expert ${language} developer with deep knowledge of modern best practices.`
-
-  if (filename) {
-    context += ` Currently editing: ${filename}`
-  }
-
-  return context
-}
-
-/**
- * 构建注释补全指令
- * @param {string} commentType - 注释类型 ('line' | 'block')
- * @returns {string} 指令文本
- */
-function buildCommentInstruction(commentType) {
-  return commentType === 'block' ? BLOCK_COMMENT_INSTRUCTION : LINE_COMMENT_INSTRUCTION
-}
-
-/**
  * 创建智能 Prompt，根据上下文优化补全
  * @param {Object} completionMetadata - 补全元数据
- * @returns {{ context: string, instruction: string, fileContent: string }} Prompt 对象
+ * @returns {{ fileContent: string, commentStatus: object, lowcodeContext: object | null }} Prompt 对象
  */
 export function createSmartPrompt(completionMetadata) {
   const {
@@ -167,38 +136,27 @@ export function createSmartPrompt(completionMetadata) {
 
   const commentStatus = isInComment(textBeforeCursor)
   const codeContext = extractCodeContext(textBeforeCursor)
+  let lowcodeContext = null
 
   // 构建文件元信息（伪装成注释，让 AI 理解上下文）
   const metaInfo = buildMetaInfo(filename, language, codeContext, technologies)
 
-  // 基础上下文
-  const context = buildContext(language, filename)
-
-  // 根据是否在注释中使用不同的 instruction
-  let instruction
-  if (commentStatus.isComment) {
-    instruction = buildCommentInstruction(commentStatus.type)
-  } else if (lowcodeMetadata) {
-    // 如果提供了低代码元数据，使用增强的指令
-    const lowcodeContext = buildLowcodeContext(lowcodeMetadata)
+  if (lowcodeMetadata) {
+    lowcodeContext = buildLowcodeContext(lowcodeMetadata)
     const validation = validateLowcodeContext(lowcodeContext)
 
     if (!validation.valid) {
       // eslint-disable-next-line no-console
       console.warn('⚠️ Lowcode context validation warnings:', validation.warnings)
     }
-
-    instruction = createLowcodeInstruction(language, lowcodeContext)
-  } else {
-    instruction = createCodeInstruction(language)
   }
 
   // 在文件内容前注入元信息
   const fileContent = `${metaInfo}${textBeforeCursor}[CURSOR]${textAfterCursor}`
 
   return {
-    context,
-    instruction,
-    fileContent
+    fileContent,
+    commentStatus,
+    lowcodeContext
   }
 }

@@ -1,18 +1,41 @@
 import { useResource, useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { MODEL_COMMON_CONFIG } from '../constants.js'
 
+function trimSuffixOverlap(text, suffix = '') {
+  if (!text || !suffix) {
+    return text
+  }
+
+  const candidates = [suffix, suffix.trimStart()].filter(Boolean)
+  let bestOverlap = 0
+
+  for (const candidate of candidates) {
+    const maxOverlap = Math.min(text.length, candidate.length)
+
+    for (let size = maxOverlap; size > bestOverlap; size--) {
+      if (text.endsWith(candidate.slice(0, size))) {
+        bestOverlap = size
+        break
+      }
+    }
+  }
+
+  return bestOverlap > 0 ? text.slice(0, -bestOverlap) : text
+}
+
 /**
  * 构建低代码元数据
  * @returns {Object} 低代码元数据
  */
 export function buildLowcodeMetadata() {
-  const { dataSource = [], utils = [], globalState = [] } = useResource().appSchemaState || {}
+  const { dataSource = [], utils = [], bridge = [], globalState = [] } = useResource().appSchemaState || {}
   const { state: pageState = {}, methods = {} } = useCanvas().getPageSchema() || {}
   const currentSchema = useCanvas().getCurrentSchema()
 
   return {
     dataSource,
     utils,
+    bridge,
     globalState,
     state: pageState,
     methods,
@@ -25,9 +48,10 @@ export function buildLowcodeMetadata() {
  * @param {string} text - 原始补全文本
  * @param {string} modelType - 模型类型
  * @param {Object} cursorContext - 光标上下文信息（可选）
+ * @param {string} suffix - 光标后的原始文本
  * @returns {string} 清理后的文本
  */
-export function cleanCompletion(text, modelType, cursorContext = null) {
+export function cleanCompletion(text, modelType, cursorContext = null, suffix = '') {
   if (!text) return text
 
   let cleaned = text
@@ -81,5 +105,7 @@ export function cleanCompletion(text, modelType, cursorContext = null) {
     cleaned = lines.slice(0, cutoffIndex).join('\n')
   }
 
-  return cleaned
+  cleaned = trimSuffixOverlap(cleaned, suffix)
+
+  return cleaned.trim()
 }

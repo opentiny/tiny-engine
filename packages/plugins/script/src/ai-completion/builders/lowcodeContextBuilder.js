@@ -1,42 +1,75 @@
+const FACT_LIMITS = {
+  ITEMS: 20,
+  STORE_MEMBERS: 12,
+  SCHEMA_KEYS: 16
+}
+
+function limitList(items, max = FACT_LIMITS.ITEMS) {
+  if (!Array.isArray(items)) {
+    return []
+  }
+
+  return items.filter(Boolean).slice(0, max)
+}
+
+function normalizeDescription(text) {
+  return typeof text === 'string' ? text.replace(/\s+/g, ' ').trim() : ''
+}
+
+function getValueType(value) {
+  if (Array.isArray(value)) {
+    return 'array'
+  }
+
+  if (value === null) {
+    return 'null'
+  }
+
+  return typeof value
+}
+
 /**
- * 格式化数据源信息
+ * 格式化数据信息
  * @param {Array} dataSource - 数据源数组
  * @returns {Array} 格式化后的数据源
  */
 function formatDataSources(dataSource) {
-  return dataSource.map((ds) => ({
-    name: ds.name,
-    type: ds.type || 'unknown',
-    description: ds.description || `Data source: ${ds.name}`,
-    // 只保留关键信息，避免上下文过大
-    ...(ds.options && { options: ds.options })
-  }))
+  return limitList(
+    dataSource
+      .filter((ds) => ds?.name)
+      .map((ds) => ({
+        name: ds.name,
+        type: ds.type || 'unknown',
+        accessPath: `this.dataSourceMap.${ds.name}.load()`,
+        description: normalizeDescription(ds.description || `Data source: ${ds.name}`)
+      }))
+  )
 }
 
 /**
- * 从函数代码中提取函数签名
+ * 从函数代码中提取参数列表
  * @param {string} functionCode - 函数代码字符串
- * @returns {string} 函数签名
+ * @returns {string} 参数列表
  */
-function extractFunctionSignature(functionCode) {
-  if (!functionCode) return 'function()'
+function extractFunctionParams(functionCode) {
+  if (!functionCode) return ''
 
-  // 匹配函数声明: function name(params)
-  const funcMatch = functionCode.match(/function\s+(\w+)?\s*\(([^)]*)\)/)
+  const funcMatch = functionCode.match(/function(?:\s+\w+)?\s*\(([^)]*)\)/)
   if (funcMatch) {
-    const name = funcMatch[1] || 'anonymous'
-    const params = funcMatch[2].trim()
-    return `function ${name}(${params})`
+    return funcMatch[1].trim()
   }
 
-  // 匹配箭头函数: (params) => 或 params =>
   const arrowMatch = functionCode.match(/(?:\(([^)]*)\)|(\w+))\s*=>/)
   if (arrowMatch) {
-    const params = arrowMatch[1] || arrowMatch[2] || ''
-    return `(${params}) => {}`
+    return (arrowMatch[1] || arrowMatch[2] || '').trim()
   }
 
-  return 'function()'
+  return ''
+}
+
+function createCallableAccess(prefix, name, functionCode) {
+  const params = extractFunctionParams(functionCode)
+  return `${prefix}${name}(${params})`
 }
 
 /**
@@ -45,32 +78,46 @@ function extractFunctionSignature(functionCode) {
  * @returns {Array} 格式化后的工具类
  */
 function formatUtils(utils) {
-  return utils.map((util) => {
-    const formatted = {
-      name: util.name,
-      type: util.type || 'function'
-    }
+  return limitList(
+    utils
+      .filter((util) => util?.name)
+      .map((util) => {
+        const formatted = {
+          name: util.name,
+          type: util.type || 'function',
+          accessPath: `this.utils.${util.name}`
+        }
 
-    // 处理 npm 类型的工具
-    if (util.type === 'npm' && util.content) {
-      formatted.package = util.content.package
-      formatted.exportName = util.content.exportName
-      formatted.destructuring = util.content.destructuring
-      formatted.description = `Import from ${util.content.package}`
-    }
+        if (util.type === 'npm' && util.content) {
+          formatted.package = util.content.package
+          formatted.description = `npm utility from ${util.content.package}`
+        }
 
-    // 处理函数类型的工具
-    if (util.type === 'function' && util.content) {
-      if (util.content.type === 'JSFunction') {
-        // 提取函数签名而不是完整实现
-        const funcSignature = extractFunctionSignature(util.content.value)
-        formatted.signature = funcSignature
-        formatted.description = `Utility function: ${util.name}`
-      }
-    }
+        if (util.type === 'function' && util.content?.type === 'JSFunction') {
+          formatted.signature = createCallableAccess('this.utils.', util.name, util.content.value)
+          formatted.description = `Utility function: ${util.name}`
+        }
 
-    return formatted
-  })
+        return formatted
+      })
+  )
+}
+
+/**
+ * 格式化 bridge 信息
+ * @param {Array} bridge - bridge 数组
+ * @returns {Array} 格式化后的 bridge 信息
+ */
+function formatBridge(bridge) {
+  return limitList(
+    bridge
+      .filter((item) => item?.name)
+      .map((item) => ({
+        name: item.name,
+        accessPath: `this.bridge.${item.name}`,
+        description: normalizeDescription(item.description || `Bridge API: ${item.name}`)
+      }))
+  )
 }
 
 /**
@@ -79,54 +126,48 @@ function formatUtils(utils) {
  * @returns {Array} 格式化后的全局状态
  */
 function formatGlobalState(globalState) {
-  return globalState.map((store) => ({
-    id: store.id,
-    state: Object.keys(store.state || {}),
-    getters: Object.keys(store.getters || {}),
-    actions: Object.keys(store.actions || {}),
-    description: `Pinia store: ${store.id}`
-  }))
+  return limitList(
+    globalState
+      .filter((store) => store?.id)
+      .map((store) => ({
+        id: store.id,
+        state: limitList(Object.keys(store.state || {}), FACT_LIMITS.STORE_MEMBERS),
+        getters: limitList(Object.keys(store.getters || {}), FACT_LIMITS.STORE_MEMBERS),
+        actions: limitList(Object.keys(store.actions || {}), FACT_LIMITS.STORE_MEMBERS),
+        description: `Pinia store: ${store.id}`
+      }))
+  )
 }
 
 /**
  * 格式化本地状态
  * @param {Object} state - 状态对象
- * @returns {Object} 格式化后的状态
+ * @returns {Array} 格式化后的状态
  */
 function formatState(state) {
-  // 只返回键名和类型信息，不返回实际值
-  const formatted = {}
-  for (const [key, value] of Object.entries(state)) {
-    formatted[key] = {
-      type: typeof value,
-      isArray: Array.isArray(value),
-      isObject: value !== null && typeof value === 'object' && !Array.isArray(value)
-    }
-  }
-  return formatted
+  return limitList(
+    Object.entries(state).map(([key, value]) => ({
+      name: key,
+      accessPath: `this.state.${key}`,
+      type: getValueType(value)
+    }))
+  )
 }
 
 /**
  * 格式化本地方法
  * @param {Object} methods - 方法对象
- * @returns {Object} 格式化后的方法
+ * @returns {Array} 格式化后的方法
  */
 function formatMethods(methods) {
-  const formatted = {}
-  for (const [key, value] of Object.entries(methods)) {
-    if (value && value.type === 'JSFunction') {
-      formatted[key] = {
-        signature: extractFunctionSignature(value.value),
-        description: `Method: ${key}`
-      }
-    } else {
-      formatted[key] = {
-        type: typeof value,
-        description: `Method: ${key}`
-      }
-    }
-  }
-  return formatted
+  return limitList(
+    Object.entries(methods).map(([key, value]) => ({
+      name: key,
+      accessPath: `this.${key}`,
+      signature: value?.type === 'JSFunction' ? createCallableAccess('this.', key, value.value) : `this.${key}()`,
+      description: `Method: ${key}`
+    }))
+  )
 }
 
 /**
@@ -138,27 +179,30 @@ function formatCurrentSchema(schema) {
   if (!schema) return null
 
   const formatted = {
-    componentName: schema.componentName,
-    ...(schema.ref && { ref: schema.ref })
+    componentName: schema.componentName || 'Unknown',
+    ...(schema.ref && { ref: schema.ref, refAccess: `this.$('${schema.ref}')` })
   }
 
-  // 格式化 props
   if (schema.props) {
-    formatted.props = {}
+    const propKeys = []
+    const eventKeys = []
+    const dynamicPropKeys = []
+
     for (const [key, value] of Object.entries(schema.props)) {
-      // 识别事件处理器
       if (key.startsWith('on')) {
-        formatted.props[key] = {
-          type: 'event',
-          isFunction: value && value.type === 'JSFunction'
-        }
+        eventKeys.push(key)
       } else {
-        formatted.props[key] = {
-          type: value && value.type ? value.type : 'static',
-          isDynamic: value && (value.type === 'JSExpression' || value.type === 'JSFunction')
-        }
+        propKeys.push(key)
+      }
+
+      if (value && (value.type === 'JSExpression' || value.type === 'JSFunction')) {
+        dynamicPropKeys.push(key)
       }
     }
+
+    formatted.props = limitList(propKeys, FACT_LIMITS.SCHEMA_KEYS)
+    formatted.events = limitList(eventKeys, FACT_LIMITS.SCHEMA_KEYS)
+    formatted.dynamicProps = limitList(dynamicPropKeys, FACT_LIMITS.SCHEMA_KEYS)
   }
 
   return formatted
@@ -176,27 +220,35 @@ export function validateLowcodeContext(context) {
     return { valid: false, warnings: ['Context is null or undefined'] }
   }
 
-  // 检查必要字段
-  const requiredFields = ['dataSource', 'utils', 'globalState', 'state', 'methods']
+  const requiredFields = ['dataSource', 'utils', 'bridge', 'globalState', 'state', 'methods']
   for (const field of requiredFields) {
     if (!(field in context)) {
       warnings.push(`Missing field: ${field}`)
     }
   }
 
-  // 检查数据源格式
   if (context.dataSource && !Array.isArray(context.dataSource)) {
     warnings.push('dataSource should be an array')
   }
 
-  // 检查工具类格式
   if (context.utils && !Array.isArray(context.utils)) {
     warnings.push('utils should be an array')
   }
 
-  // 检查全局状态格式
+  if (context.bridge && !Array.isArray(context.bridge)) {
+    warnings.push('bridge should be an array')
+  }
+
   if (context.globalState && !Array.isArray(context.globalState)) {
     warnings.push('globalState should be an array')
+  }
+
+  if (context.state && !Array.isArray(context.state)) {
+    warnings.push('state should be an array')
+  }
+
+  if (context.methods && !Array.isArray(context.methods)) {
+    warnings.push('methods should be an array')
   }
 
   return {
@@ -214,35 +266,34 @@ export function mergeLowcodeContexts(...contexts) {
   const merged = {
     dataSource: [],
     utils: [],
+    bridge: [],
     globalState: [],
-    state: {},
-    methods: {},
+    state: [],
+    methods: [],
     currentSchema: null
   }
 
   for (const context of contexts) {
     if (!context) continue
 
-    // 合并数组类型
     if (context.dataSource) {
       merged.dataSource = [...merged.dataSource, ...context.dataSource]
     }
     if (context.utils) {
       merged.utils = [...merged.utils, ...context.utils]
     }
+    if (context.bridge) {
+      merged.bridge = [...merged.bridge, ...context.bridge]
+    }
     if (context.globalState) {
       merged.globalState = [...merged.globalState, ...context.globalState]
     }
-
-    // 合并对象类型
     if (context.state) {
-      merged.state = { ...merged.state, ...context.state }
+      merged.state = [...merged.state, ...context.state]
     }
     if (context.methods) {
-      merged.methods = { ...merged.methods, ...context.methods }
+      merged.methods = [...merged.methods, ...context.methods]
     }
-
-    // currentSchema 使用最后一个非空值
     if (context.currentSchema) {
       merged.currentSchema = context.currentSchema
     }
@@ -257,11 +308,20 @@ export function mergeLowcodeContexts(...contexts) {
  * @returns {Object} 格式化的低代码上下文
  */
 export function buildLowcodeContext(metadata) {
-  const { dataSource = [], utils = [], globalState = [], state = {}, methods = {}, currentSchema = null } = metadata
+  const {
+    dataSource = [],
+    utils = [],
+    bridge = [],
+    globalState = [],
+    state = {},
+    methods = {},
+    currentSchema = null
+  } = metadata
 
   return {
     dataSource: formatDataSources(dataSource),
     utils: formatUtils(utils),
+    bridge: formatBridge(bridge),
     globalState: formatGlobalState(globalState),
     state: formatState(state),
     methods: formatMethods(methods),

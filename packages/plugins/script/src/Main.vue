@@ -72,6 +72,7 @@ export default {
     type RequestHandler = NonNullable<RegisterCompletionOptions['requestHandler']>
     type TriggerMode = NonNullable<RegisterCompletionOptions['trigger']>
     let completion: CompletionRegistration | null = null
+    let completionAction: { dispose?: () => void } | null = null
 
     const panelState = reactive({
       emitEvent: emit
@@ -126,10 +127,13 @@ export default {
 
       if (aiCompletionEnabled) {
         try {
-          const monaco = monacoRef.value.getMonaco()
-          const editor = monacoRef.value.getEditor()
+          const monacoInstance = monacoRef.value.getMonaco()
+          const editorInstance = monacoRef.value.getEditor()
 
-          completion = registerCompletion(monaco, editor, {
+          completion?.deregister?.()
+          completionAction?.dispose?.()
+
+          completion = registerCompletion(monacoInstance, editorInstance, {
             language: 'javascript',
             filename: 'page.js',
             maxContextLines: 50,
@@ -145,11 +149,11 @@ export default {
             requestHandler: createCompletionHandler() as RequestHandler
           })
 
-          monaco.editor.addEditorAction({
+          completionAction = monacoInstance.editor.addEditorAction({
             id: 'monacopilot.triggerCompletion',
             label: 'Complete Code',
             contextMenuGroupId: 'navigation',
-            keybindings: [monaco.KeyMod.CtrlCmd | monaco.KeyMod.Shift | monaco.KeyCode.Space],
+            keybindings: [monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyMod.Shift | monacoInstance.KeyCode.Space],
             run: () => {
               completion!.trigger()
             }
@@ -166,6 +170,7 @@ export default {
       if (completion) {
         completion.deregister()
       }
+      completionAction?.dispose?.()
       ;(state.completionProvider as any)?.forEach?.((provider: any) => {
         provider?.dispose?.()
       })

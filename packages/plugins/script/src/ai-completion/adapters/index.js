@@ -19,12 +19,25 @@ export function createCompletionHandler() {
   return async (params) => {
     try {
       // 1. 获取 AI 配置
-      const { completeModel, apiKey, baseUrl } = getMetaApi(META_SERVICE.Robot).getSelectedQuickModelInfo() || {}
+      const {
+        completeModel,
+        apiKey,
+        baseUrl,
+        capabilities = {},
+        service = null
+      } = getMetaApi(META_SERVICE.Robot).getSelectedQuickModelInfo() || {}
 
-      if (!completeModel || !apiKey || !baseUrl) {
+      if (!completeModel || !baseUrl) {
         return {
           completion: null,
           error: ERROR_MESSAGES.CONFIG_MISSING
+        }
+      }
+
+      if (!apiKey && !service?.allowEmptyApiKey) {
+        return {
+          completion: null,
+          error: ERROR_MESSAGES.API_KEY_MISSING
         }
       }
 
@@ -38,7 +51,7 @@ export function createCompletionHandler() {
 
       // 3. 构建低代码元数据和 prompt
       const lowcodeMetadata = buildLowcodeMetadata()
-      const { fileContent } = createSmartPrompt({
+      const { fileContent, commentStatus, lowcodeContext } = createSmartPrompt({
         textBeforeCursor,
         textAfterCursor,
         language,
@@ -48,22 +61,24 @@ export function createCompletionHandler() {
       })
 
       // 4. 检测模型类型并构建 FIM 参数
-      const modelType = detectModelType(completeModel)
+      const modelType = detectModelType(completeModel, {
+        provider: service?.provider,
+        baseUrl,
+        capabilities
+      })
+
+      if (modelType === MODEL_CONFIG.UNKNOWN.TYPE) {
+        return {
+          completion: null,
+          error: ERROR_MESSAGES.UNSUPPORTED_MODEL
+        }
+      }
 
       // 5. 准备元数据（用于增强 FIM prompt）
       const fimMetadata = {
         language,
-        isComment: textBeforeCursor.trim().endsWith('//') || textBeforeCursor.includes('/*'),
-        lowcodeContext: lowcodeMetadata
-          ? {
-              dataSource: lowcodeMetadata.dataSource || [],
-              utils: lowcodeMetadata.utils || [],
-              globalState: lowcodeMetadata.globalState || [],
-              state: lowcodeMetadata.state || {},
-              methods: lowcodeMetadata.methods || {},
-              currentSchema: lowcodeMetadata.currentSchema || null
-            }
-          : null
+        isComment: commentStatus.isComment,
+        lowcodeContext
       }
 
       // 6. 根据模型类型构建请求参数
@@ -109,9 +124,14 @@ export function createCompletionHandler() {
 
       // 7. 处理补全结果
       if (completionText) {
-        completionText = completionText.trim()
+        completionText = cleanCompletion(completionText, modelType, cursorContext, textAfterCursor)
 
-        completionText = cleanCompletion(completionText, modelType, cursorContext)
+        if (!completionText) {
+          return {
+            completion: null,
+            error: ERROR_MESSAGES.NO_COMPLETION
+          }
+        }
 
         return {
           completion: completionText,

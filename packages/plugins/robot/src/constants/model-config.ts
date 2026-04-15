@@ -57,7 +57,6 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen3-coder-plus',
         capabilities: {
           toolCalling: true,
-          codeCompletion: true,
           reasoning: reasoningExtraBody,
           jsonOutput: bailianJsonOutputExtraBody
         }
@@ -82,24 +81,23 @@ export const DEFAULT_LLM_MODELS = [
         }
       },
       {
-        label: 'Qwen2.5 Coder编程模型-最快响应',
-        name: 'qwen-coder-turbo-latest',
+        label: 'Qwen Coder编程模型（Flash）',
+        name: 'qwen3-coder-flash',
         capabilities: {
           toolCalling: true,
           compact: true,
-          codeCompletion: true,
           jsonOutput: bailianJsonOutputExtraBody
         }
       },
       {
-        label: 'Qwen2.5 Coder编程模型（32B）',
-        name: 'qwen2.5-coder-32b-instruct',
-        capabilities: {
-          toolCalling: true,
-          compact: true,
-          codeCompletion: true,
-          jsonOutput: bailianJsonOutputExtraBody
-        }
+        label: 'Qwen3（14b）',
+        name: 'qwen3-14b',
+        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
+      },
+      {
+        label: 'Qwen3（8b）',
+        name: 'qwen3-8b',
+        capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
       }
     ]
   },
@@ -120,16 +118,6 @@ export const DEFAULT_LLM_MODELS = [
               disable: { model: 'deepseek-chat' }
             }
           },
-          jsonOutput: jsonOutputExtraBody
-        }
-      },
-      {
-        label: 'Deepseek Coder编程模型',
-        name: 'deepseek-coder',
-        capabilities: {
-          toolCalling: true,
-          compact: true,
-          codeCompletion: true,
           jsonOutput: jsonOutputExtraBody
         }
       }

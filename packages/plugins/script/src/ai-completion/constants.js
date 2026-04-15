@@ -37,11 +37,15 @@ export const DEEPSEEK_CONFIG = {
 export const MODEL_CONFIG = {
   QWEN: {
     TYPE: 'qwen',
-    KEYWORDS: ['qwen']
+    KEYWORDS: ['qwen'],
+    PROVIDERS: ['bailian'],
+    BASE_URL_KEYWORDS: ['dashscope.aliyuncs.com']
   },
   DEEPSEEK: {
     TYPE: 'deepseek',
-    KEYWORDS: ['deepseek']
+    KEYWORDS: ['deepseek'],
+    PROVIDERS: ['deepseek'],
+    BASE_URL_KEYWORDS: ['deepseek.com']
   },
   UNKNOWN: {
     TYPE: 'unknown',
@@ -79,6 +83,8 @@ export const DEFAULTS = {
  */
 export const ERROR_MESSAGES = {
   CONFIG_MISSING: 'AI 配置未设置（缺少 model/apiKey/baseUrl）',
+  API_KEY_MISSING: 'AI 配置未设置（缺少 API Key）',
+  UNSUPPORTED_MODEL: '当前快速模型未配置可用的补全协议，请在模型设置中指定协议或选择内置代码模型',
   NO_COMPLETION: '未收到有效的补全结果',
   REQUEST_FAILED: '请求失败',
   QWEN_API_ERROR: 'Qwen API 错误'

@@ -3,10 +3,37 @@ import { MODEL_CONFIG, MODEL_COMMON_CONFIG, STOP_SEQUENCES, CONTEXT_STOP_SEQUENC
 /**
  * 检测模型类型
  * @param {string} modelName - 模型名称
+ * @param {Object} options - 额外上下文
+ * @param {string} options.provider - 服务 provider
+ * @param {string} options.baseUrl - 服务 baseUrl
+ * @param {Object} options.capabilities - 模型能力
  * @returns {'qwen' | 'deepseek' | 'unknown'} 模型类型
  */
-export function detectModelType(modelName) {
+export function detectModelType(modelName, options = {}) {
   if (!modelName) return MODEL_CONFIG.UNKNOWN.TYPE
+
+  const { provider = '', baseUrl = '', capabilities = {} } = options
+  if (capabilities?.completionProtocol) {
+    return capabilities.completionProtocol
+  }
+
+  const lowerProvider = provider.toLowerCase()
+  if (MODEL_CONFIG.QWEN.PROVIDERS.some((item) => item === lowerProvider)) {
+    return MODEL_CONFIG.QWEN.TYPE
+  }
+
+  if (MODEL_CONFIG.DEEPSEEK.PROVIDERS.some((item) => item === lowerProvider)) {
+    return MODEL_CONFIG.DEEPSEEK.TYPE
+  }
+
+  const lowerBaseUrl = baseUrl.toLowerCase()
+  if (MODEL_CONFIG.QWEN.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))) {
+    return MODEL_CONFIG.QWEN.TYPE
+  }
+
+  if (MODEL_CONFIG.DEEPSEEK.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))) {
+    return MODEL_CONFIG.DEEPSEEK.TYPE
+  }
 
   const lowerName = modelName.toLowerCase()
 

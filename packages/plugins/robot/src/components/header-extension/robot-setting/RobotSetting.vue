@@ -42,7 +42,7 @@
                 快速模型
                 <tiny-tooltip
                   effect="light"
-                  content="用于代码补全、话题命名等快速响应场景。推荐选择带「代码」标签的模型以获得更好的代码补全效果。"
+                  content="用于代码补全、话题命名等场景。建议选择轻量模型以实现更快的响应速度，例如flash类型或8b/14b模型。"
                   placement="top"
                 >
                   <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
@@ -51,25 +51,11 @@
               <tiny-select
                 clearable
                 v-model="state.modelSelection.quickModel"
+                :options="compactModelOptions"
                 filterable
                 placeholder="请选择"
                 @change="handleCompactModelChange"
-                popper-class="model-select-popper"
-              >
-                <template v-for="item in compactModelOptions" :key="item.value">
-                  <tiny-option :label="item.label" :value="item.value">
-                    <span class="left">{{ item.label }}</span>
-                    <div>
-                      <tiny-tag v-if="item.capabilities?.codeCompletion" type="success" effect="light" size="small"
-                        >代码</tiny-tag
-                      >
-                      <tiny-tag v-if="item.capabilities?.compact" type="info" effect="light" size="small"
-                        >轻量</tiny-tag
-                      >
-                    </div>
-                  </tiny-option>
-                </template>
-              </tiny-select>
+              ></tiny-select>
             </tiny-form-item>
 
             <div v-if="selectedDefaultModelInfo" class="model-info">
@@ -186,8 +172,8 @@ const emit = defineEmits(['close'])
 const {
   robotSettingState,
   saveRobotSettingState,
+  getAllAvailableModels,
   getCompactModels,
-  getNonCodeCompletionModels,
   addCustomService,
   updateService,
   deleteService,
@@ -200,6 +186,15 @@ const getModelValue = (serviceId: string, modelName: string) => {
   return serviceId && modelName ? `${serviceId}::${modelName}` : ''
 }
 
+const parseModelValue = (value = '') => {
+  const [serviceId = '', modelName = ''] = value.split('::')
+
+  return {
+    serviceId,
+    modelName
+  }
+}
+
 const state = reactive({
   activeTab: 'model-selection',
   modelSelection: {
@@ -210,9 +205,28 @@ const state = reactive({
   editingService: undefined as ModelService | undefined
 })
 
-// 获取所有可用模型选项（排除代码补全专用模型）
+const syncModelSelection = () => {
+  state.modelSelection.defaultModel = getModelValue(
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
+  )
+  state.modelSelection.quickModel = getModelValue(
+    robotSettingState.quickModel.serviceId,
+    robotSettingState.quickModel.modelName
+  )
+}
+
+const notifyMissingApiKey = (service: ModelService) => {
+  useNotify({
+    type: 'warning',
+    title: '未配置API Key',
+    message: `请先为 ${service.label} 配置API Key`
+  })
+}
+
+// 获取所有可用模型选项
 const allModelOptions = computed(() => {
-  return getNonCodeCompletionModels().map((model) => ({
+  return getAllAvailableModels().map((model) => ({
     label: model.displayLabel,
     value: model.value,
     capabilities: model.capabilities
@@ -221,14 +235,10 @@ const allModelOptions = computed(() => {
 
 // 获取快速模型选项
 const compactModelOptions = computed(() => {
-  const models = getCompactModels().map((model) => ({
+  return getCompactModels().map((model) => ({
     label: model.displayLabel,
-    value: model.value,
-    capabilities: model.capabilities,
-    serviceName: model.serviceName
+    value: model.value
   }))
-
-  return models.sort((a, b) => a.serviceName.localeCompare(b.serviceName, 'zh-CN'))
 })
 
 // 获取当前选择的默认模型信息
@@ -249,16 +259,15 @@ const handleBack = () => {
 }
 
 const handleModelChange = () => {
-  const [defaultServiceId, defaultModelName] = state.modelSelection.defaultModel.split('::')
+  const { serviceId: defaultServiceId, modelName: defaultModelName } = parseModelValue(
+    state.modelSelection.defaultModel
+  )
 
   // 检查API Key
   const defaultService = getServiceById(defaultServiceId)
   if (defaultService && !defaultService.apiKey && !defaultService.allowEmptyApiKey) {
-    useNotify({
-      type: 'warning',
-      title: '未配置API Key',
-      message: `请先为 ${defaultService.label} 配置API Key`
-    })
+    notifyMissingApiKey(defaultService)
+    syncModelSelection()
     state.activeTab = 'services'
     return
   }
@@ -273,7 +282,16 @@ const handleModelChange = () => {
 }
 
 const handleCompactModelChange = () => {
-  const [quickServiceId = '', quickModelName = ''] = (state.modelSelection.quickModel || '').split('::')
+  const { serviceId: quickServiceId, modelName: quickModelName } = parseModelValue(state.modelSelection.quickModel)
+  const quickService = getServiceById(quickServiceId)
+
+  if (quickService && !quickService.apiKey && !quickService.allowEmptyApiKey) {
+    notifyMissingApiKey(quickService)
+    syncModelSelection()
+    state.activeTab = 'services'
+    return
+  }
+
   const updatedState = {
     quickModel: {
       serviceId: quickServiceId,
@@ -289,22 +307,50 @@ const addService = () => {
 }
 
 const editService = (service: any) => {
-  state.editingService = JSON.parse(JSON.stringify(service)) as ModelService
+  state.editingService = JSON.parse(JSON.stringify(service))
   state.showServiceDialog = true
 }
 
 const handleDeleteService = (serviceId: string) => {
   deleteService(serviceId)
+
+  const shouldResetDefaultModel = robotSettingState.defaultModel.serviceId === serviceId
+  const shouldResetQuickModel = robotSettingState.quickModel.serviceId === serviceId
+
+  if (shouldResetDefaultModel || shouldResetQuickModel) {
+    saveRobotSettingState({
+      ...(shouldResetDefaultModel
+        ? {
+            defaultModel: {
+              serviceId: '',
+              modelName: ''
+            }
+          }
+        : {}),
+      ...(shouldResetQuickModel
+        ? {
+            quickModel: {
+              serviceId: '',
+              modelName: ''
+            }
+          }
+        : {})
+    })
+  }
+
+  syncModelSelection()
 }
 
-const handleServiceConfirm = (serviceData: Partial<ModelService>) => {
+const handleServiceConfirm = async (serviceData: Partial<ModelService>) => {
   if (serviceData.id) {
     // 更新现有服务
-    updateService(serviceData.id, serviceData)
+    await updateService(serviceData.id, serviceData)
   } else {
     // 添加新服务
-    addCustomService(serviceData as any)
+    await addCustomService(serviceData as any)
   }
+
+  syncModelSelection()
 }
 </script>
 
