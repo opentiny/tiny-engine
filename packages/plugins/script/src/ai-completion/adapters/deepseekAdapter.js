@@ -1,5 +1,39 @@
 import { HTTP_CONFIG, ERROR_MESSAGES, DEEPSEEK_CONFIG } from '../constants.js'
 
+export function buildDeepSeekCompletionsUrl(baseUrl) {
+  const normalizedBaseUrl = String(baseUrl || '').trim()
+
+  if (!normalizedBaseUrl) {
+    return ''
+  }
+
+  const normalizePath = (path = '') => {
+    const trimmedPath = path.replace(/\/+$/, '')
+
+    if (trimmedPath.endsWith('/beta/completions')) {
+      return trimmedPath
+    }
+
+    if (trimmedPath.endsWith('/beta')) {
+      return `${trimmedPath}/completions`
+    }
+
+    if (/\/v1$/i.test(trimmedPath)) {
+      return trimmedPath.replace(/\/v1$/i, '/beta/completions')
+    }
+
+    return `${trimmedPath}/beta/completions`
+  }
+
+  try {
+    const parsedUrl = new URL(normalizedBaseUrl)
+    parsedUrl.pathname = normalizePath(parsedUrl.pathname)
+    return parsedUrl.toString()
+  } catch {
+    return normalizePath(normalizedBaseUrl)
+  }
+}
+
 /**
  * 构建 DeepSeek FIM 格式的请求参数
  * @param {string} fileContent - 文件内容（包含 [CURSOR] 标记）
@@ -27,8 +61,7 @@ export function buildDeepSeekFIMParams(fileContent, fimBuilder, metadata = {}) {
  * @returns {Promise<string>} 补全文本
  */
 export async function callDeepSeekAPI(prompt, suffix, config, apiKey, baseUrl) {
-  // 构建 DeepSeek FIM API URL：将 /v1 替换为 /beta/completions
-  const completionsUrl = baseUrl.replace(DEEPSEEK_CONFIG.PATH_REPLACE, DEEPSEEK_CONFIG.COMPLETION_PATH) + '/completions'
+  const completionsUrl = buildDeepSeekCompletionsUrl(baseUrl)
 
   const requestBody = {
     model: config.model,

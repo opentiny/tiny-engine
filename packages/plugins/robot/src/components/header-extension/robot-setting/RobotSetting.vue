@@ -246,7 +246,7 @@ const syncModelSelection = () => {
   )
 }
 
-const notifyMissingApiKey = (service: any) => {
+const notifyMissingApiKey = (service: ModelService) => {
   useNotify({
     type: 'warning',
     title: '未配置API Key',
@@ -364,7 +364,7 @@ const addService = () => {
   state.showServiceDialog = true
 }
 
-const editService = (service: ModelService) => {
+const editService = (service: any) => {
   state.editingService = JSON.parse(JSON.stringify(service))
   state.showServiceDialog = true
 }

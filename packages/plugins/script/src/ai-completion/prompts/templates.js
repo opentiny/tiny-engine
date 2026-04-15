@@ -128,13 +128,6 @@ function buildLowcodeFacts(lowcodeContext = {}) {
 }
 
 /**
- * 系统 Prompt - 定义 AI 的角色和基本规则
- */
-export const SYSTEM_BASE_PROMPT = `Return only the text to insert at the cursor.
-Match the surrounding style and indentation.
-Stay in the current scope and do not repeat existing code.`
-
-/**
  * 代码补全指令模板
  * @param {string} language - 编程语言
  * @returns {string} 指令文本
@@ -177,19 +170,4 @@ export function createLowcodeInstruction(language, lowcodeContext = {}) {
   const facts = buildLowcodeFacts(lowcodeContext)
 
   return facts ? `${instruction}\n\n${facts}` : instruction
-}
-
-/**
- * 用户 Prompt 模板
- * @param {string} instruction - 指令文本
- * @param {string} fileContent - 文件内容（包含 [CURSOR] 标记）
- * @returns {string} 完整的用户 Prompt
- */
-export function createUserPrompt(instruction, fileContent) {
-  return `${instruction}
-
-File content (cursor position marked with [CURSOR]):
-${fileContent}
-
-Complete the code/text at the [CURSOR] position. Return ONLY the completion text.`
 }

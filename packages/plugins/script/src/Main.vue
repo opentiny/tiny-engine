@@ -122,8 +122,9 @@ export default {
       // 保留原有的 ESLint
       state.linterWorker = initLinter(editor, monacoRef.value.getMonaco(), state) as any
 
-      const { aiCompletionEnabled, aiCompletionTrigger = 'onIdle' } =
-        getMergeMeta('engine.plugins.pagecontroller')?.options || {}
+      const pageControllerOptions = getMergeMeta('engine.plugins.pagecontroller')?.options || {}
+      const aiCompletionEnabled = pageControllerOptions.aiCompletionEnabled ?? pageControllerOptions.enableAICompletion
+      const aiCompletionTrigger = pageControllerOptions.aiCompletionTrigger || 'onIdle'
 
       if (aiCompletionEnabled) {
         try {

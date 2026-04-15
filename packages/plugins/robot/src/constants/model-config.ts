@@ -94,7 +94,6 @@ export const DEFAULT_LLM_MODELS = [
         name: 'qwen-coder-turbo-latest',
         capabilities: {
           toolCalling: true,
-          compact: true,
           jsonOutput: bailianJsonOutputExtraBody,
           completionProtocol: 'qwen'
         }
@@ -122,7 +121,6 @@ export const DEFAULT_LLM_MODELS = [
         name: 'deepseek-chat',
         capabilities: {
           toolCalling: true,
-          compact: true,
           completionProtocol: 'deepseek',
           reasoning: {
             extraBody: {

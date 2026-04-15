@@ -46,12 +46,11 @@ export function buildLowcodeMetadata() {
 /**
  * 清理补全文本
  * @param {string} text - 原始补全文本
- * @param {string} modelType - 模型类型
  * @param {Object} cursorContext - 光标上下文信息（可选）
  * @param {string} suffix - 光标后的原始文本
  * @returns {string} 清理后的文本
  */
-export function cleanCompletion(text, modelType, cursorContext = null, suffix = '') {
+export function cleanCompletion(text, cursorContext = null, suffix = '') {
   if (!text) return text
 
   let cleaned = text

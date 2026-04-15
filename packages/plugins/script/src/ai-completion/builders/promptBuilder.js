@@ -1,5 +1,4 @@
-import { CODE_PATTERNS, CONTEXT_CONFIG } from '../constants.js'
-import { buildLowcodeContext, validateLowcodeContext } from './lowcodeContextBuilder.js'
+import { buildLowcodeContext } from './lowcodeContextBuilder.js'
 import { getCommentState, getOpenScopeContext } from '../utils/contextAnalysis.js'
 
 /**
@@ -22,85 +21,36 @@ function isInComment(textBeforeCursor) {
 }
 
 /**
- * 提取当前代码上下文信息（函数名、类名、接口名等）
+ * 提取当前代码上下文信息（函数名、类名）
  * @param {string} textBeforeCursor - 光标前的文本
- * @returns {{ functionName: string, className: string, interfaceName: string, typeName: string }} 代码上下文
+ * @returns {{ functionName: string, className: string }} 代码上下文
  */
 function extractCodeContext(textBeforeCursor) {
-  const lines = textBeforeCursor.split('\n')
   const openScope = getOpenScopeContext(textBeforeCursor)
-  let functionName = openScope.functionName
-  let className = openScope.className
-  let interfaceName = ''
-  let typeName = ''
 
-  // 从后往前查找最近的定义
-  const startLine = Math.max(0, lines.length - CONTEXT_CONFIG.MAX_LINES_TO_SCAN)
-
-  for (let i = lines.length - 1; i >= startLine; i--) {
-    const line = lines[i]
-
-    if (!interfaceName) {
-      const interfaceMatch = line.match(CODE_PATTERNS.INTERFACE)
-      if (interfaceMatch) interfaceName = interfaceMatch[1]
-    }
-
-    if (!typeName) {
-      const typeMatch = line.match(CODE_PATTERNS.TYPE)
-      if (typeMatch) typeName = typeMatch[1]
-    }
-
-    // 找到所有信息后提前退出
-    if (functionName && className && interfaceName && typeName) break
+  return {
+    functionName: openScope.functionName,
+    className: openScope.className
   }
-
-  return { functionName, className, interfaceName, typeName }
 }
 
 /**
  * 构建元信息注释
- * @param {string} filename - 文件名
- * @param {string} language - 语言类型
  * @param {Object} codeContext - 代码上下文
- * @param {string[]} technologies - 技术栈
  * @returns {string} 元信息字符串
  */
-function buildMetaInfo(filename, language, codeContext, technologies) {
-  let metaInfo = ''
+function buildMetaInfo(codeContext) {
+  const metaLines = []
 
-  if (filename) {
-    metaInfo += `// File: ${filename}\n`
-  }
-
-  metaInfo += `// Language: ${language}\n`
-
-  // 强调当前作用域
   if (codeContext.className) {
-    metaInfo += `// Current Class: ${codeContext.className}\n`
-    metaInfo += `// IMPORTANT: Only complete code within this class\n`
-  }
-
-  if (codeContext.interfaceName) {
-    metaInfo += `// Current Interface: ${codeContext.interfaceName}\n`
-  }
-
-  if (codeContext.typeName) {
-    metaInfo += `// Current Type: ${codeContext.typeName}\n`
+    metaLines.push(`// Current Class: ${codeContext.className}`)
   }
 
   if (codeContext.functionName) {
-    metaInfo += `// Current Function: ${codeContext.functionName}\n`
-    metaInfo += `// IMPORTANT: Only complete code within this function scope\n`
+    metaLines.push(`// Current Function: ${codeContext.functionName}`)
   }
 
-  if (technologies.length > 0) {
-    metaInfo += `// Technologies: ${technologies.join(', ')}\n`
-  }
-
-  metaInfo += `// NOTE: Do not reference variables or code from other functions\n`
-  metaInfo += '\n'
-
-  return metaInfo
+  return metaLines.length ? `${metaLines.join('\n')}\n\n` : ''
 }
 
 /**
@@ -109,32 +59,19 @@ function buildMetaInfo(filename, language, codeContext, technologies) {
  * @returns {{ fileContent: string, commentStatus: object, lowcodeContext: object | null }} Prompt 对象
  */
 export function createSmartPrompt(completionMetadata) {
-  const {
-    textBeforeCursor = '',
-    textAfterCursor = '',
-    language = 'javascript',
-    filename,
-    technologies = [],
-    lowcodeMetadata = null
-  } = completionMetadata
+  const { textBeforeCursor = '', textAfterCursor = '', lowcodeMetadata = null } = completionMetadata
 
   const commentStatus = isInComment(textBeforeCursor)
   const codeContext = extractCodeContext(textBeforeCursor)
   let lowcodeContext = null
 
-  // 构建文件元信息（伪装成注释，让 AI 理解上下文）
-  const metaInfo = buildMetaInfo(filename, language, codeContext, technologies)
+  // 用极少量上下文注释提醒当前开放作用域，避免重复注入过多控制信息
+  const metaInfo = buildMetaInfo(codeContext)
 
   if (lowcodeMetadata) {
     lowcodeContext = buildLowcodeContext(lowcodeMetadata, {
       hintText: textBeforeCursor
     })
-    const validation = validateLowcodeContext(lowcodeContext)
-
-    if (!validation.valid) {
-      // eslint-disable-next-line no-console
-      console.warn('⚠️ Lowcode context validation warnings:', validation.warnings)
-    }
   }
 
   // 在文件内容前注入元信息

@@ -3,7 +3,7 @@ import { createSmartPrompt } from '../builders/promptBuilder.js'
 import { FIMPromptBuilder } from '../builders/fimPromptBuilder.js'
 import { detectModelType, calculateTokens, getStopSequences } from '../utils/modelUtils.js'
 import { cleanCompletion, buildLowcodeMetadata } from '../utils/completionUtils.js'
-import { buildQwenMessages, callQwenAPI } from './qwenAdapter.js'
+import { buildQwenFIMPrompt, callQwenAPI } from './qwenAdapter.js'
 import { buildDeepSeekFIMParams, callDeepSeekAPI } from './deepseekAdapter.js'
 import { QWEN_CONFIG, DEEPSEEK_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } from '../constants.js'
 
@@ -56,7 +56,6 @@ export function createCompletionHandler() {
         textAfterCursor,
         language,
         filename,
-        technologies: DEFAULTS.TECHNOLOGIES,
         lowcodeMetadata
       })
 
@@ -87,15 +86,15 @@ export function createCompletionHandler() {
 
       if (modelType === MODEL_CONFIG.QWEN.TYPE) {
         // ===== Qwen 流程 =====
-        const { messages, cursorContext: ctx } = buildQwenMessages(fileContent, qwenFimBuilder, fimMetadata)
+        const { prompt, cursorContext: ctx } = buildQwenFIMPrompt(fileContent, qwenFimBuilder, fimMetadata)
         cursorContext = ctx
 
         completionText = await callQwenAPI(
-          messages,
+          prompt,
           {
             model: completeModel,
             maxTokens: calculateTokens(ctx),
-            stopSequences: getStopSequences(ctx, modelType)
+            stopSequences: getStopSequences(ctx)
           },
           apiKey,
           baseUrl
@@ -115,7 +114,7 @@ export function createCompletionHandler() {
           {
             model: completeModel,
             maxTokens: calculateTokens(ctx),
-            stopSequences: getStopSequences(ctx, modelType)
+            stopSequences: getStopSequences(ctx)
           },
           apiKey,
           baseUrl
@@ -124,7 +123,7 @@ export function createCompletionHandler() {
 
       // 7. 处理补全结果
       if (completionText) {
-        completionText = cleanCompletion(completionText, modelType, cursorContext, textAfterCursor)
+        completionText = cleanCompletion(completionText, cursorContext, textAfterCursor)
 
         if (!completionText) {
           return {

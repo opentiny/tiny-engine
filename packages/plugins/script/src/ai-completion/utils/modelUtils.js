@@ -4,15 +4,13 @@ import { MODEL_CONFIG, MODEL_COMMON_CONFIG, STOP_SEQUENCES, CONTEXT_STOP_SEQUENC
  * 检测模型类型
  * @param {string} modelName - 模型名称
  * @param {Object} options - 额外上下文
- * @param {string} options.provider - 服务 provider
- * @param {string} options.baseUrl - 服务 baseUrl
  * @param {Object} options.capabilities - 模型能力
  * @returns {'qwen' | 'deepseek' | 'unknown'} 模型类型
  */
 export function detectModelType(modelName, options = {}) {
   if (!modelName) return MODEL_CONFIG.UNKNOWN.TYPE
 
-  const { provider = '', baseUrl = '', capabilities = {} } = options
+  const { capabilities = {} } = options
   if (capabilities?.completionProtocol) {
     return capabilities.completionProtocol
   }
@@ -30,16 +28,6 @@ export function detectModelType(modelName, options = {}) {
   }
 
   if (isDeepSeekCompletionModel) {
-    return MODEL_CONFIG.DEEPSEEK.TYPE
-  }
-
-  const lowerProvider = provider.toLowerCase()
-  const lowerBaseUrl = baseUrl.toLowerCase()
-  if (
-    isDeepSeekCompletionModel &&
-    MODEL_CONFIG.DEEPSEEK.PROVIDERS.some((item) => item === lowerProvider) &&
-    MODEL_CONFIG.DEEPSEEK.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))
-  ) {
     return MODEL_CONFIG.DEEPSEEK.TYPE
   }
 
@@ -72,7 +60,7 @@ export function calculateTokens(cursorContext) {
 }
 
 // 获取动态停止符（最多 16 个）
-export function getStopSequences(cursorContext, _modelType) {
+export function getStopSequences(cursorContext) {
   const stops = []
 
   // 核心停止符

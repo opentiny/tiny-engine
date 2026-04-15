@@ -1,3 +1,5 @@
+import { getCommentState } from '../utils/contextAnalysis.js'
+
 /**
  * 检测光标是否在语句结束符后（分号后）
  */
@@ -52,18 +54,27 @@ export function shouldTriggerCompletion(params) {
   const lines = text.split('\n')
   const currentLine = lines[position.lineNumber - 1] || ''
   const beforeCursor = currentLine.substring(0, position.column - 1)
+  const textBeforeCursor = `${lines.slice(0, position.lineNumber - 1).join('\n')}${
+    position.lineNumber > 1 ? '\n' : ''
+  }${beforeCursor}`
+  const lexicalState = getCommentState(textBeforeCursor)
 
   // 1. 代码太短不触发
   if (text.trim().length < 2) {
     return false
   }
 
-  // 2. 分号后不触发（语句已结束）
+  // 2. 注释和字符串里不触发
+  if (lexicalState.inComment || lexicalState.inString) {
+    return false
+  }
+
+  // 3. 分号后不触发（语句已结束）
   if (isAfterStatementEnd(beforeCursor)) {
     return false
   }
 
-  // 3. 右花括号后不触发（块已结束）
+  // 4. 右花括号后不触发（块已结束）
   if (isAfterBlockEnd(beforeCursor)) {
     return false
   }

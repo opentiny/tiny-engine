@@ -32,7 +32,7 @@ export class FIMPromptBuilder {
       return {
         prefix: fileContent,
         suffix: '',
-        cursorContext: { type: 'unknown', hasPrefix: true, hasSuffix: false }
+        cursorContext: { type: 'unknown' }
       }
     }
 
@@ -118,18 +118,14 @@ export class FIMPromptBuilder {
   /**
    * 分析光标上下文
    * @param {string} prefix - 前缀代码
-   * @param {string} suffix - 后缀代码
    * @returns {Object} 上下文信息
    */
-  analyzeCursorContext(prefix, suffix) {
+  analyzeCursorContext(prefix) {
     const context = {
       type: 'unknown',
-      hasPrefix: prefix.trim().length > 0,
-      hasSuffix: suffix.trim().length > 0,
       inFunction: false,
       inClass: false,
       inObject: false,
-      inArray: false,
       inBlockComment: false,
       inLineComment: false,
       needsExpression: false,

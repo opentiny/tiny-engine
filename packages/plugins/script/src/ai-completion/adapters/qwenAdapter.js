@@ -1,41 +1,36 @@
 import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
 
 /**
- * 构建 Qwen FIM 格式的 messages
+ * 构建 Qwen FIM prompt
  * @param {string} fileContent - 文件内容（包含 [CURSOR] 标记）
  * @param {Object} fimBuilder - FIM 构建器实例
- * @param {Object} metadata - 元数据（language, lowcodeMetadata 等）
- * @returns {{ messages: Array, cursorContext: Object }} Messages 和上下文
+ * @param {Object} metadata - 元数据
+ * @returns {{ prompt: string, cursorContext: Object }} Prompt 和上下文
  */
-export function buildQwenMessages(fileContent, fimBuilder, metadata = {}) {
+export function buildQwenFIMPrompt(fileContent, fimBuilder, metadata = {}) {
   const { fimPrompt, cursorContext } = fimBuilder.buildOptimizedFIMPrompt(fileContent, metadata)
 
   return {
-    messages: [
-      {
-        role: 'user',
-        content: fimPrompt
-      }
-    ],
+    prompt: fimPrompt,
     cursorContext
   }
 }
 
 /**
  * 调用 Qwen Completions API
- * @param {Array} messages - Messages 数组
+ * @param {string} prompt - FIM prompt
  * @param {Object} config - 配置对象
  * @param {string} apiKey - API 密钥
  * @param {string} baseUrl - 基础 URL
  * @returns {Promise<string>} 补全文本
  */
-export async function callQwenAPI(messages, config, apiKey, baseUrl) {
+export async function callQwenAPI(prompt, config, apiKey, baseUrl) {
   // 构建完整的 Completions API URL
   const completionsUrl = `${baseUrl}${QWEN_CONFIG.COMPLETION_PATH}`
 
   const requestBody = {
     model: config.model,
-    prompt: messages[0].content, // FIM prompt
+    prompt,
     max_tokens: config.maxTokens,
     temperature: QWEN_CONFIG.DEFAULT_TEMPERATURE,
     top_p: QWEN_CONFIG.TOP_P,

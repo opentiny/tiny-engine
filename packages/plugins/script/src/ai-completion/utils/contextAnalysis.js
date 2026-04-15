@@ -97,10 +97,14 @@ export function getCommentState(text = '') {
     }
   }
 
+  const inTemplateString = inTemplate && templateExpressionDepth === 0
+
   return {
     inBlockComment,
     inLineComment,
-    inComment: inBlockComment || inLineComment
+    inComment: inBlockComment || inLineComment,
+    inString: inSingleQuote || inDoubleQuote || inTemplateString,
+    inTemplateString
   }
 }
 

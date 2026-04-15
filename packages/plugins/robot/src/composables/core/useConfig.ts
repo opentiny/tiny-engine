@@ -145,6 +145,22 @@ const getFallbackCompletionModel = (services: ModelService[], preferredServiceId
   }
 }
 
+const resolveCompletionModelSelection = (services: ModelService[], serviceId = '', modelName = '') => {
+  if (serviceId && modelName) {
+    const selectedService = services.find((service) => service.id === serviceId)
+    const selectedModel = selectedService?.models.find((model) => model.name === modelName)
+
+    if (isCompletionCapableModel(selectedService, selectedModel)) {
+      return {
+        serviceId,
+        modelName
+      }
+    }
+  }
+
+  return getFallbackCompletionModel(services, serviceId)
+}
+
 const initBuiltInServices = (): ModelService[] => {
   return getAIModelOptions().map((service: any) => ({
     id: service.provider,
@@ -229,19 +245,21 @@ const migrateOldSettings = (oldSettings: any): RobotSettings | null => {
     services.push(customService)
   }
 
-  // 确定默认模型和快速模型
+  // 确定默认模型、快速模型和代码补全模型
   const selectedModel = activeName === 'existingModels' ? existModel : customizeModel
   const defaultServiceId =
     activeName === 'existingModels' ? services.find((s) => s.baseUrl === selectedModel?.baseUrl)?.id : ''
+  const legacyCompleteModelName = selectedModel?.completeModel || ''
 
   const quickModel = {
     serviceId: defaultServiceId || '',
-    modelName: selectedModel?.completeModel || ''
+    modelName: legacyCompleteModelName
   }
-  const completionModel =
-    quickModel.modelName && quickModel.serviceId
-      ? getFallbackCompletionModel(services, quickModel.serviceId)
-      : getFallbackCompletionModel(services, defaultServiceId || services[0]?.id || '')
+  const completionModel = resolveCompletionModelSelection(
+    services,
+    defaultServiceId || services[0]?.id || '',
+    legacyCompleteModelName
+  )
 
   return {
     version: SETTING_VERSION,
@@ -546,13 +564,6 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
     (m) => m.name === robotSettingState.quickModel.modelName
   )
   const { name = '', label = '', capabilities = {} } = currentModel || {}
-  const completionProtocol =
-    inferCompletionProtocol({
-      provider: currentService?.provider,
-      baseUrl: currentService?.baseUrl,
-      modelName: name,
-      capabilities
-    }) || null
 
   const { models, ...service } = currentService ?? ({} as Partial<ModelService>)
 
@@ -567,7 +578,6 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
     // 模型兼容字段
     model: robotSettingState.quickModel.modelName,
     completeModel: robotSettingState.quickModel.modelName || '',
-    completionProtocol,
     // 服务兼容字段
     baseUrl: currentService?.baseUrl || '',
     apiKey: currentService?.apiKey || ''

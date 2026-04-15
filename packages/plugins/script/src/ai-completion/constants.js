@@ -37,31 +37,17 @@ export const DEEPSEEK_CONFIG = {
 export const MODEL_CONFIG = {
   QWEN: {
     TYPE: 'qwen',
-    KEYWORDS: ['qwen'],
-    PROVIDERS: ['bailian'],
-    BASE_URL_KEYWORDS: ['dashscope.aliyuncs.com'],
     COMPLETION_MODELS: ['qwen-coder-turbo-latest', 'qwen-coder-turbo-0919', 'qwen-coder-turbo'],
     COMPLETION_MODEL_PATTERNS: [/^qwen2\.5-coder-(7|14|32)b-instruct$/]
   },
   DEEPSEEK: {
     TYPE: 'deepseek',
-    KEYWORDS: ['deepseek'],
-    PROVIDERS: ['deepseek'],
-    BASE_URL_KEYWORDS: ['deepseek.com'],
     COMPLETION_MODELS: ['deepseek-chat'],
     COMPLETION_MODEL_PATTERNS: []
   },
   UNKNOWN: {
-    TYPE: 'unknown',
-    KEYWORDS: []
+    TYPE: 'unknown'
   }
-}
-
-/**
- * API 端点配置
- */
-export const API_ENDPOINTS = {
-  CHAT_COMPLETIONS: '/app-center/api/chat/completions'
 }
 
 /**
@@ -77,9 +63,7 @@ export const HTTP_CONFIG = {
  * 默认配置
  */
 export const DEFAULTS = {
-  LANGUAGE: 'javascript',
-  LOG_PREVIEW_LENGTH: 100,
-  TECHNOLOGIES: []
+  LANGUAGE: 'javascript'
 }
 
 /**
@@ -88,7 +72,7 @@ export const DEFAULTS = {
 export const ERROR_MESSAGES = {
   CONFIG_MISSING: 'AI 配置未设置（缺少 model/apiKey/baseUrl）',
   API_KEY_MISSING: 'AI 配置未设置（缺少 API Key）',
-  UNSUPPORTED_MODEL: '当前快速模型未配置可用的补全协议，请在模型设置中指定协议或选择内置代码模型',
+  UNSUPPORTED_MODEL: '当前代码补全模型未配置可用的补全协议，请在模型设置中指定协议或选择内置代码模型',
   NO_COMPLETION: '未收到有效的补全结果',
   REQUEST_FAILED: '请求失败',
   QWEN_API_ERROR: 'Qwen API 错误'
@@ -163,10 +147,6 @@ export const CONTEXT_CONFIG = {
  * 代码模式匹配（JS/TS）
  */
 export const CODE_PATTERNS = {
-  // 匹配函数定义：function name() / const name = () => / name() {
-  FUNCTION: /function\s+(\w+)|const\s+(\w+)\s*=.*=>|(\w+)\s*\([^)]*\)\s*{/,
-  // 匹配类定义
-  CLASS: /class\s+(\w+)/,
   // 匹配接口定义（TS）
   INTERFACE: /interface\s+(\w+)/,
   // 匹配类型定义（TS）
