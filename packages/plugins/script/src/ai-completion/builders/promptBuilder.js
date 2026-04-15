@@ -1,5 +1,6 @@
 import { CODE_PATTERNS, CONTEXT_CONFIG } from '../constants.js'
 import { buildLowcodeContext, validateLowcodeContext } from './lowcodeContextBuilder.js'
+import { getCommentState, getOpenScopeContext } from '../utils/contextAnalysis.js'
 
 /**
  * 检测光标是否在注释中
@@ -7,21 +8,13 @@ import { buildLowcodeContext, validateLowcodeContext } from './lowcodeContextBui
  * @returns {{ isComment: boolean, type: string | null }} 注释状态
  */
 function isInComment(textBeforeCursor) {
-  const trimmed = textBeforeCursor.trim()
+  const commentState = getCommentState(textBeforeCursor)
 
-  // 单行注释 //
-  if (trimmed.includes('//')) {
-    const lastLineBreak = textBeforeCursor.lastIndexOf('\n')
-    const currentLine = textBeforeCursor.substring(lastLineBreak + 1)
-    if (currentLine.trim().startsWith('//')) {
-      return { isComment: true, type: 'line' }
-    }
+  if (commentState.inLineComment) {
+    return { isComment: true, type: 'line' }
   }
 
-  // 块注释 /* */ 或 JSDoc /** */
-  const lastBlockStart = textBeforeCursor.lastIndexOf('/*')
-  const lastBlockEnd = textBeforeCursor.lastIndexOf('*/')
-  if (lastBlockStart > lastBlockEnd) {
+  if (commentState.inBlockComment) {
     return { isComment: true, type: 'block' }
   }
 
@@ -35,8 +28,9 @@ function isInComment(textBeforeCursor) {
  */
 function extractCodeContext(textBeforeCursor) {
   const lines = textBeforeCursor.split('\n')
-  let functionName = ''
-  let className = ''
+  const openScope = getOpenScopeContext(textBeforeCursor)
+  let functionName = openScope.functionName
+  let className = openScope.className
   let interfaceName = ''
   let typeName = ''
 
@@ -45,16 +39,6 @@ function extractCodeContext(textBeforeCursor) {
 
   for (let i = lines.length - 1; i >= startLine; i--) {
     const line = lines[i]
-
-    if (!functionName) {
-      const funcMatch = line.match(CODE_PATTERNS.FUNCTION)
-      if (funcMatch) functionName = funcMatch[1] || funcMatch[2] || funcMatch[3]
-    }
-
-    if (!className) {
-      const classMatch = line.match(CODE_PATTERNS.CLASS)
-      if (classMatch) className = classMatch[1]
-    }
 
     if (!interfaceName) {
       const interfaceMatch = line.match(CODE_PATTERNS.INTERFACE)
@@ -142,7 +126,9 @@ export function createSmartPrompt(completionMetadata) {
   const metaInfo = buildMetaInfo(filename, language, codeContext, technologies)
 
   if (lowcodeMetadata) {
-    lowcodeContext = buildLowcodeContext(lowcodeMetadata)
+    lowcodeContext = buildLowcodeContext(lowcodeMetadata, {
+      hintText: textBeforeCursor
+    })
     const validation = validateLowcodeContext(lowcodeContext)
 
     if (!validation.valid) {

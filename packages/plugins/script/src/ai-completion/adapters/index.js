@@ -25,7 +25,7 @@ export function createCompletionHandler() {
         baseUrl,
         capabilities = {},
         service = null
-      } = getMetaApi(META_SERVICE.Robot).getSelectedQuickModelInfo() || {}
+      } = getMetaApi(META_SERVICE.Robot).getSelectedCompletionModelInfo() || {}
 
       if (!completeModel || !baseUrl) {
         return {

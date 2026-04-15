@@ -66,6 +66,7 @@ export interface RobotSettings {
   version?: number
   defaultModel: ModelSelection
   quickModel: ModelSelection
+  completionModel: ModelSelection
   services: ModelService[]
   chatMode: string
   enableThinking: boolean

@@ -5,6 +5,7 @@ import {
   BLOCK_COMMENT_INSTRUCTION,
   LINE_COMMENT_INSTRUCTION
 } from '../prompts/templates.js'
+import { getCommentState, getOpenScopeContext, sanitizeStructuralText } from '../utils/contextAnalysis.js'
 
 /**
  * FIM (Fill-In-the-Middle) Prompt 构建器
@@ -135,25 +136,22 @@ export class FIMPromptBuilder {
       needsStatement: false
     }
 
-    // 检测是否在注释中
-    const lastBlockStart = prefix.lastIndexOf('/*')
-    const lastBlockEnd = prefix.lastIndexOf('*/')
-    if (lastBlockStart > lastBlockEnd) {
+    const commentState = getCommentState(prefix)
+    if (commentState.inBlockComment) {
       context.inBlockComment = true
       context.type = 'block-comment'
       return context
     }
 
-    const lastLineBreak = prefix.lastIndexOf('\n')
-    const currentLine = prefix.substring(lastLineBreak + 1)
-    if (currentLine.trim().startsWith('//')) {
+    if (commentState.inLineComment) {
       context.inLineComment = true
       context.type = 'line-comment'
       return context
     }
 
     // 分析前缀最后几个字符
-    const prefixTrimmed = prefix.trimEnd()
+    const sanitizedPrefix = sanitizeStructuralText(prefix)
+    const prefixTrimmed = sanitizedPrefix.trimEnd()
     const isObjectLiteralStart = () => {
       if (!/{\s*$/.test(prefixTrimmed)) {
         return false
@@ -191,11 +189,9 @@ export class FIMPromptBuilder {
     }
 
     // 检测作用域
-    const functionMatch = prefix.match(/function\s+\w+|const\s+\w+\s*=.*=>|async\s+function/g)
-    const classMatch = prefix.match(/class\s+\w+/g)
-
-    context.inFunction = functionMatch && functionMatch.length > 0
-    context.inClass = classMatch && classMatch.length > 0
+    const openScope = getOpenScopeContext(prefix)
+    context.inFunction = Boolean(openScope.functionName)
+    context.inClass = Boolean(openScope.className)
 
     return context
   }

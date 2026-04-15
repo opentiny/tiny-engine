@@ -17,31 +17,29 @@ export function detectModelType(modelName, options = {}) {
     return capabilities.completionProtocol
   }
 
-  const lowerProvider = provider.toLowerCase()
-  if (MODEL_CONFIG.QWEN.PROVIDERS.some((item) => item === lowerProvider)) {
-    return MODEL_CONFIG.QWEN.TYPE
-  }
-
-  if (MODEL_CONFIG.DEEPSEEK.PROVIDERS.some((item) => item === lowerProvider)) {
-    return MODEL_CONFIG.DEEPSEEK.TYPE
-  }
-
-  const lowerBaseUrl = baseUrl.toLowerCase()
-  if (MODEL_CONFIG.QWEN.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))) {
-    return MODEL_CONFIG.QWEN.TYPE
-  }
-
-  if (MODEL_CONFIG.DEEPSEEK.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))) {
-    return MODEL_CONFIG.DEEPSEEK.TYPE
-  }
-
   const lowerName = modelName.toLowerCase()
+  const isQwenCompletionModel =
+    MODEL_CONFIG.QWEN.COMPLETION_MODELS.some((item) => item === lowerName) ||
+    MODEL_CONFIG.QWEN.COMPLETION_MODEL_PATTERNS.some((pattern) => pattern.test(lowerName))
+  const isDeepSeekCompletionModel =
+    MODEL_CONFIG.DEEPSEEK.COMPLETION_MODELS.some((item) => item === lowerName) ||
+    MODEL_CONFIG.DEEPSEEK.COMPLETION_MODEL_PATTERNS.some((pattern) => pattern.test(lowerName))
 
-  if (MODEL_CONFIG.QWEN.KEYWORDS.some((keyword) => lowerName.includes(keyword))) {
+  if (isQwenCompletionModel) {
     return MODEL_CONFIG.QWEN.TYPE
   }
 
-  if (MODEL_CONFIG.DEEPSEEK.KEYWORDS.some((keyword) => lowerName.includes(keyword))) {
+  if (isDeepSeekCompletionModel) {
+    return MODEL_CONFIG.DEEPSEEK.TYPE
+  }
+
+  const lowerProvider = provider.toLowerCase()
+  const lowerBaseUrl = baseUrl.toLowerCase()
+  if (
+    isDeepSeekCompletionModel &&
+    MODEL_CONFIG.DEEPSEEK.PROVIDERS.some((item) => item === lowerProvider) &&
+    MODEL_CONFIG.DEEPSEEK.BASE_URL_KEYWORDS.some((keyword) => lowerBaseUrl.includes(keyword))
+  ) {
     return MODEL_CONFIG.DEEPSEEK.TYPE
   }
 

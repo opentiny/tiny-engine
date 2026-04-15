@@ -39,13 +39,17 @@ export const MODEL_CONFIG = {
     TYPE: 'qwen',
     KEYWORDS: ['qwen'],
     PROVIDERS: ['bailian'],
-    BASE_URL_KEYWORDS: ['dashscope.aliyuncs.com']
+    BASE_URL_KEYWORDS: ['dashscope.aliyuncs.com'],
+    COMPLETION_MODELS: ['qwen-coder-turbo-latest', 'qwen-coder-turbo-0919', 'qwen-coder-turbo'],
+    COMPLETION_MODEL_PATTERNS: [/^qwen2\.5-coder-(7|14|32)b-instruct$/]
   },
   DEEPSEEK: {
     TYPE: 'deepseek',
     KEYWORDS: ['deepseek'],
     PROVIDERS: ['deepseek'],
-    BASE_URL_KEYWORDS: ['deepseek.com']
+    BASE_URL_KEYWORDS: ['deepseek.com'],
+    COMPLETION_MODELS: ['deepseek-chat'],
+    COMPLETION_MODEL_PATTERNS: []
   },
   UNKNOWN: {
     TYPE: 'unknown',

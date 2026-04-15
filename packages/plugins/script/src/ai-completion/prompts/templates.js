@@ -36,6 +36,14 @@ function formatSchemaFacts(currentSchema) {
   ]
 }
 
+function appendOverflow(lines, omitted, label) {
+  if (!omitted) {
+    return lines
+  }
+
+  return [...lines, `...and ${omitted} more ${label} not shown`]
+}
+
 function buildLowcodeFacts(lowcodeContext = {}) {
   const {
     dataSource = [],
@@ -44,8 +52,10 @@ function buildLowcodeFacts(lowcodeContext = {}) {
     globalState = [],
     state = [],
     methods = [],
-    currentSchema = null
+    currentSchema = null,
+    truncated = {}
   } = lowcodeContext
+  const schemaTruncated = truncated.currentSchema || {}
 
   const sections = [
     createSection('Platform APIs', [
@@ -56,26 +66,62 @@ function buildLowcodeFacts(lowcodeContext = {}) {
     ]),
     createSection(
       'Data sources',
-      dataSource.map((item) => formatFactWithDescription(item.accessPath, item.description, item.type))
+      appendOverflow(
+        dataSource.map((item) => formatFactWithDescription(item.accessPath, item.description, item.type)),
+        truncated.dataSource,
+        'data sources'
+      )
     ),
     createSection(
       'Utilities',
-      utils.map((item) => formatFactWithDescription(item.signature || item.accessPath, item.description, item.package))
+      appendOverflow(
+        utils.map((item) =>
+          formatFactWithDescription(item.signature || item.accessPath, item.description, item.package)
+        ),
+        truncated.utils,
+        'utilities'
+      )
     ),
     createSection(
       'Bridge APIs',
-      bridge.map((item) => formatFactWithDescription(item.accessPath, item.description))
+      appendOverflow(
+        bridge.map((item) => formatFactWithDescription(item.accessPath, item.description)),
+        truncated.bridge,
+        'bridge APIs'
+      )
     ),
-    createSection('Global stores', formatStoreFacts(globalState)),
+    createSection(
+      'Global stores',
+      appendOverflow(formatStoreFacts(globalState), truncated.globalState, 'global stores')
+    ),
     createSection(
       'Local state',
-      state.map((item) => `${item.accessPath}: ${item.type}`)
+      appendOverflow(
+        state.map((item) => `${item.accessPath}: ${item.type}`),
+        truncated.state,
+        'local state fields'
+      )
     ),
     createSection(
       'Local methods',
-      methods.map((item) => item.signature || `${item.accessPath}()`)
+      appendOverflow(
+        methods.map((item) => item.signature || `${item.accessPath}()`),
+        truncated.methods,
+        'local methods'
+      )
     ),
-    createSection('Current component', formatSchemaFacts(currentSchema))
+    createSection(
+      'Current component',
+      appendOverflow(
+        appendOverflow(
+          appendOverflow(formatSchemaFacts(currentSchema), schemaTruncated.props, 'component props'),
+          schemaTruncated.events,
+          'component events'
+        ),
+        schemaTruncated.dynamicProps,
+        'dynamic component props'
+      )
+    )
   ].filter(Boolean)
 
   return sections.join('\n\n')
