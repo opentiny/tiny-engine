@@ -33,6 +33,13 @@
       @confirm="handleOverwriteConfirm"
       @cancel="handleOverwriteCancel"
     />
+    <import-notice-dialog
+      :visible="state.showImportNoticeDialog"
+      :upload-type="state.pendingUploadType"
+      @update:visible="(v) => (state.showImportNoticeDialog = v)"
+      @confirm="handleImportNoticeConfirm"
+      @cancel="handleImportNoticeCancel"
+    />
   </div>
 </template>
 
@@ -85,6 +92,7 @@ import {
 import { hydrateImportedAppSchemaState, normalizeImportedAppSchema, normalizeImportedSchema } from './schemaImport'
 import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
 import OverwriteDialog from './OverwriteDialog.vue'
+import ImportNoticeDialog from './ImportNoticeDialog.vue'
 import { TinyPopover } from '@opentiny/vue'
 import { constants } from '@opentiny/tiny-engine-utils'
 
@@ -97,6 +105,7 @@ export default {
   components: {
     ToolbarBase,
     OverwriteDialog,
+    ImportNoticeDialog,
     TinyPopover
   },
   props: {
@@ -108,12 +117,14 @@ export default {
   setup() {
     const state = reactive({
       showOverwriteDialog: false,
+      showImportNoticeDialog: false,
       duplicatePages: [] as Array<{ name: string; ps: any; existing: any }>,
       toCreatePages: [] as any[],
       pendingImportedPages: [] as any[],
       pendingImportedComponentsMap: [] as any[],
       pendingAppSchema: null as any,
-      appId: '' as any
+      appId: '' as any,
+      pendingUploadType: 'directory' as 'file' | 'directory' | 'zip'
     })
 
     const poperVisible = ref(false)
@@ -376,9 +387,7 @@ export default {
       return String(latestVersion || '1.0.0').replace(/\d+$/, (match) => String(Number(match) + 1))
     }
 
-    // 触发隐藏文件上传
-    const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
-      closePopover()
+    const openUploadSelector = (type: 'file' | 'directory' | 'zip') => {
       if (type === 'file') {
         fileInputRef.value?.click()
       } else if (type === 'directory') {
@@ -386,6 +395,28 @@ export default {
       } else if (type === 'zip') {
         zipInputRef.value?.click()
       }
+    }
+
+    // 触发隐藏文件上传
+    const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
+      closePopover()
+
+      if (type === 'directory' || type === 'zip') {
+        state.pendingUploadType = type
+        state.showImportNoticeDialog = true
+        return
+      }
+
+      openUploadSelector(type)
+    }
+
+    const handleImportNoticeConfirm = () => {
+      state.showImportNoticeDialog = false
+      openUploadSelector(state.pendingUploadType)
+    }
+
+    const handleImportNoticeCancel = () => {
+      state.showImportNoticeDialog = false
     }
 
     const applyImportedAppSchema = async (appSchema: any, appId: string, hostType: string) => {
@@ -1197,6 +1228,8 @@ export default {
       fileInputRef,
       directoryInputRef,
       zipInputRef,
+      handleImportNoticeConfirm,
+      handleImportNoticeCancel,
       handleOverwriteConfirm,
       handleOverwriteCancel
     }
