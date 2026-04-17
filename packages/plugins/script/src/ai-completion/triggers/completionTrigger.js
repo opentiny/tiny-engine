@@ -1,17 +1,19 @@
-import { getCommentState } from '../utils/contextAnalysis.js'
+import { getCommentState, sanitizeStructuralText } from '../utils/contextAnalysis.js'
 
 /**
  * 检测光标是否在语句结束符后（分号后）
  */
-function isAfterStatementEnd(beforeCursor) {
+function isAfterStatementEnd(beforeCursor, textBeforeCursor) {
   // 检查是否以分号结尾（忽略尾部空格）
   const trimmedEnd = beforeCursor.trimEnd()
 
   if (trimmedEnd.endsWith(';')) {
+    const structuralTextBeforeCursor = sanitizeStructuralText(textBeforeCursor)
+
     // 排除 for 循环中的分号：for (let i = 0; i < 10; i++)
     // 检查是否在括号内
-    const openParens = (beforeCursor.match(/\(/g) || []).length
-    const closeParens = (beforeCursor.match(/\)/g) || []).length
+    const openParens = (structuralTextBeforeCursor.match(/\(/g) || []).length
+    const closeParens = (structuralTextBeforeCursor.match(/\)/g) || []).length
 
     // 如果括号未闭合，说明可能在 for 循环中
     if (openParens > closeParens) {
@@ -70,7 +72,7 @@ export function shouldTriggerCompletion(params) {
   }
 
   // 3. 分号后不触发（语句已结束）
-  if (isAfterStatementEnd(beforeCursor)) {
+  if (isAfterStatementEnd(beforeCursor, textBeforeCursor)) {
     return false
   }
 

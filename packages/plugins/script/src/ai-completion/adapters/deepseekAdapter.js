@@ -1,4 +1,5 @@
 import { HTTP_CONFIG, ERROR_MESSAGES, DEEPSEEK_CONFIG } from '../constants.js'
+import { fetchWithTimeout } from '../utils/requestUtils.js'
 
 export function buildDeepSeekCompletionsUrl(baseUrl) {
   const normalizedBaseUrl = String(baseUrl || '').trim()
@@ -60,7 +61,7 @@ export function buildDeepSeekFIMParams(fileContent, fimBuilder, metadata = {}) {
  * @param {string} baseUrl - 基础 URL
  * @returns {Promise<string>} 补全文本
  */
-export async function callDeepSeekAPI(prompt, suffix, config, apiKey, baseUrl) {
+export async function callDeepSeekAPI(prompt, suffix, config, apiKey, baseUrl, signal) {
   const completionsUrl = buildDeepSeekCompletionsUrl(baseUrl)
 
   const requestBody = {
@@ -74,14 +75,19 @@ export async function callDeepSeekAPI(prompt, suffix, config, apiKey, baseUrl) {
     stop: config.stopSequences
   }
 
-  const fetchResponse = await fetch(completionsUrl, {
-    method: HTTP_CONFIG.METHOD,
-    headers: {
-      'Content-Type': HTTP_CONFIG.CONTENT_TYPE,
-      Authorization: `Bearer ${apiKey}`
+  const fetchResponse = await fetchWithTimeout(
+    completionsUrl,
+    {
+      method: HTTP_CONFIG.METHOD,
+      headers: {
+        'Content-Type': HTTP_CONFIG.CONTENT_TYPE,
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(requestBody)
     },
-    body: JSON.stringify(requestBody)
-  })
+    HTTP_CONFIG.REQUEST_TIMEOUT_MS,
+    signal
+  )
 
   if (!fetchResponse.ok) {
     const errorText = await fetchResponse.text()

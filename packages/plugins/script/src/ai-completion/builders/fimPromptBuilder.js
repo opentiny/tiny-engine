@@ -41,7 +41,7 @@ export class FIMPromptBuilder {
     const rawSuffix = fileContent.substring(cursorIndex + FIM_CONFIG.MARKERS.CURSOR.length)
 
     // 3. 分析光标上下文
-    const cursorContext = this.analyzeCursorContext(rawPrefix, rawSuffix)
+    const cursorContext = this.analyzeCursorContext(rawPrefix)
 
     // 4. 构建完整的指令前缀
     const instructionPrefix = this.buildInstructionPrefix(language, isComment, lowcodeContext, cursorContext)

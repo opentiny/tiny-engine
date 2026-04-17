@@ -42,7 +42,7 @@ export const MODEL_CONFIG = {
   },
   DEEPSEEK: {
     TYPE: 'deepseek',
-    COMPLETION_MODELS: ['deepseek-chat'],
+    COMPLETION_MODELS: ['deepseek-chat', 'deepseek-coder'],
     COMPLETION_MODEL_PATTERNS: []
   },
   UNKNOWN: {
@@ -56,7 +56,8 @@ export const MODEL_CONFIG = {
 export const HTTP_CONFIG = {
   METHOD: 'POST',
   CONTENT_TYPE: 'application/json',
-  STREAM: false
+  STREAM: false,
+  REQUEST_TIMEOUT_MS: 15000
 }
 
 /**

@@ -18,6 +18,8 @@ export function createCompletionHandler() {
 
   return async (params) => {
     try {
+      const requestSignal = params?.signal ?? null
+
       // 1. 获取 AI 配置
       const {
         completeModel,
@@ -97,7 +99,8 @@ export function createCompletionHandler() {
             stopSequences: getStopSequences(ctx)
           },
           apiKey,
-          baseUrl
+          baseUrl,
+          requestSignal
         )
       } else {
         // ===== DeepSeek 流程（使用 FIM API） =====
@@ -117,7 +120,8 @@ export function createCompletionHandler() {
             stopSequences: getStopSequences(ctx)
           },
           apiKey,
-          baseUrl
+          baseUrl,
+          requestSignal
         )
       }
 

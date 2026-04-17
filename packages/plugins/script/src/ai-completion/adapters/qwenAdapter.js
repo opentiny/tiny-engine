@@ -1,4 +1,5 @@
 import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
+import { fetchWithTimeout } from '../utils/requestUtils.js'
 
 /**
  * 构建 Qwen FIM prompt
@@ -24,7 +25,7 @@ export function buildQwenFIMPrompt(fileContent, fimBuilder, metadata = {}) {
  * @param {string} baseUrl - 基础 URL
  * @returns {Promise<string>} 补全文本
  */
-export async function callQwenAPI(prompt, config, apiKey, baseUrl) {
+export async function callQwenAPI(prompt, config, apiKey, baseUrl, signal) {
   // 构建完整的 Completions API URL
   const completionsUrl = `${baseUrl}${QWEN_CONFIG.COMPLETION_PATH}`
 
@@ -39,14 +40,19 @@ export async function callQwenAPI(prompt, config, apiKey, baseUrl) {
     presence_penalty: QWEN_CONFIG.PRESENCE_PENALTY
   }
 
-  const fetchResponse = await fetch(completionsUrl, {
-    method: HTTP_CONFIG.METHOD,
-    headers: {
-      'Content-Type': HTTP_CONFIG.CONTENT_TYPE,
-      Authorization: `Bearer ${apiKey}`
+  const fetchResponse = await fetchWithTimeout(
+    completionsUrl,
+    {
+      method: HTTP_CONFIG.METHOD,
+      headers: {
+        'Content-Type': HTTP_CONFIG.CONTENT_TYPE,
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(requestBody)
     },
-    body: JSON.stringify(requestBody)
-  })
+    HTTP_CONFIG.REQUEST_TIMEOUT_MS,
+    signal
+  )
 
   if (!fetchResponse.ok) {
     const errorText = await fetchResponse.text()

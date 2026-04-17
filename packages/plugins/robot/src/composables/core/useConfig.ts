@@ -55,7 +55,7 @@ const getAIModelOptions = () => {
 }
 
 const QWEN_FIM_MODEL_PATTERNS = [/^qwen-coder-turbo(?:-latest|-0919)?$/, /^qwen2\.5-coder-(7|14|32)b-instruct$/]
-const DEEPSEEK_FIM_MODELS = new Set(['deepseek-chat'])
+const DEEPSEEK_FIM_MODELS = new Set(['deepseek-chat', 'deepseek-coder'])
 
 const matchesCompletionModel = (modelName = '', patterns: RegExp[] = [], exactModels: Set<string> = new Set()) => {
   const normalizedModelName = modelName.toLowerCase()

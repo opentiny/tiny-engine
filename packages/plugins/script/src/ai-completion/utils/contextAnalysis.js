@@ -1,7 +1,88 @@
 const CONTROL_KEYWORDS = new Set(['if', 'for', 'while', 'switch', 'catch', 'with'])
+const REGEX_PREFIX_KEYWORDS = new Set([
+  'await',
+  'case',
+  'delete',
+  'do',
+  'else',
+  'in',
+  'instanceof',
+  'new',
+  'of',
+  'return',
+  'throw',
+  'typeof',
+  'void',
+  'yield'
+])
+const REGEX_PREFIX_CHARS = new Set([
+  '(',
+  '[',
+  '{',
+  '=',
+  ':',
+  ',',
+  ';',
+  '!',
+  '?',
+  '~',
+  '+',
+  '-',
+  '*',
+  '%',
+  '^',
+  '&',
+  '|',
+  '<',
+  '>'
+])
 
 function maskChar(char) {
   return char === '\n' ? '\n' : ' '
+}
+
+function isIdentifierStart(char = '') {
+  return /[A-Za-z_$]/.test(char)
+}
+
+function isIdentifierPart(char = '') {
+  return /[\w$]/.test(char)
+}
+
+function readIdentifier(text = '', start = 0) {
+  let end = start + 1
+
+  while (end < text.length && isIdentifierPart(text[end])) {
+    end++
+  }
+
+  return {
+    value: text.slice(start, end),
+    end
+  }
+}
+
+function isRegexStart(lastToken, nextChar = '') {
+  if (!nextChar || nextChar === '/' || nextChar === '*') {
+    return false
+  }
+
+  if (!lastToken) {
+    return true
+  }
+
+  if (lastToken.type === 'word') {
+    return REGEX_PREFIX_KEYWORDS.has(lastToken.value)
+  }
+
+  return lastToken.type === 'char' ? REGEX_PREFIX_CHARS.has(lastToken.value) : false
+}
+
+function createLiteralToken() {
+  return {
+    type: 'literal',
+    value: 'literal'
+  }
 }
 
 export function getCommentState(text = '') {
@@ -11,6 +92,9 @@ export function getCommentState(text = '') {
   let templateExpressionDepth = 0
   let inBlockComment = false
   let inLineComment = false
+  let inRegex = false
+  let inRegexCharClass = false
+  let lastToken = null
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i]
@@ -31,11 +115,37 @@ export function getCommentState(text = '') {
       continue
     }
 
+    if (inRegex) {
+      if (char === '\\') {
+        i++
+        continue
+      }
+
+      if (inRegexCharClass) {
+        if (char === ']') {
+          inRegexCharClass = false
+        }
+        continue
+      }
+
+      if (char === '[') {
+        inRegexCharClass = true
+        continue
+      }
+
+      if (char === '/') {
+        inRegex = false
+        lastToken = createLiteralToken()
+      }
+      continue
+    }
+
     if (inSingleQuote) {
       if (char === '\\') {
         i++
       } else if (char === "'") {
         inSingleQuote = false
+        lastToken = createLiteralToken()
       }
       continue
     }
@@ -45,6 +155,7 @@ export function getCommentState(text = '') {
         i++
       } else if (char === '"') {
         inDoubleQuote = false
+        lastToken = createLiteralToken()
       }
       continue
     }
@@ -54,9 +165,11 @@ export function getCommentState(text = '') {
         i++
       } else if (char === '`') {
         inTemplate = false
+        lastToken = createLiteralToken()
       } else if (char === '$' && next === '{') {
         templateExpressionDepth = 1
         i++
+        lastToken = null
       }
       continue
     }
@@ -70,6 +183,12 @@ export function getCommentState(text = '') {
     if (char === '/' && next === '*') {
       inBlockComment = true
       i++
+      continue
+    }
+
+    if (char === '/' && isRegexStart(lastToken, next)) {
+      inRegex = true
+      inRegexCharClass = false
       continue
     }
 
@@ -91,8 +210,37 @@ export function getCommentState(text = '') {
     if (inTemplate && templateExpressionDepth > 0) {
       if (char === '{') {
         templateExpressionDepth++
+        lastToken = {
+          type: 'char',
+          value: '{'
+        }
       } else if (char === '}') {
         templateExpressionDepth--
+        lastToken =
+          templateExpressionDepth === 0
+            ? createLiteralToken()
+            : {
+                type: 'char',
+                value: '}'
+              }
+      }
+      continue
+    }
+
+    if (isIdentifierStart(char)) {
+      const identifier = readIdentifier(text, i)
+      lastToken = {
+        type: 'word',
+        value: identifier.value
+      }
+      i = identifier.end - 1
+      continue
+    }
+
+    if (!/\s/.test(char)) {
+      lastToken = {
+        type: 'char',
+        value: char
       }
     }
   }
@@ -116,6 +264,9 @@ export function sanitizeStructuralText(text = '') {
   let templateExpressionDepth = 0
   let inBlockComment = false
   let inLineComment = false
+  let inRegex = false
+  let inRegexCharClass = false
+  let lastToken = null
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i]
@@ -139,6 +290,33 @@ export function sanitizeStructuralText(text = '') {
       continue
     }
 
+    if (inRegex) {
+      sanitized.push(maskChar(char))
+      if (char === '\\') {
+        sanitized.push(maskChar(next))
+        i++
+        continue
+      }
+
+      if (inRegexCharClass) {
+        if (char === ']') {
+          inRegexCharClass = false
+        }
+        continue
+      }
+
+      if (char === '[') {
+        inRegexCharClass = true
+        continue
+      }
+
+      if (char === '/') {
+        inRegex = false
+        lastToken = createLiteralToken()
+      }
+      continue
+    }
+
     if (inSingleQuote) {
       sanitized.push(maskChar(char))
       if (char === '\\') {
@@ -146,6 +324,7 @@ export function sanitizeStructuralText(text = '') {
         i++
       } else if (char === "'") {
         inSingleQuote = false
+        lastToken = createLiteralToken()
       }
       continue
     }
@@ -157,6 +336,7 @@ export function sanitizeStructuralText(text = '') {
         i++
       } else if (char === '"') {
         inDoubleQuote = false
+        lastToken = createLiteralToken()
       }
       continue
     }
@@ -168,10 +348,12 @@ export function sanitizeStructuralText(text = '') {
         i++
       } else if (char === '`') {
         inTemplate = false
+        lastToken = createLiteralToken()
       } else if (char === '$' && next === '{') {
         sanitized.push(maskChar(next))
         templateExpressionDepth = 1
         i++
+        lastToken = null
       }
       continue
     }
@@ -189,6 +371,13 @@ export function sanitizeStructuralText(text = '') {
       sanitized.push(maskChar(next))
       inBlockComment = true
       i++
+      continue
+    }
+
+    if (char === '/' && isRegexStart(lastToken, next)) {
+      sanitized.push(maskChar(char))
+      inRegex = true
+      inRegexCharClass = false
       continue
     }
 
@@ -214,21 +403,48 @@ export function sanitizeStructuralText(text = '') {
       if (char === '{') {
         templateExpressionDepth++
         sanitized.push(char)
+        lastToken = {
+          type: 'char',
+          value: '{'
+        }
         continue
       }
 
       if (char === '}') {
         if (templateExpressionDepth === 1) {
           sanitized.push(maskChar(char))
+          lastToken = createLiteralToken()
         } else {
           sanitized.push(char)
+          lastToken = {
+            type: 'char',
+            value: '}'
+          }
         }
         templateExpressionDepth--
         continue
       }
     }
 
+    if (isIdentifierStart(char)) {
+      const identifier = readIdentifier(text, i)
+      sanitized.push(identifier.value)
+      lastToken = {
+        type: 'word',
+        value: identifier.value
+      }
+      i = identifier.end - 1
+      continue
+    }
+
     sanitized.push(char)
+
+    if (!/\s/.test(char)) {
+      lastToken = {
+        type: 'char',
+        value: char
+      }
+    }
   }
 
   return sanitized.join('')

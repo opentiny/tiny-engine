@@ -5,6 +5,14 @@ const FACT_LIMITS = {
   HINT_TOKENS: 80
 }
 
+function asArray(value) {
+  return Array.isArray(value) ? value : []
+}
+
+function asRecord(value) {
+  return value && typeof value === 'object' && !Array.isArray(value) ? value : {}
+}
+
 function limitList(items, max = FACT_LIMITS.ITEMS) {
   if (!Array.isArray(items)) {
     return []
@@ -123,7 +131,7 @@ function getValueType(value) {
  * @returns {Array} 格式化后的数据源
  */
 function formatDataSources(dataSource, hintContext) {
-  const candidates = dataSource
+  const candidates = asArray(dataSource)
     .filter((ds) => ds?.name)
     .map((ds) => ({
       name: ds.name,
@@ -169,7 +177,7 @@ function createCallableAccess(prefix, name, functionCode) {
  * @returns {Array} 格式化后的工具类
  */
 function formatUtils(utils, hintContext) {
-  const candidates = utils
+  const candidates = asArray(utils)
     .filter((util) => util?.name)
     .map((util) => {
       const formatted = {
@@ -202,7 +210,7 @@ function formatUtils(utils, hintContext) {
  * @returns {Array} 格式化后的 bridge 信息
  */
 function formatBridge(bridge, hintContext) {
-  const candidates = bridge
+  const candidates = asArray(bridge)
     .filter((item) => item?.name)
     .map((item) => ({
       name: item.name,
@@ -221,7 +229,7 @@ function formatBridge(bridge, hintContext) {
  * @returns {Array} 格式化后的全局状态
  */
 function formatGlobalState(globalState, hintContext) {
-  const candidates = globalState
+  const candidates = asArray(globalState)
     .filter((store) => store?.id)
     .map((store) => ({
       id: store.id,
@@ -242,7 +250,7 @@ function formatGlobalState(globalState, hintContext) {
  * @returns {Array} 格式化后的状态
  */
 function formatState(state, hintContext) {
-  const candidates = Object.entries(state).map(([key, value]) => ({
+  const candidates = Object.entries(asRecord(state)).map(([key, value]) => ({
     name: key,
     accessPath: `this.state.${key}`,
     type: getValueType(value)
@@ -259,7 +267,7 @@ function formatState(state, hintContext) {
  * @returns {Array} 格式化后的方法
  */
 function formatMethods(methods, hintContext) {
-  const candidates = Object.entries(methods).map(([key, value]) => ({
+  const candidates = Object.entries(asRecord(methods)).map(([key, value]) => ({
     name: key,
     accessPath: `this.${key}`,
     signature: value?.type === 'JSFunction' ? createCallableAccess('this.', key, value.value) : `this.${key}()`,
@@ -287,7 +295,9 @@ function prioritizeSchemaKeys(keys, max, hintContext) {
  * @returns {Object|null} 格式化后的 schema
  */
 function formatCurrentSchema(schema, hintContext) {
-  if (!schema) {
+  const normalizedSchema = schema && typeof schema === 'object' && !Array.isArray(schema) ? schema : null
+
+  if (!normalizedSchema) {
     return {
       schema: null,
       truncated: {
@@ -299,8 +309,8 @@ function formatCurrentSchema(schema, hintContext) {
   }
 
   const formatted = {
-    componentName: schema.componentName || 'Unknown',
-    ...(schema.ref && { ref: schema.ref, refAccess: `this.$('${schema.ref}')` })
+    componentName: normalizedSchema.componentName || 'Unknown',
+    ...(normalizedSchema.ref && { ref: normalizedSchema.ref, refAccess: `this.$('${normalizedSchema.ref}')` })
   }
 
   const truncated = {
@@ -309,12 +319,14 @@ function formatCurrentSchema(schema, hintContext) {
     dynamicProps: 0
   }
 
-  if (schema.props) {
+  const schemaProps = asRecord(normalizedSchema.props)
+
+  if (Object.keys(schemaProps).length > 0) {
     const propKeys = []
     const eventKeys = []
     const dynamicPropKeys = []
 
-    for (const [key, value] of Object.entries(schema.props)) {
+    for (const [key, value] of Object.entries(schemaProps)) {
       if (key.startsWith('on')) {
         eventKeys.push(key)
       } else {
@@ -350,7 +362,8 @@ function formatCurrentSchema(schema, hintContext) {
  * @param {Object} metadata - 低代码平台元数据
  * @returns {Object} 格式化的低代码上下文
  */
-export function buildLowcodeContext(metadata, options = {}) {
+export function buildLowcodeContext(metadata = {}, options = {}) {
+  const normalizedMetadata = metadata && typeof metadata === 'object' ? metadata : {}
   const {
     dataSource = [],
     utils = [],
@@ -359,7 +372,7 @@ export function buildLowcodeContext(metadata, options = {}) {
     state = {},
     methods = {},
     currentSchema = null
-  } = metadata
+  } = normalizedMetadata
   const hintContext = buildHintContext(options.hintText)
   const formattedDataSource = formatDataSources(dataSource, hintContext)
   const formattedUtils = formatUtils(utils, hintContext)
