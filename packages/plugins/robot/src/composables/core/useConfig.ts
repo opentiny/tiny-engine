@@ -13,7 +13,17 @@
 /* metaService: engine.plugins.robot.useRobot */
 import { reactive, readonly } from 'vue'
 import { DEFAULT_LLM_MODELS } from '../../constants'
-import { getRobotServiceOptions } from '../../utils'
+import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../constants/prompts'
+import {
+  isValidJsonPatchObjectString,
+  getRobotServiceOptions,
+  addSystemPrompt,
+  jsonPatchAutoFix,
+  isValidFastJsonPatch,
+  getJsonObjectString,
+  fixMethods,
+  schemaAutoFix
+} from '../../utils'
 import { ChatMode } from '../../types/mode.types'
 import type { ModelConfig, ModelService, RobotSettings, SelectedModelInfo } from '../../types/setting.types'
 import apiService from '../../services/api'
@@ -463,6 +473,19 @@ export default () => {
     addCustomService,
     updateService,
     deleteService,
-    getServiceById
+    getServiceById,
+
+    // 公共方法
+    formatComponents,
+    getAgentSystemPrompt,
+    getJsonFixPrompt,
+    isValidJsonPatchObjectString,
+    getRobotServiceOptions,
+    addSystemPrompt,
+    jsonPatchAutoFix,
+    isValidFastJsonPatch,
+    getJsonObjectString,
+    fixMethods,
+    schemaAutoFix
   }
 }

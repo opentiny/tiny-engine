@@ -91,6 +91,30 @@
       <div title="删除">
         <icon-del class="svg-currentcolor" @click.stop="remove"></icon-del>
       </div>
+      <!-- AI助手按钮（默认状态：隐藏） -->
+      <div title="AI助手" class="ai-helper">
+        <svg-icon name="add-group" @click.stop="openAIHelper"></svg-icon>
+        <CanvasAIChat
+          v-if="shouldShowAIChat"
+          class="ai-component"
+          @complete="handleAIChatComplete"
+          @close="closeAIHelper"
+        ></CanvasAIChat>
+        <AILoadingDialog
+          v-if="shouldShowAILoading"
+          class="ai-component"
+          @cancel="handleAILoadingCancel"
+          @close="closeAIHelper"
+        ></AILoadingDialog>
+        <AIConfirmDialog
+          v-if="shouldShowAIConfirm"
+          class="ai-component"
+          @confirm="handleAIConfirm"
+          @cancel="handleAICancel"
+          @close="closeAIHelper"
+          @refresh="handleAIRefresh"
+        ></AIConfirmDialog>
+      </div>
     </div>
   </div>
   <div v-show="hoverState.height && hoverState.width" class="canvas-rect hover">
@@ -133,9 +157,22 @@ import {
   getCurrentElement,
   querySelectById
 } from '../container'
-import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
+import {
+  useLayout,
+  useMaterial,
+  useCanvas,
+  useMessage,
+  getMetaApi,
+  useHistory
+} from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import CanvasAIChat from './CanvasAIChat.vue'
+import AIConfirmDialog from './AIConfirmDialog.vue'
+import AILoadingDialog from './AILoadingDialog.vue'
+import { jsonrepair } from 'jsonrepair'
+import * as jsonpatch from 'fast-json-patch'
+import axios from 'axios'
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -155,6 +192,9 @@ const STYLE_UNSET = 'unset'
 
 export default {
   components: {
+    AILoadingDialog,
+    CanvasAIChat,
+    AIConfirmDialog,
     IconDel: IconDel(),
     IconSetting: IconSetting(),
     IconChevronLeft: IconChevronLeft(),
@@ -198,6 +238,26 @@ export default {
   },
   emits: ['remove', 'selectSlot', 'setting'],
   setup(props) {
+    const {
+      getPageSchema,
+      pageState: _pageState,
+      getNodeAIStatus: _getNodeAIStatus,
+      openNodeAIChat,
+      closeNodeAIHelper,
+      startNodeAILoading,
+      cancelNodeAILoading,
+      completeNodeAILoading,
+      shouldShowNodeAIHelper,
+      shouldShowNodeAIChat,
+      shouldShowNodeAILoading,
+      shouldShowNodeAIConfirm,
+      setCurrentSchema,
+      findJsonPatchPath
+    } = useCanvas()
+
+    const { fixMethods, schemaAutoFix, getJsonObjectString, isValidFastJsonPatch, jsonPatchAutoFix } =
+      getMetaApi('engine.service.robot')
+
     const remove = () => {
       removeNodeById(getCurrent().schema?.id)
     }
@@ -282,6 +342,75 @@ export default {
       const config = useMaterial().getMaterial(props.selectState.componentName)
       return config?.configure?.isModal
     })
+
+    // AI助手显示状态
+    const shouldShowAIHelper = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false // 默认不显示
+      }
+
+      return shouldShowNodeAIHelper(currentSchema.id)
+    })
+
+    // 是否显示AI聊天界面
+    const shouldShowAIChat = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAIChat(currentSchema.id)
+    })
+
+    // 是否显示确认弹窗
+    const shouldShowAIConfirm = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAIConfirm(currentSchema.id)
+    })
+
+    // 是否显示AI加载状态
+    const shouldShowAILoading = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAILoading(currentSchema.id)
+    })
+
+    // 切换AI助手显示/隐藏
+    const openAIHelper = () => {
+      const currentSchema = getCurrent().schema
+
+      if (!currentSchema?.id) {
+        return
+      }
+
+      const currentStatus = _getNodeAIStatus(currentSchema.id)
+
+      if (currentStatus && currentStatus.state !== 'hidden') {
+        // 如果AI助手当前不是隐藏状态，则关闭它
+        closeNodeAIHelper(currentSchema.id)
+      } else {
+        // 如果AI助手当前是隐藏状态，则打开它
+        openNodeAIChat(currentSchema.id)
+      }
+    }
+
+    // 关闭AI助手（由其他组件调用，如AI聊天界面）
+    const closeAIHelper = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      closeNodeAIHelper(currentSchema.id)
+    }
 
     const optionRef = ref(null)
     const fixStyle = ref('')
@@ -633,6 +762,127 @@ export default {
       fixStyle.value = optionStyleValue
     })
 
+    const setSchema = (schema) => {
+      const { importSchema, setSaved } = useCanvas()
+      importSchema(schema)
+      setSaved(false)
+    }
+
+    // AI聊天完成处理
+    const handleAIChatComplete = async (result) => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      // 先进入加载状态
+      startNodeAILoading(currentSchema.id, 'AI正在处理您的请求...')
+
+      const response = await axios(result)
+      if (response.data) {
+        const content = response.data.choices[0].message.content
+        // let content = getJsonObjectString(streamContent)
+        // let jsonPatches = []
+        // try {
+        //   if (!isFinal) {
+        //     content = jsonrepair(content)
+        //   }
+        //   jsonPatches = JSON.parse(content)
+        // } catch (error) {
+        //   if (isFinal) {
+        //     logger.error('parse json patch error:', error)
+        //   }
+        //   return { isError: true, error }
+        // }
+
+        // // 过滤有效的json patch
+        // if (!isFinal && !isValidFastJsonPatch(jsonPatches)) {
+        //   return { isError: true, error: 'format error: not a valid json patch.' }
+        // }
+
+        const validJsonPatches = JSON.parse(content)
+        const parentPath = findJsonPatchPath(getPageSchema(), currentSchema.id)
+        const newSchema = validJsonPatches.reduce((acc, patch) => {
+          try {
+            // 创建新的 patch 对象，拼接完整路径
+            const fullPatch = {
+              ...patch,
+              path: parentPath + patch.path
+            }
+            return jsonpatch.applyPatch(acc, [fullPatch], false, false).newDocument
+          } catch (error) {
+            return acc
+          }
+        }, getPageSchema())
+        // schema纠错
+        fixMethods(newSchema.methods)
+        schemaAutoFix(newSchema.children)
+
+        // 更新Schema
+        setSchema(newSchema)
+        // if (isFinal) {
+        useHistory().addHistory()
+        // }
+        completeNodeAILoading(currentSchema.id)
+      }
+    }
+
+    // AI加载取消处理
+    const handleAILoadingCancel = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      // 取消加载状态
+      cancelNodeAILoading(currentSchema.id)
+    }
+
+    // 刷新AI操作（重新生成）
+    const handleAIRefresh = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      // 这里应该调用AI重新生成的逻辑
+      // 目前暂时先记录一个操作历史，然后关闭确认状态返回聊天状态
+      const { addNodeAIActionHistory } = useCanvas()
+
+      // 记录刷新操作
+      addNodeAIActionHistory(currentSchema.id, 'refresh', {
+        timestamp: Date.now(),
+        reason: '用户请求重新生成AI建议'
+      })
+
+      // 返回到聊天状态，让用户重新输入
+      useCanvas().cancelNodeAIAction(currentSchema.id)
+
+      // 可以在这里触发一些回调，比如重新调用AI API
+      // 暂时先不实现具体的重新生成逻辑，只做状态切换
+    }
+
+    // 确认AI操作
+    const handleAIConfirm = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      useCanvas().confirmNodeAIAction(currentSchema.id)
+      // 这里可以添加实际应用AI修改的逻辑
+    }
+
+    // 取消AI操作
+    const handleAICancel = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      useCanvas().cancelNodeAIAction(currentSchema.id)
+    }
+
     return {
       remove,
       moveUp,
@@ -650,7 +900,18 @@ export default {
       isModal,
       onMousedown,
       labelStyle,
-      labelRef
+      labelRef,
+      openAIHelper,
+      shouldShowAIHelper,
+      shouldShowAIChat,
+      shouldShowAILoading,
+      shouldShowAIConfirm,
+      closeAIHelper,
+      handleAIChatComplete,
+      handleAILoadingCancel,
+      handleAIConfirm,
+      handleAICancel,
+      handleAIRefresh
     }
   }
 }
@@ -940,6 +1201,20 @@ export default {
     left: auto;
     top: auto;
     cursor: se-resize;
+  }
+}
+
+.ai-helper {
+  position: relative;
+  .ai-component,
+  .ai-component-loading {
+    position: absolute;
+    bottom: -106px;
+    right: 0;
+    width: 360px;
+  }
+  .ai-component-loading {
+    width: 270px;
   }
 }
 </style>
