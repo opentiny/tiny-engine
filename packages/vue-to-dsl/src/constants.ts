@@ -15,6 +15,22 @@ export const defaultComponentMap: Record<string, string> = {
   'tiny-card': 'TinyCard'
 }
 
+export const builtinSchemaComponentNames = [
+  'Page',
+  'Block',
+  'Text',
+  'Icon',
+  'Template',
+  'Collection',
+  'Slot',
+  'slot',
+  'RouterView',
+  'RouterLink',
+  'CanvasPlaceholder'
+]
+
+export const builtinSchemaComponents = new Set(builtinSchemaComponentNames)
+
 export const defaultComponentsMap = [
   {
     componentName: 'TinyCarouselItem',

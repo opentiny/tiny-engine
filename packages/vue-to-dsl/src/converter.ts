@@ -3,7 +3,7 @@ import { parseTemplate } from './parsers/templateParser'
 import { parseScript } from './parsers/scriptParser'
 import { parseStyle } from './parsers/styleParser'
 import { generateSchema, generateAppSchema } from './generator/index'
-import { defaultComponentMap, defaultComponentsMap } from './constants'
+import { builtinSchemaComponents, defaultComponentMap, defaultComponentsMap } from './constants'
 import { parse as babelParse } from '@babel/parser'
 import traverseModule from '@babel/traverse'
 import * as t from '@babel/types'
@@ -47,20 +47,6 @@ const HTML_TAGS = new Set([
   'main',
   'template',
   'slot'
-])
-
-const BUILTIN_SCHEMA_COMPONENTS = new Set([
-  'Page',
-  'Block',
-  'Text',
-  'Icon',
-  'Template',
-  'Collection',
-  'Slot',
-  'slot',
-  'RouterView',
-  'RouterLink',
-  'CanvasPlaceholder'
 ])
 
 function collectTemplateRefNames(nodes: any, collector = new Set<string>()) {
@@ -447,7 +433,7 @@ export class VueToDslConverter {
 
   private isSchemaBuiltinComponent(componentName = '') {
     if (!componentName) return true
-    if (BUILTIN_SCHEMA_COMPONENTS.has(componentName)) return true
+    if (builtinSchemaComponents.has(componentName)) return true
 
     const lower = componentName.toLowerCase()
     if (HTML_TAGS.has(lower)) return true
@@ -1446,7 +1432,7 @@ export class VueToDslConverter {
 
     const visit = (node: any) => {
       if (!node || typeof node !== 'object') return
-      if (node.componentType === 'Block' && node.componentName) {
+      if (node.componentType === 'Block' && node.componentName && !this.isSchemaBuiltinComponent(node.componentName)) {
         names.add(String(node.componentName))
       }
       if (Array.isArray(node.children)) {

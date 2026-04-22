@@ -1,3 +1,29 @@
+const ROUTER_SCHEMA_COMPONENTS = new Set(['RouterLink', 'RouterView'])
+
+function normalizeImportedRouterComponents(schema: any) {
+  const walk = (value: any) => {
+    if (!value || typeof value !== 'object') return
+
+    if (Array.isArray(value)) {
+      value.forEach((item) => walk(item))
+      return
+    }
+
+    if (ROUTER_SCHEMA_COMPONENTS.has(String(value.componentName || '')) && value.componentType === 'Block') {
+      delete value.componentType
+    }
+
+    Object.values(value).forEach((item) => {
+      if (item && typeof item === 'object') {
+        walk(item)
+      }
+    })
+  }
+
+  walk(schema)
+  return schema
+}
+
 function isEscaped(code: string, index: number) {
   let slashCount = 0
 
@@ -806,6 +832,7 @@ function normalizeImportedMultiRootSlots(schema: any) {
 }
 
 export function normalizeImportedSchema(schema: any) {
+  normalizeImportedRouterComponents(schema)
   normalizeSchemaComputedDefaults(schema)
   normalizeImportedRuntimeCodeEntries(schema?.methods)
   normalizeImportedRuntimeCodeEntries(schema?.computed)
