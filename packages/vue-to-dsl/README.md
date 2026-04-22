@@ -80,6 +80,8 @@ new VueToDslConverter(options?: VueToSchemaOptions)
 
 interface VueToSchemaOptions {
   componentMap?: Record<string, string>
+  materials?: any[] | Record<string, any>
+  supportedComponents?: string[]
   preserveComments?: boolean
   strictMode?: boolean
   // 控制是否额外输出 computed 字段（默认 false）
@@ -103,6 +105,8 @@ type ConvertResult = {
   warnings: string[]
 }
 ```
+
+`materials`/`supportedComponents` 可用于在运行时把设计器当前已加载的物料组件注入给转换器，避免在 `vue-to-dsl` 包内直接依赖具体的 `builtin.json` 或 `bundle.json` 文件。
 
 实例方法：
 

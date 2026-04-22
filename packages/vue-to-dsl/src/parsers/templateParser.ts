@@ -1,7 +1,7 @@
 import { parse } from '@vue/compiler-dom'
 import { parse as babelParse } from '@babel/parser'
 import traverseModule from '@babel/traverse'
-import { builtinSchemaComponents } from '../constants'
+import { getSupportedSchemaComponents } from '../materials.js'
 
 const traverse: any = (traverseModule as any)?.default ?? (traverseModule as any)
 
@@ -379,7 +379,7 @@ function isComponentImported(tag: string, options: any) {
   if (lower.startsWith('tiny-')) return false
 
   const componentName = getComponentName(tag, options)
-  if (builtinSchemaComponents.has(componentName)) return false
+  if (getSupportedSchemaComponents(options).has(componentName)) return false
 
   // Check if the tag matches any imported component
   // The tag could be in kebab-case or PascalCase
@@ -803,7 +803,7 @@ const templateAstParser = {
     // Check if this is an imported component (sub-component)
     // If the component name is PascalCase and not an HTML tag, it's likely a component
     const isImportedComponent = isComponentImported(node.tag, options)
-    if (isImportedComponent && !builtinSchemaComponents.has(componentName)) {
+    if (isImportedComponent && !getSupportedSchemaComponents(options).has(componentName)) {
       schema.componentType = 'Block'
     }
 

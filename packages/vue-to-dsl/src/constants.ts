@@ -1,35 +1,7 @@
-export const defaultComponentMap: Record<string, string> = {
-  'tiny-form': 'TinyForm',
-  'tiny-form-item': 'TinyFormItem',
-  'tiny-button': 'TinyButton',
-  'tiny-button-group': 'TinyButtonGroup',
-  'tiny-switch': 'TinySwitch',
-  'tiny-select': 'TinySelect',
-  'tiny-search': 'TinySearch',
-  'tiny-input': 'TinyInput',
-  'tiny-grid': 'TinyGrid',
-  'tiny-grid-item': 'TinyGridItem',
-  'tiny-col': 'TinyCol',
-  'tiny-row': 'TinyRow',
-  'tiny-time-line': 'TinyTimeLine',
-  'tiny-card': 'TinyCard'
-}
+import { builtinSchemaComponentNames, builtinSchemaComponents, createDefaultComponentMap } from './materials.js'
 
-export const builtinSchemaComponentNames = [
-  'Page',
-  'Block',
-  'Text',
-  'Icon',
-  'Template',
-  'Collection',
-  'Slot',
-  'slot',
-  'RouterView',
-  'RouterLink',
-  'CanvasPlaceholder'
-]
-
-export const builtinSchemaComponents = new Set(builtinSchemaComponentNames)
+export const defaultComponentMap: Record<string, string> = createDefaultComponentMap()
+export { builtinSchemaComponentNames, builtinSchemaComponents }
 
 export const defaultComponentsMap = [
   {

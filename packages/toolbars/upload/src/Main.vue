@@ -252,6 +252,15 @@ export default {
       return schema
     }
 
+    const createVueToDslConverter = () => {
+      const materials = useMaterial().getComponentList?.() || []
+
+      return new VueToDslConverter({
+        computed_flag: true,
+        materials
+      })
+    }
+
     const normalizeImportedAppSchemaIcons = (appSchema: any) => {
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
       const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
@@ -1076,7 +1085,7 @@ export default {
 
       try {
         // 转换器实例
-        const converter = new VueToDslConverter({ computed_flag: true })
+        const converter = createVueToDslConverter()
 
         // 检查是目录上传还是文件上传
         const isDirectory = files[0].webkitRelativePath !== ''

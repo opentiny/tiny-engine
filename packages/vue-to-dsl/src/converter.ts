@@ -3,7 +3,8 @@ import { parseTemplate } from './parsers/templateParser'
 import { parseScript } from './parsers/scriptParser'
 import { parseStyle } from './parsers/styleParser'
 import { generateSchema, generateAppSchema } from './generator/index'
-import { builtinSchemaComponents, defaultComponentMap, defaultComponentsMap } from './constants'
+import { builtinSchemaComponents, defaultComponentsMap } from './constants'
+import { createDefaultComponentMap, getSupportedSchemaComponents } from './materials.js'
 import { parse as babelParse } from '@babel/parser'
 import traverseModule from '@babel/traverse'
 import * as t from '@babel/types'
@@ -134,6 +135,8 @@ function normalizeSchemaTemplateRefs(schema: any, scriptSchema: any, templateSch
 
 export interface VueToSchemaOptions {
   componentMap?: Record<string, string>
+  materials?: any[] | Record<string, any>
+  supportedComponents?: string[]
   preserveComments?: boolean
   strictMode?: boolean
   // 控制是否在出码结果中包含 computed 字段，默认 false
@@ -175,17 +178,32 @@ type ImportedAssetEntry = {
 export class VueToDslConverter {
   private options: VueToSchemaOptions
 
+  private rawOptions: VueToSchemaOptions
+
   private static readonly NOOP_FUNCTION_VALUE = 'function noop() {}'
 
   constructor(options: VueToSchemaOptions = {}) {
-    this.options = {
-      componentMap: defaultComponentMap,
+    this.rawOptions = { ...options }
+    this.options = this.normalizeOptions(this.rawOptions)
+  }
+
+  private normalizeOptions(options: VueToSchemaOptions = {}) {
+    const normalizedOptions = {
       preserveComments: false,
       strictMode: false,
       computed_flag: false,
       customParsers: {},
       ...options
     }
+
+    return {
+      ...normalizedOptions,
+      componentMap: normalizedOptions.componentMap || createDefaultComponentMap(normalizedOptions)
+    }
+  }
+
+  private getSupportedSchemaComponents(options: VueToSchemaOptions = this.options) {
+    return getSupportedSchemaComponents(options)
   }
 
   private isLocalModuleSource(source = '') {
@@ -1429,10 +1447,11 @@ export class VueToDslConverter {
 
   private collectBlockComponentNames(schema: any) {
     const names = new Set<string>()
+    const supportedComponents = this.getSupportedSchemaComponents()
 
     const visit = (node: any) => {
       if (!node || typeof node !== 'object') return
-      if (node.componentType === 'Block' && node.componentName && !this.isSchemaBuiltinComponent(node.componentName)) {
+      if (node.componentType === 'Block' && node.componentName && !supportedComponents.has(node.componentName)) {
         names.add(String(node.componentName))
       }
       if (Array.isArray(node.children)) {
@@ -2107,7 +2126,8 @@ export class VueToDslConverter {
   }
 
   setOptions(options: VueToSchemaOptions) {
-    this.options = { ...this.options, ...options }
+    this.rawOptions = { ...this.rawOptions, ...options }
+    this.options = this.normalizeOptions(this.rawOptions)
   }
 
   getOptions(): VueToSchemaOptions {
