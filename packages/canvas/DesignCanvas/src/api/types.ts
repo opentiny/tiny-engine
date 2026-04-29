@@ -14,28 +14,14 @@ export interface NodeAIStatus {
     content: any
   }>
   chatContent?: string // 聊天内容
-  pendingConfirmation?: {
-    title: string
-    message: string
-    confirmText?: string
-    cancelText?: string
-    data: any // 待确认的数据
-  }
-  
   // AI采纳状态相关字段
-  originalNodeData?: any      // AI修改前的节点数据备份
-  aiModifiedNodeData?: any    // AI修改后的节点数据
-  adoptionStatus?: AIAdoptionStatus // 采纳状态
-  aiModificationTime?: number // AI修改时间戳
-  userDecisionTime?: number   // 用户决定时间戳
-  modificationDescription?: string // 修改描述
+  originalNodeData?: any // AI修改前的节点数据备份
+  aiModifiedNodeData?: any // AI修改后的节点数据
 }
-
-export type AIAdoptionStatus = 'not_asked' | 'pending' | 'adopted' | 'rejected'
 
 export interface NodeStatus {
   [key: string]: any
-  aiStatus?: NodeAIStatus  // 现在包含了所有的AI状态，包括采纳状态
+  aiStatus?: NodeAIStatus // 现在包含了所有的AI状态，包括采纳状态
 }
 
 export interface PageState {

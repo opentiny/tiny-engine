@@ -27,6 +27,7 @@ import {
 import { ChatMode } from '../../types/mode.types'
 import type { ModelConfig, ModelService, RobotSettings, SelectedModelInfo } from '../../types/setting.types'
 import apiService from '../../services/api'
+import { updatePageSchema } from '../core/pageUpdater'
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
 const SETTING_VERSION = 2 // 新版本号
@@ -486,6 +487,7 @@ export default () => {
     isValidFastJsonPatch,
     getJsonObjectString,
     fixMethods,
-    schemaAutoFix
+    schemaAutoFix,
+    updatePageSchema
   }
 }

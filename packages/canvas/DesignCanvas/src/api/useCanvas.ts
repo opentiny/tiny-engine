@@ -15,6 +15,7 @@ import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { useHistory, getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
+import useAIChat from '../../../container/src/composables/useAIChat'
 import type { canvasApi as CanvasApi } from '../../../container/src/container'
 import type { Node, RootNode } from '../../../types'
 import type {
@@ -22,7 +23,6 @@ import type {
   DeleteOperation,
   InsertOperation,
   NodeOperation,
-  NodeAIStatus,
   PageSchema,
   PageState,
   UpdateAttributesOperation
@@ -183,6 +183,8 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
   Object.assign(pageState, defaultPageState, state)
 
   nodesMap.value.clear()
+  // 切换页面时清空所有节点的AI状态，避免旧页面的AI状态残留
+  pageState.nodesStatus = {}
 
   if (pageState.pageSchema) {
     if (!pageState.pageSchema.children) {
@@ -203,13 +205,50 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
     generateNodesMap(pageState.pageSchema.children, pageState.pageSchema)
 
     // 初始化所有节点的AI状态
-    initializeAllNodesAIStatus()
+    useAIChat().initializeAllNodesAIStatus()
   }
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
   canvasApi.value?.clearSelect?.()
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
+}
+
+// 更新页面schema，保留AI状态（不清空nodesStatus）
+const updatePageSchema = (newPageSchema: any) => {
+  const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
+
+  pageState.pageSchema = newPageSchema
+
+  if (!newPageSchema.children) {
+    newPageSchema.children = []
+  }
+
+  rootSchema.value = [
+    {
+      id: 0,
+      componentName: 'div',
+      props: newPageSchema.props || {},
+      children: newPageSchema.children
+    }
+  ]
+
+  // 重建 nodesMap
+  nodesMap.value.clear()
+  nodesMap.value.set(0, { node: rootSchema.value, parent: newPageSchema })
+  generateNodesMap(newPageSchema.children, newPageSchema)
+
+  // 为新增的节点初始化AI状态（已存在的不覆盖）
+  const { initializeNodeAIStatus } = useAIChat()
+  nodesMap.value.forEach(({ node }) => {
+    if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
+      initializeNodeAIStatus(node)
+    }
+  })
+
+  const diffPatch = jsonDiffPatchInstance.diff(previousSchema, newPageSchema)
+
+  publish({ topic: 'schemaImport', data: { current: newPageSchema, previous: previousSchema, diffPatch } })
 }
 
 // 页面重置画布数据
@@ -389,7 +428,7 @@ const operationTypeMap = {
 
     // 初始化新节点的AI状态
     if (newNodeData.id) {
-      initializeNodeAIStatus(newNodeData.id)
+      useAIChat().initializeNodeAIStatus(newNodeData)
     }
 
     // 6. 如果新节点有子节点，递归构建 nodeMap
@@ -398,10 +437,11 @@ const operationTypeMap = {
       generateNodesMap(newNodeData.children, newNode)
 
       // 递归初始化所有子节点的AI状态
+      const { initializeNodeAIStatus: initAIStatus } = useAIChat()
       const initChildrenAIStatus = (children: Node[]) => {
         children.forEach((child) => {
           if (child.id) {
-            initializeNodeAIStatus(child.id)
+            initAIStatus(child)
           }
           if (Array.isArray(child?.children) && child.children.length > 0) {
             initChildrenAIStatus(child.children)
@@ -672,467 +712,6 @@ const updateSchema = (data: Partial<PageSchema>) => {
   publish({ topic: 'schemaChange', data: {} })
 }
 
-// AI助手状态管理函数
-const updateNodeAIStatus = (nodeId: string, aiStatus: Partial<NodeAIStatus>) => {
-  console.log('pageState.nodesStatus', pageState.nodesStatus)
-  if (!pageState.nodesStatus[nodeId]) {
-    pageState.nodesStatus[nodeId] = {}
-  }
-
-  if (!pageState.nodesStatus[nodeId].aiStatus) {
-    pageState.nodesStatus[nodeId].aiStatus = {
-      state: 'hidden', // 默认隐藏
-      aiContext: null,
-      lastAIAction: '',
-      aiHistory: []
-    }
-  }
-
-  Object.assign(pageState.nodesStatus[nodeId].aiStatus!, aiStatus)
-
-  // 发布状态更新事件
-  publish({ topic: 'nodeAIStatusUpdate', data: { nodeId, aiStatus: pageState.nodesStatus[nodeId].aiStatus } })
-}
-
-const getNodeAIStatus = (nodeId: string): NodeAIStatus | null => {
-  return pageState.nodesStatus[nodeId]?.aiStatus || null
-}
-
-// 添加AI操作历史记录
-const addNodeAIActionHistory = (nodeId: string, action: string, content: any) => {
-  const currentStatus = getNodeAIStatus(nodeId)
-  if (!currentStatus) {
-    updateNodeAIStatus(nodeId, {
-      state: 'hidden',
-      aiHistory: [{ timestamp: Date.now(), action, content }]
-    })
-    return
-  }
-
-  const aiHistory = currentStatus.aiHistory || []
-  aiHistory.push({ timestamp: Date.now(), action, content })
-
-  updateNodeAIStatus(nodeId, {
-    aiHistory,
-    lastAIAction: action
-  })
-}
-
-// 初始化单个节点的AI状态
-const initializeNodeAIStatus = (nodeId: string, initialStatus: Partial<NodeAIStatus> = {}) => {
-  if (!pageState.nodesStatus[nodeId]) {
-    pageState.nodesStatus[nodeId] = {}
-  }
-
-  pageState.nodesStatus[nodeId].aiStatus = {
-    state: 'hidden',
-    aiContext: null,
-    lastAIAction: '',
-    aiHistory: [],
-    ...initialStatus
-  }
-}
-
-// 初始化所有现有节点的AI状态
-const initializeAllNodesAIStatus = () => {
-  nodesMap.value.forEach(({ node }) => {
-    if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
-      initializeNodeAIStatus(node.id)
-    }
-  })
-}
-
-// 打开AI助手聊天界面
-const openNodeAIChat = (nodeId: string, initialContent: string = '') => {
-  updateNodeAIStatus(nodeId, {
-    state: 'chat',
-    chatContent: initialContent,
-    lastAIAction: 'open_chat'
-  })
-
-  addNodeAIActionHistory(nodeId, 'open_chat', {
-    timestamp: Date.now(),
-    initialContent
-  })
-}
-
-// 关闭AI助手
-const closeNodeAIHelper = (nodeId: string) => {
-  updateNodeAIStatus(nodeId, {
-    state: 'hidden',
-    lastAIAction: 'close'
-  })
-
-  addNodeAIActionHistory(nodeId, 'close', {
-    timestamp: Date.now()
-  })
-}
-
-// 完成AI聊天，进入确认状态
-const completeNodeAIChat = (
-  nodeId: string,
-  result: any,
-  confirmationConfig: {
-    title: string
-    message: string
-    confirmText?: string
-    cancelText?: string
-  }
-) => {
-  // 获取当前节点数据并保存原始数据
-  const node = getNode(nodeId)
-  if (node) {
-    startNodeAIModification(nodeId, deepClone(node))
-
-    // 如果result包含节点修改，设置AI修改数据
-    if (result?.nodeModification) {
-      setNodeAIModifiedData(nodeId, result.nodeModification, result.description || 'AI生成的节点修改')
-    }
-  }
-
-  updateNodeAIStatus(nodeId, {
-    state: 'confirm',
-    pendingConfirmation: {
-      ...confirmationConfig,
-      data: result
-    },
-    lastAIAction: 'complete_chat'
-  })
-
-  addNodeAIActionHistory(nodeId, 'complete_chat', {
-    timestamp: Date.now(),
-    result,
-    confirmationConfig
-  })
-}
-
-// 确认AI助手操作
-const confirmNodeAIAction = (nodeId: string) => {
-  const currentStatus = getNodeAIStatus(nodeId)
-  if (!currentStatus || currentStatus.state !== 'confirm') {
-    return
-  }
-
-  // 如果有AI生成的修改数据，采纳它
-  const aiData = currentStatus.pendingConfirmation?.data
-  if (aiData?.nodeModification) {
-    // 采纳AI修改
-    adoptNodeAIModification(nodeId)
-  }
-
-  updateNodeAIStatus(nodeId, {
-    state: 'completed',
-    pendingConfirmation: undefined,
-    lastAIAction: 'confirm'
-  })
-
-  addNodeAIActionHistory(nodeId, 'confirm', {
-    timestamp: Date.now(),
-    confirmedData: currentStatus.pendingConfirmation?.data
-  })
-}
-
-// 取消AI助手操作
-const cancelNodeAIAction = (nodeId: string) => {
-  const currentStatus = getNodeAIStatus(nodeId)
-  if (!currentStatus) {
-    return
-  }
-
-  // 如果有待处理的AI修改，拒绝它
-  if (hasNodePendingAIModification(nodeId)) {
-    rejectNodeAIModification(nodeId)
-  }
-
-  // 返回到聊天状态或隐藏状态
-  const newState = currentStatus.chatContent ? 'chat' : 'hidden'
-
-  updateNodeAIChat(nodeId, '')
-
-  updateNodeAIStatus(nodeId, {
-    state: newState,
-    pendingConfirmation: undefined,
-    lastAIAction: 'cancel'
-  })
-
-  addNodeAIActionHistory(nodeId, 'cancel', {
-    timestamp: Date.now(),
-    previousState: currentStatus.state
-  })
-}
-
-// ==================== 节点级AI采纳状态管理 ====================
-
-/**
- * 开始节点AI修改：保存原始节点数据
- * @param nodeId 节点ID
- * @param originalNodeData 原始节点数据
- */
-const startNodeAIModification = (nodeId: string, originalNodeData: any) => {
-  if (!pageState.nodesStatus[nodeId]) {
-    pageState.nodesStatus[nodeId] = {}
-  }
-
-  // 确保aiStatus存在
-  if (!pageState.nodesStatus[nodeId].aiStatus) {
-    initializeNodeAIStatus(nodeId)
-  }
-
-  // 更新aiStatus中的采纳状态字段
-  updateNodeAIStatus(nodeId, {
-    originalNodeData: deepClone(originalNodeData),
-    adoptionStatus: 'pending',
-    aiModificationTime: Date.now(),
-    modificationDescription: 'AI生成的修改'
-  })
-}
-
-/**
- * 设置AI修改后的节点数据
- * @param nodeId 节点ID
- * @param aiModifiedNodeData AI修改后的节点数据
- * @param description 修改描述
- */
-const setNodeAIModifiedData = (nodeId: string, aiModifiedNodeData: any, description?: string) => {
-  const currentAIStatus = getNodeAIStatus(nodeId)
-  if (!currentAIStatus || currentAIStatus.adoptionStatus !== 'pending') {
-    console.warn(`节点 ${nodeId} 没有待处理的AI采纳状态记录`)
-    return
-  }
-
-  updateNodeAIStatus(nodeId, {
-    aiModifiedNodeData: deepClone(aiModifiedNodeData),
-    modificationDescription: description || 'AI生成的修改',
-    aiModificationTime: Date.now()
-  })
-}
-
-/**
- * 采纳AI修改
- * @param nodeId 节点ID
- */
-const adoptNodeAIModification = (nodeId: string) => {
-  const currentAIStatus = getNodeAIStatus(nodeId)
-  if (!currentAIStatus || currentAIStatus.adoptionStatus !== 'pending') {
-    console.warn(`节点 ${nodeId} 没有待处理的AI修改`)
-    return false
-  }
-
-  // 更新采纳状态
-  updateNodeAIStatus(nodeId, {
-    adoptionStatus: 'adopted',
-    userDecisionTime: Date.now()
-  })
-
-  // 将AI修改应用到实际节点（这里需要实际的节点更新逻辑）
-  const node = getNode(nodeId)
-  if (node && currentAIStatus.aiModifiedNodeData) {
-    // 应用AI修改到实际节点
-    Object.assign(node, currentAIStatus.aiModifiedNodeData)
-
-    // 触发schema变更事件
-    publish({ topic: 'schemaChange', data: { nodeId } })
-  }
-
-  return true
-}
-
-/**
- * 拒绝AI修改
- * @param nodeId 节点ID
- */
-const rejectNodeAIModification = (nodeId: string) => {
-  const currentAIStatus = getNodeAIStatus(nodeId)
-  if (!currentAIStatus || currentAIStatus.adoptionStatus !== 'pending') {
-    console.warn(`节点 ${nodeId} 没有待处理的AI修改`)
-    return false
-  }
-
-  // 更新拒绝状态
-  updateNodeAIStatus(nodeId, {
-    adoptionStatus: 'rejected',
-    userDecisionTime: Date.now()
-  })
-
-  return true
-}
-
-/**
- * 重置节点AI采纳状态
- * @param nodeId 节点ID
- */
-const resetNodeAIAdoptionStatus = (nodeId: string) => {
-  const currentAIStatus = getNodeAIStatus(nodeId)
-  if (currentAIStatus) {
-    // 重置采纳状态相关字段
-    updateNodeAIStatus(nodeId, {
-      originalNodeData: undefined,
-      aiModifiedNodeData: undefined,
-      adoptionStatus: undefined,
-      aiModificationTime: undefined,
-      userDecisionTime: undefined,
-      modificationDescription: undefined
-    })
-  }
-}
-
-/**
- * 检查节点是否有待处理的AI修改
- * @param nodeId 节点ID
- */
-const hasNodePendingAIModification = (nodeId: string): boolean => {
-  const aiStatus = getNodeAIStatus(nodeId)
-  return aiStatus?.adoptionStatus === 'pending'
-}
-
-/**
- * 获取所有有待处理AI修改的节点ID
- */
-const getAllNodesWithPendingAIModification = (): string[] => {
-  const pendingNodes: string[] = []
-
-  Object.entries(pageState.nodesStatus).forEach(([nodeId, status]) => {
-    if (status.aiStatus?.adoptionStatus === 'pending') {
-      pendingNodes.push(nodeId)
-    }
-  })
-
-  return pendingNodes
-}
-
-/**
- * 检查页面是否有任何待处理的AI修改
- */
-const hasAnyPendingAIModification = (): boolean => {
-  return getAllNodesWithPendingAIModification().length > 0
-}
-
-// ==================== 原有AI助手状态函数 ====================
-
-// 获取当前节点是否应该显示AI助手
-const shouldShowNodeAIHelper = (nodeId: string): boolean => {
-  const status = getNodeAIStatus(nodeId)
-  if (!status) {
-    return false // 默认不显示
-  }
-
-  // 在聊天状态、加载状态或确认状态时显示
-  return status.state === 'chat' || status.state === 'loading' || status.state === 'confirm'
-}
-
-// 获取当前节点是否应该显示AI聊天界面
-const shouldShowNodeAIChat = (nodeId: string): boolean => {
-  const status = getNodeAIStatus(nodeId)
-  return status?.state === 'chat'
-}
-
-// 获取当前节点是否应该显示确认弹窗
-const shouldShowNodeAIConfirm = (nodeId: string): boolean => {
-  const status = getNodeAIStatus(nodeId)
-  return status?.state === 'confirm'
-}
-
-// 开始AI加载状态
-const startNodeAILoading = (nodeId: string, loadingMessage: string = 'AI处理中...') => {
-  updateNodeAIStatus(nodeId, {
-    state: 'loading',
-    lastAIAction: 'start_loading',
-    aiContext: {
-      loadingMessage,
-      startTime: Date.now()
-    }
-  })
-
-  addNodeAIActionHistory(nodeId, 'start_loading', {
-    timestamp: Date.now(),
-    loadingMessage
-  })
-}
-
-// 完成AI加载，进入确认状态
-const completeNodeAILoading = (
-  nodeId: string,
-  result: any,
-  confirmationConfig: {
-    title: string
-    message: string
-    confirmText?: string
-    cancelText?: string
-  }
-) => {
-  updateNodeAIStatus(nodeId, {
-    state: 'confirm',
-    pendingConfirmation: {
-      ...confirmationConfig,
-      data: result
-    },
-    lastAIAction: 'complete_loading'
-  })
-
-  addNodeAIActionHistory(nodeId, 'complete_loading', {
-    timestamp: Date.now(),
-    result,
-    confirmationConfig
-  })
-}
-
-// 取消AI加载
-const cancelNodeAILoading = (nodeId: string) => {
-  const currentStatus = getNodeAIStatus(nodeId)
-  if (!currentStatus || currentStatus.state !== 'loading') {
-    return
-  }
-
-  // 返回到聊天状态或隐藏状态
-  const newState = currentStatus.chatContent ? 'chat' : 'hidden'
-
-  updateNodeAIStatus(nodeId, {
-    state: newState,
-    aiContext: undefined,
-    lastAIAction: 'cancel_loading'
-  })
-
-  addNodeAIActionHistory(nodeId, 'cancel_loading', {
-    timestamp: Date.now(),
-    previousState: currentStatus.state,
-    loadingDuration: Date.now() - (currentStatus.aiContext?.startTime || Date.now())
-  })
-}
-
-// 获取当前节点是否应该显示AI加载状态
-const shouldShowNodeAILoading = (nodeId: string): boolean => {
-  const status = getNodeAIStatus(nodeId)
-  return status?.state === 'loading'
-}
-
-const findJsonPatchPath = (node, targetId, path = []) => {
-  if (!node || typeof node !== 'object') return null
-  
-  if (node.id === targetId) {
-    return '/' + path.join('/')
-  }
-  
-  if (Array.isArray(node.children)) {
-    for (let i = 0; i < node.children.length; i++) {
-      const result = findJsonPatchPath(node.children[i], targetId, [...path, 'children', i])
-      if (result) return result
-    }
-  }
-  
-  // 如果不是数组也不是目标，继续搜索其他属性
-  for (const key in node) {
-    if (key !== 'children' && node.hasOwnProperty(key)) {
-      const value = node[key]
-      if (value && typeof value === 'object') {
-        const result = findJsonPatchPath(value, targetId, [...path, key])
-        if (result) return result
-      }
-    }
-  }
-  
-  return null
-}
-
 export default function () {
   return {
     pageState,
@@ -1168,34 +747,6 @@ export default function () {
     getSchema,
     getNodePath,
     updateSchema,
-    // AI助手状态管理
-    updateNodeAIStatus,
-    getNodeAIStatus,
-    addNodeAIActionHistory,
-    initializeNodeAIStatus,
-    initializeAllNodesAIStatus,
-    // 新的AI助手状态机函数
-    openNodeAIChat,
-    closeNodeAIHelper,
-    startNodeAILoading,
-    completeNodeAILoading,
-    cancelNodeAILoading,
-    completeNodeAIChat,
-    confirmNodeAIAction,
-    cancelNodeAIAction,
-    shouldShowNodeAIHelper,
-    shouldShowNodeAIChat,
-    shouldShowNodeAILoading,
-    shouldShowNodeAIConfirm,
-    // 节点级AI采纳状态管理
-    startNodeAIModification,
-    setNodeAIModifiedData,
-    adoptNodeAIModification,
-    rejectNodeAIModification,
-    resetNodeAIAdoptionStatus,
-    hasNodePendingAIModification,
-    getAllNodesWithPendingAIModification,
-    hasAnyPendingAIModification,
-    findJsonPatchPath
+    updatePageSchema
   }
 }

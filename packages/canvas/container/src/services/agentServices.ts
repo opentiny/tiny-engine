@@ -12,8 +12,6 @@
 
 import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
 
-const logger = console
-
 /**
  * AI搜索功能
  * @param content 搜索内容
@@ -33,8 +31,7 @@ export const search = async (content: string): Promise<string> => {
       result += item.content
     })
   } catch (error) {
-    // 静默处理错误，返回空字符串
-    logger.warn('AI search failed:', error)
+    return ''
   }
 
   return result
@@ -56,7 +53,20 @@ export const fetchAssets = async (appId: string) => {
         describe: item.description
       }))
   } catch (error) {
-    logger.warn('Fetch assets failed:', error)
     return []
   }
+}
+
+export const chat = async (params) => {
+  const response = await getMetaApi(META_SERVICE.Http).request({
+    url: 'app-center/api/ai/chat',
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      ...params.headers
+    },
+    data: params.body
+  })
+
+  return response
 }

@@ -5,7 +5,6 @@
         <icon-successful class="icon-successful"></icon-successful>
         <span class="header-title">AI操作已完成，您可选择采纳或放弃</span>
       </div>
-      <svg-icon name="close" class="close-icon" @click="handleClose"></svg-icon>
     </div>
     <div class="ai-confirm-actions-row">
       <div class="actions-right">
@@ -18,8 +17,6 @@
 </template>
 
 <script>
-import { computed, ref } from 'vue'
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
 import { TinyButton } from '@opentiny/vue'
 import { IconSuccessful } from '@opentiny/vue-icon'
 
@@ -31,38 +28,6 @@ export default {
   emits: ['confirm', 'cancel', 'close', 'refresh'],
 
   setup(props, { emit }) {
-    const { pageState, getNodeAIStatus } = useCanvas()
-
-    // 预览区域状态
-    const showPreview = ref(true)
-    const isPreviewExpanded = ref(false)
-
-    // 获取当前节点的待确认数据
-    const currentAIConfirmation = computed(() => {
-      const currentSchema = pageState.currentSchema
-      if (!currentSchema?.id) {
-        return null
-      }
-
-      const aiStatus = getNodeAIStatus(currentSchema.id)
-      return aiStatus?.pendingConfirmation
-    })
-
-    const title = computed(() => currentAIConfirmation.value?.title || '确认AI操作')
-    const message = computed(() => currentAIConfirmation.value?.message || '请确认是否应用AI生成的修改？')
-    const previewData = computed(() => currentAIConfirmation.value?.data)
-
-    const formattedPreview = computed(() => {
-      if (!previewData.value) {
-        return ''
-      }
-      try {
-        return JSON.stringify(previewData.value, null, 2)
-      } catch {
-        return String(previewData.value)
-      }
-    })
-
     const handleConfirm = () => {
       emit('confirm')
     }
@@ -71,30 +36,14 @@ export default {
       emit('cancel')
     }
 
-    const handleClose = () => {
-      emit('close')
-    }
-
     const handleRefresh = () => {
       emit('refresh')
     }
 
-    const togglePreview = () => {
-      isPreviewExpanded.value = !isPreviewExpanded.value
-    }
-
     return {
-      title,
-      message,
-      previewData,
-      formattedPreview,
-      showPreview,
-      isPreviewExpanded,
       handleConfirm,
       handleCancel,
-      handleClose,
-      handleRefresh,
-      togglePreview
+      handleRefresh
     }
   }
 }
@@ -124,7 +73,7 @@ export default {
 
   .icon-successful {
     font-size: 20px;
-    fill: #5CB300;
+    fill: #5cb300;
     margin-right: 8px;
   }
 

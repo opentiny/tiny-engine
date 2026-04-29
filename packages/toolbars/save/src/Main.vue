@@ -75,6 +75,7 @@ import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading, setAutoSaveStatus, getAutoSaveStatus } from './js/index'
 import { constants } from '@opentiny/tiny-engine-utils'
+import useSaveValidation from './js/aiSaveValidation'
 const { OPEN_DELAY } = constants
 
 export const api = {
@@ -175,12 +176,13 @@ export default {
       state.originalCode = ''
     }
     const openApi = () => {
-      console.log('getAllNodesWithPendingAIModification()', useCanvas().getAllNodesWithPendingAIModification())
-      if (useCanvas().hasAnyPendingAIModification()) {
+      if (useSaveValidation().hasAnyPendingAIModification()) {
+        const pendingNodeIds = useSaveValidation().getAllNodesWithPendingAIModification()
+
         useNotify({
           type: 'warning',
           title: '保存被阻止',
-          message: `有 ${useCanvas().getAllNodesWithPendingAIModification().length} 个节点的AI修改未完成处理`,
+          message: `以下节点的AI修改还未处理：${pendingNodeIds.join('、')}，请先采纳或取消`,
           duration: 5000,
           customClass: 'ai-save-warning'
         })
