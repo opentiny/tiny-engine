@@ -808,9 +808,9 @@ export default {
         cancelNodeAILoading(nodeId)
         return
       }
-      const params = await buildAIChatRequest(chatContent)
 
       try {
+        const params = await buildAIChatRequest(chatContent)
         const response = await chat(params)
         // AI运行完操作和 handleAIChatComplete 一样
         applyAIPatches(nodeId, response, chatContent)

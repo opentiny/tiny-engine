@@ -15,7 +15,6 @@ import * as jsonDiffPatch from 'jsondiffpatch'
 import DiffMatchPatch from 'diff-match-patch'
 import { constants, utils } from '@opentiny/tiny-engine-utils'
 import { useHistory, getMetaApi, useMessage } from '@opentiny/tiny-engine-meta-register'
-import useAIChat from '../../../container/src/composables/useAIChat'
 import type { canvasApi as CanvasApi } from '../../../container/src/container'
 import type { Node, RootNode } from '../../../types'
 import type {
@@ -84,6 +83,43 @@ const rootSchema = ref([
     children: pageState.pageSchema?.children || []
   }
 ])
+
+// 初始化单个节点的AI状态
+const initializeNodeAIStatus = (node: object, initialStatus: Partial<NodeAIStatus> = {}) => {
+  if (!pageState.nodesStatus[node.id]) {
+    pageState.nodesStatus[node.id] = {}
+  }
+
+  pageState.nodesStatus[node.id].aiStatus = {
+    state: 'hidden',
+    originalNodeData: deepClone(node),
+    aiModifiedNodeData: undefined,
+    aiContext: null,
+    lastAIAction: '',
+    aiHistory: [],
+    ...initialStatus
+  }
+}
+
+// 初始化所有现有节点的AI状态
+const initializeAllNodesAIStatus = () => {
+  // 递归遍历 pageSchema 的 children 来初始化所有节点的AI状态
+  const traverseNodes = (nodes: any[]) => {
+    if (!nodes) return
+    nodes.forEach((node) => {
+      if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
+        initializeNodeAIStatus(node)
+      }
+      if (Array.isArray(node.children) && node.children.length) {
+        traverseNodes(node.children)
+      }
+    })
+  }
+
+  if (pageState.pageSchema?.children) {
+    traverseNodes(pageState.pageSchema.children)
+  }
+}
 
 const handleTinyGridColumnsSlots = (node: Node) => {
   const columns = Array.isArray(node.props?.columns) ? node.props.columns : []
@@ -205,7 +241,7 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
     generateNodesMap(pageState.pageSchema.children, pageState.pageSchema)
 
     // 初始化所有节点的AI状态
-    useAIChat().initializeAllNodesAIStatus()
+    initializeAllNodesAIStatus()
   }
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
@@ -239,7 +275,6 @@ const updatePageSchema = (newPageSchema: any) => {
   generateNodesMap(newPageSchema.children, newPageSchema)
 
   // 为新增的节点初始化AI状态（已存在的不覆盖）
-  const { initializeNodeAIStatus } = useAIChat()
   nodesMap.value.forEach(({ node }) => {
     if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
       initializeNodeAIStatus(node)
@@ -428,7 +463,7 @@ const operationTypeMap = {
 
     // 初始化新节点的AI状态
     if (newNodeData.id) {
-      useAIChat().initializeNodeAIStatus(newNodeData)
+      initializeNodeAIStatus(newNodeData)
     }
 
     // 6. 如果新节点有子节点，递归构建 nodeMap
@@ -437,7 +472,6 @@ const operationTypeMap = {
       generateNodesMap(newNodeData.children, newNode)
 
       // 递归初始化所有子节点的AI状态
-      const { initializeNodeAIStatus: initAIStatus } = useAIChat()
       const initChildrenAIStatus = (children: Node[]) => {
         children.forEach((child) => {
           if (child.id) {

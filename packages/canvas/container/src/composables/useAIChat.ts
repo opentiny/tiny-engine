@@ -77,47 +77,6 @@ const addNodeAIActionHistory = (nodeId: string, action: string, content: any) =>
   })
 }
 
-// 初始化单个节点的AI状态
-const initializeNodeAIStatus = (node: object, initialStatus: Partial<NodeAIStatus> = {}) => {
-  const { pageState } = useCanvas()
-
-  if (!pageState.nodesStatus[node.id]) {
-    pageState.nodesStatus[node.id] = {}
-  }
-
-  pageState.nodesStatus[node.id].aiStatus = {
-    state: 'hidden',
-    originalNodeData: deepClone(node),
-    aiModifiedNodeData: undefined,
-    aiContext: null,
-    lastAIAction: '',
-    aiHistory: [],
-    ...initialStatus
-  }
-}
-
-// 初始化所有现有节点的AI状态
-const initializeAllNodesAIStatus = () => {
-  const { pageState } = useCanvas()
-
-  // 递归遍历 pageSchema 的 children 来初始化所有节点的AI状态
-  const traverseNodes = (nodes: any[]) => {
-    if (!nodes) return
-    nodes.forEach((node) => {
-      if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
-        initializeNodeAIStatus(node)
-      }
-      if (Array.isArray(node.children) && node.children.length) {
-        traverseNodes(node.children)
-      }
-    })
-  }
-
-  if (pageState.pageSchema?.children) {
-    traverseNodes(pageState.pageSchema.children)
-  }
-}
-
 // 打开AI助手聊天界面
 const openNodeAIChat = (nodeId: string, initialContent: string = '') => {
   updateNodeAIStatus(nodeId, {
@@ -743,8 +702,6 @@ export default function () {
     updateNodeAIStatus,
     getNodeAIStatus,
     addNodeAIActionHistory,
-    initializeNodeAIStatus,
-    initializeAllNodesAIStatus,
     // AI助手状态机函数
     openNodeAIChat,
     closeNodeAIHelper,

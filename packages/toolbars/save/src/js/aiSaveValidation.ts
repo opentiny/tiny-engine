@@ -3,9 +3,7 @@
  * 检查是否有未完成的AI修改，如果有则提示用户
  */
 
-import { useCanvas } from '@opentiny/tiny-engine-meta-register'
-import { useMessage } from '@opentiny/tiny-engine-meta-register'
-
+import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 const { publish } = useMessage()
 
 /**
