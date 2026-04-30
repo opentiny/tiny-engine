@@ -81,6 +81,7 @@ const addNodeAIActionHistory = (nodeId: string, action: string, content: any) =>
 const openNodeAIChat = (nodeId: string, initialContent: string = '') => {
   updateNodeAIStatus(nodeId, {
     state: 'chat',
+    collapsed: false,
     chatContent: initialContent,
     lastAIAction: 'open_chat'
   })
@@ -111,8 +112,10 @@ const confirmNodeAIAction = (nodeId: string) => {
     return
   }
 
+  // 采纳后直接回到hidden，completed无对应UI，避免需要点击两次才能重新打开
   updateNodeAIStatus(nodeId, {
-    state: 'completed',
+    state: 'hidden',
+    collapsed: false,
     originalNodeData: deepClone(currentStatus.aiModifiedNodeData),
     aiModifiedNodeData: undefined,
     lastAIAction: 'confirm'
@@ -144,6 +147,7 @@ const cancelNodeAIAction = (nodeId: string) => {
 
   updateNodeAIStatus(nodeId, {
     state: newState,
+    collapsed: false,
     aiModifiedNodeData: undefined,
     lastAIAction: 'cancel'
   })
@@ -270,19 +274,20 @@ const hasAnyPendingAIModification = (): boolean => {
 // 获取当前节点是否应该显示AI聊天界面
 const shouldShowNodeAIChat = (nodeId: string): boolean => {
   const status = getNodeAIStatus(nodeId)
-  return status?.state === 'chat'
+  return status?.state === 'chat' && !status?.collapsed
 }
 
 // 获取当前节点是否应该显示确认弹窗
 const shouldShowNodeAIConfirm = (nodeId: string): boolean => {
   const status = getNodeAIStatus(nodeId)
-  return status?.state === 'confirm'
+  return status?.state === 'confirm' && !status?.collapsed
 }
 
 // 开始AI加载状态
 const startNodeAILoading = (nodeId: string, loadingMessage: string = 'AI处理中...') => {
   updateNodeAIStatus(nodeId, {
     state: 'loading',
+    collapsed: false,
     lastAIAction: 'start_loading',
     aiContext: {
       loadingMessage,
@@ -300,6 +305,7 @@ const startNodeAILoading = (nodeId: string, loadingMessage: string = 'AI处理�
 const completeNodeAILoading = (nodeId: string) => {
   updateNodeAIStatus(nodeId, {
     state: 'confirm',
+    collapsed: false,
     lastAIAction: 'complete_loading'
   })
 
@@ -320,6 +326,7 @@ const cancelNodeAILoading = (nodeId: string) => {
 
   updateNodeAIStatus(nodeId, {
     state: newState,
+    collapsed: false,
     aiContext: undefined,
     lastAIAction: 'cancel_loading'
   })
@@ -334,7 +341,7 @@ const cancelNodeAILoading = (nodeId: string) => {
 // 获取当前节点是否应该显示AI加载状态
 const shouldShowNodeAILoading = (nodeId: string): boolean => {
   const status = getNodeAIStatus(nodeId)
-  return status?.state === 'loading'
+  return status?.state === 'loading' && !status?.collapsed
 }
 
 /**
@@ -645,6 +652,7 @@ const applyAIPatches = (nodeId: string, chatResponse: any, chatContent?: string)
 
   updateNodeAIStatus(nodeId, {
     state: 'confirm',
+    collapsed: false,
     chatContent,
     aiModifiedNodeData: modifiedNodeData
   })

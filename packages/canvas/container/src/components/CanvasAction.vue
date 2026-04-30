@@ -93,25 +93,36 @@
       </div>
       <!-- AI助手按钮（默认状态：隐藏） -->
       <div title="AI助手" class="ai-helper">
-        <svg-icon name="add-group" @click.stop="openAIHelper"></svg-icon>
-        <CanvasAIChat
-          v-if="shouldShowAIChat"
-          class="ai-component"
-          @complete="handleAIChatComplete"
-          @close="closeAIHelper"
-        ></CanvasAIChat>
-        <AILoadingDialog
-          v-if="shouldShowAILoading"
-          class="ai-component"
-          @cancel="handleAILoadingCancel"
-        ></AILoadingDialog>
-        <AIConfirmDialog
-          v-if="shouldShowAIConfirm"
-          class="ai-component"
-          @confirm="handleAIConfirm"
-          @cancel="handleAICancel"
-          @refresh="handleAIRefresh"
-        ></AIConfirmDialog>
+        <TinyPopover
+          v-model="showAIPopover"
+          placement="bottom-start"
+          width="360"
+          popper-class="ai-popper"
+          trigger="manual"
+          :visible-arrow="false"
+        >
+          <CanvasAIChat
+            v-if="shouldShowAIChat"
+            class="ai-component"
+            @complete="handleAIChatComplete"
+            @close="closeAIHelper"
+          ></CanvasAIChat>
+          <AILoadingDialog
+            v-if="shouldShowAILoading"
+            class="ai-component"
+            @cancel="handleAILoadingCancel"
+          ></AILoadingDialog>
+          <AIConfirmDialog
+            v-if="shouldShowAIConfirm"
+            class="ai-component"
+            @confirm="handleAIConfirm"
+            @cancel="handleAICancel"
+            @refresh="handleAIRefresh"
+          ></AIConfirmDialog>
+          <template #reference>
+            <svg-icon name="add-group" @click.stop="openAIHelper"></svg-icon>
+          </template>
+        </TinyPopover>
       </div>
     </div>
   </div>
@@ -367,6 +378,15 @@ export default {
       return shouldShowNodeAILoading(currentSchema.id)
     })
 
+    const showAIPopover = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+      const status = getNodeAIStatus(currentSchema?.id)
+      return status?.state !== 'hidden' && !status?.collapsed
+    })
+
     // 切换AI助手显示/隐藏
     const openAIHelper = () => {
       const currentSchema = getCurrent().schema
@@ -377,23 +397,32 @@ export default {
 
       const currentStatus = getNodeAIStatus(currentSchema.id)
 
-      if (currentStatus && currentStatus.state !== 'hidden') {
-        // 如果AI助手当前不是隐藏状态，则关闭它
-        closeNodeAIHelper(currentSchema.id)
+      if (currentStatus && currentStatus.collapsed) {
+        // 面板已收起，重新展开恢复原状态
+        updateNodeAIStatus(currentSchema.id, { collapsed: false })
+      } else if (currentStatus && currentStatus.state !== 'hidden') {
+        // 面板当前可见，收起面板但保留业务状态
+        updateNodeAIStatus(currentSchema.id, { collapsed: true })
       } else {
-        // 如果AI助手当前是隐藏状态，则打开它
+        // hidden状态，进入chat
         openNodeAIChat(currentSchema.id)
       }
     }
 
-    // 关闭AI助手（由其他组件调用，如AI聊天界面）
+    // 关闭AI助手（由其他组件调用，如AI聊天界面的关闭按钮）
     const closeAIHelper = () => {
       const currentSchema = getCurrent().schema
       if (!currentSchema?.id) {
         return
       }
 
-      closeNodeAIHelper(currentSchema.id)
+      const currentStatus = getNodeAIStatus(currentSchema.id)
+      // loading/confirm状态下只收起面板，保留状态以便重新打开恢复
+      if (currentStatus && (currentStatus.state === 'loading' || currentStatus.state === 'confirm')) {
+        updateNodeAIStatus(currentSchema.id, { collapsed: true })
+      } else {
+        closeNodeAIHelper(currentSchema.id)
+      }
     }
 
     const optionRef = ref(null)
@@ -902,6 +931,7 @@ export default {
       showQuickAction,
       showPopover,
       showToParent,
+      showAIPopover,
       activeSetting,
       isModal,
       onMousedown,
@@ -1233,5 +1263,9 @@ export default {
     opacity: 1;
     transform: translateY(10px);
   }
+}
+.ai-popper.ai-popper.tiny-popper.tiny-popover {
+  padding: 0;
+  border-radius: 40px;
 }
 </style>

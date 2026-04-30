@@ -84,11 +84,6 @@ export default {
     display: flex;
     gap: 12px;
     align-items: center;
-    .refresh-icon {
-      cursor: pointer;
-      color: #000;
-      font-size: 18px;
-    }
     .actions-btn {
       min-width: 40px;
       height: 28px;

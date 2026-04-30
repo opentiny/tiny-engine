@@ -36,14 +36,9 @@ export default {
       content.value = ''
     }
 
-    const handleClose = () => {
-      emit('close')
-    }
-
     return {
       content,
-      handleSubmit,
-      handleClose
+      handleSubmit
     }
   }
 }

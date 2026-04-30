@@ -6,6 +6,7 @@ export type AIHelperState = 'hidden' | 'chat' | 'loading' | 'confirm' | 'complet
 
 export interface NodeAIStatus {
   state: AIHelperState
+  collapsed?: boolean // 面板是否收起（收起时保留原状态，重新打开可恢复）
   aiContext?: any
   lastAIAction?: string
   aiHistory?: Array<{
