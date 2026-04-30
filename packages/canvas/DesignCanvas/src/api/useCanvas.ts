@@ -21,6 +21,7 @@ import type {
   ChangePropsOperation,
   DeleteOperation,
   InsertOperation,
+  NodeAIStatus,
   NodeOperation,
   PageSchema,
   PageState,
@@ -475,7 +476,7 @@ const operationTypeMap = {
       const initChildrenAIStatus = (children: Node[]) => {
         children.forEach((child) => {
           if (child.id) {
-            initAIStatus(child)
+            initializeNodeAIStatus(child)
           }
           if (Array.isArray(child?.children) && child.children.length > 0) {
             initChildrenAIStatus(child.children)

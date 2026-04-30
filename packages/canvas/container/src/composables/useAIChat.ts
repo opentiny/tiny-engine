@@ -133,6 +133,8 @@ const cancelNodeAIAction = (nodeId: string) => {
     const { publish } = useMessage()
     const node = getNode(nodeId)
     if (node) {
+      // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
+      Object.keys(node).forEach((key) => delete node[key])
       Object.assign(node, deepClone(currentStatus.originalNodeData))
       publish({ topic: 'schemaChange', data: { nodeId } })
     }
@@ -200,6 +202,8 @@ const rejectNodeAIModification = (nodeId: string) => {
     const { publish } = useMessage()
     const node = getNode(nodeId)
     if (node) {
+      // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
+      Object.keys(node).forEach((key) => delete node[key])
       Object.assign(node, deepClone(currentAIStatus.originalNodeData))
       publish({ topic: 'schemaChange', data: { nodeId } })
     }

@@ -5,7 +5,6 @@
         <img src="../../assets/loading.webp" class="loading" />
         <span class="header-title">AI操作中，您可随时取消</span>
       </div>
-      <svg-icon name="close" class="close-icon" @click="handleClose"></svg-icon>
     </div>
     <div class="ai-loading-actions-row">
       <div class="actions-right">
@@ -21,20 +20,15 @@ export default {
   components: {
     TinyButton
   },
-  emits: ['cancel', 'close'],
+  emits: ['cancel'],
 
   setup(props, { emit }) {
     const handleCancel = () => {
       emit('cancel')
     }
 
-    const handleClose = () => {
-      emit('close')
-    }
-
     return {
-      handleCancel,
-      handleClose
+      handleCancel
     }
   }
 }

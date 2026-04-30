@@ -57,7 +57,7 @@ export const fetchAssets = async (appId: string) => {
   }
 }
 
-export const chat = async (params) => {
+export const chat = async (params, signal?: AbortSignal) => {
   const response = await getMetaApi(META_SERVICE.Http).request({
     url: 'app-center/api/ai/chat',
     method: 'POST',
@@ -65,7 +65,8 @@ export const chat = async (params) => {
       'Content-Type': 'application/json',
       ...params.headers
     },
-    data: params.body
+    data: params.body,
+    signal
   })
 
   return response

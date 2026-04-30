@@ -104,7 +104,6 @@
           v-if="shouldShowAILoading"
           class="ai-component"
           @cancel="handleAILoadingCancel"
-          @close="closeAIHelper"
         ></AILoadingDialog>
         <AIConfirmDialog
           v-if="shouldShowAIConfirm"
@@ -249,6 +248,9 @@ export default {
       applyAIPatches,
       buildAIChatRequest
     } = useAIChat()
+
+    // AI请求的AbortController，用于取消正在进行的请求
+    let aiChatAbortController = null
 
     const remove = () => {
       removeNodeById(getCurrent().schema?.id)
@@ -755,7 +757,34 @@ export default {
       // 先进入加载状态
       startNodeAILoading(currentSchema.id, 'AI正在处理您的请求...')
 
-      const response = await chat(params)
+      // 在AI修改节点前，先刷新originalNodeData为当前最新节点数据
+      // 避免取消/重新生成时回滚到过期的快照，丢失用户之前的普通编辑
+      const currentNode = getNode(currentSchema.id)
+      if (currentNode) {
+        const currentStatus = getNodeAIStatus(currentSchema.id)
+        if (currentStatus) {
+          currentStatus.originalNodeData = deepClone(currentNode)
+        }
+      }
+
+      // 创建新的AbortController用于取消请求
+      aiChatAbortController = new AbortController()
+      let response
+      try {
+        response = await chat(params, aiChatAbortController.signal)
+      } catch (error) {
+        // 请求被取消时不再应用补丁
+        if (error.name === 'AbortError' || error.name === 'CanceledError') {
+          return
+        }
+      }
+
+      // 响应到达后再次检查：如果用户已经取消，不应用AI补丁
+      const currentStatus = getNodeAIStatus(currentSchema.id)
+      if (!currentStatus || currentStatus.state !== 'loading') {
+        return
+      }
+
       // AI运行完：设置chatContent、aiModifiedNodeData，修改画布schema为AI的schema
       applyAIPatches(currentSchema.id, response, content)
     }
@@ -765,6 +794,12 @@ export default {
       const currentSchema = getCurrent().schema
       if (!currentSchema?.id) {
         return
+      }
+
+      // 中止正在进行的AI请求
+      if (aiChatAbortController) {
+        aiChatAbortController.abort()
+        aiChatAbortController = null
       }
 
       // 取消加载状态
@@ -789,6 +824,8 @@ export default {
       if (currentAIStatus.originalNodeData) {
         const node = getNode(nodeId)
         if (node) {
+          // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
+          Object.keys(node).forEach((key) => delete node[key])
           Object.assign(node, deepClone(currentAIStatus.originalNodeData))
           useMessage().publish({ topic: 'schemaChange', data: { nodeId } })
         }
@@ -811,10 +848,23 @@ export default {
 
       try {
         const params = await buildAIChatRequest(chatContent)
-        const response = await chat(params)
+        // 创建新的AbortController用于重新生成的请求
+        aiChatAbortController = new AbortController()
+        const response = await chat(params, aiChatAbortController.signal)
+
+        // 响应到达后检查是否已被取消
+        const status = getNodeAIStatus(nodeId)
+        if (!status || status.state !== 'loading') {
+          return
+        }
+
         // AI运行完操作和 handleAIChatComplete 一样
         applyAIPatches(nodeId, response, chatContent)
       } catch (error) {
+        // 请求被取消时不做额外处理
+        if (error.name === 'AbortError' || error.name === 'CanceledError') {
+          return
+        }
         cancelNodeAILoading(nodeId)
       }
     }
