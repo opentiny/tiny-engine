@@ -33,12 +33,8 @@ const updateNodeAIStatus = (nodeId: string, aiStatus: Partial<NodeAIStatus>) => 
   const { pageState } = useCanvas()
   const { publish } = useMessage()
 
-  if (!pageState.nodesStatus[nodeId]) {
-    pageState.nodesStatus[nodeId] = {}
-  }
-
-  if (!pageState.nodesStatus[nodeId].aiStatus) {
-    pageState.nodesStatus[nodeId].aiStatus = {
+  if (!pageState.aiNodesStatus[nodeId]) {
+    pageState.aiNodesStatus[nodeId] = {
       state: 'hidden', // 默认隐藏
       aiContext: null,
       lastAIAction: '',
@@ -46,15 +42,15 @@ const updateNodeAIStatus = (nodeId: string, aiStatus: Partial<NodeAIStatus>) => 
     }
   }
 
-  Object.assign(pageState.nodesStatus[nodeId].aiStatus, aiStatus)
+  Object.assign(pageState.aiNodesStatus[nodeId], aiStatus)
 
   // 发布状态更新事件
-  publish({ topic: 'nodeAIStatusUpdate', data: { nodeId, aiStatus: pageState.nodesStatus[nodeId].aiStatus } })
+  publish({ topic: 'nodeAIStatusUpdate', data: { nodeId, aiStatus: pageState.aiNodesStatus[nodeId] } })
 }
 
 const getNodeAIStatus = (nodeId: string): NodeAIStatus | null => {
   const { pageState } = useCanvas()
-  return pageState.nodesStatus[nodeId]?.aiStatus || null
+  return pageState.aiNodesStatus[nodeId] || null
 }
 
 // 添加AI操作历史记录
@@ -130,17 +126,12 @@ const cancelNodeAIAction = (nodeId: string) => {
     return
   }
 
-  // 恢复画布节点schema为originalNodeData
+  // 恢复画布节点schema为originalNodeData，同步重建nodesMap
   if (currentStatus.originalNodeData && currentStatus.state === 'confirm') {
-    const { getNode } = useCanvas()
+    const { restoreNodeSubtree } = useCanvas()
     const { publish } = useMessage()
-    const node = getNode(nodeId)
-    if (node) {
-      // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
-      Object.keys(node).forEach((key) => delete node[key])
-      Object.assign(node, deepClone(currentStatus.originalNodeData))
-      publish({ topic: 'schemaChange', data: { nodeId } })
-    }
+    restoreNodeSubtree(nodeId, deepClone(currentStatus.originalNodeData))
+    publish({ topic: 'schemaChange', data: { nodeId } })
   }
 
   const newState = currentStatus.chatContent ? 'chat' : 'hidden'
@@ -200,17 +191,12 @@ const rejectNodeAIModification = (nodeId: string) => {
     return false
   }
 
-  // 恢复画布节点schema为originalNodeData
+  // 恢复画布节点schema为originalNodeData，同步重建nodesMap
   if (currentAIStatus.originalNodeData) {
-    const { getNode } = useCanvas()
+    const { restoreNodeSubtree } = useCanvas()
     const { publish } = useMessage()
-    const node = getNode(nodeId)
-    if (node) {
-      // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
-      Object.keys(node).forEach((key) => delete node[key])
-      Object.assign(node, deepClone(currentAIStatus.originalNodeData))
-      publish({ topic: 'schemaChange', data: { nodeId } })
-    }
+    restoreNodeSubtree(nodeId, deepClone(currentAIStatus.originalNodeData))
+    publish({ topic: 'schemaChange', data: { nodeId } })
   }
 
   const newState = currentAIStatus.chatContent ? 'chat' : 'hidden'
@@ -245,30 +231,6 @@ const hasNodePendingAIModification = (nodeId: string): boolean => {
   const aiStatus = getNodeAIStatus(nodeId)
   return aiStatus?.state === 'confirm'
 }
-
-/**
- * 获取所有有待处理AI修改的节点ID
- */
-const getAllNodesWithPendingAIModification = (): string[] => {
-  const { pageState } = useCanvas()
-  const pendingNodes: string[] = []
-
-  Object.entries(pageState.nodesStatus).forEach(([nodeId, status]) => {
-    if (status.aiStatus?.state === 'confirm') {
-      pendingNodes.push(nodeId)
-    }
-  })
-
-  return pendingNodes
-}
-
-/**
- * 检查页面是否有任何待处理的AI修改
- */
-const hasAnyPendingAIModification = (): boolean => {
-  return getAllNodesWithPendingAIModification().length > 0
-}
-
 // ==================== AI助手状态函数 ====================
 
 // 获取当前节点是否应该显示AI聊天界面
@@ -731,8 +693,6 @@ export default function () {
     rejectNodeAIModification,
     resetNodeAIAdoptionStatus,
     hasNodePendingAIModification,
-    getAllNodesWithPendingAIModification,
-    hasAnyPendingAIModification,
     findJsonPatchPath,
     applyAIPatches,
     // AI聊天请求构建

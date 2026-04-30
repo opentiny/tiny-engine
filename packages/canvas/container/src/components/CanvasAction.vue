@@ -849,15 +849,11 @@ export default {
         return
       }
 
-      // 恢复画布节点schema为originalNodeData
+      // 恢复画布节点schema为originalNodeData，同步重建nodesMap
       if (currentAIStatus.originalNodeData) {
-        const node = getNode(nodeId)
-        if (node) {
-          // 先删除AI新增的属性，再用原始数据覆盖，确保回滚幂等
-          Object.keys(node).forEach((key) => delete node[key])
-          Object.assign(node, deepClone(currentAIStatus.originalNodeData))
-          useMessage().publish({ topic: 'schemaChange', data: { nodeId } })
-        }
+        const { restoreNodeSubtree } = useCanvas()
+        restoreNodeSubtree(nodeId, deepClone(currentAIStatus.originalNodeData))
+        useMessage().publish({ topic: 'schemaChange', data: { nodeId } })
       }
 
       // 设置aiModifiedNodeData为空

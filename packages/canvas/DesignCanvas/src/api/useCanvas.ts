@@ -44,6 +44,7 @@ const defaultPageState: PageState = {
   isLock: false,
   isBlock: false,
   nodesStatus: {},
+  aiNodesStatus: {},
   loading: false
 }
 
@@ -85,13 +86,9 @@ const rootSchema = ref([
   }
 ])
 
-// 初始化单个节点的AI状态
+// 初始化单个节点的AI状态（使用独立的aiNodesStatus，避免与nodesStatus可见性冲突）
 const initializeNodeAIStatus = (node: object, initialStatus: Partial<NodeAIStatus> = {}) => {
-  if (!pageState.nodesStatus[node.id]) {
-    pageState.nodesStatus[node.id] = {}
-  }
-
-  pageState.nodesStatus[node.id].aiStatus = {
+  pageState.aiNodesStatus[node.id] = {
     state: 'hidden',
     originalNodeData: deepClone(node),
     aiModifiedNodeData: undefined,
@@ -108,7 +105,7 @@ const initializeAllNodesAIStatus = () => {
   const traverseNodes = (nodes: any[]) => {
     if (!nodes) return
     nodes.forEach((node) => {
-      if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
+      if (node.id && !pageState.aiNodesStatus[node.id]) {
         initializeNodeAIStatus(node)
       }
       if (Array.isArray(node.children) && node.children.length) {
@@ -277,7 +274,7 @@ const updatePageSchema = (newPageSchema: any) => {
 
   // 为新增的节点初始化AI状态（已存在的不覆盖）
   nodesMap.value.forEach(({ node }) => {
-    if (node.id && !pageState.nodesStatus[node.id]?.aiStatus) {
+    if (node.id && !pageState.aiNodesStatus[node.id]) {
       initializeNodeAIStatus(node)
     }
   })
@@ -507,16 +504,18 @@ const operationTypeMap = {
     if (index > -1) {
       parent.children.splice(index, 1)
       nodesMap.value.delete(node.id)
+      delete pageState.aiNodesStatus[node.id]
     }
 
     let children = [...(node.children || [])]
 
-    // 递归清理 nodesMap
+    // 递归清理 nodesMap 和 aiNodesStatus
     while (children?.length) {
       const len = children.length
       children.forEach((item) => {
         const nodeItem = getNode(item.id)
         nodesMap.value.delete(item.id)
+        delete pageState.aiNodesStatus[item.id]
 
         if (Array.isArray(nodeItem?.children) && nodeItem?.children.length) {
           children.push(...nodeItem.children)
@@ -747,6 +746,49 @@ const updateSchema = (data: Partial<PageSchema>) => {
   publish({ topic: 'schemaChange', data: {} })
 }
 
+/**
+ * 恢复节点子树数据并重建nodesMap
+ * 用于AI回滚场景：恢复originalNodeData后需要同步清理/重建nodesMap
+ * @param nodeId 要恢复的节点ID
+ * @param restoredData 恢复后的节点数据（deepClone后的originalNodeData）
+ */
+const restoreNodeSubtree = (nodeId: string, restoredData: any) => {
+  // 1. 收集恢复前该节点子树中的所有ID（这些是需要从nodesMap中清理的）
+  const collectSubtreeIds = (node: any): string[] => {
+    const ids: string[] = []
+    if (node?.id) ids.push(node.id)
+    if (Array.isArray(node?.children)) {
+      node.children.forEach((child: any) => ids.push(...collectSubtreeIds(child)))
+    }
+    return ids
+  }
+
+  const currentNode = getNode(nodeId)
+  const oldIds = currentNode ? collectSubtreeIds(currentNode) : []
+  // 获取当前节点的parent信息（在清理前保存）
+  const parentEntry = nodesMap.value.get(nodeId)
+  const parentNode = parentEntry?.parent
+
+  // 2. 清理旧子树的nodesMap
+  oldIds.forEach((id) => nodesMap.value.delete(id))
+
+  // 3. 用恢复后的数据覆盖当前节点
+  if (currentNode) {
+    Object.keys(currentNode).forEach((key) => delete currentNode[key])
+    Object.assign(currentNode, restoredData)
+  }
+
+  // 4. 重建该节点自身的nodesMap条目
+  if (currentNode && parentNode) {
+    nodesMap.value.set(nodeId, { node: currentNode, parent: parentNode })
+  }
+
+  // 5. 重建子节点的nodesMap
+  if (Array.isArray(restoredData?.children) && restoredData.children.length && currentNode) {
+    generateNodesMap(restoredData.children, currentNode)
+  }
+}
+
 export default function () {
   return {
     pageState,
@@ -782,6 +824,7 @@ export default function () {
     getSchema,
     getNodePath,
     updateSchema,
-    updatePageSchema
+    updatePageSchema,
+    restoreNodeSubtree
   }
 }

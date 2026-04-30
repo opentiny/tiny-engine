@@ -22,7 +22,6 @@ export interface NodeAIStatus {
 
 export interface NodeStatus {
   [key: string]: any
-  aiStatus?: NodeAIStatus // 现在包含了所有的AI状态，包括采纳状态
 }
 
 export interface PageState {
@@ -41,6 +40,7 @@ export interface PageState {
   isLock: boolean
   isBlock: boolean
   nodesStatus: Record<string, NodeStatus>
+  aiNodesStatus: Record<string, NodeAIStatus> // AI状态独立存储，避免与nodesStatus的可见性(false)冲突
   loading: boolean
 }
 

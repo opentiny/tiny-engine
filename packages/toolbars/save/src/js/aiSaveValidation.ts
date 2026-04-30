@@ -10,11 +10,12 @@ const { publish } = useMessage()
  * 获取所有有待处理AI修改的节点ID
  */
 const getAllNodesWithPendingAIModification = (): string[] => {
-  const { pageState } = useCanvas()
+  const { pageState, getNode } = useCanvas()
   const pendingNodes: string[] = []
 
-  Object.entries(pageState.nodesStatus).forEach(([nodeId, status]) => {
-    if (status.aiStatus?.state === 'confirm') {
+  Object.entries(pageState.aiNodesStatus).forEach(([nodeId, status]) => {
+    // 只统计仍存在于schema中的节点，已删除节点不再阻塞保存
+    if (status?.state === 'confirm' && getNode(nodeId)) {
       pendingNodes.push(nodeId)
     }
   })
@@ -44,7 +45,7 @@ const validateBeforeSave = () => {
   const pendingNodeIds = getAllNodesWithPendingAIModification()
   const pendingNodes = pendingNodeIds.map((nodeId) => {
     const { pageState } = useCanvas()
-    const aiStatus = pageState.nodesStatus[nodeId]?.aiStatus || null
+    const aiStatus = pageState.aiNodesStatus[nodeId] || null
     return {
       nodeId,
       aiStatus
