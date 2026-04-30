@@ -217,7 +217,7 @@ const resetCanvasState = async (state: Partial<PageState> = {}, options?: { pres
   const preserveAINodeStatus = options?.preserveAINodeStatus ?? false
 
   // 保留旧aiNodesStatus快照，用于后续diff补初始化
-  const oldAINodesStatus = preserveAINodeStatus ? { ...pageState.aiNodesStatus } : null
+  const oldAINodesStatus: Record<string, NodeAIStatus> = preserveAINodeStatus ? { ...pageState.aiNodesStatus } : {}
 
   Object.assign(pageState, defaultPageState, state)
 
@@ -264,7 +264,10 @@ const resetCanvasState = async (state: Partial<PageState> = {}, options?: { pres
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
 
-  canvasApi.value?.clearSelect?.()
+  if (!preserveAINodeStatus) {
+    canvasApi.value?.clearSelect?.()
+  }
+
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
