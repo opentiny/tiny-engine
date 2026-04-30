@@ -218,7 +218,7 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
 
   nodesMap.value.clear()
   // 切换页面时清空所有节点的AI状态，避免旧页面的AI状态残留
-  pageState.nodesStatus = {}
+  pageState.aiNodesStatus = {}
 
   if (pageState.pageSchema) {
     if (!pageState.pageSchema.children) {
