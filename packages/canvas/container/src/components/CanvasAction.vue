@@ -262,6 +262,8 @@ export default {
 
     // AI请求的AbortController，用于取消正在进行的请求
     let aiChatAbortController = null
+    // 递增token，用于防止并发请求的响应竞争
+    let aiChatRequestToken = 0
 
     const remove = () => {
       removeNodeById(getCurrent().schema?.id)
@@ -378,14 +380,20 @@ export default {
       return shouldShowNodeAILoading(currentSchema.id)
     })
 
-    const showAIPopover = computed(() => {
-      const currentSchema = getCurrent().schema
-      if (!currentSchema?.id) {
-        return false
+    const showAIPopover = ref(false)
+    watch(
+      () => {
+        const currentSchema = getCurrent().schema
+        if (!currentSchema?.id) {
+          return false
+        }
+        const status = getNodeAIStatus(currentSchema?.id)
+        return status?.state !== 'hidden' && !status?.collapsed
+      },
+      (val) => {
+        showAIPopover.value = val
       }
-      const status = getNodeAIStatus(currentSchema?.id)
-      return status?.state !== 'hidden' && !status?.collapsed
-    })
+    )
 
     // 切换AI助手显示/隐藏
     const openAIHelper = () => {
@@ -781,7 +789,6 @@ export default {
       if (!currentSchema?.id) {
         return
       }
-      const params = await buildAIChatRequest(content)
 
       // 先进入加载状态
       startNodeAILoading(currentSchema.id, 'AI正在处理您的请求...')
@@ -796,26 +803,38 @@ export default {
         }
       }
 
-      // 创建新的AbortController用于取消请求
+      // 创建新的AbortController用于取消请求，递增token防止响应竞争
       aiChatAbortController = new AbortController()
-      let response
+      const currentToken = ++aiChatRequestToken
+
       try {
-        response = await chat(params, aiChatAbortController.signal)
+        const params = await buildAIChatRequest(content)
+        const response = await chat(params, aiChatAbortController.signal)
+
+        // 响应到达后校验token：如果有更新的请求已经发出，丢弃本次响应
+        if (currentToken !== aiChatRequestToken) {
+          return
+        }
+
+        // 响应到达后再次检查：如果用户已经取消，不应用AI补丁
+        const status = getNodeAIStatus(currentSchema.id)
+        if (!status || status.state !== 'loading') {
+          return
+        }
+
+        // AI运行完：设置chatContent、aiModifiedNodeData，修改画布schema为AI的schema
+        // 应用失败则取消loading，避免UI永久转圈
+        if (!applyAIPatches(currentSchema.id, response, content)) {
+          cancelNodeAILoading(currentSchema.id)
+        }
       } catch (error) {
         // 请求被取消时不再应用补丁
         if (error.name === 'AbortError' || error.name === 'CanceledError') {
           return
         }
+        // 其他错误：取消loading状态，避免UI永久转圈
+        cancelNodeAILoading(currentSchema.id)
       }
-
-      // 响应到达后再次检查：如果用户已经取消，不应用AI补丁
-      const currentStatus = getNodeAIStatus(currentSchema.id)
-      if (!currentStatus || currentStatus.state !== 'loading') {
-        return
-      }
-
-      // AI运行完：设置chatContent、aiModifiedNodeData，修改画布schema为AI的schema
-      applyAIPatches(currentSchema.id, response, content)
     }
 
     // AI加载取消处理
@@ -829,6 +848,8 @@ export default {
       if (aiChatAbortController) {
         aiChatAbortController.abort()
         aiChatAbortController = null
+        // 递增token，使任何未完成的请求响应失效
+        aiChatRequestToken++
       }
 
       // 取消加载状态
@@ -873,9 +894,15 @@ export default {
 
       try {
         const params = await buildAIChatRequest(chatContent)
-        // 创建新的AbortController用于重新生成的请求
+        // 创建新的AbortController用于重新生成的请求，递增token防止响应竞争
+        const refreshToken = ++aiChatRequestToken
         aiChatAbortController = new AbortController()
         const response = await chat(params, aiChatAbortController.signal)
+
+        // 响应到达后校验token：如果有更新的请求已经发出，丢弃本次响应
+        if (refreshToken !== aiChatRequestToken) {
+          return
+        }
 
         // 响应到达后检查是否已被取消
         const status = getNodeAIStatus(nodeId)
@@ -883,8 +910,10 @@ export default {
           return
         }
 
-        // AI运行完操作和 handleAIChatComplete 一样
-        applyAIPatches(nodeId, response, chatContent)
+        // AI运行完操作和 handleAIChatComplete 一样，应用失败则取消loading
+        if (!applyAIPatches(nodeId, response, chatContent)) {
+          cancelNodeAILoading(nodeId)
+        }
       } catch (error) {
         // 请求被取消时不做额外处理
         if (error.name === 'AbortError' || error.name === 'CanceledError') {

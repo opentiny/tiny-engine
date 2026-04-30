@@ -586,7 +586,7 @@ const applyPatchesToSchema = (patches: any[], pageSchema: object, parentPath: st
  * @returns 应用成功返回 true，失败返回 false
  */
 const applyAIPatches = (nodeId: string, chatResponse: any, chatContent?: string): boolean => {
-  if (!chatResponse) {
+  if (!chatResponse?.choices?.[0]?.message?.content) {
     return false
   }
 

@@ -87,7 +87,7 @@ const rootSchema = ref([
 ])
 
 // 初始化单个节点的AI状态（使用独立的aiNodesStatus，避免与nodesStatus可见性冲突）
-const initializeNodeAIStatus = (node: object, initialStatus: Partial<NodeAIStatus> = {}) => {
+const initializeNodeAIStatus = (node: Node, initialStatus: Partial<NodeAIStatus> = {}) => {
   pageState.aiNodesStatus[node.id] = {
     state: 'hidden',
     originalNodeData: deepClone(node),
@@ -211,14 +211,25 @@ const jsonDiffPatchInstance = jsonDiffPatch.create({
 const { publish } = useMessage()
 
 // 重置画布数据
-const resetCanvasState = async (state: Partial<PageState> = {}) => {
+// preserveAINodeStatus: 为true时保留aiNodesStatus并为新增节点补初始化（适用于AI/robot等schema热更新场景）
+const resetCanvasState = async (state: Partial<PageState> = {}, options?: { preserveAINodeStatus?: boolean }) => {
   const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
+  const preserveAINodeStatus = options?.preserveAINodeStatus ?? false
+
+  // 保留旧aiNodesStatus快照，用于后续diff补初始化
+  const oldAINodesStatus = preserveAINodeStatus ? { ...pageState.aiNodesStatus } : null
 
   Object.assign(pageState, defaultPageState, state)
 
   nodesMap.value.clear()
-  // 切换页面时清空所有节点的AI状态，避免旧页面的AI状态残留
-  pageState.aiNodesStatus = {}
+
+  if (preserveAINodeStatus) {
+    // 保留aiNodesStatus，后续只为新增节点补初始化
+    pageState.aiNodesStatus = oldAINodesStatus
+  } else {
+    // 切换页面时清空所有节点的AI状态，避免旧页面的AI状态残留
+    pageState.aiNodesStatus = {}
+  }
 
   if (pageState.pageSchema) {
     if (!pageState.pageSchema.children) {
@@ -238,8 +249,17 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
 
     generateNodesMap(pageState.pageSchema.children, pageState.pageSchema)
 
-    // 初始化所有节点的AI状态
-    initializeAllNodesAIStatus()
+    if (preserveAINodeStatus) {
+      // 为新增的节点初始化AI状态（已存在的不覆盖）
+      nodesMap.value.forEach(({ node }) => {
+        if (node.id && !pageState.aiNodesStatus[node.id]) {
+          initializeNodeAIStatus(node)
+        }
+      })
+    } else {
+      // 初始化所有节点的AI状态
+      initializeAllNodesAIStatus()
+    }
   }
 
   const diffPatch = jsonDiffPatchInstance.diff(previousSchema, pageState.pageSchema)
@@ -248,40 +268,9 @@ const resetCanvasState = async (state: Partial<PageState> = {}) => {
   publish({ topic: 'schemaImport', data: { current: pageState.pageSchema, previous: previousSchema, diffPatch } })
 }
 
-// 更新页面schema，保留AI状态（不清空nodesStatus）
+// 更新页面schema，保留AI状态（委托resetCanvasState + preserveAINodeStatus）
 const updatePageSchema = (newPageSchema: any) => {
-  const previousSchema = JSON.parse(JSON.stringify(pageState.pageSchema))
-
-  pageState.pageSchema = newPageSchema
-
-  if (!newPageSchema.children) {
-    newPageSchema.children = []
-  }
-
-  rootSchema.value = [
-    {
-      id: 0,
-      componentName: 'div',
-      props: newPageSchema.props || {},
-      children: newPageSchema.children
-    }
-  ]
-
-  // 重建 nodesMap
-  nodesMap.value.clear()
-  nodesMap.value.set(0, { node: rootSchema.value, parent: newPageSchema })
-  generateNodesMap(newPageSchema.children, newPageSchema)
-
-  // 为新增的节点初始化AI状态（已存在的不覆盖）
-  nodesMap.value.forEach(({ node }) => {
-    if (node.id && !pageState.aiNodesStatus[node.id]) {
-      initializeNodeAIStatus(node)
-    }
-  })
-
-  const diffPatch = jsonDiffPatchInstance.diff(previousSchema, newPageSchema)
-
-  publish({ topic: 'schemaImport', data: { current: newPageSchema, previous: previousSchema, diffPatch } })
+  resetCanvasState({ ...pageState, pageSchema: newPageSchema }, { preserveAINodeStatus: true })
 }
 
 // 页面重置画布数据
@@ -693,7 +682,7 @@ const patchLatestSchema = (schema: unknown) => {
   }
 }
 
-const importSchema = (data: any) => {
+const importSchema = (data: any, options?: { preserveAINodeStatus?: boolean }) => {
   let importData = data
 
   if (typeof data === 'string') {
@@ -705,11 +694,7 @@ const importSchema = (data: any) => {
     }
   }
 
-  // JSON 格式校验
-  resetCanvasState({
-    ...pageState,
-    pageSchema: importData
-  })
+  resetCanvasState({ ...pageState, pageSchema: importData }, options)
 }
 
 const exportSchema = () => {
