@@ -271,6 +271,22 @@ export default {
       return appSchema
     }
 
+    const resolveImportedPageName = (ps: any, fallback = 'Page') =>
+      (ps?.meta?.name || ps?.fileName || fallback) as string
+
+    const buildSafeRoute = (rawName: string) =>
+      String(rawName || 'Page')
+        .replace(/\s+/g, '-')
+        .toLowerCase()
+
+    const normalizeImportedRoute = (route: any, rawName: string) => {
+      const normalized = String(route || '')
+        .trim()
+        .replace(/^\/+/, '')
+
+      return normalized || buildSafeRoute(rawName)
+    }
+
     const syncComponentsDepsByMap = (componentsMap: any[] = []) => {
       if (!Array.isArray(componentsMap) || !componentsMap.length) return
 
@@ -899,11 +915,10 @@ export default {
 
       state.appId = appId
       const buildCreateParams = (ps: any) => {
-        const rawName = (ps?.meta?.name || ps?.fileName || 'Page') as string
-        const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
+        const rawName = resolveImportedPageName(ps)
         return {
           name: rawName,
-          route: ps?.meta?.router || safeRoute,
+          route: normalizeImportedRoute(ps?.meta?.router, rawName),
           group: 'staticPages',
           parentId: '0',
           isPage: true,
@@ -926,13 +941,12 @@ export default {
             if (p?.name) mapByName.set(String(p.name), p)
           })
 
-          const getRawName = (ps: any) => (ps?.meta?.name || ps?.fileName || 'Page') as string
           const pagesToUpdate: Array<{ ps: any; existing: any; name: string }> = []
           const pagesToCreate: any[] = []
           const duplicateNames: string[] = []
 
           for (const ps of pages) {
-            const rawName = getRawName(ps)
+            const rawName = resolveImportedPageName(ps)
             const existing = mapByName.get(rawName)
             if (existing) {
               pagesToUpdate.push({ ps, existing, name: rawName })
@@ -1004,7 +1018,6 @@ export default {
 
       // 解析单文件页面信息
       const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
-      const safeRoute = `${rawName.replace(/\s+/g, '-').toLowerCase()}`
       const fileName = result?.schema?.fileName || rawName
       const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
 
@@ -1033,7 +1046,7 @@ export default {
           // 不重名：直接创建
           const createParams: any = {
             name: rawName,
-            route: result?.schema?.meta?.router || safeRoute,
+            route: normalizeImportedRoute(result?.schema?.meta?.router, rawName),
             group: 'staticPages',
             parentId: '0',
             isPage: true,
@@ -1056,7 +1069,7 @@ export default {
         // 兜底：如果列表获取失败，按原逻辑创建
         const createParams: any = {
           name: rawName,
-          route: result?.schema?.meta?.router || safeRoute,
+          route: normalizeImportedRoute(result?.schema?.meta?.router, rawName),
           group: 'staticPages',
           parentId: '0',
           isPage: true,
@@ -1136,11 +1149,10 @@ export default {
           const ps = item.ps
           const existing = item.existing
           const rawName = item.name
-          const safeRoute = `/${rawName.replace(/\s+/g, '-').toLowerCase()}`
           const updateParams: any = {
             ...existing,
             name: rawName,
-            route: ps?.meta?.router || existing?.route || safeRoute,
+            route: normalizeImportedRoute(ps?.meta?.router || existing?.route, rawName),
             isPage: true,
             app: appId,
             page_content: { ...ps, fileName: ps?.fileName || rawName },
@@ -1152,16 +1164,16 @@ export default {
         }
         // 创建不重名项
         for (const ps of state.toCreatePages) {
+          const rawName = resolveImportedPageName(ps)
           requests.push(
             getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', {
-              name: ps?.meta?.name || ps?.fileName || 'Page',
-              route:
-                ps?.meta?.router || `/${(ps?.meta?.name || ps?.fileName || 'Page').replace(/\s+/g, '-').toLowerCase()}`,
+              name: rawName,
+              route: normalizeImportedRoute(ps?.meta?.router, rawName),
               group: 'staticPages',
               parentId: '0',
               isPage: true,
               app: appId,
-              page_content: { ...ps, fileName: ps?.fileName || ps?.meta?.name || 'Page' },
+              page_content: { ...ps, fileName: ps?.fileName || rawName },
               message: 'Page auto save',
               isBody: false,
               isHome: false

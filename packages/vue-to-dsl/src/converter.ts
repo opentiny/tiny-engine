@@ -1557,6 +1557,45 @@ export class VueToDslConverter {
     }
   }
 
+  private async collectRouterEntriesFromModuleContext(context: LocalModuleContext) {
+    const rcode = await context.readText('src/router/index.js')
+    if (!rcode) {
+      throw new Error('router file not found')
+    }
+
+    const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
+    const homeName = homeMatch ? homeMatch[1] : ''
+    const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
+    const routeEntries: Array<{
+      routeName: string
+      routePath: string
+      importPath: string
+      isHome: boolean
+      resolvedFilePath: string | null
+    }> = []
+    const routeRegex =
+      /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
+    let match: RegExpExecArray | null
+
+    while ((match = routeRegex.exec(rclean))) {
+      const importPath = match[3]
+      routeEntries.push({
+        routeName: match[1],
+        routePath: match[2],
+        importPath,
+        isHome: match[1] === homeName,
+        resolvedFilePath: this.resolveLocalVueFilePath(importPath, 'src/router/index.js', context)
+      })
+    }
+
+    return routeEntries
+  }
+
+  private async collectRoutedViewPathsFromModuleContext(context: LocalModuleContext) {
+    const routeEntries = await this.collectRouterEntriesFromModuleContext(context)
+    return new Set(routeEntries.map((item) => item.resolvedFilePath).filter((item): item is string => !!item))
+  }
+
   private async createImportedUtilEntry(
     spec: {
       local: string
@@ -1819,22 +1858,7 @@ export class VueToDslConverter {
 
   private async enrichPageSchemasWithRouterFromModuleContext(pageSchemas: any[], context: LocalModuleContext) {
     try {
-      const rcode = await context.readText('src/router/index.js')
-      if (!rcode) {
-        throw new Error('router file not found')
-      }
-
-      const homeMatch = rcode.match(/redirect:\s*\{\s*name:\s*['"]([^'"]+)['"]/)
-      const homeName = homeMatch ? homeMatch[1] : ''
-      const rclean = rcode.replace(/redirect\s*:\s*\{[\s\S]*?\}/, '')
-      const routeEntries: Array<{ routeName: string; routePath: string; importPath: string }> = []
-      const routeRegex =
-        /name:\s*['"]([^'"]+)['"][\s\S]*?path:\s*['"]([^'"]+)['"][\s\S]*?component:\s*\(\)\s*=>\s*import\(\s*['"]([^'"]+)['"]\s*\)/g
-      let match: RegExpExecArray | null
-
-      while ((match = routeRegex.exec(rclean))) {
-        routeEntries.push({ routeName: match[1], routePath: match[2], importPath: match[3] })
-      }
+      const routeEntries = await this.collectRouterEntriesFromModuleContext(context)
 
       const byFile: Record<string, { routeName: string; routePath: string; isHome: boolean }> = {}
       routeEntries.forEach((item) => {
@@ -1844,7 +1868,7 @@ export class VueToDslConverter {
             .pop()
             ?.replace(/\.vue$/i, '') || ''
         if (!base) return
-        byFile[base] = { routeName: item.routeName, routePath: item.routePath, isHome: item.routeName === homeName }
+        byFile[base] = { routeName: item.routeName, routePath: item.routePath, isHome: item.isHome }
       })
 
       for (const pageSchema of pageSchemas) {
@@ -1900,12 +1924,17 @@ export class VueToDslConverter {
     blockSchemas = importedVueBlockData.blockSchemas
     allResults.push(...importedVueBlockData.blockResults)
     const assets = await this.collectImportedAssetsFromResults(allResults, context)
+    const routedViewPaths = await this.collectRoutedViewPathsFromModuleContext(context).catch(() => null)
 
     const pageSchemas = pageResults
-      .filter(
-        (result: any) =>
-          result?.schema && !importedVueBlockData.blockedViewPaths.has(result?.scriptSchema?.__filePath || '')
-      )
+      .filter((result: any) => {
+        if (!result?.schema) return false
+
+        const filePath = result?.scriptSchema?.__filePath || ''
+        if (!importedVueBlockData.blockedViewPaths.has(filePath)) return true
+
+        return routedViewPaths?.has(filePath) || false
+      })
       .map((result) => result.schema)
       .filter(Boolean)
 
