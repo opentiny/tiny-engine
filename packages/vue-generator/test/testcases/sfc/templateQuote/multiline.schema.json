@@ -1,0 +1,23 @@
+{
+  "state": {},
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyButton",
+      "props": {
+        "multilineJson": "{\n  \"name\": \"test\",\n  \"value\": \"data\"\n}",
+        "objWithMultiline": {
+          "template": "line1\nline2",
+          "label": "normal"
+        }
+      },
+      "id": "multiline-test-001",
+      "children": []
+    }
+  ],
+  "fileName": "testMultiline"
+}

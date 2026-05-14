@@ -42,6 +42,7 @@ const handleVisibleToggle = () => {
   height: 32px;
   padding: 0px 8px;
   border: 1px solid rgb(194, 194, 194);
+  color: #595959;
   cursor: pointer;
   box-sizing: border-box;
   background-color: var(--te-base-gray-10);

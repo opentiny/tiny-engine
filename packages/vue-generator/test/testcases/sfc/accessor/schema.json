@@ -44,7 +44,7 @@
       }
     },
     "strVal": {
-      "defaultValue": "i am str.",
+      "defaultValue": "i am 'str'.",
       "accessor": {
         "getter": {
           "type": "JSFunction",

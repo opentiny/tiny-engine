@@ -1855,6 +1855,13 @@
         "version": "0.1.16"
       },
       {
+        "componentName": "TinyActionMenu",
+        "package": "@opentiny/vue",
+        "exportName": "ActionMenu",
+        "destructuring": true,
+        "version": "0.1.16"
+      },
+      {
         "componentName": "TinyDialogBox",
         "package": "@opentiny/vue",
         "exportName": "DialogBox",
@@ -2208,6 +2215,27 @@
         "componentName": "TinyHuichartsRadar",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsRadar",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsGraph",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsGraph",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsProcess",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsProcess",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyHuichartsGauge",
+        "package": "@opentiny/vue-huicharts",
+        "exportName": "TinyHuichartsGauge",
         "destructuring": true,
         "version": "3.22.0"
       },

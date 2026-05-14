@@ -26,7 +26,7 @@ const state = vue.reactive({
   nullValue: null,
   numberValue: 0,
   emptyStr: '',
-  strVal: 'i am str.',
+  strVal: "i am 'str'.",
   trueVal: true,
   falseVal: false,
   arrVal: [1, '2', { aaa: 'aaa' }, [3, 4], true, false],

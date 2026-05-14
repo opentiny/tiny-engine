@@ -2,6 +2,28 @@ import type { Node, RootNode } from '../../../types'
 
 export type PageSchema = RootNode
 
+export type AIHelperState = 'hidden' | 'chat' | 'loading' | 'confirm' | 'completed'
+
+export interface NodeAIStatus {
+  state: AIHelperState
+  collapsed?: boolean // 面板是否收起（收起时保留原状态，重新打开可恢复）
+  aiContext?: any
+  lastAIAction?: string
+  aiHistory?: Array<{
+    timestamp: number
+    action: string
+    content: any
+  }>
+  chatContent?: string // 聊天内容
+  // AI采纳状态相关字段
+  originalNodeData?: any // AI修改前的节点数据备份
+  aiModifiedNodeData?: any // AI修改后的节点数据
+}
+
+export interface NodeStatus {
+  [key: string]: any
+}
+
 export interface PageState {
   currentVm?: unknown
   currentSchema?: { [x: string]: any; id: string }
@@ -17,7 +39,8 @@ export interface PageState {
   isSaved: boolean
   isLock: boolean
   isBlock: boolean
-  nodesStatus: Record<string, any>
+  nodesStatus: Record<string, NodeStatus>
+  aiNodesStatus: Record<string, NodeAIStatus> // AI状态独立存储，避免与nodesStatus的可见性(false)冲突
   loading: boolean
 }
 

@@ -10,7 +10,7 @@
       >
         <template #reference>
           <div class="app-center-icon">
-            <svg-icon name="small-list"></svg-icon>
+            <svg-icon name="workspace-menu"></svg-icon>
           </div>
         </template>
         <div class="app-center-item">

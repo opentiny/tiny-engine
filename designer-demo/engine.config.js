@@ -5,5 +5,7 @@ export default {
   scripts: [],
   styles: [],
   // 是否开启 TailWindCSS 特性
-  enableTailwindCSS: true
+  enableTailwindCSS: true,
+  // 是否开启 使用结构化CSS 特性
+  enableStructuredCss: false
 }

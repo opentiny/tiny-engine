@@ -85,7 +85,10 @@ const handleJSExpressionBinding = (key, value, isJSX) => {
   }
 
   // expression 使用 v-bind 绑定
-  return `:${key}="${expressValue}"`
+  // 如果包含双引号，通过 &quot; 编码避免与属性分隔符冲突
+  // 比如绑定的值为：[{ "name": "test" }]
+  // 则转换为: :key="[{ &quot;name&quot;: &quot;test&quot; }]"
+  return `:${key}="${expressValue.replaceAll(/"/g, '&quot;')}"`
 }
 
 const handleBindI18n = (key, value, isJSX) => {
@@ -176,13 +179,13 @@ export const handleLoopAttrHook = (schemaData = {}, globalHooks, config) => {
   if (loop?.value && loop?.type) {
     source = loop.value.replace(isJSX ? thisRegexp : thisPropsBindRe, '')
   } else {
-    source = JSON.stringify(loop).replaceAll("'", "\\'").replaceAll(/"/g, "'")
+    source = JSON.stringify(loop)
   }
 
   const iterVar = [...loopArgs]
 
   if (!isJSX) {
-    attributes.push(`v-for="(${iterVar.join(',')}) in ${source}"`)
+    attributes.push(`v-for="(${iterVar.join(',')}) in ${source.replaceAll(/"/g, '&quot;')}"`)
 
     return
   }
@@ -455,7 +458,11 @@ const transformObjValue = (renderKey, value, globalHooks, config, transformObjTy
   const result = { shouldBindToState: false, res: null }
 
   if (typeof value === 'string') {
-    result.res = `${renderKey}"${value.replaceAll("'", "\\'").replaceAll(/"/g, "'")}"`
+    result.res = `${renderKey}"${value
+      .replaceAll(/\\/g, '\\\\')
+      .replaceAll(/\n/g, '\\n')
+      .replaceAll(/\r/g, '\\r')
+      .replaceAll(/"/g, '\\"')}"`
 
     return result
   }
@@ -575,15 +582,21 @@ export const handleObjBindAttrHook = (schemaData, globalHooks, config) => {
     if (shouldBindToState && !isJSX) {
       let stateKey = key
       let addSuccess = globalHooks.addState(stateKey, `${stateKey}:${res}`)
+      let retryCount = 0
 
-      while (!addSuccess) {
+      while (!addSuccess && retryCount++ < 100) {
         stateKey = `${key}${randomString()}`
         addSuccess = globalHooks.addState(stateKey, `${stateKey}:${res}`)
       }
 
-      attributes.push(`:${key}="state.${stateKey}"`)
+      if (addSuccess) {
+        attributes.push(`:${key}="state.${stateKey}"`)
+      } else {
+        // state 注册失败，回退到内联绑定
+        attributes.push(`:${key}="${res.replaceAll(/"/g, '&quot;')}"`)
+      }
     } else {
-      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res.replaceAll(/"/g, "'")}"`)
+      attributes.push(isJSX ? `${key}={${res}}` : `:${key}="${res.replaceAll(/"/g, '&quot;')}"`)
     }
 
     delete props[key]
@@ -600,7 +613,7 @@ export const handlePrimitiveAttributeHook = (schemaData, globalHooks, config) =>
     const valueType = typeof value
 
     if (valueType === 'string') {
-      attributes.push(`${key}="${value.replaceAll(/"/g, "'")}"`)
+      attributes.push(`${key}="${value.replaceAll(/"/g, '&quot;')}"`)
 
       delete props[key]
     }

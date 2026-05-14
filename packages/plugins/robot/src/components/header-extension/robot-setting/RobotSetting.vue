@@ -341,7 +341,7 @@ const handleServiceConfirm = (serviceData: Partial<ModelService>) => {
     .header-title {
       flex: 1;
       text-align: center;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 600;
     }
   }

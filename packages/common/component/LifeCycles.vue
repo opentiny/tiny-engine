@@ -277,7 +277,7 @@ export default {
 .life-cycle-tips {
   color: var(--te-component-common-text-color-weaken);
   margin: 4px 0 0;
-  height: 16px;
+  height: 30px;
   line-height: 16px;
 }
 .life-cycle-content-list {

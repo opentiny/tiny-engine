@@ -26,6 +26,7 @@ import {
 import { constants } from '@opentiny/tiny-engine-utils'
 import { handlePageUpdate } from '@opentiny/tiny-engine-common/js/http'
 import meta from '../../meta'
+import useSaveValidation from './aiSaveValidation'
 
 const { publish } = useMessage()
 
@@ -150,6 +151,19 @@ export const openCommon = async () => {
       message: ERR_MSG[curPageState]
     })
 
+    return
+  }
+
+  // 检查是否有未处理的AI修改
+  if (useSaveValidation().hasAnyPendingAIModification()) {
+    const pendingNodeIds = useSaveValidation().getAllNodesWithPendingAIModification()
+
+    useNotify({
+      type: 'warning',
+      title: '保存被阻止',
+      message: `以下节点的AI修改还未处理：${pendingNodeIds.join('、')}，请先采纳或取消`,
+      duration: 5000
+    })
     return
   }
 

@@ -1,6 +1,7 @@
 import { generateApp, type IAppSchema } from '@opentiny/tiny-engine-dsl-vue'
 import * as dslVue from '@opentiny/tiny-engine-dsl-vue'
 import { getMergeMeta } from '@opentiny/tiny-engine-meta-register'
+import { formatString } from '../../js/ast'
 import defaultPrettierConfig from '../../js/config-files/prettierrc'
 
 // 应用出码默认配置
@@ -42,7 +43,7 @@ const generateAppCode = async (appSchema: IAppSchema, options = {}) => {
 const { parseRequiredBlocks, genSFCWithDefaultPlugin } = dslVue as any
 
 const generatePageCode = (...args: any[]) => {
-  return genSFCWithDefaultPlugin(...args)
+  return formatString(genSFCWithDefaultPlugin(...args), 'vue')
 }
 
 /**

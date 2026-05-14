@@ -118,7 +118,7 @@ const { utils } = wrap(function () {
 })()
 const state = vue.reactive({
   IconPlusSquare: utils.IconPlusSquare(),
-  theme: "{   'id': 22,   'name': '@cloud/tinybuilder-theme-dark',   'description': '黑暗主题' }",
+  theme: '{   "id": 22,   "name": "@cloud/tinybuilder-theme-dark",   "description": "黑暗主题" }',
   companyName: '',
   companyOptions: null,
   companyCity: '',
