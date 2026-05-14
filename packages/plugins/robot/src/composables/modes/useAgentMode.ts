@@ -17,10 +17,10 @@ import { updatePageSchema } from '../core/pageUpdater'
 import useModelConfig from '../core/useConfig'
 import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../constants/prompts'
 import { search, fetchAssets } from '../../services/agentServices'
-import { client } from '../../services/aiClient'
+import { provider } from '../../services/aiClient'
 import type { ModeHooks } from '../../types/mode.types'
 import { ChatMode } from '../../types/mode.types'
-import { STATUS, type MessageState } from '@opentiny/tiny-robot-kit'
+import { STATUS, type MessageState } from '../../constants/status'
 
 const { deepClone } = utils
 const logger = console
@@ -74,7 +74,6 @@ export default function useAgentMode(): ModeHooks {
     // 确保会话元数据中记录为 Agent 模式
     if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Agent) {
       apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Agent })
-      apis.saveConversations()
     }
 
     // Agent 模式特殊处理：标记失败的 loading
@@ -215,7 +214,7 @@ export default function useAgentMode(): ModeHooks {
         }
         const apiUrl = 'app-center/api/chat/completions'
         lastMessage.renderContent.at(-1).status = 'fix'
-        const fixedResponse = await client.chat({
+        const fixedResponse = await provider.chat({
           messages: [{ role: 'user', content: getJsonFixPrompt(content, jsonValidResult.error) }],
           options: { signal: abortControllerMap.errorFix?.signal, beforeRequest: beforeRequest as any, apiUrl }
         })

@@ -23,7 +23,13 @@
         ></tr-prompts>
       </div>
       <tr-bubble-provider v-else :content-renderer-matches="contentRendererMatches">
-        <tr-bubble-list :messages="messages" :role-configs="roleConfigs" auto-scroll class="robot-bubble-list">
+        <tr-bubble-list
+          :messages="messages"
+          :role-configs="roleConfigs"
+          :content-resolver="resolveMessageContent"
+          auto-scroll
+          class="robot-bubble-list"
+        >
           <template #content-footer="{ messages }">
             <div v-if="messages[0]?.aborted" class="aborted">已中止</div>
           </template>
@@ -91,6 +97,7 @@ import {
   TrAttachments,
   UploadButton,
   VoiceButton,
+  BubbleRenderers,
   BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
@@ -143,10 +150,26 @@ watch(
   }
 )
 
-const contentRendererMatches: BubbleContentRendererMatch[] = [
+const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
+  {
+    priority: BubbleRendererMatchPriority.LOADING,
+    find: (message) => Boolean(message.loading),
+    renderer: LoadingRenderer
+  },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any) => !Boolean(message.loading) && message.content,
+    find: (message: any, content: any) => content?.type === 'tool' && message.tool_calls?.length,
+    renderer: BubbleRenderers.Tools
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any, content: any) =>
+      content?.type !== 'tool' && typeof message.reasoning_content === 'string' && message.reasoning_content,
+    renderer: BubbleRenderers.Reasoning
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any) => !message.loading && message.content,
     renderer: MarkdownRenderer
   },
   {
@@ -154,12 +177,12 @@ const contentRendererMatches: BubbleContentRendererMatch[] = [
     find: (message: any) => message?.content?.[0]?.type === 'img' || message?.content?.[0]?.type === 'image',
     renderer: ImgRenderer
   },
-  {
-    priority: BubbleRendererMatchPriority.LOADING,
-    find: (message) => Boolean(message.loading),
-    renderer: LoadingRenderer
-  }
-]
+  ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: any, content: any) => content?.type === type,
+    renderer
+  }))
+])
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -232,15 +255,21 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '48px' })
 
+const resolveMessageContent = (message: any) => {
+  if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
+    return message.renderContent
+  }
+
+  return message.content
+}
+
 const roleConfigs: Record<string, BubbleRoleConfig> = {
   assistant: {
     placement: 'start',
-    avatar: aiAvatar,
-    contentResolver: (message: any) => message.renderContent || message.content
+    avatar: aiAvatar
   },
   user: {
-    placement: 'end',
-    contentResolver: (message: any) => message.renderContent || message.content
+    placement: 'end'
   },
   system: {
     hidden: true

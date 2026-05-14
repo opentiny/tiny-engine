@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { IconHistory, IconClose } from '@opentiny/tiny-robot-svgs'
-import type { Conversation } from '@opentiny/tiny-robot-kit'
+import type { ConversationInfo } from '@opentiny/tiny-robot-kit'
 import { TrHistory, TrIconButton, type HistoryItem, type HistoryMenuItem } from '@opentiny/tiny-robot'
 import { computed, ref } from 'vue'
 
@@ -37,7 +37,7 @@ const showHistory = ref(false)
 interface HistoryProps {
   conversationState: {
     currentId?: string | null
-    conversations: Conversation[]
+    conversations: ConversationInfo[]
   }
   onItemClick?: (item: HistoryItem) => void
   onItemAction?: (action: HistoryMenuItem, item: HistoryItem) => void
@@ -47,7 +47,7 @@ interface HistoryProps {
 const props = defineProps<HistoryProps>()
 
 // 将平铺格式的历史会话数据转换为分组格式（基于createdAt时间戳）
-const convertFlatToGrouped = (flatData: Conversation[]): Array<{ group: string; items: Conversation[] }> => {
+const convertFlatToGrouped = (flatData: ConversationInfo[]): Array<{ group: string; items: ConversationInfo[] }> => {
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const getDate = (days: number) => {
@@ -64,7 +64,7 @@ const convertFlatToGrouped = (flatData: Conversation[]): Array<{ group: string; 
     { group: '更早', threshold: new Date(0) }
   ]
 
-  const groups = groupConfigs.map((config) => ({ ...config, items: [] as Conversation[] }))
+  const groups = groupConfigs.map((config) => ({ ...config, items: [] as ConversationInfo[] }))
 
   flatData.forEach((item) => {
     const itemDate = new Date(item.createdAt)

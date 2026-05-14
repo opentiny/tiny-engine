@@ -1,7 +1,8 @@
-import { nextTick, ref } from 'vue'
-import { GeneratingStatus, STATUS, type ChatMessage, type MessageState } from '@opentiny/tiny-robot-kit'
+import { nextTick, ref, computed } from 'vue'
+import type { ChatMessage } from '@opentiny/tiny-robot-kit'
+import { GeneratingStatus, STATUS, type MessageState } from '../constants/status'
 import { formatMessages, removeLoading } from '../utils'
-import { getClientConfig as getConfig, updateClientConfig as updateConfig, client } from '../services/aiClient'
+import { getClientConfig as getConfig, updateClientConfig as updateConfig, provider } from '../services/aiClient'
 import useModelConfig from './core/useConfig'
 import useMode from './modes/useMode'
 import { createStreamDataHandler } from './core/useMessageStream'
@@ -14,7 +15,6 @@ const {
   // 配置方法
   getApiUrl,
   getContentType,
-  getLoadingType,
   // 生命周期钩子
   onConversationStart,
   onMessageSent,
@@ -98,7 +98,11 @@ const handleFinishRequest = async (
   await onRequestEnd(finishReason, lastMessage.content, messages) // 本次请求结束
 
   // 部分模型返回格式不太标准，例如finishReason没有返回tool_calls而是stop，这里做下兼容
-  if (['tool_calls', 'stop'].includes(finishReason) && lastMessage.tool_calls?.length) {
+  if (
+    ['tool_calls', 'stop'].includes(finishReason) &&
+    lastMessage.tool_calls?.length &&
+    !lastMessage.state?.toolsHandled
+  ) {
     lastMessage!.tool_calls.forEach((toolCall) => {
       if (toolCall.type !== 'function') {
         // 修复，兼容部分场景返回格式不标准，流式中多次返回type字段
@@ -110,14 +114,14 @@ const handleFinishRequest = async (
 
   if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
     messageState.status = STATUS.ABORTED
-  } else if (finishReason === 'stop' && !lastMessage.tool_calls) {
+  } else if (finishReason === 'stop' && (!lastMessage.tool_calls?.length || lastMessage.state?.toolsHandled)) {
     messageState.status = STATUS.FINISHED
     chatStatus.value = CHAT_STATUS.FINISHED
-    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages.value, {})
+    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages, {})
   }
 }
 
-const handleRequestError = async (error: Error, messages: ChatMessage[], messageState: MessageState) => {
+const handleRequestError = async (error: unknown, messages: ChatMessage[], messageState: MessageState) => {
   chatStatus.value = CHAT_STATUS.FINISHED
   delete abortControllerMap.main
   await onRequestEnd('error', messages.at(-1).content, messages, { error }) // 本次请求结束
@@ -133,7 +137,7 @@ const {
   autoSetTitle: autoSetTitleBase,
   ...conversationMethods
 } = useConversationAdapter({
-  client,
+  provider,
   onStreamData: handleStreamData,
   onFinishRequest: handleFinishRequest,
   onMessageProcessed: async (finishReason, content, messages) => {
@@ -159,7 +163,7 @@ const {
 
 // 使用工厂函数创建工具调用处理器
 const handleToolCall = createToolCallHandler({
-  client,
+  provider,
   getAbortController: () => {
     abortControllerMap.toolCall = new AbortController()
     return abortControllerMap.toolCall
@@ -187,8 +191,30 @@ const handleToolCall = createToolCallHandler({
   }
 })
 
+const hasActiveRequest = () => {
+  return chatStatus.value !== CHAT_STATUS.FINISHED || Object.keys(abortControllerMap).length > 0
+}
+
+const abortRequest = () => {
+  Object.values(abortControllerMap).forEach((controller) => controller?.abort())
+  for (const key of Object.keys(abortControllerMap)) {
+    delete abortControllerMap[key]
+  }
+  chatStatus.value = CHAT_STATUS.FINISHED
+
+  onRequestEnd('aborted', messageManager.messages.value.at(-1)?.content as string, messageManager.messages.value)
+}
+
+const interruptActiveRequest = () => {
+  if (!hasActiveRequest()) {
+    return
+  }
+
+  abortRequest()
+}
+
 // 包装 conversation 方法，添加业务特定逻辑
-const createConversation = (title = '新会话', chatMode = robotSettingState.chatMode) => {
+const createConversationWithMode = (title = '新会话', chatMode = robotSettingState.chatMode) => {
   const currentConversationId = conversationState.currentId!
   const newConversationId = createConversationBase(title, { chatMode })
   if (newConversationId !== currentConversationId) {
@@ -198,7 +224,13 @@ const createConversation = (title = '新会话', chatMode = robotSettingState.ch
   return newConversationId
 }
 
+const createConversation = (title = '新会话', chatMode = robotSettingState.chatMode) => {
+  interruptActiveRequest()
+  return createConversationWithMode(title, chatMode)
+}
+
 const switchConversation = (conversationId: string) => {
+  interruptActiveRequest()
   onConversationEnd(conversationState.currentId!)
   return switchConversationBase(conversationId, (state, messages, methods) => {
     onConversationStart(state, messages, methods)
@@ -220,20 +252,12 @@ const addMainAbortController = () => {
   abortControllerMap.main = mainAbortController
 }
 
-const addLoading = (messages: ChatMessage[]) => {
-  const assistantMessage: ChatMessage = {
-    role: 'assistant',
-    content: '',
-    renderContent: [{ type: getLoadingType() }]
-  }
-  messages.push(assistantMessage)
-}
-
 const sendUserMessage = async () => {
   onMessageSent()
   await nextTick()
+  messageManager.messageState.status = STATUS.PENDING
+  messageManager.messageState.errorMsg = undefined
   addMainAbortController()
-  addLoading(messageManager.messages.value)
   await messageManager.send()
   if (messageManager.messageState.status === STATUS.ERROR) {
     removeLoading(messageManager.messages.value)
@@ -246,31 +270,37 @@ const sendUserMessage = async () => {
   autoSetTitle()
 }
 
-const abortRequest = () => {
-  Object.values(abortControllerMap).forEach((controller) => controller?.abort())
-  for (const key of Object.keys(abortControllerMap)) {
-    delete abortControllerMap[key]
-  }
-  chatStatus.value = CHAT_STATUS.FINISHED
-
-  onRequestEnd('aborted', messageManager.messages.value.at(-1)?.content as string, messageManager.messages.value)
-}
-
 const changeChatMode = (chatMode: string) => {
+  if (chatMode === robotSettingState.chatMode) {
+    return
+  }
+
+  interruptActiveRequest()
+  updateChatModeState(chatMode)
+
   // 空会话更新metadata
   const usedConversationId = conversationState.currentId
-  const newConversationId = createConversation('新会话', chatMode)
+  const newConversationId = createConversationWithMode('新会话', chatMode)
   if (usedConversationId === newConversationId) {
     conversationMethods.updateMetadata(newConversationId, { chatMode })
-    conversationMethods.saveConversations()
   }
 
-  updateChatModeState(chatMode)
   updateConfig({ apiUrl: getApiUrl() })
 }
 
+// 将 CHAT_STATUS 映射到 STATUS 枚举，用于 UI 显示
+const mappedStatus = computed(() => {
+  const statusMap: Record<CHAT_STATUS, STATUS> = {
+    [CHAT_STATUS.PROCESSING]: STATUS.PENDING,
+    [CHAT_STATUS.STREAMING]: STATUS.STREAMING,
+    [CHAT_STATUS.FINISHED]: STATUS.FINISHED
+  }
+  return statusMap[chatStatus.value] || STATUS.FINISHED
+})
+
 export default function () {
   return {
+    mappedStatus,
     chatStatus,
     initChatClient,
     updateConfig,

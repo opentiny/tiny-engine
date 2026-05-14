@@ -24,5 +24,5 @@ export const GeneratingStatus: STATUS[] = [STATUS.PENDING, STATUS.STREAMING]
  */
 export interface MessageState {
   status: STATUS
-  errorMsg?: string
+  errorMsg?: unknown
 }
