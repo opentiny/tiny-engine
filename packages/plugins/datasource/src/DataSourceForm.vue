@@ -221,6 +221,9 @@ export default {
       }
       getDataSourceName().validate(async (valid) => {
         if (valid) {
+          const remoteConfig =
+            state.dataSource.data.type === 'remote' ? settingRef.value?.getRemoteConfig?.() || {} : {}
+
           const columns = state.dataSource.data.columns.map(({ name, title, type, format, field }) => {
             return {
               name,
@@ -244,7 +247,7 @@ export default {
               name: state.dataSource.name,
               data: Object.assign(state.dataSource.data, {
                 columns,
-                ...dataSourceState.remoteConfig,
+                ...remoteConfig,
                 data: record ? record.requestData.data.data : state.dataSource.data.data
               })
             }
@@ -252,7 +255,7 @@ export default {
               columns,
               data: record ? record.requestData.data.data : [],
               type: state.dataSource.data.type ? state.dataSource.data.type : 'remote',
-              ...dataSourceState.remoteConfig
+              ...remoteConfig
             }
             if (props.editable) {
               requestUpdateDataSource(state.dataSource.id, editRequestData).then(() => {
