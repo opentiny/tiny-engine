@@ -114,10 +114,13 @@ const handleFinishRequest = async (
 
   if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
     messageState.status = STATUS.ABORTED
-  } else if (finishReason === 'stop' && (!lastMessage.tool_calls?.length || lastMessage.state?.toolsHandled)) {
+  } else if (!lastMessage.tool_calls?.length || lastMessage.state?.toolsHandled) {
     messageState.status = STATUS.FINISHED
     chatStatus.value = CHAT_STATUS.FINISHED
-    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages, {})
+    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages, {
+      abortControllerMap,
+      messageState
+    })
   }
 }
 

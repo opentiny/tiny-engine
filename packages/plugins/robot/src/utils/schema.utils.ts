@@ -26,7 +26,7 @@ export const fixIconComponent = (data: any) => {
 /**
  * 检查是否为纯对象
  */
-const isPlainObject = (value: unknown) =>
+export const isPlainObject = (value: unknown) =>
   typeof value === 'object' && value !== null && Object.prototype.toString.call(value) === '[object Object]'
 
 /**
@@ -128,6 +128,18 @@ export const isValidFastJsonPatch = (patch: any): boolean => {
   return false
 }
 
+const isValidSchemaNode = (node: unknown): boolean => {
+  if (!isPlainObject(node)) {
+    return false
+  }
+
+  const children = (node as { children?: unknown }).children
+  return !Array.isArray(children) || children.every(isValidSchemaNode)
+}
+
+export const isValidSchemaChildren = (children: unknown): boolean =>
+  !Array.isArray(children) || children.every(isValidSchemaNode)
+
 /**
  * 自动修复JSON Patch数组，过滤无效操作
  */
@@ -146,7 +158,17 @@ export const jsonPatchAutoFix = (jsonPatches: any[], isFinial: boolean) => {
 export const getJsonObjectString = (streamContent: string): string => {
   const regex = /```(json|schema)?([\s\S]*?)```/
   const match = streamContent.match(regex)
-  return (match && match[2]) || streamContent
+  if (match?.[2]) {
+    return match[2]
+  }
+
+  const arrayStart = streamContent.indexOf('[')
+  const arrayEnd = streamContent.lastIndexOf(']')
+  if (arrayStart !== -1 && arrayEnd > arrayStart) {
+    return streamContent.slice(arrayStart, arrayEnd + 1)
+  }
+
+  return streamContent
 }
 
 /**
@@ -155,7 +177,12 @@ export const getJsonObjectString = (streamContent: string): string => {
 export const isValidJsonPatchObjectString = (streamContent: string) => {
   const jsonString = getJsonObjectString(streamContent)
   try {
-    const data = JSON.parse(jsonString)
+    let data
+    try {
+      data = JSON.parse(jsonString)
+    } catch {
+      data = JSON.parse(jsonrepair(jsonString))
+    }
     if (!isValidFastJsonPatch(data)) {
       return {
         isError: true,

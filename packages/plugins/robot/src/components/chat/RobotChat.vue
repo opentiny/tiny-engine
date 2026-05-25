@@ -66,12 +66,7 @@
             <slot name="footer-left"></slot>
           </template>
           <template #footer-right>
-            <VoiceButton
-              :speech-config="{ lang: 'zh-CN', continuous: false }"
-              @speech-start="handleSpeechStart"
-              @speech-end="handleSpeechEnd"
-              @speech-error="handleSpeechError"
-            />
+            <VoiceButton :speech-config="{ lang: 'zh-CN', continuous: false }" />
             <UploadButton
               v-if="selectedAttachments.length < 1 && props.allowFiles"
               accept="image/*"
@@ -167,21 +162,22 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
       content?.type !== 'tool' && typeof message.reasoning_content === 'string' && message.reasoning_content,
     renderer: BubbleRenderers.Reasoning
   },
+  ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: any, content: any) => content?.type === type,
+    renderer
+  })),
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any) => !message.loading && message.content,
+    find: (message: any, content: any) =>
+      !message.loading && message.content && (!content?.type || ['markdown', 'text'].includes(content.type)),
     renderer: MarkdownRenderer
   },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
     find: (message: any) => message?.content?.[0]?.type === 'img' || message?.content?.[0]?.type === 'image',
     renderer: ImgRenderer
-  },
-  ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
-    priority: BubbleRendererMatchPriority.NORMAL,
-    find: (_message: any, content: any) => content?.type === type,
-    renderer
-  }))
+  }
 ])
 
 // 处理文件选择事件
@@ -231,22 +227,6 @@ const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
 
 const handleSingleFileRetry = (file: RawFileAttachment) => {
   handleSingleFilesSelected([file.rawFile], true)
-}
-
-// 语音输入处理
-const handleSpeechStart = () => {}
-
-const handleSpeechEnd = (transcript: string) => {
-  if (transcript) {
-    inputMessage.value = transcript
-  }
-}
-
-const handleSpeechError = () => {
-  useNotify({
-    type: 'error',
-    message: '语音识别失败，请重试'
-  })
 }
 
 const getSvgIcon = (name: string, style?: CSSProperties) => {

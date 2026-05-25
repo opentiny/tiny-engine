@@ -1,6 +1,6 @@
 <template>
   <div class="build-loading-renderer" v-if="!hasReasoningFinished">
-    <img :src="getIconUrl(statusData.icon)" :alt="status" />
+    <img :src="getIconUrl(statusData.icon)" :alt="resolvedStatus" />
     <div class="build-loading-renderer-content">
       <div class="build-loading-renderer-content-header">{{ statusData.title }}</div>
       <div class="build-loading-renderer-content-body">{{ statusData.content }}</div>
@@ -15,14 +15,22 @@ export default {
   props: {
     content: {
       type: String,
-      required: true
+      default: ''
     },
     status: {
       type: String,
-      default: 'loading'
+      default: ''
     },
     contentType: {
       type: String
+    },
+    message: {
+      type: Object,
+      default: () => ({})
+    },
+    contentIndex: {
+      type: Number,
+      default: 0
     }
   },
   setup(props) {
@@ -30,16 +38,29 @@ export default {
       return new URL(`../../../assets/${icon}`, import.meta.url).href
     }
 
+    const contentItem = computed(() => {
+      const renderContent = props.message?.renderContent
+      if (Array.isArray(renderContent)) {
+        return renderContent[props.contentIndex] || {}
+      }
+
+      return {}
+    })
+
+    const resolvedStatus = computed(() => contentItem.value.status || props.status || 'loading')
+    const resolvedContent = computed(() => contentItem.value.content ?? props.content)
+    const resolvedContentType = computed(() => contentItem.value.contentType || props.contentType)
+
     const statusDataMap = {
       reasoning: {
         title: '深度思考中，请稍等片刻',
         icon: 'loading.webp',
-        content: () => props.content?.slice(-30) || '...'
+        content: '...'
       },
       loading: {
         title: '页面生成中，请稍等片刻',
         icon: 'loading.webp',
-        content: () => props.content?.slice(-30) || '...'
+        content: '...'
       },
       fix: {
         title: '页面优化中，请稍等片刻',
@@ -53,16 +74,18 @@ export default {
       },
       failed: {
         title: '页面生成失败',
-        content: () => props.content?.slice(-30) || '页面生成失败',
+        content: () => resolvedContent.value?.slice(-30) || '页面生成失败',
         icon: 'failed.svg'
       }
     }
 
-    const hasReasoningFinished = computed(() => props.contentType === 'reasoning' && props.status !== 'reasoning')
+    const hasReasoningFinished = computed(
+      () => resolvedContentType.value === 'reasoning' && resolvedStatus.value !== 'reasoning'
+    )
 
     const statusData = computed(() => {
-      let status = props.status as keyof typeof statusDataMap
-      if (props.contentType === 'reasoning') {
+      let status = resolvedStatus.value as keyof typeof statusDataMap
+      if (resolvedContentType.value === 'reasoning') {
         status = 'reasoning'
       }
       const data = statusDataMap[status] || statusDataMap.loading
@@ -74,6 +97,7 @@ export default {
 
     return {
       statusData,
+      resolvedStatus,
       getIconUrl,
       hasReasoningFinished
     }

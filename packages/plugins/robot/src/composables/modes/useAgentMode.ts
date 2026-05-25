@@ -13,7 +13,7 @@
 import { getMetaApi, META_SERVICE, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isValidJsonPatchObjectString, getRobotServiceOptions, removeLoading, addSystemPrompt } from '../../utils'
-import { updatePageSchema } from '../core/pageUpdater'
+import { getLastSuccessfulPageSchema, resetPageSchemaUpdateState, updatePageSchema } from '../core/pageUpdater'
 import useModelConfig from '../core/useConfig'
 import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../constants/prompts'
 import { search, fetchAssets } from '../../services/agentServices'
@@ -85,6 +85,7 @@ export default function useAgentMode(): ModeHooks {
   }
 
   const onMessageSent = () => {
+    resetPageSchemaUpdateState()
     pageSchema = deepClone(useCanvas().pageState.pageSchema)
   }
 
@@ -187,9 +188,14 @@ export default function useAgentMode(): ModeHooks {
     }: { abortControllerMap: Record<string, AbortController>; messageState: MessageState }
   ) => {
     const lastMessage = messages.at(-1)
+    const lastRenderContent =
+      lastMessage.renderContent.findLast((item: any) => item.type === getContentType()) ||
+      lastMessage.renderContent.at(-1)
 
     if (finishReason === 'aborted' || finishReason === 'error') {
-      lastMessage.renderContent.at(-1).status = 'failed'
+      if (lastRenderContent) {
+        lastRenderContent.status = 'failed'
+      }
       return
     }
 
@@ -213,7 +219,9 @@ export default function useAgentMode(): ModeHooks {
           return requestParams
         }
         const apiUrl = 'app-center/api/chat/completions'
-        lastMessage.renderContent.at(-1).status = 'fix'
+        if (lastRenderContent) {
+          lastRenderContent.status = 'fix'
+        }
         const fixedResponse = await provider.chat({
           messages: [{ role: 'user', content: getJsonFixPrompt(content, jsonValidResult.error) }],
           options: { signal: abortControllerMap.errorFix?.signal, beforeRequest: beforeRequest as any, apiUrl }
@@ -224,7 +232,9 @@ export default function useAgentMode(): ModeHooks {
         }
       } catch (error) {
         logger.error('json fix failed', error)
-        lastMessage.renderContent.at(-1).status = 'failed'
+        if (lastRenderContent) {
+          lastRenderContent.status = 'failed'
+        }
         if (error instanceof Error && error.message.includes('canceled')) {
           messageState.status = STATUS.ABORTED
         } else {
@@ -239,11 +249,14 @@ export default function useAgentMode(): ModeHooks {
 
     // 更新页面 schema
     const result = await updatePageSchema(lastMessage.content, pageSchema, true)
-    if (result.schema) {
-      lastMessage.renderContent.at(-1).status = 'success'
-      lastMessage.renderContent.at(-1).schema = result.schema
-    } else {
-      lastMessage.renderContent.at(-1).status = 'failed'
+    const renderedSchema = result?.schema || getLastSuccessfulPageSchema()
+    if (renderedSchema) {
+      if (lastRenderContent) {
+        lastRenderContent.status = 'success'
+        lastRenderContent.schema = renderedSchema
+      }
+    } else if (lastRenderContent) {
+      lastRenderContent.status = 'failed'
     }
 
     pageSchema = null

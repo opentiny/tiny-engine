@@ -129,7 +129,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
       }
 
       statusManager.setProcessing()
-      const finishReason = lastChoice?.finish_reason ?? 'unknown'
+      const finishReason = lastChoice?.finish_reason || 'stop'
       const contextMessages = toRaw(messages.slice(0, -1))
 
       await onFinishRequest(finishReason, messages, contextMessages, messageState)
