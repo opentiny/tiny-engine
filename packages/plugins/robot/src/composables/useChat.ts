@@ -110,6 +110,7 @@ const handleFinishRequest = async (
       }
     })
     await handleToolCall(lastMessage.tool_calls, messages, contextMessages) // eslint-disable-line
+    return
   }
 
   if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {

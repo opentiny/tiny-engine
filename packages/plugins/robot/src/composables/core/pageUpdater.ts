@@ -110,8 +110,12 @@ const _updatePageSchema = async (
 
 const updatePageSchemaThrottled = useThrottleFn(_updatePageSchema, 200, true)
 
-export const resetPageSchemaUpdateState = () => {
+const invalidatePendingStreamUpdates = () => {
   schemaUpdateVersion++
+}
+
+export const resetPageSchemaUpdateState = () => {
+  invalidatePendingStreamUpdates()
   lastSuccessfulSchema = null
 }
 
@@ -123,7 +127,7 @@ export const updatePageSchema = (
   isFinal: boolean = false
 ): UpdateResult | Promise<UpdateResult> => {
   if (isFinal) {
-    resetPageSchemaUpdateState()
+    invalidatePendingStreamUpdates()
     return _updatePageSchema(streamContent, currentPageSchema, isFinal, schemaUpdateVersion)
   }
 
