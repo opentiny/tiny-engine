@@ -11,6 +11,17 @@
 <script lang="ts">
 import { computed } from 'vue'
 
+export const resolveAgentRenderState = (props: any) => {
+  const renderContent = props.message?.renderContent
+  const contentItem = Array.isArray(renderContent) ? renderContent[props.contentIndex || 0] || {} : {}
+
+  return {
+    status: contentItem.status || props.status || 'loading',
+    content: contentItem.content ?? props.content,
+    contentType: contentItem.type || contentItem.contentType || props.contentType
+  }
+}
+
 export default {
   props: {
     content: {
@@ -38,18 +49,10 @@ export default {
       return new URL(`../../../assets/${icon}`, import.meta.url).href
     }
 
-    const contentItem = computed(() => {
-      const renderContent = props.message?.renderContent
-      if (Array.isArray(renderContent)) {
-        return renderContent[props.contentIndex] || {}
-      }
-
-      return {}
-    })
-
-    const resolvedStatus = computed(() => contentItem.value.status || props.status || 'loading')
-    const resolvedContent = computed(() => contentItem.value.content ?? props.content)
-    const resolvedContentType = computed(() => contentItem.value.contentType || props.contentType)
+    const resolvedState = computed(() => resolveAgentRenderState(props))
+    const resolvedStatus = computed(() => resolvedState.value.status)
+    const resolvedContent = computed(() => resolvedState.value.content)
+    const resolvedContentType = computed(() => resolvedState.value.contentType)
 
     const statusDataMap = {
       reasoning: {
