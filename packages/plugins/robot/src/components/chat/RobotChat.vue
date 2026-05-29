@@ -92,7 +92,6 @@ import {
   TrAttachments,
   UploadButton,
   VoiceButton,
-  BubbleRenderers,
   BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
@@ -150,17 +149,6 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
     priority: BubbleRendererMatchPriority.LOADING,
     find: (message) => Boolean(message.loading),
     renderer: LoadingRenderer
-  },
-  {
-    priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any, content: any) => content?.type === 'tool' && message.tool_calls?.length,
-    renderer: BubbleRenderers.Tools
-  },
-  {
-    priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any, content: any) =>
-      content?.type !== 'tool' && typeof message.reasoning_content === 'string' && message.reasoning_content,
-    renderer: BubbleRenderers.Reasoning
   },
   ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
     priority: BubbleRendererMatchPriority.NORMAL,

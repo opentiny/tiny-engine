@@ -29,19 +29,13 @@ const handleDeltaReasoning = (
 const handleDeltaContent = (
   choice: ChatCompletionStreamResponseChoice,
   lastMessage: Message,
-  contentType = 'markdown',
-  contentAlreadyMerged = false
+  contentType = 'markdown'
 ) => {
   if (typeof choice.delta.content === 'string' && choice.delta.content) {
-    lastMessage.content ||= ''
-
     if (lastMessage.renderContent.at(-1)?.type !== contentType) {
       lastMessage.renderContent.push({ type: contentType, content: '' })
     }
     lastMessage.renderContent.at(-1)!.content += choice.delta.content
-    if (!contentAlreadyMerged) {
-      lastMessage.content += choice.delta.content
-    }
   }
 }
 
@@ -60,6 +54,15 @@ const handleDeltaToolCalls = (choice: ChatCompletionStreamResponseChoice, lastMe
       }
     }
   }
+}
+
+const mergeUnprocessedDelta = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
+  handleDeltaReasoning(choice, lastMessage)
+  if (typeof choice.delta.content === 'string' && choice.delta.content) {
+    lastMessage.content ||= ''
+    lastMessage.content += choice.delta.content
+  }
+  handleDeltaToolCalls(choice, lastMessage)
 }
 
 /**
@@ -85,12 +88,10 @@ export function createStreamDataHandler(options: StreamDataHandlerOptions) {
       hooks.onStreamStart(messages)
     }
 
-    // 核心流式处理逻辑
-    handleDeltaReasoning(choice, lastMessage, Boolean(data.__contentAlreadyMerged))
-    handleDeltaContent(choice, lastMessage, getContentType(), Boolean(data.__contentAlreadyMerged))
     if (!data.__contentAlreadyMerged) {
-      handleDeltaToolCalls(choice, lastMessage)
+      mergeUnprocessedDelta(choice, lastMessage)
     }
+    handleDeltaContent(choice, lastMessage, getContentType())
 
     // 触发钩子
     if (typeof choice.delta.content === 'string' && choice.delta.content) {

@@ -1,7 +1,7 @@
 import { nextTick, ref, computed } from 'vue'
 import type { ChatMessage } from '@opentiny/tiny-robot-kit'
 import { GeneratingStatus, STATUS, type MessageState } from '../constants/status'
-import { formatMessages, removeLoading } from '../utils'
+import { formatMessages } from '../utils'
 import { getClientConfig as getConfig, updateClientConfig as updateConfig, provider } from '../services/aiClient'
 import useModelConfig from './core/useConfig'
 import useMode from './modes/useMode'
@@ -264,7 +264,6 @@ const sendUserMessage = async () => {
   addMainAbortController()
   await messageManager.send()
   if (messageManager.messageState.status === STATUS.ERROR) {
-    removeLoading(messageManager.messages.value)
     await handleRequestError(
       messageManager.messageState.errorMsg,
       messageManager.messages.value,
