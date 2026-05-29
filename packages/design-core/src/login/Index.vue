@@ -98,13 +98,10 @@ export default {
   }
   :deep(.tiny-button.tiny-button.tiny-button.tiny-button) {
     width: 100%;
-    background: #191919;
+    background: #595959;
     height: 32px;
     margin-top: 20px;
     font-size: 14px;
-  }
-  :deep(.tiny-button.tiny-button.tiny-button.tiny-button.tiny-button--primary) {
-    border: none;
   }
   :deep(.tiny-input.tiny-input .tiny-input__inner.tiny-input__inner) {
     height: 32px;

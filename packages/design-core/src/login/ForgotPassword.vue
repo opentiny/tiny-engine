@@ -157,7 +157,6 @@ export default {
     )
     return {
       state,
-      isReady,
       handleForgot,
       toLogin
     }
