@@ -331,8 +331,6 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
     conversationState,
     // 会话方法（包装后，覆盖原始方法）
     ...apis,
-    createConversation,
-    switchConversation,
     autoSetTitle
   }
 }
