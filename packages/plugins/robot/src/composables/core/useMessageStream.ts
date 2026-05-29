@@ -65,6 +65,15 @@ const mergeUnprocessedDelta = (choice: ChatCompletionStreamResponseChoice, lastM
   handleDeltaToolCalls(choice, lastMessage)
 }
 
+const syncThinkingState = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
+  if (typeof choice.delta.reasoning_content !== 'string') {
+    return
+  }
+
+  lastMessage.state ||= {}
+  lastMessage.state.thinking = Boolean(choice.delta.reasoning_content)
+}
+
 /**
  * 创建流式数据处理器
  * 通过依赖注入解耦业务逻辑与状态管理、回调函数
@@ -91,6 +100,7 @@ export function createStreamDataHandler(options: StreamDataHandlerOptions) {
     if (!data.__contentAlreadyMerged) {
       mergeUnprocessedDelta(choice, lastMessage)
     }
+    syncThinkingState(choice, lastMessage)
     handleDeltaContent(choice, lastMessage, getContentType())
 
     // 触发钩子

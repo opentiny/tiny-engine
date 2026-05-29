@@ -38,36 +38,6 @@ const updateToolCallState = (
   }
 }
 
-const updateToolCallRenderContent = (
-  tool: Record<string, unknown>,
-  currentMessage: any,
-  { status, result }: { status?: string; result?: object | string } = {}
-) => {
-  const renderContent = currentMessage.renderContent || (currentMessage.renderContent = [])
-  const currentToolCallContent = renderContent.find((item: any) => item.type === 'tool' && item.toolCallId === tool.id)
-
-  if (currentToolCallContent) {
-    currentToolCallContent.status = status || 'running'
-    currentToolCallContent.content ||= {}
-    currentToolCallContent.content.params = tool.parsedArgs || tool.function?.arguments || {}
-    if (result) {
-      currentToolCallContent.content.result = result
-    }
-    return
-  }
-
-  renderContent.push({
-    type: 'tool',
-    name: tool.name || tool.function?.name,
-    status: status || 'running',
-    content: {
-      params: tool.parsedArgs || tool.function?.arguments || {},
-      ...(result ? { result } : {})
-    },
-    toolCallId: tool.id
-  })
-}
-
 /**
  * Chat 模式实现
  * 特点：
@@ -146,12 +116,11 @@ export default function useChatMode(): ModeHooks {
   }
 
   const onStreamTools = (tools: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {
-    tools.forEach((tool) => updateToolCallRenderContent(tool, currentMessage))
+    tools.forEach((tool) => updateToolCallState(tool, currentMessage))
   }
 
   const onBeforeCallTool = (tool: Record<string, unknown>, { currentMessage }: { currentMessage: any }) => {
     updateToolCallState(tool, currentMessage)
-    updateToolCallRenderContent(tool, currentMessage)
   }
 
   const onPostCallTool = (
@@ -161,7 +130,6 @@ export default function useChatMode(): ModeHooks {
     { currentMessage }: { currentMessage: any }
   ) => {
     updateToolCallState(tool, currentMessage, { status: toolCallStatus, result: toolCallResult })
-    updateToolCallRenderContent(tool, currentMessage, { status: toolCallStatus, result: toolCallResult })
   }
 
   const onPostCallTools = (_toolsResult: Record<string, unknown>[], _context: { currentMessage: any }) => {

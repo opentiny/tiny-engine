@@ -134,6 +134,7 @@ const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
 const inputMessage = defineModel<string>('input', { required: true })
 const messages = defineModel<ChatMessage[]>('messages', { required: true })
+const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 watch(
   () => props.allowFiles,
@@ -296,6 +297,7 @@ const handleSendMessage = async (content: string) => {
   }
   messages.value.push(userMessage)
   inputMessage.value = ''
+  senderRef.value?.clear()
   selectedAttachments.value = []
   emit('sendMessage')
 }
