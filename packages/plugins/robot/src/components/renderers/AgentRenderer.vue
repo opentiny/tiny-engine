@@ -58,12 +58,12 @@ export default {
       reasoning: {
         title: '深度思考中，请稍等片刻',
         icon: 'loading.webp',
-        content: '...'
+        content: () => resolvedContent.value?.slice(-30) || '...'
       },
       loading: {
         title: '页面生成中，请稍等片刻',
         icon: 'loading.webp',
-        content: '...'
+        content: () => resolvedContent.value?.slice(-30) || '...'
       },
       fix: {
         title: '页面优化中，请稍等片刻',

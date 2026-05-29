@@ -109,9 +109,15 @@ export default function useChatMode(): ModeHooks {
     messages: any[],
     extraData?: Record<string, unknown>
   ) => {
-    if (finishReason === 'aborted' || finishReason === 'error') {
+    if (finishReason === 'aborted') {
       removeLoading(messages)
-      messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(extraData?.error) })
+      return
+    }
+
+    if (finishReason === 'error') {
+      removeLoading(messages)
+      const errorContent = serializeError(extraData?.error) || '请求失败'
+      messages.at(-1)!.renderContent.push({ type: 'text', content: errorContent })
     }
   }
 

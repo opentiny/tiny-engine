@@ -22,6 +22,7 @@
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
+          :show-aborted="robotSettingState.chatMode !== ChatMode.Agent"
           :beforeSubmit="checkApiKey"
           :promptClickHandler="promptClickHandler"
           @fileSelected="handleFileSelected"

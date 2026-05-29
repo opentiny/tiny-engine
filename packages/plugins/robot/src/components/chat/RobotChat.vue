@@ -31,7 +31,7 @@
           class="robot-bubble-list"
         >
           <template #content-footer="{ messages }">
-            <div v-if="messages[0]?.aborted" class="aborted">已中止</div>
+            <div v-if="showAborted && messages[0]?.aborted" class="aborted">已中止</div>
           </template>
         </tr-bubble-list>
       </tr-bubble-provider>
@@ -115,6 +115,10 @@ const props = defineProps({
   allowFiles: {
     type: Boolean,
     default: false
+  },
+  showAborted: {
+    type: Boolean,
+    default: true
   },
   bubbleRenderers: {
     type: Object as PropType<Record<string, Component>>,

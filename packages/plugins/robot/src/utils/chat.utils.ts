@@ -17,6 +17,9 @@ export const formatMessages = (messages: LLMMessage[]) => {
 }
 
 export const serializeError = (err: unknown): string => {
+  if (err === undefined || err === null) {
+    return ''
+  }
   if (err instanceof Error) {
     return JSON.stringify({ name: err.name, message: err.message })
   }
