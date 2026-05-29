@@ -60,7 +60,7 @@ vi.mock('../../../src/composables/core/useConfig', () => ({
   })
 }))
 
-const baseSchema = () => ({
+const getBaseSchema = () => ({
   componentName: 'Page',
   props: {},
   state: {},
@@ -87,7 +87,7 @@ const addButtonPatch = () =>
 describe('pageUpdater', () => {
   beforeEach(async () => {
     vi.resetModules()
-    canvasState.pageSchema = baseSchema()
+    canvasState.pageSchema = getBaseSchema()
     canvasState.saved = true
     canvasState.imported = []
     canvasState.history = []
@@ -96,7 +96,7 @@ describe('pageUpdater', () => {
 
   it('applies streaming updates without importing the whole schema', async () => {
     const { updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     const result = await updatePageSchema(addButtonPatch(), initialSchema, false)
 
@@ -111,7 +111,7 @@ describe('pageUpdater', () => {
 
   it('imports and records history for final updates', async () => {
     const { updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     const result = await updatePageSchema(addButtonPatch(), initialSchema, true)
 
@@ -125,7 +125,7 @@ describe('pageUpdater', () => {
 
   it('stores the last successful streaming schema as a final fallback', async () => {
     const { getLastSuccessfulPageSchema, updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     await updatePageSchema(addButtonPatch(), initialSchema, false)
     const fallbackBeforeFinal = getLastSuccessfulPageSchema()
@@ -140,7 +140,7 @@ describe('pageUpdater', () => {
     const { getLastSuccessfulPageSchema, resetPageSchemaUpdateState, updatePageSchema } = await import(
       '../../../src/composables/core/pageUpdater'
     )
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     await updatePageSchema(addButtonPatch(), initialSchema, false)
     expect(getLastSuccessfulPageSchema()).toBeTruthy()
@@ -152,7 +152,7 @@ describe('pageUpdater', () => {
 
   it('keeps the final schema after an earlier streaming update has completed', async () => {
     const { updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     const streamingResult = await updatePageSchema(addButtonPatch(), initialSchema, false)
     const finalResult = await updatePageSchema(
@@ -178,7 +178,7 @@ describe('pageUpdater', () => {
 
   it('rejects schemas containing invalid children nodes before touching canvas', async () => {
     const { updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     const result = await updatePageSchema(
       JSON.stringify([
@@ -199,7 +199,7 @@ describe('pageUpdater', () => {
 
   it('normalizes invalid methods before updating canvas', async () => {
     const { updatePageSchema } = await import('../../../src/composables/core/pageUpdater')
-    const initialSchema = baseSchema()
+    const initialSchema = getBaseSchema()
 
     const result = await updatePageSchema(
       JSON.stringify([
