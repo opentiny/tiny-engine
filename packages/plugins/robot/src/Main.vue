@@ -19,6 +19,7 @@
           v-model:show="robotVisible"
           v-model:input="inputMessage"
           :status="mappedStatus"
+          :chat-mode="robotSettingState.chatMode"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"

@@ -38,6 +38,17 @@ const updateToolCallState = (
   }
 }
 
+const syncToolCallRenderContent = (currentMessage: any) => {
+  if (!currentMessage.tool_calls?.length) {
+    return
+  }
+
+  currentMessage.renderContent ||= []
+  if (!currentMessage.renderContent.some((item: any) => item.type === 'tool')) {
+    currentMessage.renderContent.push({ type: 'tool' })
+  }
+}
+
 /**
  * Chat 模式实现
  * 特点：
@@ -123,10 +134,12 @@ export default function useChatMode(): ModeHooks {
 
   const onStreamTools = (tools: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {
     tools.forEach((tool) => updateToolCallState(tool, currentMessage))
+    syncToolCallRenderContent(currentMessage)
   }
 
   const onBeforeCallTool = (tool: Record<string, unknown>, { currentMessage }: { currentMessage: any }) => {
     updateToolCallState(tool, currentMessage)
+    syncToolCallRenderContent(currentMessage)
   }
 
   const onPostCallTool = (
@@ -136,6 +149,7 @@ export default function useChatMode(): ModeHooks {
     { currentMessage }: { currentMessage: any }
   ) => {
     updateToolCallState(tool, currentMessage, { status: toolCallStatus, result: toolCallResult })
+    syncToolCallRenderContent(currentMessage)
   }
 
   const onPostCallTools = (_toolsResult: Record<string, unknown>[], _context: { currentMessage: any }) => {

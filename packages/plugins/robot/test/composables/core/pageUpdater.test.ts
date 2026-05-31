@@ -1,12 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-
-const canvasState = {
-  pageSchema: null as any,
-  saved: true,
-  imported: [] as any[],
-  history: [] as any[],
-  published: [] as any[]
-}
+import { canvasState, resetCanvasState } from '../../mocks/meta-register'
 
 vi.mock('@opentiny/tiny-engine-utils', () => ({
   utils: {
@@ -18,36 +11,6 @@ vi.mock('@opentiny/vue-icon', () => ({
   default: {
     IconWarning: {}
   }
-}))
-
-vi.mock('@opentiny/tiny-engine-meta-register', () => ({
-  useCanvas: () => ({
-    pageState: {
-      get pageSchema() {
-        return canvasState.pageSchema
-      },
-      set pageSchema(value) {
-        canvasState.pageSchema = value
-      }
-    },
-    importSchema: (schema: any) => {
-      canvasState.imported.push(JSON.parse(JSON.stringify(schema)))
-      canvasState.pageSchema = schema
-    },
-    setSaved: (saved: boolean) => {
-      canvasState.saved = saved
-    }
-  }),
-  useHistory: () => ({
-    addHistory: () => {
-      canvasState.history.push(JSON.parse(JSON.stringify(canvasState.pageSchema)))
-    }
-  }),
-  useMessage: () => ({
-    publish: (event: any) => {
-      canvasState.published.push(event)
-    }
-  })
 }))
 
 vi.mock('../../../src/composables/core/useConfig', () => ({
@@ -86,12 +49,10 @@ const addButtonPatch = () =>
 
 describe('pageUpdater', () => {
   beforeEach(async () => {
-    vi.resetModules()
+    resetCanvasState()
     canvasState.pageSchema = getBaseSchema()
-    canvasState.saved = true
-    canvasState.imported = []
-    canvasState.history = []
-    canvasState.published = []
+    const { resetPageSchemaUpdateState } = await import('../../../src/composables/core/pageUpdater')
+    resetPageSchemaUpdateState()
   })
 
   it('applies streaming updates without importing the whole schema', async () => {

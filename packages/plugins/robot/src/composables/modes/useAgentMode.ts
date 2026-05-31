@@ -47,6 +47,50 @@ const updateToolCallRenderContent = (tool: Record<string, unknown>, renderConten
   }
 }
 
+const normalizeFinishedAgentMessages = (messages: any[]) => {
+  messages.forEach((message) => {
+    if (message.role !== 'assistant' || message.loading || !Array.isArray(message.renderContent)) {
+      return
+    }
+
+    message.renderContent = message.renderContent.filter((item: any) => item.type !== 'agent-loading')
+    const agentContents = message.renderContent.filter((item: any) => item.type === 'agent-content')
+    const finalStatus = agentContents.findLast((item: any) =>
+      ['success', 'failed', 'fix'].includes(item.status)
+    )?.status
+
+    message.renderContent.forEach((item: any) => {
+      if (item.type === 'agent-content' && (!item.status || item.status === 'loading')) {
+        item.status = finalStatus || message.metadata?.agentStatus || 'failed'
+      }
+    })
+  })
+}
+
+const markLastAgentContentFailed = (messages: any[], content: unknown) => {
+  const lastMessage = messages.at(-1)
+  if (!lastMessage) {
+    return
+  }
+
+  lastMessage.loading = undefined
+  lastMessage.metadata = {
+    ...(lastMessage.metadata || {}),
+    chatMode: ChatMode.Agent,
+    agentStatus: 'failed'
+  }
+  lastMessage.renderContent ||= []
+  lastMessage.renderContent = lastMessage.renderContent.filter((item: any) => item.type !== 'agent-loading')
+
+  const lastAgentContent = lastMessage.renderContent.findLast((item: any) => item.type === 'agent-content')
+  const errorInfo = { content: content || '页面生成失败', status: 'failed' }
+  if (lastAgentContent) {
+    Object.assign(lastAgentContent, errorInfo)
+  } else {
+    lastMessage.renderContent.push({ type: 'agent-content', ...errorInfo })
+  }
+}
+
 /**
  * Agent 模式实现
  * 特点：
@@ -75,6 +119,8 @@ export default function useAgentMode(): ModeHooks {
     if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Agent) {
       apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Agent })
     }
+
+    normalizeFinishedAgentMessages(messages)
 
     // Agent 模式特殊处理：标记失败的 loading
     messages.at(-1)?.renderContent?.forEach((item: any) => {
@@ -148,12 +194,7 @@ export default function useAgentMode(): ModeHooks {
   ) => {
     if (finishReason === 'aborted' || finishReason === 'error') {
       removeLoading(messages)
-      const errorInfo = { content: extraData?.error || '请求失败', status: 'failed' }
-      if (messages.at(-1).renderContent.at(-1)) {
-        Object.assign(messages.at(-1).renderContent.at(-1), errorInfo)
-      } else {
-        messages.at(-1).renderContent = [{ type: getContentType(), ...errorInfo }]
-      }
+      markLastAgentContentFailed(messages, extraData?.error || content || '请求失败')
     }
   }
 
@@ -193,9 +234,7 @@ export default function useAgentMode(): ModeHooks {
       lastMessage.renderContent.at(-1)
 
     if (finishReason === 'aborted' || finishReason === 'error') {
-      if (lastRenderContent) {
-        lastRenderContent.status = 'failed'
-      }
+      markLastAgentContentFailed(messages, content || '页面生成失败')
       return
     }
 
@@ -235,6 +274,11 @@ export default function useAgentMode(): ModeHooks {
         if (lastRenderContent) {
           lastRenderContent.status = 'failed'
         }
+        lastMessage.metadata = {
+          ...(lastMessage.metadata || {}),
+          chatMode: ChatMode.Agent,
+          agentStatus: 'failed'
+        }
         if (error instanceof Error && error.message.includes('canceled')) {
           messageState.status = STATUS.ABORTED
         } else {
@@ -255,8 +299,18 @@ export default function useAgentMode(): ModeHooks {
         lastRenderContent.status = 'success'
         lastRenderContent.schema = renderedSchema
       }
+      lastMessage.metadata = {
+        ...(lastMessage.metadata || {}),
+        chatMode: ChatMode.Agent,
+        agentStatus: 'success'
+      }
     } else if (lastRenderContent) {
       lastRenderContent.status = 'failed'
+      lastMessage.metadata = {
+        ...(lastMessage.metadata || {}),
+        chatMode: ChatMode.Agent,
+        agentStatus: 'failed'
+      }
     }
 
     pageSchema = null

@@ -31,6 +31,8 @@ export interface ConversationMetadata {
   [key: string]: any
 }
 
+let currentConversationMetadata: ConversationMetadata = {}
+
 const createResponseProvider = (
   provider: Pick<OpenAICompatibleProvider, 'chatStream'>
 ): UseMessageOptions['responseProvider'] => {
@@ -102,6 +104,7 @@ const updateMessageMetadata = (currentMessage: ChatMessage, chunk: ChatCompletio
   currentMessage.loading = undefined
   currentMessage.renderContent ||= []
   currentMessage.metadata ||= {}
+  currentMessage.metadata.chatMode ||= currentConversationMetadata.chatMode
   currentMessage.metadata.createdAt ||= chunk.created
   currentMessage.metadata.updatedAt = Math.floor(Date.now() / 1000)
   currentMessage.metadata.id ||= chunk.id
@@ -191,6 +194,9 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
       ...(conversation.metadata || {}),
       ...metadata
     }
+    if (conversationId === activeConversationId.value) {
+      currentConversationMetadata = conversation.metadata
+    }
     conversation.updatedAt = Date.now()
     void saveConversation(conversation)
   }
@@ -251,12 +257,14 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
             ...metadata
           }
         }
+        currentConversationMetadata = conversation.metadata || {}
         void saveConversation(conversation)
         return currentId
       }
     }
 
     const conversation = createConversationKit({ title, metadata })
+    currentConversationMetadata = conversation.metadata || {}
     return conversation.id
   }
 
@@ -277,6 +285,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
     const result = await switchConversationKit(conversationId)
 
     if (result && onStart) {
+      currentConversationMetadata = conversation.metadata || {}
       onStart(conversationState, messageManager.messages.value, {
         createConversation,
         switchConversation,

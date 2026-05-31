@@ -16,9 +16,9 @@ export const resolveAgentRenderState = (props: any) => {
   const contentItem = Array.isArray(renderContent) ? renderContent[props.contentIndex || 0] || {} : {}
 
   return {
-    status: contentItem.status || props.status || 'loading',
-    content: contentItem.content ?? props.content,
-    contentType: contentItem.type || contentItem.contentType || props.contentType
+    status: props.status || contentItem.status || 'loading',
+    content: props.content || contentItem.content,
+    contentType: props.type || props.contentType || contentItem.type || contentItem.contentType
   }
 }
 
@@ -33,6 +33,9 @@ export default {
       default: ''
     },
     contentType: {
+      type: String
+    },
+    type: {
       type: String
     },
     message: {

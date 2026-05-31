@@ -93,35 +93,54 @@ const handleFinishRequest = async (
   messageState: MessageState
 ) => {
   const lastMessage = messages.at(-1)
-
-  delete abortControllerMap.main
-  await onRequestEnd(finishReason, lastMessage.content, messages) // 本次请求结束
-
-  // 部分模型返回格式不太标准，例如finishReason没有返回tool_calls而是stop，这里做下兼容
-  if (
-    ['tool_calls', 'stop'].includes(finishReason) &&
-    lastMessage.tool_calls?.length &&
-    !lastMessage.state?.toolsHandled
-  ) {
-    lastMessage!.tool_calls.forEach((toolCall) => {
-      if (toolCall.type !== 'function') {
-        // 修复，兼容部分场景返回格式不标准，流式中多次返回type字段
-        toolCall.type = 'function'
-      }
-    })
-    await handleToolCall(lastMessage.tool_calls, messages, contextMessages) // eslint-disable-line
+  if (!lastMessage) {
+    chatStatus.value = CHAT_STATUS.FINISHED
     return
   }
 
-  if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
-    messageState.status = STATUS.ABORTED
-  } else if (!lastMessage.tool_calls?.length || lastMessage.state?.toolsHandled) {
-    messageState.status = STATUS.FINISHED
+  try {
+    delete abortControllerMap.main
+    lastMessage.loading = undefined
+    await onRequestEnd(finishReason, lastMessage.content, messages) // 本次请求结束
+
+    // 部分模型返回格式不太标准，例如finishReason没有返回tool_calls而是stop，这里做下兼容
+    if (
+      ['tool_calls', 'stop', 'unknown'].includes(finishReason) &&
+      lastMessage.tool_calls?.length &&
+      !lastMessage.state?.toolsHandled
+    ) {
+      lastMessage!.tool_calls.forEach((toolCall) => {
+        if (toolCall.type !== 'function') {
+          // 修复，兼容部分场景返回格式不标准，流式中多次返回type字段
+          toolCall.type = 'function'
+        }
+      })
+      await handleToolCall(lastMessage.tool_calls, messages, contextMessages) // eslint-disable-line
+      return
+    }
+
+    if (finishReason === 'aborted' || messageState?.status === STATUS.ABORTED) {
+      messageState.status = STATUS.ABORTED
+      await onMessageProcessed('aborted', lastMessage.content ?? '', messages, {
+        abortControllerMap,
+        messageState
+      })
+    } else if (!lastMessage.tool_calls?.length || lastMessage.state?.toolsHandled) {
+      messageState.status = STATUS.FINISHED
+      await onMessageProcessed(finishReason, lastMessage.content ?? '', messages, {
+        abortControllerMap,
+        messageState
+      })
+    }
+  } finally {
+    if (GeneratingStatus.includes(messageState.status)) {
+      messageState.status = STATUS.FINISHED
+    }
+    const currentMessage = messages.at(-1)
+    if (currentMessage) {
+      currentMessage.loading = undefined
+    }
     chatStatus.value = CHAT_STATUS.FINISHED
-    await onMessageProcessed(finishReason, lastMessage.content ?? '', messages, {
-      abortControllerMap,
-      messageState
-    })
   }
 }
 
@@ -205,8 +224,17 @@ const abortRequest = () => {
     delete abortControllerMap[key]
   }
   chatStatus.value = CHAT_STATUS.FINISHED
+  messageManager.messageState.status = STATUS.ABORTED
 
-  onRequestEnd('aborted', messageManager.messages.value.at(-1)?.content as string, messageManager.messages.value)
+  void onRequestEnd(
+    'aborted',
+    messageManager.messages.value.at(-1)?.content as string,
+    messageManager.messages.value
+  ).finally(() => {
+    if (conversationState.currentId) {
+      conversationMethods.saveMessages(conversationState.currentId)
+    }
+  })
 }
 
 const interruptActiveRequest = () => {
@@ -215,6 +243,35 @@ const interruptActiveRequest = () => {
   }
 
   abortRequest()
+}
+
+const restoreConversationMessagesState = (conversationId: string, messages: ChatMessage[]) => {
+  try {
+    const conversations = JSON.parse(localStorage.getItem('tiny-robot-ai-conversations') || '[]')
+    const conversation = conversations.find((item: any) => item.id === conversationId)
+    if (!conversation?.messages?.length) {
+      return
+    }
+
+    messages.forEach((message: any, index) => {
+      const storedMessage = conversation.messages[index]
+      if (!storedMessage) {
+        return
+      }
+
+      if (Array.isArray(storedMessage.renderContent) && storedMessage.renderContent.length) {
+        message.renderContent = storedMessage.renderContent
+      }
+      if (storedMessage.metadata?.agentStatus) {
+        message.metadata = {
+          ...(message.metadata || {}),
+          agentStatus: storedMessage.metadata.agentStatus
+        }
+      }
+    })
+  } catch (error) {
+    // 忽略历史消息状态恢复失败，继续使用 tiny-robot-kit 加载出的消息。
+  }
 }
 
 // 包装 conversation 方法，添加业务特定逻辑
@@ -237,6 +294,18 @@ const switchConversation = (conversationId: string) => {
   interruptActiveRequest()
   onConversationEnd(conversationState.currentId!)
   return switchConversationBase(conversationId, (state, messages, methods) => {
+    const conversation = state.conversations.find((item: any) => item.id === state.currentId)
+    if (conversation?.metadata?.chatMode) {
+      updateChatModeState(conversation.metadata.chatMode)
+      updateConfig({ apiUrl: getApiUrl() })
+      restoreConversationMessagesState(state.currentId, messages)
+      messages.forEach((message: any) => {
+        message.metadata = {
+          ...(message.metadata || {}),
+          chatMode: conversation.metadata.chatMode
+        }
+      })
+    }
     onConversationStart(state, messages, methods)
   })
 }

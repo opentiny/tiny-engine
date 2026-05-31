@@ -92,6 +92,7 @@ import {
   TrAttachments,
   UploadButton,
   VoiceButton,
+  BubbleRenderers,
   BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
@@ -112,6 +113,7 @@ const props = defineProps({
     type: Function
   },
   status: { type: String },
+  chatMode: { type: String },
   allowFiles: {
     type: Boolean,
     default: false
@@ -162,6 +164,11 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
   })),
   {
     priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any, content: any) => content?.type === 'tool' && message.tool_calls?.length,
+    renderer: BubbleRenderers.Tools
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
     find: (message: any, content: any) =>
       !message.loading && message.content && (!content?.type || ['markdown', 'text'].includes(content.type)),
     renderer: MarkdownRenderer
@@ -172,6 +179,42 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
     renderer: ImgRenderer
   }
 ])
+
+const isAgentMessage = (message: any) => {
+  const hasAgentContent = message.renderContent?.some((item: any) => {
+    return item.type === 'agent-content' || item.type === 'agent-loading'
+  })
+  return message.metadata?.chatMode === 'agent' || hasAgentContent
+}
+
+const resolveAgentRenderContent = (message: any) => {
+  if (!isAgentMessage(message) || message.role !== 'assistant') {
+    return message.renderContent
+  }
+
+  const isLastMessage = messages.value.at(-1) === message
+  const isGenerating = Boolean(message.loading) || (isLastMessage && GeneratingStatus.includes(props.status as any))
+  const renderContent = isGenerating
+    ? message.renderContent
+    : message.renderContent.filter((item: any) => item.type !== 'agent-loading')
+  const agentContents = renderContent.filter((item: any) => item.type === 'agent-content')
+  const finalStatus = agentContents.findLast((item: any) => ['success', 'failed', 'fix'].includes(item.status))?.status
+
+  return renderContent.map((item: any) => {
+    if (item.type !== 'agent-content' || isGenerating) {
+      return item
+    }
+
+    if (!item.status || item.status === 'loading') {
+      return {
+        ...item,
+        status: finalStatus || message.metadata?.agentStatus || 'failed'
+      }
+    }
+
+    return item
+  })
+}
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -230,7 +273,20 @@ const welcomeIcon = getSvgIcon('AI', { fontSize: '44px' })
 
 const resolveMessageContent = (message: any) => {
   if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
-    return message.renderContent
+    return resolveAgentRenderContent(message)
+  }
+
+  if (isAgentMessage(message) && message.role === 'assistant' && message.content) {
+    const agentStatus = ['success', 'failed', 'fix'].includes(message.metadata?.agentStatus)
+      ? message.metadata.agentStatus
+      : 'failed'
+    return [
+      {
+        type: 'agent-content',
+        status: agentStatus,
+        content: message.content
+      }
+    ]
   }
 
   return message.content
