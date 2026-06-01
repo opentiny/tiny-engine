@@ -40,6 +40,18 @@ jobs:
         env:
           ENV_BACKEND_URL: ${{ github.event.inputs.backend_url || 'https://agent.bytedev.site/' }}
         run: |
+          if [[ "$ENV_BACKEND_URL" == *$'\n'* || "$ENV_BACKEND_URL" == *$'\r'* ]]; then
+            echo "::error::backend_url must be a single-line value"
+            exit 1
+          fi
+
+          if [[ ! "$ENV_BACKEND_URL" =~ ^https?://[^[:space:]/?#:]+(:[0-9]+)?(/[^[:space:]?#]*)?$ ]]; then
+            echo "::error::backend_url must be an http(s) base URL without query or hash"
+            exit 1
+          fi
+
+          ENV_BACKEND_URL="${ENV_BACKEND_URL%/}/"
+
           cat <<EOF >> designer-demo/env/.env.alpha
           # ---- appended by CI (gh-pages) ----
           VITE_ORIGIN=$ENV_BACKEND_URL
