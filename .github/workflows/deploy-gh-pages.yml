@@ -37,13 +37,14 @@ jobs:
         run: pnpm install
 
       - name: add environment variable
+        env:
+          ENV_BACKEND_URL: ${{ github.event.inputs.backend_url || 'https://agent.bytedev.site/' }}
         run: |
-          VITE_ORIGIN_URL="${{ github.event.inputs.backend_url || 'https://agent.bytedev.site/' }}"
           cat <<EOF >> designer-demo/env/.env.alpha
           # ---- appended by CI (gh-pages) ----
-          VITE_ORIGIN=$VITE_ORIGIN_URL
+          VITE_ORIGIN=$ENV_BACKEND_URL
           EOF
-          echo "VITE_ORIGIN_URL=$VITE_ORIGIN_URL"
+          echo "VITE_ORIGIN_URL=$ENV_BACKEND_URL"
       - name: Run Build
         run: |
           set -eo pipefail
