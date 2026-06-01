@@ -2156,6 +2156,27 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyAlert",
+        "package": "@opentiny/vue",
+        "exportName": "TinyAlert",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyLink",
+        "package": "@opentiny/vue",
+        "exportName": "TinyLink",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyDivider",
+        "package": "@opentiny/vue",
+        "exportName": "TinyDivider",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsFunnel",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsFunnel",
