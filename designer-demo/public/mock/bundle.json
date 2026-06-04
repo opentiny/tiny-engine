@@ -9,7 +9,7 @@
             "zh_CN": "锚点"
           },
           "component": "TinyAnchor",
-          "icon": "hr",
+          "icon": "anchor",
           "description": "用于页内导航。",
           "docUrl": "",
           "screenshot": "",
