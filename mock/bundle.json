@@ -6,6 +6,847 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "警告"
+          },
+          "component": "TinyAlert",
+          "icon": "alert",
+          "description": "Alert 警告，非浮层的静态展现形式，始终展现，不会自动消失，用户可以点击关闭。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyAlert",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "警告",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "提示内容"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "description",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "警告的提示内容",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "关闭按钮文本"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "close-text",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "关闭按钮自定义文本",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "center",
+                    "label": {
+                      "text": {
+                        "zh_CN": "居中"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "文字是否居中"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "closable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "可以关闭"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "警告是否可以关闭"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-icon",
+                    "label": {
+                      "text": {
+                        "zh_CN": "图标"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示图标"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "尺寸"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "normal",
+                            "value": "normal"
+                          },
+                          {
+                            "label": "large",
+                            "value": "large"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "size",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "警告的尺寸大小",
+                    "defaultValue": "normal",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "success",
+                            "value": "success"
+                          },
+                          {
+                            "label": "warning",
+                            "value": "warning"
+                          },
+                          {
+                            "label": "info",
+                            "value": "info"
+                          },
+                          {
+                            "label": "error",
+                            "value": "error"
+                          },
+                          {
+                            "label": "simple",
+                            "value": "simple"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "警告的类型",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onClose": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "点击关闭按钮时触发"
+                },
+                "description": {
+                  "zh_CN": "点击关闭按钮时触发的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "event",
+                      "type": "Event",
+                      "description": {
+                        "zh_CN": "事件对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "close": {
+                "label": {
+                  "zh_CN": "关闭内容"
+                },
+                "description": {
+                  "zh_CN": "自定义关闭内容，当 closable 属性为 false 时有效"
+                }
+              },
+              "default": {
+                "label": {
+                  "zh_CN": "默认插槽"
+                },
+                "description": {
+                  "zh_CN": "组件默认插槽，当 size 设置为 large 时有效，显示在 description下方"
+                }
+              },
+              "description": {
+                "label": {
+                  "zh_CN": "内容插槽"
+                },
+                "description": {
+                  "zh_CN": "提示内容插槽"
+                }
+              },
+              "title": {
+                "label": {
+                  "zh_CN": "标题"
+                },
+                "description": {
+                  "zh_CN": "标题的内容，当 size 设置为 large 后有效"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "链接"
+          },
+          "component": "TinyLink",
+          "icon": "link",
+          "description": "文字超链接",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyLink",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "链接",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "href属性"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "href",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "原生href属性",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示内容"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "value",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "显示内容",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "disabled",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "underline",
+                    "label": {
+                      "text": {
+                        "zh_CN": "下划线"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否下划线"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "打开方式"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "_self",
+                            "value": "_self"
+                          },
+                          {
+                            "label": "_blank",
+                            "value": "_blank"
+                          },
+                          {
+                            "label": "_parent",
+                            "value": "_parent"
+                          },
+                          {
+                            "label": "_top",
+                            "value": "_top"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "target",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "链接打开方式",
+                    "defaultValue": "_self",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "链接类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "primary",
+                            "value": "primary"
+                          },
+                          {
+                            "label": "success",
+                            "value": "success"
+                          },
+                          {
+                            "label": "warning",
+                            "value": "warning"
+                          },
+                          {
+                            "label": "danger",
+                            "value": "danger"
+                          },
+                          {
+                            "label": "info",
+                            "value": "info"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "文本链接类型",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onClick": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "点击链接时触发"
+                },
+                "description": {
+                  "zh_CN": "点击链接时触发的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "event",
+                      "type": "Event",
+                      "description": {
+                        "zh_CN": "事件对象"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认内容"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "icon": {
+                "label": {
+                  "zh_CN": "图标"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "分割线"
+          },
+          "component": "TinyDivider",
+          "icon": "hr",
+          "description": "Divider 分割线组件，用于对不同内容的分隔。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyDivider",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "分割线",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分隔线的颜色",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文案背景色"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "content-background-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分割线文案的背景颜色",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文案颜色"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "content-color",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分隔线文案的颜色",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "样式"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "solid",
+                            "value": "solid"
+                          },
+                          {
+                            "label": "dashed",
+                            "value": "dashed"
+                          },
+                          {
+                            "label": "dotted",
+                            "value": "dotted"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "border-style",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分隔线的样式",
+                    "defaultValue": "solid",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文案位置"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "left",
+                            "value": "left"
+                          },
+                          {
+                            "label": "center",
+                            "value": "center"
+                          },
+                          {
+                            "label": "right",
+                            "value": "right"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "content-position",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分隔线文案的位置",
+                    "defaultValue": "center",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "方向"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "horizontal",
+                            "value": "horizontal"
+                          },
+                          {
+                            "label": "vertical",
+                            "value": "vertical"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "direction",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置分隔线的方向",
+                    "defaultValue": "horizontal",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {},
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "动作菜单"
           },
           "component": "TinyActionMenu",
@@ -26105,6 +26946,32 @@
                   "placeholder": "输入关键词"
                 }
               }
+            },
+            {
+              "name": {
+                "zh_CN": "链接(组件)"
+              },
+              "icon": "link",
+              "screenshot": "",
+              "snippetName": "TinyLink",
+              "schema": {
+                "componentName": "TinyLink",
+                "props": {
+                  "value": "默认链接"
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "分割线"
+              },
+              "icon": "hr",
+              "screenshot": "",
+              "snippetName": "TinyDivider",
+              "schema": {
+                "componentName": "TinyDivider",
+                "props": {}
+              }
             }
           ]
         },
@@ -27099,6 +27966,21 @@
                 "props": {
                   "value": 36256.22,
                   "precision": 2
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "警告"
+              },
+              "icon": "alert",
+              "screenshot": "",
+              "snippetName": "TinyAlert",
+              "schema": {
+                "componentName": "TinyAlert",
+                "props": {
+                  "description": "这是一个警告",
+                  "type": "warning"
                 }
               }
             }
