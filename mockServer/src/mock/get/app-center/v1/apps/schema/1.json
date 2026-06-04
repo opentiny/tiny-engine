@@ -2177,6 +2177,13 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyAnchor",
+        "package": "@opentiny/vue",
+        "exportName": "TinyAnchor",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsFunnel",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsFunnel",
