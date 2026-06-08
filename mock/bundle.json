@@ -6,6 +6,221 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "锚点"
+          },
+          "component": "TinyAnchor",
+          "icon": "anchor",
+          "description": "用于页内导航。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyAnchor",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "锚点",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "容器id"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "container-id",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "用于单页面 hash 路由模式时指定滚动容器的 id 值，id 为空时则滚动容器默认为 HTML 文档的根节点 body 元素",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "元素类名"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "mark-class",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "自定义滚动的目标元素类名",
+                    "defaultValue": "",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "offset-top",
+                    "label": {
+                      "text": {
+                        "zh_CN": "顶部偏移量"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "锚点距离顶部的偏移量，用于调整滚动定位的位置"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "is-affix",
+                    "label": {
+                      "text": {
+                        "zh_CN": "固定模式"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "line",
+                            "value": "line"
+                          },
+                          {
+                            "label": "dot",
+                            "value": "dot"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "锚点类型",
+                    "defaultValue": "line",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "links",
+                    "label": {
+                      "text": {
+                        "zh_CN": "选项数据"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "导航数据配置项，可通过 children 嵌套"
+                    },
+                    "labelPosition": "top"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {},
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "警告"
           },
           "component": "TinyAlert",
@@ -850,7 +1065,7 @@
             "zh_CN": "动作菜单"
           },
           "component": "TinyActionMenu",
-          "icon": "dropdown",
+          "icon": "action-menu",
           "description": "动作菜单",
           "docUrl": "",
           "screenshot": "",
@@ -28188,7 +28403,7 @@
               "name": {
                 "zh_CN": "动作菜单"
               },
-              "icon": "dropdown",
+              "icon": "action-menu",
               "screenshot": "",
               "snippetName": "TinyActionMenu",
               "schema": {
@@ -28221,6 +28436,47 @@
                       ]
                     }
                   ]
+                }
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "锚点"
+              },
+              "icon": "anchor",
+              "screenshot": "",
+              "snippetName": "TinyAnchor",
+              "schema": {
+                "componentName": "TinyAnchor",
+                "props": {
+                  "links": [
+                    {
+                      "key": "basic-usage",
+                      "link": "#basic-usage",
+                      "title": "基本用法"
+                    },
+                    {
+                      "key": "is-affix",
+                      "link": "#is-affix",
+                      "title": "固定模式"
+                    },
+                    {
+                      "key": "set-container",
+                      "link": "#set-container",
+                      "title": "滚动容器"
+                    },
+                    {
+                      "key": "offset-top",
+                      "link": "#offset-top",
+                      "title": "顶部偏移量"
+                    },
+                    {
+                      "key": "on-change",
+                      "link": "#change",
+                      "title": "change 事件"
+                    }
+                  ],
+                  "type": "dot"
                 }
               }
             }
