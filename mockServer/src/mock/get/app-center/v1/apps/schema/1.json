@@ -2184,6 +2184,27 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyDrawer",
+        "package": "@opentiny/vue",
+        "exportName": "TinyDrawer",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyContainer",
+        "package": "@opentiny/vue",
+        "exportName": "TinyContainer",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyFileUpload",
+        "package": "@opentiny/vue",
+        "exportName": "TinyFileUpload",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsFunnel",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsFunnel",
