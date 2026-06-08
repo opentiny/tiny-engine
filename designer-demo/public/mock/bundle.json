@@ -280,7 +280,7 @@
                       "component": "InputConfigurator"
                     },
                     "disabled": false,
-                    "property": "width",
+                    "property": "height",
                     "readOnly": false,
                     "required": false,
                     "description": "设置抽屉的高度",
@@ -621,7 +621,7 @@
             "loop": true,
             "condition": true,
             "styles": true,
-            "isContainer": false,
+            "isContainer": true,
             "isModal": false,
             "nestingRule": {
               "childWhitelist": "",
