@@ -28708,7 +28708,8 @@
               "schema": {
                 "componentName": "TinyContainer",
                 "props": {
-                  "pattern": "default"
+                  "pattern": "default",
+                  "style": "position: relative; min-height: 240px; display: block;"
                 },
                 "children": [
                   {
@@ -28716,7 +28717,14 @@
                     "props": {
                       "style": "background: #ffebd1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
                     },
-                    "children": "Main内容"
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "Main内容"
+                        }
+                      }
+                    ]
                   },
                   {
                     "componentName": "Template",
@@ -28729,7 +28737,14 @@
                         "props": {
                           "style": "background: #deecff; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
                         },
-                        "children": "header内容"
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "header内容"
+                            }
+                          }
+                        ]
                       }
                     ]
                   },
@@ -28744,7 +28759,14 @@
                         "props": {
                           "style": "background: #fce3e1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
                         },
-                        "children": "aside内容"
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "aside内容"
+                            }
+                          }
+                        ]
                       }
                     ]
                   },
@@ -28759,7 +28781,14 @@
                         "props": {
                           "style": "background: #e6f2d5; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
                         },
-                        "children": "footer内容"
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "footer内容"
+                            }
+                          }
+                        ]
                       }
                     ]
                   }
