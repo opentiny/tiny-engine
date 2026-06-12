@@ -6,6 +6,1708 @@
         {
           "version": "3.22.0",
           "name": {
+            "zh_CN": "抽屉"
+          },
+          "component": "TinyDrawer",
+          "icon": "drawer",
+          "description": "从页面侧边弹出的内容容器。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyDrawer",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "抽屉",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "title",
+                    "label": {
+                      "text": {
+                        "zh_CN": "标题"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "抽屉标题"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "dragable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "拖拽"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否开启抽屉的宽度拖拽功能"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "mask",
+                    "label": {
+                      "text": {
+                        "zh_CN": "遮罩"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示遮罩层"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "mask-closable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "单击遮罩层关闭"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "默认情况下，弹窗打开后，可以单击遮罩层关闭弹窗，设置 mask-closable 为 false 后将禁用该功能"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "方向"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "left",
+                            "value": "left"
+                          },
+                          {
+                            "label": "right",
+                            "value": "right"
+                          },
+                          {
+                            "label": "top",
+                            "value": "top"
+                          },
+                          {
+                            "label": "bottom",
+                            "value": "bottom"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "placement",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置抽屉的方向",
+                    "defaultValue": "right",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "show-close",
+                    "label": {
+                      "text": {
+                        "zh_CN": "关闭图标"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示关闭图标"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-footer",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示底部"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示底部"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-header",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显示头部"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示头部"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "cols": 12,
+                    "type": "boolean",
+                    "label": {
+                      "text": {
+                        "zh_CN": "显隐状态"
+                      }
+                    },
+                    "widget": {
+                      "props": {},
+                      "component": "CheckBoxConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "visible",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "控制抽屉的显示与关闭",
+                    "defaultValue": false,
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "宽度"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "width",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置抽屉的宽度",
+                    "defaultValue": "500px",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "高度"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "placeholder": "请输入..."
+                      },
+                      "component": "InputConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "height",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "设置抽屉的高度",
+                    "defaultValue": "100vh",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "z-index",
+                    "label": {
+                      "text": {
+                        "zh_CN": "堆叠顺序"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "自定义堆叠顺序（对于某些特殊场景，比如被遮挡时可能会用到）"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "tips-props",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自定义数据"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "可自定义标题帮助提示信息"
+                    },
+                    "labelPosition": "top"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onClose": {
+                "label": {
+                  "zh_CN": "关闭抽屉时触发"
+                },
+                "description": {
+                  "zh_CN": "关闭抽屉事件，参数 force 指定是否强制关闭"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onConfirm": {
+                "label": {
+                  "zh_CN": "确认事件"
+                },
+                "description": {
+                  "zh_CN": "确认事件，设置 show-footer 为 true 时有效"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              },
+              "onShow": {
+                "label": {
+                  "zh_CN": "抽屉显示事件"
+                },
+                "description": {
+                  "zh_CN": "抽屉显示事件"
+                },
+                "type": "event",
+                "functionInfo": {
+                  "params": [],
+                  "returns": {}
+                },
+                "defaultValue": ""
+              }
+            },
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "默认插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "footer": {
+                "label": {
+                  "zh_CN": "底部插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "header": {
+                "label": {
+                  "zh_CN": "头部插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "header-right": {
+                "label": {
+                  "zh_CN": "头部右侧插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": true,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "容器布局"
+          },
+          "component": "TinyContainer",
+          "icon": "container",
+          "description": "内置 5 种常见布局版型，方便快速搭建页面。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyContainer",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "容器布局",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "aside-width",
+                    "label": {
+                      "text": {
+                        "zh_CN": "左侧宽度"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "footer-height",
+                    "label": {
+                      "text": {
+                        "zh_CN": "底部高度"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "header-height",
+                    "label": {
+                      "text": {
+                        "zh_CN": "头部高度"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "版型类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "默认",
+                            "value": "default"
+                          },
+                          {
+                            "label": "简约",
+                            "value": "simple"
+                          },
+                          {
+                            "label": "传奇",
+                            "value": "legend"
+                          },
+                          {
+                            "label": "经典",
+                            "value": "classic"
+                          },
+                          {
+                            "label": "时尚",
+                            "value": "fashion"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "pattern",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "",
+                    "defaultValue": "default",
+                    "labelPosition": "left"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {},
+            "slots": {
+              "default": {
+                "label": {
+                  "zh_CN": "主要内容插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "footer": {
+                "label": {
+                  "zh_CN": "底部内容插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "header": {
+                "label": {
+                  "zh_CN": "头部内容插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              },
+              "aside": {
+                "label": {
+                  "zh_CN": "侧边内容插槽"
+                },
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": true,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
+            "zh_CN": "文件上传"
+          },
+          "component": "TinyFileUpload",
+          "icon": "file-upload",
+          "description": "可通过点击、拖拽或粘贴实现文件上传。",
+          "docUrl": "",
+          "screenshot": "",
+          "tags": "",
+          "keywords": "",
+          "devMode": "proCode",
+          "npm": {
+            "package": "@opentiny/vue",
+            "exportName": "TinyFileUpload",
+            "destructuring": true
+          },
+          "group": "component",
+          "category": "文件上传",
+          "priority": 2,
+          "schema": {
+            "properties": [
+              {
+                "name": "0",
+                "label": {
+                  "zh_CN": "基础属性"
+                },
+                "content": [
+                  {
+                    "property": "accept",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文件类型"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "限制文件类型（thumbnail-mode 模式下此参数无效）"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "action",
+                    "label": {
+                      "text": {
+                        "zh_CN": "地址"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "上传的地址，必填参数"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "auto-upload",
+                    "label": {
+                      "text": {
+                        "zh_CN": "立即上传"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否在选取文件后立即进行上传"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "before-add-file",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文件选择之前的钩子"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "文件选择之前的钩子，若返回 false 或者返回 Promise 且被 reject，则停止添加文件。如果不用以上 2 种方式，也可以通过执行参数中的回调函数继续进行上传"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "before-remove",
+                    "label": {
+                      "text": {
+                        "zh_CN": "删除文件前的钩子"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "删除文件前的钩子，参数为上传的文件和文件列表，若返回 false 或者返回 Promise 且被 reject，则停止删除"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "before-upload",
+                    "label": {
+                      "text": {
+                        "zh_CN": "上传文件之前的钩子"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "上传文件之前的钩子，参数为上传的文件，若返回 false 或者返回 Promise 且被 reject，则停止上传"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "data",
+                    "label": {
+                      "text": {
+                        "zh_CN": "额外参数"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "上传时附带的额外参数，参数自定义"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "disabled",
+                    "label": {
+                      "text": {
+                        "zh_CN": "禁用"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否禁用"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "drag",
+                    "label": {
+                      "text": {
+                        "zh_CN": "拖拽上传"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否启用拖拽上传"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "encrypt-config",
+                    "label": {
+                      "text": {
+                        "zh_CN": "水印和加密弹窗"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置水印和加密弹窗"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "file-list",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文件列表"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "上传的文件列表"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "file-size",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文件大小"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "限制文件大小，单位为 KB；当为 Number 类型时，小于该值停止上传；为数组时[min,max] 设置上传范围"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "headers",
+                    "label": {
+                      "text": {
+                        "zh_CN": "请求头部"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置上传的请求头部;通过设置 headers 为头部请求信息"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "http-request",
+                    "label": {
+                      "text": {
+                        "zh_CN": "上传行为"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "覆盖默认的上传行为，可以自定义上传的实现; 由于 TinyVue 官网为 Mock 上传不能执行上传"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "is-hidden",
+                    "label": {
+                      "text": {
+                        "zh_CN": "隐藏按钮"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "达到最大上传个数时，是否隐藏上传按钮，默认不隐藏"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "limit",
+                    "label": {
+                      "text": {
+                        "zh_CN": "最大上传个数"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "最大允许上传个数"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "cols": 12,
+                    "type": "string",
+                    "label": {
+                      "text": {
+                        "zh_CN": "类型"
+                      }
+                    },
+                    "widget": {
+                      "props": {
+                        "options": [
+                          {
+                            "label": "text",
+                            "value": "text"
+                          },
+                          {
+                            "label": "picture",
+                            "value": "picture"
+                          },
+                          {
+                            "label": "picture-card",
+                            "value": "picture-card"
+                          },
+                          {
+                            "label": "thumb",
+                            "value": "thumb"
+                          },
+                          {
+                            "label": "saas",
+                            "value": "saas"
+                          }
+                        ]
+                      },
+                      "component": "SelectConfigurator"
+                    },
+                    "disabled": false,
+                    "property": "list-type",
+                    "readOnly": false,
+                    "required": false,
+                    "description": "文件列表的类型",
+                    "defaultValue": "text",
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "max-name-length",
+                    "label": {
+                      "text": {
+                        "zh_CN": "文件名最大长度"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "NumberConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "列表项的文件名最大字符数，默认超出20个字符隐藏"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "merge-service",
+                    "label": {
+                      "text": {
+                        "zh_CN": "合并服务上传"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "配置 merge-service 为 true 且开启多文件上传走默认服务会将多个上传服务合并为一个服务上传"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "multiple",
+                    "label": {
+                      "text": {
+                        "zh_CN": "多选"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否支持多选文件"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "name",
+                    "label": {
+                      "text": {
+                        "zh_CN": "字段名"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "InputConfigurator",
+                      "props": {}
+                    },
+                    "description": {
+                      "zh_CN": "上传的文件字段名"
+                    },
+                    "labelPosition": "left"
+                  },
+                  {
+                    "property": "open-download-file",
+                    "label": {
+                      "text": {
+                        "zh_CN": "下载文件"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否开启点击下载文件，默认不开启"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "paste-upload",
+                    "label": {
+                      "text": {
+                        "zh_CN": "粘贴键"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否启用粘贴键快捷上传功能"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "prompt-tip",
+                    "label": {
+                      "text": {
+                        "zh_CN": "tip 类型"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "设置提示是否为 tip 类型，悬浮图标时显示 tip 提示"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "re-uploadable",
+                    "label": {
+                      "text": {
+                        "zh_CN": "重新上传"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否启用重新上传功能"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "show-file-list",
+                    "label": {
+                      "text": {
+                        "zh_CN": "已上传列表"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "是否显示已上传文件列表"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": true,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "with-credentials",
+                    "label": {
+                      "text": {
+                        "zh_CN": "凭证信息"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "支持发送 cookie 凭证信息"
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "labelPosition": "left",
+                    "type": "boolean",
+                    "defaultValue": false,
+                    "widget": {
+                      "component": "CheckBoxConfigurator",
+                      "props": {}
+                    }
+                  },
+                  {
+                    "property": "re-upload-tip",
+                    "label": {
+                      "text": {
+                        "zh_CN": "自定义重新上传提示"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "自定义重新上传的左侧提示文字，需要与 re-uploadable 搭配使用"
+                    },
+                    "labelPosition": "top"
+                  },
+                  {
+                    "property": "thumb-option",
+                    "label": {
+                      "text": {
+                        "zh_CN": "thumb配置"
+                      }
+                    },
+                    "required": true,
+                    "readOnly": false,
+                    "disabled": false,
+                    "cols": 12,
+                    "widget": {
+                      "component": "CodeConfigurator",
+                      "props": {
+                        "language": "json"
+                      }
+                    },
+                    "description": {
+                      "zh_CN": "文件列表的显示类型为 thumb 时的相关配置"
+                    },
+                    "labelPosition": "top"
+                  }
+                ],
+                "description": {
+                  "zh_CN": ""
+                }
+              }
+            ],
+            "events": {
+              "onChange": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件状态改变时触发"
+                },
+                "description": {
+                  "zh_CN": "文件状态改变时触发的事件，添加文件、上传成功和上传失败时都会被触发"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "fileList",
+                      "type": "IFile[]",
+                      "description": {
+                        "zh_CN": "文件列表"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onDropError": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "拖拽文件失败时触发"
+                },
+                "description": {
+                  "zh_CN": "拖拽文件失败时触发的事件，开启拖拽时有效； file 为上传失败文件信息"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onError": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件上传失败时触发"
+                },
+                "description": {
+                  "zh_CN": "文件上传失败时触发的事件； message 为错误信息事件对象，file 为当前上传失败文件信息，fileList 为上传成功 file 数组"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "message",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "错误信息事件对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "fileList",
+                      "type": "IFile[]",
+                      "description": {
+                        "zh_CN": "文件列表"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onExceed": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件超出个数限制时触发"
+                },
+                "description": {
+                  "zh_CN": "文件超出个数限制时触发的事件； files 为上传的文件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "fileList",
+                      "type": "IFile[]",
+                      "description": {
+                        "zh_CN": "文件列表"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onHashProgress": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件上传生成 hash 值时触发"
+                },
+                "description": {
+                  "zh_CN": "文件上传生成 hash 值触发的事件； percentage 为生成的进度值"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "percentage",
+                      "type": "number",
+                      "description": {
+                        "zh_CN": "进度值"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onPreview": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "点击文件列表中已上传的文件时触发"
+                },
+                "description": {
+                  "zh_CN": "点击文件列表中已上传的文件时触发的事件"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onProgress": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件上传时触发"
+                },
+                "description": {
+                  "zh_CN": "文件上传时触发的事件； message 为进度条事件对象"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "message",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "进度条事件对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onRemove": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "从文件列表移除文件时触发"
+                },
+                "description": {
+                  "zh_CN": "从文件列表移除文件时触发的事件； file 为当前移除的文件信息"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              },
+              "onSuccess": {
+                "type": "event",
+                "label": {
+                  "zh_CN": "文件上传成功时触发"
+                },
+                "description": {
+                  "zh_CN": "文件上传成功时触发的事件； res 为上传成功后的响应信息事件对象，file 为当前上传的文件，fileList 为所有上传文件数组"
+                },
+                "defaultValue": "",
+                "functionInfo": {
+                  "params": [
+                    {
+                      "name": "res",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "上传成功后的响应信息事件对象"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "file",
+                      "type": "Object",
+                      "description": {
+                        "zh_CN": "文件数据"
+                      },
+                      "defaultValue": ""
+                    },
+                    {
+                      "name": "fileList",
+                      "type": "IFile[]",
+                      "description": {
+                        "zh_CN": "文件列表"
+                      },
+                      "defaultValue": ""
+                    }
+                  ],
+                  "returns": {
+                    "type": "",
+                    "description": {
+                      "zh_CN": ""
+                    },
+                    "defaultValue": ""
+                  }
+                }
+              }
+            },
+            "slots": {
+              "file": {
+                "label": {
+                  "zh_CN": "文件内容"
+                },
+                "description": {
+                  "zh_CN": "定义文件显示内容"
+                }
+              },
+              "tip": {
+                "label": {
+                  "zh_CN": "提示"
+                },
+                "description": {
+                  "zh_CN": "提示说明文字"
+                }
+              },
+              "trigger": {
+                "label": {
+                  "zh_CN": "选择框内容"
+                },
+                "description": {
+                  "zh_CN": "触发文件选择框的内容"
+                }
+              }
+            }
+          },
+          "configure": {
+            "loop": true,
+            "condition": true,
+            "styles": true,
+            "isContainer": false,
+            "isModal": false,
+            "nestingRule": {
+              "childWhitelist": "",
+              "parentWhitelist": "",
+              "descendantBlacklist": "",
+              "ancestorWhitelist": ""
+            },
+            "isNullNode": false,
+            "isLayout": false,
+            "rootSelector": "",
+            "shortcuts": {
+              "properties": []
+            },
+            "contextMenu": {
+              "actions": [
+                "create symbol"
+              ],
+              "disable": [
+                "copy",
+                "remove"
+              ]
+            }
+          }
+        },
+        {
+          "version": "3.22.0",
+          "name": {
             "zh_CN": "锚点"
           },
           "component": "TinyAnchor",
@@ -26995,6 +28697,103 @@
                   }
                 ]
               }
+            },
+            {
+              "name": {
+                "zh_CN": "容器布局"
+              },
+              "icon": "container",
+              "screenshot": "",
+              "snippetName": "TinyContainer",
+              "schema": {
+                "componentName": "TinyContainer",
+                "props": {
+                  "pattern": "default",
+                  "style": "position: relative; min-height: 240px; display: block;"
+                },
+                "children": [
+                  {
+                    "componentName": "div",
+                    "props": {
+                      "style": "background: #ffebd1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
+                    },
+                    "children": [
+                      {
+                        "componentName": "Text",
+                        "props": {
+                          "text": "Main内容"
+                        }
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "Template",
+                    "props": {
+                      "slot": "header"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "background: #deecff; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "header内容"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "Template",
+                    "props": {
+                      "slot": "aside"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "background: #fce3e1; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "aside内容"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "componentName": "Template",
+                    "props": {
+                      "slot": "footer"
+                    },
+                    "children": [
+                      {
+                        "componentName": "div",
+                        "props": {
+                          "style": "background: #e6f2d5; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;"
+                        },
+                        "children": [
+                          {
+                            "componentName": "Text",
+                            "props": {
+                              "text": "footer内容"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -27632,6 +29431,40 @@
                   "placeholder": "请选择"
                 }
               }
+            },
+            {
+              "name": {
+                "zh_CN": "文件上传"
+              },
+              "icon": "file-upload",
+              "screenshot": "",
+              "snippetName": "TinyFileUpload",
+              "schema": {
+                "componentName": "TinyFileUpload",
+                "props": {
+                  "action": "http://localhost:8090/api/upload",
+                  "data": {
+                    "id": "123"
+                  }
+                },
+                "children": [
+                  {
+                    "componentName": "Template",
+                    "props": {
+                      "slot": "trigger"
+                    },
+                    "children": [
+                      {
+                        "componentName": "TinyButton",
+                        "props": {
+                          "text": "点击上传",
+                          "style": "margin: 0 5px 0 5px;"
+                        }
+                      }
+                    ]
+                  }
+                ]
+              }
             }
           ]
         },
@@ -27781,6 +29614,26 @@
                   "visible": true,
                   "show-close": true,
                   "title": "dialogBox title"
+                },
+                "children": [
+                  {
+                    "componentName": "div"
+                  }
+                ]
+              }
+            },
+            {
+              "name": {
+                "zh_CN": "抽屉"
+              },
+              "screenshot": "",
+              "snippetName": "TinyDrawer",
+              "icon": "drawer",
+              "schema": {
+                "componentName": "TinyDrawer",
+                "props": {
+                  "visible": true,
+                  "title": "drawer title"
                 },
                 "children": [
                   {
