@@ -22,8 +22,8 @@ export default class BlockService {
     this.userInfo = {
       id: 86,
       username: '开发者',
-      email: 'developer@lowcode.com',
-      confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+      email: 'demo@example.com',
+      confirmationToken: null,
       is_admin: true
     }
 

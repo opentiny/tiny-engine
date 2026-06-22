@@ -28,3 +28,4 @@ pnpm-debug.log*
 *.sw?
 tmp
 temp
+__pycache__

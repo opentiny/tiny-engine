@@ -183,41 +183,15 @@ class FileStore extends StoreAdapter {
 
     for (const [key, value] of Object.entries(query)) {
       if (typeof value === 'object' && value !== null) {
-        // Handle special operators
-        if (value.$regex) {
-          const regex = value.$regex
-          if (!regex.test(doc[key])) {
-            return false
-          }
-        } else if (value.$ne !== undefined) {
-          if (doc[key] === value.$ne) {
-            return false
-          }
-        } else if (value.$in !== undefined) {
-          if (!value.$in.includes(doc[key])) {
-            return false
-          }
-        } else if (value.$nin !== undefined) {
-          if (value.$nin.includes(doc[key])) {
-            return false
-          }
-        } else if (value.$gt !== undefined) {
-          if (!(doc[key] > value.$gt)) {
-            return false
-          }
-        } else if (value.$gte !== undefined) {
-          if (!(doc[key] >= value.$gte)) {
-            return false
-          }
-        } else if (value.$lt !== undefined) {
-          if (!(doc[key] < value.$lt)) {
-            return false
-          }
-        } else if (value.$lte !== undefined) {
-          if (!(doc[key] <= value.$lte)) {
-            return false
-          }
-        }
+        if (value.$regex && !value.$regex.test(doc[key])) return false
+        if (value.$ne !== undefined && doc[key] === value.$ne) return false
+        if (value.$in !== undefined && !value.$in.includes(doc[key])) return false
+        if (value.$nin !== undefined && value.$nin.includes(doc[key])) return false
+        if (value.$gt !== undefined && !(doc[key] > value.$gt)) return false
+        if (value.$gte !== undefined && !(doc[key] >= value.$gte)) return false
+        if (value.$lt !== undefined && !(doc[key] < value.$lt)) return false
+        if (value.$lte !== undefined && !(doc[key] <= value.$lte)) return false
+
       } else if (doc[key] !== value) {
         // Simple equality check
         return false
@@ -314,7 +288,7 @@ class FileStore extends StoreAdapter {
       return 0
     }
 
-    const multi = options.multi !== false
+    const multi = options.multi === true
     const entriesToUpdate = multi ? matchingEntries : [matchingEntries[0]]
     const reservedNames = new Set()
 
@@ -364,7 +338,7 @@ class FileStore extends StoreAdapter {
       return 0
     }
 
-    const multi = options.multi !== false
+    const multi = options.multi === true
     const entriesToRemove = multi ? matchingEntries : [matchingEntries[0]]
 
     for (const entry of entriesToRemove) {

@@ -136,7 +136,7 @@ class TinyCSS2Checker(CSSChecker):
             return len(self.errors) == 0
 
         except Exception as e:
-            self.errors.append(f"Failed to parse CSS: {e}")
+            self.errors.append(f"CSS check failed unexpectedly: {e}")
             return False
 
 
@@ -201,7 +201,10 @@ class PostCSSChecker(CSSChecker):
             import os
             try:
                 os.unlink(temp_file)
-            except:
+            except OSError:
+                # FileNotFoundError (subclass of OSError) is expected if the temp
+                # file was never created or already removed; other OS-level
+                # cleanup failures are non-fatal here.
                 pass
 
 

@@ -43,9 +43,17 @@ class EventBindingChecker:
                 self._check_node(item)
 
     def _check_event_bindings(self, node: Dict[str, Any]) -> None:
-        """检查单个节点的事件绑定"""
+        """检查单个节点的事件绑定（含 props 内的事件绑定）"""
         component = node.get('componentName', 'unknown')
 
+        # 两处都需要校验，避免漏检 props 内的事件。
+        self._check_event_holder(node, component)
+        props = node.get('props')
+        if isinstance(props, dict):
+            self._check_event_holder(props, component)
+
+    def _check_event_holder(self, holder: Dict[str, Any], component: str) -> None:
+        """检查某个属性容器（节点本身或其 props）内的事件绑定"""
         # 检查所有可能的事件属性
         event_keys = [
             'onClick', 'onChange', 'onKeyup', 'onKeyDown', 'onKeyPress',
@@ -55,13 +63,13 @@ class EventBindingChecker:
         ]
 
         for key in event_keys:
-            if key in node:
-                value = node[key]
+            if key in holder:
+                value = holder[key]
                 if isinstance(value, dict):
                     self._check_event_value(component, key, value)
 
         # 也检查以'on'开头的属性
-        for key, value in node.items():
+        for key, value in holder.items():
             if key.startswith('on') and key not in event_keys:
                 if isinstance(value, dict):
                     self._check_event_value(component, key, value)

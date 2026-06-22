@@ -95,8 +95,13 @@ def check_class_name_usage(file_path: str) -> bool:
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-    except:
-        return True  # JSON 错误会在其他检查中捕获
+    except (json.JSONDecodeError, OSError):
+        # JSON 语法错误或文件读取问题（FileNotFoundError 属于 OSError）由其他
+        # 检查负责报告；此处不掩盖其他意外运行错误。
+        return True
+    except Exception as e:
+        print(f"❌ className 检查异常: {e}")
+        return False
 
     page_content = data.get('page_content', {})
     errors = []

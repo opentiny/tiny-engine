@@ -85,7 +85,7 @@ export default class AppsService {
       id: mockId++,
       ...params
     }
-    this.store.insert(newApp)
+    await this.store.insert(newApp)
 
     let resultStr = JSON.stringify(defaultAppSchema.data)
     resultStr = resultStr.replace(/"lowcode./g, '"lowcode_')
@@ -102,7 +102,19 @@ export default class AppsService {
       },
       id: newApp.id
     }
-    this.schemaStore.insert(newAppSchema)
+    // App and schema live in different collections. If the schema write fails,
+    // best-effort roll back the app insert so we don't leave a one-sided record,
+    // then rethrow — ErrorRoutesCatch serializes thrown errors into the response.
+    try {
+      await this.schemaStore.insert(newAppSchema)
+    } catch (err) {
+      try {
+        await this.store.remove({ id: newApp.id })
+      } catch {
+        /* swallow cleanup failure; surface the original error below */
+      }
+      throw err
+    }
     return getResponseData(newApp)
   }
 

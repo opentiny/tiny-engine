@@ -58,8 +58,8 @@ export default class PageService {
     this.userInfo = {
       id: 86,
       username: '开发者',
-      email: 'developer@lowcode.com',
-      confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+      email: 'demo@example.com',
+      confirmationToken: null,
       is_admin: true
     }
 
@@ -79,8 +79,8 @@ export default class PageService {
       occupier: {
         id: 86,
         username: '开发者',
-        email: 'developer@lowcode.com',
-        confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+        email: 'demo@example.com',
+        confirmationToken: null,
         is_admin: true
       }
     }
@@ -103,7 +103,7 @@ export default class PageService {
       pageData.route = pageData.name || 'Untitled'
     }
 
-    const existing = await this.db.findOneAsync({
+    const existing = await this.store.findOne({
       app: pageData.app.toString(),
       route: pageData.route
     })

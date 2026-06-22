@@ -603,7 +603,7 @@ Page file structure (wrapper):
 {
   "name": "PageName",
   "id": "unique-id",
-  "app": "1",
+  "app": 1,
   "route": "page-route",
   "page_content": {
     /* actual page DSL with componentName: "Page" */

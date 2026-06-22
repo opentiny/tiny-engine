@@ -38,11 +38,12 @@ class NedbStore extends StoreAdapter {
     return result
   }
 
-  async update(query, update) {
-    // Pass update operators directly, don't wrap in $set
-    await this.db.updateAsync(query, update)
-    const result = await this.db.findOneAsync(query)
-    return result
+  async update(query, update, options = {}) {
+    // Pass update operators directly and forward `multi` to NeDB. Default
+    // multi:false matches the StoreAdapter/FileStore contract (single record).
+    // Returns the count of affected records per the store contract.
+    const { numAffected } = await this.db.updateAsync(query, update, { multi: options.multi === true })
+    return numAffected
   }
 
   async find(query = {}) {
@@ -55,10 +56,11 @@ class NedbStore extends StoreAdapter {
     return result
   }
 
-  async remove(query) {
-    const result = await this.db.findOneAsync(query)
-    await this.db.removeAsync(query)
-    return result
+  async remove(query, options = {}) {
+    // Forward `multi` to NeDB; default multi:false matches the store contract.
+    // Returns the count of removed records.
+    const numRemoved = await this.db.removeAsync(query, { multi: options.multi === true })
+    return numRemoved
   }
 }
 

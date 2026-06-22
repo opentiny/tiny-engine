@@ -10,6 +10,7 @@ const forceOverwrite = process.argv.includes('--force')
 const collectionNamingFields = {
   pages: ['name'],
   apps: ['name'],
+  appsSchema: ['id'],
   blocks: ['label', 'name'],
   blockGroups: ['name'],
   blockCategories: ['name']
