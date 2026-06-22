@@ -9,12 +9,6 @@ on:
         default: true
         type: boolean
 
-env:
-  HUAWEI_CLOUD_AK: ${{ secrets.HUAWEI_CLOUD_AK }}
-  HUAWEI_CLOUD_SK: ${{ secrets.HUAWEI_CLOUD_SK }}
-  HUAWEI_CLOUD_ENDPOINT: ${{ secrets.HUAWEI_CLOUD_ENDPOINT }}
-  HUAWEI_CLOUD_BUCKET: ${{ secrets.HUAWEI_CLOUD_BUCKET }}
-
 jobs:
   check-secrets:
     runs-on: ubuntu-latest
@@ -146,12 +140,12 @@ jobs:
 
       - name: Configure and Upload to OBS
         run: |
-          obsutil config -i=${{ env.HUAWEI_CLOUD_AK }} \
-                         -k=${{ env.HUAWEI_CLOUD_SK }} \
-                         -e=${{ env.HUAWEI_CLOUD_ENDPOINT }}
+          obsutil config -i=${{ secrets.HUAWEI_CLOUD_AK }} \
+                         -k=${{ secrets.HUAWEI_CLOUD_SK }} \
+                         -e=${{ secrets.HUAWEI_CLOUD_ENDPOINT }}
           # Upload to versioned path
           obsutil cp ./designer-demo/dist \
-                    obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }} \
+                    obs://${{ secrets.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }} \
                     -r -f -flat
 
           # If is_latest_release is true, also upload to latest path
@@ -160,9 +154,9 @@ jobs:
             find ./designer-demo/dist -type f \( -name "*.html" -o -name "*.js" -o -name "*.mjs" -o -name "*.css" \) \
               -exec sed -i "s|${{ needs.build.outputs.cdn-base }}|${{ needs.build.outputs.cdn-base-latest }}|g" {} +
             obsutil cp ./designer-demo/dist \
-                      obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path-latest }} \
+                      obs://${{ secrets.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path-latest }} \
                       -r -f -flat
           fi
 
-          echo "Uploaded to: obs://${{ env.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }}"
+          echo "Uploaded to: obs://${{ secrets.HUAWEI_CLOUD_BUCKET }}/${{ needs.build.outputs.obs-path }}"
           echo "CDN URL: https://res-static.opentiny.design/${{ needs.build.outputs.obs-path }}"

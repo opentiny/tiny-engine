@@ -70,11 +70,12 @@ import type { Component } from 'vue'
 import { VueMonaco } from '@opentiny/tiny-engine-common'
 import { Button, Popover, DialogBox, Checkbox, Select } from '@opentiny/vue'
 import { iconUpWard, iconDownWard } from '@opentiny/vue-icon'
-import { useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useMessage, useNotify } from '@opentiny/tiny-engine-meta-register'
 import { ToolbarBase } from '@opentiny/tiny-engine-common'
 import { openCommon, saveCommon } from './js/index'
 import { isLoading, setAutoSaveStatus, getAutoSaveStatus } from './js/index'
 import { constants } from '@opentiny/tiny-engine-utils'
+import useSaveValidation from './js/aiSaveValidation'
 const { OPEN_DELAY } = constants
 
 export const api = {
@@ -175,6 +176,18 @@ export default {
       state.originalCode = ''
     }
     const openApi = () => {
+      if (useSaveValidation().hasAnyPendingAIModification()) {
+        const pendingNodeIds = useSaveValidation().getAllNodesWithPendingAIModification()
+
+        useNotify({
+          type: 'warning',
+          title: '保存被阻止',
+          message: `以下节点的AI修改还未处理：${pendingNodeIds.join('、')}，请先采纳或取消`,
+          duration: 5000,
+          customClass: 'ai-save-warning'
+        })
+        return
+      }
       if (!isLoading.value) {
         openCommon()
       }

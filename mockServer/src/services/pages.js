@@ -51,7 +51,7 @@ const parsePageContent = (item) => {
 export default class PageService {
   constructor() {
     this.store = createStore('pages', {
-      indexes: [{ fieldName: 'route', unique: true }],
+      indexes: [{ fieldName: '_id', unique: true }],
       namingFields: ['name']
     })
 
@@ -98,6 +98,23 @@ export default class PageService {
   async create(params) {
     const model = params.isPage ? this.pageModel : this.folderModel
     const pageData = { ...model, ...params }
+
+    if (!pageData.route) {
+      pageData.route = pageData.name || 'Untitled'
+    }
+
+    const existing = await this.db.findOneAsync({
+      app: pageData.app.toString(),
+      route: pageData.route
+    })
+
+    if (existing) {
+      return getResponseData(null, {
+        code: 'ROUTE_CONFLICT',
+        message: `Route "${pageData.route}" already exists in app "${pageData.app}"`,
+        status: 409
+      })
+    }
 
     pageData.page_content = formatPageContentForStorage(pageData.page_content)
 

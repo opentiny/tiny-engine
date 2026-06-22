@@ -18,10 +18,12 @@
           v-model:fullscreen="fullscreen"
           v-model:show="robotVisible"
           v-model:input="inputMessage"
-          :status="chatStatus"
+          :status="mappedStatus"
+          :chat-mode="robotSettingState.chatMode"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
+          :show-aborted="robotSettingState.chatMode !== ChatMode.Agent"
           :beforeSubmit="checkApiKey"
           :promptClickHandler="promptClickHandler"
           @fileSelected="handleFileSelected"
@@ -147,7 +149,7 @@ const showTeleport = ref(false)
 const showSetting = ref(false)
 
 const {
-  chatStatus,
+  mappedStatus,
   inputMessage,
   messages,
   changeChatMode,

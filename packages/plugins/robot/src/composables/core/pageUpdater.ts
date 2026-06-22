@@ -1,20 +1,37 @@
 import { jsonrepair } from 'jsonrepair'
 import * as jsonpatch from 'fast-json-patch'
 import { utils } from '@opentiny/tiny-engine-utils'
-import { useCanvas, useHistory } from '@opentiny/tiny-engine-meta-register'
+import { useCanvas, useHistory, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { useThrottleFn } from '@vueuse/core'
 import useModelConfig from './useConfig'
 import { ChatMode } from '../../types/mode.types'
-import { fixMethods, schemaAutoFix, getJsonObjectString, isValidFastJsonPatch, jsonPatchAutoFix } from '../../utils'
+import {
+  fixMethods,
+  schemaAutoFix,
+  getJsonObjectString,
+  isValidFastJsonPatch,
+  isValidSchemaChildren,
+  jsonPatchAutoFix
+} from '../../utils'
 
 const { deepClone } = utils
 
 const logger = console
+let schemaUpdateVersion = 0
+let lastSuccessfulSchema: object | null = null
 
-const setSchema = (schema: object) => {
-  const { importSchema, setSaved } = useCanvas()
-  importSchema(schema)
+const setSchema = async (schema: object, addHistory = false) => {
+  const { importSchema, pageState, setSaved } = useCanvas()
+
+  if (addHistory) {
+    importSchema(schema)
+    useHistory().addHistory()
+  } else {
+    Object.assign(pageState.pageSchema, schema)
+    useMessage().publish({ topic: 'schemaChange', data: {} })
+  }
   setSaved(false)
+  lastSuccessfulSchema = schema
 }
 
 type UpdateResult =
@@ -22,11 +39,16 @@ type UpdateResult =
   | { isError: false; schema: object; error?: undefined }
   | { isError: true; schema?: undefined; error: unknown }
 
-const _updatePageSchema = (
+const _updatePageSchema = async (
   streamContent: string,
   currentPageSchema: object,
-  isFinal: boolean = false
-): UpdateResult => {
+  isFinal: boolean = false,
+  version = schemaUpdateVersion
+): Promise<UpdateResult> => {
+  if (version !== schemaUpdateVersion) {
+    return
+  }
+
   const { getSelectedModelInfo } = useModelConfig()
   if (getSelectedModelInfo().config?.chatMode !== ChatMode.Agent) {
     return
@@ -68,15 +90,46 @@ const _updatePageSchema = (
 
   // schema纠错
   fixMethods(newSchema.methods)
+  if (!isValidSchemaChildren(newSchema.children)) {
+    return { isError: true, error: 'format error: schema children contains invalid nodes.' }
+  }
   schemaAutoFix(newSchema.children)
 
   // 更新Schema
-  setSchema(newSchema)
-  if (isFinal) {
-    useHistory().addHistory()
+  try {
+    await setSchema(newSchema, isFinal)
+  } catch (error) {
+    if (isFinal) {
+      logger.error('set schema error:', error)
+    }
+    return { isError: true, error }
   }
 
   return { schema: newSchema, isError: false }
 }
 
-export const updatePageSchema = useThrottleFn(_updatePageSchema, 200, true)
+const updatePageSchemaThrottled = useThrottleFn(_updatePageSchema, 200, true)
+
+const invalidatePendingStreamUpdates = () => {
+  schemaUpdateVersion++
+}
+
+export const resetPageSchemaUpdateState = () => {
+  invalidatePendingStreamUpdates()
+  lastSuccessfulSchema = null
+}
+
+export const getLastSuccessfulPageSchema = () => lastSuccessfulSchema
+
+export const updatePageSchema = (
+  streamContent: string,
+  currentPageSchema: object,
+  isFinal: boolean = false
+): UpdateResult | Promise<UpdateResult> => {
+  if (isFinal) {
+    invalidatePendingStreamUpdates()
+    return _updatePageSchema(streamContent, currentPageSchema, isFinal, schemaUpdateVersion)
+  }
+
+  return updatePageSchemaThrottled(streamContent, currentPageSchema, isFinal, schemaUpdateVersion)
+}

@@ -13,14 +13,14 @@
 import { getMetaApi, META_SERVICE, useCanvas, useMaterial } from '@opentiny/tiny-engine-meta-register'
 import { utils } from '@opentiny/tiny-engine-utils'
 import { isValidJsonPatchObjectString, getRobotServiceOptions, removeLoading, addSystemPrompt } from '../../utils'
-import { updatePageSchema } from '../core/pageUpdater'
+import { getLastSuccessfulPageSchema, resetPageSchemaUpdateState, updatePageSchema } from '../core/pageUpdater'
 import useModelConfig from '../core/useConfig'
 import { formatComponents, getAgentSystemPrompt, getJsonFixPrompt } from '../../constants/prompts'
 import { search, fetchAssets } from '../../services/agentServices'
-import { client } from '../../services/aiClient'
+import { provider } from '../../services/aiClient'
 import type { ModeHooks } from '../../types/mode.types'
 import { ChatMode } from '../../types/mode.types'
-import { STATUS, type MessageState } from '@opentiny/tiny-robot-kit'
+import { STATUS, type MessageState } from '../../constants/status'
 
 const { deepClone } = utils
 const logger = console
@@ -44,6 +44,50 @@ const updateToolCallRenderContent = (tool: Record<string, unknown>, renderConten
       formatPretty: true,
       toolCallId: tool.id
     })
+  }
+}
+
+const normalizeFinishedAgentMessages = (messages: any[]) => {
+  messages.forEach((message) => {
+    if (message.role !== 'assistant' || message.loading || !Array.isArray(message.renderContent)) {
+      return
+    }
+
+    message.renderContent = message.renderContent.filter((item: any) => item.type !== 'agent-loading')
+    const agentContents = message.renderContent.filter((item: any) => item.type === 'agent-content')
+    const finalStatus = agentContents.findLast((item: any) =>
+      ['success', 'failed', 'fix'].includes(item.status)
+    )?.status
+
+    message.renderContent.forEach((item: any) => {
+      if (item.type === 'agent-content' && (!item.status || item.status === 'loading')) {
+        item.status = finalStatus || message.metadata?.agentStatus || 'failed'
+      }
+    })
+  })
+}
+
+const markLastAgentContentFailed = (messages: any[], content: unknown) => {
+  const lastMessage = messages.at(-1)
+  if (!lastMessage) {
+    return
+  }
+
+  lastMessage.loading = undefined
+  lastMessage.metadata = {
+    ...(lastMessage.metadata || {}),
+    chatMode: ChatMode.Agent,
+    agentStatus: 'failed'
+  }
+  lastMessage.renderContent ||= []
+  lastMessage.renderContent = lastMessage.renderContent.filter((item: any) => item.type !== 'agent-loading')
+
+  const lastAgentContent = lastMessage.renderContent.findLast((item: any) => item.type === 'agent-content')
+  const errorInfo = { content: content || '页面生成失败', status: 'failed' }
+  if (lastAgentContent) {
+    Object.assign(lastAgentContent, errorInfo)
+  } else {
+    lastMessage.renderContent.push({ type: 'agent-content', ...errorInfo })
   }
 }
 
@@ -74,8 +118,9 @@ export default function useAgentMode(): ModeHooks {
     // 确保会话元数据中记录为 Agent 模式
     if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Agent) {
       apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Agent })
-      apis.saveConversations()
     }
+
+    normalizeFinishedAgentMessages(messages)
 
     // Agent 模式特殊处理：标记失败的 loading
     messages.at(-1)?.renderContent?.forEach((item: any) => {
@@ -86,6 +131,7 @@ export default function useAgentMode(): ModeHooks {
   }
 
   const onMessageSent = () => {
+    resetPageSchemaUpdateState()
     pageSchema = deepClone(useCanvas().pageState.pageSchema)
   }
 
@@ -148,12 +194,7 @@ export default function useAgentMode(): ModeHooks {
   ) => {
     if (finishReason === 'aborted' || finishReason === 'error') {
       removeLoading(messages)
-      const errorInfo = { content: extraData?.error || '请求失败', status: 'failed' }
-      if (messages.at(-1).renderContent.at(-1)) {
-        Object.assign(messages.at(-1).renderContent.at(-1), errorInfo)
-      } else {
-        messages.at(-1).renderContent = [{ type: getContentType(), ...errorInfo }]
-      }
+      markLastAgentContentFailed(messages, extraData?.error || content || '请求失败')
     }
   }
 
@@ -188,9 +229,12 @@ export default function useAgentMode(): ModeHooks {
     }: { abortControllerMap: Record<string, AbortController>; messageState: MessageState }
   ) => {
     const lastMessage = messages.at(-1)
+    const lastRenderContent =
+      lastMessage.renderContent.findLast((item: any) => item.type === getContentType()) ||
+      lastMessage.renderContent.at(-1)
 
     if (finishReason === 'aborted' || finishReason === 'error') {
-      lastMessage.renderContent.at(-1).status = 'failed'
+      markLastAgentContentFailed(messages, content || '页面生成失败')
       return
     }
 
@@ -214,8 +258,10 @@ export default function useAgentMode(): ModeHooks {
           return requestParams
         }
         const apiUrl = 'app-center/api/chat/completions'
-        lastMessage.renderContent.at(-1).status = 'fix'
-        const fixedResponse = await client.chat({
+        if (lastRenderContent) {
+          lastRenderContent.status = 'fix'
+        }
+        const fixedResponse = await provider.chat({
           messages: [{ role: 'user', content: getJsonFixPrompt(content, jsonValidResult.error) }],
           options: { signal: abortControllerMap.errorFix?.signal, beforeRequest: beforeRequest as any, apiUrl }
         })
@@ -225,7 +271,14 @@ export default function useAgentMode(): ModeHooks {
         }
       } catch (error) {
         logger.error('json fix failed', error)
-        lastMessage.renderContent.at(-1).status = 'failed'
+        if (lastRenderContent) {
+          lastRenderContent.status = 'failed'
+        }
+        lastMessage.metadata = {
+          ...(lastMessage.metadata || {}),
+          chatMode: ChatMode.Agent,
+          agentStatus: 'failed'
+        }
         if (error instanceof Error && error.message.includes('canceled')) {
           messageState.status = STATUS.ABORTED
         } else {
@@ -240,11 +293,24 @@ export default function useAgentMode(): ModeHooks {
 
     // 更新页面 schema
     const result = await updatePageSchema(lastMessage.content, pageSchema, true)
-    if (result.schema) {
-      lastMessage.renderContent.at(-1).status = 'success'
-      lastMessage.renderContent.at(-1).schema = result.schema
-    } else {
-      lastMessage.renderContent.at(-1).status = 'failed'
+    const renderedSchema = result?.schema || getLastSuccessfulPageSchema()
+    if (renderedSchema) {
+      if (lastRenderContent) {
+        lastRenderContent.status = 'success'
+        lastRenderContent.schema = renderedSchema
+      }
+      lastMessage.metadata = {
+        ...(lastMessage.metadata || {}),
+        chatMode: ChatMode.Agent,
+        agentStatus: 'success'
+      }
+    } else if (lastRenderContent) {
+      lastRenderContent.status = 'failed'
+      lastMessage.metadata = {
+        ...(lastMessage.metadata || {}),
+        chatMode: ChatMode.Agent,
+        agentStatus: 'failed'
+      }
     }
 
     pageSchema = null

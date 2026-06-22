@@ -10,22 +10,51 @@
  *
  */
 
-import { getResponseData } from '../tool/Common'
-import modelList from '../assets/json/model.json'
+import DateStore from '@seald-io/nedb'
+import { getDatabasePath, getResponseData } from '../tool/Common'
 
 const defaultModel = {
-  createdBy: '86',
-  lastUpdatedBy: '86',
+  createdBy: '1',
+  lastUpdatedBy: '1',
   tenantId: null,
   renterId: null,
   siteId: null,
   appId: null,
   platformId: 1,
-  nameCn: 'test',
-  nameEn: 'test',
+  nameCn: '',
+  nameEn: '',
   version: '1.0.0',
-  modelUrl: '1',
-  parameters: [],
+  modelUrl: 'https://agent-alpha.opentiny.design/platform-center/api/model-data',
+  parameters: [
+    {
+      prop: 'id',
+      isModel: false,
+      type: 'Number',
+      required: true,
+      description: '主键'
+    },
+    {
+      prop: 'name',
+      isModel: false,
+      type: 'String',
+      required: true,
+      description: '姓名'
+    },
+    {
+      prop: 'status',
+      isModel: false,
+      type: 'Enum',
+      options: '[{"value":"1","label":"已转正"},{"value":"0","label":"未转正"}]',
+      required: true,
+      description: '状态'
+    },
+    {
+      prop: 'test',
+      type: 'String',
+      required: false,
+      description: ''
+    }
+  ],
   method: [
     {
       name: '新增方法',
@@ -33,13 +62,41 @@ const defaultModel = {
       requestParameters: [
         {
           prop: 'nameEn',
-          type: 'String',
-          children: null
+          type: 'String'
         },
         {
           prop: 'params',
           type: 'Object',
-          children: []
+          children: [
+            {
+              prop: 'id',
+              isModel: false,
+              type: 'Number',
+              required: true,
+              description: '主键'
+            },
+            {
+              prop: 'name',
+              isModel: false,
+              type: 'String',
+              required: true,
+              description: '姓名'
+            },
+            {
+              prop: 'status',
+              isModel: false,
+              type: 'Enum',
+              options: '[{"value":"1","label":"已转正"},{"value":"0","label":"未转正"}]',
+              required: true,
+              description: '状态'
+            },
+            {
+              prop: 'test',
+              type: 'String',
+              required: false,
+              description: ''
+            }
+          ]
         }
       ],
       responseParameters: [
@@ -63,18 +120,75 @@ const defaultModel = {
       requestParameters: [
         {
           prop: 'nameEn',
-          type: 'String',
-          children: null
+          type: 'String'
         },
         {
           prop: 'data',
           type: 'Object',
-          children: []
+          children: [
+            {
+              prop: 'id',
+              isModel: false,
+              type: 'Number',
+              required: true,
+              description: '主键'
+            },
+            {
+              prop: 'name',
+              isModel: false,
+              type: 'String',
+              required: true,
+              description: '姓名'
+            },
+            {
+              prop: 'status',
+              isModel: false,
+              type: 'Enum',
+              options: '[{"value":"1","label":"已转正"},{"value":"0","label":"未转正"}]',
+              required: true,
+              description: '状态'
+            },
+            {
+              prop: 'test',
+              type: 'String',
+              required: false,
+              description: ''
+            }
+          ]
         },
         {
           prop: 'params',
           type: 'Object',
-          children: []
+          children: [
+            {
+              prop: 'id',
+              isModel: false,
+              type: 'Number',
+              required: true,
+              description: '主键'
+            },
+            {
+              prop: 'name',
+              isModel: false,
+              type: 'String',
+              required: true,
+              description: '姓名'
+            },
+            {
+              prop: 'status',
+              isModel: false,
+              type: 'Enum',
+              options: '[{"value":"1","label":"已转正"},{"value":"0","label":"未转正"}]',
+              required: true,
+              description: '状态'
+            },
+            {
+              prop: 'test',
+              type: 'String',
+              required: false,
+              description: ''
+            }
+          ]
         }
       ],
       responseParameters: [
@@ -98,28 +212,53 @@ const defaultModel = {
       requestParameters: [
         {
           prop: 'nameEn',
-          type: 'String',
-          children: null
+          type: 'String'
         },
         {
           prop: 'currentPage',
-          type: 'Number',
-          children: null
+          type: 'Number'
         },
         {
           prop: 'pageSize',
-          type: 'Number',
-          children: null
+          type: 'Number'
         },
         {
           prop: 'nameCn',
-          type: 'String',
-          children: null
+          type: 'String'
         },
         {
           prop: 'params',
           type: 'Object',
-          children: []
+          children: [
+            {
+              prop: 'id',
+              isModel: false,
+              type: 'Number',
+              required: true,
+              description: '主键'
+            },
+            {
+              prop: 'name',
+              isModel: false,
+              type: 'String',
+              required: true,
+              description: '姓名'
+            },
+            {
+              prop: 'status',
+              isModel: false,
+              type: 'Enum',
+              options: '[{"value":"1","label":"已转正"},{"value":"0","label":"未转正"}]',
+              required: true,
+              description: '状态'
+            },
+            {
+              prop: 'test',
+              type: 'String',
+              required: false,
+              description: ''
+            }
+          ]
         }
       ],
       responseParameters: [
@@ -147,13 +286,11 @@ const defaultModel = {
       requestParameters: [
         {
           prop: 'nameEn',
-          type: 'String',
-          children: null
+          type: 'String'
         },
         {
           prop: 'id',
-          type: 'Number',
-          children: null
+          type: 'Number'
         }
       ],
       responseParameters: [
@@ -172,49 +309,56 @@ const defaultModel = {
       ]
     }
   ],
-  description: '',
-  created_at: '2026-01-30 04:34:25',
-  updated_at: '2026-01-30 04:34:25'
+  description: ''
 }
 
-export default class AppsService {
+export default class ModelService {
   constructor() {
-    this.modelList = modelList
+    this.db = new DateStore({
+      filename: getDatabasePath('model.db'),
+      autoload: true
+    })
+
+    this.db.ensureIndex({
+      fieldName: '_id',
+      unique: true
+    })
+    this.modelList = []
   }
 
   async create(params) {
-    let mockId =
-      this.modelList.data.records.length > 0 ? Math.max(...this.modelList.data.records.map((item) => item.id)) + 1 : 3
+    let mockId = this.modelList.length > 0 ? Math.max(...this.modelList.map((item) => item.id)) + 1 : 3
     const newModel = {
       ...defaultModel,
       id: mockId++,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
       ...params
     }
-    this.modelList.data.records.push(newModel)
-    return getResponseData(newModel)
+
+    this.db.insert(newModel)
+    this.modelList.push(newModel)
+
+    return getResponseData({ records: this.modelList })
   }
 
   async delete(id) {
-    this.modelList.data.records = this.modelList.data.records.filter((item) => Number(item.id) !== Number(id))
+    const result = await this.db.findOneAsync({ id: Number(id) })
+    await this.db.removeAsync({ id: Number(id) })
 
-    return getResponseData(this.modelList.data)
+    return getResponseData(result)
   }
 
   async list() {
-    return getResponseData(this.modelList.data)
+    this.modelList = await this.db.findAsync()
+
+    return getResponseData({ records: this.modelList })
   }
 
   async update(id, params) {
-    const index = this.modelList.data.records.findIndex((item) => Number(item.id) === Number(id))
-    if (index === -1) {
-      return getResponseData({ success: false, message: '未找到应用' })
-    }
+    await this.db.updateAsync({ id: Number(id) }, { $set: params })
+    const result = await this.db.findOneAsync({ id: Number(id) })
 
-    this.modelList.data.records[index] = {
-      ...this.modelList.data.records[index],
-      ...params
-    }
-
-    return getResponseData(this.modelList.data.records[index])
+    return getResponseData(result)
   }
 }

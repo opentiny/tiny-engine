@@ -3,9 +3,10 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type PropType } from 'vue'
 import DOMPurify from 'dompurify'
-import MarkdownIt, { type Options } from 'markdown-it'
+import MarkdownIt from 'markdown-it'
+import type { Options } from 'markdown-it'
 import hljs from 'highlight.js/lib/core'
 import 'highlight.js/styles/github.css'
 
@@ -27,17 +28,21 @@ hljs.registerLanguage('yaml', yaml)
 hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('shell', shell)
 
+interface MarkdownMessage {
+  content: string
+}
+
 const props = defineProps({
-  content: {
-    type: String,
-    required: true
+  message: {
+    type: Object as PropType<MarkdownMessage>,
+    default: () => ({ content: '' })
   },
   theme: {
-    type: String as () => 'light' | 'dark',
+    type: String as PropType<'light' | 'dark'>,
     default: 'light'
   },
   options: {
-    type: Object as () => Options,
+    type: Object as PropType<Options>,
     default: () => ({})
   }
 })
@@ -66,7 +71,7 @@ const markdownIt = new MarkdownIt({
 })
 
 const renderContent = computed(() => {
-  return DOMPurify.sanitize(markdownIt.render(props.content))
+  return DOMPurify.sanitize(markdownIt.render(props.message.content))
 })
 </script>
 

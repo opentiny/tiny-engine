@@ -5,7 +5,9 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -29,9 +31,9 @@
     "@opentiny/tiny-engine-common": "workspace:*",
     "@opentiny/tiny-engine-meta-register": "workspace:*",
     "@opentiny/tiny-engine-utils": "workspace:*",
-    "@opentiny/tiny-robot": "0.3.1",
-    "@opentiny/tiny-robot-kit": "0.3.1",
-    "@opentiny/tiny-robot-svgs": "0.3.1",
+    "@opentiny/tiny-robot": "0.4.0",
+    "@opentiny/tiny-robot-kit": "0.4.0",
+    "@opentiny/tiny-robot-svgs": "0.4.0",
     "@opentiny/tiny-schema-renderer": "1.0.0-beta.6",
     "@vueuse/core": "^9.13.0",
     "dompurify": "^3.0.1",
@@ -45,7 +47,8 @@
     "@types/markdown-it": "^14.1.2",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vitest": "^1.6.1"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",

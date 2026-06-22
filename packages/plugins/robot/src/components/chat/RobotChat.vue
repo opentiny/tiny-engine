@@ -22,8 +22,18 @@
           @item-click="handlePromptItemClick"
         ></tr-prompts>
       </div>
-      <tr-bubble-provider v-else :content-renderers="contentRenderers">
-        <tr-bubble-list :items="messages" :roles="roles" auto-scroll class="robot-bubble-list"> </tr-bubble-list>
+      <tr-bubble-provider v-else :content-renderer-matches="contentRendererMatches">
+        <tr-bubble-list
+          :messages="messages"
+          :role-configs="roleConfigs"
+          :content-resolver="resolveMessageContent"
+          auto-scroll
+          class="robot-bubble-list"
+        >
+          <template #content-footer="{ messages }">
+            <div v-if="showAborted && messages[0]?.aborted" class="aborted">已中止</div>
+          </template>
+        </tr-bubble-list>
       </tr-bubble-provider>
     </div>
 
@@ -39,9 +49,6 @@
           :showWordLimit="false"
           @submit="handleSendMessage"
           @cancel="handleAbortRequest"
-          :allowFiles="selectedAttachments.length < 1 && props.allowFiles"
-          uploadTooltip="支持上传1张图片"
-          @files-selected="handleSingleFilesSelected"
         >
           <template #header v-if="selectedAttachments.length > 0">
             <div>
@@ -55,8 +62,17 @@
               </tr-attachments>
             </div>
           </template>
-          <template #footer-left>
+          <template #footer>
             <slot name="footer-left"></slot>
+          </template>
+          <template #footer-right>
+            <VoiceButton :speech-config="{ lang: 'zh-CN', continuous: false }" />
+            <UploadButton
+              v-if="selectedAttachments.length < 1 && props.allowFiles"
+              accept="image/*"
+              :multiple="false"
+              @select="handleSingleFilesSelected"
+            />
           </template>
         </tr-sender>
       </div>
@@ -74,11 +90,17 @@ import {
   TrSender,
   TrWelcome,
   TrAttachments,
+  UploadButton,
+  VoiceButton,
+  BubbleRenderers,
+  BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
-  type RawFileAttachment
+  type RawFileAttachment,
+  type BubbleContentRendererMatch
 } from '@opentiny/tiny-robot'
-import { type ChatMessage, GeneratingStatus } from '@opentiny/tiny-robot-kit'
+import { type ChatMessage } from '@opentiny/tiny-robot-kit'
+import { GeneratingStatus } from '../../constants/status'
 import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
 
@@ -91,9 +113,14 @@ const props = defineProps({
     type: Function
   },
   status: { type: String },
+  chatMode: { type: String },
   allowFiles: {
     type: Boolean,
     default: false
+  },
+  showAborted: {
+    type: Boolean,
+    default: true
   },
   bubbleRenderers: {
     type: Object as PropType<Record<string, Component>>,
@@ -113,6 +140,7 @@ const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
 const inputMessage = defineModel<string>('input', { required: true })
 const messages = defineModel<ChatMessage[]>('messages', { required: true })
+const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 watch(
   () => props.allowFiles,
@@ -122,6 +150,71 @@ watch(
     }
   }
 )
+
+const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
+  {
+    priority: BubbleRendererMatchPriority.LOADING,
+    find: (message) => Boolean(message.loading),
+    renderer: LoadingRenderer
+  },
+  ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: any, content: any) => content?.type === type,
+    renderer
+  })),
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any, content: any) => content?.type === 'tool' && message.tool_calls?.length,
+    renderer: BubbleRenderers.Tools
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any, content: any) =>
+      !message.loading && message.content && (!content?.type || ['markdown', 'text'].includes(content.type)),
+    renderer: MarkdownRenderer
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: any) => message?.content?.[0]?.type === 'img' || message?.content?.[0]?.type === 'image',
+    renderer: ImgRenderer
+  }
+])
+
+const isAgentMessage = (message: any) => {
+  const hasAgentContent = message.renderContent?.some((item: any) => {
+    return item.type === 'agent-content' || item.type === 'agent-loading'
+  })
+  return message.metadata?.chatMode === 'agent' || hasAgentContent
+}
+
+const resolveAgentRenderContent = (message: any) => {
+  if (!isAgentMessage(message) || message.role !== 'assistant') {
+    return message.renderContent
+  }
+
+  const isLastMessage = messages.value.at(-1) === message
+  const isGenerating = Boolean(message.loading) || (isLastMessage && GeneratingStatus.includes(props.status as any))
+  const renderContent = isGenerating
+    ? message.renderContent
+    : message.renderContent.filter((item: any) => item.type !== 'agent-loading')
+  const agentContents = renderContent.filter((item: any) => item.type === 'agent-content')
+  const finalStatus = agentContents.findLast((item: any) => ['success', 'failed', 'fix'].includes(item.status))?.status
+
+  return renderContent.map((item: any) => {
+    if (item.type !== 'agent-content' || isGenerating) {
+      return item
+    }
+
+    if (!item.status || item.status === 'loading') {
+      return {
+        ...item,
+        status: finalStatus || message.metadata?.agentStatus || 'failed'
+      }
+    }
+
+    return item
+  })
+}
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -178,31 +271,39 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '44px' })
 
-const contentRenderers = computed(() => ({
-  markdown: MarkdownRenderer,
-  loading: LoadingRenderer,
-  img: ImgRenderer,
-  ...props.bubbleRenderers
-}))
+const resolveMessageContent = (message: any) => {
+  if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
+    return resolveAgentRenderContent(message)
+  }
 
-const roles: Record<string, BubbleRoleConfig> = {
+  if (isAgentMessage(message) && message.role === 'assistant' && message.content) {
+    const agentStatus = ['success', 'failed', 'fix'].includes(message.metadata?.agentStatus)
+      ? message.metadata.agentStatus
+      : 'failed'
+    return [
+      {
+        type: 'agent-content',
+        status: agentStatus,
+        content: message.content
+      }
+    ]
+  }
+
+  return message.content
+}
+
+const roleConfigs: Record<string, BubbleRoleConfig> = {
   assistant: {
     placement: 'start',
-    avatar: aiAvatar,
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+    avatar: aiAvatar
   },
   user: {
-    placement: 'end',
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+    placement: 'end'
   },
   system: {
     hidden: true
   }
 }
-
-const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 // 发送消息
 const handleSendMessage = async (content: string) => {
@@ -256,6 +357,7 @@ const handleSendMessage = async (content: string) => {
   }
   messages.value.push(userMessage)
   inputMessage.value = ''
+  senderRef.value?.clear()
   selectedAttachments.value = []
   emit('sendMessage')
 }
@@ -371,13 +473,13 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       }
     }
     :deep([data-role='user']) {
-      --tr-bubble-content-bg: var(--tr-color-primary-light);
+      --tr-bubble-box-bg: var(--tr-color-primary-light);
     }
   }
 
   &.fullscreen {
     :deep([data-role='assistant']) {
-      --tr-bubble-content-bg: transparent;
+      --tr-bubble-box-bg: transparent;
       .tr-bubble__content {
         padding: 8px 0 0;
       }
@@ -490,5 +592,11 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
 .robot-bubble-list {
   height: 100%;
+}
+
+.aborted {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.7;
 }
 </style>

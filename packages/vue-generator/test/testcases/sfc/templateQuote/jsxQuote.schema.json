@@ -1,0 +1,45 @@
+{
+  "state": {
+    "columns": [
+      {
+        "field": "info",
+        "title": "信息",
+        "slots": {
+          "default": {
+            "type": "JSSlot",
+            "value": [
+              {
+                "componentName": "span",
+                "props": {
+                  "title": "{\"key\": \"value\"}"
+                },
+                "id": "jsx-span-001",
+                "children": []
+              }
+            ],
+            "params": ["row"]
+          }
+        }
+      }
+    ]
+  },
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyGrid",
+      "props": {
+        "columns": {
+          "type": "JSExpression",
+          "value": "state.columns"
+        }
+      },
+      "id": "jsx-test-001",
+      "children": []
+    }
+  ],
+  "fileName": "testJsxQuote"
+}

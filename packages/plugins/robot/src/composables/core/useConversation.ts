@@ -1,9 +1,20 @@
-import { toRaw } from 'vue'
-import { useConversation as useConversationKit, type UseMessageOptions } from '@opentiny/tiny-robot-kit'
-import type { AIClient } from '@opentiny/tiny-robot-kit'
+import { computed, reactive, ref, toRaw } from 'vue'
+import {
+  localStorageStrategyFactory,
+  useConversation as useConversationKit,
+  type ChatCompletion,
+  type ChatMessage,
+  type ConversationInfo,
+  type ConversationStorageStrategy,
+  type UseMessageOptions,
+  type UseMessagePlugin
+} from '@opentiny/tiny-robot-kit'
+import type { CompletionChoice } from '@opentiny/tiny-robot-kit'
+import { STATUS, type MessageState } from '../../constants/status'
+import type { OpenAICompatibleProvider } from '../../services/OpenAICompatibleProvider'
 
 export interface ConversationAdapterOptions {
-  client: AIClient
+  provider: Pick<OpenAICompatibleProvider, 'chatStream'>
   // 业务回调函数
   onStreamData: (data: any, messages: any[]) => void
   onFinishRequest: (finishReason: string, messages: any[], contextMessages: any[], messageState: any) => Promise<void>
@@ -20,46 +31,212 @@ export interface ConversationMetadata {
   [key: string]: any
 }
 
+let currentConversationMetadata: ConversationMetadata = {}
+
+const createResponseProvider = (
+  provider: Pick<OpenAICompatibleProvider, 'chatStream'>
+): UseMessageOptions['responseProvider'] => {
+  return async function* responseProvider(requestBody, abortSignal) {
+    const queue: ChatCompletion[] = []
+    let streamError: unknown
+    let finished = false
+    let wakeUp: (() => void) | undefined
+    const notify = () => {
+      wakeUp?.()
+      wakeUp = undefined
+    }
+    const handleAbort = () => {
+      finished = true
+      notify()
+    }
+
+    abortSignal.addEventListener('abort', handleAbort, { once: true })
+
+    const streamTask = provider
+      .chatStream(
+        { messages: requestBody.messages as ChatMessage[], options: { signal: abortSignal } },
+        {
+          onData: (data) => {
+            queue.push(data as ChatCompletion)
+            notify()
+          },
+          onError: (error) => {
+            streamError = error
+            finished = true
+            notify()
+          },
+          onDone: () => {
+            finished = true
+            notify()
+          }
+        }
+      )
+      .catch((error) => {
+        streamError = error
+        finished = true
+        notify()
+      })
+
+    try {
+      while (!finished || queue.length > 0) {
+        if (queue.length === 0) {
+          await new Promise<void>((resolve) => {
+            wakeUp = resolve
+          })
+          continue
+        }
+
+        yield queue.shift() as ChatCompletion
+      }
+
+      if (streamError) {
+        throw streamError
+      }
+    } finally {
+      abortSignal.removeEventListener('abort', handleAbort)
+      await streamTask
+    }
+  }
+}
+
+const updateMessageMetadata = (currentMessage: ChatMessage, chunk: ChatCompletion, choice?: CompletionChoice) => {
+  currentMessage.role = choice?.delta?.role || choice?.message?.role || currentMessage.role || 'assistant'
+  currentMessage.loading = undefined
+  currentMessage.renderContent ||= []
+  currentMessage.metadata ||= {}
+  currentMessage.metadata.chatMode ||= currentConversationMetadata.chatMode
+  currentMessage.metadata.createdAt ||= chunk.created
+  currentMessage.metadata.updatedAt = Math.floor(Date.now() / 1000)
+  currentMessage.metadata.id ||= chunk.id
+  currentMessage.metadata.model ||= chunk.model
+}
+
 /**
  * Conversation 适配器
- * 将 tiny-robot-kit 的 useConversation 与业务逻辑解耦
+ * 基于 tiny-robot-kit v0.4 的 useConversation/useMessage，对外保持旧业务层接口
  */
 export function useConversationAdapter(options: ConversationAdapterOptions) {
-  const { client, onStreamData, onFinishRequest, onMessageProcessed, statusManager } = options
+  const { provider, onStreamData, onFinishRequest, statusManager } = options
 
-  // 构建 events 适配器，连接业务回调
-  const events: UseMessageOptions['events'] = {
-    onReceiveData: (data, messages, preventDefault) => {
-      preventDefault()
-      onStreamData(data, messages.value)
-    },
-    async onFinish(finishReason, { messages, messageState }, preventDefault) {
-      preventDefault()
+  const storage: ConversationStorageStrategy = localStorageStrategyFactory()
+  const messageState = reactive<MessageState>({
+    status: STATUS.FINISHED
+  })
+  const emptyMessages = ref<ChatMessage[]>([])
+
+  const adapterPlugin: UseMessagePlugin = {
+    name: 'robot-conversation-adapter',
+    async onAfterRequest({ messages, lastChoice }) {
       if (statusManager.isProcessing()) {
-        // 无效场景，直接返回，例如返回流中出现了多次 [Done], 只响应第一次
         return
-      } else {
-        statusManager.setProcessing()
       }
-      const contextMessages = toRaw(messages.value.slice(0, -1))
-      await onFinishRequest(finishReason ?? 'unknown', messages.value, contextMessages, messageState)
-      const lastMessage = messages.value.at(-1)
-      if (lastMessage && finishReason === 'stop' && !lastMessage.tool_calls && statusManager.isProcessing()) {
-        statusManager.resetProcessing()
-        await onMessageProcessed(finishReason ?? 'unknown', lastMessage.content ?? '', messages.value, {})
-      }
+
+      statusManager.setProcessing()
+      const finishReason = lastChoice?.finish_reason || 'stop'
+      const contextMessages = toRaw(messages.slice(0, -1))
+
+      await onFinishRequest(finishReason, messages, contextMessages, messageState)
+    },
+    onError({ error }) {
+      messageState.status = STATUS.ERROR
+      messageState.errorMsg = error
     }
   }
 
-  // 使用 tiny-robot-kit 的 useConversation
   const {
-    messageManager,
-    state: conversationState,
-    ...conversationMethods
+    conversations,
+    activeConversationId,
+    activeConversation,
+    createConversation: createConversationKit,
+    switchConversation: switchConversationKit,
+    deleteConversation,
+    clear,
+    updateConversationTitle,
+    saveMessages,
+    abortActiveRequest
   } = useConversationKit({
-    client,
-    events
+    autoSaveMessages: true,
+    storage,
+    useMessageOptions: {
+      responseProvider: createResponseProvider(provider),
+      plugins: [adapterPlugin],
+      onCompletionChunk({ currentMessage, messages, chunk, choice }, runDefault) {
+        runDefault()
+        updateMessageMetadata(currentMessage, chunk, choice)
+        onStreamData({ ...chunk, __contentAlreadyMerged: true }, messages)
+      }
+    }
   })
+
+  const getActiveEngine = () => activeConversation.value?.engine
+
+  const saveConversation = (conversation: ConversationInfo) => {
+    const rawConversation = {
+      ...toRaw(conversation),
+      metadata: toRaw(conversation.metadata)
+    }
+    return storage.saveConversation?.(rawConversation)
+  }
+
+  const saveConversations = () => {
+    conversations.value.forEach((conversation) => {
+      void saveConversation(conversation)
+    })
+  }
+
+  const updateMetadata = (conversationId: string, metadata: ConversationMetadata = {}) => {
+    const conversation = conversations.value.find((item) => item.id === conversationId)
+    if (!conversation) {
+      return
+    }
+
+    conversation.metadata = {
+      ...(conversation.metadata || {}),
+      ...metadata
+    }
+    if (conversationId === activeConversationId.value) {
+      currentConversationMetadata = conversation.metadata
+    }
+    conversation.updatedAt = Date.now()
+    void saveConversation(conversation)
+  }
+
+  const updateTitle = (conversationId: string, title?: string) => {
+    updateConversationTitle(conversationId, title)
+  }
+
+  const isConversationEmpty = (conversationId?: string | null) => {
+    if (!conversationId || conversationId !== activeConversationId.value) {
+      return false
+    }
+
+    const messages = getActiveEngine()?.messages.value || []
+    return !messages.some(
+      (message) =>
+        message.role !== 'system' &&
+        (message.content ||
+          message.tool_calls?.length ||
+          message.tool_call_id ||
+          (Array.isArray(message.renderContent) && message.renderContent.length))
+    )
+  }
+
+  const conversationState = reactive({
+    get currentId() {
+      return activeConversationId.value
+    },
+    get conversations() {
+      return conversations.value
+    }
+  })
+
+  const messageManager = {
+    messages: computed(() => getActiveEngine()?.messages.value ?? emptyMessages.value),
+    messageState,
+    sendMessage: (content: string) => getActiveEngine()?.sendMessage(content) ?? Promise.resolve(),
+    send: (...msgs: ChatMessage[]) => getActiveEngine()?.send(...msgs) ?? Promise.resolve(),
+    abortRequest: () => abortActiveRequest()
+  }
 
   /**
    * 创建新会话
@@ -67,7 +244,28 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
    * @param metadata 会话元数据（如 chatMode）
    */
   const createConversation = (title: string, metadata?: ConversationMetadata) => {
-    return conversationMethods.createConversation(title, metadata)
+    if (isConversationEmpty(activeConversationId.value)) {
+      const currentId = activeConversationId.value as string
+      const conversation = conversations.value.find((item) => item.id === currentId)
+
+      if (conversation) {
+        conversation.title = title
+        conversation.updatedAt = Date.now()
+        if (metadata) {
+          conversation.metadata = {
+            ...(conversation.metadata || {}),
+            ...metadata
+          }
+        }
+        currentConversationMetadata = conversation.metadata || {}
+        void saveConversation(conversation)
+        return currentId
+      }
+    }
+
+    const conversation = createConversationKit({ title, metadata })
+    currentConversationMetadata = conversation.metadata || {}
+    return conversation.id
   }
 
   /**
@@ -75,18 +273,45 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
    * @param conversationId 会话ID
    * @param onStart 切换成功后的回调
    */
-  const switchConversation = (conversationId: string, onStart?: (state: any, messages: any, methods: any) => void) => {
-    const conversation = conversationState.conversations.find((c) => c.id === conversationId)
-    if (!conversation) return
+  const switchConversation = async (
+    conversationId: string,
+    onStart?: (state: any, messages: any, methods: any) => void
+  ) => {
+    const conversation = conversations.value.find((item) => item.id === conversationId)
+    if (!conversation) {
+      return null
+    }
 
-    const result = conversationMethods.switchConversation(conversationId)
+    const result = await switchConversationKit(conversationId)
 
-    // 触发业务回调
-    if (onStart) {
-      onStart(conversationState, messageManager.messages.value, conversationMethods)
+    if (result && onStart) {
+      currentConversationMetadata = conversation.metadata || {}
+      onStart(conversationState, messageManager.messages.value, {
+        createConversation,
+        switchConversation,
+        deleteConversation,
+        clear,
+        saveMessages,
+        saveConversations,
+        updateTitle,
+        updateMetadata,
+        abortActiveRequest
+      })
     }
 
     return result
+  }
+
+  const apis = {
+    createConversation,
+    switchConversation,
+    deleteConversation,
+    clear,
+    saveMessages,
+    saveConversations,
+    updateTitle,
+    updateMetadata,
+    abortActiveRequest
   }
 
   /**
@@ -95,14 +320,16 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
    * @param defaultTitle 默认标题
    */
   const autoSetTitle = (currentId: string, defaultTitle = '新会话') => {
-    const currentConversation = conversationState.conversations.find((conversation) => conversation.id === currentId)
-    if (!currentConversation) return
+    const currentConversation = conversations.value.find((conversation) => conversation.id === currentId)
+    if (!currentConversation || currentId !== activeConversationId.value) {
+      return
+    }
 
-    const currentTitle = currentConversation?.title
+    const currentTitle = currentConversation.title
     if (currentTitle === defaultTitle && currentId) {
-      const messageContent = currentConversation.messages.find((item) => item.role === 'user')?.content
+      const messageContent = getActiveEngine()?.messages.value.find((item) => item.role === 'user')?.content
       const contentStr = typeof messageContent === 'string' ? messageContent : JSON.stringify(messageContent)
-      conversationMethods.updateTitle(currentId, contentStr.substring(0, 20))
+      updateTitle(currentId, contentStr.substring(0, 20))
     }
   }
 
@@ -112,9 +339,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
     // 会话状态
     conversationState,
     // 会话方法（包装后，覆盖原始方法）
-    ...conversationMethods,
-    createConversation,
-    switchConversation,
+    ...apis,
     autoSetTitle
   }
 }

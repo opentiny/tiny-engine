@@ -91,6 +91,39 @@
       <div title="删除">
         <icon-del class="svg-currentcolor" @click.stop="remove"></icon-del>
       </div>
+      <!-- AI助手按钮（默认状态：隐藏） -->
+      <div title="AI助手" class="ai-helper">
+        <TinyPopover
+          v-model="showAIPopover"
+          placement="bottom-start"
+          width="360"
+          popper-class="ai-popper"
+          trigger="manual"
+          :visible-arrow="false"
+        >
+          <CanvasAIChat
+            v-if="shouldShowAIChat"
+            class="ai-component"
+            @complete="handleAIChatComplete"
+            @close="closeAIHelper"
+          ></CanvasAIChat>
+          <AILoadingDialog
+            v-if="shouldShowAILoading"
+            class="ai-component"
+            @cancel="handleAILoadingCancel"
+          ></AILoadingDialog>
+          <AIConfirmDialog
+            v-if="shouldShowAIConfirm"
+            class="ai-component"
+            @confirm="handleAIConfirm"
+            @cancel="handleAICancel"
+            @refresh="handleAIRefresh"
+          ></AIConfirmDialog>
+          <template #reference>
+            <svg-icon name="add-group" @click.stop="openAIHelper"></svg-icon>
+          </template>
+        </TinyPopover>
+      </div>
     </div>
   </div>
   <div v-show="hoverState.height && hoverState.width" class="canvas-rect hover">
@@ -136,6 +169,14 @@ import {
 import { useLayout, useMaterial, useCanvas, useMessage } from '@opentiny/tiny-engine-meta-register'
 import { Popover } from '@opentiny/vue'
 import shortCutPopover from './shortCutPopover.vue'
+import CanvasAIChat from './CanvasAIChat.vue'
+import AIConfirmDialog from './AIConfirmDialog.vue'
+import AILoadingDialog from './AILoadingDialog.vue'
+import { chat } from '../services/agentServices'
+import { utils } from '@opentiny/tiny-engine-utils'
+import useAIChat from '../composables/useAIChat'
+
+const { deepClone } = utils
 
 // 工具操作条高度
 const OPTION_BAR_HEIGHT = 24
@@ -155,6 +196,9 @@ const STYLE_UNSET = 'unset'
 
 export default {
   components: {
+    AILoadingDialog,
+    CanvasAIChat,
+    AIConfirmDialog,
     IconDel: IconDel(),
     IconSetting: IconSetting(),
     IconChevronLeft: IconChevronLeft(),
@@ -198,6 +242,29 @@ export default {
   },
   emits: ['remove', 'selectSlot', 'setting'],
   setup(props) {
+    const { pageState: _pageState, getNode } = useCanvas()
+
+    const {
+      getNodeAIStatus,
+      openNodeAIChat,
+      closeNodeAIHelper,
+      startNodeAILoading,
+      cancelNodeAILoading,
+      shouldShowNodeAIChat,
+      shouldShowNodeAILoading,
+      shouldShowNodeAIConfirm,
+      confirmNodeAIAction,
+      updateNodeAIStatus,
+      cancelNodeAIAction,
+      applyAIPatches,
+      buildAIChatRequest
+    } = useAIChat()
+
+    // AI请求的AbortController，用于取消正在进行的请求
+    let aiChatAbortController = null
+    // 递增token，用于防止并发请求的响应竞争
+    let aiChatRequestToken = 0
+
     const remove = () => {
       removeNodeById(getCurrent().schema?.id)
     }
@@ -282,6 +349,89 @@ export default {
       const config = useMaterial().getMaterial(props.selectState.componentName)
       return config?.configure?.isModal
     })
+
+    // 是否显示AI聊天界面
+    const shouldShowAIChat = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAIChat(currentSchema.id)
+    })
+
+    // 是否显示确认弹窗
+    const shouldShowAIConfirm = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAIConfirm(currentSchema.id)
+    })
+
+    // 是否显示AI加载状态
+    const shouldShowAILoading = computed(() => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return false
+      }
+
+      return shouldShowNodeAILoading(currentSchema.id)
+    })
+
+    const showAIPopover = ref(false)
+    watch(
+      () => {
+        const currentSchema = getCurrent().schema
+        if (!currentSchema?.id) {
+          return false
+        }
+        const status = getNodeAIStatus(currentSchema?.id)
+        return status?.state !== 'hidden' && !status?.collapsed
+      },
+      (val) => {
+        showAIPopover.value = val
+      }
+    )
+
+    // 切换AI助手显示/隐藏
+    const openAIHelper = () => {
+      const currentSchema = getCurrent().schema
+
+      if (!currentSchema?.id) {
+        return
+      }
+
+      const currentStatus = getNodeAIStatus(currentSchema.id)
+
+      if (currentStatus && currentStatus.collapsed) {
+        // 面板已收起，重新展开恢复原状态
+        updateNodeAIStatus(currentSchema.id, { collapsed: false })
+      } else if (currentStatus && currentStatus.state !== 'hidden') {
+        // 面板当前可见，收起面板但保留业务状态
+        updateNodeAIStatus(currentSchema.id, { collapsed: true })
+      } else {
+        // hidden状态，进入chat
+        openNodeAIChat(currentSchema.id)
+      }
+    }
+
+    // 关闭AI助手（由其他组件调用，如AI聊天界面的关闭按钮）
+    const closeAIHelper = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      const currentStatus = getNodeAIStatus(currentSchema.id)
+      // loading/confirm状态下只收起面板，保留状态以便重新打开恢复
+      if (currentStatus && (currentStatus.state === 'loading' || currentStatus.state === 'confirm')) {
+        updateNodeAIStatus(currentSchema.id, { collapsed: true })
+      } else {
+        closeNodeAIHelper(currentSchema.id)
+      }
+    }
 
     const optionRef = ref(null)
     const fixStyle = ref('')
@@ -633,6 +783,166 @@ export default {
       fixStyle.value = optionStyleValue
     })
 
+    // AI聊天完成处理
+    const handleAIChatComplete = async (content) => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      // 先进入加载状态
+      startNodeAILoading(currentSchema.id, 'AI正在处理您的请求...')
+
+      // 在AI修改节点前，先刷新originalNodeData为当前最新节点数据
+      // 避免取消/重新生成时回滚到过期的快照，丢失用户之前的普通编辑
+      const currentNode = getNode(currentSchema.id)
+      if (currentNode) {
+        const currentStatus = getNodeAIStatus(currentSchema.id)
+        if (currentStatus) {
+          currentStatus.originalNodeData = deepClone(currentNode)
+        }
+      }
+
+      // 创建新的AbortController用于取消请求，递增token防止响应竞争
+      aiChatAbortController = new AbortController()
+      const currentToken = ++aiChatRequestToken
+
+      try {
+        const params = await buildAIChatRequest(content)
+        const response = await chat(params, aiChatAbortController.signal)
+
+        // 响应到达后校验token：如果有更新的请求已经发出，丢弃本次响应
+        if (currentToken !== aiChatRequestToken) {
+          return
+        }
+
+        // 响应到达后再次检查：如果用户已经取消，不应用AI补丁
+        const status = getNodeAIStatus(currentSchema.id)
+        if (!status || status.state !== 'loading') {
+          return
+        }
+
+        // AI运行完：设置chatContent、aiModifiedNodeData，修改画布schema为AI的schema
+        // 应用失败则取消loading，避免UI永久转圈
+        if (!applyAIPatches(currentSchema.id, response, content)) {
+          cancelNodeAILoading(currentSchema.id)
+        }
+      } catch (error) {
+        // 请求被取消时不再应用补丁
+        if (error.name === 'AbortError' || error.name === 'CanceledError') {
+          return
+        }
+        // 其他错误：取消loading状态，避免UI永久转圈
+        cancelNodeAILoading(currentSchema.id)
+      }
+    }
+
+    // AI加载取消处理
+    const handleAILoadingCancel = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      // 中止正在进行的AI请求
+      if (aiChatAbortController) {
+        aiChatAbortController.abort()
+        aiChatAbortController = null
+        // 递增token，使任何未完成的请求响应失效
+        aiChatRequestToken++
+      }
+
+      // 取消加载状态
+      cancelNodeAILoading(currentSchema.id)
+    }
+
+    // 刷新AI操作（重新生成）
+    // 逻辑：修改画布节点schema为originalNodeData，设置aiModifiedNodeData为空，重新发起请求
+    const handleAIRefresh = async () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      const nodeId = currentSchema.id
+      const currentAIStatus = getNodeAIStatus(nodeId)
+      if (!currentAIStatus) {
+        return
+      }
+
+      // 恢复画布节点schema为originalNodeData，同步重建nodesMap
+      if (currentAIStatus.originalNodeData) {
+        const { restoreNodeSubtree } = useCanvas()
+        restoreNodeSubtree(nodeId, deepClone(currentAIStatus.originalNodeData))
+        useMessage().publish({ topic: 'schemaChange', data: { nodeId } })
+      }
+
+      // 设置aiModifiedNodeData为空
+      updateNodeAIStatus(nodeId, {
+        aiModifiedNodeData: undefined
+      })
+
+      // 重新进入加载状态
+      startNodeAILoading(nodeId, 'AI正在重新生成...')
+
+      // 使用上次的聊天消息重新发起请求
+      const chatContent = currentAIStatus.chatContent
+      if (!chatContent) {
+        cancelNodeAILoading(nodeId)
+        return
+      }
+
+      try {
+        const params = await buildAIChatRequest(chatContent)
+        // 创建新的AbortController用于重新生成的请求，递增token防止响应竞争
+        const refreshToken = ++aiChatRequestToken
+        aiChatAbortController = new AbortController()
+        const response = await chat(params, aiChatAbortController.signal)
+
+        // 响应到达后校验token：如果有更新的请求已经发出，丢弃本次响应
+        if (refreshToken !== aiChatRequestToken) {
+          return
+        }
+
+        // 响应到达后检查是否已被取消
+        const status = getNodeAIStatus(nodeId)
+        if (!status || status.state !== 'loading') {
+          return
+        }
+
+        // AI运行完操作和 handleAIChatComplete 一样，应用失败则取消loading
+        if (!applyAIPatches(nodeId, response, chatContent)) {
+          cancelNodeAILoading(nodeId)
+        }
+      } catch (error) {
+        // 请求被取消时不做额外处理
+        if (error.name === 'AbortError' || error.name === 'CanceledError') {
+          return
+        }
+        cancelNodeAILoading(nodeId)
+      }
+    }
+
+    // 确认AI操作
+    const handleAIConfirm = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      confirmNodeAIAction(currentSchema.id)
+    }
+
+    // 取消AI操作
+    const handleAICancel = () => {
+      const currentSchema = getCurrent().schema
+      if (!currentSchema?.id) {
+        return
+      }
+
+      cancelNodeAIAction(currentSchema.id)
+    }
+
     return {
       remove,
       moveUp,
@@ -646,11 +956,22 @@ export default {
       showQuickAction,
       showPopover,
       showToParent,
+      showAIPopover,
       activeSetting,
       isModal,
       onMousedown,
       labelStyle,
-      labelRef
+      labelRef,
+      openAIHelper,
+      shouldShowAIChat,
+      shouldShowAILoading,
+      shouldShowAIConfirm,
+      closeAIHelper,
+      handleAIChatComplete,
+      handleAILoadingCancel,
+      handleAIConfirm,
+      handleAICancel,
+      handleAIRefresh
     }
   }
 }
@@ -941,5 +1262,35 @@ export default {
     top: auto;
     cursor: se-resize;
   }
+}
+
+.ai-helper {
+  position: relative;
+  .ai-component,
+  .ai-component-loading {
+    position: absolute;
+    right: 0;
+    width: 360px;
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: slideIn 0.2s ease-in-out forwards;
+  }
+  .ai-component-loading {
+    width: 270px;
+  }
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(10px);
+  }
+}
+.ai-popper.ai-popper.tiny-popper.tiny-popover {
+  padding: 0;
+  border-radius: 40px;
 }
 </style>

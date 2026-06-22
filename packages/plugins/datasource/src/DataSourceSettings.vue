@@ -5,6 +5,7 @@
         <div>
           <data-source-setting-remote
             v-model="state.dataSource.data"
+            ref="remoteRef"
             :editable="editable"
             @renderRemoteData="renderRemoteData"
           ></data-source-setting-remote>
@@ -75,6 +76,7 @@ export default {
   setup(props, { emit }) {
     const { dataSourceState } = useDataSource()
     const recordRef = ref(null)
+    const remoteRef = ref(null)
 
     const state = reactive({
       dataSource: {},
@@ -86,6 +88,10 @@ export default {
 
     const saveRecord = () => {
       return recordRef.value.saveRecordList()
+    }
+
+    const getRemoteConfig = () => {
+      return remoteRef.value?.getRemoteConfig?.() || {}
     }
 
     const changeRecord = () => {
@@ -145,12 +151,14 @@ export default {
     return {
       state,
       recordRef,
+      remoteRef,
       showRemote,
       tabClick,
       renderRemoteData,
       refresh,
       changeTab,
-      saveRecord
+      saveRecord,
+      getRemoteConfig
     }
   }
 }

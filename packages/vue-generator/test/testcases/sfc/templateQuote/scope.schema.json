@@ -1,0 +1,29 @@
+{
+  "state": {
+    "items": [
+      { "name": "test", "tag": "featured" },
+      { "name": "hello", "tag": "normal" }
+    ]
+  },
+  "methods": {},
+  "componentName": "Page",
+  "css": "",
+  "props": {},
+  "lifeCycles": {},
+  "children": [
+    {
+      "componentName": "TinyButton",
+      "props": {
+        "jsonContent": "{\"key\": \"value\", \"nested\": \"data\"}",
+        "mixedQuotes": "She said \"hello\" and he said 'hi'",
+        "filteredItems": {
+          "type": "JSExpression",
+          "value": "this.state.items.filter(i => i.name === \"test\" && i.tag === 'featured')"
+        }
+      },
+      "id": "scope-test-001",
+      "children": []
+    }
+  ],
+  "fileName": "testQuoteScope"
+}

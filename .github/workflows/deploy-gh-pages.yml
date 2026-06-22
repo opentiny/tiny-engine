@@ -5,14 +5,11 @@ on:
     branches: [develop]
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Backend environment'
+      backend_url:
+        description: 'Backend Base URL (e.g. https://agent.bytedev.site/)'
         required: true
-        default: 'alpha'
-        type: choice
-        options:
-          - alpha
-          - production
+        default: 'https://agent.bytedev.site/'
+        type: string
 
 jobs:
   deploy-gh-pages:
@@ -40,18 +37,26 @@ jobs:
         run: pnpm install
 
       - name: add environment variable
+        env:
+          ENV_BACKEND_URL: ${{ github.event.inputs.backend_url || 'https://agent.bytedev.site/' }}
         run: |
-          ENV=${{ github.event.inputs.environment || 'alpha' }}
-          VITE_ORIGIN_URL="https://agent-alpha.opentiny.design/"
-          if [ "$ENV" = "production" ]; then
-            VITE_ORIGIN_URL="https://agent.opentiny.design/"
+          if [[ "$ENV_BACKEND_URL" == *$'\n'* || "$ENV_BACKEND_URL" == *$'\r'* ]]; then
+            echo "::error::backend_url must be a single-line value"
+            exit 1
           fi
+
+          if [[ ! "$ENV_BACKEND_URL" =~ ^https?://[a-zA-Z0-9._-]+(:[0-9]+)?(/[a-zA-Z0-9._/~:%-]*)?$ ]]; then
+            echo "::error::backend_url must be an http(s) base URL using only URL-safe characters (letters, digits, . _ - / ~ : %)"
+            exit 1
+          fi
+
+          ENV_BACKEND_URL="${ENV_BACKEND_URL%/}/"
+
           cat <<EOF >> designer-demo/env/.env.alpha
           # ---- appended by CI (gh-pages) ----
-          VITE_ORIGIN=$VITE_ORIGIN_URL
+          VITE_ORIGIN=$ENV_BACKEND_URL
           EOF
-          echo "DEPLOY_ENV=$ENV"
-          echo "VITE_ORIGIN_URL=$VITE_ORIGIN_URL"
+          echo "VITE_ORIGIN_URL=$ENV_BACKEND_URL"
       - name: Run Build
         run: |
           set -eo pipefail

@@ -62,7 +62,7 @@ export default {
       })
     }
   },
-  emits: ['confirm'],
+  emits: ['confirm', 'update:modelValue'],
   setup(props, { emit }) {
     const dataSourceRemoteAdapteRef = ref(null)
 
@@ -141,10 +141,24 @@ export default {
         })
     }
 
+    const getRemoteConfig = () => {
+      const options = { ...state.remoteData.options }
+
+      if (options.params) {
+        options.params = string2Obj(options.params)
+      }
+
+      return {
+        options,
+        ...dataSourceRemoteAdapteRef.value.getEditorValue()
+      }
+    }
+
     return {
       state,
       dataSourceRemoteAdapteRef,
       sendRequest,
+      getRemoteConfig,
       closePanel: close
     }
   }

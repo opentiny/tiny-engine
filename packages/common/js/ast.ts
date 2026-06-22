@@ -38,12 +38,23 @@ export const string2Ast = (string = ''): BabelAst =>
 export const ast2String = (ast: GeneratorInput): string => generate(ast, { retainLines: true }).code // 将 AST 再转回字符串
 
 type FormatterFn = (input: string) => string
-type SupportedLanguage = 'json' | 'typescript' | 'javascript' | 'html' | 'css'
+type SupportedLanguage = 'json' | 'typescript' | 'javascript' | 'html' | 'css' | 'vue' | 'less'
+type SupportedPrettierParser = 'json' | 'babel' | 'babel-ts' | 'html' | 'css' | 'less' | 'vue'
 
-const formatScript: FormatterFn = (string) => {
+const PRETTIER_PLUGINS = [parserBabel, parseCss, parserHtml]
+
+const formatWithParser = (string: string, parser: SupportedPrettierParser, options: PrettierOptions = {}): string =>
+  prettier.format(string, {
+    parser,
+    plugins: PRETTIER_PLUGINS,
+    ...basePrettierConfig,
+    ...options
+  })
+
+const formatScript = (string: string, parser: 'babel' | 'babel-ts' = 'babel'): string => {
   let newStr = string
   const options: PrettierOptions = {
-    parser: 'babel',
+    parser,
     plugins: [parserBabel],
     ...basePrettierConfig
   }
@@ -72,34 +83,49 @@ const formatScript: FormatterFn = (string) => {
   return newStr
 }
 
-const formatJson: FormatterFn = (string) =>
-  prettier.format(string, {
-    parser: 'json',
-    plugins: [parserBabel],
-    trailingComma: 'es5',
-    ...basePrettierConfig
-  })
+const formatJson: FormatterFn = (string) => formatWithParser(string, 'json')
 
-const formatHtml: FormatterFn = (string) =>
-  prettier.format(string, {
-    parser: 'html',
-    plugins: [parserBabel, parserHtml],
-    ...basePrettierConfig
-  })
+const formatHtml: FormatterFn = (string) => formatWithParser(string, 'html')
 
-const formatCss: FormatterFn = (string) =>
-  prettier.format(string, {
-    parser: 'css',
-    plugins: [parseCss],
-    ...basePrettierConfig
-  })
+const formatCss: FormatterFn = (string) => formatWithParser(string, 'css')
+
+const formatVue: FormatterFn = (string) => formatWithParser(string, 'vue')
+
+const formatLess: FormatterFn = (string) => formatWithParser(string, 'less')
 
 const formatterMap: Record<SupportedLanguage, FormatterFn> = {
   json: formatJson,
-  typescript: formatScript,
+  typescript: (str) => formatScript(str, 'babel-ts'),
   javascript: formatScript,
   html: formatHtml,
-  css: formatCss
+  css: formatCss,
+  vue: formatVue,
+  less: formatLess
+}
+
+const parserMap: Record<string, SupportedPrettierParser> = {
+  json: 'json',
+  js: 'babel',
+  jsx: 'babel',
+  mjs: 'babel',
+  cjs: 'babel',
+  ts: 'babel-ts',
+  tsx: 'babel-ts',
+  css: 'css',
+  less: 'less',
+  html: 'html',
+  vue: 'vue'
+}
+
+export const getPrettierParserByFileName = (fileName = ''): SupportedPrettierParser | undefined => {
+  const pureFileName = fileName.split('?')[0].split('#')[0].toLowerCase()
+  const extension = pureFileName.split('.').at(-1)
+
+  if (!extension || extension === pureFileName) {
+    return undefined
+  }
+
+  return parserMap[extension]
 }
 
 export const formatString = (str: string, language: string): string => {
@@ -113,6 +139,27 @@ export const formatString = (str: string, language: string): string => {
   }
 
   return result
+}
+
+export const formatStringByFileName = (str: string, fileName: string): string => {
+  const parser = getPrettierParserByFileName(fileName)
+
+  if (!parser) {
+    return str
+  }
+
+  try {
+    if (parser === 'babel' || parser === 'babel-ts') {
+      return formatScript(str, parser)
+    }
+
+    return formatWithParser(str, parser)
+  } catch (error) {
+    const printer: Console = console
+    printer.log(error)
+
+    return str
+  }
 }
 
 export { parse, parseExpression, traverse, generate }

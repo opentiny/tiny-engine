@@ -16,19 +16,12 @@ export interface StreamDataHandlerOptions {
   }
 }
 
-const handleDeltaReasoning = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
-  if (typeof choice.delta.reasoning_content === 'string' && choice.delta.reasoning_content) {
-    if (lastMessage.renderContent.at(-1)?.contentType !== 'reasoning') {
-      lastMessage.renderContent.push({
-        type: 'collapsible-text',
-        contentType: 'reasoning',
-        title: '深度思考',
-        content: '',
-        status: 'reasoning',
-        defaultOpen: true
-      })
-    }
-    lastMessage.renderContent.at(-1)!.content += choice.delta.reasoning_content
+const handleDeltaReasoning = (
+  choice: ChatCompletionStreamResponseChoice,
+  lastMessage: Message,
+  reasoningAlreadyMerged = false
+) => {
+  if (typeof choice.delta.reasoning_content === 'string' && choice.delta.reasoning_content && !reasoningAlreadyMerged) {
     lastMessage.reasoning_content = (lastMessage.reasoning_content || '') + choice.delta.reasoning_content
   }
 }
@@ -39,15 +32,10 @@ const handleDeltaContent = (
   contentType = 'markdown'
 ) => {
   if (typeof choice.delta.content === 'string' && choice.delta.content) {
-    if (lastMessage.renderContent.at(-1)?.contentType === 'reasoning') {
-      lastMessage.renderContent.at(-1)!.status = 'finish'
-    }
     if (lastMessage.renderContent.at(-1)?.type !== contentType) {
       lastMessage.renderContent.push({ type: contentType, content: '' })
-      lastMessage.content = ''
     }
     lastMessage.renderContent.at(-1)!.content += choice.delta.content
-    lastMessage.content += choice.delta.content
   }
 }
 
@@ -66,6 +54,24 @@ const handleDeltaToolCalls = (choice: ChatCompletionStreamResponseChoice, lastMe
       }
     }
   }
+}
+
+const mergeUnprocessedDelta = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
+  handleDeltaReasoning(choice, lastMessage)
+  if (typeof choice.delta.content === 'string' && choice.delta.content) {
+    lastMessage.content ||= ''
+    lastMessage.content += choice.delta.content
+  }
+  handleDeltaToolCalls(choice, lastMessage)
+}
+
+const syncThinkingState = (choice: ChatCompletionStreamResponseChoice, lastMessage: Message) => {
+  if (typeof choice.delta.reasoning_content !== 'string') {
+    return
+  }
+
+  lastMessage.state ||= {}
+  lastMessage.state.thinking = Boolean(choice.delta.reasoning_content)
 }
 
 /**
@@ -91,10 +97,11 @@ export function createStreamDataHandler(options: StreamDataHandlerOptions) {
       hooks.onStreamStart(messages)
     }
 
-    // 核心流式处理逻辑
-    handleDeltaReasoning(choice, lastMessage)
+    if (!data.__contentAlreadyMerged) {
+      mergeUnprocessedDelta(choice, lastMessage)
+    }
+    syncThinkingState(choice, lastMessage)
     handleDeltaContent(choice, lastMessage, getContentType())
-    handleDeltaToolCalls(choice, lastMessage)
 
     // 触发钩子
     if (typeof choice.delta.content === 'string' && choice.delta.content) {
