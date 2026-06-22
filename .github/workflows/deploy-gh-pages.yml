@@ -45,8 +45,8 @@ jobs:
             exit 1
           fi
 
-          if [[ ! "$ENV_BACKEND_URL" =~ ^https?://[^[:space:]/?#:]+(:[0-9]+)?(/[^[:space:]?#]*)?$ ]]; then
-            echo "::error::backend_url must be an http(s) base URL without query or hash"
+          if [[ ! "$ENV_BACKEND_URL" =~ ^https?://[a-zA-Z0-9._-]+(:[0-9]+)?(/[a-zA-Z0-9._/~:%-]*)?$ ]]; then
+            echo "::error::backend_url must be an http(s) base URL using only URL-safe characters (letters, digits, . _ - / ~ : %)"
             exit 1
           fi
 
