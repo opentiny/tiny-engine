@@ -174,7 +174,38 @@ class FileStore extends StoreAdapter {
   }
 
   /**
-   * Check if a document matches the query
+   * Deep equality, mirroring NeDB's areThingsEqual: primitives by ===, Dates by
+   * timestamp, arrays and plain objects by recursive value comparison. An array
+   * never equals a non-array.
+   */
+  deepEqual(a, b) {
+    if (a === b) return true
+    if (a === null || b === null || typeof a !== 'object' || typeof b !== 'object') return false
+
+    const aIsArray = Array.isArray(a)
+    const bIsArray = Array.isArray(b)
+    if (aIsArray !== bIsArray) return false
+
+    if (a instanceof Date || b instanceof Date) {
+      return a instanceof Date && b instanceof Date && a.getTime() === b.getTime()
+    }
+
+    const aKeys = Object.keys(a)
+    const bKeys = Object.keys(b)
+    if (aKeys.length !== bKeys.length) return false
+    for (const k of aKeys) {
+      if (!Object.prototype.hasOwnProperty.call(b, k)) return false
+      if (!this.deepEqual(a[k], b[k])) return false
+    }
+    return true
+  }
+
+  /**
+   * Check if a document matches the query (NeDB-compatible semantics).
+   * An object query value is treated as an operator object only when every key
+   * starts with `$`; otherwise (plain object or array) it is deep-compared, so
+   * `{ config: { mode: 'x' } }` or `{ tags: ['a'] }` does not silently match all
+   * records. A RegExp query value is matched like `$regex`.
    */
   matchesQuery(doc, query) {
     if (!query || Object.keys(query).length === 0) {
@@ -182,16 +213,25 @@ class FileStore extends StoreAdapter {
     }
 
     for (const [key, value] of Object.entries(query)) {
-      if (typeof value === 'object' && value !== null) {
-        if (value.$regex && !value.$regex.test(doc[key])) return false
-        if (value.$ne !== undefined && doc[key] === value.$ne) return false
-        if (value.$in !== undefined && !value.$in.includes(doc[key])) return false
-        if (value.$nin !== undefined && value.$nin.includes(doc[key])) return false
-        if (value.$gt !== undefined && !(doc[key] > value.$gt)) return false
-        if (value.$gte !== undefined && !(doc[key] >= value.$gte)) return false
-        if (value.$lt !== undefined && !(doc[key] < value.$lt)) return false
-        if (value.$lte !== undefined && !(doc[key] <= value.$lte)) return false
+      if (value !== null && typeof value === 'object' && !(value instanceof RegExp)) {
+        const keys = Object.keys(value)
+        const isOperatorObject = keys.length > 0 && keys.every((k) => k.startsWith('$'))
 
+        if (isOperatorObject) {
+          if (value.$regex && !value.$regex.test(doc[key])) return false
+          if (value.$ne !== undefined && doc[key] === value.$ne) return false
+          if (value.$in !== undefined && !value.$in.includes(doc[key])) return false
+          if (value.$nin !== undefined && value.$nin.includes(doc[key])) return false
+          if (value.$gt !== undefined && !(doc[key] > value.$gt)) return false
+          if (value.$gte !== undefined && !(doc[key] >= value.$gte)) return false
+          if (value.$lt !== undefined && !(doc[key] < value.$lt)) return false
+          if (value.$lte !== undefined && !(doc[key] <= value.$lte)) return false
+        } else if (!this.deepEqual(doc[key], value)) {
+          // Plain object or array query value: deep-compare (NeDB areThingsEqual)
+          return false
+        }
+      } else if (value instanceof RegExp) {
+        if (!value.test(doc[key])) return false
       } else if (doc[key] !== value) {
         // Simple equality check
         return false

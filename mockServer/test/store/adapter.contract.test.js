@@ -131,4 +131,28 @@ describe.each(adapterFactories)('%s honours the StoreAdapter contract', (_name, 
     expect(await store.find({ _id: { $nin: ['p1'] } })).toHaveLength(2)
     expect(await store.find({ name: { $regex: /^ba/ } })).toHaveLength(2)
   })
+
+  test('plain object query value deep-compares instead of matching all', async () => {
+    await store.insert({ _id: 'o1', config: { mode: 'x', n: 1 } })
+    await store.insert({ _id: 'o2', config: { mode: 'y', n: 2 } })
+    await store.insert({ _id: 'o3', config: { mode: 'x', n: 3 } })
+
+    const matches = await store.find({ config: { mode: 'x', n: 1 } })
+    expect(matches).toHaveLength(1)
+    expect(matches[0]._id).toBe('o1')
+
+    // a plain object that matches no record must return none — not everything
+    expect(await store.find({ config: { mode: 'z' } })).toHaveLength(0)
+  })
+
+  test('array query value deep-compares instead of matching all', async () => {
+    await store.insert({ _id: 'a1', tags: ['red', 'blue'] })
+    await store.insert({ _id: 'a2', tags: ['green'] })
+
+    const matches = await store.find({ tags: ['red', 'blue'] })
+    expect(matches).toHaveLength(1)
+    expect(matches[0]._id).toBe('a1')
+
+    expect(await store.find({ tags: ['purple'] })).toHaveLength(0)
+  })
 })
