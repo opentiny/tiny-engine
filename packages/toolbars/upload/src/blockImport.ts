@@ -91,6 +91,27 @@ export function normalizeImportedBlockDefaultValue(value: any) {
   return value
 }
 
+function getImportedBlockEmptyDefaultValueByType(type = '') {
+  switch (String(type || '').toLowerCase()) {
+    case 'number':
+      return 0
+    case 'boolean':
+      return false
+    case 'array':
+      return []
+    case 'object':
+      return {}
+    case 'function':
+      return {
+        type: 'JSFunction',
+        value: 'function() {}'
+      }
+    case 'string':
+    default:
+      return ''
+  }
+}
+
 function isImportedBlockLiteralExpression(value = '') {
   const raw = String(value || '').trim()
   if (!raw) return false
@@ -210,9 +231,21 @@ export function resolveImportedBlockPropType(declaredType: any, value: any) {
   return inferImportedBlockPropTypeFromValue(value)
 }
 
-export function resolveImportedBlockDefaultValue(declaredDefault: any, value: any) {
-  if (isImportedBlockDynamicBindingValue(value)) return ''
-  if (value !== undefined) return normalizeImportedBlockDefaultValue(value)
-  if (declaredDefault !== undefined) return normalizeImportedBlockDefaultValue(declaredDefault)
-  return ''
+export function resolveImportedBlockDefaultValue(declaredDefault: any, value: any, propType?: string) {
+  const normalizedDeclaredDefault = normalizeImportedBlockDefaultValue(declaredDefault)
+  const normalizedValue = normalizeImportedBlockDefaultValue(value)
+  const resolvedType = String(propType || resolveImportedBlockPropType(undefined, value) || 'string')
+
+  if (isImportedBlockDynamicBindingValue(value)) {
+    if (declaredDefault !== undefined) {
+      return normalizedDeclaredDefault
+    }
+
+    return getImportedBlockEmptyDefaultValueByType(resolvedType)
+  }
+
+  if (value !== undefined) return normalizedValue
+  if (declaredDefault !== undefined) return normalizedDeclaredDefault
+
+  return getImportedBlockEmptyDefaultValueByType(resolvedType)
 }

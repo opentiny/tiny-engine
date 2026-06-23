@@ -183,6 +183,61 @@ export default {
       return Array.from(merged.values())
     }
 
+    const mergeI18nMessages = (base: Record<string, any> = {}, incoming: Record<string, any> = {}) => {
+      const mergedLocales = new Set([...Object.keys(base || {}), ...Object.keys(incoming || {})])
+      const result: Record<string, any> = {}
+
+      mergedLocales.forEach((locale) => {
+        result[locale] = {
+          ...((base && base[locale]) || {}),
+          ...((incoming && incoming[locale]) || {})
+        }
+      })
+
+      return result
+    }
+
+    const mergeDataSourceByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item) return
+
+        const key = String(item.name || item.id || '')
+        if (!key) return
+
+        merged.set(key, item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const mergeGlobalStateById = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        const id = String(item?.id || '')
+        if (!id) return
+
+        const existing = merged.get(id)
+        merged.set(
+          id,
+          existing
+            ? {
+                ...existing,
+                ...item,
+                id,
+                state: item?.state ?? existing?.state ?? {},
+                getters: item?.getters ?? existing?.getters,
+                actions: item?.actions ?? existing?.actions
+              }
+            : item
+        )
+      })
+
+      return Array.from(merged.values())
+    }
+
     const toPascalCase = (input = '') =>
       String(input)
         .split(/[-_\s]+/)
@@ -448,20 +503,25 @@ export default {
       const { appSchemaState } = useResource()
       const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
       const importedComponentsMap = Array.isArray(appSchema?.componentsMap) ? appSchema.componentsMap : []
-      const i18n = appSchema?.i18n || {}
-      const locales = Object.keys(i18n).length
-        ? Object.keys(i18n).map((key) => ({ lang: key, label: key }))
+      const importedI18n = appSchema?.i18n || {}
+      const mergedI18n = mergeI18nMessages(appSchemaState.langs?.messages || {}, importedI18n)
+      const locales = Object.keys(mergedI18n).length
+        ? Object.keys(mergedI18n).map((key) => ({ lang: key, label: key }))
         : [
             { lang: 'zh_CN', label: 'zh_CN' },
             { lang: 'en_US', label: 'en_US' }
           ]
+      const mergedUtils = mergeUtilsByName(appSchemaState.utils || [], importedUtils)
+      const mergedDataSource = mergeDataSourceByName(appSchemaState.dataSource || [], appSchema?.dataSource?.list || [])
+      const mergedGlobalState = mergeGlobalStateById(appSchemaState.globalState || [], appSchema?.globalState || [])
+
       appSchemaState.langs = {
         locales,
-        messages: i18n
+        messages: mergedI18n
       }
-      appSchemaState.utils = importedUtils
-      appSchemaState.dataSource = appSchema?.dataSource?.list || []
-      appSchemaState.globalState = appSchema?.globalState || []
+      appSchemaState.utils = mergedUtils
+      appSchemaState.dataSource = mergedDataSource
+      appSchemaState.globalState = mergedGlobalState
       appSchemaState.componentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], importedComponentsMap)
       syncComponentsDepsByMap(appSchemaState.componentsMap || [])
 
@@ -482,9 +542,16 @@ export default {
           componentsTree,
           pageSchema: pages,
           componentsMap: appSchemaState.componentsMap,
+          i18n: mergedI18n,
+          utils: mergedUtils,
+          dataSource: {
+            ...(appSchema.dataSource || {}),
+            list: mergedDataSource
+          },
+          globalState: mergedGlobalState,
           meta: {
             ...(appSchema.meta || {}),
-            globalState: (appSchema.meta && appSchema.meta.globalState) || appSchema.globalState || []
+            globalState: mergedGlobalState
           }
         }
         localStorage.setItem('TE_LOCAL_APPSCHEMA', JSON.stringify(normalizedAppData))
@@ -593,7 +660,7 @@ export default {
                 const parentVal = parentProps[propName]
 
                 const propType = resolveImportedBlockPropType(declared?.type, parentVal)
-                const defaultValue = resolveImportedBlockDefaultValue(declared?.default, parentVal)
+                const defaultValue = resolveImportedBlockDefaultValue(declared?.default, parentVal, propType)
 
                 blockProperties.push({
                   property: propName,
