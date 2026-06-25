@@ -43,7 +43,7 @@ TinyEngine 现在支持将 **File 存储模式** 与一份标准化的 **DSL Ski
               │
               ▼
    ┌───────────────────────┐
-   │  MockServer (File 模式) │  ◄── 启动命令：MOCK_DB_MODE=file npm run dev
+   │  MockServer (File 模式) │  ◄── 启动命令：pnpm dev:file
    └───────────────────────┘
               │
               ▼
@@ -54,7 +54,7 @@ TinyEngine 现在支持将 **File 存储模式** 与一份标准化的 **DSL Ski
 
 - **文件即数据**：File 模式下，MockServer 直接扫描 `mockServer/data/` 目录的 JSON 文件，文件名优先取 `name || label`（冲突时自动追加后缀）。
 - **可编辑性**：页面 / 区块的 `occupier` 必须为 `null`，否则进入画布后会提示被占用而无法编辑。
-- **命名与关联**：页面通过 `app` 字段关联所属应用，`route` 需在应用内唯一；Skill 推荐应用与页面的 ID 统一使用整数。
+- **命名与关联**：页面通过 `app` 字段关联所属应用，`route` 需在应用内唯一；应用与页面的 ID 统一使用整数（字符串格式也兼容）。
 
 ## 前置条件
 
@@ -108,8 +108,6 @@ pnpm serve:backend:file
 
 数据将读写 `mockServer/data/` 目录。
 
-> 想自定义数据目录时：`MOCK_DB_MODE=file MOCK_FILE_DB_PATH=/path/to/data npm run dev`。
-
 ### 2. 向 AI Agent 描述目标
 
 明确告诉 Agent 你要生成什么，越具体越好。例如：
@@ -147,7 +145,7 @@ Agent 会遵循 Skill 内定义的标准流程：
 
 ### 文件输出路径
 
-| 产物 | 落盘路径 | 文件名规则 |
+| 产物 | 文件路径 | 文件名规则 |
 | --- | --- | --- |
 | 应用 | `mockServer/data/apps/<app-name>.json` | 应用 `name` |
 | 页面 | `mockServer/data/pages/<PageName>.json` | 页面 `name` |
@@ -221,7 +219,7 @@ Agent 会遵循 Skill 内定义的标准流程：
 
 - 文件名优先使用记录的 `name || label`；同名冲突时 MockServer 会自动追加随机后缀。
 - 页面的 `route` 需在所属应用内唯一，否则会被唯一性约束拦截。
-- 页面的 `app` 字段必须引用所属应用的 `id`，二者类型保持一致（Skill 推荐统一使用整数）。
+- 页面的 `app` 字段必须引用所属应用的 `id`，二者类型保持一致（推荐统一使用整数，也兼容字符串格式）。
 
 ## 示例：生成一个登录页
 
@@ -331,12 +329,6 @@ python3 .agents/skills/tinyengine-dsl-generator/scripts/check_css.py mockServer/
 | CSS 类名 | 使用 `className` | 使用 `class` |
 | 组件 ID | 全局唯一 | 复用 ID 导致渲染/选中异常 |
 | 保留名 | 禁止自定义组件叫 `Page`/`Block`/`Text`/`Template`/`Slot`/`Collection` | 与内置容器冲突 |
-
-更完整的协议定义、组件清单与常见模式，请查阅 Skill 的参考文档：
-
-- [协议规范 protocol.md](../../.agents/skills/tinyengine-dsl-generator/references/protocol.md)
-- [组件清单 components.md](../../.agents/skills/tinyengine-dsl-generator/references/components.md)
-- [常见模式 patterns.md](../../.agents/skills/tinyengine-dsl-generator/references/patterns.md)
 
 ## 常见问题
 
