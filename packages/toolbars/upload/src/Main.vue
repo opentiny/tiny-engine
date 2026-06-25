@@ -71,7 +71,8 @@ import {
   fetchResourceGroups,
   createResourceGroup,
   fetchResourceListByGroupId,
-  batchCreateResource
+  batchCreateResource,
+  updateAppConfig
 } from './http'
 import {
   buildImportedAssetCreatePayload,
@@ -525,6 +526,16 @@ export default {
       appSchemaState.componentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], importedComponentsMap)
       syncComponentsDepsByMap(appSchemaState.componentsMap || [])
 
+      try {
+        await updateAppConfig(appId, { global_state: mergedGlobalState })
+      } catch (error) {
+        useNotify({
+          type: 'warning',
+          title: '应用状态同步失败',
+          message: '已在当前编辑器会话中合并应用状态，但后端保存失败，请稍后重试'
+        })
+      }
+
       await syncImportedUtils(appId, importedUtils)
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
 
@@ -963,7 +974,9 @@ export default {
 
       replaceImportedAssetPlaceholders(appSchema, urlMap)
       delete appSchema.assets
-      useResource().fetchResource?.()
+      // Avoid re-fetching app schema here: it can overwrite freshly merged app state
+      // (for example globalState) before the current import flow finishes.
+      useMaterial().refreshMaterial?.()
 
       return {
         total: importedAssets.length,

@@ -86,3 +86,6 @@ export const batchCreateResource = (params: any[]) =>
       ...getResourceRequestMeta()
     }))
   )
+
+export const updateAppConfig = (appId: string | number, params: any) =>
+  getMetaApi(META_SERVICE.Http).post(`/app-center/api/apps/update/${appId}`, params)

@@ -1005,6 +1005,147 @@ export class VueToDslConverter {
       .replace(/\/$/, '')
   }
 
+  private getObjectKeyName(node: any): string | null {
+    if (t.isIdentifier(node)) return node.name
+    if (t.isStringLiteral(node)) return node.value
+    if (t.isNumericLiteral(node)) return String(node.value)
+    return null
+  }
+
+  private getStaticStateValue(node: any): any {
+    if (!node) return undefined
+
+    if (t.isStringLiteral(node) || t.isNumericLiteral(node) || t.isBooleanLiteral(node)) return node.value
+    if (t.isNullLiteral(node)) return null
+    if (t.isUnaryExpression(node) && node.operator === '-' && t.isNumericLiteral(node.argument)) {
+      return -node.argument.value
+    }
+    if (t.isTemplateLiteral(node)) {
+      return node.expressions?.length ? undefined : node.quasis.map((item: any) => item.value?.cooked || '').join('')
+    }
+    if (t.isArrayExpression(node)) {
+      return node.elements.map((item: any) => (item ? this.getStaticStateValue(item) : null))
+    }
+    if (t.isObjectExpression(node)) {
+      const result: Record<string, any> = {}
+
+      node.properties.forEach((property: any) => {
+        if (!t.isObjectProperty(property) || property.computed) return
+
+        const keyName = this.getObjectKeyName(property.key)
+        if (!keyName) return
+
+        const value = this.getStaticStateValue(property.value)
+        if (value !== undefined) {
+          result[keyName] = value
+        }
+      })
+
+      return result
+    }
+
+    return undefined
+  }
+
+  private getReturnedObjectExpression(node: any) {
+    if (!node) return null
+
+    if (t.isArrowFunctionExpression(node) && !t.isBlockStatement(node.body)) {
+      return t.isObjectExpression(node.body) ? node.body : null
+    }
+
+    if (!t.isFunctionExpression(node) && !t.isObjectMethod(node) && !t.isArrowFunctionExpression(node)) {
+      return null
+    }
+
+    const body = (node as any).body
+    if (!t.isBlockStatement(body)) return null
+
+    const returnStatement = body.body.find((item: any) => t.isReturnStatement(item) && item.argument)
+    if (!returnStatement || !t.isReturnStatement(returnStatement) || !returnStatement.argument) {
+      return null
+    }
+
+    return t.isObjectExpression(returnStatement.argument) ? returnStatement.argument : null
+  }
+
+  private collectPiniaStoreState(code: string, filePath: string) {
+    const stores: any[] = []
+
+    try {
+      const ast: any = babelParse(code, {
+        sourceType: 'module',
+        plugins: ['typescript', 'jsx']
+      })
+      const fallbackId =
+        filePath
+          .split('/')
+          .pop()
+          ?.replace(/\.[^.]+$/, '') || 'store'
+
+      traverse(ast, {
+        CallExpression: (path: any) => {
+          const callee = path.node.callee
+          const isDefineStore =
+            (t.isIdentifier(callee) && callee.name === 'defineStore') ||
+            (t.isMemberExpression(callee) && t.isIdentifier(callee.property) && callee.property.name === 'defineStore')
+
+          if (!isDefineStore) return
+
+          const args = path.node.arguments || []
+          const firstArg = args[0]
+          const secondArg = args[1]
+          const optionsNode = t.isObjectExpression(firstArg)
+            ? firstArg
+            : t.isObjectExpression(secondArg)
+            ? secondArg
+            : null
+
+          if (!optionsNode) return
+
+          let id = t.isStringLiteral(firstArg) ? firstArg.value : fallbackId
+          let stateNode: any = null
+
+          optionsNode.properties.forEach((property: any) => {
+            if (t.isObjectMethod(property)) {
+              const keyName = this.getObjectKeyName(property.key)
+              if (keyName === 'state') {
+                stateNode = this.getReturnedObjectExpression(property)
+              }
+              return
+            }
+
+            if (!t.isObjectProperty(property)) return
+
+            const keyName = this.getObjectKeyName(property.key)
+            if (keyName === 'id' && !t.isStringLiteral(firstArg) && t.isStringLiteral(property.value)) {
+              id = property.value.value
+              return
+            }
+
+            if (keyName === 'state') {
+              stateNode = this.getReturnedObjectExpression(property.value)
+            }
+          })
+
+          const state = stateNode ? this.getStaticStateValue(stateNode) : null
+          if (state && typeof state === 'object' && !Array.isArray(state) && Object.keys(state).length > 0) {
+            stores.push({
+              id,
+              state,
+              getters: {},
+              actions: {}
+            })
+          }
+        }
+      })
+    } catch {
+      // ignore invalid store modules
+    }
+
+    return stores
+  }
+
   private buildConflictResolvedFileName(
     relativePath: string,
     baseName: string,
@@ -1818,36 +1959,14 @@ export class VueToDslConverter {
     const globalState: any[] = []
     const storeFiles = context.allFiles
       .map((filePath) => this.normalizeVirtualPath(filePath))
-      .filter((filePath) => filePath.startsWith('src/stores/') && filePath.endsWith('.js'))
+      .filter((filePath) => filePath.startsWith('src/stores/') && /\.(js|ts|mjs|cjs)$/.test(filePath))
 
     for (const filePath of storeFiles) {
       try {
         const code = await context.readText(filePath)
         if (!code || !/defineStore\s*\(/.test(code)) continue
 
-        const idMatch = code.match(/id:\s*['"]([^'"]+)['"]/)
-        const stateMatch = code.match(/state:\s*\(\)\s*=>\s*\((\{[\s\S]*?\})\)/)
-        const fallbackId =
-          filePath
-            .split('/')
-            .pop()
-            ?.replace(/\.[^.]+$/, '') || 'store'
-        const entry: any = { id: idMatch ? idMatch[1] : fallbackId }
-
-        if (stateMatch) {
-          try {
-            const objText = stateMatch[1]
-            entry.state = Function(`return (${objText})`)()
-          } catch {
-            entry.state = {}
-          }
-        } else {
-          continue
-        }
-
-        if (entry.state && typeof entry.state === 'object' && Object.keys(entry.state).length > 0) {
-          globalState.push(entry)
-        }
+        globalState.push(...this.collectPiniaStoreState(code, filePath))
       } catch {
         // ignore
       }
