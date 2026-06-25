@@ -42,7 +42,7 @@ jobs:
       - name: add environment variable
         run: |
           ENV=${{ github.event.inputs.environment || 'alpha' }}
-          VITE_ORIGIN_URL="https://agent-alpha.opentiny.design/"
+          VITE_ORIGIN_URL="https://agent.bytedev.site/"
           if [ "$ENV" = "production" ]; then
             VITE_ORIGIN_URL="https://agent.opentiny.design/"
           fi
