@@ -67,7 +67,7 @@ export default defineConfigWithVueTs(
     }
   },
   {
-    files: ['scripts/**/*'],
+    files: ['scripts/**/*', 'skills/**/*'],
     rules: {
       'no-console': 'off',
       '@typescript-eslint/no-require-imports': 'off'

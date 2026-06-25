@@ -25,17 +25,17 @@ echo
 
 # 1. 结构验证
 echo "1️⃣ 结构验证..."
-python3 "$SCRIPT_DIR/validate_dsl.py" "$DSL_FILE" || exit 1
+node "$SCRIPT_DIR/validate_dsl.mjs" "$DSL_FILE" || exit 1
 echo
 
 # 2. 事件绑定检查
 echo "2️⃣ 事件绑定检查..."
-python3 "$SCRIPT_DIR/check_event_bindings.py" "$DSL_FILE" || exit 1
+node "$SCRIPT_DIR/check_event_bindings.mjs" "$DSL_FILE" || exit 1
 echo
 
 # 3. CSS 语法检查
 echo "3️⃣ CSS 语法检查..."
-python3 "$SCRIPT_DIR/check_css.py" "$DSL_FILE" basic || exit 1
+node "$SCRIPT_DIR/check_css.mjs" "$DSL_FILE" basic || exit 1
 echo
 
 echo "======================================"

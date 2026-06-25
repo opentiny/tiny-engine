@@ -15,7 +15,7 @@ Generate conformant DSL (JSON schemas) for TinyEngine low-code platform applicat
 | Generate block DSL | Describe reusable functionality with configurable props |
 | Generate app DSL   | Describe multi-page application structure               |
 | From screenshot    | Provide image with description of desired layout        |
-| Validate DSL       | Run `scripts/validate_dsl.py <file>`                    |
+| Validate DSL       | Run `node scripts/validate_dsl.mjs <file>`              |
 
 ## DSL Generation Workflow
 
@@ -152,7 +152,7 @@ Block receives props via `this.props.xxx` and emits events via `this.emit('event
 Run the validator:
 
 ```bash
-python3 /path/to/skill/scripts/validate_dsl.py <output-file>
+node /path/to/skill/scripts/validate_dsl.mjs <output-file>
 ```
 
 The validator checks:
@@ -666,6 +666,8 @@ Component catalog with props, events, and usage examples.
 
 Template patterns for common page types and interaction flows.
 
-### scripts/validate_dsl.py
+### scripts/validate_dsl.mjs
 
-Python validator for generated DSL files. Run before finalizing output.
+Node.js validator (ESM, zero dependencies) for generated DSL files. Run before finalizing output.
+Also available: `check_event_bindings.mjs`, `check_css.mjs`, `validate_page.mjs`, and the
+`validate_all.sh` orchestrator (which chains all three checks).
