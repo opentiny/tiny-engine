@@ -24,6 +24,9 @@ TinyEngine 现在支持将 **File 存储模式** 与一份标准化的 **DSL Ski
 - **版本控制友好**：格式化的 JSON 可直接提交 Git，页面 / 应用的变更历史一目了然。
 - **批量与可复用**：适合一次性生成整个应用（多页面 + 物料 + 关联），也可沉淀为团队模板。
 
+> MockServer File 模式当前只支持Fork代码仓开发场景。如果是使用CLI创建全新的项目，暂无法使用全部的两块能力，但可以单独使用DSL Skill生成JSON格式Schema到指定目录（需要复制Skill到新项目Agent的Skill目录，如.agents/skills/）。
+
+
 ## 工作原理
 
 整体链路如下：
@@ -74,9 +77,9 @@ DSL Skill 的规范位置在仓库内的：
 │   ├── components.md         # 可用组件清单与 props/events
 │   └── patterns.md           # 列表页 / 表单页等常见模板与交互模式
 └── scripts/
-    ├── validate_dsl.py       # 结构校验
-    ├── check_event_bindings.py
-    ├── check_css.py
+    ├── validate_dsl.mjs      # 结构校验
+    ├── check_event_bindings.mjs
+    ├── check_css.mjs
     └── validate_all.sh       # 一键综合校验
 ```
 
@@ -306,13 +309,13 @@ bash .agents/skills/tinyengine-dsl-generator/scripts/validate_all.sh mockServer/
 
 ```bash
 # 结构校验（必填字段、componentName、meta、ID 等）
-python3 .agents/skills/tinyengine-dsl-generator/scripts/validate_dsl.py mockServer/data/pages/Login.json
+node .agents/skills/tinyengine-dsl-generator/scripts/validate_dsl.mjs mockServer/data/pages/Login.json
 
 # 事件绑定检查（确保用 JSExpression 引用方法）
-python3 .agents/skills/tinyengine-dsl-generator/scripts/check_event_bindings.py mockServer/data/pages/Login.json
+node .agents/skills/tinyengine-dsl-generator/scripts/check_event_bindings.mjs mockServer/data/pages/Login.json
 
 # CSS 语法检查
-python3 .agents/skills/tinyengine-dsl-generator/scripts/check_css.py mockServer/data/pages/Login.json basic
+node .agents/skills/tinyengine-dsl-generator/scripts/check_css.mjs mockServer/data/pages/Login.json basic
 ```
 
 此外，Skill 内置一份**生成前检查清单（Pre-Generation Checklist）**，Agent 会在落盘前逐条核对，主要包括：事件绑定全部用 `JSExpression`、方法首参为 `event`、`modelValue` 带 `model: true`、应用与页面 ID 统一为整数、生命周期名以 `on` 开头、`occupier` 为 `null`、组件 ID 唯一、CSS 类名用 `className`。完整清单见 [SKILL.md](https://github.com/opentiny/tiny-engine/blob/develop/.agents/skills/tinyengine-dsl-generator/SKILL.md)。
