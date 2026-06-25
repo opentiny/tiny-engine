@@ -68,6 +68,9 @@ import {
   fetchUtilsResourceList,
   createUtilsResource,
   updateUtilsResource,
+  fetchDataSourceList,
+  createDataSource,
+  updateDataSource,
   fetchResourceGroups,
   createResourceGroup,
   fetchResourceListByGroupId,
@@ -211,6 +214,73 @@ export default {
       })
 
       return Array.from(merged.values())
+    }
+
+    const normalizeImportedDataSourceItem = (item: any) => {
+      if (!item || typeof item !== 'object') return item
+
+      const nextItem = { ...item }
+      const rawData = item.data && typeof item.data === 'object' ? { ...item.data } : {}
+      const hasOptions = rawData.options && typeof rawData.options === 'object'
+      const inferredType =
+        rawData.type ||
+        nextItem.type ||
+        (rawData.method || rawData.uri || rawData.params || rawData.isSync !== undefined ? 'remote' : 'array')
+
+      if (inferredType === 'remote') {
+        const options = {
+          ...(hasOptions ? rawData.options : {}),
+          method: (hasOptions ? rawData.options?.method : undefined) || rawData.method || 'GET',
+          uri: (hasOptions ? rawData.options?.uri : undefined) || rawData.uri || '',
+          params: (hasOptions ? rawData.options?.params : undefined) || rawData.params || '',
+          isSync: (hasOptions ? rawData.options?.isSync : undefined) ?? rawData.isSync ?? true
+        }
+
+        delete rawData.method
+        delete rawData.uri
+        delete rawData.params
+        delete rawData.isSync
+
+        nextItem.data = {
+          ...rawData,
+          type: 'remote',
+          options,
+          shouldFetch: rawData.shouldFetch || {
+            type: 'JSFunction',
+            value: 'function shouldFetch() { return true }'
+          },
+          willFetch: rawData.willFetch || {
+            type: 'JSFunction',
+            value: 'function willFetch(option) { return option }'
+          },
+          dataHandler: rawData.dataHandler || {
+            type: 'JSFunction',
+            value: 'function dataHandler(res) { return res }'
+          },
+          errorHandler: rawData.errorHandler || {
+            type: 'JSFunction',
+            value: 'function errorHandler(err) { return Promise.reject(err) }'
+          }
+        }
+      } else {
+        nextItem.data = {
+          ...rawData,
+          type: rawData.type || inferredType
+        }
+      }
+
+      return nextItem
+    }
+
+    const normalizeImportedDataSourceConfig = (dataSource: any = { list: [] }) => {
+      const list = Array.isArray(dataSource?.list)
+        ? dataSource.list.map((item: any) => normalizeImportedDataSourceItem(item))
+        : []
+
+      return {
+        ...dataSource,
+        list
+      }
     }
 
     const mergeGlobalStateById = (base: any[] = [], incoming: any[] = []) => {
@@ -451,6 +521,69 @@ export default {
       }
     }
 
+    const syncImportedDataSources = async (appId: string, importedDataSource: any = { list: [] }) => {
+      const importedList = Array.isArray(importedDataSource?.list)
+        ? importedDataSource.list.filter((item: any) => item?.name)
+        : []
+      const { appSchemaState } = useResource()
+
+      if (!importedList.length) {
+        return {
+          list: Array.isArray(appSchemaState.dataSource) ? appSchemaState.dataSource : [],
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      }
+
+      try {
+        const existingRes: any = await fetchDataSourceList(appId)
+        const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+        const existingMap = new Map<string, any>()
+
+        existingList.forEach((item: any) => {
+          if (!item?.name) return
+          existingMap.set(String(item.name), item)
+        })
+
+        await Promise.allSettled(
+          importedList.map((item: any) => {
+            const existing = existingMap.get(String(item.name))
+            const payload = {
+              name: item.name,
+              app: appId,
+              data: item.data || {}
+            }
+
+            return existing?.id ? updateDataSource(existing.id, payload) : createDataSource(payload)
+          })
+        )
+
+        const refreshedRes: any = await fetchDataSourceList(appId)
+        const refreshedList = Array.isArray(refreshedRes) ? refreshedRes : refreshedRes?.data || []
+
+        if (Array.isArray(appSchemaState.dataSource)) {
+          appSchemaState.dataSource.splice(0, appSchemaState.dataSource.length, ...refreshedList)
+        } else {
+          appSchemaState.dataSource = refreshedList
+        }
+
+        return {
+          list: refreshedList,
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      } catch (_error) {
+        return {
+          list: importedList,
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      }
+    }
+
     const getNextBlockVersion = (block: any) => {
       const backupList = Array.isArray(block?.histories) ? block.histories : []
 
@@ -503,6 +636,7 @@ export default {
     const applyImportedAppSchema = async (appSchema: any, appId: string, hostType: string) => {
       const { appSchemaState } = useResource()
       const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
+      const normalizedImportedDataSource = normalizeImportedDataSourceConfig(appSchema?.dataSource || { list: [] })
       const importedComponentsMap = Array.isArray(appSchema?.componentsMap) ? appSchema.componentsMap : []
       const importedI18n = appSchema?.i18n || {}
       const mergedI18n = mergeI18nMessages(appSchemaState.langs?.messages || {}, importedI18n)
@@ -513,7 +647,10 @@ export default {
             { lang: 'en_US', label: 'en_US' }
           ]
       const mergedUtils = mergeUtilsByName(appSchemaState.utils || [], importedUtils)
-      const mergedDataSource = mergeDataSourceByName(appSchemaState.dataSource || [], appSchema?.dataSource?.list || [])
+      const mergedDataSource = mergeDataSourceByName(
+        appSchemaState.dataSource || [],
+        normalizedImportedDataSource.list || []
+      )
       const mergedGlobalState = mergeGlobalStateById(appSchemaState.globalState || [], appSchema?.globalState || [])
 
       appSchemaState.langs = {
@@ -521,7 +658,11 @@ export default {
         messages: mergedI18n
       }
       appSchemaState.utils = mergedUtils
-      appSchemaState.dataSource = mergedDataSource
+      if (Array.isArray(appSchemaState.dataSource)) {
+        appSchemaState.dataSource.splice(0, appSchemaState.dataSource.length, ...mergedDataSource)
+      } else {
+        appSchemaState.dataSource = mergedDataSource
+      }
       appSchemaState.globalState = mergedGlobalState
       appSchemaState.componentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], importedComponentsMap)
       syncComponentsDepsByMap(appSchemaState.componentsMap || [])
@@ -537,6 +678,10 @@ export default {
       }
 
       await syncImportedUtils(appId, importedUtils)
+      const syncedDataSource = await syncImportedDataSources(appId, {
+        ...normalizedImportedDataSource,
+        list: mergedDataSource
+      })
       const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
 
       try {
@@ -556,8 +701,9 @@ export default {
           i18n: mergedI18n,
           utils: mergedUtils,
           dataSource: {
-            ...(appSchema.dataSource || {}),
-            list: mergedDataSource
+            ...normalizedImportedDataSource,
+            ...syncedDataSource,
+            list: syncedDataSource?.list || mergedDataSource
           },
           globalState: mergedGlobalState,
           meta: {

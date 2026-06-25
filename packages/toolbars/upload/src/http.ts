@@ -60,6 +60,18 @@ export const createUtilsResource = (params: any) =>
 export const updateUtilsResource = (params: any) =>
   getMetaApi(META_SERVICE.Http).post('/app-center/api/apps/extension/update', params)
 
+// 获取数据源列表
+export const fetchDataSourceList = (appId: string | number) =>
+  getMetaApi(META_SERVICE.Http).get(`/app-center/api/sources/list/${appId}`)
+
+// 创建数据源
+export const createDataSource = (params: any) =>
+  getMetaApi(META_SERVICE.Http).post('/app-center/api/sources/create', params)
+
+// 更新数据源
+export const updateDataSource = (dataSourceId: string | number, params: any) =>
+  getMetaApi(META_SERVICE.Http).post(`/app-center/api/sources/update/${dataSourceId}`, params)
+
 // 资源管理 - 获取资源分组列表
 export const fetchResourceGroups = () =>
   getMetaApi(META_SERVICE.Http).get(
