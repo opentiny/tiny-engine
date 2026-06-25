@@ -101,7 +101,7 @@
               "name": "conditional-rendering.md"
             },
             {
-              "title": "使用Skill生成页面或应用",
+              "title": "对接本地 AI Agent 生成页面或应用",
               "name": "using-skill-to-integrate-local-ai-agent.md"
             },
             {
