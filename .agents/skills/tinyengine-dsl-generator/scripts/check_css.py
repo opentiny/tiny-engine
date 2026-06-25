@@ -19,7 +19,25 @@ import json
 import re
 import subprocess
 import sys
-from typing import Dict, List, Any
+from typing import Any, Dict, List
+
+
+def _extract_inner_dsl(dsl_data: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    解包外层包装结构，返回内层 DSL。
+
+    落盘的页面/区块文件是"外层包装 + 内层 DSL"：
+    - 页面 DSL 在 page_content 内
+    - 区块 DSL 在 content 内
+    仅当内层确实是含 componentName 的节点时才解包，避免误吞同名普通字段；
+    否则原样返回。
+    """
+    if isinstance(dsl_data, dict):
+        for key in ('page_content', 'content'):
+            inner = dsl_data.get(key)
+            if isinstance(inner, dict) and 'componentName' in inner:
+                return inner
+    return dsl_data
 
 
 class CSSChecker:
@@ -32,8 +50,9 @@ class CSSChecker:
 
     def check(self) -> bool:
         """检查CSS语法"""
-        page_content = self.dsl.get('page_content', self.dsl)
-        css_string = page_content.get('css', '')
+        # 从外层包装(page_content/content)解包到内层 DSL 后再读取 css
+        inner = _extract_inner_dsl(self.dsl)
+        css_string = inner.get('css', '')
 
         if not css_string:
             self.warnings.append("No CSS field found")

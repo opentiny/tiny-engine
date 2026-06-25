@@ -24,7 +24,9 @@ class TinyEngineValidator:
             dsl_data: DSL数据
             schema_type: Schema类型 ('page', 'block', 'app', 'auto')
         """
-        self.dsl = dsl_data
+        self.original = dsl_data
+        # 落盘文件是"外层包装 + 内层 DSL"，这里解包到内层 DSL 再做协议校验。
+        self.dsl, self._from_wrapper = self._unwrap(dsl_data)
         self.schema_type = schema_type
         self.errors = []
         self.warnings = []
@@ -32,6 +34,24 @@ class TinyEngineValidator:
         # 自动检测schema类型
         if schema_type == 'auto':
             self.schema_type = self._detect_schema_type()
+
+    @staticmethod
+    def _unwrap(dsl_data: Any):
+        """
+        识别并解包外层包装结构。
+
+        TinyEngine 落盘的页面/区块文件是"外层包装 + 内层 DSL"结构：
+        - 页面：真正的页面 DSL 在 `page_content` 内
+        - 区块：真正的区块 DSL 在 `content` 内
+        返回 (内层DSL, 是否来自包装)。若不是包装结构，原样返回 (原数据, False)。
+        仅当内层确实是含 componentName 的节点时才解包，避免误吞同名普通字段。
+        """
+        if isinstance(dsl_data, dict):
+            for key in ('page_content', 'content'):
+                inner = dsl_data.get(key)
+                if isinstance(inner, dict) and 'componentName' in inner:
+                    return inner, True
+        return dsl_data, False
 
     def _detect_schema_type(self) -> str:
         """自动检测schema类型"""
@@ -59,7 +79,7 @@ class TinyEngineValidator:
 
     def _validate_page(self) -> bool:
         """验证页面Schema"""
-        required = ['componentName', 'fileName', 'meta']
+        required = ['componentName', 'fileName']
         for field in required:
             if field not in self.dsl:
                 self.errors.append(f"Missing required field: {field}")
@@ -68,8 +88,13 @@ class TinyEngineValidator:
             self.errors.append(f"Page componentName must be 'Page', got: {self.dsl.get('componentName')}")
 
         # 验证meta
+        # 原始页面协议(IPageSchema)要求 meta；但外层包装格式把 meta 等元信息
+        # 上提到包装层(name/route/isHome/parentId/group...)，page_content 内不再含 meta。
+        # 因此仅在校验"裸"页面 DSL 时强制要求 meta；包装格式由外层字段承载。
         if 'meta' in self.dsl:
             self._validate_meta(self.dsl['meta'])
+        elif not self._from_wrapper:
+            self.errors.append("Missing required field: meta")
 
         # 验证children
         if 'children' in self.dsl and self.dsl['children']:
@@ -153,6 +178,10 @@ class TinyEngineValidator:
 
     def _validate_children(self, children: List[Any]) -> None:
         """验证子组件列表"""
+        # children 可以是字符串（文本子节点），按协议(IComponentSchema[] | string)
+        # 这是合法形态，无需逐项校验；递归调用遇到字符串时同样直接返回。
+        if isinstance(children, str):
+            return
         for i, child in enumerate(children):
             if not isinstance(child, dict):
                 self.errors.append(f"Child at index {i} is not an object")
