@@ -82,7 +82,7 @@
     {
       "componentName": "TinyForm",
       "props": {
-        "modelValue": {
+        "model": {
           "type": "JSExpression",
           "value": "this.state.searchForm"
         },
@@ -210,7 +210,7 @@
       "componentName": "TinyForm",
       "props": {
         "ref": "formRef",
-        "modelValue": {
+        "model": {
           "type": "JSExpression",
           "value": "this.state.formData"
         },
@@ -286,36 +286,7 @@
 
 ## 常见交互模式
 
-### 事件绑定基础规则
-
-**重要**: 事件绑定必须使用 `JSExpression` 引用 methods 中定义的方法，不能直接使用 `JSFunction`。
-
-❌ 错误示例:
-
-```json
-"onClick": {
-  "type": "JSFunction",
-  "value": "function() { this.handleClick(); }"
-}
-```
-
-✅ 正确示例:
-
-```json
-// methods 中定义
-"methods": {
-  "handleClick": {
-    "type": "JSFunction",
-    "value": "function(event) { /* 处理点击逻辑 */ }"
-  }
-}
-
-// 事件绑定
-"onClick": {
-  "type": "JSExpression",
-  "value": "this.handleClick"
-}
-```
+> **事件绑定规则**: 事件必须用 `JSExpression` 引用 `methods` 中的方法，不能用 `JSFunction`，`value` 里也不准写函数体。完整 ❌/✅ 见 [SKILL.md](../SKILL.md)「Critical Rules」与 [protocol.md](protocol.md)。下面只给模板。
 
 ### 事件参数传递
 
@@ -416,7 +387,7 @@
     {
       "componentName": "TinyForm",
       "props": {
-        "modelValue": {
+        "model": {
           "type": "JSExpression",
           "value": "this.state.dialogForm"
         }
@@ -837,8 +808,9 @@
                   "text": "编辑",
                   "size": "small",
                   "onClick": {
-                    "type": "JSFunction",
-                    "value": "function() { this.handleEdit(row); }"
+                    "type": "JSExpression",
+                    "value": "this.handleEdit",
+                    "params": ["row"]
                   }
                 },
                 "id": "btn-edit"
@@ -938,6 +910,12 @@
       }
     }
   },
+  "methods": {
+    "handleConfirm": {
+      "type": "JSFunction",
+      "value": "function(event) { this.emit('confirm'); }"
+    }
+  },
   "children": [
     {
       "componentName": "div",
@@ -974,7 +952,7 @@
             "text": "确认",
             "onClick": {
               "type": "JSExpression",
-              "value": "function() { this.emit('confirm'); }"
+              "value": "this.handleConfirm"
             }
           }
         }

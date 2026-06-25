@@ -5,7 +5,7 @@
  * 检查DSL文件中的事件绑定是否正确使用JSExpression引用方法，
  * 而不是在value中直接写函数定义。
  *
- * Node.js port of check_event_bindings.py — 行为保持一致，零依赖。
+ * 零依赖（仅用 Node 标准库）。
  */
 
 import fs from 'node:fs';

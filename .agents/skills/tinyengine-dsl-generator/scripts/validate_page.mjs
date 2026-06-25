@@ -5,9 +5,8 @@
  * 验证包装格式的页面DSL文件（包含 name, id, app, route, page_content 等字段）。
  * 运行所有检查：结构验证、事件绑定检查、CSS检查。
  *
- * Node.js port of validate_page.py —— 行为保持一致，零依赖。
- * 通过子进程调用同目录下的 check_event_bindings.mjs / check_css.mjs（与 Python 版
- * subprocess.run(..., capture_output=False) 行为对应：子进程直接继承 stdout/stderr）。
+ * 零依赖（仅用 Node 标准库）。
+ * 通过子进程调用同目录下的 check_event_bindings.mjs / check_css.mjs（子进程直接继承 stdout/stderr）。
  */
 
 import fs from 'node:fs';

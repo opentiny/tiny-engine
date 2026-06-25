@@ -4,8 +4,7 @@
  *
  * 验证生成的DSL是否符合TinyEngine协议规范。
  *
- * Node.js port of validate_dsl.py — 行为保持一致，零依赖（仅用 Node 标准库）。
- * 通过 .agents/skills/tinyengine-dsl-generator/scripts/_tests/harness.py 特征化测试校验。
+ * 零依赖（仅用 Node 标准库）。
  */
 
 import fs from 'node:fs';
@@ -13,8 +12,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 /**
- * 把 JS 值的类型名映射为 Python 的类型名（与 validate_dsl.py 的 type(x).__name__ 对齐），
- * 这样 app id / meta.appId 告警里的 "got: <类型>" 与 Python 基线逐字一致。
+ * 把 JS 值的类型名映射为 Python 风格（int/str/bool/list/dict/NoneType），
+ * 用于 app id / meta.appId 告警里的 "got: <类型>" 描述。
  */
 function pyTypeName(value) {
   if (value === null) return 'NoneType';

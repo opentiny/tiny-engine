@@ -4,7 +4,7 @@
  *
  * 检查DSL中的CSS字段是否有语法错误（基础模式：括号匹配、基本语法，无需额外依赖）。
  *
- * Node.js port of check_css.py 的 basic 模式 —— 行为保持一致，零依赖。
+ * 零依赖（仅用 Node 标准库）。
  * （原 tinycss2 / postcss 模式依赖外部环境，已精简；basic 是默认且为编排脚本使用的模式。）
  */
 

@@ -64,7 +64,7 @@ interface TinyInputProps {
 "modelValue": {
   "type": "JSExpression",
   "value": "this.state.inputText",
-  "model": true  // 必须设置为 true
+  "model": true  // 标准双向绑定 (v-model)
 }
 
 // ⚠️ 事件绑定示例:
@@ -189,14 +189,14 @@ interface TinyFormProps {
 "modelValue": {
   "type": "JSExpression",
   "value": "this.state.formData",
-  "model": true  // 必须设置为 true
+  "model": true  // 标准双向绑定 (v-model)
 }
 
 // ⚠️ 表单内输入框双向绑定:
 "modelValue": {
   "type": "JSExpression",
   "value": "this.state.formData.name",
-  "model": true  // 必须设置为 true，而不是 { "prop": "name" }
+  "model": true  // 标准双向绑定用 true；{prop} 仅用于具名 v-model (v-model:xxx)
 }
 
 // 表单验证示例:
@@ -460,155 +460,15 @@ interface TinyPieChartProps {
 
 ## 组件查询
 
-当需要查找特定组件时，使用以下模式搜索 bundle.json：
+不要手动 grep bundle.json（≈1MB）。用查询脚本：
 
 ```bash
-# 查找组件
-grep -A 20 '"component": "ComponentName"' bundle.json
-
-# 查找分类
-grep '"category"' bundle.json | sort | uniq
+node scripts/query_components.mjs props TinyButton   # 某组件的属性表（模糊匹配）
+node scripts/query_components.mjs list               # 全部组件
+node scripts/query_components.mjs cat 表单           # 某分类下的组件
+node scripts/query_components.mjs search 表格        # 全字段搜索
 ```
 
-## 注意事项
+## 常见问题与规则
 
-1. **保留字**: Page, Block, Component, Template, Slot, Collection, Text 不应用作组件名
-2. **事件绑定**: 事件名以 `on` 开头，如 `onClick`, `onChange`，使用 `JSExpression` 引用方法
-3. **双向绑定**: 使用 `modelValue` 属性配合 `type: "JSExpression"`，并设置 `model: true`
-4. **样式**: 优先使用 `className` 引用 CSS 类，内联样式用 `style` 属性
-
-## 常见问题排查
-
-### 问题：输入框无法输入
-
-**检查**:
-
-- `modelValue` 中是否包含 `model: true`
-- 绑定的 state 变量是否存在
-
-```json
-// ✅ 正确配置
-"modelValue": {
-  "type": "JSExpression",
-  "value": "this.state.inputText",
-  "model": true  // 必须有这个
-}
-```
-
-### 问题：事件不触发
-
-**检查**:
-
-1. 是否使用 `JSExpression` 而非 `JSFunction`
-2. 方法名是否正确
-3. 方法是否在 `methods` 中定义
-
-```json
-// ❌ 错误
-"onClick": {
-  "type": "JSFunction",
-  "value": "function() { this.handleClick(); }"
-}
-
-// ✅ 正确
-"methods": {
-  "handleClick": {
-    "type": "JSFunction",
-    "value": "function(event) { /* 处理逻辑 */ }"
-  }
-},
-"onClick": {
-  "type": "JSExpression",
-  "value": "this.handleClick"
-}
-```
-
-### 问题：页面无法编辑
-
-**检查**: `occupier` 是否为 `null`
-
-```json
-// ✅ 页面可编辑
-{
-  "componentName": "Page",
-  "occupier": null,  // 必须是 null
-  ...
-}
-```
-
-### 问题：参数传递错误
-
-**检查**:
-
-1. 方法第一个参数是否为 `event`
-2. `params` 中的参数是否正确追加
-
-```json
-// 方法定义 - 第一个参数是 event
-"methods": {
-  "handleDelete": {
-    "type": "JSFunction",
-    "value": "function(event, id) { /* event 和 id 都可用 */ }"
-  }
-}
-
-// 事件绑定
-"onClick": {
-  "type": "JSExpression",
-  "value": "this.handleDelete",
-  "params": ["123"]  // 实际调用: handleDelete(event, 123)
-}
-```
-
-### 问题：CSS 样式不生效
-
-**检查**:
-
-- 类名是否正确引用
-
-```json
-// ✅ 正确的 CSS 格式
-"css": ".container {\n  padding: 20px;\n  background: #fff;\n}\n\n.title {\n  font-size: 18px;\n}"
-```
-
-### 问题：生命周期不执行
-
-**检查**:
-
-- 生命周期名是否以 `on` 开头（除 `setup` 外）
-- 函数体是否完整
-
-```json
-// ✅ 正确的生命周期配置
-"lifeCycles": {
-  "onMounted": {
-    "type": "JSFunction",
-    "value": "function onMounted() { this.loadData(); }"
-  },
-  "setup": {
-    "type": "JSFunction",
-    "value": "function setup({ props, state, watch }) { /* setup 逻辑 */ }"
-  }
-}
-```
-
-### 问题：条件渲染不工作
-
-**检查**:
-
-- `condition` 是否使用 `JSExpression`
-- 条件表达式是否返回布尔值
-
-```json
-// ✅ 正确的条件渲染
-{
-  "componentName": "div",
-  "props": {
-    "condition": {
-      "type": "JSExpression",
-      "value": "this.state.items.length > 0"
-    }
-  },
-  "children": [...]
-}
-```
+通用规则（事件绑定、双向绑定 `model`、`occupier`、`className`、生命周期、参数传递）的精简表见 [SKILL.md](../SKILL.md)「Critical Rules / Troubleshooting」；完整 ❌/✅ 示例与 TS 接口见 [protocol.md](protocol.md)；条件渲染 / 循环渲染等模式见 [patterns.md](patterns.md)。本文件专注于各组件的 props/events 参考。

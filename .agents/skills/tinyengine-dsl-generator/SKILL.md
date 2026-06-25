@@ -1,81 +1,42 @@
 ---
 name: tinyengine-dsl-generator
-description: Generate TinyEngine low-code platform DSL files - page, block, and app JSON schemas. Use when creating or modifying TinyEngine applications. Supports complete app generation, single page DSL with components and block references, reusable block DSL with configurable props, design-to-DSL conversion from screenshots, and template-based generation for common patterns like list pages, form pages, and dashboards.
+description: Use when creating or modifying TinyEngine low-code applications - generating page, block, or app DSL (JSON schemas), converting designs/screenshots to DSL, or debugging generated TinyEngine JSON.
 ---
 
 # TinyEngine DSL Generator
 
-Generate conformant DSL (JSON schemas) for TinyEngine low-code platform applications.
+Generate conformant DSL (JSON) for the TinyEngine low-code platform: **pages**, **blocks**, and **apps**. This file is a router — load the reference files on demand for detail instead of reading everything up front.
 
 ## Quick Reference
 
-| Task               | Command/Approach                                        |
-| ------------------ | ------------------------------------------------------- |
-| Generate page DSL  | Describe the page components, layout, and interactions  |
-| Generate block DSL | Describe reusable functionality with configurable props |
-| Generate app DSL   | Describe multi-page application structure               |
-| From screenshot    | Provide image with description of desired layout        |
-| Validate DSL       | Run `node scripts/validate_dsl.mjs <file>`              |
+| Task               | Do                                                    |
+| ------------------ | ----------------------------------------------------- |
+| Generate page DSL  | Describe components, layout, interactions → §Workflow |
+| Generate block DSL | Describe reusable functionality + configurable props |
+| Generate app DSL   | Describe multi-page structure + shared componentsMap  |
+| From screenshot    | Describe layout → map to components (§Design-to-DSL)  |
+| Lookup a component | `node scripts/query_components.mjs props <Name>`      |
+| Validate output    | `bash scripts/validate_all.sh <file>` (required)      |
 
-## DSL Generation Workflow
+## Workflow
 
-### 1. Understand the Goal
+1. **Understand the goal** — Page (components / state / methods / lifeCycles), Block (reusable, exposes a props `schema`), or App (pages + `componentsMap` + `meta`).
+2. **Gather requirements** — name / route / title; component hierarchy; state; event handlers; data sources. Blocks additionally: exposed props, emitted events. Apps additionally: all pages, shared `componentsMap`.
+3. **Load only the reference you need:**
 
-Identify what to generate:
+   | Need                                                        | File                                                       |
+   | ----------------------------------------------------------- | ---------------------------------------------------------- |
+   | Schema structure, TS interfaces, reserved names, prop types | [protocol.md](references/protocol.md)                      |
+   | Component props/events, or a component not listed here      | [components.md](references/components.md) · `query_components.mjs` |
+   | List page / form page / layout / interaction templates      | [patterns.md](references/patterns.md)                      |
 
-- **Page**: A single page with components, state, methods, lifecycle
-- **Block**: A reusable component with props schema for configuration
-- **App**: Complete application with multiple pages, componentsMap, meta
+   ⚠️ **Before generating any page with interactions**, read the event-binding section of [protocol.md](references/protocol.md). Event handlers are the #1 error source; the compact Critical Rules table below is a reminder, not a substitute for the full ❌/✅ example.
 
-### 2. Gather Requirements
+4. **Generate** — follow the Page skeleton + property types below. Full Page/Block/Component interfaces are in protocol.md.
+5. **Validate** (required) — see §Validate.
+6. **Run the checklist** before handing off — see §Pre-Generation Checklist.
 
-For **Pages**, collect:
-
-- Page name, route, title, description
-- Components hierarchy (layout, forms, tables, etc.)
-- State management needs
-- Event handlers and methods
-- Data sources (if any)
-
-For **Blocks**, additionally collect:
-
-- Exposed props (name, type, default, widget)
-- Events that the block emits
-- Whether it needs internal state
-
-For **Apps**, additionally collect:
-
-- All pages in the application
-- Shared componentsMap
-- Application-level configuration
-
-### 3. Reference Protocol
-
-See [references/protocol.md](references/protocol.md) for:
-
-- Complete schema structure definitions
-- Reserved component names (Page, Block, Text, etc.)
-- Property value types (JSExpression, i18n, JSFunction, JSResource)
-- Slot syntax for template usage
-
-See [references/components.md](references/components.md) for:
-
-- Available components (TinyButton, TinyGrid, etc.)
-- Component props and events
-- Usage examples
-
-See [references/patterns.md](references/patterns.md) for:
-
-- List page template
-- Form page template
-- Common interaction patterns
-- Layout patterns
-
-### 4. Generate the DSL
-
-Follow the schema structure exactly:
-
-**Page Structure**:
+### Page skeleton (anchor)
 
 ```json
 {
@@ -85,589 +46,122 @@ Follow the schema structure exactly:
   "state": {},
   "methods": {},
   "lifeCycles": {},
-  "children": [...]
+  "children": []
 }
 ```
 
-**Block Structure**:
+### Property value types
+
+- **Literal**: `"text"`, `123`, `true`
+- **JSExpression**: `{"type":"JSExpression","value":"this.state.count"}` — bindings, conditions, **event handlers**
+- **JSFunction**: `{"type":"JSFunction","value":"function(){}"}` — **only** inside `methods` / `lifeCycles`
+- **i18n**: `{"type":"i18n","key":"app.title"}`
+- **JSResource**: `{"type":"JSResource","value":"this.utils.format()"}`
+
+### Referencing a block
 
 ```json
-{
-  "componentName": "Block",
-  "fileName": "BlockName",
-  "schema": { "properties": [...], "events": {} },
-  "props": {},
-  "state": {},
-  "methods": {},
-  "lifeCycles": {},
-  "children": [...]
-}
+{ "componentName": "BlockFileName", "componentType": "block", "id": "block-001", "props": { "title": "value" } }
 ```
 
-**Component in children**:
+Inside the block: read `this.props.xxx`, emit via `this.emit('eventName', data)`.
+
+## Critical Rules (common pitfalls)
+
+These cause silent failures. Full ❌/✅ JSON examples live in [protocol.md](references/protocol.md); the checklist below enforces them.
+
+| Rule               | ❌ Wrong                                                                       | ✅ Right                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- |
+| **Event bindings** | `"onClick":{"type":"JSFunction",...}`; or `JSExpression.value` = `"function…"` | `"onClick":{"type":"JSExpression","value":"this.handleX"}` — put the body in `methods` as `JSFunction` |
+| **Method params**  | `function(filter){...}`                                                        | `function(event, filter){...}`; binding `"params":["'all'"]` → call `handleX(event,'all')`        |
+| **Lifecycle name** | `"mounted":{...}`                                                              | `"onMounted":{"type":"JSFunction","value":"function onMounted(){...}"}`                           |
+| **Two-way binding**| `modelValue` with **no** `model`                                               | `"model":true` (v-model) or `"model":{"prop":"x"}` (v-model:x)                                    |
+| **Page editable**  | `"occupier": {...}`                                                            | `"occupier": null`                                                                                |
+| **CSS class**      | `props.class`                                                                  | `props.className`                                                                                 |
+
+### Event bindings — the full pattern (highest-frequency error)
+
+The function body lives in `methods` (`JSFunction`); the event only **references** it (`JSExpression`). `event` is always the first arg; `params` append after.
 
 ```json
-{
+"methods": {
+  "handleDelete": {
+    "type": "JSFunction",
+    "value": "function(event, id) { this.state.list = this.state.list.filter(x => x.id !== id); }"
+  }
+},
+"children": [{
   "componentName": "TinyButton",
-  "id": "unique-id",
   "props": {
-    "text": "Button Text",
-    "type": "primary",
-    "onClick": { "type": "JSExpression", "value": "this.handleButtonClick" }
+    "text": "删除",
+    "onClick": { "type": "JSExpression", "value": "this.handleDelete", "params": ["123"] }
   }
-}
+}]
 ```
 
-**Property Value Types**:
+The binding above calls `handleDelete(event, 123)`. ❌ Never put a `JSFunction` on an event, and never put a `function(){}` body inside a `JSExpression.value` — both silently break the handler.
 
-- Literal: `"text"`, `123`, `true`
-- JSExpression: `{"type": "JSExpression", "value": "this.state.count"}`
-- i18n: `{"type": "i18n", "key": "app.title"}`
-- JSFunction: `{"type": "JSFunction", "value": "function() {}"}` - Only for methods and lifeCycles
-- JSResource: `{"type": "JSResource", "value": "this.utils.format()"}`
+**Memory aid:** `JSExpression` = reference (`this.fn`) · `JSFunction` = definition (`function(){}`). Events use references; methods use definitions.
 
-### 5. Using Blocks
-
-When a page references a block:
-
-```json
-{
-  "componentName": "BlockFileName",
-  "componentType": "block",
-  "id": "block-001",
-  "props": {
-    "configurableProp": "value",
-    "dataBinding": {
-      "type": "JSExpression",
-      "value": "this.state.dataSource"
-    }
-  }
-}
-```
-
-Block receives props via `this.props.xxx` and emits events via `this.emit('eventName', data)`.
-
-### 6. Validate the Output
-
-Run the validator:
+## Validate (required)
 
 ```bash
-node /path/to/skill/scripts/validate_dsl.mjs <output-file>
+bash .agents/skills/tinyengine-dsl-generator/scripts/validate_all.sh <output-file>
 ```
 
-The validator checks:
+`validate_all.sh` chains three checks — do **not** rely on `validate_dsl.mjs` alone (it misses event-binding errors). Fix and re-run until all three pass; never hand off unvalidated output.
 
-- Required fields presence
-- Correct componentName for Page/Block
-- Valid meta structure
-- Component ID recommendations
+| Stage          | Script                   | Catches                                                                         |
+| -------------- | ------------------------ | ------------------------------------------------------------------------------- |
+| Structure      | validate_dsl.mjs         | Required fields, Page/Block `componentName`, meta, `class` vs `className`, integer app id |
+| Event bindings | check_event_bindings.mjs | `JSFunction` on an event, or a function body in `JSExpression.value`           |
+| CSS            | check_css.mjs            | Malformed `css` strings                                                         |
 
-### 7. Pre-Generation Checklist (Before Finalizing)
+## Pre-Generation Checklist
 
-Before finalizing any TinyEngine DSL generation, verify:
+- [ ] Event bindings use `JSExpression`; no `value` starts with `"function"`; function bodies live in `methods` / `lifeCycles`
+- [ ] Event methods take `event` as the first parameter; `params` append after it
+- [ ] Lifecycle names start with `on` (`onMounted`, …); `setup` is the only exception
+- [ ] `modelValue` declares `model` (`true` for standard v-model)
+- [ ] `occupier` is `null`
+- [ ] All `id`s are unique; CSS classes use `className`, not `class`
+- [ ] App / page IDs are integers (`918`, not `"918"`)
 
-**Event Bindings**:
+## Component lookup
 
-- [ ] All event bindings (`onClick`, `onChange`, `onKeyup`, etc.) use `JSExpression` type
-- [ ] No `JSExpression.value` starts with `"function"`
-- [ ] All `JSExpression.value` are method references like `this.methodName`
-- [ ] All function definitions are in `methods` or `lifeCycles` with `JSFunction` type
+Don't load `bundle.json` (≈1 MB) by hand. Query it:
 
-**Model Bindings**:
-
-- [ ] All `modelValue` bindings have `"model": true` (for standard v-model)
-- [ ] State variables referenced in modelValue exist in `state` object
-
-**App ID Format** (统一使用整数):
-
-- [ ] App Schema `id` is integer (e.g., `918`)
-- [ ] App Schema `meta.appId` is integer (e.g., `918`)
-- [ ] App Metadata `id` is integer (e.g., `918`)
-- [ ] Page Files `app` is integer (e.g., `918`)
-
-**Other Checks**:
-
-- [ ] Event handler methods have `event` as first parameter
-- [ ] `params` in event bindings append after `event` parameter
-- [ ] Lifecycle names start with `on` (e.g., `onMounted`, not `mounted`)
-- [ ] `occupier` is `null` (for pages to be editable)
-- [ ] All component IDs are unique
-- [ ] All CSS classes use `className` (NOT `class`)
-
-## Critical Rules (Common Pitfalls)
-
-### Event Binding - Use JSExpression, NOT JSFunction
-
-**❌ WRONG #1** - Event binding with JSFunction:
-
-```json
-"onClick": {
-  "type": "JSFunction",
-  "value": "function() { this.setFilter('all'); }"
-}
+```bash
+node scripts/query_components.mjs list              # all components
+node scripts/query_components.mjs props TinyButton  # one component's props (fuzzy match)
+node scripts/query_components.mjs cat 表单          # components in a category
+node scripts/query_components.mjs search 表格       # full-text search
 ```
 
-**❌ WRONG #2** - JSExpression with function definition in value:
+## File output
 
-```json
-"onClick": {
-  "type": "JSExpression",
-  "value": "function(event) { this.state.selectedTodos = []; }"
-}
-```
+- **Apps** → `mockServer/data/apps/<app-name>.json`
+- **Pages** → `mockServer/data/pages/<PageName>.json`
+- **Blocks** → `mockServer/data/blocks/<BlockName>.json`
 
-**✅ CORRECT** - Event binding with JSExpression referencing method:
-
-```json
-"onClick": {
-  "type": "JSExpression",
-  "value": "this.setFilter",
-  "params": ["'all'"]
-}
-```
-
-**Rule**: Event bindings must use `JSExpression` to reference methods defined in the `methods` object. The actual function definition goes in `methods`, not in the event binding.
-
-**Memory Aid**:
-
-- `JSExpression` = Reference (e.g., `this.methodName`)
-- `JSFunction` = Definition (e.g., `function() {...}`)
-- Event bindings use references (`JSExpression`), method definitions use functions (`JSFunction`)
-
-### Method Parameters - Event is Always First
-
-Methods bound to events receive `event` as the first parameter automatically. Additional parameters via `params` are appended after.
-
-**Method definition** (in `methods`):
-
-```json
-"setFilter": {
-  "type": "JSFunction",
-  "value": "function(event, filter) { this.state.filter = filter; }"
-}
-```
-
-**Event binding**:
-
-```json
-"onClick": {
-  "type": "JSExpression",
-  "value": "this.setFilter",
-  "params": ["'all'"]  // Actual call: setFilter(event, 'all')
-}
-```
-
-**With multiple parameters**:
-
-```json
-"handleCheckboxChange": {
-  "type": "JSFunction",
-  "value": "function(event, row) { this.toggleTodo(event, row.id); }"
-}
-
-"onChange": {
-  "type": "JSExpression",
-  "value": "this.handleCheckboxChange",
-  "params": ["row"]  // Actual call: handleCheckboxChange(event, row)
-}
-```
-
-### LifeCycles - Use onMounted with Complete Function
-
-**❌ WRONG**:
-
-```json
-"lifeCycles": {
-  "mounted": {
-    "type": "JSFunction",
-    "value": "function() { this.loadTodos(); }"
-  }
-}
-```
-
-**✅ CORRECT**:
-
-```json
-"lifeCycles": {
-  "onMounted": {
-    "type": "JSFunction",
-    "value": "function onMounted() { this.loadTodos(); }"
-  }
-}
-```
-
-**Rules**:
-
-- Lifecycle names must start with `on` (e.g., `onMounted`, `onBeforeMount`)
-- Use complete function body with function name
-- Available: `setup`, `onBeforeMount`, `onMounted`, `onUnmounted`, `onUpdated`, `onBeforeUpdate`
-
-### Two-Way Binding - model Should Be true
-
-**❌ WRONG**:
-
-```json
-"modelValue": {
-  "type": "JSExpression",
-  "value": "this.state.newTodo",
-  "model": {
-    "prop": "newTodo"
-  }
-}
-```
-
-**✅ CORRECT**:
-
-```json
-"modelValue": {
-  "type": "JSExpression",
-  "value": "this.state.newTodo",
-  "model": true
-}
-```
-
-**Rule**: For standard v-model, set `model: true`. Only use object form for v-model:{propName} (rare).
-
-### Occupier Field - Must Be null
-
-**❌ WRONG**:
-
-```json
-"occupier": {
-  "id": 1,
-  "username": "admin"
-}
-```
-
-**✅ CORRECT**:
-
-```json
-"occupier": null
-```
-
-**Rule**: `occupier` must be `null` to allow page editing.
-
-### CSS Class Names - Use className, NOT class
-
-**❌ WRONG**:
-
-```json
-{
-  "componentName": "div",
-  "props": {
-    "class": "container"
-  }
-}
-```
-
-**✅ CORRECT**:
-
-```json
-{
-  "componentName": "div",
-  "props": {
-    "className": "container"
-  }
-}
-```
-
-**Rule**: In TinyEngine DSL, always use `className` for CSS classes, not `class`. This follows React/Vue convention.
-
-### CSS Field - Prefer Single-Line Format
-
-**Recommended (single-line)**:
-
-```json
-{
-  "componentName": "Page",
-  "css": ".container { padding: 20px; background: #fff; } .title { font-size: 18px; }"
-}
-```
-
-**Alternative (multi-line with escapes)** - Use for complex styles:
-
-```json
-{
-  "componentName": "Page",
-  "css": ".container {\n  padding: 20px;\n  background: #fff;\n}\n\n.title {\n  font-size: 18px;\n}"
-}
-```
-
-**Rules**:
-
-- For simple styles, use single-line CSS for cleaner JSON
-- For complex styles with many properties, use multi-line with `\n` escapes for better readability
-- Use standard CSS syntax
-- Avoid complex selectors when possible
-
-### Dynamic List Rendering with Slots
-
-Use TinyGrid with slots for dynamic lists:
-
-```json
-{
-  "componentName": "TinyGrid",
-  "props": {
-    "data": {
-      "type": "JSExpression",
-      "value": "this.getFilteredTodos()"
-    },
-    "columns": [
-      {
-        "field": "text",
-        "title": "Task",
-        "slots": {
-          "default": {
-            "type": "JSSlot",
-            "params": ["row"],
-            "value": [
-              {
-                "componentName": "Text",
-                "props": {
-                  "text": {
-                    "type": "JSExpression",
-                    "value": "row.text"
-                  }
-                }
-              }
-            ]
-          }
-        }
-      }
-    ]
-  }
-}
-```
-
-### Conditional Rendering
-
-Use `condition` property for v-if behavior:
-
-```json
-{
-  "componentName": "div",
-  "props": {
-    "condition": {
-      "type": "JSExpression",
-      "value": "this.getFilteredTodos().length === 0"
-    }
-  },
-  "children": [
-    {
-      "componentName": "Text",
-      "props": {
-        "text": "No todos yet!"
-      }
-    }
-  ]
-}
-```
-
-### Input Enter Key Handling
-
-```json
-// Method in methods
-"handleInputKeyup": {
-  "type": "JSFunction",
-  "value": "function(event) { if (event.keyCode === 13) this.addTodo(event); }"
-}
-
-// Binding
-"onKeyup": {
-  "type": "JSExpression",
-  "value": "this.handleInputKeyup"
-}
-```
-
-## Common Patterns
-
-### List Page with Search
-
-```json
-{
-  "state": {
-    "tableData": [],
-    "searchForm": {},
-    "pagination": { "currentPage": 1, "pageSize": 10, "total": 0 }
-  },
-  "methods": {
-    "fetchData": {
-      "type": "JSFunction",
-      "value": "async function() { /* load data */ }"
-    },
-    "handleSearch": {
-      "type": "JSFunction",
-      "value": "function() { this.state.pagination.currentPage = 1; this.fetchData(); }"
-    }
-  },
-  "children": [
-    { "componentName": "TinyForm", "children": [...] },
-    { "componentName": "TinyGrid", "props": { "data": { "type": "JSExpression", "value": "this.state.tableData" } } },
-    { "componentName": "TinyPager", "props": {...} }
-  ]
-}
-```
-
-### Form Page with Validation
-
-```json
-{
-  "state": {
-    "formData": {},
-    "rules": {
-      "name": [{ "required": true, "message": "Required" }]
-    }
-  },
-  "methods": {
-    "handleSubmit": {
-      "type": "JSFunction",
-      "value": "async function() { const valid = await this.$refs.formRef.validate(); if (valid) { /* submit */ } }"
-    }
-  },
-  "children": [
-    {
-      "componentName": "TinyForm",
-      "props": {
-        "ref": "formRef",
-        "modelValue": { "type": "JSExpression", "value": "this.state.formData" },
-        "rules": { "type": "JSExpression", "value": "this.state.rules" }
-      },
-      "children": [...]
-    }
-  ]
-}
-```
-
-### Configurable Block
-
-```json
-{
-  "componentName": "Block",
-  "fileName": "ConfigurableCard",
-  "schema": {
-    "properties": [
-      {
-        "label": { "zh_CN": "Config" },
-        "content": [
-          {
-            "property": "title",
-            "type": "String",
-            "defaultValue": "Default Title",
-            "label": { "text": { "zh_CN": "Title" } },
-            "widget": { "component": "MetaInput" }
-          }
-        ]
-      }
-    ]
-  },
-  "children": [
-    {
-      "componentName": "Text",
-      "props": {
-        "text": { "type": "JSExpression", "value": "this.props.title" }
-      }
-    }
-  ]
-}
-```
-
-## Reserved Component Names
-
-DO NOT use these as custom component names:
-
-- `Page` - Page container
-- `Block` - Block container
-- `Component` - Business component container (reserved)
-- `Template` - Virtual container for slots
-- `Slot` - Slot definition
-- `Collection` - Data source container
-- `Text` - Text node (renders as span)
-
-## Component Resources
-
-- **Components available**: See `designer-demo/public/mock/bundle.json` in the project
-- **Categories**: general, html, 容器组件, 图表组件, 评分组件, 进度条, etc.
-- **Common components**: TinyButton, TinyInput, TinyGrid, TinySelect, TinyForm, TinyDialogBox, TinyTabs
-
-## File Output
-
-Generated DSL files should be placed:
-
-- **Apps**: `mockServer/data/apps/<app-name>.json`
-- **Pages**: `mockServer/data/pages/<PageName>.json`
-- **Blocks**: `mockServer/data/blocks/<BlockName>.json`
-
-Page file structure (wrapper):
-
-```json
-{
-  "name": "PageName",
-  "id": "unique-id",
-  "app": 1,
-  "route": "page-route",
-  "page_content": {
-    /* actual page DSL with componentName: "Page" */
-  },
-  "tenant": 1,
-  "parentId": "0",
-  "group": "staticPages",
-  "isPage": true,
-  "isHome": false
-}
-```
-
-Block file structure (wrapper):
-
-```json
-{
-  "id": "unique-id",
-  "label": "BlockLabel",
-  "framework": "Vue",
-  "content": {
-    /* actual block DSL with componentName: "Block" */
-  },
-  "path": "category",
-  "public": 1,
-  "is_published": true
-}
-```
+Pages and blocks are saved with an **outer wrapper** around the DSL: page files wrap the Page DSL in `page_content` (plus `name`, `id`, `app`, `route`, `tenant`, `parentId`, `group`, `isPage`, `isHome`); block files wrap the Block DSL in `content` (plus `id`, `label`, `framework`, `path`, `public`, `is_published`). The validators auto-unwrap both, so you can validate either the wrapper or the inner DSL directly.
 
 ## Design-to-DSL
 
-When converting from a design description or screenshot:
-
-1. Identify the layout structure (header, sidebar, content)
-2. Map visual elements to TinyEngine components
-3. Extract interactive elements (buttons, forms, navigation)
-4. Define state for dynamic content
-5. Add event handlers for interactions
-6. Apply appropriate CSS classes or inline styles
+From a description or screenshot: identify layout regions → map visuals to components → extract interactions → define state + handlers → apply `className` / `style`.
 
 ## Troubleshooting
 
-| Problem           | Check                                                               |
-| ----------------- | ------------------------------------------------------------------- |
-| Input not working | Verify `modelValue` has `model: true`                               |
-| Event not firing  | Use `JSExpression` (not `JSFunction`), check method name is correct |
-| Page not editable | Ensure `occupier` is `null`                                         |
-| Wrong parameters  | First parameter is always `event`, params append after              |
+| Problem           | Check                                                                  |
+| ----------------- | ---------------------------------------------------------------------- |
+| Input not working | `modelValue` declares `model` (`true` for standard v-model)            |
+| Event not firing  | `JSExpression` (not `JSFunction`); method exists in `methods`          |
+| Page not editable | `occupier` is `null`                                                   |
+| Wrong params      | first param is always `event`; `params` append after                   |
 
 ## Resources
 
-### references/protocol.md
-
-Complete DSL protocol specification with TypeScript interfaces for all schema types.
-
-### references/components.md
-
-Component catalog with props, events, and usage examples.
-
-### references/patterns.md
-
-Template patterns for common page types and interaction flows.
-
-### scripts/validate_dsl.mjs
-
-Node.js validator (ESM, zero dependencies) for generated DSL files. Run before finalizing output.
-Also available: `check_event_bindings.mjs`, `check_css.mjs`, `validate_page.mjs`, and the
-`validate_all.sh` orchestrator (which chains all three checks).
+- [protocol.md](references/protocol.md) — schema spec, TS interfaces, reserved names, property types, slots, full ❌/✅ examples
+- [components.md](references/components.md) — component catalog (props/events); supplement with `query_components.mjs`
+- [patterns.md](references/patterns.md) — list/form page, layout, interaction templates
+- `scripts/` — `validate_all.sh` (run this), `validate_dsl.mjs`, `check_event_bindings.mjs`, `check_css.mjs`, `validate_page.mjs`, `query_components.mjs`
