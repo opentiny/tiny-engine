@@ -113,7 +113,9 @@ const props = defineProps({
     type: Function
   },
   status: { type: String },
-  chatMode: { type: String },
+  messageContentResolver: {
+    type: Function
+  },
   allowFiles: {
     type: Boolean,
     default: false
@@ -169,51 +171,35 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
   },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any, content: any) =>
-      !message.loading && message.content && (!content?.type || ['markdown', 'text'].includes(content.type)),
+    find: (_message: any, content: any) => !content?.type || ['markdown', 'text'].includes(content.type),
     renderer: MarkdownRenderer
   },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any) => message?.content?.[0]?.type === 'img' || message?.content?.[0]?.type === 'image',
+    find: (_message: any, content: any) => ['img', 'image'].includes(content?.type),
     renderer: ImgRenderer
   }
 ])
 
-const isAgentMessage = (message: any) => {
-  const hasAgentContent = message.renderContent?.some((item: any) => {
-    return item.type === 'agent-content' || item.type === 'agent-loading'
-  })
-  return message.metadata?.chatMode === 'agent' || hasAgentContent
-}
-
-const resolveAgentRenderContent = (message: any) => {
-  if (!isAgentMessage(message) || message.role !== 'assistant') {
-    return message.renderContent
+const getTextContent = (content: any) => {
+  if (typeof content === 'string') {
+    return content
   }
-
-  const isLastMessage = messages.value.at(-1) === message
-  const isGenerating = Boolean(message.loading) || (isLastMessage && GeneratingStatus.includes(props.status as any))
-  const renderContent = isGenerating
-    ? message.renderContent
-    : message.renderContent.filter((item: any) => item.type !== 'agent-loading')
-  const agentContents = renderContent.filter((item: any) => item.type === 'agent-content')
-  const finalStatus = agentContents.findLast((item: any) => ['success', 'failed', 'fix'].includes(item.status))?.status
-
-  return renderContent.map((item: any) => {
-    if (item.type !== 'agent-content' || isGenerating) {
-      return item
-    }
-
-    if (!item.status || item.status === 'loading') {
-      return {
-        ...item,
-        status: finalStatus || message.metadata?.agentStatus || 'failed'
-      }
-    }
-
-    return item
-  })
+  if (Array.isArray(content)) {
+    return content
+      .map((item) => {
+        if (typeof item === 'string') {
+          return item
+        }
+        if (item?.type === 'text') {
+          return item.text ?? item.content ?? ''
+        }
+        return ''
+      })
+      .filter(Boolean)
+      .join('\n')
+  }
+  return ''
 }
 
 // 处理文件选择事件
@@ -272,21 +258,43 @@ const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '44px' })
 
 const resolveMessageContent = (message: any) => {
-  if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
-    return resolveAgentRenderContent(message)
+  if (props.messageContentResolver) {
+    return props.messageContentResolver(message, {
+      messages: messages.value,
+      status: props.status
+    })
   }
 
-  if (isAgentMessage(message) && message.role === 'assistant' && message.content) {
-    const agentStatus = ['success', 'failed', 'fix'].includes(message.metadata?.agentStatus)
-      ? message.metadata.agentStatus
-      : 'failed'
-    return [
-      {
-        type: 'agent-content',
-        status: agentStatus,
-        content: message.content
+  if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
+    return message.renderContent.map((item: any) => {
+      if (item?.type === 'img' || item?.type === 'image') {
+        return {
+          type: 'img',
+          content: item.content || item.url || item.image_url?.url || ''
+        }
       }
-    ]
+      if (item?.type === 'text') {
+        return {
+          type: 'text',
+          content: item.content ?? item.text ?? ''
+        }
+      }
+      return item
+    })
+  }
+
+  if (Array.isArray(message.content) && message.content.length > 0) {
+    const textContent = getTextContent(
+      message.content.map((item: any) => item?.text ?? item?.content ?? item?.image_url?.url ?? '')
+    )
+    if (textContent) {
+      return textContent
+    }
+  }
+
+  const textContent = getTextContent(message.content)
+  if (textContent) {
+    return textContent
   }
 
   return message.content
@@ -326,28 +334,29 @@ const handleSendMessage = async (content: string) => {
   }
   const files = selectedAttachments.value.filter((item) => item.status === 'success')
   if (files.length > 0) {
-    const fileMessages: ChatMessage[] = files.map((file) => ({
-      role: 'user',
-      content: '',
-      renderContent: [
-        {
-          type: 'img',
-          content: file.url
-        }
-      ]
-    }))
-    messages.value.push(...fileMessages)
-    userMessage.content = files
-      .map((item) => ({
+    userMessage.content = [
+      {
+        type: 'text',
+        text: messageContent
+      },
+      ...files.map((item) => ({
         type: 'image_url',
         image_url: {
           url: item.url
         }
       }))
-      .concat({
+    ] as any
+    userMessage.renderContent = [
+      {
         type: 'text',
-        text: messageContent
-      })
+        content: messageContent
+      },
+      ...files.map((item) => ({
+        type: 'img',
+        content: item.url
+      }))
+    ]
+  } else {
     userMessage.renderContent = [
       {
         type: 'text',

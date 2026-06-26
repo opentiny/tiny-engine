@@ -19,11 +19,11 @@
           v-model:show="robotVisible"
           v-model:input="inputMessage"
           :status="mappedStatus"
-          :chat-mode="robotSettingState.chatMode"
           :prompt-items="promptItems"
           :bubble-renderers="bubbleRenderers"
           :allowFiles="isVisualModel && robotSettingState.chatMode === ChatMode.Agent"
           :show-aborted="robotSettingState.chatMode !== ChatMode.Agent"
+          :message-content-resolver="resolveChatMessageContent"
           :beforeSubmit="checkApiKey"
           :promptClickHandler="promptClickHandler"
           @fileSelected="handleFileSelected"
@@ -106,6 +106,7 @@ const { robotSettingState, getModelCapabilities, updateThinkingState, getSelecte
 
 const robotVisible = ref(false)
 const fullscreen = ref(false)
+const inputMessage = ref('')
 
 watch(robotVisible, (visible) => {
   useLayout().layoutState.toolbars.render = visible ? META_APP.Robot : ''
@@ -150,7 +151,6 @@ const showSetting = ref(false)
 
 const {
   mappedStatus,
-  inputMessage,
   messages,
   changeChatMode,
   abortRequest,
@@ -247,6 +247,55 @@ const openAIRobot = () => {
 
 // 当前Robot的bubbleRenderers无法做到响应式更新，因此Agent模式的type要与Chat模式不同
 const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': AgentRenderer }
+
+const resolveChatMessageContent = (message: any, context: { messages: any[]; status: string }) => {
+  const hasAgentContent = message.renderContent?.some((item: any) => {
+    return item.type === 'agent-content' || item.type === 'agent-loading'
+  })
+  const isAgentMessage = message.metadata?.chatMode === 'agent' || hasAgentContent
+
+  if (!isAgentMessage || message.role !== 'assistant') {
+    return Array.isArray(message.renderContent) && message.renderContent.length > 0
+      ? message.renderContent
+      : message.content
+  }
+
+  const isLastMessage = context.messages.at(-1) === message
+  const isGenerating = Boolean(message.loading) || (isLastMessage && context.status !== 'finished')
+  const renderContent = isGenerating
+    ? message.renderContent || []
+    : (message.renderContent || []).filter((item: any) => item.type !== 'agent-loading')
+  const agentContents = renderContent.filter((item: any) => item.type === 'agent-content')
+  const finalStatus = agentContents.findLast((item: any) => ['success', 'failed', 'fix'].includes(item.status))?.status
+
+  if (!Array.isArray(message.renderContent) || message.renderContent.length === 0) {
+    const agentStatus = ['success', 'failed', 'fix'].includes(message.metadata?.agentStatus)
+      ? message.metadata.agentStatus
+      : 'failed'
+    return [
+      {
+        type: 'agent-content',
+        status: agentStatus,
+        content: message.content
+      }
+    ]
+  }
+
+  return renderContent.map((item: any) => {
+    if (item.type !== 'agent-content' || isGenerating) {
+      return item
+    }
+
+    if (!item.status || item.status === 'loading') {
+      return {
+        ...item,
+        status: finalStatus || message.metadata?.agentStatus || 'failed'
+      }
+    }
+
+    return item
+  })
+}
 
 const handleFileSelected = async (formData: FormData, updateAttachment: (resourceUrl: string) => void) => {
   try {

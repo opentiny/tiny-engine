@@ -33,6 +33,29 @@ export interface ConversationMetadata {
 
 let currentConversationMetadata: ConversationMetadata = {}
 
+const extractMessageText = (content: unknown): string => {
+  if (typeof content === 'string') {
+    return content
+  }
+
+  if (Array.isArray(content)) {
+    return content
+      .map((item: any) => {
+        if (typeof item === 'string') {
+          return item
+        }
+        if (item?.type === 'text') {
+          return item.text ?? item.content ?? ''
+        }
+        return ''
+      })
+      .filter(Boolean)
+      .join('\n')
+  }
+
+  return ''
+}
+
 const createResponseProvider = (
   provider: Pick<OpenAICompatibleProvider, 'chatStream'>
 ): UseMessageOptions['responseProvider'] => {
@@ -180,7 +203,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
 
   const saveConversations = () => {
     conversations.value.forEach((conversation) => {
-      void saveConversation(conversation)
+      saveConversation(conversation)
     })
   }
 
@@ -198,7 +221,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
       currentConversationMetadata = conversation.metadata
     }
     conversation.updatedAt = Date.now()
-    void saveConversation(conversation)
+    saveConversation(conversation)
   }
 
   const updateTitle = (conversationId: string, title?: string) => {
@@ -258,7 +281,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
           }
         }
         currentConversationMetadata = conversation.metadata || {}
-        void saveConversation(conversation)
+        saveConversation(conversation)
         return currentId
       }
     }
@@ -328,7 +351,7 @@ export function useConversationAdapter(options: ConversationAdapterOptions) {
     const currentTitle = currentConversation.title
     if (currentTitle === defaultTitle && currentId) {
       const messageContent = getActiveEngine()?.messages.value.find((item) => item.role === 'user')?.content
-      const contentStr = typeof messageContent === 'string' ? messageContent : JSON.stringify(messageContent)
+      const contentStr = extractMessageText(messageContent) || JSON.stringify(messageContent)
       updateTitle(currentId, contentStr.substring(0, 20))
     }
   }

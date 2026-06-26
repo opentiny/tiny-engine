@@ -29,7 +29,7 @@ hljs.registerLanguage('xml', xml)
 hljs.registerLanguage('shell', shell)
 
 interface MarkdownMessage {
-  content: string
+  content: string | string[] | Record<string, unknown>[]
 }
 
 const props = defineProps({
@@ -71,7 +71,15 @@ const markdownIt = new MarkdownIt({
 })
 
 const renderContent = computed(() => {
-  return DOMPurify.sanitize(markdownIt.render(props.message.content))
+  const content = Array.isArray(props.message.content)
+    ? props.message.content
+        .map((item: any) => item?.text ?? item?.content ?? '')
+        .filter(Boolean)
+        .join('\n')
+    : typeof props.message.content === 'string'
+    ? props.message.content
+    : ''
+  return DOMPurify.sanitize(markdownIt.render(content))
 })
 </script>
 
