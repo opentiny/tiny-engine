@@ -57,7 +57,7 @@ TinyEngine 现在支持将 **File 存储模式** 与一份标准化的 **DSL Ski
 
 - **文件即数据**：File 模式下，MockServer 直接扫描 `mockServer/data/` 目录的 JSON 文件，文件名优先取 `name || label`（冲突时自动追加后缀）。
 - **可编辑性**：页面 / 区块的 `occupier` 必须为 `null`，否则进入画布后会提示被占用而无法编辑。
-- **命名与关联**：页面通过 `app` 字段关联所属应用，`route` 需在应用内唯一；应用与页面的 ID 统一使用整数（字符串格式也兼容）。
+- **命名与关联**：页面通过 `app` 字段关联所属应用，`route` 需在应用内唯一；应用 ID 使用整数，Page 文件的 `app` 引用使用字符串。
 
 ## 前置条件
 
@@ -162,7 +162,7 @@ Agent 会遵循 Skill 内定义的标准流程：
 {
   "name": "Login",
   "id": "a1b2c3d4e5f6g7h8",
-  "app": 1,
+  "app": "1",
   "route": "Login",
   "page_content": {
     "componentName": "Page",
@@ -222,7 +222,7 @@ Agent 会遵循 Skill 内定义的标准流程：
 
 - 文件名优先使用记录的 `name || label`；同名冲突时 MockServer 会自动追加随机后缀。
 - 页面的 `route` 需在所属应用内唯一，否则会被唯一性约束拦截。
-- 页面的 `app` 字段必须引用所属应用的 `id`，二者类型保持一致（推荐统一使用整数，也兼容字符串格式）。
+- 页面的 `app` 字段必须以字符串形式引用所属应用的 `id`，例如应用 `id` 为 `1` 时页面写 `"app": "1"`。
 
 ## 示例：生成一个登录页
 
@@ -241,7 +241,7 @@ Agent 产出的页面核心 DSL（节选）：
 {
   "name": "Login",
   "id": "a1b2c3d4e5f6g7h8",
-  "app": 1,
+  "app": "1",
   "route": "Login",
   "page_content": {
     "componentName": "Page",
@@ -363,4 +363,3 @@ node .agents/skills/tinyengine-dsl-generator/scripts/check_css.mjs mockServer/da
 ## 相关文档
 
 - [DSL Skill](https://github.com/opentiny/tiny-engine/blob/develop/.agents/skills/tinyengine-dsl-generator/SKILL.md)
-

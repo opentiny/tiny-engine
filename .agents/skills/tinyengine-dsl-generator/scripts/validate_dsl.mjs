@@ -11,30 +11,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-/**
- * 把 JS 值的类型名映射为 Python 风格（int/str/bool/list/dict/NoneType），
- * 用于 app id / meta.appId 告警里的 "got: <类型>" 描述。
- */
-function pyTypeName(value) {
-  if (value === null) return 'NoneType';
-  if (Array.isArray(value)) return 'list';
+/** 把 JS 值映射为类型名，用于告警里的 "got: <类型>" 描述。 */
+function typeName(value) {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) return 'array';
   switch (typeof value) {
     case 'string':
-      return 'str';
+      return 'string';
     case 'boolean':
-      return 'bool';
+      return 'boolean';
     case 'number':
-      return Number.isInteger(value) ? 'int' : 'float';
+      return Number.isInteger(value) ? 'integer' : 'number';
     default:
-      return 'dict';
+      return 'object';
   }
-}
-
-/**
- * 等价于 Python 的 isinstance(x, int)：Python 中 bool 也是 int，因此布尔值不算"非整数"。
- */
-function isPythonInt(value) {
-  return typeof value === 'boolean' || (typeof value === 'number' && Number.isInteger(value));
 }
 
 /** 普通对象判定（非 null、非数组） */
@@ -89,7 +79,7 @@ export class TinyEngineValidator {
       const cn = this.dsl.componentName;
       if (cn === 'Page') return 'page';
       if (cn === 'Block') return 'block';
-      // 其它 componentName 落到 unknown（与 Python 一致：不进入 app 分支）
+      // 其它 componentName 落到 unknown（不进入 app 分支）
     } else if ('componentsTree' in this.dsl || 'version' in this.dsl) {
       return 'app';
     }
@@ -112,6 +102,17 @@ export class TinyEngineValidator {
 
     if (this.dsl.componentName !== 'Page') {
       this.errors.push(`Page componentName must be 'Page', got: ${this.dsl.componentName}`);
+    }
+
+    // Page 外层包装的 app 引用必须是字符串：pages.js list()/create() 均用 appId.toString()
+    // 查询；写成数字会导致直接落盘的 page 文件查不到。
+    if (this._fromWrapper && isPlainObject(this.original)) {
+      const appRef = this.original.app;
+      if (appRef !== undefined && typeof appRef !== 'string') {
+        this.warnings.push(
+          `Page wrapper 'app' should be string, got: ${typeName(appRef)} (pages.js queries with appId.toString(); numeric app ref won't be found by list())`
+        );
+      }
     }
 
     // 原始页面协议(IPageSchema)要求 meta；但外层包装格式把 meta 等元信息上提到包装层，
@@ -157,16 +158,16 @@ export class TinyEngineValidator {
     // 验证 app ID 格式
     if ('id' in this.dsl) {
       const rootId = this.dsl.id;
-      if (!isPythonInt(rootId)) {
-        this.warnings.push(`App Schema 'id' should be integer, got: ${pyTypeName(rootId)} (will be coerced)`);
+      if (!Number.isInteger(rootId)) {
+        this.warnings.push(`App Schema 'id' should be integer, got: ${typeName(rootId)} (will be coerced)`);
       }
     }
 
     // 验证 meta.appId 格式
     if ('meta' in this.dsl && 'appId' in this.dsl.meta) {
       const appId = this.dsl.meta.appId;
-      if (!isPythonInt(appId)) {
-        this.warnings.push(`meta.appId should be integer, got: ${pyTypeName(appId)} (will be coerced)`);
+      if (!Number.isInteger(appId)) {
+        this.warnings.push(`meta.appId should be integer, got: ${typeName(appId)} (will be coerced)`);
       }
     }
 

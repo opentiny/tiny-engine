@@ -130,7 +130,7 @@ export class BasicCssChecker {
   }
 }
 
-// 可用模式表（与 Python 版的 checkers 字典对应，仅保留 basic）
+// 可用模式表（仅保留 basic）
 const CHECKERS = { basic: BasicCssChecker };
 
 function main() {

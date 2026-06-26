@@ -113,7 +113,7 @@ bash .agents/skills/tinyengine-dsl-generator/scripts/validate_all.sh <output-fil
 
 | Stage          | Script                   | Catches                                                                         |
 | -------------- | ------------------------ | ------------------------------------------------------------------------------- |
-| Structure      | validate_dsl.mjs         | Required fields, Page/Block `componentName`, meta, `class` vs `className`, integer app id |
+| Structure      | validate_dsl.mjs         | Required fields, Page/Block `componentName`, meta, `class` vs `className`, app/page id types |
 | Event bindings | check_event_bindings.mjs | `JSFunction` on an event, or a function body in `JSExpression.value`           |
 | CSS            | check_css.mjs            | Malformed `css` strings                                                         |
 
@@ -125,7 +125,8 @@ bash .agents/skills/tinyengine-dsl-generator/scripts/validate_all.sh <output-fil
 - [ ] `modelValue` declares `model` (`true` for standard v-model)
 - [ ] `occupier` is `null`
 - [ ] All `id`s are unique; CSS classes use `className`, not `class`
-- [ ] App / page IDs are integers (`918`, not `"918"`)
+- [ ] **App schema** `id` and `meta.appId` are integers (`918`, not `"918"`) — apps.js persists `meta.appId` as string internally, keep the DSL integer
+- [ ] **Page** `app` reference is a string (`"918"`, not `918`) — pages.js queries with `appId.toString()`; a numeric `app` won't be found by `list()`. Page's own `id` is a NanoID string assigned by the server
 
 ## Component lookup
 

@@ -21,24 +21,19 @@ function isPlainObject(value) {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-/** 等价于 Python 的 isinstance(x, int)：bool 也算 int。 */
-function isPythonInt(value) {
-  return typeof value === 'boolean' || (typeof value === 'number' && Number.isInteger(value));
-}
-
-/** JS 值 → Python 类型名（与 type(x).__name__ 对齐）。 */
-function pyTypeName(value) {
-  if (value === null) return 'NoneType';
-  if (Array.isArray(value)) return 'list';
+/** 把 JS 值映射为类型名，用于告警里的 "got: <类型>" 描述。 */
+function typeName(value) {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) return 'array';
   switch (typeof value) {
     case 'string':
-      return 'str';
+      return 'string';
     case 'boolean':
-      return 'bool';
+      return 'boolean';
     case 'number':
-      return Number.isInteger(value) ? 'int' : 'float';
+      return Number.isInteger(value) ? 'integer' : 'number';
     default:
-      return 'dict';
+      return 'object';
   }
 }
 
@@ -83,12 +78,13 @@ function validatePageWrapper(filePath) {
     }
   }
 
-  // 验证 app 字段格式（建议使用整数）
+  // 验证 app 字段格式：页面外层 app 引用必须是字符串。
+  // pages.js list()/create() 均用 appId.toString() 查询，数字 app 会导致直接落盘的页面查不到。
   if ('app' in data) {
     const appField = data.app;
-    if (!isPythonInt(appField)) {
+    if (typeof appField !== 'string') {
       console.log(
-        `⚠️  WARNING: 'app' field should be integer, got: ${pyTypeName(appField)} (will be coerced)`
+        `⚠️  WARNING: 'app' field should be string, got: ${typeName(appField)} (pages.js queries with appId.toString(); numeric app ref won't be found by list())`
       );
     }
   }
@@ -142,7 +138,7 @@ function checkClassNameUsage(filePath) {
   try {
     data = readJson(filePath);
   } catch (e) {
-    // JSON 语法错误或文件读取问题（FileNotFoundError 属于 OSError）由其他检查负责报告；
+    // JSON 语法错误或文件读取问题（如 ENOENT）由其他检查负责报告；
     // 此处不掩盖其他意外运行错误。
     if (e instanceof SyntaxError || (e && typeof e.code === 'string')) {
       return true;

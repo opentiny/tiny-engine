@@ -44,7 +44,7 @@ interface IComponentMap {
 }
 
 interface IAppMeta {
-  appId: string | number // 建议使用整数 (e.g., 918)，字符串会被强制转换
+  appId: string | number // App Schema 中建议使用整数 (e.g., 918)；服务端持久化时会转成字符串
   name: string
   description: string
   creator: string
@@ -55,13 +55,13 @@ interface IAppMeta {
 }
 
 /**
- * App ID 格式建议 (统一使用整数):
+ * App ID 格式建议:
  * - App Schema 文件中的 `id` 字段: 整数类型 (e.g., 918)
  * - App Schema 文件中的 `meta.appId` 字段: 整数类型 (e.g., 918)
  * - App Metadata 文件中的 `id` 字段: 整数类型 (e.g., 918)
- * - Page 文件中的 `app` 字段: 整数类型 (e.g., 918)
+ * - Page 文件中的 `app` 字段: 字符串类型 (e.g., "918")
  *
- * 注意: 虽然字符串格式会被自动转换，但建议统一使用整数以保持一致性
+ * 注意: pages.js 使用 appId.toString() 查询页面，直接落盘的 Page 文件必须用字符串 app 引用。
  */
 
 interface IAppConfig {

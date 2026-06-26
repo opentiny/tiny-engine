@@ -77,12 +77,13 @@ export default class AppsService {
   }
 
   async create(params) {
-    let mockId = this.appList.length > 0 ? Math.max(...this.appList.map((item) => item.id)) + 1 : 3
+    const all = await this.store.find({})
+    const mockId = all.length > 0 ? Math.max(...all.map((item) => Number(item.id) || 0)) + 1 : 3
     const newApp = {
       ...defaultApp,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      id: mockId++,
+      id: mockId,
       ...params
     }
     await this.store.insert(newApp)
