@@ -1927,13 +1927,50 @@ export class VueToDslConverter {
   }
 
   private async collectAppI18nFromModuleContext(context: LocalModuleContext) {
+    const flattenI18nMessages = (value: any, prefix = '', collector: Record<string, any> = {}) => {
+      if (value === null || value === undefined) return collector
+
+      if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          const nextKey = prefix ? `${prefix}.${index}` : String(index)
+          if (item !== null && typeof item === 'object') {
+            flattenI18nMessages(item, nextKey, collector)
+          } else {
+            collector[nextKey] = item
+          }
+        })
+        return collector
+      }
+
+      if (typeof value === 'object') {
+        Object.entries(value).forEach(([key, item]) => {
+          const nextKey = prefix ? `${prefix}.${key}` : key
+          if (item !== null && typeof item === 'object') {
+            flattenI18nMessages(item, nextKey, collector)
+          } else {
+            collector[nextKey] = item
+          }
+        })
+        return collector
+      }
+
+      if (prefix) {
+        collector[prefix] = value
+      }
+
+      return collector
+    }
+
     try {
       const [en, zh] = await Promise.all([
         context.readText('src/i18n/en_US.json').then((content) => content || '{}'),
         context.readText('src/i18n/zh_CN.json').then((content) => content || '{}')
       ])
 
-      return { en_US: JSON.parse(en), zh_CN: JSON.parse(zh) }
+      return {
+        en_US: flattenI18nMessages(JSON.parse(en)),
+        zh_CN: flattenI18nMessages(JSON.parse(zh))
+      }
     } catch {
       return { en_US: {}, zh_CN: {} }
     }

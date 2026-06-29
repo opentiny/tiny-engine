@@ -188,13 +188,49 @@ export default {
     }
 
     const mergeI18nMessages = (base: Record<string, any> = {}, incoming: Record<string, any> = {}) => {
+      const flattenLocaleMessages = (value: any, prefix = '', collector: Record<string, any> = {}) => {
+        if (value === null || value === undefined) return collector
+
+        if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            const nextKey = prefix ? `${prefix}.${index}` : String(index)
+            if (item !== null && typeof item === 'object') {
+              flattenLocaleMessages(item, nextKey, collector)
+            } else {
+              collector[nextKey] = item
+            }
+          })
+          return collector
+        }
+
+        if (typeof value === 'object') {
+          Object.entries(value).forEach(([key, item]) => {
+            const nextKey = prefix ? `${prefix}.${key}` : key
+            if (item !== null && typeof item === 'object') {
+              flattenLocaleMessages(item, nextKey, collector)
+            } else {
+              collector[nextKey] = item
+            }
+          })
+          return collector
+        }
+
+        if (prefix) {
+          collector[prefix] = value
+        }
+
+        return collector
+      }
+
       const mergedLocales = new Set([...Object.keys(base || {}), ...Object.keys(incoming || {})])
       const result: Record<string, any> = {}
 
       mergedLocales.forEach((locale) => {
+        const baseMessages = flattenLocaleMessages((base && base[locale]) || {})
+        const incomingMessages = flattenLocaleMessages((incoming && incoming[locale]) || {})
         result[locale] = {
-          ...((base && base[locale]) || {}),
-          ...((incoming && incoming[locale]) || {})
+          ...baseMessages,
+          ...incomingMessages
         }
       })
 
