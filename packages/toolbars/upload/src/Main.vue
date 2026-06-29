@@ -557,6 +557,33 @@ export default {
       }
     }
 
+    const syncImportedI18n = async (appId: string, hostType: string, mergedI18n: Record<string, any> = {}) => {
+      const locales = Object.keys(mergedI18n || {})
+      if (!locales.length) return
+
+      const useTranslateApi = useTranslate()
+
+      try {
+        useTranslateApi.setLangs?.({})
+        await useTranslateApi.initI18n({ host: appId, hostType, init: true })
+
+        const entryKeys = new Set<string>()
+        locales.forEach((locale) => {
+          Object.keys(mergedI18n?.[locale] || {}).forEach((key) => entryKeys.add(key))
+        })
+
+        entryKeys.forEach((key) => {
+          const payload: Record<string, any> = { key, type: 'i18n' }
+          locales.forEach((locale) => {
+            payload[locale] = mergedI18n?.[locale]?.[key] || ''
+          })
+          useTranslateApi.ensureI18n?.(payload, true)
+        })
+      } catch (_error) {
+        // ignore persistence errors, keep current-session merged i18n
+      }
+    }
+
     const syncImportedDataSources = async (appId: string, importedDataSource: any = { list: [] }) => {
       const importedList = Array.isArray(importedDataSource?.list)
         ? importedDataSource.list.filter((item: any) => item?.name)
@@ -714,6 +741,7 @@ export default {
       }
 
       await syncImportedUtils(appId, importedUtils)
+      await syncImportedI18n(appId, hostType, mergedI18n)
       const syncedDataSource = await syncImportedDataSources(appId, {
         ...normalizedImportedDataSource,
         list: mergedDataSource
