@@ -34,6 +34,13 @@ class FileStore extends StoreAdapter {
 
     // Ensure collection directory exists
     this.ensureDirectory()
+
+    // Detect whether the collection directory lives on a case-sensitive
+    // filesystem, so a file rename that only changes letter case (e.g.
+    // Login -> login) is handled correctly. On a case-insensitive FS (macOS
+    // APFS and Windows NTFS defaults) such a rename points at the same physical
+    // file, so writeAtomic + unlink would otherwise delete the just-written file.
+    this.caseSensitive = this.detectCaseSensitive()
   }
 
   ensureDirectory() {
@@ -42,6 +49,33 @@ class FileStore extends StoreAdapter {
     }
     if (!fs.existsSync(this.collectionPath)) {
       fs.mkdirSync(this.collectionPath, { recursive: true })
+    }
+  }
+
+  /**
+   * Probe whether the collection directory lives on a case-sensitive filesystem
+   * by writing a marker file and checking whether a differently-cased name
+   * resolves to it. Returns true (case-sensitive) or false (case-insensitive),
+   * defaulting to false if probing fails so we never unlink on a case-only rename.
+   */
+  detectCaseSensitive() {
+    const probeName = `.casesens-${crypto.randomBytes(4).toString('hex')}`
+    const probePath = path.join(this.collectionPath, probeName)
+    try {
+      fs.writeFileSync(probePath, '')
+      // On a case-insensitive FS the upper-cased name resolves to the same file.
+      return !fs.existsSync(path.join(this.collectionPath, probeName.toUpperCase()))
+    } catch {
+      // Conservative default: treat as case-insensitive to avoid data loss.
+      return false
+    } finally {
+      try {
+        if (fs.existsSync(probePath)) {
+          fs.unlinkSync(probePath)
+        }
+      } catch {
+        /* best-effort cleanup of the probe file */
+      }
     }
   }
 
@@ -343,7 +377,13 @@ class FileStore extends StoreAdapter {
       reservedNames.add(fileBaseName.toLowerCase())
 
       this.writeAtomic(targetPath, updatedDoc)
-      if (targetPath !== entry.filePath && fs.existsSync(entry.filePath)) {
+      // Only unlink the previous file when it is a genuinely different physical
+      // file. On a case-insensitive FS a case-only rename (Login -> login) points
+      // at the same file, so unlinking would delete the document we just wrote.
+      const pathsDiffer = this.caseSensitive
+        ? targetPath !== entry.filePath
+        : targetPath.toLowerCase() !== entry.filePath.toLowerCase()
+      if (pathsDiffer && fs.existsSync(entry.filePath)) {
         fs.unlinkSync(entry.filePath)
       }
     }

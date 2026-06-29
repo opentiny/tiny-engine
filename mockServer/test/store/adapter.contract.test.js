@@ -155,4 +155,17 @@ describe.each(adapterFactories)('%s honours the StoreAdapter contract', (_name, 
 
     expect(await store.find({ tags: ['purple'] })).toHaveLength(0)
   })
+
+  test('updating a naming field to a case-only variant keeps the document', async () => {
+    await store.insert({ _id: 'login', name: 'Login' })
+    const affected = await store.update({ _id: 'login' }, { $set: { name: 'login' } })
+    expect(affected).toBe(1)
+    // The document must still exist and read back with the updated value.
+    // Regression guard: on a case-insensitive filesystem (macOS/Windows default)
+    // a case-only rename used to make FileStore unlink the just-written file.
+    const doc = await store.findOne({ _id: 'login' })
+    expect(doc).not.toBeNull()
+    expect(doc.name).toBe('login')
+    expect(await store.find({})).toHaveLength(1)
+  })
 })
