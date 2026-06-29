@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   addSystemPrompt,
+  extractMessageText,
   formatMessages,
   mergeStringFields,
   processSSEStream,
@@ -138,6 +139,27 @@ describe('chat utils', () => {
     })
   })
 
+  describe('extractMessageText', () => {
+    it('returns plain string content as-is', () => {
+      expect(extractMessageText('hello')).toBe('hello')
+    })
+
+    it('joins text items from mixed content arrays', () => {
+      const result = extractMessageText([
+        'line 1',
+        { type: 'text', text: 'line 2' },
+        { type: 'text', content: 'line 3' },
+        { type: 'image_url', image_url: { url: 'https://example.com/a.png' } }
+      ])
+
+      expect(result).toBe('line 1\nline 2\nline 3')
+    })
+
+    it('returns an empty string for unsupported content', () => {
+      expect(extractMessageText({ foo: 'bar' })).toBe('')
+    })
+  })
+
   describe('mergeStringFields', () => {
     it('concatenates sibling string fields', () => {
       const result = mergeStringFields(
@@ -211,7 +233,7 @@ describe('chat utils', () => {
       })
     })
 
-    it('does not overwrite truthy non-string values unless they are mergeable objects', () => {
+    it('overwrites falsy non-string values and recursively merges nested objects', () => {
       const result = mergeStringFields(
         {
           index: 0,

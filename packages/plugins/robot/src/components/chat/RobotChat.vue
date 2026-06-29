@@ -11,7 +11,7 @@
     </template>
 
     <div class="robot-chat-container-content" ref="chatContainerRef">
-      <div v-if="messages.filter((item) => item.role !== 'system').length === 0">
+      <div v-if="messages.filter((item) => item.role !== RobotMessageRole.System).length === 0">
         <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
         </tr-welcome>
         <tr-prompts
@@ -99,10 +99,18 @@ import {
   type RawFileAttachment,
   type BubbleContentRendererMatch
 } from '@opentiny/tiny-robot'
-import { type ChatMessage } from '@opentiny/tiny-robot-kit'
 import { GeneratingStatus } from '../../constants/status'
 import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
+import {
+  RobotMessageContentType,
+  RobotMessageRole,
+  type MessageContentResolver,
+  type RobotInputContentPart,
+  type RobotMessage,
+  type RobotRenderContentItem
+} from '../../types'
+import { extractMessageText } from '../../utils'
 
 const props = defineProps({
   promptItems: {
@@ -114,7 +122,7 @@ const props = defineProps({
   },
   status: { type: String },
   messageContentResolver: {
-    type: Function
+    type: Function as PropType<MessageContentResolver>
   },
   allowFiles: {
     type: Boolean,
@@ -141,7 +149,7 @@ const selectedAttachments = ref([])
 const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
 const inputMessage = defineModel<string>('input', { required: true })
-const messages = defineModel<ChatMessage[]>('messages', { required: true })
+const messages = defineModel<RobotMessage[]>('messages', { required: true })
 const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 watch(
@@ -161,46 +169,28 @@ const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
   },
   ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (_message: any, content: any) => content?.type === type,
+    find: (_message: RobotMessage, content: RobotRenderContentItem) => content?.type === type,
     renderer
   })),
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (message: any, content: any) => content?.type === 'tool' && message.tool_calls?.length,
+    find: (message: RobotMessage, content: RobotRenderContentItem) =>
+      content?.type === RobotMessageContentType.Tool && Boolean(message.tool_calls?.length),
     renderer: BubbleRenderers.Tools
   },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (_message: any, content: any) => !content?.type || ['markdown', 'text'].includes(content.type),
+    find: (_message: RobotMessage, content: RobotRenderContentItem) =>
+      !content?.type || [RobotMessageContentType.Markdown, RobotMessageContentType.Text].includes(content.type as any),
     renderer: MarkdownRenderer
   },
   {
     priority: BubbleRendererMatchPriority.NORMAL,
-    find: (_message: any, content: any) => ['img', 'image'].includes(content?.type),
+    find: (_message: RobotMessage, content: RobotRenderContentItem) =>
+      [RobotMessageContentType.Img, RobotMessageContentType.Image].includes(content?.type as any),
     renderer: ImgRenderer
   }
 ])
-
-const getTextContent = (content: any) => {
-  if (typeof content === 'string') {
-    return content
-  }
-  if (Array.isArray(content)) {
-    return content
-      .map((item) => {
-        if (typeof item === 'string') {
-          return item
-        }
-        if (item?.type === 'text') {
-          return item.text ?? item.content ?? ''
-        }
-        return ''
-      })
-      .filter(Boolean)
-      .join('\n')
-  }
-  return ''
-}
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -257,7 +247,7 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '44px' })
 
-const resolveMessageContent = (message: any) => {
+const resolveMessageContent = (message: RobotMessage) => {
   if (props.messageContentResolver) {
     return props.messageContentResolver(message, {
       messages: messages.value,
@@ -266,16 +256,16 @@ const resolveMessageContent = (message: any) => {
   }
 
   if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
-    return message.renderContent.map((item: any) => {
-      if (item?.type === 'img' || item?.type === 'image') {
+    return message.renderContent.map((item) => {
+      if (item?.type === RobotMessageContentType.Img || item?.type === RobotMessageContentType.Image) {
         return {
-          type: 'img',
+          type: RobotMessageContentType.Img,
           content: item.content || item.url || item.image_url?.url || ''
         }
       }
-      if (item?.type === 'text') {
+      if (item?.type === RobotMessageContentType.Text) {
         return {
-          type: 'text',
+          type: RobotMessageContentType.Text,
           content: item.content ?? item.text ?? ''
         }
       }
@@ -284,15 +274,13 @@ const resolveMessageContent = (message: any) => {
   }
 
   if (Array.isArray(message.content) && message.content.length > 0) {
-    const textContent = getTextContent(
-      message.content.map((item: any) => item?.text ?? item?.content ?? item?.image_url?.url ?? '')
-    )
+    const textContent = extractMessageText(message.content)
     if (textContent) {
       return textContent
     }
   }
 
-  const textContent = getTextContent(message.content)
+  const textContent = extractMessageText(message.content)
   if (textContent) {
     return textContent
   }
@@ -301,14 +289,14 @@ const resolveMessageContent = (message: any) => {
 }
 
 const roleConfigs: Record<string, BubbleRoleConfig> = {
-  assistant: {
+  [RobotMessageRole.Assistant]: {
     placement: 'start',
     avatar: aiAvatar
   },
-  user: {
+  [RobotMessageRole.User]: {
     placement: 'end'
   },
-  system: {
+  [RobotMessageRole.System]: {
     hidden: true
   }
 }
@@ -328,38 +316,38 @@ const handleSendMessage = async (content: string) => {
     return
   }
 
-  const userMessage: ChatMessage = {
-    role: 'user',
+  const userMessage: RobotMessage = {
+    role: RobotMessageRole.User,
     content: messageContent
   }
   const files = selectedAttachments.value.filter((item) => item.status === 'success')
   if (files.length > 0) {
     userMessage.content = [
       {
-        type: 'text',
+        type: RobotMessageContentType.Text,
         text: messageContent
       },
       ...files.map((item) => ({
-        type: 'image_url',
+        type: RobotMessageContentType.ImageUrl,
         image_url: {
           url: item.url
         }
       }))
-    ] as any
+    ] as RobotInputContentPart[]
     userMessage.renderContent = [
       {
-        type: 'text',
+        type: RobotMessageContentType.Text,
         content: messageContent
       },
       ...files.map((item) => ({
-        type: 'img',
+        type: RobotMessageContentType.Img,
         content: item.url
       }))
     ]
   } else {
     userMessage.renderContent = [
       {
-        type: 'text',
+        type: RobotMessageContentType.Text,
         content: messageContent
       }
     ]

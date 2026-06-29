@@ -1,6 +1,13 @@
 import { toRaw } from 'vue'
 import type { StreamHandler } from '@opentiny/tiny-robot-kit'
-import type { LLMMessage, RobotMessage } from '../types'
+import {
+  RobotMessageContentType,
+  type LLMMessage,
+  type RobotInputContentPart,
+  type RobotMessage,
+  type RobotMessageContent,
+  type RobotRenderContentItem
+} from '../types'
 
 // 格式化LLM输入messages消息
 export const formatMessages = (messages: LLMMessage[]) => {
@@ -29,6 +36,32 @@ export const serializeError = (err: unknown): string => {
   } catch {
     return String(err)
   }
+}
+
+export const extractMessageText = (content: RobotMessageContent | RobotRenderContentItem[] | unknown): string => {
+  if (typeof content === 'string') {
+    return content
+  }
+
+  if (!Array.isArray(content)) {
+    return ''
+  }
+
+  return content
+    .map((item) => {
+      if (typeof item === 'string') {
+        return item
+      }
+
+      const typedItem = item as RobotInputContentPart | RobotRenderContentItem
+      if (typedItem?.type === RobotMessageContentType.Text) {
+        return typedItem.text ?? typedItem.content ?? ''
+      }
+
+      return ''
+    })
+    .filter(Boolean)
+    .join('\n')
 }
 
 /**

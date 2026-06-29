@@ -93,6 +93,16 @@ import { AgentRenderer } from './components/renderers'
 import useChat from './composables/useChat'
 import useModelConfig from './composables/core/useConfig'
 import { ChatMode } from './types/mode.types'
+import { STATUS } from './constants/status'
+import {
+  AgentMessageStatus,
+  RobotMessageContentType,
+  RobotMessageRole,
+  isAgentFinalStatus,
+  type MessageResolverContext,
+  type RobotMessage,
+  type RobotRenderContentItem
+} from './types'
 import apiService from './services/api'
 
 const props = defineProps({
@@ -224,9 +234,9 @@ const promptClickHandler = (item: PromptProps & { mode?: 'chat' | 'agent' }) => 
     changeChatMode(item.mode)
   }
   messages.value.push({
-    role: 'user',
+    role: RobotMessageRole.User,
     content: item.description || '',
-    renderContent: [{ type: 'text', content: item.description }]
+    renderContent: [{ type: RobotMessageContentType.Text, content: item.description }]
   })
   sendUserMessage()
 }
@@ -245,51 +255,61 @@ const openAIRobot = () => {
   useLayout().closeSetting(true)
 }
 
-// 当前Robot的bubbleRenderers无法做到响应式更新，因此Agent模式的type要与Chat模式不同
-const bubbleRenderers = { 'agent-content': AgentRenderer, 'agent-loading': AgentRenderer }
+// 当前 Robot 的 bubbleRenderers 无法做到响应式更新，因此 Agent 模式需要独立的内容类型。
+// `agent-content` 表示 Agent 的最终内容片段；`agent-loading` 表示 Agent 处理中间态占位片段。
+const bubbleRenderers = {
+  [RobotMessageContentType.AgentContent]: AgentRenderer,
+  [RobotMessageContentType.AgentLoading]: AgentRenderer
+}
 
-const resolveChatMessageContent = (message: any, context: { messages: any[]; status: string }) => {
-  const hasAgentContent = message.renderContent?.some((item: any) => {
-    return item.type === 'agent-content' || item.type === 'agent-loading'
+const resolveChatMessageContent = (message: RobotMessage, context: MessageResolverContext) => {
+  const renderContent = Array.isArray(message.renderContent) ? message.renderContent : []
+  const hasAgentContent = renderContent.some((item) => {
+    return item.type === RobotMessageContentType.AgentContent || item.type === RobotMessageContentType.AgentLoading
   })
-  const isAgentMessage = message.metadata?.chatMode === 'agent' || hasAgentContent
+  const isAgentMessage = message.metadata?.chatMode === ChatMode.Agent || hasAgentContent
 
-  if (!isAgentMessage || message.role !== 'assistant') {
+  if (!isAgentMessage || message.role !== RobotMessageRole.Assistant) {
     return Array.isArray(message.renderContent) && message.renderContent.length > 0
       ? message.renderContent
       : message.content
   }
 
+  // context.status 是当前整轮对话请求的运行状态，不是单条渲染片段状态。
   const isLastMessage = context.messages.at(-1) === message
-  const isGenerating = Boolean(message.loading) || (isLastMessage && context.status !== 'finished')
-  const renderContent = isGenerating
-    ? message.renderContent || []
-    : (message.renderContent || []).filter((item: any) => item.type !== 'agent-loading')
-  const agentContents = renderContent.filter((item: any) => item.type === 'agent-content')
-  const finalStatus = agentContents.findLast((item: any) => ['success', 'failed', 'fix'].includes(item.status))?.status
+  const isGenerating = Boolean(message.loading) || (isLastMessage && context.status !== STATUS.FINISHED)
+  const resolvedRenderContent = isGenerating
+    ? renderContent
+    : renderContent.filter((item) => item.type !== RobotMessageContentType.AgentLoading)
+  const agentContents = resolvedRenderContent.filter(
+    (item): item is RobotRenderContentItem =>
+      item.type === RobotMessageContentType.AgentContent || item.type === RobotMessageContentType.AgentLoading
+  )
+  // item.status 是单个 agent 片段的业务结果，例如 success/failed/fix/loading。
+  const finalStatus = agentContents.findLast((item) => isAgentFinalStatus(item.status))?.status
 
   if (!Array.isArray(message.renderContent) || message.renderContent.length === 0) {
-    const agentStatus = ['success', 'failed', 'fix'].includes(message.metadata?.agentStatus)
+    const agentStatus = isAgentFinalStatus(message.metadata?.agentStatus)
       ? message.metadata.agentStatus
-      : 'failed'
+      : AgentMessageStatus.Failed
     return [
       {
-        type: 'agent-content',
+        type: RobotMessageContentType.AgentContent,
         status: agentStatus,
         content: message.content
       }
     ]
   }
 
-  return renderContent.map((item: any) => {
-    if (item.type !== 'agent-content' || isGenerating) {
+  return resolvedRenderContent.map((item) => {
+    if (item.type !== RobotMessageContentType.AgentContent || isGenerating) {
       return item
     }
 
-    if (!item.status || item.status === 'loading') {
+    if (!item.status || item.status === AgentMessageStatus.Loading) {
       return {
         ...item,
-        status: finalStatus || message.metadata?.agentStatus || 'failed'
+        status: finalStatus || message.metadata?.agentStatus || AgentMessageStatus.Failed
       }
     }
 

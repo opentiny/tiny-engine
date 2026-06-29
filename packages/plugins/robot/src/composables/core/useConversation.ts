@@ -12,6 +12,8 @@ import {
 import type { CompletionChoice } from '@opentiny/tiny-robot-kit'
 import { STATUS, type MessageState } from '../../constants/status'
 import type { OpenAICompatibleProvider } from '../../services/OpenAICompatibleProvider'
+import { extractMessageText } from '../../utils/chat.utils'
+import { RobotMessageRole } from '../../types/chat.types'
 
 export interface ConversationAdapterOptions {
   provider: Pick<OpenAICompatibleProvider, 'chatStream'>
@@ -32,29 +34,6 @@ export interface ConversationMetadata {
 }
 
 let currentConversationMetadata: ConversationMetadata = {}
-
-const extractMessageText = (content: unknown): string => {
-  if (typeof content === 'string') {
-    return content
-  }
-
-  if (Array.isArray(content)) {
-    return content
-      .map((item: any) => {
-        if (typeof item === 'string') {
-          return item
-        }
-        if (item?.type === 'text') {
-          return item.text ?? item.content ?? ''
-        }
-        return ''
-      })
-      .filter(Boolean)
-      .join('\n')
-  }
-
-  return ''
-}
 
 const createResponseProvider = (
   provider: Pick<OpenAICompatibleProvider, 'chatStream'>
@@ -123,7 +102,8 @@ const createResponseProvider = (
 }
 
 const updateMessageMetadata = (currentMessage: ChatMessage, chunk: ChatCompletion, choice?: CompletionChoice) => {
-  currentMessage.role = choice?.delta?.role || choice?.message?.role || currentMessage.role || 'assistant'
+  currentMessage.role =
+    choice?.delta?.role || choice?.message?.role || currentMessage.role || RobotMessageRole.Assistant
   currentMessage.loading = undefined
   currentMessage.renderContent ||= []
   currentMessage.metadata ||= {}
