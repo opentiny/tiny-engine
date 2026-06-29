@@ -56,7 +56,7 @@ export default class BlockCategoryService {
   }
 
   async find(params) {
-    const result = await this.store.find(params || {})
+    const result = await this.store.find()
     return getResponseData(result)
   }
 
