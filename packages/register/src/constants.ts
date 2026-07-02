@@ -41,6 +41,7 @@ export const META_APP = {
   Refresh: 'engine.toolbars.refresh',
   Save: 'engine.toolbars.save',
   GenerateCode: 'engine.toolbars.generate-code',
+  Upload: 'engine.toolbars.upload',
   Preview: 'engine.toolbars.preview',
   RedoUndo: 'engine.toolbars.redoundo',
   Fullscreen: 'engine.toolbars.fullscreen',

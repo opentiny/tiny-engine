@@ -28,7 +28,7 @@ export default {
     right: [
       [META_APP.Robot, META_APP.ThemeSwitch, META_APP.RedoUndo, META_APP.Clean],
       [META_APP.Preview],
-      [META_APP.GenerateCode, META_APP.Save]
+      [META_APP.Upload, META_APP.GenerateCode, META_APP.Save]
     ],
     collapse: [
       [META_APP.Collaboration],

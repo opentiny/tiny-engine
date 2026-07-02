@@ -1,0 +1,223 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component"
+  },
+  "state": {
+    "name": "",
+    "satisfaction": 3,
+    "feedback": "",
+    "recommend": true
+  },
+  "methods": {
+    "submitSurvey": {
+      "type": "JSFunction",
+      "value": "function submitSurvey() {\n  console.log('提交满意度调查：', {\n    name: this.state.name,\n    satisfaction: this.state.satisfaction,\n    feedback: this.state.feedback,\n    recommend: this.state.recommend\n  })\n  // 这里可以添加提交到服务器的逻辑\n  alert('感谢您的反馈！')\n}"
+    }
+  },
+  "computed": {},
+  "lifeCycles": {},
+  "css": ".page-base-style {\n  padding: 24px;\n  background: #ffffff;\n}\n\n.block-base-style {\n  margin: 16px;\n}\n\n.component-base-style {\n  margin: 8px;\n}",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "className": "page-base-style"
+      },
+      "children": [
+        {
+          "componentName": "TinyForm",
+          "props": {
+            "labelWidth": "100px",
+            "className": "component-base-style"
+          },
+          "children": [
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "姓名"
+              },
+              "children": [
+                {
+                  "componentName": "TinyInput",
+                  "props": {
+                    "placeholder": "请输入姓名",
+                    "className": "component-base-style",
+                    "modelValue": {
+                      "type": "JSExpression",
+                      "value": "this.state.name",
+                      "model": true
+                    }
+                  },
+                  "children": [],
+                  "id": "btf77s93"
+                }
+              ],
+              "id": "m0nep3a0"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "整体满意度"
+              },
+              "children": [
+                {
+                  "componentName": "div",
+                  "props": {
+                    "style": "display: flex; flex-wrap: wrap; gap: 12px"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyRadio",
+                      "props": {
+                        "text": "非常满意",
+                        "label": 5,
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "this.state.satisfaction",
+                          "model": true
+                        }
+                      },
+                      "children": [],
+                      "id": "r0o027ty"
+                    },
+                    {
+                      "componentName": "TinyRadio",
+                      "props": {
+                        "text": "满意",
+                        "label": 4,
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "this.state.satisfaction",
+                          "model": true
+                        }
+                      },
+                      "children": [],
+                      "id": "moq6l88f"
+                    },
+                    {
+                      "componentName": "TinyRadio",
+                      "props": {
+                        "text": "一般",
+                        "label": 3,
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "this.state.satisfaction",
+                          "model": true
+                        }
+                      },
+                      "children": [],
+                      "id": "hwydklui"
+                    },
+                    {
+                      "componentName": "TinyRadio",
+                      "props": {
+                        "text": "不满意",
+                        "label": 2,
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "this.state.satisfaction",
+                          "model": true
+                        }
+                      },
+                      "children": [],
+                      "id": "hptyv62f"
+                    },
+                    {
+                      "componentName": "TinyRadio",
+                      "props": {
+                        "text": "非常不满意",
+                        "label": 1,
+                        "modelValue": {
+                          "type": "JSExpression",
+                          "value": "this.state.satisfaction",
+                          "model": true
+                        }
+                      },
+                      "children": [],
+                      "id": "mr5ipgmo"
+                    }
+                  ],
+                  "id": "nfer8dbn"
+                }
+              ],
+              "id": "1dpt0uh8"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "具体意见"
+              },
+              "children": [
+                {
+                  "componentName": "TinyInput",
+                  "props": {
+                    "type": "textarea",
+                    "placeholder": "请提出宝贵意见",
+                    "className": "component-base-style",
+                    "modelValue": {
+                      "type": "JSExpression",
+                      "value": "this.state.feedback",
+                      "model": true
+                    }
+                  },
+                  "children": [],
+                  "id": "c5qczlnv"
+                }
+              ],
+              "id": "94ebcml9"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": "是否愿意推荐"
+              },
+              "children": [
+                {
+                  "componentName": "TinySwitch",
+                  "props": {
+                    "modelValue": {
+                      "type": "JSExpression",
+                      "value": "this.state.recommend",
+                      "model": true
+                    }
+                  },
+                  "children": [],
+                  "id": "m2pgtpsd"
+                }
+              ],
+              "id": "6p4xx6mb"
+            },
+            {
+              "componentName": "TinyFormItem",
+              "props": {
+                "label": ""
+              },
+              "children": [
+                {
+                  "componentName": "TinyButton",
+                  "props": {
+                    "text": "提交",
+                    "type": "primary",
+                    "className": "component-base-style",
+                    "onClick": {
+                      "type": "JSExpression",
+                      "value": "this.submitSurvey"
+                    }
+                  },
+                  "children": [],
+                  "id": "q1isiake"
+                }
+              ],
+              "id": "mx5qz17f"
+            }
+          ],
+          "id": "3ny8gp70"
+        }
+      ],
+      "id": "t58jntyo"
+    }
+  ],
+  "id": "88gufz3b"
+}
