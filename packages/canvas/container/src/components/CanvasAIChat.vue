@@ -45,27 +45,24 @@ export default {
 </script>
 
 <style lang="less" scoped>
-:deep(.tiny-sender) {
-  .tiny-sender__input-row {
-    min-height: 64px;
+:deep(.tr-sender) {
+  .tr-sender-main {
+    padding: 10px 16px 6px !important;
   }
-  .tiny-sender__prefix-slot .svg-icon {
-    width: 24px;
-    height: 24px;
+
+  .tr-sender-prefix .icon-AI.svg-icon {
+    width: 24px !important;
+    height: 24px !important;
   }
-  .tiny-sender__word-limit,
-  .tiny-sender__input-field-wrapper .tiny-textarea__inner {
+
+  .tr-sender-word-counter,
+  .tr-sender-editor-content .ProseMirror {
     font-size: 14px !important;
   }
-  .action-buttons__icon--send,
-  .action-buttons__button svg {
+
+  .tr-action-button svg,
+  .tr-sender-submit-button__icon {
     font-size: 24px !important;
-  }
-  .action-buttons {
-    gap: 6px;
-  }
-  .action-buttons__utility {
-    gap: 0;
   }
 }
 </style>
