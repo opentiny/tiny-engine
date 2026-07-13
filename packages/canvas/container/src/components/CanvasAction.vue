@@ -1289,7 +1289,7 @@ export default {
     transform: translateY(10px);
   }
 }
-.ai-popper.ai-popper.tiny-popper.tiny-popover {
+.tiny-popover.tiny-popover.tiny-popper[x-placement].ai-popper {
   padding: 0;
   border-radius: 40px;
 }

@@ -357,7 +357,7 @@ onMounted(async () => {
   cursor: pointer;
 }
 
-.operations-setting {
+.operations-setting.svg-icon {
   font-size: 28px;
   padding: 4px;
 }
@@ -372,7 +372,7 @@ onMounted(async () => {
       height: auto;
     }
   }
-  .operations-setting {
+  .operations-setting.svg-icon {
     font-size: 20px;
   }
   &::-webkit-scrollbar {
