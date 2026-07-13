@@ -18,6 +18,9 @@
     ".": {
       "import": "./dist/index.js"
     },
+    "./style.css": {
+      "import": "./dist/index.css"
+    },
     "./render": {
       "import": "./dist/render.js"
     }
