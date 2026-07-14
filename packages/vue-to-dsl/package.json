@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine-vue-to-dsl",
-  "version": "2.11.0-rc.1",
+  "version": "2.11.0",
   "description": "Convert Vue SFC files back to TinyEngine DSL schema",
   "publishConfig": {
     "access": "public"
