@@ -545,10 +545,6 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
   }
 }
 
-.tiny-sender__header-slot .tr-attachments .tr-attachments__file-list .tr-attachments__add-button {
-  display: none;
-}
-
 :deep(.tr-bubble) {
   .tr-bubble__content:has(> .tr-bubble__content-items > [class*='img-renderer-container']) {
     padding: 0px;
@@ -556,27 +552,19 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
   }
 }
 
-:deep(.tiny-sender) {
+:deep(.tr-sender) {
   margin: 20px;
-  .tiny-sender__footer-slot.tiny-sender__bottom-row {
-    justify-content: space-between !important;
-  }
-  .tiny-sender__upload-popup {
-    .upload-options {
-      height: 42px;
-
-      .upload-option:first-child {
-        display: none;
-      }
-    }
-  }
-  .tiny-sender__input-field-wrapper .tiny-textarea__inner {
+  .tr-sender-editor-content .ProseMirror p {
     font-size: 14px;
   }
-}
-:deep(.action-buttons__icon) {
-  width: 26px !important;
-  height: 26px !important;
+  .tr-action-button {
+    width: 26px;
+    height: 26px;
+  }
+  .tr-sender-submit-button {
+    width: 30px;
+    height: 30px;
+  }
 }
 :deep(.tr-attachments) {
   .tr-attachments__file-list {

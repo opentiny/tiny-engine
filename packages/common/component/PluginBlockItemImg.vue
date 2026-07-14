@@ -86,7 +86,7 @@ const handleCheck = (v: any) => {
   overflow: hidden;
   object-fit: cover;
 }
-.item-default-img {
+.item-default-img.svg-icon {
   width: 84px;
   height: 50px;
   color: var(--te-component-common-bg-color);
