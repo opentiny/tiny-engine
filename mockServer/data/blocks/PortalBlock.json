@@ -1,0 +1,135 @@
+{
+  "id": "V85zd9sWEya25Kxh",
+  "label": "PortalBlock",
+  "name_cn": null,
+  "framework": "Vue",
+  "content": {
+    "state": {},
+    "methods": {},
+    "componentName": "Block",
+    "fileName": "PortalBlock",
+    "css": "",
+    "props": {},
+    "children": [
+      {
+        "componentName": "div",
+        "props": {
+          "style": "font-size: 18px; height: 40px; border-bottom: 1px solid rgb(223, 225, 230); margin-top: 20px;"
+        },
+        "id": "d38cea57",
+        "children": [
+          {
+            "componentName": "Icon",
+            "props": {
+              "name": "IconChevronLeft"
+            },
+            "id": "86c6e6b0"
+          },
+          {
+            "componentName": "Text",
+            "props": {
+              "text": "编辑物料资产包 | ",
+              "style": "margin-left: 10px; font-weight: bold;"
+            },
+            "id": "38d9fbc8"
+          },
+          {
+            "componentName": "Text",
+            "props": {
+              "text": {
+                "type": "JSExpression",
+                "value": "this.props.blockName"
+              },
+              "style": "margin-left: 10px; font-weight: bold;"
+            },
+            "id": "6cd76396"
+          }
+        ]
+      }
+    ],
+    "schema": {
+      "properties": [
+        {
+          "label": {
+            "zh_CN": "基础信息"
+          },
+          "description": {
+            "zh_CN": "基础信息"
+          },
+          "collapse": {
+            "number": 6,
+            "text": {
+              "zh_CN": "显示更多"
+            }
+          },
+          "content": [
+            {
+              "property": "blockName",
+              "type": "String",
+              "defaultValue": "MT0526-React 1.0",
+              "label": {
+                "text": {
+                  "zh_CN": "区块名称"
+                }
+              },
+              "cols": 12,
+              "rules": [],
+              "handle": {
+                "getter": "",
+                "setter": ""
+              },
+              "hidden": false,
+              "required": true,
+              "readOnly": false,
+              "disabled": false,
+              "widget": {
+                "component": "MetaInput",
+                "props": {
+                  "modelValue": "MT0526-React 1.0"
+                }
+              }
+            }
+          ]
+        }
+      ],
+      "events": {},
+      "slots": {}
+    },
+    "dataSource": {}
+  },
+  "description": null,
+  "path": "portal",
+  "screenshot": "",
+  "created_app": null,
+  "tags": null,
+  "categories": [],
+  "occupier": {
+    "id": 86,
+    "username": "开发者"
+  },
+  "isDefault": null,
+  "isOfficial": null,
+  "created_at": "2022-06-28T08:59:54.000Z",
+  "updated_at": "2023-01-13T08:20:09.000Z",
+  "assets": {
+    "material": [],
+    "scripts": [
+      "http://localhost:9090/assets/js/1005web-components.es.js",
+      "http://localhost:9090/assets/js/1005web-components.umd.js"
+    ],
+    "styles": []
+  },
+  "createdBy": {
+    "id": 86,
+    "username": "开发者"
+  },
+  "current_history": 1665,
+  "public": 1,
+  "tiny_reserved": false,
+  "author": null,
+  "content_blocks": null,
+  "public_scope_tenants": [],
+  "histories_length": 1,
+  "is_published": true,
+  "_id": "V85zd9sWEya25Kxh"
+}

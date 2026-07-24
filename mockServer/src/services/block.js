@@ -9,26 +9,21 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import { getResponseData } from '../tool/Common'
 
 export default class BlockService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('blocks.db'),
-      autoload: true
-    })
-
-    this.db.ensureIndex({
-      fieldName: 'label',
-      unique: true
+    this.store = createStore('blocks', {
+      indexes: [{ fieldName: 'label', unique: true }],
+      namingFields: ['label', 'name']
     })
 
     this.userInfo = {
       id: 86,
       username: '开发者',
-      email: 'developer@lowcode.com',
-      confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+      email: 'demo@example.com',
+      confirmationToken: null,
       is_admin: true
     }
 
@@ -55,38 +50,38 @@ export default class BlockService {
 
   async create(params) {
     const blockData = { ...this.blockModel, ...params }
-    const result = await this.db.insertAsync(blockData)
+    const result = await this.store.insert(blockData)
     const { _id } = result
-    await this.db.updateAsync({ _id }, { $set: { id: _id } })
+    await this.store.update({ _id }, { $set: { id: _id } })
     result.id = result._id
     return result
   }
 
   async update(id, params) {
-    await this.db.updateAsync({ _id: id }, { $set: params })
-    const result = await this.db.findOneAsync({ _id: id })
+    await this.store.update({ _id: id }, { $set: params })
+    const result = await this.store.findOne({ _id: id })
     return getResponseData(result)
   }
 
   async detail(blockId) {
-    const result = await this.db.findOneAsync({ _id: blockId })
+    const result = await this.store.findOne({ _id: blockId })
 
     return getResponseData(result)
   }
 
   async delete(blockId) {
-    const result = await this.db.findOneAsync({ _id: blockId })
-    await this.db.removeAsync({ _id: blockId })
+    const result = await this.store.findOne({ _id: blockId })
+    await this.store.remove({ _id: blockId })
     return getResponseData(result)
   }
 
   async list(appId) {
-    const result = await this.db.findAsync()
+    const result = await this.store.find()
     return getResponseData(result)
   }
 
   async find(params) {
-    const result = await this.db.findAsync(params)
+    const result = await this.store.find(params)
     return result
   }
 }

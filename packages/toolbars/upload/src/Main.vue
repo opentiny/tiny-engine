@@ -1,0 +1,1566 @@
+<template>
+  <div class="toolbar-upload">
+    <tiny-popover :visible-arrow="false" trigger="manual" :open-delay="OPEN_DELAY.Default" v-model="poperVisible">
+      <template #reference>
+        <toolbar-base
+          content="导入"
+          :icon="options.icon?.default || options?.icon"
+          :options="options"
+          @click-api="clickPopover"
+        >
+        </toolbar-base>
+      </template>
+      <div class="toolbar-upload-option">
+        <div class="toolbar-upload-item" @click="() => triggerUpload('file')">Vue 文件</div>
+        <div class="toolbar-upload-item" @click="() => triggerUpload('directory')">项目目录</div>
+        <div class="toolbar-upload-item" @click="() => triggerUpload('zip')">项目压缩包</div>
+      </div>
+      <input ref="fileInputRef" type="file" accept=".vue" style="display: none" @change="handleFileChange" />
+      <input ref="directoryInputRef" type="file" webkitdirectory style="display: none" @change="handleFileChange" />
+      <input
+        ref="zipInputRef"
+        type="file"
+        accept=".zip,application/zip"
+        style="display: none"
+        @change="handleFileChange"
+      />
+    </tiny-popover>
+    <!-- 覆盖选择对话框 -->
+    <overwrite-dialog
+      :visible="state.showOverwriteDialog"
+      :duplicates="state.duplicatePages.map((d) => ({ name: d.name }))"
+      @update:visible="(v) => (state.showOverwriteDialog = v)"
+      @confirm="handleOverwriteConfirm"
+      @cancel="handleOverwriteCancel"
+    />
+    <import-notice-dialog
+      :visible="state.showImportNoticeDialog"
+      :upload-type="state.pendingUploadType"
+      @update:visible="(v) => (state.showImportNoticeDialog = v)"
+      @confirm="handleImportNoticeConfirm"
+      @cancel="handleImportNoticeCancel"
+    />
+  </div>
+</template>
+
+<script lang="ts">
+/* metaService: engine.toolbars.upload.Main */
+import { reactive, ref } from 'vue'
+import {
+  useNotify,
+  useResource,
+  usePage,
+  useMaterial,
+  useTranslate,
+  getMetaApi,
+  getMergeMeta,
+  META_SERVICE
+} from '@opentiny/tiny-engine-meta-register'
+import { ToolbarBase } from '@opentiny/tiny-engine-common'
+import {
+  fetchPageList,
+  fetchBlockGroups,
+  createBlockGroup,
+  createBlock,
+  fetchBlockByLabel,
+  updateBlock,
+  deployBlock,
+  fetchUtilsResourceList,
+  createUtilsResource,
+  updateUtilsResource,
+  fetchDataSourceList,
+  createDataSource,
+  updateDataSource,
+  fetchResourceGroups,
+  createResourceGroup,
+  fetchResourceListByGroupId,
+  batchCreateResource,
+  updateAppConfig
+} from './http'
+import {
+  buildImportedAssetCreatePayload,
+  buildImportedAssetResourceName,
+  findImportedAssetResource,
+  getImportedAssetResourceUrl,
+  getImportedAssets,
+  normalizeImportedAssetResourceList,
+  splitImportedAssetCreatePayloads,
+  replaceImportedAssetPlaceholders
+} from './assetImport'
+import {
+  buildImportedBlockEvents,
+  resolveImportedBlockDefaultValue,
+  resolveImportedBlockPropType,
+  splitImportedBlockBindings
+} from './blockImport'
+import { hydrateImportedAppSchemaState, normalizeImportedAppSchema, normalizeImportedSchema } from './schemaImport'
+import { VueToDslConverter } from '@opentiny/tiny-engine-vue-to-dsl'
+import OverwriteDialog from './OverwriteDialog.vue'
+import ImportNoticeDialog from './ImportNoticeDialog.vue'
+import { TinyPopover } from '@opentiny/vue'
+import { constants } from '@opentiny/tiny-engine-utils'
+
+const { OPEN_DELAY } = constants
+const IMPORTED_RESOURCE_GROUP_NAME = '项目导入资源'
+const IMPORTED_RESOURCE_GROUP_DESCRIPTION = '项目导入时自动上传的图片资源'
+
+// @ts-ignore
+export default {
+  components: {
+    ToolbarBase,
+    OverwriteDialog,
+    ImportNoticeDialog,
+    TinyPopover
+  },
+  props: {
+    options: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  setup() {
+    const state = reactive({
+      showOverwriteDialog: false,
+      showImportNoticeDialog: false,
+      duplicatePages: [] as Array<{ name: string; ps: any; existing: any }>,
+      toCreatePages: [] as any[],
+      pendingImportedPages: [] as any[],
+      pendingImportedComponentsMap: [] as any[],
+      pendingAppSchema: null as any,
+      appId: '' as any,
+      pendingUploadType: 'directory' as 'file' | 'directory' | 'zip'
+    })
+
+    const poperVisible = ref(false)
+    const clickPopover = () => {
+      poperVisible.value = !poperVisible.value
+    }
+
+    const closePopover = () => {
+      poperVisible.value = false
+    }
+
+    // 文件上传引用
+    const fileInputRef = ref<HTMLInputElement | null>(null)
+    // 目录上传引用
+    const directoryInputRef = ref<HTMLInputElement | null>(null)
+    // zip压缩包上传引用
+    const zipInputRef = ref<HTMLInputElement | null>(null)
+
+    // 按页面ID切换到对应页面，确保 currentPage 与渲染一致
+    const switchToPageByName = async (name?: string) => {
+      if (!name) return
+      // 优先使用已缓存的 appId
+      const appId = state.appId || getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+      try {
+        const list: any[] = await fetchPageList(appId)
+        const target = list?.find?.((p: any) => String(p?.name) === String(name))
+        if (target?.id) {
+          await usePage().switchPageWithConfirm?.(target.id, true)
+        }
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    const mergeUtilsByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item?.name) return
+        merged.set(String(item.name), item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const mergeComponentsMapByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item?.componentName) return
+        const key = String(item.componentName)
+        const existing = merged.get(key)
+        merged.set(key, existing ? { ...existing, ...item, componentName: key } : item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const mergeI18nMessages = (base: Record<string, any> = {}, incoming: Record<string, any> = {}) => {
+      const flattenLocaleMessages = (value: any, prefix = '', collector: Record<string, any> = {}) => {
+        if (value === null || value === undefined) return collector
+
+        if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            const nextKey = prefix ? `${prefix}.${index}` : String(index)
+            if (item !== null && typeof item === 'object') {
+              flattenLocaleMessages(item, nextKey, collector)
+            } else {
+              collector[nextKey] = item
+            }
+          })
+          return collector
+        }
+
+        if (typeof value === 'object') {
+          Object.entries(value).forEach(([key, item]) => {
+            const nextKey = prefix ? `${prefix}.${key}` : key
+            if (item !== null && typeof item === 'object') {
+              flattenLocaleMessages(item, nextKey, collector)
+            } else {
+              collector[nextKey] = item
+            }
+          })
+          return collector
+        }
+
+        if (prefix) {
+          collector[prefix] = value
+        }
+
+        return collector
+      }
+
+      const mergedLocales = new Set([...Object.keys(base || {}), ...Object.keys(incoming || {})])
+      const result: Record<string, any> = {}
+
+      mergedLocales.forEach((locale) => {
+        const baseMessages = flattenLocaleMessages((base && base[locale]) || {})
+        const incomingMessages = flattenLocaleMessages((incoming && incoming[locale]) || {})
+        result[locale] = {
+          ...baseMessages,
+          ...incomingMessages
+        }
+      })
+
+      return result
+    }
+
+    const mergeDataSourceByName = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        if (!item) return
+
+        const key = String(item.name || item.id || '')
+        if (!key) return
+
+        merged.set(key, item)
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const normalizeImportedDataSourceItem = (item: any) => {
+      if (!item || typeof item !== 'object') return item
+
+      const nextItem = { ...item }
+      const rawData = item.data && typeof item.data === 'object' ? { ...item.data } : {}
+      const hasOptions = rawData.options && typeof rawData.options === 'object'
+      const inferredType =
+        rawData.type ||
+        nextItem.type ||
+        (rawData.method || rawData.uri || rawData.params || rawData.isSync !== undefined ? 'remote' : 'array')
+
+      if (inferredType === 'remote') {
+        const options = {
+          ...(hasOptions ? rawData.options : {}),
+          method: (hasOptions ? rawData.options?.method : undefined) || rawData.method || 'GET',
+          uri: (hasOptions ? rawData.options?.uri : undefined) || rawData.uri || '',
+          params: (hasOptions ? rawData.options?.params : undefined) || rawData.params || '',
+          isSync: (hasOptions ? rawData.options?.isSync : undefined) ?? rawData.isSync ?? true
+        }
+
+        delete rawData.method
+        delete rawData.uri
+        delete rawData.params
+        delete rawData.isSync
+
+        nextItem.data = {
+          ...rawData,
+          type: 'remote',
+          options,
+          shouldFetch: rawData.shouldFetch || {
+            type: 'JSFunction',
+            value: 'function shouldFetch() { return true }'
+          },
+          willFetch: rawData.willFetch || {
+            type: 'JSFunction',
+            value: 'function willFetch(option) { return option }'
+          },
+          dataHandler: rawData.dataHandler || {
+            type: 'JSFunction',
+            value: 'function dataHandler(res) { return res }'
+          },
+          errorHandler: rawData.errorHandler || {
+            type: 'JSFunction',
+            value: 'function errorHandler(err) { return Promise.reject(err) }'
+          }
+        }
+      } else {
+        nextItem.data = {
+          ...rawData,
+          type: rawData.type || inferredType
+        }
+      }
+
+      return nextItem
+    }
+
+    const normalizeImportedDataSourceConfig = (dataSource: any = { list: [] }) => {
+      const list = Array.isArray(dataSource?.list)
+        ? dataSource.list.map((item: any) => normalizeImportedDataSourceItem(item))
+        : []
+
+      return {
+        ...dataSource,
+        list
+      }
+    }
+
+    const mergeGlobalStateById = (base: any[] = [], incoming: any[] = []) => {
+      const merged = new Map<string, any>()
+
+      ;[...base, ...incoming].forEach((item) => {
+        const id = String(item?.id || '')
+        if (!id) return
+
+        const existing = merged.get(id)
+        merged.set(
+          id,
+          existing
+            ? {
+                ...existing,
+                ...item,
+                id,
+                state: item?.state ?? existing?.state ?? {},
+                getters: item?.getters ?? existing?.getters,
+                actions: item?.actions ?? existing?.actions
+              }
+            : item
+        )
+      })
+
+      return Array.from(merged.values())
+    }
+
+    const toPascalCase = (input = '') =>
+      String(input)
+        .split(/[-_\s]+/)
+        .filter(Boolean)
+        .map((item) => item.charAt(0).toUpperCase() + item.slice(1))
+        .join('')
+
+    const normalizeIconComponentName = (componentName = '') => {
+      const raw = String(componentName || '')
+      if (/^TinyIcon[A-Z0-9]/.test(raw)) {
+        return raw.replace(/^Tiny/, '')
+      }
+
+      const lower = raw.toLowerCase()
+      if (lower.startsWith('tiny-icon-')) {
+        return `Icon${toPascalCase(lower.replace(/^tiny-icon-/, ''))}`
+      }
+
+      return ''
+    }
+
+    const normalizeImportedSchemaIcons = (schema: any) => {
+      if (!schema || typeof schema !== 'object') return schema
+
+      const visited = new WeakSet<object>()
+      const shouldHandleAsSchemaNode = (value: any) => {
+        if (!value || typeof value !== 'object') return false
+        if (typeof value.componentName !== 'string') return false
+        return (
+          Object.prototype.hasOwnProperty.call(value, 'props') ||
+          Object.prototype.hasOwnProperty.call(value, 'children') ||
+          Object.prototype.hasOwnProperty.call(value, 'id') ||
+          Object.prototype.hasOwnProperty.call(value, 'componentType')
+        )
+      }
+
+      const walk = (value: any) => {
+        if (!value || typeof value !== 'object') return
+        if (visited.has(value)) return
+        visited.add(value)
+
+        if (Array.isArray(value)) {
+          value.forEach(walk)
+          return
+        }
+
+        if (shouldHandleAsSchemaNode(value)) {
+          const iconName = normalizeIconComponentName(value.componentName)
+          if (iconName) {
+            const nextProps = {
+              ...(value.props || {}),
+              name: iconName
+            }
+            value.componentName = 'Icon'
+            value.props = nextProps
+          }
+        }
+
+        Object.values(value).forEach((item) => {
+          if (item && typeof item === 'object') {
+            walk(item)
+          }
+        })
+      }
+
+      walk(schema)
+      return schema
+    }
+
+    const createVueToDslConverter = () => {
+      const materials = useMaterial().getComponentList?.() || []
+
+      return new VueToDslConverter({
+        computed_flag: true,
+        materials
+      })
+    }
+
+    const normalizeImportedAppSchemaIcons = (appSchema: any) => {
+      const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+      const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
+
+      pages.forEach((pageSchema: any) => normalizeImportedSchemaIcons(pageSchema))
+      blocks.forEach((blockSchema: any) => normalizeImportedSchemaIcons(blockSchema))
+
+      return appSchema
+    }
+
+    const resolveImportedPageName = (ps: any, fallback = 'Page') =>
+      (ps?.meta?.name || ps?.fileName || fallback) as string
+
+    const buildSafeRoute = (rawName: string) =>
+      String(rawName || 'Page')
+        .replace(/\s+/g, '-')
+        .toLowerCase()
+
+    const normalizeImportedRoute = (route: any, rawName: string) => {
+      const normalized = String(route || '')
+        .trim()
+        .replace(/^\/+/, '')
+
+      return normalized || buildSafeRoute(rawName)
+    }
+
+    const syncComponentsDepsByMap = (componentsMap: any[] = []) => {
+      if (!Array.isArray(componentsMap) || !componentsMap.length) return
+
+      const { appSchemaState } = useResource()
+      const scriptsDeps = appSchemaState.materialsDeps?.scripts || []
+
+      componentsMap.forEach((item: any) => {
+        if (!item?.componentName || !item?.package) return
+        const pkg = String(item.package)
+        if (!pkg) return
+
+        const exportName = item.exportName || item.componentName
+        const destructuring = item.destructuring !== false
+        const existing = scriptsDeps.find((dep: any) => String(dep?.package || '') === pkg)
+
+        if (existing) {
+          existing.components = {
+            ...(existing.components || {}),
+            [item.componentName]: { exportName, destructuring }
+          }
+
+          if (!existing.script && item.script) {
+            existing.script = item.script
+          }
+
+          return
+        }
+
+        scriptsDeps.push({
+          package: pkg,
+          script: item.script,
+          components: {
+            [item.componentName]: { exportName, destructuring }
+          }
+        })
+      })
+
+      useMaterial().updateCanvasDeps?.()
+    }
+
+    const syncImportedComponentsMap = (importedComponentsMap: any[] = []) => {
+      const normalized = Array.isArray(importedComponentsMap)
+        ? importedComponentsMap.filter((item) => item?.componentName)
+        : []
+      if (!normalized.length) return
+
+      const { appSchemaState } = useResource()
+      const mergedComponentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], normalized)
+      appSchemaState.componentsMap = mergedComponentsMap
+      syncComponentsDepsByMap(mergedComponentsMap)
+
+      try {
+        const cachedAppSchema = localStorage.getItem('TE_LOCAL_APPSCHEMA')
+        if (cachedAppSchema) {
+          const parsed = JSON.parse(cachedAppSchema)
+          parsed.componentsMap = mergeComponentsMapByName(parsed?.componentsMap || [], normalized)
+          localStorage.setItem('TE_LOCAL_APPSCHEMA', JSON.stringify(parsed))
+        }
+      } catch (e) {
+        // ignore persistence errors
+      }
+    }
+
+    const syncImportedUtils = async (appId: string, importedUtils: any[] = []) => {
+      const normalizedUtils = Array.isArray(importedUtils)
+        ? importedUtils.filter((item) => item?.name && item?.type)
+        : []
+      const useUtilsApi: any = getMetaApi(META_SERVICE.UseUtils)
+      const mergedLocalUtils = mergeUtilsByName(useUtilsApi?.getUtils?.() || [], normalizedUtils)
+
+      useUtilsApi?.setUtils?.(mergedLocalUtils)
+
+      if (!normalizedUtils.length) {
+        return
+      }
+
+      try {
+        const existingRes: any = await fetchUtilsResourceList(appId)
+        const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+        const existingMap = new Map<string, any>()
+
+        existingList?.forEach?.((item: any) => {
+          if (!item?.name) return
+          existingMap.set(String(item.name), item)
+        })
+
+        await Promise.allSettled(
+          normalizedUtils.map((item: any) => {
+            const existing = existingMap.get(String(item.name))
+            const payload = {
+              ...(existing || {}),
+              app: appId,
+              category: 'utils',
+              name: item.name,
+              type: item.type,
+              content: item.content || {}
+            }
+
+            return existing?.id ? updateUtilsResource(payload) : createUtilsResource(payload)
+          })
+        )
+
+        await useUtilsApi?.refreshUtils?.()
+      } catch (e) {
+        useUtilsApi?.setUtils?.(mergedLocalUtils)
+      }
+    }
+
+    const syncImportedI18n = async (appId: string, hostType: string, mergedI18n: Record<string, any> = {}) => {
+      const locales = Object.keys(mergedI18n || {})
+      if (!locales.length) return
+
+      const useTranslateApi = useTranslate()
+
+      try {
+        useTranslateApi.setLangs?.({})
+        await useTranslateApi.initI18n({ host: appId, hostType, init: true })
+
+        const entryKeys = new Set<string>()
+        locales.forEach((locale) => {
+          Object.keys(mergedI18n?.[locale] || {}).forEach((key) => entryKeys.add(key))
+        })
+
+        entryKeys.forEach((key) => {
+          const payload: Record<string, any> = { key, type: 'i18n' }
+          locales.forEach((locale) => {
+            payload[locale] = mergedI18n?.[locale]?.[key] || ''
+          })
+          useTranslateApi.ensureI18n?.(payload, true)
+        })
+      } catch (_error) {
+        // ignore persistence errors, keep current-session merged i18n
+      }
+    }
+
+    const syncImportedDataSources = async (appId: string, importedDataSource: any = { list: [] }) => {
+      const importedList = Array.isArray(importedDataSource?.list)
+        ? importedDataSource.list.filter((item: any) => item?.name)
+        : []
+      const { appSchemaState } = useResource()
+
+      if (!importedList.length) {
+        return {
+          list: Array.isArray(appSchemaState.dataSource) ? appSchemaState.dataSource : [],
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      }
+
+      try {
+        const existingRes: any = await fetchDataSourceList(appId)
+        const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+        const existingMap = new Map<string, any>()
+
+        existingList.forEach((item: any) => {
+          if (!item?.name) return
+          existingMap.set(String(item.name), item)
+        })
+
+        await Promise.allSettled(
+          importedList.map((item: any) => {
+            const existing = existingMap.get(String(item.name))
+            const payload = {
+              name: item.name,
+              app: appId,
+              data: item.data || {}
+            }
+
+            return existing?.id ? updateDataSource(existing.id, payload) : createDataSource(payload)
+          })
+        )
+
+        const refreshedRes: any = await fetchDataSourceList(appId)
+        const refreshedList = Array.isArray(refreshedRes) ? refreshedRes : refreshedRes?.data || []
+
+        if (Array.isArray(appSchemaState.dataSource)) {
+          appSchemaState.dataSource.splice(0, appSchemaState.dataSource.length, ...refreshedList)
+        } else {
+          appSchemaState.dataSource = refreshedList
+        }
+
+        return {
+          list: refreshedList,
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      } catch (_error) {
+        return {
+          list: importedList,
+          dataHandler: importedDataSource?.dataHandler || appSchemaState.dataHandler,
+          willFetch: importedDataSource?.willFetch || appSchemaState.willFetch,
+          errorHandler: importedDataSource?.errorHandler || appSchemaState.errorHandler
+        }
+      }
+    }
+
+    const getNextBlockVersion = (block: any) => {
+      const backupList = Array.isArray(block?.histories) ? block.histories : []
+
+      let latestVersion = block?.current_version || '1.0.0'
+      let latestTime = 0
+
+      backupList.forEach((item: { created_at?: string | number | Date; version?: string }) => {
+        const itemTime = item?.created_at ? new Date(item.created_at).getTime() : 0
+        if (itemTime > latestTime && item?.version) {
+          latestTime = itemTime
+          latestVersion = item.version
+        }
+      })
+
+      return String(latestVersion || '1.0.0').replace(/\d+$/, (match) => String(Number(match) + 1))
+    }
+
+    const openUploadSelector = (type: 'file' | 'directory' | 'zip') => {
+      if (type === 'file') {
+        fileInputRef.value?.click()
+      } else if (type === 'directory') {
+        directoryInputRef.value?.click()
+      } else if (type === 'zip') {
+        zipInputRef.value?.click()
+      }
+    }
+
+    // 触发隐藏文件上传
+    const triggerUpload = (type: 'file' | 'directory' | 'zip') => {
+      closePopover()
+
+      if (type === 'directory' || type === 'zip') {
+        state.pendingUploadType = type
+        state.showImportNoticeDialog = true
+        return
+      }
+
+      openUploadSelector(type)
+    }
+
+    const handleImportNoticeConfirm = () => {
+      state.showImportNoticeDialog = false
+      openUploadSelector(state.pendingUploadType)
+    }
+
+    const handleImportNoticeCancel = () => {
+      state.showImportNoticeDialog = false
+    }
+
+    const applyImportedAppSchema = async (appSchema: any, appId: string, hostType: string) => {
+      const { appSchemaState } = useResource()
+      const importedUtils = Array.isArray(appSchema?.utils) ? appSchema.utils : []
+      const normalizedImportedDataSource = normalizeImportedDataSourceConfig(appSchema?.dataSource || { list: [] })
+      const importedComponentsMap = Array.isArray(appSchema?.componentsMap) ? appSchema.componentsMap : []
+      const importedI18n = appSchema?.i18n || {}
+      const mergedI18n = mergeI18nMessages(appSchemaState.langs?.messages || {}, importedI18n)
+      const locales = Object.keys(mergedI18n).length
+        ? Object.keys(mergedI18n).map((key) => ({ lang: key, label: key }))
+        : [
+            { lang: 'zh_CN', label: 'zh_CN' },
+            { lang: 'en_US', label: 'en_US' }
+          ]
+      const mergedUtils = mergeUtilsByName(appSchemaState.utils || [], importedUtils)
+      const mergedDataSource = mergeDataSourceByName(
+        appSchemaState.dataSource || [],
+        normalizedImportedDataSource.list || []
+      )
+      const mergedGlobalState = mergeGlobalStateById(appSchemaState.globalState || [], appSchema?.globalState || [])
+
+      appSchemaState.langs = {
+        locales,
+        messages: mergedI18n
+      }
+      appSchemaState.utils = mergedUtils
+      if (Array.isArray(appSchemaState.dataSource)) {
+        appSchemaState.dataSource.splice(0, appSchemaState.dataSource.length, ...mergedDataSource)
+      } else {
+        appSchemaState.dataSource = mergedDataSource
+      }
+      appSchemaState.globalState = mergedGlobalState
+      appSchemaState.componentsMap = mergeComponentsMapByName(appSchemaState.componentsMap || [], importedComponentsMap)
+      syncComponentsDepsByMap(appSchemaState.componentsMap || [])
+
+      try {
+        await updateAppConfig(appId, { global_state: mergedGlobalState })
+      } catch (error) {
+        useNotify({
+          type: 'warning',
+          title: '应用状态同步失败',
+          message: '已在当前编辑器会话中合并应用状态，但后端保存失败，请稍后重试'
+        })
+      }
+
+      await syncImportedUtils(appId, importedUtils)
+      await syncImportedI18n(appId, hostType, mergedI18n)
+      const syncedDataSource = await syncImportedDataSources(appId, {
+        ...normalizedImportedDataSource,
+        list: mergedDataSource
+      })
+      const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+
+      try {
+        const componentsTree = pages.map((ps: any) => ({
+          name: ps?.meta?.name || ps?.fileName || 'Page',
+          meta: { ...(ps?.meta || {}), isPage: true, message: 'Page auto save', isBody: false, isHome: false },
+          page_content: ps
+        }))
+        if (!componentsTree.some((p: any) => p?.meta?.isHome) && componentsTree[0]) {
+          componentsTree[0].meta.isHome = true
+        }
+        const normalizedAppData = {
+          ...appSchema,
+          componentsTree,
+          pageSchema: pages,
+          componentsMap: appSchemaState.componentsMap,
+          i18n: mergedI18n,
+          utils: mergedUtils,
+          dataSource: {
+            ...normalizedImportedDataSource,
+            ...syncedDataSource,
+            list: syncedDataSource?.list || mergedDataSource
+          },
+          globalState: mergedGlobalState,
+          meta: {
+            ...(appSchema.meta || {}),
+            globalState: mergedGlobalState
+          }
+        }
+        localStorage.setItem('TE_LOCAL_APPSCHEMA', JSON.stringify(normalizedAppData))
+      } catch (e) {
+        // ignore persistence errors
+      }
+
+      await useTranslate().initI18n({ host: appId, hostType: hostType, init: true })
+    }
+
+    const createAndPublishBlocks = async (appSchema: any, appId: string) => {
+      const blocks = Array.isArray(appSchema?.blockSchemas) ? appSchema.blockSchemas : []
+      if (!blocks.length) {
+        return { total: 0, created: 0, updated: 0 }
+      }
+
+      if (blocks.length) {
+        try {
+          // 查询或创建区块分组
+          let groupId: string | null = null
+          try {
+            const groupsRes: any = await fetchBlockGroups({ app: appId })
+            const groups = Array.isArray(groupsRes) ? groupsRes : groupsRes?.data || []
+
+            if (groups.length > 0) {
+              // 使用第一个分组
+              groupId = groups[0].id
+            } else {
+              // 创建默认分组 "我的分组"
+              const createGroupRes: any = await createBlockGroup({
+                name: '我的分组',
+                app: appId
+              })
+              groupId = createGroupRes?.id
+            }
+          } catch (e) {
+            // 继续创建区块，即使分组创建失败
+          }
+
+          // 创建区块
+          // 先从页面 schema 中收集父组件传给各区块的 props
+          const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+          const parentPropsMap: Record<string, Record<string, any>> = {}
+          const parentEventsMap: Record<string, Record<string, any>> = {}
+          const collectParentProps = (node: any) => {
+            if (!node || typeof node !== 'object') return
+            if (node.componentType === 'Block' && node.componentName && node.props) {
+              const name = node.componentName
+              if (!parentPropsMap[name]) parentPropsMap[name] = {}
+              if (!parentEventsMap[name]) parentEventsMap[name] = {}
+
+              const { props: blockProps, events: blockEvents } = splitImportedBlockBindings(node.props)
+
+              Object.keys(blockProps).forEach((key) => {
+                if (key !== 'className' && key !== 'style' && key !== 'class') {
+                  parentPropsMap[name][key] = blockProps[key]
+                }
+              })
+              Object.keys(blockEvents).forEach((key) => {
+                parentEventsMap[name][key] = blockEvents[key]
+              })
+            }
+            if (Array.isArray(node.children)) {
+              node.children.forEach(collectParentProps)
+            }
+          }
+          pages.forEach((ps: any) => {
+            if (ps?.children) ps.children.forEach(collectParentProps)
+          })
+
+          let createdCount = 0
+          let updatedCount = 0
+
+          await Promise.allSettled(
+            blocks.map(async (bs: any) => {
+              const blockLabel = bs.fileName || bs.meta?.name || 'Block'
+
+              // 类型对应的默认编辑器组件
+              const META_COMPONENTS: Record<string, string> = {
+                array: 'CodeConfigurator',
+                string: 'InputConfigurator',
+                number: 'NumberConfigurator',
+                object: 'CodeConfigurator',
+                boolean: 'SwitchConfigurator',
+                function: 'CodeConfigurator'
+              }
+
+              // 合并两个来源的 props：
+              // 1. 子组件自身声明的 props（bs.props）
+              // 2. 父组件传递的 props（parentPropsMap）
+              const declaredProps: Record<string, any> = {}
+              if (Array.isArray(bs.props)) {
+                bs.props.forEach((p: any) => {
+                  declaredProps[p.name] = p
+                })
+              }
+              const parentProps = parentPropsMap[blockLabel] || {}
+              const parentEvents = parentEventsMap[blockLabel] || {}
+
+              // 以父组件传递的 props 为主，合并子组件声明的 props
+              const mergedPropNames = new Set([...Object.keys(declaredProps), ...Object.keys(parentProps)])
+
+              const blockProperties: any[] = []
+              mergedPropNames.forEach((propName) => {
+                const declared = declaredProps[propName]
+                const parentVal = parentProps[propName]
+
+                const propType = resolveImportedBlockPropType(declared?.type, parentVal)
+                const defaultValue = resolveImportedBlockDefaultValue(declared?.default, parentVal, propType)
+
+                blockProperties.push({
+                  property: propName,
+                  type: propType,
+                  defaultValue: defaultValue,
+                  label: {
+                    text: {
+                      zh_CN: propName
+                    }
+                  },
+                  cols: 12,
+                  rules: [],
+                  accessor: {},
+                  hidden: false,
+                  required: declared?.required || false,
+                  readOnly: false,
+                  disabled: false,
+                  widget: {
+                    component: META_COMPONENTS[propType] || 'InputConfigurator',
+                    props: {}
+                  },
+                  properties: [
+                    {
+                      label: {
+                        zh_CN: '默认分组'
+                      },
+                      content: []
+                    }
+                  ]
+                })
+              })
+
+              // 将子节点中引用 state 变量的地方转换为 this.props.xxx
+              const propNames = new Set(blockProperties.map((p: any) => p.property))
+              const rewriteChildrenProps = (node: any) => {
+                if (!node || typeof node !== 'object') return
+                if (node.props && typeof node.props === 'object') {
+                  Object.keys(node.props).forEach((key) => {
+                    const val = node.props[key]
+                    // 将 state 引用转为 props 引用
+                    if (typeof val === 'object' && val?.type === 'JSExpression' && typeof val.value === 'string') {
+                      propNames.forEach((pn) => {
+                        if (val.value.includes(`this.state.${pn}`)) {
+                          val.value = val.value.replace(new RegExp(`this\\.state\\.${pn}`, 'g'), `this.props.${pn}`)
+                        }
+                      })
+                    }
+                  })
+                }
+                if (Array.isArray(node.children)) {
+                  node.children.forEach(rewriteChildrenProps)
+                }
+              }
+              const children = JSON.parse(JSON.stringify(bs.children || []))
+              const blockState = JSON.parse(JSON.stringify(bs.state || {}))
+              const blockMethods = JSON.parse(JSON.stringify(bs.methods || {}))
+              const blockLifeCycles = JSON.parse(JSON.stringify(bs.lifeCycles || {}))
+              children.forEach(rewriteChildrenProps)
+
+              const blockParams: any = {
+                label: blockLabel,
+                name_cn: blockLabel,
+                public: 1,
+                framework: 'Vue',
+                created_app: appId,
+                content: {
+                  componentName: 'Block',
+                  fileName: blockLabel,
+                  css: bs.css || '',
+                  props: {},
+                  children: children,
+                  schema: {
+                    properties: [
+                      {
+                        label: {
+                          zh_CN: '基础信息'
+                        },
+                        description: {
+                          zh_CN: '基础信息'
+                        },
+                        collapse: {
+                          number: 6,
+                          text: {
+                            zh_CN: '显示更多'
+                          }
+                        },
+                        content: blockProperties
+                      }
+                    ],
+                    events: buildImportedBlockEvents(bs.emits || [], parentEvents),
+                    slots: {}
+                  },
+                  state: blockState,
+                  methods: blockMethods,
+                  lifeCycles: blockLifeCycles,
+                  dataSource: bs.dataSource || {},
+                  dependencies: bs.dependencies || { scripts: [], styles: [] },
+                  id: 'body'
+                }
+              }
+
+              // 添加分组ID（如果成功获取或创建）
+              if (groupId) {
+                blockParams.groups = [groupId]
+              } else {
+                // 备选方案：使用空分类数组
+                blockParams.categories = []
+              }
+
+              const existingRes: any = await fetchBlockByLabel(blockLabel).catch(() => [])
+              const existingList = Array.isArray(existingRes) ? existingRes : existingRes?.data || []
+              const existing =
+                existingList.find?.(
+                  (item: any) =>
+                    String(item?.label) === String(blockLabel) &&
+                    String(item?.created_app || item?.app || '') === String(appId)
+                ) ||
+                existingList.find?.((item: any) => String(item?.label) === String(blockLabel)) ||
+                existingList?.[0]
+
+              let blockData: any = null
+
+              if (existing?.id) {
+                const existingGroups = Array.isArray(existing.groups)
+                  ? existing.groups.map((item: any) => item?.id || item).filter(Boolean)
+                  : []
+                const existingCategories = Array.isArray(existing.categories)
+                  ? existing.categories.map((item: any) => item?.id || item).filter(Boolean)
+                  : []
+                const updateParams = {
+                  name_cn: blockParams.name_cn,
+                  label: blockParams.label,
+                  content: blockParams.content,
+                  screenshot: existing.screenshot,
+                  public: existing.public ?? blockParams.public,
+                  public_scope_tenants: existing.public_scope_tenants || [],
+                  tags: existing.tags || [],
+                  description: existing.description || '',
+                  ...(groupId
+                    ? { groups: [groupId] }
+                    : existingGroups.length
+                    ? { groups: existingGroups }
+                    : { categories: existingCategories.length ? existingCategories : blockParams.categories || [] })
+                }
+
+                blockData = await updateBlock(existing.id, updateParams, appId)
+                if (blockData?.id) {
+                  updatedCount += 1
+                }
+              } else {
+                blockData = await createBlock(blockParams)
+                if (blockData?.id) {
+                  createdCount += 1
+                }
+              }
+
+              if (blockData?.id) {
+                const publishVersion = existing?.id
+                  ? getNextBlockVersion(existing)
+                  : blockData?.current_version || '1.0.1'
+                const params = {
+                  block: blockData,
+                  is_compile: true,
+                  deploy_info: '导入项目自动发布',
+                  version: publishVersion,
+                  needToSave: true
+                }
+                await deployBlock(params)
+              }
+            })
+          )
+
+          return {
+            total: blocks.length,
+            created: createdCount,
+            updated: updatedCount
+          }
+        } catch (e) {
+          // 区块创建失败不阻塞页面导入流程
+        }
+      }
+
+      return { total: blocks.length, created: 0, updated: 0 }
+    }
+
+    const ensureImportedResourceGroup = async () => {
+      const groupResponse: any = await fetchResourceGroups()
+      const groupList = Array.isArray(groupResponse) ? groupResponse : groupResponse?.data || []
+      const existingGroup = groupList.find((item: any) => String(item?.name || '') === IMPORTED_RESOURCE_GROUP_NAME)
+
+      if (existingGroup?.id) {
+        return existingGroup
+      }
+
+      return await createResourceGroup({
+        name: IMPORTED_RESOURCE_GROUP_NAME,
+        description: IMPORTED_RESOURCE_GROUP_DESCRIPTION
+      })
+    }
+
+    const syncImportedAssets = async (appSchema: any) => {
+      const importedAssets = getImportedAssets(appSchema)
+      if (!importedAssets.length) {
+        delete appSchema?.assets
+        return { total: 0, uploaded: 0, reused: 0 }
+      }
+
+      const { id: appId } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      const platformId = getMergeMeta('engine.config')?.platformId
+      const resourceGroup = await ensureImportedResourceGroup()
+      const resourceResponse: any = await fetchResourceListByGroupId(resourceGroup.id)
+      const existingResources = normalizeImportedAssetResourceList(resourceResponse)
+      const existingByName = new Map<string, any>()
+      const urlMap = new Map<string, string>()
+      const createPayloads: any[] = []
+
+      existingResources.forEach((item: any) => {
+        if (!item?.name) return
+        existingByName.set(String(item.name), item)
+      })
+
+      importedAssets.forEach((asset: any) => {
+        const resourceName = buildImportedAssetResourceName(asset)
+        const existing = existingByName.get(resourceName)
+        const existingResourceUrl = getImportedAssetResourceUrl(existing)
+
+        if (existingResourceUrl) {
+          urlMap.set(String(asset.placeholder), String(existingResourceUrl))
+          return
+        }
+
+        createPayloads.push({
+          placeholder: asset.placeholder,
+          ...buildImportedAssetCreatePayload(asset, resourceGroup.id, { appId, platformId })
+        })
+      })
+
+      if (createPayloads.length) {
+        const uploadPayloads = createPayloads.map((item: any) => ({
+          name: item.name,
+          description: item.description,
+          resourceGroupId: item.resourceGroupId,
+          resourceData: item.resourceData,
+          resourceUrl: item.resourceUrl,
+          category: item.category,
+          appId: item.appId,
+          platformId: item.platformId
+        }))
+        const uploadBatches = splitImportedAssetCreatePayloads(uploadPayloads)
+        const createdResources: any[] = []
+
+        for (const batch of uploadBatches) {
+          const createResponse: any = await batchCreateResource(batch)
+          createdResources.push(...normalizeImportedAssetResourceList(createResponse))
+        }
+
+        const createdByName = new Map<string, any>()
+        createdResources.forEach((item: any) => {
+          if (!item?.name) return
+          createdByName.set(String(item.name), item)
+        })
+
+        createPayloads.forEach((item: any) => {
+          const created = createdByName.get(String(item.name)) || findImportedAssetResource(createdResources, item)
+          const createdResourceUrl = getImportedAssetResourceUrl(created)
+          if (createdResourceUrl) {
+            urlMap.set(String(item.placeholder), String(createdResourceUrl))
+          }
+        })
+
+        for (let attempt = 0; attempt < 4; attempt += 1) {
+          const pendingPayloads = createPayloads.filter((item: any) => !urlMap.get(String(item.placeholder)))
+          if (!pendingPayloads.length) {
+            break
+          }
+
+          if (attempt > 0) {
+            await new Promise((resolve) => window.setTimeout(resolve, 400 * attempt))
+          }
+
+          const refreshedResponse: any = await fetchResourceListByGroupId(resourceGroup.id)
+          const refreshedResources = normalizeImportedAssetResourceList(refreshedResponse)
+
+          pendingPayloads.forEach((item: any) => {
+            const created = findImportedAssetResource(refreshedResources, item)
+            const createdResourceUrl = getImportedAssetResourceUrl(created)
+            if (createdResourceUrl) {
+              urlMap.set(String(item.placeholder), String(createdResourceUrl))
+            }
+          })
+        }
+      }
+
+      const unresolvedAsset = importedAssets.find((item: any) => !urlMap.get(String(item.placeholder)))
+      if (unresolvedAsset) {
+        throw new Error(
+          `图片资源上传失败：${unresolvedAsset.filePath || unresolvedAsset.name || unresolvedAsset.placeholder}`
+        )
+      }
+
+      replaceImportedAssetPlaceholders(appSchema, urlMap)
+      delete appSchema.assets
+      // Avoid re-fetching app schema here: it can overwrite freshly merged app state
+      // (for example globalState) before the current import flow finishes.
+      useMaterial().refreshMaterial?.()
+
+      return {
+        total: importedAssets.length,
+        uploaded: createPayloads.length,
+        reused: importedAssets.length - createPayloads.length
+      }
+    }
+
+    const processAppSchema = async (appSchema: any) => {
+      normalizeImportedAppSchemaIcons(appSchema)
+      normalizeImportedAppSchema(appSchema)
+      await hydrateImportedAppSchemaState(appSchema)
+
+      const { id: appId, type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+      const pages = Array.isArray(appSchema?.pageSchema) ? appSchema.pageSchema : []
+
+      state.appId = appId
+      const buildCreateParams = (ps: any) => {
+        const rawName = resolveImportedPageName(ps)
+        return {
+          name: rawName,
+          route: normalizeImportedRoute(ps?.meta?.router, rawName),
+          group: 'staticPages',
+          parentId: '0',
+          isPage: true,
+          app: appId,
+          page_content: {
+            ...ps,
+            fileName: ps?.fileName || rawName
+          },
+          message: 'Page auto save',
+          isBody: false,
+          isHome: false
+        }
+      }
+
+      if (pages.length) {
+        try {
+          const existingList: any[] = await fetchPageList(appId)
+          const mapByName = new Map<string, any>()
+          existingList?.forEach?.((p: any) => {
+            if (p?.name) mapByName.set(String(p.name), p)
+          })
+
+          const pagesToUpdate: Array<{ ps: any; existing: any; name: string }> = []
+          const pagesToCreate: any[] = []
+          const duplicateNames: string[] = []
+
+          for (const ps of pages) {
+            const rawName = resolveImportedPageName(ps)
+            const existing = mapByName.get(rawName)
+            if (existing) {
+              pagesToUpdate.push({ ps, existing, name: rawName })
+              duplicateNames.push(rawName)
+            } else {
+              pagesToCreate.push(ps)
+            }
+          }
+
+          if (duplicateNames.length) {
+            state.duplicatePages = pagesToUpdate
+            state.toCreatePages = pagesToCreate
+            state.pendingImportedPages = pages
+            state.pendingImportedComponentsMap = []
+            state.pendingAppSchema = appSchema
+            state.showOverwriteDialog = true
+            return
+          }
+
+          await syncImportedAssets(appSchema)
+          await Promise.allSettled(
+            pagesToCreate.map((ps: any) =>
+              getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+            )
+          )
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+        } catch (e) {
+          await syncImportedAssets(appSchema)
+          await Promise.allSettled(
+            pages.map((ps: any) =>
+              getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', buildCreateParams(ps))
+            )
+          )
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+        }
+      }
+
+      if (!pages.length) {
+        await syncImportedAssets(appSchema)
+      }
+
+      await applyImportedAppSchema(appSchema, appId, type)
+      const blockResult = await createAndPublishBlocks(appSchema, appId)
+
+      const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+      const blockMsg = blockResult?.total
+        ? `，已处理 ${blockResult.total} 个区块${blockResult.updated ? `（更新 ${blockResult.updated}）` : ''}`
+        : ''
+      if (!chosen) {
+        useNotify({ type: 'success', title: '导入成功', message: `已更新全局配置（未检测到页面）${blockMsg}` })
+      } else {
+        await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
+        useNotify({
+          type: 'success',
+          title: '导入成功',
+          message: `已创建页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
+        })
+      }
+    }
+
+    const processSingleFile = async (file: File, converter: VueToDslConverter) => {
+      const text = await file.text()
+      const result = await converter.convertFromString(text, file.name)
+      normalizeImportedSchemaIcons(result?.schema)
+      normalizeImportedSchema(result?.schema)
+      await hydrateImportedAppSchemaState({ pageSchema: [result?.schema], blockSchemas: [] })
+
+      // 解析单文件页面信息
+      const rawName = (result?.schema?.meta?.name || file.name).replace(/\.(vue|jsx|tsx)$/i, '')
+      const fileName = result?.schema?.fileName || rawName
+      const appId = getMetaApi(META_SERVICE.GlobalService).getBaseInfo().id
+
+      // 检查是否与现有页面重名
+      try {
+        const existingList: any[] = await fetchPageList(appId)
+        const existing = existingList?.find?.((p: any) => String(p?.name) === rawName)
+
+        // 将待导入的 schema 作为 ps（与 zip 流程保持一致的数据形态）
+        const ps: any = {
+          ...result.schema,
+          meta: { ...(result?.schema?.meta || {}), name: rawName },
+          fileName
+        }
+
+        if (existing) {
+          // 重名：弹出覆盖对话框
+          state.appId = appId
+          state.duplicatePages = [{ ps, existing, name: rawName }]
+          state.toCreatePages = []
+          state.pendingImportedPages = [ps]
+          state.pendingImportedComponentsMap = result?.componentsMap || []
+          state.pendingAppSchema = null
+          state.showOverwriteDialog = true
+        } else {
+          // 不重名：直接创建
+          const createParams: any = {
+            name: rawName,
+            route: normalizeImportedRoute(result?.schema?.meta?.router, rawName),
+            group: 'staticPages',
+            parentId: '0',
+            isPage: true,
+            app: appId,
+            page_content: {
+              ...result.schema,
+              fileName
+            },
+            message: 'Page auto save',
+            isBody: false,
+            isHome: false
+          }
+          await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
+          const { pageSettingState } = usePage()
+          await pageSettingState.updateTreeData?.()
+          syncImportedComponentsMap(result?.componentsMap || [])
+          useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
+        }
+      } catch (e: any) {
+        // 兜底：如果列表获取失败，按原逻辑创建
+        const createParams: any = {
+          name: rawName,
+          route: normalizeImportedRoute(result?.schema?.meta?.router, rawName),
+          group: 'staticPages',
+          parentId: '0',
+          isPage: true,
+          app: appId,
+          page_content: {
+            ...result.schema,
+            fileName
+          },
+          message: 'Page auto save',
+          isBody: false,
+          isHome: false
+        }
+        await getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', createParams)
+        const { pageSettingState } = usePage()
+        await pageSettingState.updateTreeData?.()
+        syncImportedComponentsMap(result?.componentsMap || [])
+        useNotify({ type: 'success', title: '导入成功', message: `已创建新页面：${rawName}` })
+      }
+    }
+
+    // 处理上传的 .vue 或 .zip 文件
+    const handleFileChange = async (e: Event) => {
+      const input = e.target as HTMLInputElement
+      const files = input?.files
+      if (!files || files.length === 0) return
+
+      try {
+        // 转换器实例
+        const converter = createVueToDslConverter()
+
+        // 检查是目录上传还是文件上传
+        const isDirectory = files[0].webkitRelativePath !== ''
+
+        if (isDirectory) {
+          const appSchema: any = await converter.convertAppFromDirectory(files)
+          // 后续处理与 zip 包导入类似
+          await processAppSchema(appSchema)
+        } else {
+          const file = files[0]
+          // zip：转换整个应用；vue：转换单文件
+          const isZip = /\.zip$/i.test(file.name)
+          if (isZip) {
+            const buffer = await file.arrayBuffer()
+            const appSchema: any = await converter.convertAppFromZip(buffer)
+            await processAppSchema(appSchema)
+          } else {
+            // 单个 vue 文件导入
+            await processSingleFile(file, converter)
+          }
+        }
+      } catch (error: any) {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        useNotify({ type: 'error', title: '加载失败', message: error?.message || String(error) })
+      } finally {
+        // 清空 input 以便可重复选择同一文件
+        if (fileInputRef.value) fileInputRef.value.value = ''
+        if (directoryInputRef.value) directoryInputRef.value.value = ''
+        if (zipInputRef.value) zipInputRef.value.value = ''
+      }
+    }
+
+    // 覆盖选择：确认
+    const handleOverwriteConfirm = async (selectedNames: string[]) => {
+      const { pageSettingState } = usePage()
+      try {
+        const appId = state.appId
+        const { type } = getMetaApi(META_SERVICE.GlobalService).getBaseInfo()
+        const pendingAppSchema = state.pendingAppSchema
+        if (pendingAppSchema) {
+          await syncImportedAssets(pendingAppSchema)
+        }
+        const requests: Promise<any>[] = []
+        // 更新选中的重名项
+        for (const item of state.duplicatePages) {
+          if (!selectedNames.includes(item.name)) continue
+          const ps = item.ps
+          const existing = item.existing
+          const rawName = item.name
+          const updateParams: any = {
+            ...existing,
+            name: rawName,
+            route: normalizeImportedRoute(ps?.meta?.router || existing?.route, rawName),
+            isPage: true,
+            app: appId,
+            page_content: { ...ps, fileName: ps?.fileName || rawName },
+            message: 'Page auto save',
+            isBody: false,
+            isHome: false
+          }
+          requests.push(getMetaApi(META_SERVICE.Http).post(`/app-center/api/pages/update/${existing.id}`, updateParams))
+        }
+        // 创建不重名项
+        for (const ps of state.toCreatePages) {
+          const rawName = resolveImportedPageName(ps)
+          requests.push(
+            getMetaApi(META_SERVICE.Http).post('/app-center/api/pages/create', {
+              name: rawName,
+              route: normalizeImportedRoute(ps?.meta?.router, rawName),
+              group: 'staticPages',
+              parentId: '0',
+              isPage: true,
+              app: appId,
+              page_content: { ...ps, fileName: ps?.fileName || rawName },
+              message: 'Page auto save',
+              isBody: false,
+              isHome: false
+            })
+          )
+        }
+        if (requests.length) {
+          await Promise.allSettled(requests)
+        }
+        const hasOps = requests.length > 0
+        if (hasOps) {
+          await pageSettingState.updateTreeData?.()
+          if (pendingAppSchema) {
+            await applyImportedAppSchema(pendingAppSchema, appId, type)
+          } else if (state.pendingImportedComponentsMap?.length) {
+            syncImportedComponentsMap(state.pendingImportedComponentsMap)
+          }
+          const blockResult = pendingAppSchema
+            ? await createAndPublishBlocks(pendingAppSchema, appId)
+            : { total: 0, created: 0, updated: 0 }
+          // 用户选择后进行渲染
+          const pages = state.pendingImportedPages
+          const chosen = pages.find((p: any) => p?.meta?.isHome) || pages[0]
+          const blockMsg = blockResult?.total
+            ? `，已处理 ${blockResult.total} 个区块${blockResult.updated ? `（更新 ${blockResult.updated}）` : ''}`
+            : ''
+          if (chosen) {
+            await switchToPageByName(chosen?.meta?.name || chosen?.fileName)
+            useNotify({
+              type: 'success',
+              title: '导入成功',
+              message: `已创建/覆盖页面并加载：${chosen?.meta?.name || '页面'}${blockMsg}`
+            })
+          } else {
+            useNotify({
+              type: 'success',
+              title: '导入成功',
+              message: `已更新全局配置（未检测到页面）${blockMsg}`
+            })
+          }
+        } else {
+          // 无任何选择且无不重名项：直接跳过
+          useNotify({ type: 'info', title: '已跳过导入', message: '未选择覆盖任何页面' })
+        }
+      } finally {
+        state.showOverwriteDialog = false
+        state.duplicatePages = []
+        state.toCreatePages = []
+        state.pendingImportedPages = []
+        state.pendingImportedComponentsMap = []
+        state.pendingAppSchema = null
+      }
+    }
+
+    // 覆盖选择：取消
+    const handleOverwriteCancel = async () => {
+      state.showOverwriteDialog = false
+      state.duplicatePages = []
+      state.toCreatePages = []
+      state.pendingImportedPages = []
+      state.pendingImportedComponentsMap = []
+      state.pendingAppSchema = null
+      useNotify({ type: 'info', title: '已取消导入', message: '未创建或覆盖任何页面' })
+    }
+
+    return {
+      state,
+      OPEN_DELAY,
+      poperVisible,
+      clickPopover,
+      triggerUpload,
+      handleFileChange,
+      fileInputRef,
+      directoryInputRef,
+      zipInputRef,
+      handleImportNoticeConfirm,
+      handleImportNoticeCancel,
+      handleOverwriteConfirm,
+      handleOverwriteCancel
+    }
+  }
+}
+</script>
+<style lang="less" scoped>
+.toolbar-upload-option {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  .toolbar-upload-item {
+    cursor: pointer;
+    line-height: 28px;
+    margin: 0 -16px;
+    padding: 0 16px;
+    &:hover {
+      background-color: var(--te-toolbars-upload-bg-color-hover);
+    }
+  }
+}
+</style>

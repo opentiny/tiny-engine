@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import { formatStringByFileName } from '@opentiny/tiny-engine-common/js/ast'
 import { constants } from '@opentiny/tiny-engine-utils'
 import { getImportMap as getInitImportMap } from './importMap'
 import { getMetaApi, getMergeMeta, META_SERVICE, useEnv } from '@opentiny/tiny-engine-meta-register'
@@ -342,6 +343,21 @@ interface IUsePreviewData {
   setImportMap: (importMap: Record<string, string>) => void
 }
 
+const formatGeneratedFile = (fileContent: unknown, fileName: string): string => {
+  if (typeof fileContent !== 'string') {
+    return String(fileContent ?? '')
+  }
+
+  return formatStringByFileName(fileContent, fileName)
+}
+
+const formatGeneratedFiles = (files: Record<string, string>) =>
+  Object.entries(files).reduce((acc, [fileName, fileContent]) => {
+    acc[fileName] = formatGeneratedFile(fileContent, fileName)
+
+    return acc
+  }, {} as Record<string, string>)
+
 export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewData) => {
   const basicFiles = setFiles(srcFiles, 'src/Main.vue')
 
@@ -407,10 +423,10 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
       const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
       const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
 
-      newFiles['app.js'] = appJsCode
+      newFiles['app.js'] = formatGeneratedFile(appJsCode, 'app.js')
       pageCode.forEach((item) => assignFiles(item, newFiles))
 
-      const metaFiles = generateMetaFiles(metaData)
+      const metaFiles = formatGeneratedFiles(generateMetaFiles(metaData))
       Object.assign(newFiles, metaFiles)
       setFiles(newFiles, 'App.vue')
     } else if (previewType === 'app') {
@@ -581,7 +597,7 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
         return `${importSnippet}\n ${routeSnippets} \n ${exportSnippet}`
       }
 
-      const formatCode = (fileContent, fileName) => {
+      const formatPreviewFile = (fileContent, fileName) => {
         if (fileName === 'src/router/index.js') {
           fileContent = getRouterFile(appSchema)
         } else {
@@ -601,23 +617,25 @@ export const usePreviewData = ({ setFiles, store, setImportMap }: IUsePreviewDat
             `const route = useRoute()\nconst router = useRouter()\nconst currentRoute = ref()\n\nwatchEffect(() => {\n\tcurrentRoute.value = route.path\n})\n\nconst routeChange = () => {\n\trouter.push(currentRoute.value)\n}\nprovide(I18nInjectionKey, i18n)`
           )
         }
-        return fileContent
+
+        return formatGeneratedFile(fileContent, fileName)
       }
 
       const fileRes = await getPreGenerateInfo()
       const newFileRes = fileRes.filter((item) => item.filePath.includes('src/'))
       const srcFiles = newFileRes.reduce((prev, item) => {
         const fileName = item.filePath
-        prev[fileName] = formatCode(item.fileContent, fileName)
+        prev[fileName] = formatPreviewFile(item.fileContent, fileName)
         return prev
-      }, {})
-      srcFiles['import-map.json'] = JSON.stringify(importMapData)
+      }, {} as Record<string, string>)
+      srcFiles['import-map.json'] = formatGeneratedFile(JSON.stringify(importMapData), 'import-map.json')
       const newFiles = store.getFiles()
       const enableTailwindCSS = getMergeMeta('engine.config')?.enableTailwindCSS
       const appJsCode = processAppJsCode(newFiles['app.js'] || '', params.styles, enableTailwindCSS)
-      srcFiles['app.js'] = appJsCode
+      srcFiles['app.js'] = formatGeneratedFile(appJsCode, 'app.js')
       srcFiles['main.js'] = `import app from './app.js' \n ${srcFiles['src/main.js']}`
       srcFiles['main.js'] = srcFiles['main.js'].replace("import 'element-plus/dist/index.css'", '')
+      srcFiles['main.js'] = formatGeneratedFile(srcFiles['main.js'], 'main.js')
       setFiles(srcFiles, 'src/main.js')
     }
   }

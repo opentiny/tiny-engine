@@ -53,7 +53,7 @@ gulp.task(
         return []
       },
       verbose: true,
-      ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js'],
+      ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js', 'data/*'],
       env: {
         NODE_ENV: 'development'
       },
@@ -77,7 +77,7 @@ gulp.task('nodemon', () => {
       js: jsScript
     },
     verbose: true,
-    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js'],
+    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js', 'data/*'],
     env: {
       NODE_ENV: 'development'
     },
@@ -92,7 +92,7 @@ gulp.task('default', () => {
       js: jsScript
     },
     verbose: true,
-    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js'],
+    ignore: ['build/*.js', 'dist/*.js', 'nodemon.json', '.git', 'node_modules/**/node_modules', 'gulpfile.js', 'data/*'],
     env: {
       NODE_ENV: 'development'
     },

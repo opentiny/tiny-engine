@@ -1,6 +1,6 @@
 {
   "name": "@opentiny/tiny-engine",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "type": "module",
   "description": "TinyEngine enables developers to customize low-code platforms, build low-bit platforms online in real time, and support secondary development or integration of low-bit platform capabilities.",
   "homepage": "https://opentiny.design/tiny-engine",
@@ -25,7 +25,7 @@
   "scripts": {
     "preview": "vite preview",
     "lint": "eslint . --ext .js,.vue,.jsx --fix",
-    "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build"
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=6144 vite build"
   },
   "repository": {
     "type": "git",
@@ -76,6 +76,7 @@
     "@opentiny/tiny-engine-toolbar-collaboration": "workspace:*",
     "@opentiny/tiny-engine-toolbar-fullscreen": "workspace:*",
     "@opentiny/tiny-engine-toolbar-generate-code": "workspace:*",
+    "@opentiny/tiny-engine-toolbar-upload": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lang": "workspace:*",
     "@opentiny/tiny-engine-toolbar-lock": "workspace:*",
     "@opentiny/tiny-engine-toolbar-logo": "workspace:*",

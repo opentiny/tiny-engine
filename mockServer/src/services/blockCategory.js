@@ -9,20 +9,15 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import { getResponseData } from '../tool/Common'
 import appinfo from '../assets/json/appinfo.json'
 
 export default class BlockCategoryService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('blockCategories.db'),
-      autoload: true
-    })
-
-    this.db.ensureIndex({
-      fieldName: 'name',
-      unique: true
+    this.store = createStore('blockCategories', {
+      indexes: [{ fieldName: 'name', unique: true }],
+      namingFields: ['name']
     })
 
     this.blockCategoriesModel = {
@@ -37,42 +32,42 @@ export default class BlockCategoryService {
   async create(params) {
     const blockCategoriesData = { ...this.blockCategoriesModel, ...params }
     blockCategoriesData.app = appinfo.app
-    const result = await this.db.insertAsync(blockCategoriesData)
+    const result = await this.store.insert(blockCategoriesData)
     const { _id } = result
-    await this.db.updateAsync({ _id }, { $set: { id: _id } })
+    await this.store.update({ _id }, { $set: { id: _id } })
     result.id = result._id
     return getResponseData(result)
   }
 
   async update(id, params) {
     if (params?._id) {
-      const categories = await this.db.findOneAsync({ _id: id })
+      const categories = await this.store.findOne({ _id: id })
       if (categories) {
         categories.blocks.push(params._id)
-        await this.db.updateAsync({ _id: id }, { $set: categories })
+        await this.store.update({ _id: id }, { $set: categories })
         return getResponseData(categories)
       }
     }
     params.app = appinfo.app
-    await this.db.updateAsync({ _id: id }, { $set: params })
+    await this.store.update({ _id: id }, { $set: params })
 
-    const result = await this.db.findOneAsync({ _id: id })
+    const result = await this.store.findOne({ _id: id })
     return getResponseData(result)
   }
 
   async find(params) {
-    const result = await this.db.findAsync()
+    const result = await this.store.find()
     return getResponseData(result)
   }
 
   async delete(id) {
-    const result = await this.db.findOneAsync({ _id: id })
-    await this.db.removeAsync({ _id: id })
+    const result = await this.store.findOne({ _id: id })
+    await this.store.remove({ _id: id })
     return getResponseData(result)
   }
 
   async list(appId) {
-    const result = await this.db.findAsync()
+    const result = await this.store.find()
     return getResponseData(result)
   }
 }

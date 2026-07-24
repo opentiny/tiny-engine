@@ -10,8 +10,32 @@
  *
  */
 
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import config from '../config/config'
+import { getResponseData } from '../tool/Common'
+
+const formatPageContentForStorage = (pageContent) => {
+  if (pageContent === undefined) {
+    return pageContent
+  }
+
+  if (config.dbMode === 'file') {
+    if (typeof pageContent === 'string') {
+      try {
+        return JSON.parse(pageContent)
+      } catch (e) {
+        return pageContent
+      }
+    }
+    return pageContent
+  }
+
+  if (pageContent && typeof pageContent === 'object') {
+    return JSON.stringify(pageContent)
+  }
+
+  return pageContent
+}
 
 const parsePageContent = (item) => {
   if (item && item.page_content && typeof item.page_content === 'string') {
@@ -26,21 +50,16 @@ const parsePageContent = (item) => {
 
 export default class PageService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('pages.db'),
-      autoload: true
-    })
-
-    this.db.ensureIndex({
-      fieldName: '_id',
-      unique: true
+    this.store = createStore('pages', {
+      indexes: [{ fieldName: '_id', unique: true }],
+      namingFields: ['name']
     })
 
     this.userInfo = {
       id: 86,
       username: '开发者',
-      email: 'developer@lowcode.com',
-      confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+      email: 'demo@example.com',
+      confirmationToken: null,
       is_admin: true
     }
 
@@ -60,8 +79,8 @@ export default class PageService {
       occupier: {
         id: 86,
         username: '开发者',
-        email: 'developer@lowcode.com',
-        confirmationToken: 'dfb2c162-351f-4f44-ad5f-8998',
+        email: 'demo@example.com',
+        confirmationToken: null,
         is_admin: true
       }
     }
@@ -84,7 +103,7 @@ export default class PageService {
       pageData.route = pageData.name || 'Untitled'
     }
 
-    const existing = await this.db.findOneAsync({
+    const existing = await this.store.findOne({
       app: pageData.app.toString(),
       route: pageData.route
     })
@@ -97,30 +116,29 @@ export default class PageService {
       })
     }
 
-    if (pageData.page_content && typeof pageData.page_content === 'object') {
-      pageData.page_content = JSON.stringify(pageData.page_content)
-    }
+    pageData.page_content = formatPageContentForStorage(pageData.page_content)
 
-    const result = await this.db.insertAsync(pageData)
+    const result = await this.store.insert(pageData)
     const { _id } = result
-    await this.db.updateAsync({ _id }, { $set: { id: _id } })
+    await this.store.update({ _id }, { $set: { id: _id } })
     result.id = result._id
     return getResponseData(parsePageContent(result))
   }
 
   async update(id, params) {
     const updateData = { ...params }
-    if (updateData.page_content && typeof updateData.page_content === 'object') {
-      updateData.page_content = JSON.stringify(updateData.page_content)
+
+    if (Object.prototype.hasOwnProperty.call(updateData, 'page_content')) {
+      updateData.page_content = formatPageContentForStorage(updateData.page_content)
     }
 
-    await this.db.updateAsync({ _id: id }, { $set: updateData })
-    const result = await this.db.findOneAsync({ _id: id })
+    await this.store.update({ _id: id }, { $set: updateData })
+    const result = await this.store.findOne({ _id: id })
     return getResponseData(parsePageContent(result))
   }
 
   async list(appId) {
-    const result = await this.db.findAsync({ app: appId.toString() })
+    const result = await this.store.find({ app: appId.toString() })
     if (Array.isArray(result)) {
       result.forEach(parsePageContent)
     }
@@ -128,15 +146,13 @@ export default class PageService {
   }
 
   async detail(pageId) {
-    const result = await this.db.findOneAsync({ _id: pageId })
-
+    const result = await this.store.findOne({ _id: pageId })
     return getResponseData(parsePageContent(result))
   }
 
   async delete(pageId) {
-    const result = await this.db.findOneAsync({ _id: pageId })
-
-    await this.db.removeAsync({ _id: pageId })
+    const result = await this.store.findOne({ _id: pageId })
+    await this.store.remove({ _id: pageId })
     return getResponseData(parsePageContent(result))
   }
 }

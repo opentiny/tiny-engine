@@ -10,8 +10,8 @@
  *
  */
 
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import { getResponseData } from '../tool/Common'
 import defaultAppSchema from '../mock/get/app-center/v1/apps/schema/16.json'
 
 const defaultApp = {
@@ -63,39 +63,30 @@ const defaultApp = {
 
 export default class AppsService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('apps.db'),
-      autoload: true
+    this.store = createStore('apps', {
+      indexes: [{ fieldName: '_id', unique: true }],
+      namingFields: ['name']
     })
 
-    this.db.ensureIndex({
-      fieldName: '_id',
-      unique: true
-    })
-
-    this.schemaDb = new DateStore({
-      filename: getDatabasePath('appsSchema.db'),
-      autoload: true
-    })
-
-    this.schemaDb.ensureIndex({
-      fieldName: '_id',
-      unique: true
+    this.schemaStore = createStore('appsSchema', {
+      indexes: [{ fieldName: '_id', unique: true }],
+      namingFields: ['id']
     })
 
     this.appList = []
   }
 
   async create(params) {
-    let mockId = this.appList.length > 0 ? Math.max(...this.appList.map((item) => item.id)) + 1 : 3
+    const all = await this.store.find({})
+    const mockId = all.length > 0 ? Math.max(...all.map((item) => Number(item.id) || 0)) + 1 : 3
     const newApp = {
       ...defaultApp,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      id: mockId++,
+      id: mockId,
       ...params
     }
-    this.db.insert(newApp)
+    await this.store.insert(newApp)
 
     let resultStr = JSON.stringify(defaultAppSchema.data)
     resultStr = resultStr.replace(/"lowcode./g, '"lowcode_')
@@ -112,15 +103,27 @@ export default class AppsService {
       },
       id: newApp.id
     }
-    this.schemaDb.insert(newAppSchema)
+    // App and schema live in different collections. If the schema write fails,
+    // best-effort roll back the app insert so we don't leave a one-sided record,
+    // then rethrow — ErrorRoutesCatch serializes thrown errors into the response.
+    try {
+      await this.schemaStore.insert(newAppSchema)
+    } catch (err) {
+      try {
+        await this.store.remove({ id: newApp.id })
+      } catch {
+        /* swallow cleanup failure; surface the original error below */
+      }
+      throw err
+    }
     return getResponseData(newApp)
   }
 
   async delete(id) {
-    const result = await this.db.findOneAsync({ id: Number(id) })
-    await this.db.removeAsync({ id: Number(id) })
+    const result = await this.store.findOne({ id: Number(id) })
+    await this.store.remove({ id: Number(id) })
 
-    await this.schemaDb.removeAsync({ id: Number(id) })
+    await this.schemaStore.remove({ id: Number(id) })
     return getResponseData(result)
   }
 
@@ -131,7 +134,7 @@ export default class AppsService {
       query.name = { $regex: new RegExp(name, 'i') }
     }
 
-    const result = await this.db.findAsync(query)
+    const result = await this.store.find(query)
     this.appList = result.sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
 
     if (createdBy) {
@@ -146,18 +149,18 @@ export default class AppsService {
   }
 
   async update(id, params) {
-    await this.db.updateAsync({ id: Number(id) }, { $set: params })
-    const result = await this.db.findOneAsync({ id: Number(id) })
+    await this.store.update({ id: Number(id) }, { $set: params })
+    const result = await this.store.findOne({ id: Number(id) })
     return getResponseData(result)
   }
 
   async find(id) {
-    const result = await this.db.findOneAsync({ id: Number(id) })
+    const result = await this.store.findOne({ id: Number(id) })
     return getResponseData(result)
   }
 
   async findSchema(id) {
-    const result = await this.schemaDb.findOneAsync({ id: Number(id) })
+    const result = await this.schemaStore.findOne({ id: Number(id) })
     let resultStr = JSON.stringify(result)
     resultStr = resultStr.replace(/"lowcode_/g, '"lowcode.')
     const modifiedResult = JSON.parse(resultStr)

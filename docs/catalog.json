@@ -101,6 +101,10 @@
               "name": "conditional-rendering.md"
             },
             {
+              "title": "对接本地 AI Agent 生成页面或应用",
+              "name": "using-skill-to-integrate-local-ai-agent.md"
+            },
+            {
               "title": "新版AI插件使用",
               "name": "new-ai-plugin-usage.md"
             },

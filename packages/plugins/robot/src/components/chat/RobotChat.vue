@@ -11,7 +11,7 @@
     </template>
 
     <div class="robot-chat-container-content" ref="chatContainerRef">
-      <div v-if="messages.filter((item) => item.role !== 'system').length === 0">
+      <div v-if="messages.filter((item) => item.role !== RobotMessageRole.System).length === 0">
         <tr-welcome title="AI助手" description="您好，我是您的开发小助手" :icon="welcomeIcon" class="robot-welcome">
         </tr-welcome>
         <tr-prompts
@@ -22,8 +22,18 @@
           @item-click="handlePromptItemClick"
         ></tr-prompts>
       </div>
-      <tr-bubble-provider v-else :content-renderers="contentRenderers">
-        <tr-bubble-list :items="messages" :roles="roles" auto-scroll class="robot-bubble-list"> </tr-bubble-list>
+      <tr-bubble-provider v-else :content-renderer-matches="contentRendererMatches">
+        <tr-bubble-list
+          :messages="messages"
+          :role-configs="roleConfigs"
+          :content-resolver="resolveMessageContent"
+          auto-scroll
+          class="robot-bubble-list"
+        >
+          <template #content-footer="{ messages }">
+            <div v-if="showAborted && messages[0]?.aborted" class="aborted">已中止</div>
+          </template>
+        </tr-bubble-list>
       </tr-bubble-provider>
     </div>
 
@@ -39,9 +49,6 @@
           :showWordLimit="false"
           @submit="handleSendMessage"
           @cancel="handleAbortRequest"
-          :allowFiles="selectedAttachments.length < 1 && props.allowFiles"
-          uploadTooltip="支持上传1张图片"
-          @files-selected="handleSingleFilesSelected"
         >
           <template #header v-if="selectedAttachments.length > 0">
             <div>
@@ -55,8 +62,17 @@
               </tr-attachments>
             </div>
           </template>
-          <template #footer-left>
+          <template #footer>
             <slot name="footer-left"></slot>
+          </template>
+          <template #footer-right>
+            <VoiceButton :speech-config="{ lang: 'zh-CN', continuous: false }" />
+            <UploadButton
+              v-if="selectedAttachments.length < 1 && props.allowFiles"
+              accept="image/*"
+              :multiple="false"
+              @select="handleSingleFilesSelected"
+            />
           </template>
         </tr-sender>
       </div>
@@ -74,13 +90,27 @@ import {
   TrSender,
   TrWelcome,
   TrAttachments,
+  UploadButton,
+  VoiceButton,
+  BubbleRenderers,
+  BubbleRendererMatchPriority,
   type BubbleRoleConfig,
   type PromptProps,
-  type RawFileAttachment
+  type RawFileAttachment,
+  type BubbleContentRendererMatch
 } from '@opentiny/tiny-robot'
-import { type ChatMessage, GeneratingStatus } from '@opentiny/tiny-robot-kit'
+import { GeneratingStatus } from '../../constants/status'
 import { LoadingRenderer, MarkdownRenderer, ImgRenderer } from '../renderers'
 import { useNotify } from '@opentiny/tiny-engine-meta-register'
+import {
+  RobotMessageContentType,
+  RobotMessageRole,
+  type MessageContentResolver,
+  type RobotInputContentPart,
+  type RobotMessage,
+  type RobotRenderContentItem
+} from '../../types'
+import { extractMessageText } from '../../utils'
 
 const props = defineProps({
   promptItems: {
@@ -91,9 +121,16 @@ const props = defineProps({
     type: Function
   },
   status: { type: String },
+  messageContentResolver: {
+    type: Function as PropType<MessageContentResolver>
+  },
   allowFiles: {
     type: Boolean,
     default: false
+  },
+  showAborted: {
+    type: Boolean,
+    default: true
   },
   bubbleRenderers: {
     type: Object as PropType<Record<string, Component>>,
@@ -112,7 +149,8 @@ const selectedAttachments = ref([])
 const robotVisible = defineModel<boolean>('show', { required: true })
 const fullscreen = defineModel<boolean>('fullscreen')
 const inputMessage = defineModel<string>('input', { required: true })
-const messages = defineModel<ChatMessage[]>('messages', { required: true })
+const messages = defineModel<RobotMessage[]>('messages', { required: true })
+const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 watch(
   () => props.allowFiles,
@@ -122,6 +160,37 @@ watch(
     }
   }
 )
+
+const contentRendererMatches = computed<BubbleContentRendererMatch[]>(() => [
+  {
+    priority: BubbleRendererMatchPriority.LOADING,
+    find: (message) => Boolean(message.loading),
+    renderer: LoadingRenderer
+  },
+  ...Object.entries(props.bubbleRenderers).map(([type, renderer]) => ({
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: RobotMessage, content: RobotRenderContentItem) => content?.type === type,
+    renderer
+  })),
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (message: RobotMessage, content: RobotRenderContentItem) =>
+      content?.type === RobotMessageContentType.Tool && Boolean(message.tool_calls?.length),
+    renderer: BubbleRenderers.Tools
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: RobotMessage, content: RobotRenderContentItem) =>
+      !content?.type || [RobotMessageContentType.Markdown, RobotMessageContentType.Text].includes(content.type as any),
+    renderer: MarkdownRenderer
+  },
+  {
+    priority: BubbleRendererMatchPriority.NORMAL,
+    find: (_message: RobotMessage, content: RobotRenderContentItem) =>
+      [RobotMessageContentType.Img, RobotMessageContentType.Image].includes(content?.type as any),
+    renderer: ImgRenderer
+  }
+])
 
 // 处理文件选择事件
 const handleSingleFilesSelected = (files: File[] | null, retry = false) => {
@@ -178,31 +247,59 @@ const getSvgIcon = (name: string, style?: CSSProperties) => {
 const aiAvatar = getSvgIcon('AI')
 const welcomeIcon = getSvgIcon('AI', { fontSize: '44px' })
 
-const contentRenderers = computed(() => ({
-  markdown: MarkdownRenderer,
-  loading: LoadingRenderer,
-  img: ImgRenderer,
-  ...props.bubbleRenderers
-}))
+const resolveMessageContent = (message: RobotMessage) => {
+  if (props.messageContentResolver) {
+    return props.messageContentResolver(message, {
+      messages: messages.value,
+      status: props.status
+    })
+  }
 
-const roles: Record<string, BubbleRoleConfig> = {
-  assistant: {
+  if (Array.isArray(message.renderContent) && message.renderContent.length > 0) {
+    return message.renderContent.map((item) => {
+      if (item?.type === RobotMessageContentType.Img || item?.type === RobotMessageContentType.Image) {
+        return {
+          type: RobotMessageContentType.Img,
+          content: item.content || item.url || item.image_url?.url || ''
+        }
+      }
+      if (item?.type === RobotMessageContentType.Text) {
+        return {
+          type: RobotMessageContentType.Text,
+          content: item.content ?? item.text ?? ''
+        }
+      }
+      return item
+    })
+  }
+
+  if (Array.isArray(message.content) && message.content.length > 0) {
+    const textContent = extractMessageText(message.content)
+    if (textContent) {
+      return textContent
+    }
+  }
+
+  const textContent = extractMessageText(message.content)
+  if (textContent) {
+    return textContent
+  }
+
+  return message.content
+}
+
+const roleConfigs: Record<string, BubbleRoleConfig> = {
+  [RobotMessageRole.Assistant]: {
     placement: 'start',
-    avatar: aiAvatar,
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+    avatar: aiAvatar
   },
-  user: {
-    placement: 'end',
-    contentRenderer: MarkdownRenderer,
-    customContentField: 'renderContent'
+  [RobotMessageRole.User]: {
+    placement: 'end'
   },
-  system: {
+  [RobotMessageRole.System]: {
     hidden: true
   }
 }
-
-const senderRef = ref<InstanceType<typeof TrSender> | null>(null)
 
 // 发送消息
 const handleSendMessage = async (content: string) => {
@@ -219,43 +316,45 @@ const handleSendMessage = async (content: string) => {
     return
   }
 
-  const userMessage: ChatMessage = {
-    role: 'user',
+  const userMessage: RobotMessage = {
+    role: RobotMessageRole.User,
     content: messageContent
   }
   const files = selectedAttachments.value.filter((item) => item.status === 'success')
   if (files.length > 0) {
-    const fileMessages: ChatMessage[] = files.map((file) => ({
-      role: 'user',
-      content: '',
-      renderContent: [
-        {
-          type: 'img',
-          content: file.url
-        }
-      ]
-    }))
-    messages.value.push(...fileMessages)
-    userMessage.content = files
-      .map((item) => ({
-        type: 'image_url',
+    userMessage.content = [
+      {
+        type: RobotMessageContentType.Text,
+        text: messageContent
+      },
+      ...files.map((item) => ({
+        type: RobotMessageContentType.ImageUrl,
         image_url: {
           url: item.url
         }
       }))
-      .concat({
-        type: 'text',
-        text: messageContent
-      })
+    ] as RobotInputContentPart[]
     userMessage.renderContent = [
       {
-        type: 'text',
+        type: RobotMessageContentType.Text,
+        content: messageContent
+      },
+      ...files.map((item) => ({
+        type: RobotMessageContentType.Img,
+        content: item.url
+      }))
+    ]
+  } else {
+    userMessage.renderContent = [
+      {
+        type: RobotMessageContentType.Text,
         content: messageContent
       }
     ]
   }
   messages.value.push(userMessage)
   inputMessage.value = ''
+  senderRef.value?.clear()
   selectedAttachments.value = []
   emit('sendMessage')
 }
@@ -371,13 +470,13 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
       }
     }
     :deep([data-role='user']) {
-      --tr-bubble-content-bg: var(--tr-color-primary-light);
+      --tr-bubble-box-bg: var(--tr-color-primary-light);
     }
   }
 
   &.fullscreen {
     :deep([data-role='assistant']) {
-      --tr-bubble-content-bg: transparent;
+      --tr-bubble-box-bg: transparent;
       .tr-bubble__content {
         padding: 8px 0 0;
       }
@@ -446,10 +545,6 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
   }
 }
 
-.tiny-sender__header-slot .tr-attachments .tr-attachments__file-list .tr-attachments__add-button {
-  display: none;
-}
-
 :deep(.tr-bubble) {
   .tr-bubble__content:has(> .tr-bubble__content-items > [class*='img-renderer-container']) {
     padding: 0px;
@@ -457,27 +552,19 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
   }
 }
 
-:deep(.tiny-sender) {
+:deep(.tr-sender) {
   margin: 20px;
-  .tiny-sender__footer-slot.tiny-sender__bottom-row {
-    justify-content: space-between !important;
-  }
-  .tiny-sender__upload-popup {
-    .upload-options {
-      height: 42px;
-
-      .upload-option:first-child {
-        display: none;
-      }
-    }
-  }
-  .tiny-sender__input-field-wrapper .tiny-textarea__inner {
+  .tr-sender-editor-content .ProseMirror p {
     font-size: 14px;
   }
-}
-:deep(.action-buttons__icon) {
-  width: 26px !important;
-  height: 26px !important;
+  .tr-action-button {
+    width: 26px;
+    height: 26px;
+  }
+  .tr-sender-submit-button {
+    width: 30px;
+    height: 30px;
+  }
 }
 :deep(.tr-attachments) {
   .tr-attachments__file-list {
@@ -490,5 +577,11 @@ const handlePromptItemClick = (ev: unknown, item: { description?: string }) => {
 
 .robot-bubble-list {
   height: 100%;
+}
+
+.aborted {
+  margin-top: 6px;
+  font-size: 12px;
+  opacity: 0.7;
 }
 </style>

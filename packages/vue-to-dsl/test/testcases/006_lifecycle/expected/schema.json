@@ -1,0 +1,64 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component"
+  },
+  "state": {},
+  "methods": {},
+  "computed": {},
+  "lifeCycles": {
+    "onMounted": {
+      "type": "JSFunction",
+      "value": "function onMounted() {\n  console.log('mounted')\n}"
+    },
+    "onUpdated": {
+      "type": "JSFunction",
+      "value": "function onUpdated() {\n  console.log('updated')\n}"
+    },
+    "onUnmounted": {
+      "type": "JSFunction",
+      "value": "function onUnmounted() {\n  console.log('unmounted')\n}"
+    },
+    "onBeforeMount": {
+      "type": "JSFunction",
+      "value": "function onBeforeMount() {\n  console.log('before mount')\n}"
+    },
+    "onBeforeUpdate": {
+      "type": "JSFunction",
+      "value": "function onBeforeUpdate() {\n  console.log('before update')\n}"
+    },
+    "onBeforeUnmount": {
+      "type": "JSFunction",
+      "value": "function onBeforeUnmount() {\n  console.log('before unmount')\n}"
+    },
+    "onActivated": {
+      "type": "JSFunction",
+      "value": "function onActivated() {\n  console.log('activated')\n}"
+    },
+    "onDeactivated": {
+      "type": "JSFunction",
+      "value": "function onDeactivated() {\n  console.log('deactivated')\n}"
+    }
+  },
+  "css": ".lifecycle-container {\n  color: #333;\n}",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {
+        "className": "lifecycle-container"
+      },
+      "children": [
+        {
+          "componentName": "Text",
+          "props": {
+            "text": "Lifecycle"
+          },
+          "id": "lnvsla7q"
+        }
+      ],
+      "id": "rrfdkail"
+    }
+  ],
+  "id": "b30pdz9q"
+}

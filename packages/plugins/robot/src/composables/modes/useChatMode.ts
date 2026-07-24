@@ -16,29 +16,36 @@ import useMcpServer from '../features/useMcp'
 import type { ModeHooks } from '../../types/mode.types'
 import { ChatMode } from '../../types/mode.types'
 
-const updateToolCallRenderContent = (tool: Record<string, unknown>, renderContent: any[], { status, result } = {}) => {
-  const currentToolCallContent = renderContent.find((item) => item.type === 'tool' && item.toolCallId === tool.id)
-  if (currentToolCallContent) {
-    currentToolCallContent.status = status || 'running'
-    if (!currentToolCallContent.content) {
-      currentToolCallContent.content = {}
-    }
-    currentToolCallContent.content.params = tool.parsedArgs || tool.function!.arguments || {}
-    if (result) {
-      currentToolCallContent.content.result = result
-    }
-  } else {
-    renderContent.push({
-      type: 'tool',
-      name: tool.name || tool.function!.name,
-      status: status || 'running',
-      content: {
-        params: tool.parsedArgs || tool.function!.arguments || {},
-        ...(result ? { result } : {})
-      },
-      formatPretty: true,
-      toolCallId: tool.id
-    })
+const updateToolCallState = (
+  tool: Record<string, unknown>,
+  currentMessage: any,
+  { status, result }: { status?: string; result?: object | string } = {}
+) => {
+  if (!tool.id) {
+    return
+  }
+
+  currentMessage.state ||= {}
+  currentMessage.state.toolCall ||= {}
+  currentMessage.state.toolCall[tool.id as string] = {
+    ...(currentMessage.state.toolCall[tool.id as string] || {}),
+    status: status || 'running'
+  }
+
+  if (result) {
+    currentMessage.state.toolCallResults ||= {}
+    currentMessage.state.toolCallResults[tool.id as string] = result
+  }
+}
+
+const syncToolCallRenderContent = (currentMessage: any) => {
+  if (!currentMessage.tool_calls?.length) {
+    return
+  }
+
+  currentMessage.renderContent ||= []
+  if (!currentMessage.renderContent.some((item: any) => item.type === 'tool')) {
+    currentMessage.renderContent.push({ type: 'tool' })
   }
 }
 
@@ -58,8 +65,6 @@ export default function useChatMode(): ModeHooks {
 
   const getContentType = () => 'markdown'
 
-  const getLoadingType = () => 'loading'
-
   // ========== 生命周期钩子 ==========
   const onConversationStart = (conversationState: any, messages: any[], apis: any) => {
     const conversation = conversationState.conversations.find((item: any) => item.id === conversationState.currentId)
@@ -67,7 +72,6 @@ export default function useChatMode(): ModeHooks {
     // 确保会话元数据中记录为 Chat 模式
     if (!conversation.metadata?.chatMode || conversation.metadata.chatMode !== ChatMode.Chat) {
       apis.updateMetadata(conversationState.currentId, { chatMode: ChatMode.Chat })
-      apis.saveConversations()
     }
 
     // Chat 模式简单移除 loading
@@ -116,18 +120,26 @@ export default function useChatMode(): ModeHooks {
     messages: any[],
     extraData?: Record<string, unknown>
   ) => {
-    if (finishReason === 'aborted' || finishReason === 'error') {
+    if (finishReason === 'aborted') {
       removeLoading(messages)
-      messages.at(-1)!.renderContent.push({ type: 'text', content: serializeError(extraData?.error) })
+      return
+    }
+
+    if (finishReason === 'error') {
+      removeLoading(messages)
+      const errorContent = serializeError(extraData?.error) || '请求失败'
+      messages.at(-1)!.renderContent.push({ type: 'text', content: errorContent })
     }
   }
 
   const onStreamTools = (tools: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {
-    tools.forEach((tool) => updateToolCallRenderContent(tool, currentMessage.renderContent))
+    tools.forEach((tool) => updateToolCallState(tool, currentMessage))
+    syncToolCallRenderContent(currentMessage)
   }
 
   const onBeforeCallTool = (tool: Record<string, unknown>, { currentMessage }: { currentMessage: any }) => {
-    updateToolCallRenderContent(tool, currentMessage.renderContent)
+    updateToolCallState(tool, currentMessage)
+    syncToolCallRenderContent(currentMessage)
   }
 
   const onPostCallTool = (
@@ -136,11 +148,12 @@ export default function useChatMode(): ModeHooks {
     toolCallStatus: string,
     { currentMessage }: { currentMessage: any }
   ) => {
-    updateToolCallRenderContent(tool, currentMessage.renderContent, { status: toolCallStatus, result: toolCallResult })
+    updateToolCallState(tool, currentMessage, { status: toolCallStatus, result: toolCallResult })
+    syncToolCallRenderContent(currentMessage)
   }
 
-  const onPostCallTools = (_toolsResult: Record<string, unknown>[], { currentMessage }: { currentMessage: any }) => {
-    currentMessage.renderContent.push({ type: getLoadingType(), content: '' })
+  const onPostCallTools = (_toolsResult: Record<string, unknown>[], _context: { currentMessage: any }) => {
+    // Chat 模式的工具调用由 BubbleRenderers.Tools 渲染；续写内容继续追加到同一个 markdown 块。
   }
 
   const onMessageProcessed = async (
@@ -160,7 +173,7 @@ export default function useChatMode(): ModeHooks {
     // 配置方法
     getApiUrl,
     getContentType,
-    getLoadingType,
+    getLoadingType: () => 'loading',
 
     // 生命周期钩子
     onConversationStart,

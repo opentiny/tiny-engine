@@ -1,0 +1,1125 @@
+{
+  "componentName": "Page",
+  "fileName": "component",
+  "meta": {
+    "name": "component"
+  },
+  "state": {
+    "dataDisk": [1, 2, 3]
+  },
+  "methods": {},
+  "computed": {},
+  "lifeCycles": {},
+  "css": "body {\n  background-color: #eef0f5;\n  margin-bottom: 80px;\n}",
+  "children": [
+    {
+      "componentName": "div",
+      "props": {},
+      "children": [
+        {
+          "componentName": "div",
+          "props": {
+            "style": "padding-bottom: 10px; padding-top: 10px"
+          },
+          "children": [
+            {
+              "componentName": "TinyTimeLine",
+              "props": {
+                "active": "2",
+                "style": "border-radius: 0px",
+                "horizontal": true,
+                "data": [
+                  {
+                    "name": "基础配置"
+                  },
+                  {
+                    "name": "网络配置"
+                  },
+                  {
+                    "name": "高级配置"
+                  },
+                  {
+                    "name": "确认配置"
+                  }
+                ]
+              },
+              "children": [],
+              "id": "f6o3ajqj"
+            }
+          ],
+          "id": "md6cwygl"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "\n        border-width: 1px;\n        border-style: solid;\n        border-radius: 4px;\n        border-color: #fff;\n        padding-top: 10px;\n        padding-bottom: 10px;\n        padding-left: 10px;\n        padding-right: 10px;\n        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;\n        background-color: #fff;\n        margin-bottom: 10px;\n      "
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "计费模式"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "modelValue": "1",
+                        "data": [
+                          {
+                            "text": "包年/包月",
+                            "value": "1"
+                          },
+                          {
+                            "text": "按需计费",
+                            "value": "2"
+                          }
+                        ]
+                      },
+                      "children": [],
+                      "id": "ubwd8lfk"
+                    }
+                  ],
+                  "id": "676a0faj"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "区域"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "modelValue": "1",
+                        "style": "border-radius: 0px; margin-right: 10px",
+                        "data": [
+                          {
+                            "text": "乌兰察布二零一",
+                            "value": "1"
+                          }
+                        ]
+                      },
+                      "children": [],
+                      "id": "s13qy75a"
+                    },
+                    {
+                      "componentName": "span",
+                      "props": {
+                        "style": "background-color: [object Event]; color: #8a8e99; font-size: 12px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "温馨提示：页面左上角切换区域"
+                          },
+                          "id": "43spgaa5"
+                        }
+                      ],
+                      "id": "sfcukuue"
+                    },
+                    {
+                      "componentName": "span",
+                      "props": {
+                        "style": "display: block; color: #8a8e99; border-radius: 0px; font-size: 12px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Text",
+                          "props": {
+                            "text": "不同区域的云服务产品之间内网互不相通；请就近选择靠近您业务的区域，可减少网络时延，提高访问速度"
+                          },
+                          "id": "bkvslsjy"
+                        }
+                      ],
+                      "id": "dsregz0u"
+                    }
+                  ],
+                  "id": "i6ol9j9w"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "可用区",
+                    "style": "border-radius: 0px"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "modelValue": "1",
+                        "data": [
+                          {
+                            "text": "可用区1",
+                            "value": "1"
+                          },
+                          {
+                            "text": "可用区2",
+                            "value": "2"
+                          },
+                          {
+                            "text": "可用区3",
+                            "value": "3"
+                          }
+                        ]
+                      },
+                      "children": [],
+                      "id": "vwnsns4b"
+                    }
+                  ],
+                  "id": "l3xly2oq"
+                }
+              ],
+              "id": "4ekrjalz"
+            }
+          ],
+          "id": "rvsu4gu6"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "\n        border-width: 1px;\n        border-style: solid;\n        border-radius: 4px;\n        border-color: #fff;\n        padding-top: 10px;\n        padding-bottom: 10px;\n        padding-left: 10px;\n        padding-right: 10px;\n        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;\n        background-color: #fff;\n        margin-bottom: 10px;\n      "
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "CPU架构"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "modelValue": "1",
+                        "data": [
+                          {
+                            "text": "x86计算",
+                            "value": "1"
+                          },
+                          {
+                            "text": "鲲鹏计算",
+                            "value": "2"
+                          }
+                        ]
+                      },
+                      "children": [],
+                      "id": "sa4dv21x"
+                    }
+                  ],
+                  "id": "kgjdu3xq"
+                },
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "区域"
+                  },
+                  "children": [
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "display: flex; justify-content: flex-start; align-items: center"
+                      },
+                      "children": [
+                        {
+                          "componentName": "div",
+                          "props": {
+                            "style": "display: flex; align-items: center; margin-right: 10px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "width: 80px"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "vCPUs"
+                                  },
+                                  "id": "3qi9sj2n"
+                                }
+                              ],
+                              "id": "pjytdebw"
+                            },
+                            {
+                              "componentName": "TinySelect",
+                              "props": {
+                                "modelValue": "",
+                                "placeholder": "请选择",
+                                "options": [
+                                  {
+                                    "value": "1",
+                                    "label": "黄金糕"
+                                  },
+                                  {
+                                    "value": "2",
+                                    "label": "双皮奶"
+                                  }
+                                ]
+                              },
+                              "children": [],
+                              "id": "y0t8wovv"
+                            }
+                          ],
+                          "id": "fx3sn05n"
+                        },
+                        {
+                          "componentName": "div",
+                          "props": {
+                            "style": "display: flex; align-items: center; margin-right: 10px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "width: 80px; border-radius: 0px"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "内存"
+                                  },
+                                  "id": "vp34oq3k"
+                                }
+                              ],
+                              "id": "0ft31pas"
+                            },
+                            {
+                              "componentName": "TinySelect",
+                              "props": {
+                                "modelValue": "",
+                                "placeholder": "请选择",
+                                "options": [
+                                  {
+                                    "value": "1",
+                                    "label": "黄金糕"
+                                  },
+                                  {
+                                    "value": "2",
+                                    "label": "双皮奶"
+                                  }
+                                ]
+                              },
+                              "children": [],
+                              "id": "zt8zcs8t"
+                            }
+                          ],
+                          "id": "95z4v9c1"
+                        },
+                        {
+                          "componentName": "div",
+                          "props": {
+                            "style": "display: flex; align-items: center"
+                          },
+                          "children": [
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "width: 80px"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "规格名称"
+                                  },
+                                  "id": "hib8vlsc"
+                                }
+                              ],
+                              "id": "q1qpyi0h"
+                            },
+                            {
+                              "componentName": "TinySearch",
+                              "props": {
+                                "modelValue": "",
+                                "placeholder": "输入关键词"
+                              },
+                              "children": [],
+                              "id": "krtylew9"
+                            }
+                          ],
+                          "id": "fapyalc6"
+                        }
+                      ],
+                      "id": "vs6rq4a7"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "border-radius: 0px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyButtonGroup",
+                          "props": {
+                            "modelValue": "1",
+                            "style": "border-radius: 0px; margin-top: 12px",
+                            "data": [
+                              {
+                                "text": "通用计算型",
+                                "value": "1"
+                              },
+                              {
+                                "text": "通用计算增强型",
+                                "value": "2"
+                              },
+                              {
+                                "text": "内存优化型",
+                                "value": "3"
+                              },
+                              {
+                                "text": "内存优化型",
+                                "value": "4"
+                              },
+                              {
+                                "text": "磁盘增强型",
+                                "value": "5"
+                              },
+                              {
+                                "text": "超高I/O型",
+                                "value": "6"
+                              },
+                              {
+                                "text": "GPU加速型",
+                                "value": "7"
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "w2rvp1zj"
+                        },
+                        {
+                          "componentName": "TinyGrid",
+                          "props": {
+                            "style": "margin-top: 12px; border-radius: 0px",
+                            "auto-resize": true,
+                            "editConfig": {
+                              "trigger": "click",
+                              "mode": "cell",
+                              "showStatus": true
+                            },
+                            "columns": [
+                              {
+                                "type": "radio",
+                                "width": 60
+                              },
+                              {
+                                "field": "employees",
+                                "title": "规格名称"
+                              },
+                              {
+                                "field": "created_date",
+                                "title": "vCPUs | 内存(GiB)",
+                                "sortable": true
+                              },
+                              {
+                                "field": "city",
+                                "title": "CPU",
+                                "sortable": true
+                              },
+                              {
+                                "title": "基准 / 最大带宽\t",
+                                "sortable": true
+                              },
+                              {
+                                "title": "内网收发包",
+                                "sortable": true
+                              }
+                            ],
+                            "data": [
+                              {
+                                "id": "1",
+                                "name": "GFD科技有限公司",
+                                "city": "福州",
+                                "employees": 800,
+                                "created_date": "2014-04-30 00:56:00",
+                                "boole": false
+                              },
+                              {
+                                "id": "2",
+                                "name": "WWW科技有限公司",
+                                "city": "深圳",
+                                "employees": 300,
+                                "created_date": "2016-07-08 12:36:22",
+                                "boole": true
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "56qdrmjc"
+                        },
+                        {
+                          "componentName": "div",
+                          "props": {
+                            "style": "margin-top: 12px; border-radius: 0px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "width: 150px; display: inline-block"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "当前规格"
+                                  },
+                                  "id": "j0lbbokj"
+                                }
+                              ],
+                              "id": "819b4ldc"
+                            },
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "font-weight: 700"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "通用计算型 | Si2.large.2 | 2vCPUs | 4 GiB"
+                                  },
+                                  "id": "mhxn1jsh"
+                                }
+                              ],
+                              "id": "nroj6wso"
+                            }
+                          ],
+                          "id": "kf0lnpnv"
+                        }
+                      ],
+                      "id": "tk67ku85"
+                    }
+                  ],
+                  "id": "08j8y1ff"
+                }
+              ],
+              "id": "dqcoos16"
+            }
+          ],
+          "id": "wgnx6mrw"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "\n        border-width: 1px;\n        border-style: solid;\n        border-radius: 4px;\n        border-color: #fff;\n        padding-top: 10px;\n        padding-bottom: 10px;\n        padding-left: 10px;\n        padding-right: 10px;\n        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;\n        background-color: #fff;\n        margin-bottom: 10px;\n      "
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "镜像",
+                    "style": "border-radius: 0px"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButtonGroup",
+                      "props": {
+                        "modelValue": "1",
+                        "data": [
+                          {
+                            "text": "公共镜像",
+                            "value": "1"
+                          },
+                          {
+                            "text": "私有镜像",
+                            "value": "2"
+                          },
+                          {
+                            "text": "共享镜像",
+                            "value": "3"
+                          }
+                        ]
+                      },
+                      "children": [],
+                      "id": "3pmrh1zz"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "display: flex; margin-top: 12px; border-radius: 0px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinySelect",
+                          "props": {
+                            "modelValue": "",
+                            "placeholder": "请选择",
+                            "style": "width: 170px; margin-right: 10px",
+                            "options": [
+                              {
+                                "value": "1",
+                                "label": "黄金糕"
+                              },
+                              {
+                                "value": "2",
+                                "label": "双皮奶"
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "4s9tm0oo"
+                        },
+                        {
+                          "componentName": "TinySelect",
+                          "props": {
+                            "modelValue": "",
+                            "placeholder": "请选择",
+                            "style": "width: 340px",
+                            "options": [
+                              {
+                                "value": "1",
+                                "label": "黄金糕"
+                              },
+                              {
+                                "value": "2",
+                                "label": "双皮奶"
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "i0ou3048"
+                        }
+                      ],
+                      "id": "rawlzvaa"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "margin-top: 12px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "span",
+                          "props": {
+                            "style": "color: #e37d29"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "请注意操作系统的语言类型。"
+                              },
+                              "id": "vlnnyrxv"
+                            }
+                          ],
+                          "id": "fkhps62d"
+                        }
+                      ],
+                      "id": "laqstaoh"
+                    }
+                  ],
+                  "id": "m8as5pxu"
+                }
+              ],
+              "id": "7pb83c31"
+            }
+          ],
+          "id": "3ng26b65"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "\n        border-width: 1px;\n        border-style: solid;\n        border-radius: 4px;\n        border-color: #fff;\n        padding-top: 10px;\n        padding-bottom: 10px;\n        padding-left: 10px;\n        padding-right: 10px;\n        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;\n        background-color: #fff;\n        margin-bottom: 10px;\n      "
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "系统盘",
+                    "style": "border-radius: 0px"
+                  },
+                  "children": [
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "display: flex"
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinySelect",
+                          "props": {
+                            "modelValue": "",
+                            "placeholder": "请选择",
+                            "style": "width: 200px; margin-right: 10px",
+                            "options": [
+                              {
+                                "value": "1",
+                                "label": "黄金糕"
+                              },
+                              {
+                                "value": "2",
+                                "label": "双皮奶"
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "w3pe0p5l"
+                        },
+                        {
+                          "componentName": "TinyInput",
+                          "props": {
+                            "placeholder": "请输入",
+                            "modelValue": "",
+                            "style": "width: 120px; margin-right: 10px"
+                          },
+                          "children": [],
+                          "id": "hhs8g284"
+                        },
+                        {
+                          "componentName": "span",
+                          "props": {
+                            "style": "color: #575d6c; font-size: 12px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "GiB IOPS上限240，IOPS突发上限5,000"
+                              },
+                              "id": "zj1dyvyc"
+                            }
+                          ],
+                          "id": "b5accadg"
+                        }
+                      ],
+                      "id": "ro8z737r"
+                    }
+                  ],
+                  "id": "c6513skc"
+                }
+              ],
+              "id": "bqckjdbt"
+            },
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [
+                {
+                  "componentName": "TinyFormItem",
+                  "props": {
+                    "label": "数据盘",
+                    "style": "border-radius: 0px"
+                  },
+                  "children": [
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "margin-top: 12px; display: flex"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Icon",
+                          "props": {
+                            "style": "margin-right: 10px; width: 16px; height: 16px",
+                            "name": "IconPanelMini"
+                          },
+                          "children": [],
+                          "id": "in4uom22"
+                        },
+                        {
+                          "componentName": "TinySelect",
+                          "props": {
+                            "modelValue": "",
+                            "placeholder": "请选择",
+                            "style": "width: 200px; margin-right: 10px",
+                            "options": [
+                              {
+                                "value": "1",
+                                "label": "黄金糕"
+                              },
+                              {
+                                "value": "2",
+                                "label": "双皮奶"
+                              }
+                            ]
+                          },
+                          "children": [],
+                          "id": "f9b3adim"
+                        },
+                        {
+                          "componentName": "TinyInput",
+                          "props": {
+                            "placeholder": "请输入",
+                            "modelValue": "",
+                            "style": "width: 120px; margin-right: 10px"
+                          },
+                          "children": [],
+                          "id": "hkc6mfzd"
+                        },
+                        {
+                          "componentName": "span",
+                          "props": {
+                            "style": "color: #575d6c; font-size: 12px; margin-right: 10px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "GiB IOPS上限600，IOPS突发上限5,000"
+                              },
+                              "id": "gu5suwyv"
+                            }
+                          ],
+                          "id": "4f38cvox"
+                        },
+                        {
+                          "componentName": "TinyInput",
+                          "props": {
+                            "placeholder": "请输入",
+                            "modelValue": "",
+                            "style": "width: 120px"
+                          },
+                          "children": [],
+                          "id": "oj3nt5s1"
+                        }
+                      ],
+                      "loop": {
+                        "type": "JSExpression",
+                        "value": "this.state.dataDisk"
+                      },
+                      "id": "c74s7y9n"
+                    },
+                    {
+                      "componentName": "div",
+                      "props": {
+                        "style": "display: flex; margin-top: 12px; border-radius: 0px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "Icon",
+                          "props": {
+                            "style": "width: 16px; height: 16px; margin-right: 10px",
+                            "name": "IconPlus"
+                          },
+                          "children": [],
+                          "id": "ze75z2il"
+                        },
+                        {
+                          "componentName": "span",
+                          "props": {
+                            "style": "font-size: 12px; border-radius: 0px; margin-right: 10px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "增加一块数据盘"
+                              },
+                              "id": "wmbogfnt"
+                            }
+                          ],
+                          "id": "jrvc6fj3"
+                        },
+                        {
+                          "componentName": "span",
+                          "props": {
+                            "style": "color: #8a8e99; font-size: 12px"
+                          },
+                          "children": [
+                            {
+                              "componentName": "Text",
+                              "props": {
+                                "text": "您还可以挂载 21 块磁盘（云硬盘）"
+                              },
+                              "id": "7w1z3fem"
+                            }
+                          ],
+                          "id": "pczkwydn"
+                        }
+                      ],
+                      "id": "dn6ab3hv"
+                    }
+                  ],
+                  "id": "j260lifx"
+                }
+              ],
+              "id": "g46smnve"
+            }
+          ],
+          "id": "ccze0iwn"
+        },
+        {
+          "componentName": "div",
+          "props": {
+            "style": "\n        border-width: 1px;\n        border-style: solid;\n        border-color: #ffffff;\n        padding-top: 10px;\n        padding-left: 10px;\n        padding-right: 10px;\n        box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px;\n        background-color: #fff;\n        position: fixed;\n        inset: auto 0% 0% 0%;\n        height: 80px;\n        line-height: 80px;\n        border-radius: 0px;\n      "
+          },
+          "children": [
+            {
+              "componentName": "TinyForm",
+              "props": {
+                "labelWidth": "80px",
+                "labelPosition": "top",
+                "label-position": "left ",
+                "label-width": "150px",
+                "style": "border-radius: 0px",
+                "inline": false
+              },
+              "children": [],
+              "id": "k4z8lqi7"
+            },
+            {
+              "componentName": "TinyRow",
+              "props": {
+                "style": "border-radius: 0px; height: 100%"
+              },
+              "children": [
+                {
+                  "componentName": "TinyCol",
+                  "props": {
+                    "span": "8"
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyRow",
+                      "props": {
+                        "style": "border-radius: 0px"
+                      },
+                      "children": [
+                        {
+                          "componentName": "TinyCol",
+                          "props": {
+                            "span": "5",
+                            "style": "display: flex"
+                          },
+                          "children": [
+                            {
+                              "componentName": "span",
+                              "props": {
+                                "style": "margin-right: 10px"
+                              },
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "购买量"
+                                  },
+                                  "id": "o1jcb13q"
+                                }
+                              ],
+                              "id": "qnptw0yo"
+                            },
+                            {
+                              "componentName": "TinyInput",
+                              "props": {
+                                "placeholder": "请输入",
+                                "modelValue": "",
+                                "style": "width: 120px; margin-right: 10px"
+                              },
+                              "children": [],
+                              "id": "jwlwlvz0"
+                            },
+                            {
+                              "componentName": "span",
+                              "props": {},
+                              "children": [
+                                {
+                                  "componentName": "Text",
+                                  "props": {
+                                    "text": "台"
+                                  },
+                                  "id": "jmfizbf2"
+                                }
+                              ],
+                              "id": "uxtzimy2"
+                            }
+                          ],
+                          "id": "pm92xrj9"
+                        },
+                        {
+                          "componentName": "TinyCol",
+                          "props": {
+                            "span": "7"
+                          },
+                          "children": [
+                            {
+                              "componentName": "div",
+                              "props": {},
+                              "children": [
+                                {
+                                  "componentName": "span",
+                                  "props": {
+                                    "style": "font-size: 12px"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "Text",
+                                      "props": {
+                                        "text": "配置费用"
+                                      },
+                                      "id": "xxiefanz"
+                                    }
+                                  ],
+                                  "id": "ae4vk0vk"
+                                },
+                                {
+                                  "componentName": "span",
+                                  "props": {
+                                    "style": "padding-left: 10px; padding-right: 10px; color: #de504e"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "Text",
+                                      "props": {
+                                        "text": "¥1.5776"
+                                      },
+                                      "id": "i40ub6sn"
+                                    }
+                                  ],
+                                  "id": "cb02qhdh"
+                                },
+                                {
+                                  "componentName": "span",
+                                  "props": {
+                                    "style": "font-size: 12px"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "Text",
+                                      "props": {
+                                        "text": "/小时"
+                                      },
+                                      "id": "adkjij9o"
+                                    }
+                                  ],
+                                  "id": "k2x66nf0"
+                                }
+                              ],
+                              "id": "n1d16xku"
+                            },
+                            {
+                              "componentName": "div",
+                              "props": {},
+                              "children": [
+                                {
+                                  "componentName": "span",
+                                  "props": {
+                                    "style": "font-size: 12px; border-radius: 0px"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "Text",
+                                      "props": {
+                                        "text": "参考价格，具体扣费请以账单为准。"
+                                      },
+                                      "id": "vmd1mfi5"
+                                    }
+                                  ],
+                                  "id": "dpi9os07"
+                                },
+                                {
+                                  "componentName": "span",
+                                  "props": {
+                                    "style": "font-size: 12px; color: #344899"
+                                  },
+                                  "children": [
+                                    {
+                                      "componentName": "Text",
+                                      "props": {
+                                        "text": "了解计费详情"
+                                      },
+                                      "id": "eq0byqdt"
+                                    }
+                                  ],
+                                  "id": "n8tt8sko"
+                                }
+                              ],
+                              "id": "q9wmr8ma"
+                            }
+                          ],
+                          "id": "cwequlwq"
+                        }
+                      ],
+                      "id": "8jwt4esp"
+                    }
+                  ],
+                  "id": "sy3gd183"
+                },
+                {
+                  "componentName": "TinyCol",
+                  "props": {
+                    "span": "4",
+                    "style": "\n            display: flex;\n            flex-direction: row-reverse;\n            border-radius: 0px;\n            height: 100%;\n            justify-content: flex-start;\n            align-items: center;\n          "
+                  },
+                  "children": [
+                    {
+                      "componentName": "TinyButton",
+                      "props": {
+                        "text": "下一步: 网络配置",
+                        "type": "danger",
+                        "style": "max-width: unset"
+                      },
+                      "children": [],
+                      "id": "skzmpiap"
+                    }
+                  ],
+                  "id": "n9wdnvab"
+                }
+              ],
+              "id": "rjuainel"
+            }
+          ],
+          "id": "veqg3b07"
+        }
+      ],
+      "id": "z9geov13"
+    }
+  ],
+  "id": "ozevdge6"
+}

@@ -2156,6 +2156,55 @@
         "version": "3.22.0"
       },
       {
+        "componentName": "TinyAlert",
+        "package": "@opentiny/vue",
+        "exportName": "TinyAlert",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyLink",
+        "package": "@opentiny/vue",
+        "exportName": "TinyLink",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyDivider",
+        "package": "@opentiny/vue",
+        "exportName": "TinyDivider",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyAnchor",
+        "package": "@opentiny/vue",
+        "exportName": "TinyAnchor",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyDrawer",
+        "package": "@opentiny/vue",
+        "exportName": "TinyDrawer",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyContainer",
+        "package": "@opentiny/vue",
+        "exportName": "TinyContainer",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
+        "componentName": "TinyFileUpload",
+        "package": "@opentiny/vue",
+        "exportName": "TinyFileUpload",
+        "destructuring": true,
+        "version": "3.22.0"
+      },
+      {
         "componentName": "TinyHuichartsFunnel",
         "package": "@opentiny/vue-huicharts",
         "exportName": "TinyHuichartsFunnel",

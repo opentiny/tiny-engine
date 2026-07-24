@@ -9,20 +9,15 @@
  * A PARTICULAR PURPOSE. SEE THE APPLICABLE LICENSES FOR MORE DETAILS.
  *
  */
-import DateStore from '@seald-io/nedb'
-import { getDatabasePath, getResponseData } from '../tool/Common'
+import createStore from '../store/StoreFactory'
+import { getResponseData } from '../tool/Common'
 import appinfo from '../assets/json/appinfo.json'
 
 export default class BlockGroupService {
   constructor() {
-    this.db = new DateStore({
-      filename: getDatabasePath('blockGroups.db'),
-      autoload: true
-    })
-
-    this.db.ensureIndex({
-      fieldName: 'name',
-      unique: true
+    this.store = createStore('blockGroups', {
+      indexes: [{ fieldName: 'name', unique: true }],
+      namingFields: ['name']
     })
 
     this.blockGroupModel = {
@@ -37,39 +32,39 @@ export default class BlockGroupService {
   async create(params) {
     const blockGroupData = { ...this.blockGroupModel, ...params }
     blockGroupData.app = appinfo.app
-    const result = await this.db.insertAsync(blockGroupData)
+    const result = await this.store.insert(blockGroupData)
     const { _id } = result
-    await this.db.updateAsync({ _id }, { $set: { id: _id } })
+    await this.store.update({ _id }, { $set: { id: _id } })
     result.id = result._id
     return getResponseData(result)
   }
 
   async update(id, params) {
     params.app = appinfo.app
-    await this.db.updateAsync({ _id: id }, { $set: params })
+    await this.store.update({ _id: id }, { $set: params })
 
-    const result = await this.db.findOneAsync({ _id: id })
+    const result = await this.store.findOne({ _id: id })
     return getResponseData(result)
   }
 
   async find(params) {
     if (params?.app || !params?.id) {
-      const result = await this.db.findAsync()
+      const result = await this.store.find()
       return getResponseData(result)
     }
     const { id } = params
-    const blockGroup = await this.db.findOneAsync({ _id: id })
+    const blockGroup = await this.store.findOne({ _id: id })
     return getResponseData([blockGroup])
   }
 
   async delete(blockGroupId) {
-    const result = await this.db.findOneAsync({ _id: blockGroupId })
-    await this.db.removeAsync({ _id: blockGroupId })
+    const result = await this.store.findOne({ _id: blockGroupId })
+    await this.store.remove({ _id: blockGroupId })
     return getResponseData(result)
   }
 
   async list(appId) {
-    const result = await this.db.findAsync()
+    const result = await this.store.find()
     return getResponseData(result)
   }
 }

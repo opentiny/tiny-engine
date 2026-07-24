@@ -28,3 +28,7 @@ pnpm-debug.log*
 *.sw?
 tmp
 temp
+__pycache__
+
+# .claude/skills is a generated link to .agents/skills (see scripts/link-skills.js)
+.claude/skills

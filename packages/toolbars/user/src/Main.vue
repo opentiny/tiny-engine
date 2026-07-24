@@ -133,7 +133,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.user-icon {
+.user-icon.svg-icon {
   width: 28px;
   height: 28px;
   margin-right: 2px;
