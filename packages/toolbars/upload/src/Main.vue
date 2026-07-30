@@ -1011,6 +1011,18 @@ export default {
                 const existingCategories = Array.isArray(existing.categories)
                   ? existing.categories.map((item: any) => item?.id || item).filter(Boolean)
                   : []
+                let relationParams: Record<string, any>
+
+                if (groupId) {
+                  relationParams = { groups: [groupId] }
+                } else if (existingGroups.length) {
+                  relationParams = { groups: existingGroups }
+                } else {
+                  relationParams = {
+                    categories: existingCategories.length ? existingCategories : blockParams.categories || []
+                  }
+                }
+
                 const updateParams = {
                   name_cn: blockParams.name_cn,
                   label: blockParams.label,
@@ -1020,11 +1032,7 @@ export default {
                   public_scope_tenants: existing.public_scope_tenants || [],
                   tags: existing.tags || [],
                   description: existing.description || '',
-                  ...(groupId
-                    ? { groups: [groupId] }
-                    : existingGroups.length
-                    ? { groups: existingGroups }
-                    : { categories: existingCategories.length ? existingCategories : blockParams.categories || [] })
+                  ...relationParams
                 }
 
                 blockData = await updateBlock(existing.id, updateParams, appId)
