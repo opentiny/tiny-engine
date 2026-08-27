@@ -5,7 +5,9 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build"
+    "build": "vite build",
+    "test": "vitest",
+    "test:unit": "vitest run"
   },
   "type": "module",
   "main": "dist/index.js",
@@ -35,7 +37,8 @@
     "@opentiny/tiny-engine-vite-plugin-meta-comments": "workspace:*",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vitejs/plugin-vue-jsx": "^4.0.1",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vitest": "^1.4.0"
   },
   "peerDependencies": {
     "@opentiny/vue": "^3.20.0",
