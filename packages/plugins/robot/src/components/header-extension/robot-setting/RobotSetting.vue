@@ -58,6 +58,27 @@
               ></tiny-select>
             </tiny-form-item>
 
+            <tiny-form-item prop="completionModel" label-width="150px">
+              <template #label>
+                代码补全模型
+                <tiny-tooltip
+                  effect="light"
+                  content="用于页面 JS 的 AI 代码补全。这里会单独使用支持补全协议的编码模型，不受快速对话模型影响。"
+                  placement="top"
+                >
+                  <svg-icon class="help-link" name="plugin-icon-plugin-help"></svg-icon>
+                </tiny-tooltip>
+              </template>
+              <tiny-select
+                clearable
+                v-model="state.modelSelection.completionModel"
+                :options="completionModelOptions"
+                filterable
+                placeholder="请选择"
+                @change="handleCompletionModelChange"
+              ></tiny-select>
+            </tiny-form-item>
+
             <div v-if="selectedDefaultModelInfo" class="model-info">
               <div class="info-item">
                 <span class="label">服务：</span>
@@ -174,6 +195,7 @@ const {
   saveRobotSettingState,
   getAllAvailableModels,
   getCompactModels,
+  getCompletionModels,
   addCustomService,
   updateService,
   deleteService,
@@ -186,15 +208,51 @@ const getModelValue = (serviceId: string, modelName: string) => {
   return serviceId && modelName ? `${serviceId}::${modelName}` : ''
 }
 
+const parseModelValue = (value = '') => {
+  const [serviceId = '', modelName = ''] = value.split('::')
+
+  return {
+    serviceId,
+    modelName
+  }
+}
+
 const state = reactive({
   activeTab: 'model-selection',
   modelSelection: {
     defaultModel: getModelValue(robotSettingState.defaultModel.serviceId, robotSettingState.defaultModel.modelName),
-    quickModel: getModelValue(robotSettingState.quickModel.serviceId, robotSettingState.quickModel.modelName)
+    quickModel: getModelValue(robotSettingState.quickModel.serviceId, robotSettingState.quickModel.modelName),
+    completionModel: getModelValue(
+      robotSettingState.completionModel.serviceId,
+      robotSettingState.completionModel.modelName
+    )
   },
   showServiceDialog: false,
   editingService: undefined as ModelService | undefined
 })
+
+const syncModelSelection = () => {
+  state.modelSelection.defaultModel = getModelValue(
+    robotSettingState.defaultModel.serviceId,
+    robotSettingState.defaultModel.modelName
+  )
+  state.modelSelection.quickModel = getModelValue(
+    robotSettingState.quickModel.serviceId,
+    robotSettingState.quickModel.modelName
+  )
+  state.modelSelection.completionModel = getModelValue(
+    robotSettingState.completionModel.serviceId,
+    robotSettingState.completionModel.modelName
+  )
+}
+
+const notifyMissingApiKey = (service: ModelService) => {
+  useNotify({
+    type: 'warning',
+    title: '未配置API Key',
+    message: `请先为 ${service.label} 配置API Key`
+  })
+}
 
 // 获取所有可用模型选项
 const allModelOptions = computed(() => {
@@ -208,6 +266,13 @@ const allModelOptions = computed(() => {
 // 获取快速模型选项
 const compactModelOptions = computed(() => {
   return getCompactModels().map((model) => ({
+    label: model.displayLabel,
+    value: model.value
+  }))
+})
+
+const completionModelOptions = computed(() => {
+  return getCompletionModels().map((model) => ({
     label: model.displayLabel,
     value: model.value
   }))
@@ -231,16 +296,15 @@ const handleBack = () => {
 }
 
 const handleModelChange = () => {
-  const [defaultServiceId, defaultModelName] = state.modelSelection.defaultModel.split('::')
+  const { serviceId: defaultServiceId, modelName: defaultModelName } = parseModelValue(
+    state.modelSelection.defaultModel
+  )
 
   // 检查API Key
   const defaultService = getServiceById(defaultServiceId)
   if (defaultService && !defaultService.apiKey && !defaultService.allowEmptyApiKey) {
-    useNotify({
-      type: 'warning',
-      title: '未配置API Key',
-      message: `请先为 ${defaultService.label} 配置API Key`
-    })
+    notifyMissingApiKey(defaultService)
+    syncModelSelection()
     state.activeTab = 'services'
     return
   }
@@ -255,7 +319,16 @@ const handleModelChange = () => {
 }
 
 const handleCompactModelChange = () => {
-  const [quickServiceId = '', quickModelName = ''] = (state.modelSelection.quickModel || '').split('::')
+  const { serviceId: quickServiceId, modelName: quickModelName } = parseModelValue(state.modelSelection.quickModel)
+  const quickService = getServiceById(quickServiceId)
+
+  if (quickService && !quickService.apiKey && !quickService.allowEmptyApiKey) {
+    notifyMissingApiKey(quickService)
+    syncModelSelection()
+    state.activeTab = 'services'
+    return
+  }
+
   const updatedState = {
     quickModel: {
       serviceId: quickServiceId,
@@ -265,28 +338,86 @@ const handleCompactModelChange = () => {
   saveRobotSettingState(updatedState)
 }
 
+const handleCompletionModelChange = () => {
+  const { serviceId: completionServiceId, modelName: completionModelName } = parseModelValue(
+    state.modelSelection.completionModel
+  )
+  const completionService = getServiceById(completionServiceId)
+
+  if (completionService && !completionService.apiKey && !completionService.allowEmptyApiKey) {
+    notifyMissingApiKey(completionService)
+    syncModelSelection()
+    state.activeTab = 'services'
+    return
+  }
+
+  saveRobotSettingState({
+    completionModel: {
+      serviceId: completionServiceId,
+      modelName: completionModelName
+    }
+  })
+}
+
 const addService = () => {
   state.editingService = undefined
   state.showServiceDialog = true
 }
 
-const editService = (service: ModelService) => {
+const editService = (service: any) => {
   state.editingService = JSON.parse(JSON.stringify(service))
   state.showServiceDialog = true
 }
 
 const handleDeleteService = (serviceId: string) => {
   deleteService(serviceId)
+
+  const shouldResetDefaultModel = robotSettingState.defaultModel.serviceId === serviceId
+  const shouldResetQuickModel = robotSettingState.quickModel.serviceId === serviceId
+  const shouldResetCompletionModel = robotSettingState.completionModel.serviceId === serviceId
+
+  if (shouldResetDefaultModel || shouldResetQuickModel || shouldResetCompletionModel) {
+    saveRobotSettingState({
+      ...(shouldResetDefaultModel
+        ? {
+            defaultModel: {
+              serviceId: '',
+              modelName: ''
+            }
+          }
+        : {}),
+      ...(shouldResetCompletionModel
+        ? {
+            completionModel: {
+              serviceId: '',
+              modelName: ''
+            }
+          }
+        : {}),
+      ...(shouldResetQuickModel
+        ? {
+            quickModel: {
+              serviceId: '',
+              modelName: ''
+            }
+          }
+        : {})
+    })
+  }
+
+  syncModelSelection()
 }
 
-const handleServiceConfirm = (serviceData: Partial<ModelService>) => {
+const handleServiceConfirm = async (serviceData: Partial<ModelService>) => {
   if (serviceData.id) {
     // 更新现有服务
-    updateService(serviceData.id, serviceData)
+    await updateService(serviceData.id, serviceData)
   } else {
     // 添加新服务
-    addCustomService(serviceData as any)
+    await addCustomService(serviceData as any)
   }
+
+  syncModelSelection()
 }
 </script>
 

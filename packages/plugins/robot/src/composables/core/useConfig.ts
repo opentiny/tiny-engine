@@ -25,12 +25,18 @@ import {
   schemaAutoFix
 } from '../../utils'
 import { ChatMode } from '../../types/mode.types'
-import type { ModelConfig, ModelService, RobotSettings, SelectedModelInfo } from '../../types/setting.types'
+import type {
+  CompletionProtocol,
+  ModelConfig,
+  ModelService,
+  RobotSettings,
+  SelectedModelInfo
+} from '../../types/setting.types'
 import apiService from '../../services/api'
 import { updatePageSchema } from '../core/pageUpdater'
 
 const SETTING_STORAGE_KEY = 'tiny-engine-robot-settings'
-const SETTING_VERSION = 2 // 新版本号
+const SETTING_VERSION = 3 // 新版本号
 
 const robotSettingState = reactive<RobotSettings>({
   version: SETTING_VERSION,
@@ -39,6 +45,10 @@ const robotSettingState = reactive<RobotSettings>({
     modelName: ''
   },
   quickModel: {
+    serviceId: '',
+    modelName: ''
+  },
+  completionModel: {
     serviceId: '',
     modelName: ''
   },
@@ -55,7 +65,113 @@ const getAIModelOptions = () => {
   return mergeAIModelOptions(DEFAULT_LLM_MODELS, customAIModels) // eslint-disable-line
 }
 
+const QWEN_FIM_MODEL_PATTERNS = [/^qwen-coder-turbo(?:-latest|-0919)?$/, /^qwen2\.5-coder-(7|14|32)b-instruct$/]
+const DEEPSEEK_FIM_MODELS = new Set(['deepseek-chat', 'deepseek-coder'])
+
+const matchesCompletionModel = (modelName = '', patterns: RegExp[] = [], exactModels: Set<string> = new Set()) => {
+  const normalizedModelName = modelName.toLowerCase()
+
+  if (!normalizedModelName) {
+    return false
+  }
+
+  if (exactModels.has(normalizedModelName)) {
+    return true
+  }
+
+  return patterns.some((pattern) => pattern.test(normalizedModelName))
+}
+
+const inferCompletionProtocol = ({
+  provider = '',
+  baseUrl = '',
+  modelName = '',
+  capabilities = {}
+}: {
+  provider?: string
+  baseUrl?: string
+  modelName?: string
+  capabilities?: ModelConfig['capabilities']
+}): CompletionProtocol | null => {
+  if (capabilities?.completionProtocol) {
+    return capabilities.completionProtocol
+  }
+
+  if (matchesCompletionModel(modelName, QWEN_FIM_MODEL_PATTERNS)) {
+    return 'qwen'
+  }
+
+  if (matchesCompletionModel(modelName, [], DEEPSEEK_FIM_MODELS)) {
+    return 'deepseek'
+  }
+
+  const normalizedProvider = provider.toLowerCase()
+  const normalizedBaseUrl = baseUrl.toLowerCase()
+  if (
+    normalizedProvider === 'deepseek' &&
+    normalizedBaseUrl.includes('deepseek.com') &&
+    matchesCompletionModel(modelName, [], DEEPSEEK_FIM_MODELS)
+  ) {
+    return 'deepseek'
+  }
+
+  return null
+}
+
 // 初始化内置服务
+const isCompletionCapableModel = (service: ModelService | undefined, model: ModelConfig | undefined) => {
+  if (!service || !model) {
+    return false
+  }
+
+  return (
+    inferCompletionProtocol({
+      provider: service.provider,
+      baseUrl: service.baseUrl,
+      modelName: model.name,
+      capabilities: model.capabilities
+    }) !== null
+  )
+}
+
+const getFallbackCompletionModel = (services: ModelService[], preferredServiceId = '') => {
+  const preferredService = services.find((service) => service.id === preferredServiceId)
+  const orderedServices = preferredService
+    ? [preferredService, ...services.filter((service) => service.id !== preferredServiceId)]
+    : services
+
+  for (const service of orderedServices) {
+    const supportedModel = service.models.find((model) => isCompletionCapableModel(service, model))
+    if (supportedModel) {
+      return {
+        serviceId: service.id,
+        modelName: supportedModel.name
+      }
+    }
+  }
+
+  return {
+    serviceId: '',
+    modelName: ''
+  }
+}
+
+const resolveCompletionModelSelection = (services: ModelService[], serviceId = '', modelName = '') => {
+  if (serviceId && modelName) {
+    const selectedService = services.find((service) => service.id === serviceId)
+    const selectedModel = selectedService?.models.find((model) => model.name === modelName)
+
+    if (isCompletionCapableModel(selectedService, selectedModel)) {
+      return {
+        serviceId,
+        modelName
+      }
+    }
+  }
+
+  return getFallbackCompletionModel(services, serviceId)
+}
+
 const initBuiltInServices = (): ModelService[] => {
   return getAIModelOptions().map((service: any) => ({
     id: service.provider,
@@ -85,6 +201,7 @@ const initDefaultSettings = (): RobotSettings => {
       serviceId: '',
       modelName: ''
     },
+    completionModel: getFallbackCompletionModel(builtInServices),
     services: builtInServices,
     chatMode: ChatMode.Agent,
     enableThinking: false
@@ -131,16 +248,29 @@ const migrateOldSettings = (oldSettings: any): RobotSettings | null => {
       customService.models.push({
         name: customizeModel.completeModel,
         label: customizeModel.completeModel,
-        capabilities: { compact: true }
+        capabilities: {
+          compact: true
+        }
       })
     }
     services.push(customService)
   }
 
-  // 确定默认模型和快速模型
+  // 确定默认模型、快速模型和代码补全模型
   const selectedModel = activeName === 'existingModels' ? existModel : customizeModel
   const defaultServiceId =
     activeName === 'existingModels' ? services.find((s) => s.baseUrl === selectedModel?.baseUrl)?.id : ''
+  const legacyCompleteModelName = selectedModel?.completeModel || ''
+
+  const quickModel = {
+    serviceId: defaultServiceId || '',
+    modelName: legacyCompleteModelName
+  }
+  const completionModel = resolveCompletionModelSelection(
+    services,
+    defaultServiceId || services[0]?.id || '',
+    legacyCompleteModelName
+  )
 
   return {
     version: SETTING_VERSION,
@@ -148,10 +278,8 @@ const migrateOldSettings = (oldSettings: any): RobotSettings | null => {
       serviceId: defaultServiceId || services[0]?.id || '',
       modelName: selectedModel?.model || services[0]?.models[0]?.name || ''
     },
-    quickModel: {
-      serviceId: defaultServiceId || '',
-      modelName: selectedModel?.completeModel || ''
-    },
+    quickModel,
+    completionModel,
     services,
     chatMode: chatMode || ChatMode.Agent,
     enableThinking: enableThinking || false
@@ -334,6 +462,22 @@ const getCompactModels = () => {
   return getAllAvailableModels().filter((model) => model.capabilities?.compact)
 }
 
+const getCompletionModels = () => {
+  return robotSettingState.services.flatMap((service) =>
+    service.models
+      .filter((model) => isCompletionCapableModel(service, model))
+      .map((model) => ({
+        serviceId: service.id,
+        serviceName: service.label,
+        modelName: model.name,
+        modelLabel: model.label,
+        capabilities: model.capabilities || {},
+        displayLabel: `${service.label} - ${model.label}`,
+        value: `${service.id}::${model.name}`
+      }))
+  )
+}
+
 const updateThinkingState = (value: boolean) => {
   robotSettingState.enableThinking = value
   saveRobotSettingState({ enableThinking: robotSettingState.enableThinking })
@@ -451,6 +595,35 @@ const getSelectedQuickModelInfo = (): SelectedModelInfo => {
   }
 }
 
+const getSelectedCompletionModelInfo = (): SelectedModelInfo => {
+  const currentService: ModelService | undefined = getServiceById(robotSettingState.completionModel.serviceId)
+  const currentModel: ModelConfig | undefined = currentService?.models.find(
+    (m) => m.name === robotSettingState.completionModel.modelName
+  )
+  const { name = '', label = '', capabilities = {} } = currentModel || {}
+  const completionProtocol =
+    inferCompletionProtocol({
+      provider: currentService?.provider,
+      baseUrl: currentService?.baseUrl,
+      modelName: name,
+      capabilities
+    }) || null
+
+  const { models, ...service } = currentService ?? ({} as Partial<ModelService>)
+
+  return {
+    name,
+    label,
+    capabilities,
+    service: (currentService ? service : null) as ModelService | null,
+    model: robotSettingState.completionModel.modelName,
+    completeModel: robotSettingState.completionModel.modelName || '',
+    completionProtocol,
+    baseUrl: currentService?.baseUrl || '',
+    apiKey: currentService?.apiKey || ''
+  }
+}
+
 export default () => {
   return {
     // 配置状态
@@ -467,8 +640,10 @@ export default () => {
     getModelCapabilities,
     getAllAvailableModels,
     getCompactModels,
+    getCompletionModels,
     getSelectedModelInfo, // 对话模型信息
     getSelectedQuickModelInfo, // 快速模型信息
+    getSelectedCompletionModelInfo, // 代码补全模型信息
 
     // 服务管理
     addCustomService,

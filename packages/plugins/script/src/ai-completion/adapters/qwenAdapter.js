@@ -1,0 +1,64 @@
+import { QWEN_CONFIG, HTTP_CONFIG, ERROR_MESSAGES } from '../constants.js'
+import { fetchWithTimeout } from '../utils/requestUtils.js'
+
+/**
+ * 构建 Qwen FIM prompt
+ * @param {string} fileContent - 文件内容（包含 [CURSOR] 标记）
+ * @param {Object} fimBuilder - FIM 构建器实例
+ * @param {Object} metadata - 元数据
+ * @returns {{ prompt: string, cursorContext: Object }} Prompt 和上下文
+ */
+export function buildQwenFIMPrompt(fileContent, fimBuilder, metadata = {}) {
+  const { fimPrompt, cursorContext } = fimBuilder.buildOptimizedFIMPrompt(fileContent, metadata)
+
+  return {
+    prompt: fimPrompt,
+    cursorContext
+  }
+}
+
+/**
+ * 调用 Qwen Completions API
+ * @param {string} prompt - FIM prompt
+ * @param {Object} config - 配置对象
+ * @param {string} apiKey - API 密钥
+ * @param {string} baseUrl - 基础 URL
+ * @returns {Promise<string>} 补全文本
+ */
+export async function callQwenAPI(prompt, config, apiKey, baseUrl, signal) {
+  // 构建完整的 Completions API URL
+  const completionsUrl = `${baseUrl}${QWEN_CONFIG.COMPLETION_PATH}`
+
+  const requestBody = {
+    model: config.model,
+    prompt,
+    max_tokens: config.maxTokens,
+    temperature: QWEN_CONFIG.DEFAULT_TEMPERATURE,
+    top_p: QWEN_CONFIG.TOP_P,
+    stream: HTTP_CONFIG.STREAM,
+    stop: config.stopSequences,
+    presence_penalty: QWEN_CONFIG.PRESENCE_PENALTY
+  }
+
+  const fetchResponse = await fetchWithTimeout(
+    completionsUrl,
+    {
+      method: HTTP_CONFIG.METHOD,
+      headers: {
+        'Content-Type': HTTP_CONFIG.CONTENT_TYPE,
+        Authorization: `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(requestBody)
+    },
+    HTTP_CONFIG.REQUEST_TIMEOUT_MS,
+    signal
+  )
+
+  if (!fetchResponse.ok) {
+    const errorText = await fetchResponse.text()
+    throw new Error(`${ERROR_MESSAGES.QWEN_API_ERROR} ${fetchResponse.status}: ${errorText}`)
+  }
+
+  const response = await fetchResponse.json()
+  return response?.choices?.[0]?.text
+}

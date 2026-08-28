@@ -90,6 +90,15 @@ export const DEFAULT_LLM_MODELS = [
         }
       },
       {
+        label: 'Qwen Coder编程模型（Turbo）',
+        name: 'qwen-coder-turbo-latest',
+        capabilities: {
+          toolCalling: true,
+          jsonOutput: bailianJsonOutputExtraBody,
+          completionProtocol: 'qwen'
+        }
+      },
+      {
         label: 'Qwen3（14b）',
         name: 'qwen3-14b',
         capabilities: { compact: true, toolCalling: true, jsonOutput: bailianJsonOutputExtraBody }
@@ -112,6 +121,7 @@ export const DEFAULT_LLM_MODELS = [
         name: 'deepseek-chat',
         capabilities: {
           toolCalling: true,
+          completionProtocol: 'deepseek',
           reasoning: {
             extraBody: {
               enable: { model: 'deepseek-reasoner' },

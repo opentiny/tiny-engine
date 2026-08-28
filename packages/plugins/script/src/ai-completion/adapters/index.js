@@ -1,0 +1,158 @@
+import { getMetaApi, META_SERVICE } from '@opentiny/tiny-engine-meta-register'
+import { createSmartPrompt } from '../builders/promptBuilder.js'
+import { FIMPromptBuilder } from '../builders/fimPromptBuilder.js'
+import { detectModelType, calculateTokens, getStopSequences } from '../utils/modelUtils.js'
+import { cleanCompletion, buildLowcodeMetadata } from '../utils/completionUtils.js'
+import { buildQwenFIMPrompt, callQwenAPI } from './qwenAdapter.js'
+import { buildDeepSeekFIMParams, callDeepSeekAPI } from './deepseekAdapter.js'
+import { QWEN_CONFIG, DEEPSEEK_CONFIG, DEFAULTS, ERROR_MESSAGES, MODEL_CONFIG } from '../constants.js'
+
+/**
+ * 创建请求处理器
+ * @returns {Function} 请求处理函数
+ */
+export function createCompletionHandler() {
+  // 为不同模型创建 FIM 构建器
+  const qwenFimBuilder = new FIMPromptBuilder(QWEN_CONFIG)
+  const deepseekFimBuilder = new FIMPromptBuilder(DEEPSEEK_CONFIG)
+
+  return async (params) => {
+    try {
+      const requestSignal = params?.signal ?? null
+
+      // 1. 获取 AI 配置
+      const {
+        completeModel,
+        apiKey,
+        baseUrl,
+        capabilities = {},
+        service = null
+      } = getMetaApi(META_SERVICE.Robot).getSelectedCompletionModelInfo() || {}
+
+      if (!completeModel || !baseUrl) {
+        return {
+          completion: null,
+          error: ERROR_MESSAGES.CONFIG_MISSING
+        }
+      }
+
+      if (!apiKey && !service?.allowEmptyApiKey) {
+        return {
+          completion: null,
+          error: ERROR_MESSAGES.API_KEY_MISSING
+        }
+      }
+
+      // 2. 提取代码上下文
+      const {
+        textBeforeCursor = '',
+        textAfterCursor = '',
+        language = DEFAULTS.LANGUAGE,
+        filename
+      } = params.body?.completionMetadata || {}
+
+      // 3. 构建低代码元数据和 prompt
+      const lowcodeMetadata = buildLowcodeMetadata()
+      const { fileContent, commentStatus, lowcodeContext } = createSmartPrompt({
+        textBeforeCursor,
+        textAfterCursor,
+        language,
+        filename,
+        lowcodeMetadata
+      })
+
+      // 4. 检测模型类型并构建 FIM 参数
+      const modelType = detectModelType(completeModel, {
+        provider: service?.provider,
+        baseUrl,
+        capabilities
+      })
+
+      if (modelType === MODEL_CONFIG.UNKNOWN.TYPE) {
+        return {
+          completion: null,
+          error: ERROR_MESSAGES.UNSUPPORTED_MODEL
+        }
+      }
+
+      // 5. 准备元数据（用于增强 FIM prompt）
+      const fimMetadata = {
+        language,
+        isComment: commentStatus.isComment,
+        lowcodeContext
+      }
+
+      // 6. 根据模型类型构建请求参数
+      let completionText
+      let cursorContext
+
+      if (modelType === MODEL_CONFIG.QWEN.TYPE) {
+        // ===== Qwen 流程 =====
+        const { prompt, cursorContext: ctx } = buildQwenFIMPrompt(fileContent, qwenFimBuilder, fimMetadata)
+        cursorContext = ctx
+
+        completionText = await callQwenAPI(
+          prompt,
+          {
+            model: completeModel,
+            maxTokens: calculateTokens(ctx),
+            stopSequences: getStopSequences(ctx)
+          },
+          apiKey,
+          baseUrl,
+          requestSignal
+        )
+      } else {
+        // ===== DeepSeek 流程（使用 FIM API） =====
+        const {
+          prompt,
+          suffix,
+          cursorContext: ctx
+        } = buildDeepSeekFIMParams(fileContent, deepseekFimBuilder, fimMetadata)
+        cursorContext = ctx
+
+        completionText = await callDeepSeekAPI(
+          prompt,
+          suffix,
+          {
+            model: completeModel,
+            maxTokens: calculateTokens(ctx),
+            stopSequences: getStopSequences(ctx)
+          },
+          apiKey,
+          baseUrl,
+          requestSignal
+        )
+      }
+
+      // 7. 处理补全结果
+      if (completionText) {
+        completionText = cleanCompletion(completionText, cursorContext, textAfterCursor)
+
+        if (!completionText) {
+          return {
+            completion: null,
+            error: ERROR_MESSAGES.NO_COMPLETION
+          }
+        }
+
+        return {
+          completion: completionText,
+          error: null
+        }
+      }
+
+      return {
+        completion: null,
+        error: ERROR_MESSAGES.NO_COMPLETION
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('❌ AI 补全请求失败:', error)
+      return {
+        completion: null,
+        error: error.message || ERROR_MESSAGES.REQUEST_FAILED
+      }
+    }
+  }
+}

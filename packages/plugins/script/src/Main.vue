@@ -34,11 +34,14 @@
 /* metaService: engine.plugins.pagecontroller.Main */
 import { onBeforeUnmount, reactive, provide } from 'vue'
 import { Button } from '@opentiny/vue'
+import { registerCompletion, type CompletionRegistration, type RegisterCompletionOptions } from 'monacopilot'
 import { VueMonaco, PluginPanel } from '@opentiny/tiny-engine-common'
-import { useHelp, useLayout } from '@opentiny/tiny-engine-meta-register'
+import { useHelp, useLayout, getMergeMeta } from '@opentiny/tiny-engine-meta-register'
 import { initCompletion } from '@opentiny/tiny-engine-common/js/completion'
 import { initLinter } from '@opentiny/tiny-engine-common/js/linter'
 import useMethod, { saveMethod, highlightMethod, getMethodNameList, getMethods } from './js/method'
+import { createCompletionHandler } from './ai-completion/adapters/index'
+import { shouldTriggerCompletion } from './ai-completion/triggers/completionTrigger'
 
 export const api = {
   saveMethod,
@@ -59,12 +62,17 @@ export default {
     }
   },
   emits: ['close'],
-  setup(props, { emit }) {
+  setup(_props, { emit }) {
     const docsUrl = useHelp().getDocsUrl('script')
     const docsContent = '同一页面/区块的添加事件会统一保存到对应的页面JS中。'
     const { state, monaco, change, close, saveMethods } = useMethod({ emit })
 
     const { PLUGIN_NAME } = useLayout()
+
+    type RequestHandler = NonNullable<RegisterCompletionOptions['requestHandler']>
+    type TriggerMode = NonNullable<RegisterCompletionOptions['trigger']>
+    let completion: CompletionRegistration | null = null
+    let completionAction: { dispose?: () => void } | null = null
 
     const panelState = reactive({
       emitEvent: emit
@@ -101,24 +109,74 @@ export default {
       wordWrapStrategy: 'advanced'
     }
 
-    const editorDidMount = (editor) => {
-      if (!monaco.value) {
-        return
+    const editorDidMount = (editor: any) => {
+      const monacoRef = monaco as any
+      if (!monacoRef.value) return
+
+      // 保留原有的 Lowcode API 提示
+      state.completionProvider = initCompletion(
+        monacoRef.value.getMonaco(),
+        monacoRef.value.getEditor()?.getModel()
+      ) as any
+
+      // 保留原有的 ESLint
+      state.linterWorker = initLinter(editor, monacoRef.value.getMonaco(), state) as any
+
+      const pageControllerOptions = getMergeMeta('engine.plugins.pagecontroller')?.options || {}
+      const aiCompletionEnabled = pageControllerOptions.aiCompletionEnabled ?? pageControllerOptions.enableAICompletion
+      const aiCompletionTrigger = pageControllerOptions.aiCompletionTrigger || 'onIdle'
+
+      if (aiCompletionEnabled) {
+        try {
+          const monacoInstance = monacoRef.value.getMonaco()
+          const editorInstance = monacoRef.value.getEditor()
+
+          completion?.deregister?.()
+          completionAction?.dispose?.()
+
+          completion = registerCompletion(monacoInstance, editorInstance, {
+            language: 'javascript',
+            filename: 'page.js',
+            maxContextLines: 50,
+            enableCaching: true,
+            allowFollowUpCompletions: false,
+            trigger: aiCompletionTrigger as TriggerMode,
+            triggerIf: ({ text, position }) => {
+              return shouldTriggerCompletion({
+                text,
+                position
+              })
+            },
+            requestHandler: createCompletionHandler() as RequestHandler
+          })
+
+          completionAction = monacoInstance.editor.addEditorAction({
+            id: 'monacopilot.triggerCompletion',
+            label: 'Complete Code',
+            contextMenuGroupId: 'navigation',
+            keybindings: [monacoInstance.KeyMod.CtrlCmd | monacoInstance.KeyMod.Shift | monacoInstance.KeyCode.Space],
+            run: () => {
+              completion!.trigger()
+            }
+          })
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.error('❌ AI 补全注册失败:', error)
+        }
       }
-
-      // Lowcode API 提示
-      state.completionProvider = initCompletion(monaco.value.getMonaco(), monaco.value.getEditor()?.getModel())
-
-      // 初始化 ESLint worker
-      state.linterWorker = initLinter(editor, monaco.value.getMonaco(), state)
     }
 
     onBeforeUnmount(() => {
-      state.completionProvider?.forEach((provider) => {
-        provider.dispose()
+      // 清理 AI 补全
+      if (completion) {
+        completion.deregister()
+      }
+      completionAction?.dispose?.()
+      ;(state.completionProvider as any)?.forEach?.((provider: any) => {
+        provider?.dispose?.()
       })
       // 终止 ESLint worker
-      state.linterWorker?.terminate?.()
+      ;(state.linterWorker as any)?.terminate?.()
     })
 
     return {
