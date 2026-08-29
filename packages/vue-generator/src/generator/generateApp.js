@@ -10,7 +10,8 @@ import {
   formatCodePlugin,
   parseSchemaPlugin,
   genGlobalState,
-  appendElePlusStylePlugin
+  appendElePlusStylePlugin,
+  genNpmrcPlugin
 } from '../plugins'
 import CodeGenerator from './codeGenerator'
 
@@ -32,7 +33,8 @@ export function generateApp(config = {}) {
     router: genRouterPlugin(config.pluginConfig?.router || {}),
     utils: genUtilsPlugin(config.pluginConfig?.utils || {}),
     formatCode: formatCodePlugin(config.pluginConfig?.formatCode || {}),
-    parseSchema: parseSchemaPlugin(config.pluginConfig?.parseSchema || {})
+    parseSchema: parseSchemaPlugin(config.pluginConfig?.parseSchema || {}),
+    npmrc: genNpmrcPlugin(config.pluginConfig?.npmrc || {})
   }
 
   const { customPlugins = {} } = config
@@ -47,6 +49,7 @@ export function generateApp(config = {}) {
     utils,
     formatCode,
     parseSchema,
+    npmrc,
     globalState,
     transformStart = [],
     transform = [],
@@ -58,6 +61,7 @@ export function generateApp(config = {}) {
     page: page || defaultPlugins.page,
     dataSource: dataSource || defaultPlugins.dataSource,
     dependencies: dependencies || defaultPlugins.dependencies,
+    npmrc: npmrc || defaultPlugins.npmrc,
     i18n: i18n || defaultPlugins.i18n,
     router: router || defaultPlugins.router,
     utils: utils || defaultPlugins.utils,
