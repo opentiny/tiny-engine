@@ -2,13 +2,26 @@ import { useMessage, defineService, META_SERVICE, getAllMergeMeta } from '@opent
 import { Client } from '@modelcontextprotocol/sdk/client/index.js'
 import { createTransportPair, createStreamProxy } from '@opentiny/next'
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import type { ToolCallback } from '@modelcontextprotocol/sdk/server/mcp.d.ts'
-import type { ZodRawShape } from 'zod'
-import type { IState, ToolItem, ServerConnectionStatus } from './type'
-import { registerTools, getToolList, getToolByName, removeTool, updateTool, type UpdateToolConfig } from './toolUtils'
+import type { IState, ToolItem, ServerConnectionStatus, ResourceItem, ResourceTemplateItem } from './type'
+import {
+  registerTools,
+  getToolList,
+  getToolByName,
+  removeTool,
+  updateTool,
+  type UpdateToolConfig,
+  initRegisterTools
+} from './toolUtils'
 import { toRaw } from 'vue'
-
-const logger = console
+import {
+  initRegisterResources,
+  registerResources,
+  getResourceList,
+  getResourceByUri,
+  removeResource,
+  updateResource
+} from './resources'
+import { getBaseTools } from './baseTools'
 
 export type { IState, ToolItem, UpdateToolConfig }
 
@@ -42,7 +55,10 @@ const initialState: IState = {
   toolList: [],
   toolInstanceMap: new Map(),
   mcpClient: null,
-  serverConnectionStatus: 'disconnected'
+  serverConnectionStatus: 'disconnected',
+  resources: [],
+  resourceTemplates: [],
+  resourceInstanceMap: new Map()
 }
 
 const updateServerConnectionStatus = (state: IState, status: ServerConnectionStatus, error?: Error) => {
@@ -161,43 +177,9 @@ const createMcpServer = async (state: IState) => {
     }
   )
 
-  // server._setupTimeout = () => {}
+  initRegisterTools(state, server)
 
-  state.toolList.forEach((tool) => {
-    const { name, callback, inputSchema, outputSchema, ...restConfig } = tool
-
-    try {
-      if (state.toolInstanceMap.has(name)) {
-        logger.error(`tool ${name} already registered`)
-        return
-      }
-
-      if (!name || typeof name !== 'string') {
-        logger.error('tool name is required and must be a string')
-        return
-      }
-
-      if (!callback || typeof callback !== 'function') {
-        logger.error('tool callback is required and must be a function')
-        return
-      }
-
-      const toolInstance = server.registerTool(
-        name,
-        // 需要序列化一次，否则 list tool 会超时，因为有 proxy 之后，内部会报错
-        {
-          ...JSON.parse(JSON.stringify(restConfig)),
-          inputSchema,
-          outputSchema
-        },
-        callback as ToolCallback<ZodRawShape>
-      )
-
-      state.toolInstanceMap.set(name, toolInstance)
-    } catch (error) {
-      logger.error('error when register tool', error)
-    }
-  })
+  initRegisterResources(state, server)
 
   await server.connect(toRaw(transport))
 
@@ -212,6 +194,14 @@ const collectTools = (state: IState) => {
   const allMetaData = getAllMergeMeta()
   const tools: ToolItem[] = []
 
+  try {
+    const baseTools = getBaseTools(state) as unknown as ToolItem[]
+    tools.push(...baseTools)
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error('inject base tools failed', e)
+  }
+
   allMetaData.forEach((meta) => {
     if (Array.isArray(meta.mcp?.tools)) {
       tools.push(...meta.mcp.tools)
@@ -219,6 +209,26 @@ const collectTools = (state: IState) => {
   })
 
   state.toolList = tools
+}
+
+// 收集所有 meta 中声明的 MCP 资源与模板
+const collectResources = (state: IState) => {
+  const allMetaData = getAllMergeMeta()
+  const resources: ResourceItem[] = []
+  const resourceTemplates: ResourceTemplateItem[] = []
+
+  allMetaData.forEach((meta) => {
+    if (meta && typeof meta === 'object' && Array.isArray(meta.mcp?.resources)) {
+      resources.push(...meta.mcp.resources)
+    }
+    if (meta && typeof meta === 'object' && Array.isArray(meta.mcp?.resourceTemplates)) {
+      resourceTemplates.push(...meta.mcp.resourceTemplates)
+    }
+  })
+
+  // 将结果挂载在 state 上，供后续创建 server 时使用
+  state.resources = resources
+  state.resourceTemplates = resourceTemplates
 }
 
 // 移除未使用的 @ts-expect-error 注释
@@ -238,8 +248,9 @@ export default defineService<IState, IOptions>({
 
     // 收集所有注册表中的 tools
     collectTools(state)
+    // 收集所有注册表中的 resources
+    collectResources(state)
     // TODO: 支持 prompts
-    // TODO: 支持 resources
     // TODO: 支持 Elicitation
 
     // 创建 mcp server
@@ -258,6 +269,12 @@ export default defineService<IState, IOptions>({
     getToolList: () => getToolList(state),
     getToolByName: (name: string) => getToolByName(state, name),
     removeTool: (name: string) => removeTool(state, name),
-    updateTool: (name: string, config?: UpdateToolConfig) => updateTool(state, name, config)
+    updateTool: (name: string, config?: UpdateToolConfig) => updateTool(state, name, config),
+    // resources apis
+    registerResources: (resources: ResourceItem[]) => registerResources(state, resources),
+    getResourceList: () => getResourceList(state),
+    getResourceByUri: (uri: string) => getResourceByUri(state, uri),
+    removeResource: (uri: string) => removeResource(state, uri),
+    updateResource: (uri: string, updates?: any) => updateResource(state, uri, updates)
   })
 })
