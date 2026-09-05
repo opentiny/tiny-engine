@@ -2,7 +2,7 @@ import fs from 'fs-extra'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import Logger from './logger.mjs'
-import pkg from '../packages/design-core/package.json' assert { type: 'json' }
+import pkg from '../packages/design-core/package.json' with { type: 'json' }
 
 const logger = new Logger('updateTemplate')
 
