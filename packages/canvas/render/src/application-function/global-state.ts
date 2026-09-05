@@ -1,28 +1,56 @@
-import { ref, shallowReactive, watchEffect } from 'vue'
+import { ref, shallowReactive, watchEffect, reactive, computed } from 'vue'
 import { reset } from '../data-utils'
 
-const Func = Function
-
 export function useGlobalState() {
-  const globalState = ref([])
+  const globalState = ref<any[]>([])
 
-  const setGlobalState = (data = []) => {
+  const setGlobalState = (data: any[] = []) => {
     globalState.value = data
   }
-  const stores = shallowReactive({})
+
+  const stores = shallowReactive<Record<string, any>>({})
+
   watchEffect(() => {
     reset(stores)
+
     globalState.value.forEach(({ id, state = {}, getters = {} }) => {
-      const computedGetters = Object.keys(getters).reduce(
-        (acc, key) => ({
-          ...acc,
-          [key]: new Func('return ' + getters[key])().call(acc, state) // parseData(getters[key], null, acc)?.call?.(acc, state)  //理论上不应该走parseData, unibuy代码遗留
-        }),
-        {}
-      )
-      stores[id] = { ...state, ...computedGetters }
+      try {
+        const reactiveState = reactive({ ...state })
+        const store = reactive({ ...reactiveState })
+
+        if (getters && typeof getters === 'object') {
+          Object.entries(getters).forEach(([key, getterDef]: [string, any]) => {
+            try {
+              if (getterDef?.type === 'JSFunction' && getterDef.value) {
+                const getterFn = new Function(`return (${getterDef.value})`)()
+                const computedGetter = computed(() => {
+                  try {
+                    return getterFn.call(store, reactiveState)
+                  } catch (error) {
+                    return null
+                  }
+                })
+
+                Object.defineProperty(store, key, {
+                  get: () => computedGetter.value,
+                  enumerable: true
+                })
+              }
+            } catch (parseError) {
+              // eslint-disable-next-line no-console
+              console.error(`[useGlobalState] Invalid getter "${key}" in store ${id}:`, parseError)
+            }
+          })
+        }
+
+        stores[id] = store
+      } catch (storeError) {
+        // eslint-disable-next-line no-console
+        console.error(`[useGlobalState] Failed to create store "${id}":`, storeError)
+      }
     })
   })
+
   return {
     globalState,
     setGlobalState,
