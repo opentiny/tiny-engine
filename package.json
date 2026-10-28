@@ -41,7 +41,7 @@
     "fs-extra": "^10.1.0",
     "globals": "^16.0.0",
     "husky": "^8.0.0",
-    "lerna": "^7.2.0",
+    "lerna": "9.0.7",
     "lint-staged": "^13.2.0",
     "mysql": "^2.18.1",
     "picocolors": "^1.0.0",
