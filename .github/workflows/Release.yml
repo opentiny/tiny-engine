@@ -25,7 +25,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: '>=24.19.0 <25'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
@@ -69,9 +69,6 @@ jobs:
             echo "Tag name $tag_name does not match package version $package_version"
             exit 1
           fi
-
-      - name: Verify npm supports trusted publishing
-        run: node -e "const v=require('child_process').execSync('npm --version',{encoding:'utf8'}).trim(); const [a,b,c]=v.split('.').map(Number); if(a<11||(a===11&&(b<5||(b===5&&c<1)))) throw new Error('npm >=11.5.1 required, found '+v); console.log('npm '+v)"
 
       - name: Publish package to npm
         run: pnpm lerna publish from-package --dist-tag ${{steps.parse_tag.outputs.dist_tag}} --yes
