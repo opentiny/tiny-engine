@@ -25,7 +25,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: '>=24.19.0 <25'
           registry-url: 'https://registry.npmjs.org'
 
       - name: Install dependencies
@@ -72,5 +72,3 @@ jobs:
 
       - name: Publish package to npm
         run: pnpm lerna publish from-package --dist-tag ${{steps.parse_tag.outputs.dist_tag}} --yes
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
