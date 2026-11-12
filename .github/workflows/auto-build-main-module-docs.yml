@@ -1,0 +1,72 @@
+name: Auto Build Main Module Docs
+
+on:
+  pull_request:
+    branches: [develop]
+    paths:
+      - 'docs/**'
+  push:
+    branches: [develop]
+    paths:
+      - 'docs/**'
+
+jobs:
+  verify-main-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+      - uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.SUBMODULE_SSH_KEY_PRIVATE }}
+      - name: Checkout submodule repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.PAT_TOKEN }}
+
+      - name: Checkout main repository
+        run: |
+          # 克隆主仓库
+          git clone https://github.com/opentiny/docs.git docs-main
+          cd docs-main
+
+          # 更新子模块到PR分支的版本
+          git submodule sync --recursive
+          git submodule update --init --recursive
+
+
+          # 获取PR分支的最新提交
+          cd ./tiny-engine
+          BRANCH_NAME="${{ github.head_ref }}"
+          git fetch origin $BRANCH_NAME
+          git checkout $BRANCH_NAME
+
+          # 回到主仓库根目录
+          cd ../
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Run main repo build
+        id: build
+        working-directory: ./docs-main
+        run: |
+          pnpm i
+          # 如果使用VitePress
+          pnpm build
+
+      - name: Update PR status
+        if: always()
+        run: |
+          # 检查构建是否成功
+          if [ ${{ steps.build.outcome }} == 'success' ]; then
+            echo "✅ 主仓库构建成功"
+          else
+            echo "❌ 主仓库构建失败"
+            exit 1
+          fi

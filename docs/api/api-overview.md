@@ -2,7 +2,7 @@
 
 TinyEngine的API主要分为`TinyEngine能力API`和`开源后端接口API`。
 
-## TinyEngine能力API
+## TinyEngine 能力API
 主要提供以下几类API
 - 主包API
 - 画布API
